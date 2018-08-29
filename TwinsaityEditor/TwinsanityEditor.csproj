@@ -1,0 +1,507 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1FE49287-4EAB-02DD-2C33-7938217EBB72}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <StartupObject>TwinsaityEditor.TwinsanityEditor</StartupObject>
+    <RootNamespace>TwinsaityEditor</RootNamespace>
+    <AssemblyName>TwinsaityEditor</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>WindowsForms</MyType>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>TwinsaityEditor.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>TwinsaityEditor.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Binary</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>Off</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>ico.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DocumentationFile>TwinsaityEditor.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+    <DefineConstants>DEBUG</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DocumentationFile>TwinsaityEditor.xml</DocumentationFile>
+    <Optimize>true</Optimize>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <DebugType>Full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <DebugSymbols>true</DebugSymbols>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DocumentationFile>TwinsaityEditor.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DocumentationFile>TwinsaityEditor.xml</DocumentationFile>
+    <Optimize>true</Optimize>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Microsoft.VisualC" />
+    <Reference Include="OpenTK, Version=3.0.1.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>packages\OpenTK.3.0.1\lib\net20\OpenTK.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenTK.GLControl, Version=3.0.1.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <HintPath>packages\OpenTK.GLControl.3.0.1\lib\net20\OpenTK.GLControl.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Twinsanity, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Twinsanity\bin\Debug\Twinsanity.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Editors\ID4Editor.Designer.cs">
+      <DependentUpon>ID4Editor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\ID4Editor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\MaterialEditor.Designer.cs">
+      <DependentUpon>MaterialEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\MaterialEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\SceneryEditor.Designer.cs">
+      <DependentUpon>SceneryEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\SceneryEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\TerrainEditor.Designer.cs">
+      <DependentUpon>TerrainEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\TerrainEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Handlers\DisposeHandler.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="TwinsanityEditor.cs" />
+    <Compile Include="Workers\BDWorker.Designer.cs">
+      <DependentUpon>BDWorker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Workers\BDWorker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Utilities\NewSM2_Dialog.Designer.cs">
+      <DependentUpon>NewSM2_Dialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities\NewSM2_Dialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\BehaviorEditor.Designer.cs">
+      <DependentUpon>BehaviorEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\BehaviorEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\FuckingShitEditor.Designer.cs">
+      <DependentUpon>FuckingShitEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\FuckingShitEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\GameObjectEditor.Designer.cs">
+      <DependentUpon>GameObjectEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\GameObjectEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\PathEditor.Designer.cs">
+      <DependentUpon>PathEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\PathEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\SurfaceBehaviorEditor.Designer.cs">
+      <DependentUpon>SurfaceBehaviorEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\SurfaceBehaviorEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Workers\ELFPatcher.Designer.cs">
+      <DependentUpon>ELFPatcher.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Workers\ELFPatcher.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TwinsanityEditorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TwinsanityEditorForm.Designer.cs">
+      <DependentUpon>TwinsanityEditorForm.cs</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\GCEditor.Designer.cs">
+      <DependentUpon>GCEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\GCEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Viewers\GeoDataVis.Designer.cs">
+      <DependentUpon>GeoDataVis.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Viewers\GeoDataVis.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Viewers\HexView.Designer.cs">
+      <DependentUpon>HexView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Viewers\HexView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Viewers\ID4ModelViewer.Designer.cs">
+      <DependentUpon>ID4ModelViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Viewers\ID4ModelViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Utilities\IDAsker.Designer.cs">
+      <DependentUpon>IDAsker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities\IDAsker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\InstanceEditor.Designer.cs">
+      <DependentUpon>InstanceEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\InstanceEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Utilities\InstanceScripting.Designer.cs">
+      <DependentUpon>InstanceScripting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities\InstanceScripting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Utilities\LibManager.Designer.cs">
+      <DependentUpon>LibManager.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities\LibManager.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Workers\MHWorker.Designer.cs">
+      <DependentUpon>MHWorker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Workers\MHWorker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Viewers\ModelViewer.Designer.cs">
+      <DependentUpon>ModelViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Viewers\ModelViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="My Project\AssemblyInfo.cs" />
+    <Compile Include="My Project\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Editors\PositionEditor.Designer.cs">
+      <DependentUpon>PositionEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\PositionEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\OGIEditor.Designer.cs">
+      <DependentUpon>OGIEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\OGIEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Workers\PSMWorker.Designer.cs">
+      <DependentUpon>PSMWorker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Workers\PSMWorker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Utilities\Randomizer.Designer.cs">
+      <DependentUpon>Randomizer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities\Randomizer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Utilities\Search.Designer.cs">
+      <DependentUpon>Search.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities\Search.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Workers\TextureImport.Designer.cs">
+      <DependentUpon>TextureImport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Workers\TextureImport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Viewers\TextureViewer.Designer.cs">
+      <DependentUpon>TextureViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Viewers\TextureViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\TriggerEditor.Designer.cs">
+      <DependentUpon>TriggerEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\TriggerEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Utilities\TriggerTree.Designer.cs">
+      <DependentUpon>TriggerTree.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities\TriggerTree.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Utilities\TwoIDAsker.Designer.cs">
+      <DependentUpon>TwoIDAsker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities\TwoIDAsker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Editors\ID4Editor.resx">
+      <DependentUpon>ID4Editor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\MaterialEditor.resx">
+      <DependentUpon>MaterialEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\SceneryEditor.resx">
+      <DependentUpon>SceneryEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\TerrainEditor.resx">
+      <DependentUpon>TerrainEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Workers\BDWorker.resx">
+      <DependentUpon>BDWorker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Utilities\NewSM2_Dialog.resx">
+      <DependentUpon>NewSM2_Dialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\BehaviorEditor.resx">
+      <DependentUpon>BehaviorEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\FuckingShitEditor.resx">
+      <DependentUpon>FuckingShitEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\GameObjectEditor.resx">
+      <DependentUpon>GameObjectEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\PathEditor.resx">
+      <DependentUpon>PathEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\SurfaceBehaviorEditor.resx">
+      <DependentUpon>SurfaceBehaviorEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Workers\ELFPatcher.resx">
+      <DependentUpon>ELFPatcher.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TwinsanityEditorForm.resx">
+      <DependentUpon>TwinsanityEditorForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\GCEditor.resx">
+      <DependentUpon>GCEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Viewers\GeoDataVis.resx">
+      <DependentUpon>GeoDataVis.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Viewers\HexView.resx">
+      <DependentUpon>HexView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Viewers\ID4ModelViewer.resx">
+      <DependentUpon>ID4ModelViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Utilities\IDAsker.resx">
+      <DependentUpon>IDAsker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\InstanceEditor.resx">
+      <DependentUpon>InstanceEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Utilities\InstanceScripting.resx">
+      <DependentUpon>InstanceScripting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Utilities\LibManager.resx">
+      <DependentUpon>LibManager.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Workers\MHWorker.resx">
+      <DependentUpon>MHWorker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Viewers\ModelViewer.resx">
+      <DependentUpon>ModelViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\PositionEditor.resx">
+      <DependentUpon>PositionEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\OGIEditor.resx">
+      <DependentUpon>OGIEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Workers\PSMWorker.resx">
+      <DependentUpon>PSMWorker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Utilities\Randomizer.resx">
+      <DependentUpon>Randomizer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Utilities\Search.resx">
+      <DependentUpon>Search.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Workers\TextureImport.resx">
+      <DependentUpon>TextureImport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Viewers\TextureViewer.resx">
+      <DependentUpon>TextureViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\TriggerEditor.resx">
+      <DependentUpon>TriggerEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Utilities\TriggerTree.resx">
+      <DependentUpon>TriggerTree.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Utilities\TwoIDAsker.resx">
+      <DependentUpon>TwoIDAsker.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ico.ico" />
+    <None Include="OpenTK.dll.config" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Resources\3614838889.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

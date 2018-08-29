@@ -1,0 +1,212 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B8D8E685-7E23-0A0B-00A3-F413B32DAD1C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Twinsanity</RootNamespace>
+    <AssemblyName>Twinsanity</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>Windows</MyType>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>Twinsanity.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>Twinsanity.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Binary</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>Off</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Diagnostics" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ADPCM.cs" />
+    <Compile Include="BDArchive.cs" />
+    <Compile Include="Items\Code\Animation.cs" />
+    <Compile Include="Items\Code\DemoGameObject.cs" />
+    <Compile Include="Items\Graphics\ID4Model.cs" />
+    <Compile Include="Items\Graphics\ID5Model.cs" />
+    <Compile Include="Items\Graphics\Terrain.cs" />
+    <Compile Include="Items\Instances\DemoInstance.cs" />
+    <Compile Include="Items\Instances\Trigger.cs" />
+    <Compile Include="Items\Instances\Position.cs" />
+    <Compile Include="Items\Instances\FuckingShit.cs" />
+    <Compile Include="Items\Instances\Path.cs" />
+    <Compile Include="Items\Instances\SurfaceBehaviour.cs" />
+    <Compile Include="Items\Instances\Behavior.cs" />
+    <Compile Include="Items\GeoData.cs" />
+    <Compile Include="Items\Scenery.cs" />
+    <Compile Include="Items\SubChunk.cs" />
+    <Compile Include="MetaData.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="PSM.cs" />
+    <Compile Include="Sections\Code\Animations.cs" />
+    <Compile Include="Sections\BaseSection.cs" />
+    <Compile Include="Items\BaseItem.cs" />
+    <Compile Include="BaseObject.cs" />
+    <Compile Include="Sections\CodeSection.cs" />
+    <Compile Include="Items\Code\GameObject.cs" />
+    <Compile Include="Sections\Code\GameObjects.cs" />
+    <Compile Include="Items\Graphics\GC.cs" />
+    <Compile Include="Sections\Code\DemoGameObjects.cs" />
+    <Compile Include="Sections\Code\SoundbankDescriptions.cs" />
+    <Compile Include="Sections\Graphics\GCs.cs" />
+    <Compile Include="Sections\GraphicsSection.cs" />
+    <Compile Include="Items\Instances\Instance.cs" />
+    <Compile Include="Sections\Graphics\ID4Models.cs" />
+    <Compile Include="Sections\Graphics\Terrains.cs" />
+    <Compile Include="Sections\InstanceInfoSection.cs" />
+    <Compile Include="Sections\Instances\Instances.cs" />
+    <Compile Include="Items\Graphics\Material.cs" />
+    <Compile Include="Sections\Graphics\Materials.cs" />
+    <Compile Include="Items\Graphics\Model.cs" />
+    <Compile Include="Sections\Graphics\Models.cs" />
+    <Compile Include="Items\Code\OGI.cs" />
+    <Compile Include="Sections\Code\OGIs.cs" />
+    <Compile Include="RM2.cs" />
+    <Compile Include="My Project\AssemblyInfo.cs" />
+    <Compile Include="My Project\Application.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Items\Code\Script.cs" />
+    <Compile Include="Sections\Code\Scripts.cs" />
+    <Compile Include="Items\Code\Sound.cs" />
+    <Compile Include="Items\Code\SoundDescription.cs" />
+    <Compile Include="Sections\Code\SoundDescriptions.cs" />
+    <Compile Include="Items\Graphics\Texture.cs" />
+    <Compile Include="Sections\Graphics\Textures.cs" />
+    <Compile Include="Sections\Instances\Triggers.cs" />
+    <Compile Include="Sections\Instances\Positions.cs" />
+    <Compile Include="Sections\Instances\Paths.cs" />
+    <Compile Include="Sections\Instances\FuckingShits.cs" />
+    <Compile Include="Sections\Instances\SurfaceBehaviours.cs" />
+    <Compile Include="Sections\Instances\Behavior.cs" />
+    <Compile Include="Sections\DemoCodeSection.cs" />
+    <Compile Include="Sections\Instances\DemoInstances.cs" />
+    <Compile Include="Sections\DemoInstanceInfoSection.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Resources\128x128" />
+    <None Include="Resources\128x1281" />
+    <None Include="Resources\128x128mip" />
+    <None Include="Resources\128x128mip1" />
+    <None Include="Resources\128x256" />
+    <None Include="Resources\128x2561" />
+    <None Include="Resources\128x32mip" />
+    <None Include="Resources\128x32mip1" />
+    <None Include="Resources\128x64mip" />
+    <None Include="Resources\128x64mip1" />
+    <None Include="Resources\16x16mip" />
+    <None Include="Resources\16x16mip1" />
+    <None Include="Resources\32x16mip" />
+    <None Include="Resources\32x16mip1" />
+    <None Include="Resources\32x32mip" />
+    <None Include="Resources\32x32mip1" />
+    <None Include="Resources\32x64" />
+    <None Include="Resources\32x641" />
+    <None Include="Resources\32x64mip" />
+    <None Include="Resources\32x64mip1" />
+    <None Include="Resources\32x8" />
+    <None Include="Resources\32x81" />
+    <None Include="Resources\64x32mip" />
+    <None Include="Resources\64x32mip1" />
+    <None Include="Resources\64x64" />
+    <None Include="Resources\64x641" />
+    <None Include="Resources\64x64mip" />
+    <None Include="Resources\64x64mip1" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
