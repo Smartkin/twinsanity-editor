@@ -2,7 +2,7 @@
 >Original made by Neo_Kesha
 
 ## Description
-This is a rewrite of Crash Twinsanity Editor, simply called TwinsanityEditor. The original was writtern in VB and is now in the process of
+This is a rewrite of Crash Twinsanity Editor, simply called TwinsanityEditor(TE). The original was writtern in VB and is now in the process of
 being converted to C#.
 
 ## Current issues
@@ -15,7 +15,7 @@ Here's the list of what needs to be fixed:
 - Scenery viewing
 - Sounds playback
 - Buttons working properly(In the future design overwhole)
-- Ditch any unnecessery dependcy(OpenTK should be suffice for sounds and graphics)
+- Ditch any unnecessery dependency(OpenTK should be suffice for sounds and graphics)
 - General code refactoing(Having 6k lines of code file doesn't seem practical)
 - More API optimizations?
 - A lot of other small stuff
