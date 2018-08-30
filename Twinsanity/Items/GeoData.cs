@@ -1,141 +1,148 @@
-using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Twinsanity
 {
     public class GeoData : BaseItem
     {
-        public new string NodeName = "Geometrical Data";
-        public uint SomeNumber;
-        public int TriggerSize;
-        public int GroupSize;
-        public int IndexSize;
-        public int VertexSize;
-        public VertexMaps[] Triggers;
-        public OffsetsMapping[] Groups;
-        public Index[] Indexes;
-        public RM2.Coordinate4[] Vertex;
+        private new readonly string NodeName = "Collision Tree Data";
+        private uint someNumber;
+        //private uint triggerCount;
+        //private uint groupCount;
+        //private uint triCount;
+        //private uint vertexCount;
+        private List<Trigger> triggers;
+        private List<GroupInfo> groups;
+        private List<ColTri> tris;
+        private List<Pos> vertices;
+        private readonly uint mask = 0x3FFFF;
+
+        public GeoData()
+        {
+            this.triggers = new List<Trigger>();
+            this.groups = new List<GroupInfo>();
+            this.tris = new List<ColTri>();
+            this.vertices = new List<Pos>();
+        }
 
         /// <summary>
         /// Update the object's memory stream with new data
         /// </summary>
         public override void UpdateStream()
         {
-            System.IO.MemoryStream NewStream = new System.IO.MemoryStream();
-            System.IO.BinaryWriter NSWriter = new System.IO.BinaryWriter(NewStream);
-            if (SomeNumber > 0)
+            MemoryStream stream = new MemoryStream();
+            BinaryWriter writer = new BinaryWriter(stream);
+            if (someNumber > 0)
             {
-                NSWriter.Write(SomeNumber);
-                NSWriter.Write(TriggerSize);
-                NSWriter.Write(GroupSize);
-                NSWriter.Write(IndexSize);
-                NSWriter.Write(VertexSize);
-                for (int i = 0; i <= TriggerSize - 1; i++)
+                writer.Write(someNumber);
+                writer.Write(triggers.Count);
+                writer.Write(groups.Count);
+                writer.Write(tris.Count);
+                writer.Write(vertices.Count);
+                for (int i = 0; i < triggers.Count; i++)
                 {
-                    NSWriter.Write(Triggers[i].X1);
-                    NSWriter.Write(Triggers[i].Y1);
-                    NSWriter.Write(Triggers[i].Z1);
-                    NSWriter.Write(Triggers[i].Flag1);
-                    NSWriter.Write(Triggers[i].X2);
-                    NSWriter.Write(Triggers[i].Y2);
-                    NSWriter.Write(Triggers[i].Z2);
-                    NSWriter.Write(Triggers[i].Flag2);
+                    writer.Write(triggers[i].X1);
+                    writer.Write(triggers[i].Y1);
+                    writer.Write(triggers[i].Z1);
+                    writer.Write(triggers[i].Flag1);
+                    writer.Write(triggers[i].X2);
+                    writer.Write(triggers[i].Y2);
+                    writer.Write(triggers[i].Z2);
+                    writer.Write(triggers[i].Flag2);
                 }
-                for (int i = 0; i <= GroupSize - 1; i++)
+                for (int i = 0; i < groups.Count; i++)
                 {
-                    NSWriter.Write(Groups[i].Size);
-                    NSWriter.Write(Groups[i].Offset);
+                    writer.Write(groups[i].Size);
+                    writer.Write(groups[i].Offset);
                 }
-                for (int i = 0; i <= IndexSize - 1; i++)
+                for (int i = 0; i < tris.Count; i++)
                 {
-                    ulong tmp1, tmp2, tmp3, tmp4;
-                    tmp1 = Indexes[i].Vert1;
-                    tmp2 = Indexes[i].Vert2;
-                    tmp2 = tmp2 << 18;
-                    tmp3 = Indexes[i].Vert3;
-                    tmp3 = tmp3 << 36;
-                    tmp4 = Indexes[i].Surface;
-                    tmp4 = tmp4 << 54;
-                    Indexes[i].legacy = tmp1 + tmp2 + tmp3 + tmp4;
-                    NSWriter.Write(Indexes[i].legacy);
+                    long tmp = (tris[i].Vert1 & mask) |
+                        ((tris[i].Vert2 & mask) << 18) |
+                        ((tris[i].Vert3 & mask) << 18*2) |
+                        ((tris[i].Surface & 0x3FF) << 18*3);
+                    writer.Write(tmp);
                 }
-                for (int i = 0; i <= VertexSize - 1; i++)
+                for (int i = 0; i < vertices.Count; i++)
                 {
-                    NSWriter.Write(Vertex[i].X);
-                    NSWriter.Write(Vertex[i].Y);
-                    NSWriter.Write(Vertex[i].Z);
-                    NSWriter.Write(Vertex[i].W);
+                    writer.Write(vertices[i].X);
+                    writer.Write(vertices[i].Y);
+                    writer.Write(vertices[i].Z);
+                    writer.Write(vertices[i].W);
                 }
             }
             else
-                NSWriter.Write(ByteStream.ToArray());
-            ByteStream = NewStream;
+                writer.Write(ByteStream.ToArray());
+            ByteStream = stream;
             Size = (uint)ByteStream.Length;
         }
 
         /////////PARENTS FUNCTION//////////
         protected override void DataUpdate()
         {
-            System.IO.BinaryReader BSReader = new System.IO.BinaryReader(ByteStream);
+            BinaryReader BSReader = new BinaryReader(ByteStream);
             ByteStream.Position = 0;
             if (ByteStream.Length > 0)
             {
-                SomeNumber = BSReader.ReadUInt32();
-                TriggerSize = (int)BSReader.ReadUInt32();
-                GroupSize = (int)BSReader.ReadUInt32();
-                IndexSize = (int)BSReader.ReadUInt32();
-                VertexSize = (int)BSReader.ReadUInt32();
-                Array.Resize(ref Triggers, TriggerSize);
-                Array.Resize(ref Groups, GroupSize);
-                Array.Resize(ref Indexes, IndexSize);
-                Array.Resize(ref Vertex, VertexSize);
-                for (int i = 0; i <= TriggerSize - 1; i++)
+                someNumber = BSReader.ReadUInt32();
+                uint triggerCount = BSReader.ReadUInt32();
+                uint groupCount = BSReader.ReadUInt32();
+                uint triCount = BSReader.ReadUInt32();
+                uint vertexCount = BSReader.ReadUInt32();
+                triggers.Clear();
+                groups.Clear();
+                tris.Clear();
+                vertices.Clear();
+                for (int i = 0; i < triggerCount; i++)
                 {
-                    Triggers[i].X1 = BSReader.ReadSingle();
-                    Triggers[i].Y1 = BSReader.ReadSingle();
-                    Triggers[i].Z1 = BSReader.ReadSingle();
-                    Triggers[i].Flag1 = BSReader.ReadInt32();
-                    Triggers[i].X2 = BSReader.ReadSingle();
-                    Triggers[i].Y2 = BSReader.ReadSingle();
-                    Triggers[i].Z2 = BSReader.ReadSingle();
-                    Triggers[i].Flag2 = BSReader.ReadInt32();
+                    Trigger trg = new Trigger
+                    {
+                        X1 = BSReader.ReadSingle(),
+                        Y1 = BSReader.ReadSingle(),
+                        Z1 = BSReader.ReadSingle(),
+                        Flag1 = BSReader.ReadInt32(),
+                        X2 = BSReader.ReadSingle(),
+                        Y2 = BSReader.ReadSingle(),
+                        Z2 = BSReader.ReadSingle(),
+                        Flag2 = BSReader.ReadInt32()
+                    };
+                    triggers.Add(trg);
                 }
-                for (int i = 0; i <= GroupSize - 1; i++)
+                for (int i = 0; i < groupCount; i++)
                 {
-                    Groups[i].Size = BSReader.ReadUInt32();
-                    Groups[i].Offset = BSReader.ReadUInt32();
+                    GroupInfo grp = new GroupInfo
+                    {
+                        Size = BSReader.ReadUInt32(),
+                        Offset = BSReader.ReadUInt32()
+                    };
+                    groups.Add(grp);
                 }
-                for (int i = 0; i <= IndexSize - 1; i++)
+                for (int i = 0; i < triCount; i++)
                 {
-                    Indexes[i].legacy = BSReader.ReadUInt64();
-                    ulong mask = 262143;
-                    ulong tmp = Indexes[i].legacy & mask;
-                    Indexes[i].Vert1 = (uint)tmp;
-                    mask = mask << 18;
-                    tmp = Indexes[i].legacy & mask;
-                    tmp = tmp >> 18;
-                    Indexes[i].Vert2 = (uint)tmp;
-                    mask = mask << 18;
-                    tmp = Indexes[i].legacy & mask;
-                    tmp = tmp >> 36;
-                    Indexes[i].Vert3 = (uint)tmp;
-                    mask = 1023;
-                    mask = mask << 54;
-                    tmp = Indexes[i].legacy & mask;
-                    tmp = tmp >> 54;
-                    Indexes[i].Surface = (uint)tmp;
+                    ColTri tri = new ColTri();
+                    ulong legacy = BSReader.ReadUInt64();
+                    tri.Vert1 = (int)(legacy & mask);
+                    tri.Vert2 = (int)((legacy >> 18 * 1) & mask);
+                    tri.Vert3 = (int)((legacy >> 18 * 2) & mask);
+                    tri.Surface = (int)(legacy >> (18 * 3));
+                    tris.Add(tri);
                 }
-                for (int i = 0; i <= VertexSize - 1; i++)
+                for (int i = 0; i < vertexCount; i++)
                 {
-                    Vertex[i].X = BSReader.ReadSingle();
-                    Vertex[i].Y = BSReader.ReadSingle();
-                    Vertex[i].Z = BSReader.ReadSingle();
-                    Vertex[i].W = BSReader.ReadSingle();
+                    Pos vtx = new Pos
+                    {
+                        X = BSReader.ReadSingle(),
+                        Y = BSReader.ReadSingle(),
+                        Z = BSReader.ReadSingle(),
+                        W = BSReader.ReadSingle()
+                    };
+                    vertices.Add(vtx);
                 }
             }
         }
 
         #region STRUCTURES
-        public struct VertexMaps
+        public struct Trigger
         {
             public float X1;
             public float Y1;
@@ -146,19 +153,39 @@ namespace Twinsanity
             public float Z2;
             public int Flag2;
         }
-        public struct OffsetsMapping
+        public struct GroupInfo
         {
             public uint Size;
             public uint Offset;
         }
-        public struct Index
+        public struct ColTri
         {
-            public ulong legacy;
-            public uint Vert1;
-            public uint Vert2;
-            public uint Vert3;
-            public uint Surface;
+            public int Vert1;
+            public int Vert2;
+            public int Vert3;
+            public int Surface;
         }
         #endregion
+
+        public List<Trigger> Triggers
+        {
+            get { return triggers; }
+            set { triggers = value; }
+        }
+        public List<GroupInfo> Groups
+        {
+            get { return groups; }
+            set { groups = value; }
+        }
+        public List<ColTri> Tris
+        {
+            get { return tris; }
+            set { tris = value; }
+        }
+        public List<Pos> Vertices
+        {
+            get { return vertices; }
+            set { vertices = value; }
+        }
     }
 }

@@ -30,6 +30,23 @@
             The main entry point for the application.
             </summary>
         </member>
+        <member name="F:TwinsaityEditor.Viewers.RMViewer.components">
+            <summary> 
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:TwinsaityEditor.Viewers.RMViewer.Dispose(System.Boolean)">
+            <summary> 
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:TwinsaityEditor.Viewers.RMViewer.InitializeComponent">
+            <summary> 
+            Required method for Designer support - do not modify 
+            the contents of this method with the code editor.
+            </summary>
+        </member>
         <member name="T:TwinsaityEditor.Context">
             <summary>
             Contains windows of every worker, utility, viewer and editor for public use

@@ -396,7 +396,7 @@
         </member>
         <member name="F:Twinsanity.BaseObject.Size">
             <summary>
-            Size if the object in bytes in the chunk
+            Size of the object in bytes in the chunk
             </summary>
         </member>
         <member name="F:Twinsanity.BaseObject.Offset">
@@ -593,92 +593,6 @@
         <member name="T:Twinsanity.RM2.Coordinate4">
             <summary>
             Represents a simple 4D coordinate
-            </summary>
-        </member>
-        <member name="T:Twinsanity.Twinsanity.My.Resources.Resources">
-            <summary>
-            Класс ресурса со строгой типизацией для поиска локализованных строк и т.д.
-            </summary>
-        </member>
-        <member name="P:Twinsanity.Twinsanity.My.Resources.Resources.ResourceManager">
-            <summary>
-            Возвращает кэшированный экземпляр ResourceManager, использованный этим классом.
-            </summary>
-        </member>
-        <member name="P:Twinsanity.Twinsanity.My.Resources.Resources.Culture">
-            <summary>
-            Перезаписывает свойство CurrentUICulture текущего потока для всех
-            обращений к ресурсу с помощью этого класса ресурса со строгой типизацией.
-            </summary>
-        </member>
-        <member name="P:Twinsanity.Twinsanity.My.Resources.Resources._128x128">
-            <summary>
-            Поиск локализованного ресурса типа System.Byte[].
-            </summary>
-        </member>
-        <member name="P:Twinsanity.Twinsanity.My.Resources.Resources._128x128mip">
-            <summary>
-            Поиск локализованного ресурса типа System.Byte[].
-            </summary>
-        </member>
-        <member name="P:Twinsanity.Twinsanity.My.Resources.Resources._128x256">
-            <summary>
-            Поиск локализованного ресурса типа System.Byte[].
-            </summary>
-        </member>
-        <member name="P:Twinsanity.Twinsanity.My.Resources.Resources._128x32mip">
-            <summary>
-            Поиск локализованного ресурса типа System.Byte[].
-            </summary>
-        </member>
-        <member name="P:Twinsanity.Twinsanity.My.Resources.Resources._128x64mip">
-            <summary>
-            Поиск локализованного ресурса типа System.Byte[].
-            </summary>
-        </member>
-        <member name="P:Twinsanity.Twinsanity.My.Resources.Resources._16x16mip">
-            <summary>
-            Поиск локализованного ресурса типа System.Byte[].
-            </summary>
-        </member>
-        <member name="P:Twinsanity.Twinsanity.My.Resources.Resources._32x16mip">
-            <summary>
-            Поиск локализованного ресурса типа System.Byte[].
-            </summary>
-        </member>
-        <member name="P:Twinsanity.Twinsanity.My.Resources.Resources._32x32mip">
-            <summary>
-            Поиск локализованного ресурса типа System.Byte[].
-            </summary>
-        </member>
-        <member name="P:Twinsanity.Twinsanity.My.Resources.Resources._32x64">
-            <summary>
-            Поиск локализованного ресурса типа System.Byte[].
-            </summary>
-        </member>
-        <member name="P:Twinsanity.Twinsanity.My.Resources.Resources._32x64mip">
-            <summary>
-            Поиск локализованного ресурса типа System.Byte[].
-            </summary>
-        </member>
-        <member name="P:Twinsanity.Twinsanity.My.Resources.Resources._32x8">
-            <summary>
-            Поиск локализованного ресурса типа System.Byte[].
-            </summary>
-        </member>
-        <member name="P:Twinsanity.Twinsanity.My.Resources.Resources._64x32mip">
-            <summary>
-            Поиск локализованного ресурса типа System.Byte[].
-            </summary>
-        </member>
-        <member name="P:Twinsanity.Twinsanity.My.Resources.Resources._64x64">
-            <summary>
-            Поиск локализованного ресурса типа System.Byte[].
-            </summary>
-        </member>
-        <member name="P:Twinsanity.Twinsanity.My.Resources.Resources._64x64mip">
-            <summary>
-            Поиск локализованного ресурса типа System.Byte[].
             </summary>
         </member>
         <member name="T:Twinsanity.Texture">

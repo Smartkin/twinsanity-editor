@@ -4,6 +4,8 @@ using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using OpenTK.Audio.OpenAL;
 using Twinsanity;
+using TwinsaityEditor.Viewers;
+using System.Collections.Generic;
 
 namespace TwinsaityEditor
 {
@@ -367,7 +369,7 @@ namespace TwinsaityEditor
             TreeView1.Nodes.Add("Level Root");
             TreeView1.TopNode.Tag = "Root";
             TreeView1.BeginUpdate();
-            for (int i = 0; i <= LevelData.Records - 1; i++)
+            for (int i = 0; i < LevelData.Records; i++)
             {
                 TreeNode node = TreeView1.TopNode;
                 LoadNode(LevelData.Item[i], ref node);
@@ -4494,37 +4496,38 @@ namespace TwinsaityEditor
         }
         private void GeoDataVisualiserToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            for (int i = 0; i <= LevelData.Records - 1; i++)
+            for (int i = 0; i < LevelData.Records; i++)
             {
                 if (LevelData.Item[i].ID == 9)
                 {
+                    Form frm = new Form();
+                    RMViewer viewer = new RMViewer((GeoData)LevelData.Item[i]);
+                    viewer.Dock = DockStyle.Fill;
+                    frm.Controls.Add(viewer);
+                    frm.Show();
                     //_viewGeoData.GD = (GeoData)LevelData.Item[i];
                     //_viewGeoData.Show();
                     //_viewGeoData.Init();
-                    i = LevelData.Records;
+                    break;
                 }
             }
         }
 
         private void ClearGeoDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i <= LevelData.Records - 1; i++)
+            for (int i = 0; i < LevelData.Records; i++)
             {
                 if (LevelData.Item[i].ID == 9)
                 {
                     GeoData GD = (GeoData)LevelData.Item[i];
-                    GD.TriggerSize = 0;
-                    GD.GroupSize = 0;
-                    GD.IndexSize = 0;
-                    GD.VertexSize = 0;
-                    Array.Resize(ref GD.Triggers, GD.TriggerSize);
-                    Array.Resize(ref GD.Groups, GD.GroupSize);
-                    Array.Resize(ref GD.Indexes, GD.IndexSize);
-                    Array.Resize(ref GD.Vertex, GD.VertexSize);
+                    GD.Triggers.Clear();
+                    GD.Groups.Clear();
+                    GD.Tris.Clear();
+                    GD.Vertices.Clear();
                     LevelData.Item[i] = GD;
                     RefreshSummary();
                     LevelData.Put_Item(GD, CalculateIndexes(TreeView1.Nodes[0].Nodes[i]));
-                    i = LevelData.Records;
+                    break;
                 }
             }
         }
@@ -4535,37 +4538,38 @@ namespace TwinsaityEditor
             {
                 System.IO.FileStream ObjFile = new System.IO.FileStream(ObjSingleSave.FileName, System.IO.FileMode.Create, System.IO.FileAccess.Write);
                 System.IO.StreamWriter ObjWriter = new System.IO.StreamWriter(ObjFile);
-                GeoData GD = new GeoData();
-                for (int i = 0; i <= LevelData.Records - 1; i++)
+                GeoData GD = null;
+                for (int i = 0; i < LevelData.Records; i++)
                 {
                     if (LevelData.Item[i].ID == 9)
                     {
                         GD = (GeoData)LevelData.Item[i];
-                        i = LevelData.Records;
+                        break;
                     }
                 }
+                if (GD == null) return;
                 ObjWriter.WriteLine("# Converted by TwinsanityEditor, made by Neo_Kesha");
                 ObjWriter.WriteLine("# All rights on game assets belongs to their respective authors");
                 ObjWriter.WriteLine("o TwinsanityMap");
-                for (int i = 0; i <= GD.VertexSize - 1; i++)
-                    ObjWriter.WriteLine("v " + GD.Vertex[i].X.ToString() + " " + GD.Vertex[i].Y.ToString() + " " + GD.Vertex[i].Z.ToString() + " 1,0");
-                for (int i = 0; i <= GD.IndexSize - 1; i++)
+                for (int i = 0; i < GD.Vertices.Count; i++)
+                    ObjWriter.WriteLine("v " + GD.Vertices[i].X.ToString() + " " + GD.Vertices[i].Y.ToString() + " " + GD.Vertices[i].Z.ToString() + " 1,0");
+                for (int i = 0; i < GD.Tris.Count; i++)
                 {
                     /*Microsoft.DirectX.Vector3 vert1 = new Microsoft.DirectX.Vector3(GD.Vertex[GD.Indexes[i].Vert1].X, GD.Vertex[GD.Indexes[i].Vert1].Y, GD.Vertex[GD.Indexes[i].Vert1].Z);
                     Microsoft.DirectX.Vector3 vert2 = new Microsoft.DirectX.Vector3(GD.Vertex[GD.Indexes[i].Vert2].X, GD.Vertex[GD.Indexes[i].Vert2].Y, GD.Vertex[GD.Indexes[i].Vert2].Z);
                     Microsoft.DirectX.Vector3 vert3 = new Microsoft.DirectX.Vector3(GD.Vertex[GD.Indexes[i].Vert3].X, GD.Vertex[GD.Indexes[i].Vert3].Y, GD.Vertex[GD.Indexes[i].Vert3].Z);
                     Microsoft.DirectX.Vector3 normal = CalcNormal(vert1, vert2, vert3);*/
-                    OpenTK.Vector3 vert1 = new OpenTK.Vector3(GD.Vertex[GD.Indexes[i].Vert1].X, GD.Vertex[GD.Indexes[i].Vert1].Y, GD.Vertex[GD.Indexes[i].Vert1].Z);
-                    OpenTK.Vector3 vert2 = new OpenTK.Vector3(GD.Vertex[GD.Indexes[i].Vert2].X, GD.Vertex[GD.Indexes[i].Vert2].Y, GD.Vertex[GD.Indexes[i].Vert2].Z);
-                    OpenTK.Vector3 vert3 = new OpenTK.Vector3(GD.Vertex[GD.Indexes[i].Vert3].X, GD.Vertex[GD.Indexes[i].Vert3].Y, GD.Vertex[GD.Indexes[i].Vert3].Z);
+                    OpenTK.Vector3 vert1 = new OpenTK.Vector3(GD.Vertices[GD.Tris[i].Vert1].X, GD.Vertices[GD.Tris[i].Vert1].Y, GD.Vertices[GD.Tris[i].Vert1].Z);
+                    OpenTK.Vector3 vert2 = new OpenTK.Vector3(GD.Vertices[GD.Tris[i].Vert2].X, GD.Vertices[GD.Tris[i].Vert2].Y, GD.Vertices[GD.Tris[i].Vert2].Z);
+                    OpenTK.Vector3 vert3 = new OpenTK.Vector3(GD.Vertices[GD.Tris[i].Vert3].X, GD.Vertices[GD.Tris[i].Vert3].Y, GD.Vertices[GD.Tris[i].Vert3].Z);
                     OpenTK.Vector3 normal = CalcNormal(vert1, vert2, vert3);
                     ObjWriter.WriteLine("vn " + normal.X.ToString() + " " + normal.Y.ToString() + " " + normal.Z.ToString());
                 }
-                for (int i = 0; i <= GD.IndexSize - 1; i++)
-                    ObjWriter.WriteLine("f " + (GD.Indexes[i].Vert1 + 1).ToString() + "//" + (i + 1).ToString() + " " + (GD.Indexes[i].Vert2 + 1).ToString() + "//" + (i + 1).ToString() + " " + (GD.Indexes[i].Vert3 + 1).ToString() + "//" + (i + 1).ToString());
+                for (int i = 0; i < GD.Tris.Count; i++)
+                    ObjWriter.WriteLine("f " + (GD.Tris[i].Vert1 + 1).ToString() + "//" + (i + 1).ToString() + " " + (GD.Tris[i].Vert2 + 1).ToString() + "//" + (i + 1).ToString() + " " + (GD.Tris[i].Vert3 + 1).ToString() + "//" + (i + 1).ToString());
                 ObjWriter.Close();
                 ObjFile.Close();
-                Interaction.MsgBox("Done");
+                Interaction.MsgBox("Done.");
             }
         }
         public OpenTK.Vector3 CalcNormal(OpenTK.Vector3 Vert1, OpenTK.Vector3 Vert2, OpenTK.Vector3 Vert3)
@@ -4584,99 +4588,71 @@ namespace TwinsaityEditor
             float nz = ((x1 - x2) * (y1 - y3)) - ((y1 - y2) * (x1 - x3));
             return new OpenTK.Vector3(nx, ny, nz);
         }
-        private struct mdl_surf
-        {
-            public uint SID;
-            public uint Num;
-        }
-        private struct face
-        {
-            public uint Vert1;
-            public uint Vert2;
-            public uint Vert3;
-        }
+
         private void ExportOBJLayeredToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (ObjSingleSave.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                mdl_surf[] surface = new mdl_surf[] { };
-                GeoData GD = new GeoData();
-                for (int i = 0; i <= LevelData.Records - 1; i++)
+                List<int> surfaces = new List<int>();
+                GeoData GD = null;
+                for (int i = 0; i < LevelData.Records; i++)
                 {
                     if (LevelData.Item[i].ID == 9)
                     {
                         GD = (GeoData)LevelData.Item[i];
-                        i = LevelData.Records;
+                        break;
                     }
                 }
-                for (int i = 0; i <= GD.IndexSize - 1; i++)
+                if (GD == null) return;
+                for (int i = 0; i < GD.Tris.Count; i++)
                 {
-                    bool flag = true;
-                    for (int j = 0; j <= surface.Length - 1; j++)
-                    {
-                        if (surface[j].SID == GD.Indexes[i].Surface)
-                        {
-                            flag = false;
-                            surface[j].Num += 1;
-                            j = surface.Length;
-                        }
-                    }
-                    if (flag)
-                    {
-                        Array.Resize(ref surface, surface.Length + 1);
-                        surface[surface.Length - 1].SID = GD.Indexes[i].Surface;
-                        surface[surface.Length - 1].Num = 0;
-                    }
+                    while (GD.Tris[i].Surface > surfaces.Count)
+                        surfaces.Add(0);
+                    surfaces[GD.Tris[i].Surface]++;
                 }
                 string Name = ObjSingleSave.FileName.Split('.')[0];
-                for (int i = 0; i <= surface.Length - 1; i++)
+                for (int i = 0; i < surfaces.Count && surfaces[i] > 0; i++)
                 {
-                    System.IO.FileStream ObjFile = new System.IO.FileStream(Name + "ID" + surface[i].SID.ToString() + ".obj", System.IO.FileMode.Create, System.IO.FileAccess.Write);
+                    System.IO.FileStream ObjFile = new System.IO.FileStream(Name + "ID" + i.ToString() + ".obj", System.IO.FileMode.Create, System.IO.FileAccess.Write);
                     System.IO.StreamWriter ObjWriter = new System.IO.StreamWriter(ObjFile);
-                    uint[] Convert = new uint[GD.VertexSize - 1 + 1];
+                    HashSet<int> vertexHash = new HashSet<int>(); //we create a hashset to prevent duplicate entries
                     uint cnt = 0;
-                    ObjWriter.WriteLine("# Map Surface ID " + surface[i].SID.ToString());
+                    ObjWriter.WriteLine("# Map Surface ID " + i.ToString());
                     ObjWriter.WriteLine("# Converted by TwinsanityEditor, made by Neo_Kesha");
-                    ObjWriter.WriteLine("# All rights on game assets belongs to their respective authors");
-                    for (int j = 0; j <= GD.IndexSize - 1; j++)
-                    {
-                        if (GD.Indexes[j].Surface == surface[i].SID)
+                    ObjWriter.WriteLine("# All rights on game assets belongs to their respective owners");
+                    for (int j = 0; j < GD.Tris.Count; j++)
+                        if (GD.Tris[j].Surface == i)
                         {
-                            cnt += 1;
-                            Convert[GD.Indexes[j].Vert1] = cnt;
-                            ObjWriter.WriteLine("v " + GD.Vertex[GD.Indexes[j].Vert1].X.ToString() + " " + GD.Vertex[GD.Indexes[j].Vert1].Y.ToString() + " " + GD.Vertex[GD.Indexes[j].Vert1].Z.ToString() + " 1,0");
-                            cnt += 1;
-                            Convert[GD.Indexes[j].Vert2] = cnt;
-                            ObjWriter.WriteLine("v " + GD.Vertex[GD.Indexes[j].Vert2].X.ToString() + " " + GD.Vertex[GD.Indexes[j].Vert2].Y.ToString() + " " + GD.Vertex[GD.Indexes[j].Vert2].Z.ToString() + " 1,0");
-                            cnt += 1;
-                            Convert[GD.Indexes[j].Vert3] = cnt;
-                            ObjWriter.WriteLine("v " + GD.Vertex[GD.Indexes[j].Vert3].X.ToString() + " " + GD.Vertex[GD.Indexes[j].Vert3].Y.ToString() + " " + GD.Vertex[GD.Indexes[j].Vert3].Z.ToString() + " 1,0");
+                            vertexHash.Add(GD.Tris[j].Vert1);
+                            vertexHash.Add(GD.Tris[j].Vert2);
+                            vertexHash.Add(GD.Tris[j].Vert3);
                         }
-                    }
-                    cnt = 0;
-                    for (int j = 0; j <= GD.GroupSize - 1; j++)
+                    List<int> vertexList = new List<int>(vertexHash); //we convert the hash to a usable list, this is MUCH faster
+                    for (int j = 0; j < vertexList.Count; j++)
+                        ObjWriter.WriteLine("v " + GD.Vertices[vertexList[j]].X.ToString() + " " + GD.Vertices[vertexList[j]].Y.ToString() + " " + GD.Vertices[vertexList[j]].Z.ToString() + " 1,0");
+                    for (int j = 0; j < GD.Groups.Count; j++)
                     {
-                        bool Flag = false;
-                        for (int k = (int)GD.Groups[j].Offset; k <= GD.Groups[j].Offset + GD.Groups[j].Size - 1; k++)
+                        bool flag = false;
+                        for (int k = (int)GD.Groups[j].Offset; k < GD.Groups[j].Offset + GD.Groups[j].Size; k++)
                         {
-                            if (GD.Indexes[k].Surface == surface[i].SID)
+                            if (GD.Tris[k].Surface == i)
                             {
-                                if (!Flag)
+                                if (!flag)
                                 {
-                                    Flag = true;
+                                    flag = true;
                                     ObjWriter.WriteLine("o G" + j.ToString());
                                 }
-                                cnt += 1;
+                                cnt++;
                                 /*Microsoft.DirectX.Vector3 V1 = new Microsoft.DirectX.Vector3(GD.Vertex[GD.Indexes[k].Vert1].X, GD.Vertex[GD.Indexes[k].Vert1].Y, GD.Vertex[GD.Indexes[k].Vert1].Z);
                                 Microsoft.DirectX.Vector3 V2 = new Microsoft.DirectX.Vector3(GD.Vertex[GD.Indexes[k].Vert2].X, GD.Vertex[GD.Indexes[k].Vert2].Y, GD.Vertex[GD.Indexes[k].Vert2].Z);
                                 Microsoft.DirectX.Vector3 V3 = new Microsoft.DirectX.Vector3(GD.Vertex[GD.Indexes[k].Vert3].X, GD.Vertex[GD.Indexes[k].Vert3].Y, GD.Vertex[GD.Indexes[k].Vert3].Z);
                                 Microsoft.DirectX.Vector3 Normal = CalcNormal(V1, V2, V3);*/
-                                OpenTK.Vector3 vert1 = new OpenTK.Vector3(GD.Vertex[GD.Indexes[i].Vert1].X, GD.Vertex[GD.Indexes[i].Vert1].Y, GD.Vertex[GD.Indexes[i].Vert1].Z);
-                                OpenTK.Vector3 vert2 = new OpenTK.Vector3(GD.Vertex[GD.Indexes[i].Vert2].X, GD.Vertex[GD.Indexes[i].Vert2].Y, GD.Vertex[GD.Indexes[i].Vert2].Z);
-                                OpenTK.Vector3 vert3 = new OpenTK.Vector3(GD.Vertex[GD.Indexes[i].Vert3].X, GD.Vertex[GD.Indexes[i].Vert3].Y, GD.Vertex[GD.Indexes[i].Vert3].Z);
+                                OpenTK.Vector3 vert1 = new OpenTK.Vector3(GD.Vertices[GD.Tris[k].Vert1].X, GD.Vertices[GD.Tris[k].Vert1].Y, GD.Vertices[GD.Tris[k].Vert1].Z);
+                                OpenTK.Vector3 vert2 = new OpenTK.Vector3(GD.Vertices[GD.Tris[k].Vert2].X, GD.Vertices[GD.Tris[k].Vert2].Y, GD.Vertices[GD.Tris[k].Vert2].Z);
+                                OpenTK.Vector3 vert3 = new OpenTK.Vector3(GD.Vertices[GD.Tris[k].Vert3].X, GD.Vertices[GD.Tris[k].Vert3].Y, GD.Vertices[GD.Tris[k].Vert3].Z);
                                 OpenTK.Vector3 normal = CalcNormal(vert1, vert2, vert3);
                                 ObjWriter.WriteLine("vn " + normal.X.ToString() + " " + normal.Y.ToString() + " " + normal.Z.ToString());
-                                ObjWriter.WriteLine("f " + Convert[GD.Indexes[k].Vert1].ToString() + "//" + cnt.ToString() + " " + Convert[GD.Indexes[k].Vert2].ToString() + "//" + cnt.ToString() + " " + Convert[GD.Indexes[k].Vert3].ToString() + "//" + cnt.ToString());
+                                ObjWriter.WriteLine("f " + GD.Vertices[GD.Tris[k].Vert1].ToString() + "//" + cnt.ToString() + " " + GD.Vertices[GD.Tris[k].Vert2].ToString() + "//" + cnt.ToString() + " " + GD.Vertices[GD.Tris[k].Vert3].ToString() + "//" + cnt.ToString());
                             }
                         }
                     }
@@ -4685,6 +4661,12 @@ namespace TwinsaityEditor
                 }
                 Interaction.MsgBox("Done");
             }
+        }
+        private struct Face
+        {
+            public int Vert1;
+            public int Vert2;
+            public int Vert3;
         }
         private struct Group
         {
@@ -4702,16 +4684,16 @@ namespace TwinsaityEditor
                     if (LevelData.Item[i].ID == 9)
                     {
                         GD = (GeoData)LevelData.Item[i];
-                        i = LevelData.Records;
+                        break;
                     }
                 }
-                uint SID = uint.Parse(ToolStripMenuItem3.Text);
-                OpenTK.Vector3[] Verts = new OpenTK.Vector3[] { };
-                face[] Faces = new face[] { };
-                Group[] Groups = new Group[] { };
-                uint Shift = (uint)GD.VertexSize;
-                uint IndShift = (uint)GD.IndexSize;
-                uint GroupShift = (uint)GD.GroupSize;
+                int SID = int.Parse(ToolStripMenuItem3.Text);
+                List<OpenTK.Vector3> verts = new List<OpenTK.Vector3>();
+                List<Face> faces = new List<Face>();
+                List<Group> groups = new List<Group>();
+                int Shift = GD.Vertices.Count;
+                int IndShift = GD.Tris.Count;
+                int GroupShift = GD.Groups.Count;
                 System.IO.FileStream ObjFile = new System.IO.FileStream(OpenObj.FileName, System.IO.FileMode.Open, System.IO.FileAccess.Read);
                 System.IO.StreamReader ObjReader = new System.IO.StreamReader(ObjFile);
                 while (!ObjReader.EndOfStream)
@@ -4720,74 +4702,64 @@ namespace TwinsaityEditor
                     switch (str[0])
                     {
                         case "v":
-                            {
-                                Array.Resize(ref Verts, Verts.Length + 1);
-                                Verts[Verts.Length - 1] = new OpenTK.Vector3(float.Parse(str[1].Replace(".", ",")), float.Parse(str[2].Replace(".", ",")), float.Parse(str[3].Replace(".", ",")));
-                                break;
-                            }
-
+                            verts.Add(new OpenTK.Vector3(float.Parse(str[1].Replace(".", ",")), float.Parse(str[2].Replace(".", ",")), float.Parse(str[3].Replace(".", ","))));
+                            break;
                         case "f":
                             {
-                                Array.Resize(ref Faces, Faces.Length + 1);
-                                Faces[Faces.Length - 1].Vert1 = uint.Parse(str[1].Split('/')[0]);
-                                Faces[Faces.Length - 1].Vert2 = uint.Parse(str[2].Split('/')[0]);
-                                Faces[Faces.Length - 1].Vert3 = uint.Parse(str[3].Split('/')[0]);
-                                Groups[Groups.Length - 1].Size += 1;
+                                faces.Add(new Face { Vert1 = int.Parse(str[1].Split('/')[0]), Vert2 = int.Parse(str[2].Split('/')[0]), Vert3 = int.Parse(str[3].Split('/')[0]) });
+                                Group grp = groups[groups.Count - 1];
+                                grp.Size += 1;
                                 break;
                             }
-
                         case "o":
-                            {
-                                Array.Resize(ref Groups, Groups.Length + 1);
-                                if (Groups.Length > 1)
-                                    Groups[Groups.Length - 1].Offset = Groups[Groups.Length - 2].Offset + Groups[Groups.Length - 2].Size;
-                                break;
-                            }
+                            groups.Add(new Group { Offset = groups.Count > 1 ? (groups[groups.Count - 2].Offset + groups[groups.Count - 2].Size) : 0 });
+                            break;
                     }
                 }
-                Array.Resize(ref GD.Vertex, GD.Vertex.Length + Verts.Length);
-                for (int i = 0; i <= Verts.Length - 1; i++)
+                for (int i = 0; i < verts.Count; i++)
                 {
-                    GD.Vertex[Shift + i].X = Verts[i].X;
-                    GD.Vertex[Shift + i].Y = Verts[i].Y;
-                    GD.Vertex[Shift + i].Z = Verts[i].Z;
+                    GD.Vertices.Add(new Pos { X = verts[i].X, Y = verts[i].Y, Z = verts[i].Z });
                 }
-                Array.Resize(ref GD.Indexes, GD.Indexes.Length + Faces.Length);
-                for (int i = 0; i <= Faces.Length - 1; i++)
+                for (int i = 0; i < faces.Count; i++)
                 {
-                    GD.Indexes[IndShift + i].Vert1 = Faces[i].Vert1 - 1 + Shift;
-                    GD.Indexes[IndShift + i].Vert2 = Faces[i].Vert2 - 1 + Shift;
-                    GD.Indexes[IndShift + i].Vert3 = Faces[i].Vert3 - 1 + Shift;
-                    GD.Indexes[IndShift + i].Surface = SID;
+                    GD.Tris.Add(new GeoData.ColTri
+                    {
+                        Vert1 = faces[i].Vert1 - 1 + Shift,
+                        Vert2 = faces[i].Vert2 - 1 + Shift,
+                        Vert3 = faces[i].Vert3 - 1 + Shift,
+                        Surface = SID
+                    });
                 }
-                Array.Resize(ref GD.Groups, GD.Groups.Length + Groups.Length);
-                for (int i = 0; i <= Groups.Length - 1; i++)
+                for (int i = 0; i < groups.Count; i++)
                 {
-                    GD.Groups[GroupShift + i].Offset = Groups[i].Offset + IndShift;
-                    GD.Groups[GroupShift + i].Size = Groups[i].Size;
+                    GD.Groups.Add(new GeoData.GroupInfo
+                    {
+                        Offset = (uint)(groups[i].Offset + IndShift),
+                        Size = groups[i].Size
+                    });
                 }
-                GD.VertexSize = GD.Vertex.Length;
-                GD.IndexSize = GD.Indexes.Length;
-                GD.GroupSize = GD.Groups.Length;
-                GD.TriggerSize = GD.GroupSize * 2 - 1;
-                GeoData.VertexMaps[] NewTriggers = new GeoData.VertexMaps[GD.GroupSize * 2 - 1 + 1];
+                //GD.VertexSize = GD.Vertex.Length;
+                //GD.IndexSize = GD.Indexes.Length;
+                //GD.GroupSize = GD.Groups.Length;
+                //GD.TriggerSize = GD.GroupSize * 2 - 1;
+                List<GeoData.Trigger> NewTriggers = new List<GeoData.Trigger>(GD.Groups.Count * 2);
                 TreeView TriggerTree = new TreeView();
                 TriggerTree.Nodes.Add("E", "0");
-                int x = (int)Math.Truncate(Math.Log(GD.GroupSize, 2));
-                for (int i = 0; i <= x - 1; i++)
+                int x = (int)Math.Truncate(Math.Log(GD.Groups.Count, 2));
+                for (int i = 0; i < x; i++)
                     ExpandLevel(TriggerTree.Nodes[0]);
-                ExpandEngings(TriggerTree, (uint)(GD.GroupSize - Math.Pow(2, x)));
+                ExpandEngings(TriggerTree, (uint)(GD.Groups.Count - Math.Pow(2, x)));
                 TreeTemp = 1;
                 CalcIDs(TriggerTree.Nodes[0]);
-                Tree2Trigger(TriggerTree.Nodes[0], ref NewTriggers);
-                TriggerRecalculate(ref NewTriggers, ref GD.Groups, ref GD.Indexes, ref GD.Vertex, 0);
+                Tree2Trigger(TriggerTree.Nodes[0], NewTriggers);
+                TriggerRecalculate(NewTriggers, GD.Groups, GD.Tris, GD.Vertices, 0);
                 GD.Triggers = NewTriggers;
                 for (int i = 0; i <= LevelData.Records - 1; i++)
                 {
                     if (LevelData.Item[i].ID == 9)
                     {
                         LevelData.Put_Item(GD, CalculateIndexes(TreeView1.Nodes[0].Nodes[i]));
-                        i = LevelData.Records;
+                        break;
                     }
                 }
                 ObjReader.Close();
@@ -4840,38 +4812,41 @@ namespace TwinsaityEditor
                 TreeTemp += 1;
             }
         }
-        private void Tree2Trigger(TreeNode Node, ref GeoData.VertexMaps[] Triggers)
+        private void Tree2Trigger(TreeNode Node, List<GeoData.Trigger> Triggers)
         {
             if (Node.Name == "P")
             {
-                Triggers[uint.Parse(Node.Text)].Flag1 = int.Parse(Node.Nodes[0].Text);
-                Triggers[uint.Parse(Node.Text)].Flag2 = int.Parse(Node.Nodes[1].Text);
-                Tree2Trigger(Node.Nodes[0], ref Triggers);
-                Tree2Trigger(Node.Nodes[1], ref Triggers);
+                GeoData.Trigger trg = Triggers[int.Parse(Node.Text)];
+                trg.Flag1 = int.Parse(Node.Nodes[0].Text);
+                trg.Flag2 = int.Parse(Node.Nodes[1].Text);
+                Tree2Trigger(Node.Nodes[0], Triggers);
+                Tree2Trigger(Node.Nodes[1], Triggers);
             }
             else if (Node.Name == "E")
             {
-                Triggers[uint.Parse(Node.Text)].Flag1 = -int.Parse(Node.Nodes[0].Text);
-                Triggers[uint.Parse(Node.Text)].Flag2 = -int.Parse(Node.Nodes[0].Text);
+                GeoData.Trigger trg = Triggers[int.Parse(Node.Text)];
+                trg.Flag1 = -int.Parse(Node.Nodes[0].Text);
+                trg.Flag2 = -int.Parse(Node.Nodes[0].Text);
             }
         }
-        private void TriggerRecalculate(ref GeoData.VertexMaps[] Triggers, ref GeoData.OffsetsMapping[] Groups, ref GeoData.Index[] Indexes, ref RM2.Coordinate4[] Vertexes, uint index)
+        private void TriggerRecalculate(List<GeoData.Trigger> Triggers, List<GeoData.GroupInfo> Groups, List<GeoData.ColTri> Indexes, List<Pos> Vertexes, int index)
         {
-            if (Triggers[index].Flag1 >= 0)
+            GeoData.Trigger trg = Triggers[index];
+            if (trg.Flag1 >= 0)
             {
-                TriggerRecalculate(ref Triggers, ref Groups, ref Indexes, ref Vertexes, (uint)Triggers[index].Flag1);
-                TriggerRecalculate(ref Triggers, ref Groups, ref Indexes, ref Vertexes, (uint)Triggers[index].Flag2);
-                Triggers[index].X1 = Math.Min(Triggers[Triggers[index].Flag1].X1, Triggers[Triggers[index].Flag2].X1);
-                Triggers[index].Y1 = Math.Min(Triggers[Triggers[index].Flag1].Y1, Triggers[Triggers[index].Flag2].Y1);
-                Triggers[index].Z1 = Math.Min(Triggers[Triggers[index].Flag1].Z1, Triggers[Triggers[index].Flag2].Z1);
-                Triggers[index].X2 = Math.Max(Triggers[Triggers[index].Flag1].X2, Triggers[Triggers[index].Flag2].X2);
-                Triggers[index].Y2 = Math.Max(Triggers[Triggers[index].Flag1].Y2, Triggers[Triggers[index].Flag2].Y2);
-                Triggers[index].Z2 = Math.Max(Triggers[Triggers[index].Flag1].Z2, Triggers[Triggers[index].Flag2].Z2);
+                TriggerRecalculate(Triggers, Groups, Indexes, Vertexes, trg.Flag1);
+                TriggerRecalculate(Triggers, Groups, Indexes, Vertexes, trg.Flag2);
+                trg.X1 = Math.Min(Triggers[trg.Flag1].X1, Triggers[trg.Flag2].X1);
+                trg.Y1 = Math.Min(Triggers[trg.Flag1].Y1, Triggers[trg.Flag2].Y1);
+                trg.Z1 = Math.Min(Triggers[trg.Flag1].Z1, Triggers[trg.Flag2].Z1);
+                trg.X2 = Math.Max(Triggers[trg.Flag1].X2, Triggers[trg.Flag2].X2);
+                trg.Y2 = Math.Max(Triggers[trg.Flag1].Y2, Triggers[trg.Flag2].Y2);
+                trg.Z2 = Math.Max(Triggers[trg.Flag1].Z2, Triggers[trg.Flag2].Z2);
             }
             else
             {
                 float x1 = 0f, x2 = 0f, y1 = 0f, y2 = 0f, z1 = 0f, z2 = 0f;
-                for (int i = (int)Groups[-Triggers[index].Flag1 - 1].Offset; i <= Groups[-Triggers[index].Flag1 - 1].Offset + Groups[-Triggers[index].Flag1 - 1].Size - 1; i++)
+                for (int i = (int)Groups[-trg.Flag1 - 1].Offset; i <= Groups[-trg.Flag1 - 1].Offset + Groups[-trg.Flag1 - 1].Size - 1; i++)
                 {
                     OpenTK.Vector3 a, b, c;
                     a.X = Vertexes[Indexes[i].Vert1].X;
@@ -4908,12 +4883,12 @@ namespace TwinsaityEditor
                     else
                         z2 = Math.Max(z2, Math.Max(a.Z, Math.Min(b.Z, c.Z)));
                 }
-                Triggers[index].X1 = x1;
-                Triggers[index].Y1 = y1;
-                Triggers[index].Z1 = z1;
-                Triggers[index].X2 = x2;
-                Triggers[index].Y2 = y2;
-                Triggers[index].Z2 = z2;
+                trg.X1 = x1;
+                trg.Y1 = y1;
+                trg.Z1 = z1;
+                trg.X2 = x2;
+                trg.Y2 = y2;
+                trg.Z2 = z2;
             }
         }
         private void TexturesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -5285,7 +5260,7 @@ namespace TwinsaityEditor
                 if (LevelData.Item[i].ID == 9)
                 {
                     GD = (GeoData)LevelData.Item[i];
-                    i = LevelData.Records;
+                    break;
                 }
             }
             _utilTriggerTree.Trigg = GD.Triggers;

@@ -5,17 +5,17 @@ using System.Runtime.InteropServices;
 
 namespace TwinsaityEditor
 {
-    static class TwinsanityEditor
+    internal static class TwinsanityEditor
     {
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        internal static void Main()
         {
             //Init OpenTK
-            OpenTK.ToolkitOptions to = new OpenTK.ToolkitOptions { EnableHighResolution = false, Backend = OpenTK.PlatformBackend.PreferNative };
-            OpenTK.Toolkit.Init(to);
+            //OpenTK.ToolkitOptions to = new OpenTK.ToolkitOptions { EnableHighResolution = false, Backend = OpenTK.PlatformBackend.PreferNative };
+            //OpenTK.Toolkit.Init(to);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

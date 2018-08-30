@@ -1,10 +1,10 @@
 ﻿namespace Twinsanity
 {
-    public struct Vector4
+    public struct Pos
     {
         private float x, y, z, w;
 
-        public Vector4(float x, float y, float z, float w) : this()
+        public Pos(float x, float y, float z, float w) : this()
         {
             this.x = x;
             this.y = y;
