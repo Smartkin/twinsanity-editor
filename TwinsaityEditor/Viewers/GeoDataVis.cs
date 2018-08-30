@@ -5,7 +5,6 @@ using OpenTK.Graphics;
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
 using Twinsanity;
-using Color = System.Drawing.Color;
 
 namespace TwinsaityEditor
 {

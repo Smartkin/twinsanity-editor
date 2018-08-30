@@ -8,7 +8,6 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
-using Color = System.Drawing.Color;
 
 /*  CURRENT ISSUES:
  *  Texture applying and rendering is completely wrong, some values need to be normalized for OpenGL

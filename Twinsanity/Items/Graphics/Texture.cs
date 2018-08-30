@@ -1,7 +1,7 @@
 using Microsoft.VisualBasic;
 using System;
 using System.Drawing;
-using Twinsanity.Twinsanity.My.Resources;
+using Twinsanity.Properties;
 
 namespace Twinsanity
 {
