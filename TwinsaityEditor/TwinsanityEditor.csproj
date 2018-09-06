@@ -172,6 +172,70 @@
     <Compile Include="Viewers\ThreeDViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Viewers\ModelViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Editors\PositionEditor.Designer.cs">
+      <DependentUpon>PositionEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\PositionEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\OGIEditor.Designer.cs">
+      <DependentUpon>OGIEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\OGIEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Workers\PSMWorker.Designer.cs">
+      <DependentUpon>PSMWorker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Workers\PSMWorker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Utilities\Randomizer.Designer.cs">
+      <DependentUpon>Randomizer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities\Randomizer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Utilities\Search.Designer.cs">
+      <DependentUpon>Search.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities\Search.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Workers\TextureImport.Designer.cs">
+      <DependentUpon>TextureImport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Workers\TextureImport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Viewers\TextureViewer.Designer.cs">
+      <DependentUpon>TextureViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Viewers\TextureViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\TriggerEditor.Designer.cs">
+      <DependentUpon>TriggerEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\TriggerEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Utilities\TriggerTree.Designer.cs">
+      <DependentUpon>TriggerTree.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities\TriggerTree.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Utilities\TwoIDAsker.Designer.cs">
+      <DependentUpon>TwoIDAsker.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities\TwoIDAsker.cs">
+      <SubType>Form</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainForm.resx">
