@@ -28,7 +28,7 @@ namespace Twinsanity
         public uint Base;
 
         /// <summary>
-        /// 
+        /// Amount of contained items
         /// </summary>
         public int Records;
 
