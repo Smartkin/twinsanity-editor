@@ -7,9 +7,24 @@ namespace Twinsanity
     /// </summary>
     public class RM2
     {
+        /// <summary>
+        /// Header number of the chunk
+        /// </summary>
         public uint Header;
+
+        /// <summary>
+        /// Size of the chunk in bytes
+        /// </summary>
         public uint Size;
+
+        /// <summary>
+        /// Amount of all the items contained in the chunk
+        /// </summary>
         public int Records;
+
+        /// <summary>
+        /// Items of the chunk
+        /// </summary>
         public BaseObject[] Item;
 
         /// <summary>
@@ -679,10 +694,13 @@ namespace Twinsanity
         }
 
         /// <summary>
-        /// Represents a simple 4D coordinate
+        /// Represents quoternion coordinate
         /// </summary>
         public struct Coordinate4
         {
+            /// <summary>
+            /// Coordinates
+            /// </summary>
             public float X, Y, Z, W;
         }
     }
