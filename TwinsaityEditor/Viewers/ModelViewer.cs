@@ -1,14 +1,13 @@
-using System;
-using System.Drawing;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using System.Runtime.InteropServices;
-using Twinsanity;
 using OpenTK;
 using OpenTK.Graphics;
-using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
-using Color = System.Drawing.Color;
+using OpenTK.Input;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
+using Twinsanity;
 
 /*  CURRENT ISSUES:
  *  Texture applying and rendering is completely wrong, some values need to be normalized for OpenGL
@@ -31,7 +30,7 @@ namespace TwinsaityEditor
         private bool Ready = false;
         private Color[] colors = new[] { Color.Gray, Color.Green, Color.Red, Color.DarkBlue, Color.Yellow, Color.Pink, Color.DarkCyan, Color.DarkGreen, Color.DarkRed, Color.Brown, Color.DarkMagenta, Color.Orange, Color.DarkSeaGreen, Color.Bisque, Color.Coral };
         private _Map[][] Map;
-        private Color[] Emission;
+        private List<Color> Emission;
 
         private List<int> _bufferID = new List<int>();
         private List<int> _arrayID = new List<int>();
@@ -61,7 +60,6 @@ namespace TwinsaityEditor
             this.Text = "Converting Model to VertexBuffer. Please wait...";
             Application.DoEvents();
             
-
             // Init Textures
             Bitmap BMP = new Bitmap(Properties.Resources.boatguy);
             Textures = new int[Textures.Length + Model.SubModels];
@@ -92,13 +90,12 @@ namespace TwinsaityEditor
 
             for (int i = 0; i <= Model.SubModels - 1; i++)
                 Vertexes += Model.SubModel[i].Vertexes;
-
-            Array.Resize(ref Emission, Vertexes);
-            int cnt = 0;
-            var positions = new Vector3[Vertexes];
-            var normals = new Vector3[Vertexes];
-            var uvs = new Vector2[Vertexes];
-            var verteces = new _VertexFormat[Vertexes];
+            
+            Emission = new List<Color>();
+            //var positions = new List<Vector3>();
+            //var normals = new List<Vector3>();
+            //var uvs = new List<Vector2>();
+            var verteces = new List<_VertexFormat>();
             var indices = new uint[Vertexes];
             for (int i = 0; i < Model.SubModels; i++)
             {
@@ -113,40 +110,36 @@ namespace TwinsaityEditor
                             VertexData[cnt].Normal = new Vector3(Model.SubModel[i].Group[j].UV[k].X, Model.SubModel[i].Group[j].UV[k].Y, Model.SubModel[i].Group[j].UV[k].Z);
                         else
                             VertexData[cnt].Normal = new Vector3(-Model.SubModel[i].Group[j].Weight[k].X, -Model.SubModel[i].Group[j].Weight[k].Y, -Model.SubModel[i].Group[j].Weight[k].Z);*/
-                        positions[cnt].X = Model.SubModel[i].Group[j].Vertex[k].X;
-                        positions[cnt].Y = Model.SubModel[i].Group[j].Vertex[k].Y;
-                        positions[cnt].Z = Model.SubModel[i].Group[j].Vertex[k].Z;
+                        var positions = new Vector3(Model.SubModel[i].Group[j].Vertex[k].X, Model.SubModel[i].Group[j].Vertex[k].Y, Model.SubModel[i].Group[j].Vertex[k].Z);
 
                         //vertexes[cnt].Position *= 10;
 
+                        Vector3 normals;
                         if (Model.SubModel[i].Group[j].UV.Length > k)
-                            normals[cnt] = new Vector3(Model.SubModel[i].Group[j].UV[k].X, Model.SubModel[i].Group[j].UV[k].Y, Model.SubModel[i].Group[j].UV[k].Z);
+                            normals = new Vector3(Model.SubModel[i].Group[j].UV[k].X, Model.SubModel[i].Group[j].UV[k].Y, Model.SubModel[i].Group[j].UV[k].Z);
                         else
-                            normals[cnt] = new Vector3(-Model.SubModel[i].Group[j].Weight[k].X, -Model.SubModel[i].Group[j].Weight[k].Y, -Model.SubModel[i].Group[j].Weight[k].Z);
+                            normals = new Vector3(-Model.SubModel[i].Group[j].Weight[k].X, -Model.SubModel[i].Group[j].Weight[k].Y, -Model.SubModel[i].Group[j].Weight[k].Z);
 
                         if (Model.SubModel[i].Group[j].Shit.Length > k)
                         {
                             uint c = Model.SubModel[i].Group[j].Shit[k];
                             byte a, r, g, b;
                             r = (byte)(c & 0xFF);
-                            g = (byte)((c & 0xFF00) >> 8);
-                            b = (byte)((c & 0xFF0000) >> 16);
-                            a = (byte)((c & 0xFF000000) >> 24);
-                            Emission[cnt] = Color.FromArgb(a, r, g, b);
+                            g = (byte)((c >> 8) & 0xFF);
+                            b = (byte)((c >> 16) & 0xFF);
+                            a = (byte)((c >> 24) & 0xFF);
+                            Emission.Add(Color.FromArgb(a, r, g, b));
                         }
                         else
-                            Emission[cnt] = Color.Gray;
+                            Emission.Add(Color.Gray);
 
-                        uvs[cnt].X = Model.SubModel[i].Group[j].Weight[k].X;
-                        uvs[cnt].Y = 1 - Model.SubModel[i].Group[j].Weight[k].Y;
-                        uvs[cnt].X *= Model.SubModel[i].Group[j].Weight[k].Z;
-                        uvs[cnt].Y *= Model.SubModel[i].Group[j].Weight[k].Z;
+                        var uvs = new Vector2(Model.SubModel[i].Group[j].Weight[k].X * Model.SubModel[i].Group[j].Weight[k].Z, 1 - Model.SubModel[i].Group[j].Weight[k].Y * Model.SubModel[i].Group[j].Weight[k].Z);
 
-                        verteces[cnt].Position = positions[cnt];
-                        verteces[cnt].Normal = normals[cnt];
-                        verteces[cnt].UV = uvs[cnt];
-
-                        cnt++;
+                        var vertex = new _VertexFormat();
+                        vertex.Position = positions;
+                        vertex.Normal = normals;
+                        vertex.UV = uvs;
+                        verteces.Add(vertex);
                     }
                 }
 
@@ -169,7 +162,7 @@ namespace TwinsaityEditor
 
             }
 
-            VBuffer = verteces;
+            VBuffer = verteces.ToArray();
 
             IBuffer = indices;
 

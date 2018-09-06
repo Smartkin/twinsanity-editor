@@ -13,7 +13,7 @@ namespace Twinsanity
         public uint ID;
 
         /// <summary>
-        /// Size if the object in bytes in the chunk
+        /// Size of the object in bytes in the chunk
         /// </summary>
         public uint Size;
 
