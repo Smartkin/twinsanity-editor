@@ -19,9 +19,11 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>Twinsanity.xml</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
     <Prefer32Bit>false</Prefer32Bit>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,7 +31,8 @@
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>Twinsanity.xml</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
@@ -63,21 +66,8 @@
   <ItemGroup>
     <Compile Include="ADPCM.cs" />
     <Compile Include="BDArchive.cs" />
-    <Compile Include="Items\Code\Animation.cs" />
-    <Compile Include="Items\Code\DemoGameObject.cs" />
-    <Compile Include="Items\Graphics\ID4Model.cs" />
-    <Compile Include="Items\Graphics\ID5Model.cs" />
-    <Compile Include="Items\Graphics\Terrain.cs" />
-    <Compile Include="Items\Instances\DemoInstance.cs" />
-    <Compile Include="Items\Instances\Trigger.cs" />
-    <Compile Include="Items\Instances\Position.cs" />
-    <Compile Include="Items\Instances\FuckingShit.cs" />
-    <Compile Include="Items\Instances\Path.cs" />
-    <Compile Include="Items\Instances\SurfaceBehaviour.cs" />
-    <Compile Include="Items\Instances\Behavior.cs" />
-    <Compile Include="Items\GeoData.cs" />
-    <Compile Include="Items\Scenery.cs" />
-    <Compile Include="Items\SubChunk.cs" />
+    <Compile Include="Items\TwinsItem.cs" />
+    <Compile Include="Items\ColData.cs" />
     <Compile Include="MetaData.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -89,6 +79,9 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Sections\TwinsSection.cs" />
+    <Compile Include="TwinsFile.cs" />
+    <Compile Include="Types.cs" />
     <Compile Include="PSM.cs" />
     <Compile Include="Sections\Code\Animations.cs" />
     <Compile Include="Sections\BaseSection.cs" />

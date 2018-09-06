@@ -34,8 +34,8 @@ namespace Twinsanity
                 while ((cnt < withBlock.Vertexes) && (ByteStream.Position < offset + withBlock.BlockSize))
                 {
                     var withBlock1 = new _Group();
-                    //Array.Resize(ref withBlock1.UV, 0);
-                    //Array.Resize(ref withBlock1.Shit, 0);
+                    Array.Resize(ref withBlock1.UV, 0);
+                    Array.Resize(ref withBlock1.Shit, 0);
                     withBlock1.SomeNum1 = BSReader.ReadUInt32();
                     withBlock1.Vertexes = BSReader.ReadByte();
                     cnt += withBlock1.Vertexes;

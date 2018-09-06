@@ -4,6 +4,8 @@ using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using OpenTK.Audio.OpenAL;
 using Twinsanity;
+using TwinsaityEditor.Viewers;
+using System.Collections.Generic;
 
 namespace TwinsaityEditor
 {
@@ -196,7 +198,7 @@ namespace TwinsaityEditor
         #endregion
 
         #region PUBLIC_DATA
-        public RM2 LevelData = new RM2();
+        public TwinsFile fileData = new TwinsFile();
         public Context context;
         #endregion
         #region PRIVATE_MEMBERS
@@ -333,14 +335,14 @@ namespace TwinsaityEditor
             if (OpenLevel.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 if (OpenLevel.FilterIndex == 1)
-                    LevelData.LoadRM2(OpenLevel.FileName);
+                    fileData.LoadRM2File(OpenLevel.FileName);
                 else if (OpenLevel.FilterIndex == 2)
-                    LevelData.LoadSM2(OpenLevel.FileName);
+                    fileData.LoadSM2(OpenLevel.FileName);
                 else if (OpenLevel.FilterIndex == 3)
-                    LevelData.LoadDemoRM2(OpenLevel.FileName);
+                    fileData.LoadDemoRM2File(OpenLevel.FileName);
                 LoadTree();
                 //_viewGeoData.VBuffer = null;
-                this.Text = "Twinsaity Editor by Neo_Kesha [" + OpenLevel.FileName + "] ";
+                Text = "Twinsaity Editor by Neo_Kesha [" + OpenLevel.FileName + "] ";
             }
         }
 
@@ -367,10 +369,10 @@ namespace TwinsaityEditor
             TreeView1.Nodes.Add("Level Root");
             TreeView1.TopNode.Tag = "Root";
             TreeView1.BeginUpdate();
-            for (int i = 0; i <= LevelData.Records - 1; i++)
+            for (int i = 0; i < fileData.Records; i++)
             {
                 TreeNode node = TreeView1.TopNode;
-                LoadNode(LevelData.Item[i], ref node);
+                LoadNode(fileData.Item[i], ref node);
                 TreeView1.TopNode = node;
             }
             TreeView1.EndUpdate();
@@ -910,7 +912,7 @@ namespace TwinsaityEditor
             System.IO.BinaryWriter Writer = new System.IO.BinaryWriter(TextBuffer);
             if (TreeView1.SelectedNode.Tag.ToString() == "Item")
             {
-                BaseItem Obj = (BaseItem)LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode));
+                BaseItem Obj = (BaseItem)fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode));
                 Writer.Write("ID: " + Obj.ID.ToString() + " " + Obj.NodeName);
                 Writer.Write("Offset: " + Obj.Offset.ToString() + " Base: " + Obj.Base.ToString() + " Size: " + Obj.Size.ToString());
                 if (Obj is GameObject)
@@ -927,7 +929,7 @@ namespace TwinsaityEditor
                 {
                     Twinsanity.GC GC = (Twinsanity.GC)Obj;
                     Writer.Write("Model: " + GC.Model.ToString());
-                    Materials MTLs = (Materials)LevelData.Item[0]._Item[1];
+                    Materials MTLs = (Materials)fileData.Item[0]._Item[1];
                     for (int i = 0; i <= GC.MaterialNumber - 1; i++)
                     {
                         for (int j = 0; j <= MTLs._Item.Length - 1; j++)
@@ -953,7 +955,7 @@ namespace TwinsaityEditor
                 else if (Obj is Instance)
                 {
                     Instance INST = (Instance)Obj;
-                    GameObjects Objects = (GameObjects)LevelData.Item[1]._Item[0];
+                    GameObjects Objects = (GameObjects)fileData.Item[1]._Item[0];
                     GameObject GO = null;
                     for (int i = 0; i <= Objects._Item.Length - 1; i++)
                     {
@@ -972,11 +974,11 @@ namespace TwinsaityEditor
                 else if (Obj is Trigger)
                 {
                     Trigger TRIG = (Trigger)Obj;
-                    InstanceInfoSection IIF = (InstanceInfoSection)LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent.Parent));
+                    InstanceInfoSection IIF = (InstanceInfoSection)fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent.Parent));
                     for (int k = 0; k <= TRIG.SectionSize - 1; k++)
                     {
                         Instance INST = (Instance)IIF._Item[6]._Item[TRIG.SomeUInt16[k]];
-                        GameObjects Objects = (GameObjects)LevelData.Item[1]._Item[0];
+                        GameObjects Objects = (GameObjects)fileData.Item[1]._Item[0];
                         GameObject GO = null;
                         for (int i = 0; i <= Objects._Item.Length - 1; i++)
                         {
@@ -1036,7 +1038,7 @@ namespace TwinsaityEditor
             }
             else
             {
-                BaseSection Obj = (BaseSection)LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode));
+                BaseSection Obj = (BaseSection)fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode));
                 Writer.Write("ID: " + Obj.ID.ToString() + " " + Obj.NodeName);
                 Writer.Write("Offset: " + Obj.Offset.ToString() + " Base: " + Obj.Base.ToString() + " Size: " + Obj.Size.ToString());
                 int n;
@@ -1053,7 +1055,7 @@ namespace TwinsaityEditor
         private void Button1_Click(object sender, EventArgs e)
         {
             int[] indexes = CalculateIndexes(TreeView1.SelectedNode);
-            System.IO.MemoryStream Obj = LevelData.Get_Stream(indexes);
+            System.IO.MemoryStream Obj = fileData.Get_Stream(indexes);
             _viewHex.LoadHEX(Obj.ToArray(), (int)Obj.Length, 0);
             _viewHex.Show();
         }
@@ -1086,7 +1088,7 @@ namespace TwinsaityEditor
         private void Extract(TreeNode Node, string Path)
         {
             int[] indexes = CalculateIndexes(Node);
-            System.IO.MemoryStream ObjStream = LevelData.Get_Stream(indexes);
+            System.IO.MemoryStream ObjStream = fileData.Get_Stream(indexes);
             System.IO.FileStream File = new System.IO.FileStream(Path, System.IO.FileMode.Create, System.IO.FileAccess.Write);
             System.IO.BinaryWriter Writer = new System.IO.BinaryWriter(File);
             Writer.Write(ObjStream.ToArray());
@@ -1132,12 +1134,12 @@ namespace TwinsaityEditor
                 System.IO.BinaryWriter Writer = new System.IO.BinaryWriter(Stream);
                 Writer.Write(Reader.ReadBytes((int)File.Length));
                 int[] indexes = CalculateIndexes(TreeView1.SelectedNode);
-                LevelData.Put_Stream(Stream, indexes);
+                fileData.Put_Stream(Stream, indexes);
                 Stream.Dispose();
                 Stream.Close();
                 File.Dispose();
                 File.Close();
-                BaseObject Obj = LevelData.Get_Item(indexes);
+                BaseObject Obj = fileData.Get_Item(indexes);
                 if ((Obj is Material))
                 {
                     Material Mat = (Material)Obj;
@@ -1170,11 +1172,11 @@ namespace TwinsaityEditor
                     System.IO.BinaryWriter Writer = new System.IO.BinaryWriter(Stream);
                     Writer.Write(Reader.ReadBytes((int)File.Length));
                     int[] indexes = CalculateIndexes(TreeView1.SelectedNode);
-                    LevelData.Add_Item(indexes);
+                    fileData.Add_Item(indexes);
                     TreeView1.SelectedNode.Nodes.Add("");
                     indexes = CalculateIndexes(TreeView1.SelectedNode.LastNode);
-                    LevelData.Put_Stream(Stream, indexes);
-                    BaseObject NewObj = LevelData.Get_Item(indexes);
+                    fileData.Put_Stream(Stream, indexes);
+                    BaseObject NewObj = fileData.Get_Item(indexes);
                     if (AddItem.FileNames[j].Contains("ID"))
                     {
                         string[] str = AddItem.FileNames[j].Split('\\');
@@ -1197,13 +1199,13 @@ namespace TwinsaityEditor
                         _utilIDAsker.ShowDialog();
                         NewObj.ID = _utilIDAsker.ID;
                     }
-                    LevelData.Put_Item(NewObj, indexes);
-                    LevelData.Recalculate();
+                    fileData.Put_Item(NewObj, indexes);
+                    fileData.Recalculate();
                     Stream.Dispose();
                     Stream.Close();
                     File.Dispose();
                     File.Close();
-                    BaseObject Obj = LevelData.Get_Item(indexes);
+                    BaseObject Obj = fileData.Get_Item(indexes);
                     if ((Obj is Material))
                     {
                         Material Mat = (Material)Obj;
@@ -1264,10 +1266,10 @@ namespace TwinsaityEditor
         private void Button5_Click(object sender, EventArgs e)
         {
             int[] indexes = CalculateIndexes(TreeView1.SelectedNode);
-            LevelData.Add_Item(indexes);
+            fileData.Add_Item(indexes);
             TreeView1.SelectedNode.Nodes.Add("");
             indexes = CalculateIndexes(TreeView1.SelectedNode.LastNode);
-            BaseObject Obj = LevelData.Get_Item(indexes);
+            BaseObject Obj = fileData.Get_Item(indexes);
             if ((Obj is Material))
             {
                 Material Mat = (Material)Obj;
@@ -1330,11 +1332,11 @@ namespace TwinsaityEditor
         }
         private void Button4_Click(object sender, EventArgs e)
         {
-            BaseItem Obj = (BaseItem)LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode));
+            BaseItem Obj = (BaseItem)fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode));
             if (Obj is SoundDescription)
             {
-                SoundDescriptions Sect = (SoundDescriptions)LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
-                Sound SoundBank = (Sound)LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent.Parent.Nodes[TreeView1.SelectedNode.Parent.Index + 1]));
+                SoundDescriptions Sect = (SoundDescriptions)fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
+                Sound SoundBank = (Sound)fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent.Parent.Nodes[TreeView1.SelectedNode.Parent.Index + 1]));
                 SoundDescription RSB = (SoundDescription)Obj;
                 int D = (int)RSB.SoundSize;
                 int O = (int)RSB.SoundOffset;
@@ -1355,13 +1357,13 @@ namespace TwinsaityEditor
                 SoundBank.ByteStream.Position += D;
                 SBW.Write(SBR.ReadBytes((int)(SoundBank.ByteStream.Length - SoundBank.ByteStream.Position)));
                 SB.Position = 0;
-                LevelData.Put_Stream(SB, CalculateIndexes(TreeView1.SelectedNode.Parent.Parent.Nodes[TreeView1.SelectedNode.Parent.Index + 1]));
-                LevelData.Put_Item(Sect, CalculateIndexes(TreeView1.SelectedNode.Parent));
+                fileData.Put_Stream(SB, CalculateIndexes(TreeView1.SelectedNode.Parent.Parent.Nodes[TreeView1.SelectedNode.Parent.Index + 1]));
+                fileData.Put_Item(Sect, CalculateIndexes(TreeView1.SelectedNode.Parent));
             }
             else
             {
                 int[] indexes = CalculateIndexes(TreeView1.SelectedNode);
-                LevelData.Delete_Item(indexes);
+                fileData.Delete_Item(indexes);
             }
             TreeView1.SelectedNode.Remove();
         }
@@ -1374,21 +1376,21 @@ namespace TwinsaityEditor
             if (System.IO.File.Exists(OpenLevel.FileName))
             {
                 if (Interaction.MsgBox("Rewrite old file?", MsgBoxStyle.YesNo) == MsgBoxResult.Yes)
-                    LevelData.Save(OpenLevel.FileName);
+                    fileData.Save(OpenLevel.FileName);
                 else if (SaveLevel.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                    LevelData.Save(SaveLevel.FileName);
+                    fileData.Save(SaveLevel.FileName);
             }
             else if (SaveLevel.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                LevelData.Save(SaveLevel.FileName);
+                fileData.Save(SaveLevel.FileName);
         }
         private void SaveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (SaveLevel.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                LevelData.Save(SaveLevel.FileName);
+                fileData.Save(SaveLevel.FileName);
         }
         private void Button6_Click(object sender, EventArgs e)
         {
-            object Obj = LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode));
+            object Obj = fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode));
             if (Obj is GameObjects)
             {
                 if (ImportGO.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -1434,7 +1436,7 @@ namespace TwinsaityEditor
                                         TreeNode Node = Textures;
                                         string NodeName = "Texture ";
                                         bool flag = true;
-                                        BaseSection BS = (BaseSection)LevelData.Get_Item(CalculateIndexes(Node));
+                                        BaseSection BS = (BaseSection)fileData.Get_Item(CalculateIndexes(Node));
                                         for (int i = 0; i <= BS.Records - 1; i++)
                                         {
                                             if (uint.Parse(ID) == BS._Item[i].ID)
@@ -1445,7 +1447,7 @@ namespace TwinsaityEditor
                                         }
                                         if (flag)
                                         {
-                                            LevelData.Add_Item(CalculateIndexes(Node));
+                                            fileData.Add_Item(CalculateIndexes(Node));
                                             Node.Nodes.Add(NodeName + "ID: " + ID);
                                             Node.LastNode.Tag = "Item";
                                             System.IO.FileStream Stream = new System.IO.FileStream(Path + ItemPath, System.IO.FileMode.Open, System.IO.FileAccess.Read);
@@ -1453,10 +1455,10 @@ namespace TwinsaityEditor
                                             System.IO.MemoryStream MStream = new System.IO.MemoryStream();
                                             System.IO.BinaryWriter MStreamW = new System.IO.BinaryWriter(MStream);
                                             MStreamW.Write(StreamR.ReadBytes((int)Stream.Length));
-                                            LevelData.Put_Stream(MStream, CalculateIndexes(Node.LastNode));
-                                            BaseItem ITM = (BaseItem)LevelData.Get_Item(CalculateIndexes(Node.LastNode));
+                                            fileData.Put_Stream(MStream, CalculateIndexes(Node.LastNode));
+                                            BaseItem ITM = (BaseItem)fileData.Get_Item(CalculateIndexes(Node.LastNode));
                                             ITM.ID = uint.Parse(ID);
-                                            LevelData.Put_Item(ITM, CalculateIndexes(Node.LastNode));
+                                            fileData.Put_Item(ITM, CalculateIndexes(Node.LastNode));
                                         }
 
                                         break;
@@ -1467,7 +1469,7 @@ namespace TwinsaityEditor
                                         TreeNode Node = Materials;
                                         string NodeName = "Material ";
                                         bool flag = true;
-                                        BaseSection BS = (BaseSection)LevelData.Get_Item(CalculateIndexes(Node));
+                                        BaseSection BS = (BaseSection)fileData.Get_Item(CalculateIndexes(Node));
                                         for (int i = 0; i <= BS.Records - 1; i++)
                                         {
                                             if (uint.Parse(ID) == BS._Item[i].ID)
@@ -1478,7 +1480,7 @@ namespace TwinsaityEditor
                                         }
                                         if (flag)
                                         {
-                                            LevelData.Add_Item(CalculateIndexes(Node));
+                                            fileData.Add_Item(CalculateIndexes(Node));
                                             Node.Nodes.Add(NodeName + "ID: " + ID);
                                             Node.LastNode.Tag = "Item";
                                             System.IO.FileStream Stream = new System.IO.FileStream(Path + ItemPath, System.IO.FileMode.Open, System.IO.FileAccess.Read);
@@ -1486,10 +1488,10 @@ namespace TwinsaityEditor
                                             System.IO.MemoryStream MStream = new System.IO.MemoryStream();
                                             System.IO.BinaryWriter MStreamW = new System.IO.BinaryWriter(MStream);
                                             MStreamW.Write(StreamR.ReadBytes((int)Stream.Length));
-                                            LevelData.Put_Stream(MStream, CalculateIndexes(Node.LastNode));
-                                            BaseItem ITM = (BaseItem)LevelData.Get_Item(CalculateIndexes(Node.LastNode));
+                                            fileData.Put_Stream(MStream, CalculateIndexes(Node.LastNode));
+                                            BaseItem ITM = (BaseItem)fileData.Get_Item(CalculateIndexes(Node.LastNode));
                                             ITM.ID = uint.Parse(ID);
-                                            LevelData.Put_Item(ITM, CalculateIndexes(Node.LastNode));
+                                            fileData.Put_Item(ITM, CalculateIndexes(Node.LastNode));
                                         }
 
                                         break;
@@ -1500,7 +1502,7 @@ namespace TwinsaityEditor
                                         TreeNode Node = Models;
                                         string NodeName = "Model ";
                                         bool flag = true;
-                                        BaseSection BS = (BaseSection)LevelData.Get_Item(CalculateIndexes(Node));
+                                        BaseSection BS = (BaseSection)fileData.Get_Item(CalculateIndexes(Node));
                                         for (int i = 0; i <= BS.Records - 1; i++)
                                         {
                                             if (uint.Parse(ID) == BS._Item[i].ID)
@@ -1511,7 +1513,7 @@ namespace TwinsaityEditor
                                         }
                                         if (flag)
                                         {
-                                            LevelData.Add_Item(CalculateIndexes(Node));
+                                            fileData.Add_Item(CalculateIndexes(Node));
                                             Node.Nodes.Add(NodeName + "ID: " + ID);
                                             Node.LastNode.Tag = "Item";
                                             System.IO.FileStream Stream = new System.IO.FileStream(Path + ItemPath, System.IO.FileMode.Open, System.IO.FileAccess.Read);
@@ -1519,10 +1521,10 @@ namespace TwinsaityEditor
                                             System.IO.MemoryStream MStream = new System.IO.MemoryStream();
                                             System.IO.BinaryWriter MStreamW = new System.IO.BinaryWriter(MStream);
                                             MStreamW.Write(StreamR.ReadBytes((int)Stream.Length));
-                                            LevelData.Put_Stream(MStream, CalculateIndexes(Node.LastNode));
-                                            BaseItem ITM = (BaseItem)LevelData.Get_Item(CalculateIndexes(Node.LastNode));
+                                            fileData.Put_Stream(MStream, CalculateIndexes(Node.LastNode));
+                                            BaseItem ITM = (BaseItem)fileData.Get_Item(CalculateIndexes(Node.LastNode));
                                             ITM.ID = uint.Parse(ID);
-                                            LevelData.Put_Item(ITM, CalculateIndexes(Node.LastNode));
+                                            fileData.Put_Item(ITM, CalculateIndexes(Node.LastNode));
                                         }
 
                                         break;
@@ -1533,7 +1535,7 @@ namespace TwinsaityEditor
                                         TreeNode Node = GCs;
                                         string NodeName = "GC ";
                                         bool flag = true;
-                                        BaseSection BS = (BaseSection)LevelData.Get_Item(CalculateIndexes(Node));
+                                        BaseSection BS = (BaseSection)fileData.Get_Item(CalculateIndexes(Node));
                                         for (int i = 0; i <= BS.Records - 1; i++)
                                         {
                                             if (uint.Parse(ID) == BS._Item[i].ID)
@@ -1544,7 +1546,7 @@ namespace TwinsaityEditor
                                         }
                                         if (flag)
                                         {
-                                            LevelData.Add_Item(CalculateIndexes(Node));
+                                            fileData.Add_Item(CalculateIndexes(Node));
                                             Node.Nodes.Add(NodeName + "ID: " + ID);
                                             Node.LastNode.Tag = "Item";
                                             System.IO.FileStream Stream = new System.IO.FileStream(Path + ItemPath, System.IO.FileMode.Open, System.IO.FileAccess.Read);
@@ -1552,10 +1554,10 @@ namespace TwinsaityEditor
                                             System.IO.MemoryStream MStream = new System.IO.MemoryStream();
                                             System.IO.BinaryWriter MStreamW = new System.IO.BinaryWriter(MStream);
                                             MStreamW.Write(StreamR.ReadBytes((int)Stream.Length));
-                                            LevelData.Put_Stream(MStream, CalculateIndexes(Node.LastNode));
-                                            BaseItem ITM = (BaseItem)LevelData.Get_Item(CalculateIndexes(Node.LastNode));
+                                            fileData.Put_Stream(MStream, CalculateIndexes(Node.LastNode));
+                                            BaseItem ITM = (BaseItem)fileData.Get_Item(CalculateIndexes(Node.LastNode));
                                             ITM.ID = uint.Parse(ID);
-                                            LevelData.Put_Item(ITM, CalculateIndexes(Node.LastNode));
+                                            fileData.Put_Item(ITM, CalculateIndexes(Node.LastNode));
                                         }
 
                                         break;
@@ -1566,7 +1568,7 @@ namespace TwinsaityEditor
                                         TreeNode Node = ID4;
                                         string NodeName = "ID4Graphics ";
                                         bool flag = true;
-                                        BaseSection BS = (BaseSection)LevelData.Get_Item(CalculateIndexes(Node));
+                                        BaseSection BS = (BaseSection)fileData.Get_Item(CalculateIndexes(Node));
                                         for (int i = 0; i <= BS.Records - 1; i++)
                                         {
                                             if (uint.Parse(ID) == BS._Item[i].ID)
@@ -1577,7 +1579,7 @@ namespace TwinsaityEditor
                                         }
                                         if (flag)
                                         {
-                                            LevelData.Add_Item(CalculateIndexes(Node));
+                                            fileData.Add_Item(CalculateIndexes(Node));
                                             Node.Nodes.Add(NodeName + "ID: " + ID);
                                             Node.LastNode.Tag = "Item";
                                             System.IO.FileStream Stream = new System.IO.FileStream(Path + ItemPath, System.IO.FileMode.Open, System.IO.FileAccess.Read);
@@ -1585,10 +1587,10 @@ namespace TwinsaityEditor
                                             System.IO.MemoryStream MStream = new System.IO.MemoryStream();
                                             System.IO.BinaryWriter MStreamW = new System.IO.BinaryWriter(MStream);
                                             MStreamW.Write(StreamR.ReadBytes((int)Stream.Length));
-                                            LevelData.Put_Stream(MStream, CalculateIndexes(Node.LastNode));
-                                            BaseItem ITM = (BaseItem)LevelData.Get_Item(CalculateIndexes(Node.LastNode));
+                                            fileData.Put_Stream(MStream, CalculateIndexes(Node.LastNode));
+                                            BaseItem ITM = (BaseItem)fileData.Get_Item(CalculateIndexes(Node.LastNode));
                                             ITM.ID = uint.Parse(ID);
-                                            LevelData.Put_Item(ITM, CalculateIndexes(Node.LastNode));
+                                            fileData.Put_Item(ITM, CalculateIndexes(Node.LastNode));
                                         }
 
                                         break;
@@ -1599,7 +1601,7 @@ namespace TwinsaityEditor
                                         TreeNode Node = ID5;
                                         string NodeName = "ID5Graphics ";
                                         bool flag = true;
-                                        BaseSection BS = (BaseSection)LevelData.Get_Item(CalculateIndexes(Node));
+                                        BaseSection BS = (BaseSection)fileData.Get_Item(CalculateIndexes(Node));
                                         for (int i = 0; i <= BS.Records - 1; i++)
                                         {
                                             if (uint.Parse(ID) == BS._Item[i].ID)
@@ -1610,7 +1612,7 @@ namespace TwinsaityEditor
                                         }
                                         if (flag)
                                         {
-                                            LevelData.Add_Item(CalculateIndexes(Node));
+                                            fileData.Add_Item(CalculateIndexes(Node));
                                             Node.Nodes.Add(NodeName + "ID: " + ID);
                                             Node.LastNode.Tag = "Item";
                                             System.IO.FileStream Stream = new System.IO.FileStream(Path + ItemPath, System.IO.FileMode.Open, System.IO.FileAccess.Read);
@@ -1618,10 +1620,10 @@ namespace TwinsaityEditor
                                             System.IO.MemoryStream MStream = new System.IO.MemoryStream();
                                             System.IO.BinaryWriter MStreamW = new System.IO.BinaryWriter(MStream);
                                             MStreamW.Write(StreamR.ReadBytes((int)Stream.Length));
-                                            LevelData.Put_Stream(MStream, CalculateIndexes(Node.LastNode));
-                                            BaseItem ITM = (BaseItem)LevelData.Get_Item(CalculateIndexes(Node.LastNode));
+                                            fileData.Put_Stream(MStream, CalculateIndexes(Node.LastNode));
+                                            BaseItem ITM = (BaseItem)fileData.Get_Item(CalculateIndexes(Node.LastNode));
                                             ITM.ID = uint.Parse(ID);
-                                            LevelData.Put_Item(ITM, CalculateIndexes(Node.LastNode));
+                                            fileData.Put_Item(ITM, CalculateIndexes(Node.LastNode));
                                         }
 
                                         break;
@@ -1632,7 +1634,7 @@ namespace TwinsaityEditor
                                         TreeNode Node = GO;
                                         string NodeName = "GameObject ";
                                         bool flag = true;
-                                        BaseSection BS = (BaseSection)LevelData.Get_Item(CalculateIndexes(Node));
+                                        BaseSection BS = (BaseSection)fileData.Get_Item(CalculateIndexes(Node));
                                         for (int i = 0; i <= BS.Records - 1; i++)
                                         {
                                             if (uint.Parse(ID) == BS._Item[i].ID)
@@ -1643,7 +1645,7 @@ namespace TwinsaityEditor
                                         }
                                         if (flag)
                                         {
-                                            LevelData.Add_Item(CalculateIndexes(Node));
+                                            fileData.Add_Item(CalculateIndexes(Node));
                                             Node.Nodes.Add(NodeName + "ID: " + ID);
                                             Node.LastNode.Tag = "Item";
                                             System.IO.FileStream Stream = new System.IO.FileStream(Path + ItemPath, System.IO.FileMode.Open, System.IO.FileAccess.Read);
@@ -1651,12 +1653,12 @@ namespace TwinsaityEditor
                                             System.IO.MemoryStream MStream = new System.IO.MemoryStream();
                                             System.IO.BinaryWriter MStreamW = new System.IO.BinaryWriter(MStream);
                                             MStreamW.Write(StreamR.ReadBytes((int)Stream.Length));
-                                            LevelData.Put_Stream(MStream, CalculateIndexes(Node.LastNode));
-                                            BaseItem ITM = (BaseItem)LevelData.Get_Item(CalculateIndexes(Node.LastNode));
+                                            fileData.Put_Stream(MStream, CalculateIndexes(Node.LastNode));
+                                            BaseItem ITM = (BaseItem)fileData.Get_Item(CalculateIndexes(Node.LastNode));
                                             ITM.ID = uint.Parse(ID);
                                             GameObject G = (GameObject)ITM;
                                             Node.LastNode.Text = G.Name;
-                                            LevelData.Put_Item(ITM, CalculateIndexes(Node.LastNode));
+                                            fileData.Put_Item(ITM, CalculateIndexes(Node.LastNode));
                                         }
 
                                         break;
@@ -1667,7 +1669,7 @@ namespace TwinsaityEditor
                                         TreeNode Node = Scripts;
                                         string NodeName = "Script ";
                                         bool flag = true;
-                                        BaseSection BS = (BaseSection)LevelData.Get_Item(CalculateIndexes(Node));
+                                        BaseSection BS = (BaseSection)fileData.Get_Item(CalculateIndexes(Node));
                                         for (int i = 0; i <= BS.Records - 1; i++)
                                         {
                                             if (uint.Parse(ID) == BS._Item[i].ID)
@@ -1678,7 +1680,7 @@ namespace TwinsaityEditor
                                         }
                                         if (flag)
                                         {
-                                            LevelData.Add_Item(CalculateIndexes(Node));
+                                            fileData.Add_Item(CalculateIndexes(Node));
                                             Node.Nodes.Add(NodeName + "ID: " + ID);
                                             Node.LastNode.Tag = "Item";
                                             System.IO.FileStream Stream = new System.IO.FileStream(Path + ItemPath, System.IO.FileMode.Open, System.IO.FileAccess.Read);
@@ -1686,15 +1688,15 @@ namespace TwinsaityEditor
                                             System.IO.MemoryStream MStream = new System.IO.MemoryStream();
                                             System.IO.BinaryWriter MStreamW = new System.IO.BinaryWriter(MStream);
                                             MStreamW.Write(StreamR.ReadBytes((int)Stream.Length));
-                                            LevelData.Put_Stream(MStream, CalculateIndexes(Node.LastNode));
-                                            BaseItem ITM = (BaseItem)LevelData.Get_Item(CalculateIndexes(Node.LastNode));
+                                            fileData.Put_Stream(MStream, CalculateIndexes(Node.LastNode));
+                                            BaseItem ITM = (BaseItem)fileData.Get_Item(CalculateIndexes(Node.LastNode));
                                             ITM.ID = uint.Parse(ID);
                                             Script S = (Script)ITM;
                                             Node.LastNode.Text = S.Name;
                                             if (S.Name == "")
                                                 Node.LastNode.Text = "Script";
                                             Node.LastNode.Text += " ID: " + ID;
-                                            LevelData.Put_Item(ITM, CalculateIndexes(Node.LastNode));
+                                            fileData.Put_Item(ITM, CalculateIndexes(Node.LastNode));
                                         }
 
                                         break;
@@ -1705,7 +1707,7 @@ namespace TwinsaityEditor
                                         TreeNode Node = Animations;
                                         string NodeName = "Animation ";
                                         bool flag = true;
-                                        BaseSection BS = (BaseSection)LevelData.Get_Item(CalculateIndexes(Node));
+                                        BaseSection BS = (BaseSection)fileData.Get_Item(CalculateIndexes(Node));
                                         for (int i = 0; i <= BS.Records - 1; i++)
                                         {
                                             if (uint.Parse(ID) == BS._Item[i].ID)
@@ -1716,7 +1718,7 @@ namespace TwinsaityEditor
                                         }
                                         if (flag)
                                         {
-                                            LevelData.Add_Item(CalculateIndexes(Node));
+                                            fileData.Add_Item(CalculateIndexes(Node));
                                             Node.Nodes.Add(NodeName + "ID: " + ID);
                                             Node.LastNode.Tag = "Item";
                                             System.IO.FileStream Stream = new System.IO.FileStream(Path + ItemPath, System.IO.FileMode.Open, System.IO.FileAccess.Read);
@@ -1724,10 +1726,10 @@ namespace TwinsaityEditor
                                             System.IO.MemoryStream MStream = new System.IO.MemoryStream();
                                             System.IO.BinaryWriter MStreamW = new System.IO.BinaryWriter(MStream);
                                             MStreamW.Write(StreamR.ReadBytes((int)Stream.Length));
-                                            LevelData.Put_Stream(MStream, CalculateIndexes(Node.LastNode));
-                                            BaseItem ITM = (BaseItem)LevelData.Get_Item(CalculateIndexes(Node.LastNode));
+                                            fileData.Put_Stream(MStream, CalculateIndexes(Node.LastNode));
+                                            BaseItem ITM = (BaseItem)fileData.Get_Item(CalculateIndexes(Node.LastNode));
                                             ITM.ID = uint.Parse(ID);
-                                            LevelData.Put_Item(ITM, CalculateIndexes(Node.LastNode));
+                                            fileData.Put_Item(ITM, CalculateIndexes(Node.LastNode));
                                         }
 
                                         break;
@@ -1738,7 +1740,7 @@ namespace TwinsaityEditor
                                         TreeNode Node = OGIs;
                                         string NodeName = "OGI ";
                                         bool flag = true;
-                                        BaseSection BS = (BaseSection)LevelData.Get_Item(CalculateIndexes(Node));
+                                        BaseSection BS = (BaseSection)fileData.Get_Item(CalculateIndexes(Node));
                                         for (int i = 0; i <= BS.Records - 1; i++)
                                         {
                                             if (uint.Parse(ID) == BS._Item[i].ID)
@@ -1749,7 +1751,7 @@ namespace TwinsaityEditor
                                         }
                                         if (flag)
                                         {
-                                            LevelData.Add_Item(CalculateIndexes(Node));
+                                            fileData.Add_Item(CalculateIndexes(Node));
                                             Node.Nodes.Add(NodeName + "ID: " + ID);
                                             Node.LastNode.Tag = "Item";
                                             System.IO.FileStream Stream = new System.IO.FileStream(Path + ItemPath, System.IO.FileMode.Open, System.IO.FileAccess.Read);
@@ -1757,10 +1759,10 @@ namespace TwinsaityEditor
                                             System.IO.MemoryStream MStream = new System.IO.MemoryStream();
                                             System.IO.BinaryWriter MStreamW = new System.IO.BinaryWriter(MStream);
                                             MStreamW.Write(StreamR.ReadBytes((int)Stream.Length));
-                                            LevelData.Put_Stream(MStream, CalculateIndexes(Node.LastNode));
-                                            BaseItem ITM = (BaseItem)LevelData.Get_Item(CalculateIndexes(Node.LastNode));
+                                            fileData.Put_Stream(MStream, CalculateIndexes(Node.LastNode));
+                                            BaseItem ITM = (BaseItem)fileData.Get_Item(CalculateIndexes(Node.LastNode));
                                             ITM.ID = uint.Parse(ID);
-                                            LevelData.Put_Item(ITM, CalculateIndexes(Node.LastNode));
+                                            fileData.Put_Item(ITM, CalculateIndexes(Node.LastNode));
                                         }
 
                                         break;
@@ -1771,7 +1773,7 @@ namespace TwinsaityEditor
                                         TreeNode Node = ID4Scripts;
                                         string NodeName = "Projectile ";
                                         bool flag = true;
-                                        BaseSection BS = (BaseSection)LevelData.Get_Item(CalculateIndexes(Node));
+                                        BaseSection BS = (BaseSection)fileData.Get_Item(CalculateIndexes(Node));
                                         for (int i = 0; i <= BS.Records - 1; i++)
                                         {
                                             if (uint.Parse(ID) == BS._Item[i].ID)
@@ -1782,7 +1784,7 @@ namespace TwinsaityEditor
                                         }
                                         if (flag)
                                         {
-                                            LevelData.Add_Item(CalculateIndexes(Node));
+                                            fileData.Add_Item(CalculateIndexes(Node));
                                             Node.Nodes.Add(NodeName + "ID: " + ID);
                                             Node.LastNode.Tag = "Item";
                                             System.IO.FileStream Stream = new System.IO.FileStream(Path + ItemPath, System.IO.FileMode.Open, System.IO.FileAccess.Read);
@@ -1790,10 +1792,10 @@ namespace TwinsaityEditor
                                             System.IO.MemoryStream MStream = new System.IO.MemoryStream();
                                             System.IO.BinaryWriter MStreamW = new System.IO.BinaryWriter(MStream);
                                             MStreamW.Write(StreamR.ReadBytes((int)Stream.Length));
-                                            LevelData.Put_Stream(MStream, CalculateIndexes(Node.LastNode));
-                                            BaseItem ITM = (BaseItem)LevelData.Get_Item(CalculateIndexes(Node.LastNode));
+                                            fileData.Put_Stream(MStream, CalculateIndexes(Node.LastNode));
+                                            BaseItem ITM = (BaseItem)fileData.Get_Item(CalculateIndexes(Node.LastNode));
                                             ITM.ID = uint.Parse(ID);
-                                            LevelData.Put_Item(ITM, CalculateIndexes(Node.LastNode));
+                                            fileData.Put_Item(ITM, CalculateIndexes(Node.LastNode));
                                         }
 
                                         break;
@@ -1802,7 +1804,7 @@ namespace TwinsaityEditor
                                 case "sfx":
                                     {
                                         bool flag = true;
-                                        SoundDescriptions BS = (SoundDescriptions)LevelData.Get_Item(CalculateIndexes(SFXD));
+                                        SoundDescriptions BS = (SoundDescriptions)fileData.Get_Item(CalculateIndexes(SFXD));
                                         for (int i = 0; i <= BS.Records - 1; i++)
                                         {
                                             if (uint.Parse(ID) == BS._Item[i].ID)
@@ -1813,7 +1815,7 @@ namespace TwinsaityEditor
                                         }
                                         if (flag)
                                         {
-                                            SoundDescriptions SbD = (SoundDescriptions)LevelData.Get_Item(CalculateIndexes(SFXD));
+                                            SoundDescriptions SbD = (SoundDescriptions)fileData.Get_Item(CalculateIndexes(SFXD));
                                             System.IO.FileStream SND = new System.IO.FileStream(Path + ItemPath, System.IO.FileMode.Open, System.IO.FileAccess.Read);
                                             System.IO.BinaryReader _Reader = new System.IO.BinaryReader(SND);
                                             uint _ID = _Reader.ReadUInt32();
@@ -1830,15 +1832,15 @@ namespace TwinsaityEditor
                                             byte[] SoundBank = _Reader.ReadBytes((int)SoundSize);
                                             _Reader.Close();
                                             SND.Close();
-                                            LevelData.Add_Item(CalculateIndexes(SFXD));
+                                            fileData.Add_Item(CalculateIndexes(SFXD));
                                             SFXD.Nodes.Add("SoundDescription ID: " + ID.ToString());
                                             SFXD.LastNode.Tag = "Item";
-                                            SbD = (SoundDescriptions)LevelData.Get_Item(CalculateIndexes(SFXD));
-                                            System.IO.MemoryStream Stream = LevelData.Get_Stream(CalculateIndexes(SFX));
+                                            SbD = (SoundDescriptions)fileData.Get_Item(CalculateIndexes(SFXD));
+                                            System.IO.MemoryStream Stream = fileData.Get_Stream(CalculateIndexes(SFX));
                                             System.IO.BinaryWriter StreamWriter = new System.IO.BinaryWriter(Stream);
                                             StreamWriter.Write(SoundBank);
-                                            LevelData.Put_Stream(Stream, CalculateIndexes(SFX));
-                                            SoundDescription SD = (SoundDescription)LevelData.Get_Item(CalculateIndexes(SFXD.LastNode));
+                                            fileData.Put_Stream(Stream, CalculateIndexes(SFX));
+                                            SoundDescription SD = (SoundDescription)fileData.Get_Item(CalculateIndexes(SFXD.LastNode));
                                             SD.ID = _ID;
                                             SD.Head = 3;
                                             SD.Frequency = Frequency;
@@ -1848,7 +1850,7 @@ namespace TwinsaityEditor
                                             SD.Param4 = 8192;
                                             SD.SoundSize = SoundSize;
                                             SD.SoundOffset = SoundOffset;
-                                            LevelData.Put_Item(SD, CalculateIndexes(SFXD.LastNode));
+                                            fileData.Put_Item(SD, CalculateIndexes(SFXD.LastNode));
                                         }
 
                                         break;
@@ -1857,7 +1859,7 @@ namespace TwinsaityEditor
                                 case "sve":
                                     {
                                         bool flag = true;
-                                        SoundbankDescriptions BS = (SoundbankDescriptions)LevelData.Get_Item(CalculateIndexes(SVE));
+                                        SoundbankDescriptions BS = (SoundbankDescriptions)fileData.Get_Item(CalculateIndexes(SVE));
                                         for (int i = 0; i <= BS.Records - 1; i++)
                                         {
                                             if (uint.Parse(ID) == BS._Item[i].ID)
@@ -1868,7 +1870,7 @@ namespace TwinsaityEditor
                                         }
                                         if (flag)
                                         {
-                                            SoundbankDescriptions SbD = (SoundbankDescriptions)LevelData.Get_Item(CalculateIndexes(SVE));
+                                            SoundbankDescriptions SbD = (SoundbankDescriptions)fileData.Get_Item(CalculateIndexes(SVE));
                                             System.IO.FileStream SND = new System.IO.FileStream(Path + ItemPath, System.IO.FileMode.Open, System.IO.FileAccess.Read);
                                             System.IO.BinaryReader _Reader = new System.IO.BinaryReader(SND);
                                             uint _ID = _Reader.ReadUInt32();
@@ -1885,16 +1887,16 @@ namespace TwinsaityEditor
                                             byte[] SoundBank = _Reader.ReadBytes((int)SoundSize);
                                             _Reader.Close();
                                             SND.Close();
-                                            LevelData.Add_Item(CalculateIndexes(SVE));
+                                            fileData.Add_Item(CalculateIndexes(SVE));
                                             SVE.Nodes.Add("SoundDescription ID: " + ID.ToString());
                                             SVE.LastNode.Tag = "Item";
-                                            SbD = (SoundbankDescriptions)LevelData.Get_Item(CalculateIndexes(SVE));
+                                            SbD = (SoundbankDescriptions)fileData.Get_Item(CalculateIndexes(SVE));
                                             System.IO.MemoryStream Stream = SbD.SoundBank;
                                             System.IO.BinaryWriter StreamWriter = new System.IO.BinaryWriter(Stream);
                                             StreamWriter.Write(SoundBank);
                                             SbD.SoundBank = Stream;
-                                            LevelData.Put_Item(SbD, CalculateIndexes(SVE));
-                                            SoundDescription SD = (SoundDescription)LevelData.Get_Item(CalculateIndexes(SVE.LastNode));
+                                            fileData.Put_Item(SbD, CalculateIndexes(SVE));
+                                            SoundDescription SD = (SoundDescription)fileData.Get_Item(CalculateIndexes(SVE.LastNode));
                                             SD.ID = _ID;
                                             SD.Head = 3;
                                             SD.Frequency = Frequency;
@@ -1904,7 +1906,7 @@ namespace TwinsaityEditor
                                             SD.Param4 = 8192;
                                             SD.SoundSize = SoundSize;
                                             SD.SoundOffset = SoundOffset;
-                                            LevelData.Put_Item(SD, CalculateIndexes(SVE.LastNode));
+                                            fileData.Put_Item(SD, CalculateIndexes(SVE.LastNode));
                                         }
 
                                         break;
@@ -1913,7 +1915,7 @@ namespace TwinsaityEditor
                                 case "svf":
                                     {
                                         bool flag = true;
-                                        SoundbankDescriptions BS = (SoundbankDescriptions)LevelData.Get_Item(CalculateIndexes(SVF));
+                                        SoundbankDescriptions BS = (SoundbankDescriptions)fileData.Get_Item(CalculateIndexes(SVF));
                                         for (int i = 0; i <= BS.Records - 1; i++)
                                         {
                                             if (uint.Parse(ID) == BS._Item[i].ID)
@@ -1924,7 +1926,7 @@ namespace TwinsaityEditor
                                         }
                                         if (flag)
                                         {
-                                            SoundbankDescriptions SbD = (SoundbankDescriptions)LevelData.Get_Item(CalculateIndexes(SVF));
+                                            SoundbankDescriptions SbD = (SoundbankDescriptions)fileData.Get_Item(CalculateIndexes(SVF));
                                             System.IO.FileStream SND = new System.IO.FileStream(Path + ItemPath, System.IO.FileMode.Open, System.IO.FileAccess.Read);
                                             System.IO.BinaryReader _Reader = new System.IO.BinaryReader(SND);
                                             uint _ID = _Reader.ReadUInt32();
@@ -1941,16 +1943,16 @@ namespace TwinsaityEditor
                                             byte[] SoundBank = _Reader.ReadBytes((int)SoundSize);
                                             _Reader.Close();
                                             SND.Close();
-                                            LevelData.Add_Item(CalculateIndexes(SVF));
+                                            fileData.Add_Item(CalculateIndexes(SVF));
                                             SVF.Nodes.Add("SoundDescription ID: " + ID.ToString());
                                             SVF.LastNode.Tag = "Item";
-                                            SbD = (SoundbankDescriptions)LevelData.Get_Item(CalculateIndexes(SVF));
+                                            SbD = (SoundbankDescriptions)fileData.Get_Item(CalculateIndexes(SVF));
                                             System.IO.MemoryStream Stream = SbD.SoundBank;
                                             System.IO.BinaryWriter StreamWriter = new System.IO.BinaryWriter(Stream);
                                             StreamWriter.Write(SoundBank);
                                             SbD.SoundBank = Stream;
-                                            LevelData.Put_Item(SbD, CalculateIndexes(SVF));
-                                            SoundDescription SD = (SoundDescription)LevelData.Get_Item(CalculateIndexes(SVF.LastNode));
+                                            fileData.Put_Item(SbD, CalculateIndexes(SVF));
+                                            SoundDescription SD = (SoundDescription)fileData.Get_Item(CalculateIndexes(SVF.LastNode));
                                             SD.ID = _ID;
                                             SD.Head = 3;
                                             SD.Frequency = Frequency;
@@ -1960,7 +1962,7 @@ namespace TwinsaityEditor
                                             SD.Param4 = 8192;
                                             SD.SoundSize = SoundSize;
                                             SD.SoundOffset = SoundOffset;
-                                            LevelData.Put_Item(SD, CalculateIndexes(SVF.LastNode));
+                                            fileData.Put_Item(SD, CalculateIndexes(SVF.LastNode));
                                         }
 
                                         break;
@@ -1969,7 +1971,7 @@ namespace TwinsaityEditor
                                 case "svg":
                                     {
                                         bool flag = true;
-                                        SoundbankDescriptions BS = (SoundbankDescriptions)LevelData.Get_Item(CalculateIndexes(SVG));
+                                        SoundbankDescriptions BS = (SoundbankDescriptions)fileData.Get_Item(CalculateIndexes(SVG));
                                         for (int i = 0; i <= BS.Records - 1; i++)
                                         {
                                             if (uint.Parse(ID) == BS._Item[i].ID)
@@ -1980,7 +1982,7 @@ namespace TwinsaityEditor
                                         }
                                         if (flag)
                                         {
-                                            SoundbankDescriptions SbD = (SoundbankDescriptions)LevelData.Get_Item(CalculateIndexes(SVG));
+                                            SoundbankDescriptions SbD = (SoundbankDescriptions)fileData.Get_Item(CalculateIndexes(SVG));
                                             System.IO.FileStream SND = new System.IO.FileStream(Path + ItemPath, System.IO.FileMode.Open, System.IO.FileAccess.Read);
                                             System.IO.BinaryReader _Reader = new System.IO.BinaryReader(SND);
                                             uint _ID = _Reader.ReadUInt32();
@@ -1997,16 +1999,16 @@ namespace TwinsaityEditor
                                             byte[] SoundBank = _Reader.ReadBytes((int)SoundSize);
                                             _Reader.Close();
                                             SND.Close();
-                                            LevelData.Add_Item(CalculateIndexes(SVG));
+                                            fileData.Add_Item(CalculateIndexes(SVG));
                                             SVG.Nodes.Add("SoundDescription ID: " + ID.ToString());
                                             SVG.LastNode.Tag = "Item";
-                                            SbD = (SoundbankDescriptions)LevelData.Get_Item(CalculateIndexes(SVG));
+                                            SbD = (SoundbankDescriptions)fileData.Get_Item(CalculateIndexes(SVG));
                                             System.IO.MemoryStream Stream = SbD.SoundBank;
                                             System.IO.BinaryWriter StreamWriter = new System.IO.BinaryWriter(Stream);
                                             StreamWriter.Write(SoundBank);
                                             SbD.SoundBank = Stream;
-                                            LevelData.Put_Item(SbD, CalculateIndexes(SVG));
-                                            SoundDescription SD = (SoundDescription)LevelData.Get_Item(CalculateIndexes(SVG.LastNode));
+                                            fileData.Put_Item(SbD, CalculateIndexes(SVG));
+                                            SoundDescription SD = (SoundDescription)fileData.Get_Item(CalculateIndexes(SVG.LastNode));
                                             SD.ID = _ID;
                                             SD.Head = 3;
                                             SD.Frequency = Frequency;
@@ -2016,7 +2018,7 @@ namespace TwinsaityEditor
                                             SD.Param4 = 8192;
                                             SD.SoundSize = SoundSize;
                                             SD.SoundOffset = SoundOffset;
-                                            LevelData.Put_Item(SD, CalculateIndexes(SVG.LastNode));
+                                            fileData.Put_Item(SD, CalculateIndexes(SVG.LastNode));
                                         }
 
                                         break;
@@ -2025,7 +2027,7 @@ namespace TwinsaityEditor
                                 case "svs":
                                     {
                                         bool flag = true;
-                                        SoundbankDescriptions BS = (SoundbankDescriptions)LevelData.Get_Item(CalculateIndexes(SVS));
+                                        SoundbankDescriptions BS = (SoundbankDescriptions)fileData.Get_Item(CalculateIndexes(SVS));
                                         for (int i = 0; i <= BS.Records - 1; i++)
                                         {
                                             if (uint.Parse(ID) == BS._Item[i].ID)
@@ -2036,7 +2038,7 @@ namespace TwinsaityEditor
                                         }
                                         if (flag)
                                         {
-                                            SoundbankDescriptions SbD = (SoundbankDescriptions)LevelData.Get_Item(CalculateIndexes(SVS));
+                                            SoundbankDescriptions SbD = (SoundbankDescriptions)fileData.Get_Item(CalculateIndexes(SVS));
                                             System.IO.FileStream SND = new System.IO.FileStream(Path + ItemPath, System.IO.FileMode.Open, System.IO.FileAccess.Read);
                                             System.IO.BinaryReader _Reader = new System.IO.BinaryReader(SND);
                                             uint _ID = _Reader.ReadUInt32();
@@ -2053,16 +2055,16 @@ namespace TwinsaityEditor
                                             byte[] SoundBank = _Reader.ReadBytes((int)SoundSize);
                                             _Reader.Close();
                                             SND.Close();
-                                            LevelData.Add_Item(CalculateIndexes(SVS));
+                                            fileData.Add_Item(CalculateIndexes(SVS));
                                             SVS.Nodes.Add("SoundDescription ID: " + ID.ToString());
                                             SVS.LastNode.Tag = "Item";
-                                            SbD = (SoundbankDescriptions)LevelData.Get_Item(CalculateIndexes(SVS));
+                                            SbD = (SoundbankDescriptions)fileData.Get_Item(CalculateIndexes(SVS));
                                             System.IO.MemoryStream Stream = SbD.SoundBank;
                                             System.IO.BinaryWriter StreamWriter = new System.IO.BinaryWriter(Stream);
                                             StreamWriter.Write(SoundBank);
                                             SbD.SoundBank = Stream;
-                                            LevelData.Put_Item(SbD, CalculateIndexes(SVS));
-                                            SoundDescription SD = (SoundDescription)LevelData.Get_Item(CalculateIndexes(SVS.LastNode));
+                                            fileData.Put_Item(SbD, CalculateIndexes(SVS));
+                                            SoundDescription SD = (SoundDescription)fileData.Get_Item(CalculateIndexes(SVS.LastNode));
                                             SD.ID = _ID;
                                             SD.Head = 3;
                                             SD.Frequency = Frequency;
@@ -2072,7 +2074,7 @@ namespace TwinsaityEditor
                                             SD.Param4 = 8192;
                                             SD.SoundSize = SoundSize;
                                             SD.SoundOffset = SoundOffset;
-                                            LevelData.Put_Item(SD, CalculateIndexes(SVS.LastNode));
+                                            fileData.Put_Item(SD, CalculateIndexes(SVS.LastNode));
                                         }
 
                                         break;
@@ -2081,7 +2083,7 @@ namespace TwinsaityEditor
                                 case "svi":
                                     {
                                         bool flag = true;
-                                        SoundbankDescriptions BS = (SoundbankDescriptions)LevelData.Get_Item(CalculateIndexes(SVI));
+                                        SoundbankDescriptions BS = (SoundbankDescriptions)fileData.Get_Item(CalculateIndexes(SVI));
                                         for (int i = 0; i <= BS.Records - 1; i++)
                                         {
                                             if (uint.Parse(ID) == BS._Item[i].ID)
@@ -2092,7 +2094,7 @@ namespace TwinsaityEditor
                                         }
                                         if (flag)
                                         {
-                                            SoundbankDescriptions SbD = (SoundbankDescriptions)LevelData.Get_Item(CalculateIndexes(SVI));
+                                            SoundbankDescriptions SbD = (SoundbankDescriptions)fileData.Get_Item(CalculateIndexes(SVI));
                                             System.IO.FileStream SND = new System.IO.FileStream(Path + ItemPath, System.IO.FileMode.Open, System.IO.FileAccess.Read);
                                             System.IO.BinaryReader _Reader = new System.IO.BinaryReader(SND);
                                             uint _ID = _Reader.ReadUInt32();
@@ -2109,16 +2111,16 @@ namespace TwinsaityEditor
                                             byte[] SoundBank = _Reader.ReadBytes((int)SoundSize);
                                             _Reader.Close();
                                             SND.Close();
-                                            LevelData.Add_Item(CalculateIndexes(SVI));
+                                            fileData.Add_Item(CalculateIndexes(SVI));
                                             SVI.Nodes.Add("SoundDescription ID: " + ID.ToString());
                                             SVI.LastNode.Tag = "Item";
-                                            SbD = (SoundbankDescriptions)LevelData.Get_Item(CalculateIndexes(SVI));
+                                            SbD = (SoundbankDescriptions)fileData.Get_Item(CalculateIndexes(SVI));
                                             System.IO.MemoryStream Stream = SbD.SoundBank;
                                             System.IO.BinaryWriter StreamWriter = new System.IO.BinaryWriter(Stream);
                                             StreamWriter.Write(SoundBank);
                                             SbD.SoundBank = Stream;
-                                            LevelData.Put_Item(SbD, CalculateIndexes(SVI));
-                                            SoundDescription SD = (SoundDescription)LevelData.Get_Item(CalculateIndexes(SVI.LastNode));
+                                            fileData.Put_Item(SbD, CalculateIndexes(SVI));
+                                            SoundDescription SD = (SoundDescription)fileData.Get_Item(CalculateIndexes(SVI.LastNode));
                                             SD.ID = _ID;
                                             SD.Head = 3;
                                             SD.Frequency = Frequency;
@@ -2128,7 +2130,7 @@ namespace TwinsaityEditor
                                             SD.Param4 = 8192;
                                             SD.SoundSize = SoundSize;
                                             SD.SoundOffset = SoundOffset;
-                                            LevelData.Put_Item(SD, CalculateIndexes(SVI.LastNode));
+                                            fileData.Put_Item(SD, CalculateIndexes(SVI.LastNode));
                                         }
 
                                         break;
@@ -2137,7 +2139,7 @@ namespace TwinsaityEditor
                                 case "svj":
                                     {
                                         bool flag = true;
-                                        SoundbankDescriptions BS = (SoundbankDescriptions)LevelData.Get_Item(CalculateIndexes(SVJ));
+                                        SoundbankDescriptions BS = (SoundbankDescriptions)fileData.Get_Item(CalculateIndexes(SVJ));
                                         for (int i = 0; i <= BS.Records - 1; i++)
                                         {
                                             if (uint.Parse(ID) == BS._Item[i].ID)
@@ -2148,7 +2150,7 @@ namespace TwinsaityEditor
                                         }
                                         if (flag)
                                         {
-                                            SoundbankDescriptions SbD = (SoundbankDescriptions)LevelData.Get_Item(CalculateIndexes(SVJ));
+                                            SoundbankDescriptions SbD = (SoundbankDescriptions)fileData.Get_Item(CalculateIndexes(SVJ));
                                             System.IO.FileStream SND = new System.IO.FileStream(Path + ItemPath, System.IO.FileMode.Open, System.IO.FileAccess.Read);
                                             System.IO.BinaryReader _Reader = new System.IO.BinaryReader(SND);
                                             uint _ID = _Reader.ReadUInt32();
@@ -2165,16 +2167,16 @@ namespace TwinsaityEditor
                                             byte[] SoundBank = _Reader.ReadBytes((int)SoundSize);
                                             _Reader.Close();
                                             SND.Close();
-                                            LevelData.Add_Item(CalculateIndexes(SVJ));
+                                            fileData.Add_Item(CalculateIndexes(SVJ));
                                             SVJ.Nodes.Add("SoundDescription ID: " + ID.ToString());
                                             SVJ.LastNode.Tag = "Item";
-                                            SbD = (SoundbankDescriptions)LevelData.Get_Item(CalculateIndexes(SVJ));
+                                            SbD = (SoundbankDescriptions)fileData.Get_Item(CalculateIndexes(SVJ));
                                             System.IO.MemoryStream Stream = SbD.SoundBank;
                                             System.IO.BinaryWriter StreamWriter = new System.IO.BinaryWriter(Stream);
                                             StreamWriter.Write(SoundBank);
                                             SbD.SoundBank = Stream;
-                                            LevelData.Put_Item(SbD, CalculateIndexes(SVJ));
-                                            SoundDescription SD = (SoundDescription)LevelData.Get_Item(CalculateIndexes(SVJ.LastNode));
+                                            fileData.Put_Item(SbD, CalculateIndexes(SVJ));
+                                            SoundDescription SD = (SoundDescription)fileData.Get_Item(CalculateIndexes(SVJ.LastNode));
                                             SD.ID = _ID;
                                             SD.Head = 3;
                                             SD.Frequency = Frequency;
@@ -2184,7 +2186,7 @@ namespace TwinsaityEditor
                                             SD.Param4 = 8192;
                                             SD.SoundSize = SoundSize;
                                             SD.SoundOffset = SoundOffset;
-                                            LevelData.Put_Item(SD, CalculateIndexes(SVJ.LastNode));
+                                            fileData.Put_Item(SD, CalculateIndexes(SVJ.LastNode));
                                         }
 
                                         break;
@@ -2222,15 +2224,15 @@ namespace TwinsaityEditor
                         byte[] SoundBank = Reader.ReadBytes((int)SoundSize);
                         Reader.Close();
                         SND.Close();
-                        LevelData.Add_Item(CalculateIndexes(TreeView1.SelectedNode));
+                        fileData.Add_Item(CalculateIndexes(TreeView1.SelectedNode));
                         TreeView1.SelectedNode.Nodes.Add("SoundDescription ID: " + ID.ToString());
                         TreeView1.SelectedNode.LastNode.Tag = "Item";
-                        SbD = (SoundDescriptions)LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode));
-                        System.IO.MemoryStream Stream = LevelData.Get_Stream(CalculateIndexes(TreeView1.SelectedNode.Parent.Nodes[6]));
+                        SbD = (SoundDescriptions)fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode));
+                        System.IO.MemoryStream Stream = fileData.Get_Stream(CalculateIndexes(TreeView1.SelectedNode.Parent.Nodes[6]));
                         System.IO.BinaryWriter StreamWriter = new System.IO.BinaryWriter(Stream);
                         StreamWriter.Write(SoundBank);
-                        LevelData.Put_Stream(Stream, CalculateIndexes(TreeView1.SelectedNode.Parent.Nodes[6]));
-                        SoundDescription SD = (SoundDescription)LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.LastNode));
+                        fileData.Put_Stream(Stream, CalculateIndexes(TreeView1.SelectedNode.Parent.Nodes[6]));
+                        SoundDescription SD = (SoundDescription)fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.LastNode));
                         SD.ID = ID;
                         SD.Head = 3;
                         SD.Frequency = Frequency;
@@ -2240,7 +2242,7 @@ namespace TwinsaityEditor
                         SD.Param4 = 8192;
                         SD.SoundSize = SoundSize;
                         SD.SoundOffset = SoundOffset;
-                        LevelData.Put_Item(SD, CalculateIndexes(TreeView1.SelectedNode.LastNode));
+                        fileData.Put_Item(SD, CalculateIndexes(TreeView1.SelectedNode.LastNode));
                     }
                 }
             }
@@ -2267,16 +2269,16 @@ namespace TwinsaityEditor
                         byte[] SoundBank = Reader.ReadBytes((int)SoundSize);
                         Reader.Close();
                         SND.Close();
-                        LevelData.Add_Item(CalculateIndexes(TreeView1.SelectedNode));
+                        fileData.Add_Item(CalculateIndexes(TreeView1.SelectedNode));
                         TreeView1.SelectedNode.Nodes.Add("SoundDescription ID: " + ID.ToString());
                         TreeView1.SelectedNode.LastNode.Tag = "Item";
-                        SbD = (SoundbankDescriptions)LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode));
+                        SbD = (SoundbankDescriptions)fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode));
                         System.IO.MemoryStream Stream = SbD.SoundBank;
                         System.IO.BinaryWriter StreamWriter = new System.IO.BinaryWriter(Stream);
                         StreamWriter.Write(SoundBank);
                         SbD.SoundBank = Stream;
-                        LevelData.Put_Item(SbD, CalculateIndexes(TreeView1.SelectedNode));
-                        SoundDescription SD = (SoundDescription)LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.LastNode));
+                        fileData.Put_Item(SbD, CalculateIndexes(TreeView1.SelectedNode));
+                        SoundDescription SD = (SoundDescription)fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.LastNode));
                         SD.ID = ID;
                         SD.Head = 3;
                         SD.Frequency = Frequency;
@@ -2286,7 +2288,7 @@ namespace TwinsaityEditor
                         SD.Param4 = 8192;
                         SD.SoundSize = SoundSize;
                         SD.SoundOffset = SoundOffset;
-                        LevelData.Put_Item(SD, CalculateIndexes(TreeView1.SelectedNode.LastNode));
+                        fileData.Put_Item(SD, CalculateIndexes(TreeView1.SelectedNode.LastNode));
                     }
                 }
             }
@@ -2296,7 +2298,7 @@ namespace TwinsaityEditor
             if (_utilTwoIDAsker.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 int[] indexes = CalculateIndexes(TreeView1.SelectedNode);
-                BaseSection Section = (BaseSection)LevelData.Get_Item(indexes);
+                BaseSection Section = (BaseSection)fileData.Get_Item(indexes);
                 TreeNode Node1 = new TreeNode(), Node2 = new TreeNode();
                 int ind1, ind2;
                 ind1 = -1;
@@ -2318,8 +2320,8 @@ namespace TwinsaityEditor
                 {
                     int[] indexes1 = CalculateIndexes(Node1);
                     int[] indexes2 = CalculateIndexes(Node2);
-                    LevelData.Put_Stream(LevelData.Get_Stream(indexes2), indexes1);
-                    BaseObject Obj = LevelData.Get_Item(indexes1);
+                    fileData.Put_Stream(fileData.Get_Stream(indexes2), indexes1);
+                    BaseObject Obj = fileData.Get_Item(indexes1);
                     if ((Obj is Material))
                     {
                         Material Mat = (Material)Obj;
@@ -2350,7 +2352,7 @@ namespace TwinsaityEditor
         {
             int[] indexes = CalculateIndexes(TreeView1.SelectedNode);
             int[] inst_indexes;
-            BaseObject Obj = LevelData.Get_Item(indexes);
+            BaseObject Obj = fileData.Get_Item(indexes);
         
         // ----'
             if (Obj is Instances)
@@ -2395,10 +2397,10 @@ namespace TwinsaityEditor
                                                 }
                                             }
                                         }
-                                        LevelData.Add_Item(indexes);
+                                        fileData.Add_Item(indexes);
                                         TreeView1.SelectedNode.Nodes.Add("");
                                         inst_indexes = CalculateIndexes(TreeView1.SelectedNode.LastNode);
-                                        Instance INST = (Instance)LevelData.Get_Item(inst_indexes);
+                                        Instance INST = (Instance)fileData.Get_Item(inst_indexes);
                                         INST.X = X;
                                         INST.Y = Y;
                                         INST.Z = Z;
@@ -2421,7 +2423,7 @@ namespace TwinsaityEditor
                                         INST.UnkI322 = rec.Floats;
                                         INST.UnkI323 = rec.Ints;
                                         // ------
-                                        LevelData.Put_Item(INST, inst_indexes);
+                                        fileData.Put_Item(INST, inst_indexes);
                                         TreeView1.SelectedNode.LastNode.Text = "Instance ID:" + INST.ID.ToString();
                                         TreeView1.SelectedNode.LastNode.Tag = "Item";
                                         break;
@@ -2473,10 +2475,10 @@ namespace TwinsaityEditor
                                             {
                                                 while (Z + shZ * StZ < Z + L)
                                                 {
-                                                    LevelData.Add_Item(indexes);
+                                                    fileData.Add_Item(indexes);
                                                     TreeView1.SelectedNode.Nodes.Add("");
                                                     inst_indexes = CalculateIndexes(TreeView1.SelectedNode.LastNode);
-                                                    Instance INST = (Instance)LevelData.Get_Item(inst_indexes);
+                                                    Instance INST = (Instance)fileData.Get_Item(inst_indexes);
                                                     INST.X = X + shX * StX;
                                                     INST.Y = Y + shY * StY;
                                                     INST.Z = Z + shZ * StZ;
@@ -2497,7 +2499,7 @@ namespace TwinsaityEditor
                                                     INST.UnkI321 = rec.SomeParams;
                                                     INST.UnkI322 = rec.Floats;
                                                     INST.UnkI323 = rec.Ints;
-                                                    LevelData.Put_Item(INST, inst_indexes);
+                                                    fileData.Put_Item(INST, inst_indexes);
                                                     TreeView1.SelectedNode.LastNode.Text = "Instance ID:" + INST.ID.ToString();
                                                     TreeView1.SelectedNode.LastNode.Tag = "Item";
                                                     shZ += 1;
@@ -2577,7 +2579,7 @@ namespace TwinsaityEditor
 
                                             case "COPY":
                                                 {
-                                                    Instances Section = (Instances)LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode));
+                                                    Instances Section = (Instances)fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode));
                                                     uint ID = uint.Parse(cmd[2]);
                                                     for (int j = 0; j <= Section.Records - 1; j++)
                                                     {
@@ -2709,10 +2711,10 @@ namespace TwinsaityEditor
                                         float Y = float.Parse(cmd[2]);
                                         float Z = float.Parse(cmd[3]);
                                         float ID = float.Parse(cmd[4]);
-                                        LevelData.Add_Item(indexes);
+                                        fileData.Add_Item(indexes);
                                         TreeView1.SelectedNode.Nodes.Add("");
                                         inst_indexes = CalculateIndexes(TreeView1.SelectedNode.LastNode);
-                                        Instance INST = (Instance)LevelData.Get_Item(inst_indexes);
+                                        Instance INST = (Instance)fileData.Get_Item(inst_indexes);
                                         INST.X = X;
                                         INST.Y = Y;
                                         INST.Z = Z;
@@ -2736,7 +2738,7 @@ namespace TwinsaityEditor
                                         INST.UnkI323 = UnkI323;
                                         INST.UnkI323Number = UnkI323Number;
                                         // ------
-                                        LevelData.Put_Item(INST, inst_indexes);
+                                        fileData.Put_Item(INST, inst_indexes);
                                         TreeView1.SelectedNode.LastNode.Text = "Instance ID:" + INST.ID.ToString();
                                         TreeView1.SelectedNode.LastNode.Tag = "Item";
                                         break;
@@ -2764,10 +2766,10 @@ namespace TwinsaityEditor
                                             {
                                                 while (Z + shZ * StZ < Z + L)
                                                 {
-                                                    LevelData.Add_Item(indexes);
+                                                    fileData.Add_Item(indexes);
                                                     TreeView1.SelectedNode.Nodes.Add("");
                                                     inst_indexes = CalculateIndexes(TreeView1.SelectedNode.LastNode);
-                                                    Instance INST = (Instance)LevelData.Get_Item(inst_indexes);
+                                                    Instance INST = (Instance)fileData.Get_Item(inst_indexes);
                                                     INST.X = X + shX * StX;
                                                     INST.Y = Y + shY * StY;
                                                     INST.Z = Z + shZ * StZ;
@@ -2789,7 +2791,7 @@ namespace TwinsaityEditor
                                                     INST.UnkI322Number = UnkI322Number;
                                                     INST.UnkI323 = UnkI323;
                                                     INST.UnkI323Number = UnkI323Number;
-                                                    LevelData.Put_Item(INST, inst_indexes);
+                                                    fileData.Put_Item(INST, inst_indexes);
                                                     TreeView1.SelectedNode.LastNode.Text = "Instance ID:" + INST.ID.ToString();
                                                     TreeView1.SelectedNode.LastNode.Tag = "Item";
                                                     shZ += 1;
@@ -2817,7 +2819,7 @@ namespace TwinsaityEditor
         {
             TreeNode Node = TreeView1.SelectedNode.Parent;
             int[] indexes = CalculateIndexes(Node);
-            BaseSection Section = (BaseSection)LevelData.Get_Item(indexes);
+            BaseSection Section = (BaseSection)fileData.Get_Item(indexes);
             int Category;
             if (Section is Materials)
                 Category = 1;
@@ -3136,7 +3138,7 @@ namespace TwinsaityEditor
                 EIndex = _utilRandomizer.EndIndex;
                 Cycles = _utilRandomizer.Cycles;
                 int[] indexes = CalculateIndexes(TreeView1.SelectedNode);
-                BaseSection Section = (BaseSection)LevelData.Get_Item(indexes);
+                BaseSection Section = (BaseSection)fileData.Get_Item(indexes);
                 if (Section is Instances)
                 {
                     Instances INSTS = (Instances)Section;
@@ -3153,7 +3155,7 @@ namespace TwinsaityEditor
                         INSTS._Item[IND1] = INST1;
                         INSTS._Item[IND2] = INST2;
                     }
-                    LevelData.Put_Item(INSTS, indexes);
+                    fileData.Put_Item(INSTS, indexes);
                 }
                 else
                 {
@@ -3167,7 +3169,7 @@ namespace TwinsaityEditor
                         TreeView1.SelectedNode.Nodes[IND1].Text = TreeView1.SelectedNode.Nodes[IND1].Text.Replace("ID:" + Section._Item[IND2].ID.ToString(), "ID:" + Section._Item[IND1].ID.ToString());
                         TreeView1.SelectedNode.Nodes[IND2].Text = TreeView1.SelectedNode.Nodes[IND2].Text.Replace("ID:" + Section._Item[IND1].ID.ToString(), "ID:" + Section._Item[IND2].ID.ToString());
                     }
-                    LevelData.Put_Item(Section, indexes);
+                    fileData.Put_Item(Section, indexes);
                 }
             }
         }
@@ -3192,7 +3194,7 @@ namespace TwinsaityEditor
         private void Button9_Click(object sender, EventArgs e)
         {
             int[] indexes = CalculateIndexes(TreeView1.SelectedNode);
-            BaseObject Obj = LevelData.Get_Item(indexes);
+            BaseObject Obj = fileData.Get_Item(indexes);
             if (Obj is GameObject)
             {
                 if (ExtractBunch.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -3234,123 +3236,123 @@ namespace TwinsaityEditor
                     BaseSection GCs = new BaseSection();
                     int CodeIndex = 0, GraphicsIndex = 0;
                     // ---SECTIONS GETTING---'
-                    for (int i = 0; i <= LevelData.Records - 1; i++)
+                    for (int i = 0; i <= fileData.Records - 1; i++)
                     {
-                        if (LevelData.Item[i].ID == 11)
+                        if (fileData.Item[i].ID == 11)
                         {
                             GraphicsIndex = i;
-                            for (int j = 0; j <= LevelData.Item[i].Records - 1; j++)
+                            for (int j = 0; j <= fileData.Item[i].Records - 1; j++)
                             {
-                                switch (LevelData.Item[i]._Item[j].ID)
+                                switch (fileData.Item[i]._Item[j].ID)
                                 {
                                     case 0:
                                         {
-                                            Textures = (BaseSection)LevelData.Item[i]._Item[j];
+                                            Textures = (BaseSection)fileData.Item[i]._Item[j];
                                             break;
                                         }
 
                                     case 1:
                                         {
-                                            Materials = (BaseSection)LevelData.Item[i]._Item[j];
+                                            Materials = (BaseSection)fileData.Item[i]._Item[j];
                                             break;
                                         }
 
                                     case 2:
                                         {
-                                            Models = (BaseSection)LevelData.Item[i]._Item[j];
+                                            Models = (BaseSection)fileData.Item[i]._Item[j];
                                             break;
                                         }
 
                                     case 3:
                                         {
-                                            GCs = (BaseSection)LevelData.Item[i]._Item[j];
+                                            GCs = (BaseSection)fileData.Item[i]._Item[j];
                                             break;
                                         }
 
                                     case 4:
                                         {
-                                            ID4s = (BaseSection)LevelData.Item[i]._Item[j];
+                                            ID4s = (BaseSection)fileData.Item[i]._Item[j];
                                             break;
                                         }
 
                                     case 5:
                                         {
-                                            ID5s = (BaseSection)LevelData.Item[i]._Item[j];
+                                            ID5s = (BaseSection)fileData.Item[i]._Item[j];
                                             break;
                                         }
                                 }
                             }
                         }
-                        else if (LevelData.Item[i].ID == 10)
+                        else if (fileData.Item[i].ID == 10)
                         {
                             CodeIndex = i;
-                            for (int j = 0; j <= LevelData.Item[i].Records - 1; j++)
+                            for (int j = 0; j <= fileData.Item[i].Records - 1; j++)
                             {
-                                switch (LevelData.Item[i]._Item[j].ID)
+                                switch (fileData.Item[i]._Item[j].ID)
                                 {
                                     case 1:
                                         {
-                                            Scripts = (BaseSection)LevelData.Item[i]._Item[j];
+                                            Scripts = (BaseSection)fileData.Item[i]._Item[j];
                                             break;
                                         }
 
                                     case 2:
                                         {
-                                            Animations = (BaseSection)LevelData.Item[i]._Item[j];
+                                            Animations = (BaseSection)fileData.Item[i]._Item[j];
                                             break;
                                         }
 
                                     case 3:
                                         {
-                                            OGIs = (BaseSection)LevelData.Item[i]._Item[j];
+                                            OGIs = (BaseSection)fileData.Item[i]._Item[j];
                                             break;
                                         }
 
                                     case 4:
                                         {
-                                            ID4Ps = (BaseSection)LevelData.Item[i]._Item[j];
+                                            ID4Ps = (BaseSection)fileData.Item[i]._Item[j];
                                             break;
                                         }
 
                                     case 5:
                                         {
-                                            Sounds = (BaseSection)LevelData.Item[i]._Item[j];
+                                            Sounds = (BaseSection)fileData.Item[i]._Item[j];
                                             break;
                                         }
 
                                     case 7:
                                         {
-                                            SoundsEnglish = (BaseSection)LevelData.Item[i]._Item[j];
+                                            SoundsEnglish = (BaseSection)fileData.Item[i]._Item[j];
                                             break;
                                         }
 
                                     case 8:
                                         {
-                                            SoundsFrench = (BaseSection)LevelData.Item[i]._Item[j];
+                                            SoundsFrench = (BaseSection)fileData.Item[i]._Item[j];
                                             break;
                                         }
 
                                     case 9:
                                         {
-                                            SoundsGerman = (BaseSection)LevelData.Item[i]._Item[j];
+                                            SoundsGerman = (BaseSection)fileData.Item[i]._Item[j];
                                             break;
                                         }
 
                                     case 10:
                                         {
-                                            SoundsSpanish = (BaseSection)LevelData.Item[i]._Item[j];
+                                            SoundsSpanish = (BaseSection)fileData.Item[i]._Item[j];
                                             break;
                                         }
 
                                     case 11:
                                         {
-                                            SoundsItalian = (BaseSection)LevelData.Item[i]._Item[j];
+                                            SoundsItalian = (BaseSection)fileData.Item[i]._Item[j];
                                             break;
                                         }
 
                                     case 12:
                                         {
-                                            SoundsJapan = (BaseSection)LevelData.Item[i]._Item[j];
+                                            SoundsJapan = (BaseSection)fileData.Item[i]._Item[j];
                                             break;
                                         }
                                 }
@@ -3432,10 +3434,10 @@ namespace TwinsaityEditor
                     }
                     // --ExtraScript--'
                     // For i As int = 0 To Script.Length - 1
-                    // For j As int = 0 To LevelData.Item(1).Item(1).Records - 1
-                    // If LevelData.Item(1).Item(1).Item(j).ID = Script(i) Then
+                    // For j As int = 0 To fileData.Item(1).Item(1).Records - 1
+                    // If fileData.Item(1).Item(1).Item(j).ID = Script(i) Then
                     // Dim ind() As int = CalculateIndexes(TreeView1.Nodes(0).Nodes(1).Nodes(1).Nodes(j))
-                    // Dim S As IO.MemoryStream = LevelData.Get_Stream(ind)
+                    // Dim S As IO.MemoryStream = fileData.Get_Stream(ind)
                     // Dim rdr As New IO.BinaryReader(S)
                     // S.Position = 8
                     // Array.Resize(Script, Script.Length + 1)
@@ -3464,12 +3466,12 @@ namespace TwinsaityEditor
                     // --ID4-5--'
                     for (int i = 0; i <= OGI.Length - 1; i++)
                     {
-                        for (int j = 0; j <= LevelData.Item[1]._Item[3].Records - 1; j++)
+                        for (int j = 0; j <= fileData.Item[1]._Item[3].Records - 1; j++)
                         {
-                            if (LevelData.Item[1]._Item[3]._Item[j].ID == OGI[i])
+                            if (fileData.Item[1]._Item[3]._Item[j].ID == OGI[i])
                             {
                                 int[] ind = CalculateIndexes(TreeView1.Nodes[0].Nodes[1].Nodes[3].Nodes[j]);
-                                OGI OG = (OGI)LevelData.Get_Item(ind);
+                                OGI OG = (OGI)fileData.Get_Item(ind);
                                 if (!(OG.SomeInt321 == 0))
                                 {
                                     Array.Resize(ref ID4, ID4.Length + 1);
@@ -3486,12 +3488,12 @@ namespace TwinsaityEditor
                     // --GC--'
                     for (int i = 0; i <= OGI.Length - 1; i++)
                     {
-                        for (int j = 0; j <= LevelData.Item[1]._Item[3].Records - 1; j++)
+                        for (int j = 0; j <= fileData.Item[1]._Item[3].Records - 1; j++)
                         {
-                            if (LevelData.Item[1]._Item[3]._Item[j].ID == OGI[i])
+                            if (fileData.Item[1]._Item[3]._Item[j].ID == OGI[i])
                             {
                                 int[] ind = CalculateIndexes(TreeView1.Nodes[0].Nodes[1].Nodes[3].Nodes[j]);
-                                OGI OG = (OGI)LevelData.Get_Item(ind);
+                                OGI OG = (OGI)fileData.Get_Item(ind);
                                 for (int a = 0; a <= OG.GCNumber - 1; a++)
                                 {
                                     Array.Resize(ref GC, GC.Length + 1);
@@ -3503,12 +3505,12 @@ namespace TwinsaityEditor
                     // --Materials And Models--'
                     for (int i = 0; i <= GC.Length - 1; i++)
                     {
-                        for (int j = 0; j <= LevelData.Item[0]._Item[3].Records - 1; j++)
+                        for (int j = 0; j <= fileData.Item[0]._Item[3].Records - 1; j++)
                         {
-                            if (LevelData.Item[0]._Item[3]._Item[j].ID == GC[i])
+                            if (fileData.Item[0]._Item[3]._Item[j].ID == GC[i])
                             {
                                 int[] ind = CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[3].Nodes[j]);
-                                Twinsanity.GC G = (Twinsanity.GC)LevelData.Get_Item(ind);
+                                Twinsanity.GC G = (Twinsanity.GC)fileData.Get_Item(ind);
                                 for (int a = 0; a <= G.MaterialNumber - 1; a++)
                                 {
                                     Array.Resize(ref Material, Material.Length + 1);
@@ -3522,11 +3524,11 @@ namespace TwinsaityEditor
                     // --ExtraMaterials--'
                     for (int i = 0; i <= ID4.Length - 1; i++)
                     {
-                        for (int j = 0; j <= LevelData.Item[0]._Item[4].Records - 1; j++)
+                        for (int j = 0; j <= fileData.Item[0]._Item[4].Records - 1; j++)
                         {
-                            if (LevelData.Item[0]._Item[4]._Item[j].ID == ID4[i])
+                            if (fileData.Item[0]._Item[4]._Item[j].ID == ID4[i])
                             {
-                                ID4Model ID4Model = (ID4Model)LevelData.Item[0]._Item[4]._Item[j];
+                                ID4Model ID4Model = (ID4Model)fileData.Item[0]._Item[4]._Item[j];
                                 for (int k = 0; k <= ID4Model.SubModels - 1; k++)
                                 {
                                     Array.Resize(ref Material, Material.Length + 1);
@@ -3537,12 +3539,12 @@ namespace TwinsaityEditor
                     }
                     for (int i = 0; i <= ID5.Length - 1; i++)
                     {
-                        for (int j = 0; j <= LevelData.Item[0]._Item[5].Records - 1; j++)
+                        for (int j = 0; j <= fileData.Item[0]._Item[5].Records - 1; j++)
                         {
-                            if (LevelData.Item[0]._Item[5]._Item[j].ID == ID5[i])
+                            if (fileData.Item[0]._Item[5]._Item[j].ID == ID5[i])
                             {
                                 int[] ind = CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[5].Nodes[j]);
-                                System.IO.MemoryStream ID = LevelData.Get_Stream(ind);
+                                System.IO.MemoryStream ID = fileData.Get_Stream(ind);
                                 System.IO.BinaryReader IDReader = new System.IO.BinaryReader(ID);
                                 ID.Position = 0;
                                 while (ID.Position + 4 <= ID.Length)
@@ -3565,12 +3567,12 @@ namespace TwinsaityEditor
                     // --Textures--'
                     for (int i = 0; i <= Material.Length - 1; i++)
                     {
-                        for (int j = 0; j <= LevelData.Item[0]._Item[1].Records - 1; j++)
+                        for (int j = 0; j <= fileData.Item[0]._Item[1].Records - 1; j++)
                         {
-                            if (LevelData.Item[0]._Item[1]._Item[j].ID == Material[i])
+                            if (fileData.Item[0]._Item[1]._Item[j].ID == Material[i])
                             {
                                 int[] ind = CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[1].Nodes[j]);
-                                Material M = (Material)LevelData.Get_Item(ind);
+                                Material M = (Material)fileData.Get_Item(ind);
                                 Array.Resize(ref Texture, Texture.Length + 1);
                                 Texture[Texture.Length - 1] = M.Texture;
                             }
@@ -3734,7 +3736,7 @@ namespace TwinsaityEditor
                                 System.IO.BinaryWriter Writer = new System.IO.BinaryWriter(File);
                                 SoundDescription SD = (SoundDescription)Sounds._Item[j];
                                 int[] ind = CalculateIndexes(TreeView1.Nodes[0].Nodes[1].Nodes[6]);
-                                System.IO.MemoryStream _Sound = LevelData.Get_Stream(ind);
+                                System.IO.MemoryStream _Sound = fileData.Get_Stream(ind);
                                 Writer.Write(SD.ID);
                                 Writer.Write(SD.Frequency);
                                 Writer.Write(SD.SoundSize);
@@ -3906,7 +3908,7 @@ namespace TwinsaityEditor
                     System.IO.FileStream File = new System.IO.FileStream(ExtractItem.FileName, System.IO.FileMode.Create, System.IO.FileAccess.Write);
                     System.IO.BinaryWriter Writer = new System.IO.BinaryWriter(File);
                     SoundDescription SD = (SoundDescription)Obj;
-                    object Par = LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
+                    object Par = fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
                     System.IO.MemoryStream Sound;
                     if (Par is SoundbankDescriptions)
                     {
@@ -3914,7 +3916,7 @@ namespace TwinsaityEditor
                         Sound = SbD.SoundBank;
                     }
                     else
-                        Sound = LevelData.Get_Stream(CalculateIndexes(TreeView1.SelectedNode.Parent.Parent.Nodes[TreeView1.SelectedNode.Parent.Index + 1]));
+                        Sound = fileData.Get_Stream(CalculateIndexes(TreeView1.SelectedNode.Parent.Parent.Nodes[TreeView1.SelectedNode.Parent.Index + 1]));
                     Writer.Write(SD.ID);
                     Writer.Write(SD.Frequency);
                     Writer.Write(SD.SoundSize);
@@ -3931,7 +3933,7 @@ namespace TwinsaityEditor
 
         private void NewRM2ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            LevelData.NewRM2();
+            fileData.NewRM2();
             LoadTree();
         }
 
@@ -3939,7 +3941,7 @@ namespace TwinsaityEditor
         {
             if (_utilNewSM2.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                LevelData.NewSM2(_utilNewSM2.TextBox1.Text);
+                fileData.NewSM2(_utilNewSM2.TextBox1.Text);
                 LoadTree();
             }
         }
@@ -4494,37 +4496,38 @@ namespace TwinsaityEditor
         }
         private void GeoDataVisualiserToolStripMenuItem_Click_1(object sender, EventArgs e)
         {
-            for (int i = 0; i <= LevelData.Records - 1; i++)
+            for (int i = 0; i < fileData.Records; i++)
             {
-                if (LevelData.Item[i].ID == 9)
+                if (fileData.Item[i].ID == 9)
                 {
-                    //_viewGeoData.GD = (GeoData)LevelData.Item[i];
+                    Form frm = new Form();
+                    RMViewer viewer = new RMViewer((GeoData)fileData.Item[i]);
+                    viewer.Dock = DockStyle.Fill;
+                    frm.Controls.Add(viewer);
+                    frm.Show();
+                    //_viewGeoData.GD = (GeoData)fileData.Item[i];
                     //_viewGeoData.Show();
                     //_viewGeoData.Init();
-                    i = LevelData.Records;
+                    break;
                 }
             }
         }
 
         private void ClearGeoDataToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            for (int i = 0; i <= LevelData.Records - 1; i++)
+            for (int i = 0; i < fileData.Records; i++)
             {
-                if (LevelData.Item[i].ID == 9)
+                if (fileData.Item[i].ID == 9)
                 {
-                    GeoData GD = (GeoData)LevelData.Item[i];
-                    GD.TriggerSize = 0;
-                    GD.GroupSize = 0;
-                    GD.IndexSize = 0;
-                    GD.VertexSize = 0;
-                    Array.Resize(ref GD.Triggers, GD.TriggerSize);
-                    Array.Resize(ref GD.Groups, GD.GroupSize);
-                    Array.Resize(ref GD.Indexes, GD.IndexSize);
-                    Array.Resize(ref GD.Vertex, GD.VertexSize);
-                    LevelData.Item[i] = GD;
+                    GeoData GD = (GeoData)fileData.Item[i];
+                    GD.Triggers.Clear();
+                    GD.Groups.Clear();
+                    GD.Tris.Clear();
+                    GD.Vertices.Clear();
+                    fileData.Item[i] = GD;
                     RefreshSummary();
-                    LevelData.Put_Item(GD, CalculateIndexes(TreeView1.Nodes[0].Nodes[i]));
-                    i = LevelData.Records;
+                    fileData.Put_Item(GD, CalculateIndexes(TreeView1.Nodes[0].Nodes[i]));
+                    break;
                 }
             }
         }
@@ -4535,40 +4538,41 @@ namespace TwinsaityEditor
             {
                 System.IO.FileStream ObjFile = new System.IO.FileStream(ObjSingleSave.FileName, System.IO.FileMode.Create, System.IO.FileAccess.Write);
                 System.IO.StreamWriter ObjWriter = new System.IO.StreamWriter(ObjFile);
-                GeoData GD = new GeoData();
-                for (int i = 0; i <= LevelData.Records - 1; i++)
+                GeoData GD = null;
+                for (int i = 0; i < fileData.Records; i++)
                 {
-                    if (LevelData.Item[i].ID == 9)
+                    if (fileData.Item[i].ID == 9)
                     {
-                        GD = (GeoData)LevelData.Item[i];
-                        i = LevelData.Records;
+                        GD = (GeoData)fileData.Item[i];
+                        break;
                     }
                 }
+                if (GD == null) return;
                 ObjWriter.WriteLine("# Converted by TwinsanityEditor, made by Neo_Kesha");
                 ObjWriter.WriteLine("# All rights on game assets belongs to their respective authors");
                 ObjWriter.WriteLine("o TwinsanityMap");
-                for (int i = 0; i <= GD.VertexSize - 1; i++)
-                    ObjWriter.WriteLine("v " + GD.Vertex[i].X.ToString() + " " + GD.Vertex[i].Y.ToString() + " " + GD.Vertex[i].Z.ToString() + " 1,0");
-                for (int i = 0; i <= GD.IndexSize - 1; i++)
+                for (int i = 0; i < GD.Vertices.Count; i++)
+                    ObjWriter.WriteLine("v " + GD.Vertices[i].X.ToString() + " " + GD.Vertices[i].Y.ToString() + " " + GD.Vertices[i].Z.ToString() + " 1,0");
+                for (int i = 0; i < GD.Tris.Count; i++)
                 {
                     /*Microsoft.DirectX.Vector3 vert1 = new Microsoft.DirectX.Vector3(GD.Vertex[GD.Indexes[i].Vert1].X, GD.Vertex[GD.Indexes[i].Vert1].Y, GD.Vertex[GD.Indexes[i].Vert1].Z);
                     Microsoft.DirectX.Vector3 vert2 = new Microsoft.DirectX.Vector3(GD.Vertex[GD.Indexes[i].Vert2].X, GD.Vertex[GD.Indexes[i].Vert2].Y, GD.Vertex[GD.Indexes[i].Vert2].Z);
                     Microsoft.DirectX.Vector3 vert3 = new Microsoft.DirectX.Vector3(GD.Vertex[GD.Indexes[i].Vert3].X, GD.Vertex[GD.Indexes[i].Vert3].Y, GD.Vertex[GD.Indexes[i].Vert3].Z);
                     Microsoft.DirectX.Vector3 normal = CalcNormal(vert1, vert2, vert3);*/
-                    OpenTK.Vector3 vert1 = new OpenTK.Vector3(GD.Vertex[GD.Indexes[i].Vert1].X, GD.Vertex[GD.Indexes[i].Vert1].Y, GD.Vertex[GD.Indexes[i].Vert1].Z);
-                    OpenTK.Vector3 vert2 = new OpenTK.Vector3(GD.Vertex[GD.Indexes[i].Vert2].X, GD.Vertex[GD.Indexes[i].Vert2].Y, GD.Vertex[GD.Indexes[i].Vert2].Z);
-                    OpenTK.Vector3 vert3 = new OpenTK.Vector3(GD.Vertex[GD.Indexes[i].Vert3].X, GD.Vertex[GD.Indexes[i].Vert3].Y, GD.Vertex[GD.Indexes[i].Vert3].Z);
+                    OpenTK.Vector3 vert1 = new OpenTK.Vector3(GD.Vertices[GD.Tris[i].Vert1].X, GD.Vertices[GD.Tris[i].Vert1].Y, GD.Vertices[GD.Tris[i].Vert1].Z);
+                    OpenTK.Vector3 vert2 = new OpenTK.Vector3(GD.Vertices[GD.Tris[i].Vert2].X, GD.Vertices[GD.Tris[i].Vert2].Y, GD.Vertices[GD.Tris[i].Vert2].Z);
+                    OpenTK.Vector3 vert3 = new OpenTK.Vector3(GD.Vertices[GD.Tris[i].Vert3].X, GD.Vertices[GD.Tris[i].Vert3].Y, GD.Vertices[GD.Tris[i].Vert3].Z);
                     OpenTK.Vector3 normal = CalcNormal(vert1, vert2, vert3);
                     ObjWriter.WriteLine("vn " + normal.X.ToString() + " " + normal.Y.ToString() + " " + normal.Z.ToString());
                 }
-                for (int i = 0; i <= GD.IndexSize - 1; i++)
-                    ObjWriter.WriteLine("f " + (GD.Indexes[i].Vert1 + 1).ToString() + "//" + (i + 1).ToString() + " " + (GD.Indexes[i].Vert2 + 1).ToString() + "//" + (i + 1).ToString() + " " + (GD.Indexes[i].Vert3 + 1).ToString() + "//" + (i + 1).ToString());
+                for (int i = 0; i < GD.Tris.Count; i++)
+                    ObjWriter.WriteLine("f " + (GD.Tris[i].Vert1 + 1).ToString() + "//" + (i + 1).ToString() + " " + (GD.Tris[i].Vert2 + 1).ToString() + "//" + (i + 1).ToString() + " " + (GD.Tris[i].Vert3 + 1).ToString() + "//" + (i + 1).ToString());
                 ObjWriter.Close();
                 ObjFile.Close();
-                Interaction.MsgBox("Done");
+                Interaction.MsgBox("Done.");
             }
         }
-        public OpenTK.Vector3 CalcNormal(OpenTK.Vector3 Vert1, OpenTK.Vector3 Vert2, OpenTK.Vector3 Vert3)
+        public static OpenTK.Vector3 CalcNormal(OpenTK.Vector3 Vert1, OpenTK.Vector3 Vert2, OpenTK.Vector3 Vert3)
         {
             float x1 = Vert1.X;
             float y1 = Vert1.Y;
@@ -4584,99 +4588,71 @@ namespace TwinsaityEditor
             float nz = ((x1 - x2) * (y1 - y3)) - ((y1 - y2) * (x1 - x3));
             return new OpenTK.Vector3(nx, ny, nz);
         }
-        private struct mdl_surf
-        {
-            public uint SID;
-            public uint Num;
-        }
-        private struct face
-        {
-            public uint Vert1;
-            public uint Vert2;
-            public uint Vert3;
-        }
+
         private void ExportOBJLayeredToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (ObjSingleSave.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                mdl_surf[] surface = new mdl_surf[] { };
-                GeoData GD = new GeoData();
-                for (int i = 0; i <= LevelData.Records - 1; i++)
+                List<int> surfaces = new List<int>();
+                GeoData GD = null;
+                for (int i = 0; i < fileData.Records; i++)
                 {
-                    if (LevelData.Item[i].ID == 9)
+                    if (fileData.Item[i].ID == 9)
                     {
-                        GD = (GeoData)LevelData.Item[i];
-                        i = LevelData.Records;
+                        GD = (GeoData)fileData.Item[i];
+                        break;
                     }
                 }
-                for (int i = 0; i <= GD.IndexSize - 1; i++)
+                if (GD == null) return;
+                for (int i = 0; i < GD.Tris.Count; i++)
                 {
-                    bool flag = true;
-                    for (int j = 0; j <= surface.Length - 1; j++)
-                    {
-                        if (surface[j].SID == GD.Indexes[i].Surface)
-                        {
-                            flag = false;
-                            surface[j].Num += 1;
-                            j = surface.Length;
-                        }
-                    }
-                    if (flag)
-                    {
-                        Array.Resize(ref surface, surface.Length + 1);
-                        surface[surface.Length - 1].SID = GD.Indexes[i].Surface;
-                        surface[surface.Length - 1].Num = 0;
-                    }
+                    while (GD.Tris[i].Surface > surfaces.Count)
+                        surfaces.Add(0);
+                    surfaces[GD.Tris[i].Surface]++;
                 }
                 string Name = ObjSingleSave.FileName.Split('.')[0];
-                for (int i = 0; i <= surface.Length - 1; i++)
+                for (int i = 0; i < surfaces.Count && surfaces[i] > 0; i++)
                 {
-                    System.IO.FileStream ObjFile = new System.IO.FileStream(Name + "ID" + surface[i].SID.ToString() + ".obj", System.IO.FileMode.Create, System.IO.FileAccess.Write);
+                    System.IO.FileStream ObjFile = new System.IO.FileStream(Name + "ID" + i.ToString() + ".obj", System.IO.FileMode.Create, System.IO.FileAccess.Write);
                     System.IO.StreamWriter ObjWriter = new System.IO.StreamWriter(ObjFile);
-                    uint[] Convert = new uint[GD.VertexSize - 1 + 1];
+                    HashSet<int> vertexHash = new HashSet<int>(); //we create a hashset to prevent duplicate entries
                     uint cnt = 0;
-                    ObjWriter.WriteLine("# Map Surface ID " + surface[i].SID.ToString());
+                    ObjWriter.WriteLine("# Map Surface ID " + i.ToString());
                     ObjWriter.WriteLine("# Converted by TwinsanityEditor, made by Neo_Kesha");
-                    ObjWriter.WriteLine("# All rights on game assets belongs to their respective authors");
-                    for (int j = 0; j <= GD.IndexSize - 1; j++)
-                    {
-                        if (GD.Indexes[j].Surface == surface[i].SID)
+                    ObjWriter.WriteLine("# All rights on game assets belongs to their respective owners");
+                    for (int j = 0; j < GD.Tris.Count; j++)
+                        if (GD.Tris[j].Surface == i)
                         {
-                            cnt += 1;
-                            Convert[GD.Indexes[j].Vert1] = cnt;
-                            ObjWriter.WriteLine("v " + GD.Vertex[GD.Indexes[j].Vert1].X.ToString() + " " + GD.Vertex[GD.Indexes[j].Vert1].Y.ToString() + " " + GD.Vertex[GD.Indexes[j].Vert1].Z.ToString() + " 1,0");
-                            cnt += 1;
-                            Convert[GD.Indexes[j].Vert2] = cnt;
-                            ObjWriter.WriteLine("v " + GD.Vertex[GD.Indexes[j].Vert2].X.ToString() + " " + GD.Vertex[GD.Indexes[j].Vert2].Y.ToString() + " " + GD.Vertex[GD.Indexes[j].Vert2].Z.ToString() + " 1,0");
-                            cnt += 1;
-                            Convert[GD.Indexes[j].Vert3] = cnt;
-                            ObjWriter.WriteLine("v " + GD.Vertex[GD.Indexes[j].Vert3].X.ToString() + " " + GD.Vertex[GD.Indexes[j].Vert3].Y.ToString() + " " + GD.Vertex[GD.Indexes[j].Vert3].Z.ToString() + " 1,0");
+                            vertexHash.Add(GD.Tris[j].Vert1);
+                            vertexHash.Add(GD.Tris[j].Vert2);
+                            vertexHash.Add(GD.Tris[j].Vert3);
                         }
-                    }
-                    cnt = 0;
-                    for (int j = 0; j <= GD.GroupSize - 1; j++)
+                    List<int> vertexList = new List<int>(vertexHash); //we convert the hash to a usable list, this is MUCH faster
+                    for (int j = 0; j < vertexList.Count; j++)
+                        ObjWriter.WriteLine("v " + GD.Vertices[vertexList[j]].X.ToString() + " " + GD.Vertices[vertexList[j]].Y.ToString() + " " + GD.Vertices[vertexList[j]].Z.ToString() + " 1,0");
+                    for (int j = 0; j < GD.Groups.Count; j++)
                     {
-                        bool Flag = false;
-                        for (int k = (int)GD.Groups[j].Offset; k <= GD.Groups[j].Offset + GD.Groups[j].Size - 1; k++)
+                        bool flag = false;
+                        for (int k = (int)GD.Groups[j].Offset; k < GD.Groups[j].Offset + GD.Groups[j].Size; k++)
                         {
-                            if (GD.Indexes[k].Surface == surface[i].SID)
+                            if (GD.Tris[k].Surface == i)
                             {
-                                if (!Flag)
+                                if (!flag)
                                 {
-                                    Flag = true;
+                                    flag = true;
                                     ObjWriter.WriteLine("o G" + j.ToString());
                                 }
-                                cnt += 1;
+                                cnt++;
                                 /*Microsoft.DirectX.Vector3 V1 = new Microsoft.DirectX.Vector3(GD.Vertex[GD.Indexes[k].Vert1].X, GD.Vertex[GD.Indexes[k].Vert1].Y, GD.Vertex[GD.Indexes[k].Vert1].Z);
                                 Microsoft.DirectX.Vector3 V2 = new Microsoft.DirectX.Vector3(GD.Vertex[GD.Indexes[k].Vert2].X, GD.Vertex[GD.Indexes[k].Vert2].Y, GD.Vertex[GD.Indexes[k].Vert2].Z);
                                 Microsoft.DirectX.Vector3 V3 = new Microsoft.DirectX.Vector3(GD.Vertex[GD.Indexes[k].Vert3].X, GD.Vertex[GD.Indexes[k].Vert3].Y, GD.Vertex[GD.Indexes[k].Vert3].Z);
                                 Microsoft.DirectX.Vector3 Normal = CalcNormal(V1, V2, V3);*/
-                                OpenTK.Vector3 vert1 = new OpenTK.Vector3(GD.Vertex[GD.Indexes[i].Vert1].X, GD.Vertex[GD.Indexes[i].Vert1].Y, GD.Vertex[GD.Indexes[i].Vert1].Z);
-                                OpenTK.Vector3 vert2 = new OpenTK.Vector3(GD.Vertex[GD.Indexes[i].Vert2].X, GD.Vertex[GD.Indexes[i].Vert2].Y, GD.Vertex[GD.Indexes[i].Vert2].Z);
-                                OpenTK.Vector3 vert3 = new OpenTK.Vector3(GD.Vertex[GD.Indexes[i].Vert3].X, GD.Vertex[GD.Indexes[i].Vert3].Y, GD.Vertex[GD.Indexes[i].Vert3].Z);
+                                OpenTK.Vector3 vert1 = new OpenTK.Vector3(GD.Vertices[GD.Tris[k].Vert1].X, GD.Vertices[GD.Tris[k].Vert1].Y, GD.Vertices[GD.Tris[k].Vert1].Z);
+                                OpenTK.Vector3 vert2 = new OpenTK.Vector3(GD.Vertices[GD.Tris[k].Vert2].X, GD.Vertices[GD.Tris[k].Vert2].Y, GD.Vertices[GD.Tris[k].Vert2].Z);
+                                OpenTK.Vector3 vert3 = new OpenTK.Vector3(GD.Vertices[GD.Tris[k].Vert3].X, GD.Vertices[GD.Tris[k].Vert3].Y, GD.Vertices[GD.Tris[k].Vert3].Z);
                                 OpenTK.Vector3 normal = CalcNormal(vert1, vert2, vert3);
                                 ObjWriter.WriteLine("vn " + normal.X.ToString() + " " + normal.Y.ToString() + " " + normal.Z.ToString());
-                                ObjWriter.WriteLine("f " + Convert[GD.Indexes[k].Vert1].ToString() + "//" + cnt.ToString() + " " + Convert[GD.Indexes[k].Vert2].ToString() + "//" + cnt.ToString() + " " + Convert[GD.Indexes[k].Vert3].ToString() + "//" + cnt.ToString());
+                                ObjWriter.WriteLine("f " + GD.Vertices[GD.Tris[k].Vert1].ToString() + "//" + cnt.ToString() + " " + GD.Vertices[GD.Tris[k].Vert2].ToString() + "//" + cnt.ToString() + " " + GD.Vertices[GD.Tris[k].Vert3].ToString() + "//" + cnt.ToString());
                             }
                         }
                     }
@@ -4685,6 +4661,12 @@ namespace TwinsaityEditor
                 }
                 Interaction.MsgBox("Done");
             }
+        }
+        private struct Face
+        {
+            public int Vert1;
+            public int Vert2;
+            public int Vert3;
         }
         private struct Group
         {
@@ -4697,21 +4679,21 @@ namespace TwinsaityEditor
             {
                 _viewGeoData.Close();
                 GeoData GD = new GeoData();
-                for (int i = 0; i <= LevelData.Records - 1; i++)
+                for (int i = 0; i <= fileData.Records - 1; i++)
                 {
-                    if (LevelData.Item[i].ID == 9)
+                    if (fileData.Item[i].ID == 9)
                     {
-                        GD = (GeoData)LevelData.Item[i];
-                        i = LevelData.Records;
+                        GD = (GeoData)fileData.Item[i];
+                        break;
                     }
                 }
-                uint SID = uint.Parse(ToolStripMenuItem3.Text);
-                OpenTK.Vector3[] Verts = new OpenTK.Vector3[] { };
-                face[] Faces = new face[] { };
-                Group[] Groups = new Group[] { };
-                uint Shift = (uint)GD.VertexSize;
-                uint IndShift = (uint)GD.IndexSize;
-                uint GroupShift = (uint)GD.GroupSize;
+                int SID = int.Parse(ToolStripMenuItem3.Text);
+                List<OpenTK.Vector3> verts = new List<OpenTK.Vector3>();
+                List<Face> faces = new List<Face>();
+                List<Group> groups = new List<Group>();
+                int Shift = GD.Vertices.Count;
+                int IndShift = GD.Tris.Count;
+                int GroupShift = GD.Groups.Count;
                 System.IO.FileStream ObjFile = new System.IO.FileStream(OpenObj.FileName, System.IO.FileMode.Open, System.IO.FileAccess.Read);
                 System.IO.StreamReader ObjReader = new System.IO.StreamReader(ObjFile);
                 while (!ObjReader.EndOfStream)
@@ -4720,74 +4702,64 @@ namespace TwinsaityEditor
                     switch (str[0])
                     {
                         case "v":
-                            {
-                                Array.Resize(ref Verts, Verts.Length + 1);
-                                Verts[Verts.Length - 1] = new OpenTK.Vector3(float.Parse(str[1].Replace(".", ",")), float.Parse(str[2].Replace(".", ",")), float.Parse(str[3].Replace(".", ",")));
-                                break;
-                            }
-
+                            verts.Add(new OpenTK.Vector3(float.Parse(str[1].Replace(".", ",")), float.Parse(str[2].Replace(".", ",")), float.Parse(str[3].Replace(".", ","))));
+                            break;
                         case "f":
                             {
-                                Array.Resize(ref Faces, Faces.Length + 1);
-                                Faces[Faces.Length - 1].Vert1 = uint.Parse(str[1].Split('/')[0]);
-                                Faces[Faces.Length - 1].Vert2 = uint.Parse(str[2].Split('/')[0]);
-                                Faces[Faces.Length - 1].Vert3 = uint.Parse(str[3].Split('/')[0]);
-                                Groups[Groups.Length - 1].Size += 1;
+                                faces.Add(new Face { Vert1 = int.Parse(str[1].Split('/')[0]), Vert2 = int.Parse(str[2].Split('/')[0]), Vert3 = int.Parse(str[3].Split('/')[0]) });
+                                Group grp = groups[groups.Count - 1];
+                                grp.Size += 1;
                                 break;
                             }
-
                         case "o":
-                            {
-                                Array.Resize(ref Groups, Groups.Length + 1);
-                                if (Groups.Length > 1)
-                                    Groups[Groups.Length - 1].Offset = Groups[Groups.Length - 2].Offset + Groups[Groups.Length - 2].Size;
-                                break;
-                            }
+                            groups.Add(new Group { Offset = groups.Count > 1 ? (groups[groups.Count - 2].Offset + groups[groups.Count - 2].Size) : 0 });
+                            break;
                     }
                 }
-                Array.Resize(ref GD.Vertex, GD.Vertex.Length + Verts.Length);
-                for (int i = 0; i <= Verts.Length - 1; i++)
+                for (int i = 0; i < verts.Count; i++)
                 {
-                    GD.Vertex[Shift + i].X = Verts[i].X;
-                    GD.Vertex[Shift + i].Y = Verts[i].Y;
-                    GD.Vertex[Shift + i].Z = Verts[i].Z;
+                    GD.Vertices.Add(new Pos { X = verts[i].X, Y = verts[i].Y, Z = verts[i].Z });
                 }
-                Array.Resize(ref GD.Indexes, GD.Indexes.Length + Faces.Length);
-                for (int i = 0; i <= Faces.Length - 1; i++)
+                for (int i = 0; i < faces.Count; i++)
                 {
-                    GD.Indexes[IndShift + i].Vert1 = Faces[i].Vert1 - 1 + Shift;
-                    GD.Indexes[IndShift + i].Vert2 = Faces[i].Vert2 - 1 + Shift;
-                    GD.Indexes[IndShift + i].Vert3 = Faces[i].Vert3 - 1 + Shift;
-                    GD.Indexes[IndShift + i].Surface = SID;
+                    GD.Tris.Add(new GeoData.ColTri
+                    {
+                        Vert1 = faces[i].Vert1 - 1 + Shift,
+                        Vert2 = faces[i].Vert2 - 1 + Shift,
+                        Vert3 = faces[i].Vert3 - 1 + Shift,
+                        Surface = SID
+                    });
                 }
-                Array.Resize(ref GD.Groups, GD.Groups.Length + Groups.Length);
-                for (int i = 0; i <= Groups.Length - 1; i++)
+                for (int i = 0; i < groups.Count; i++)
                 {
-                    GD.Groups[GroupShift + i].Offset = Groups[i].Offset + IndShift;
-                    GD.Groups[GroupShift + i].Size = Groups[i].Size;
+                    GD.Groups.Add(new GeoData.GroupInfo
+                    {
+                        Offset = (uint)(groups[i].Offset + IndShift),
+                        Size = groups[i].Size
+                    });
                 }
-                GD.VertexSize = GD.Vertex.Length;
-                GD.IndexSize = GD.Indexes.Length;
-                GD.GroupSize = GD.Groups.Length;
-                GD.TriggerSize = GD.GroupSize * 2 - 1;
-                GeoData.VertexMaps[] NewTriggers = new GeoData.VertexMaps[GD.GroupSize * 2 - 1 + 1];
+                //GD.VertexSize = GD.Vertex.Length;
+                //GD.IndexSize = GD.Indexes.Length;
+                //GD.GroupSize = GD.Groups.Length;
+                //GD.TriggerSize = GD.GroupSize * 2 - 1;
+                List<GeoData.Trigger> NewTriggers = new List<GeoData.Trigger>(GD.Groups.Count * 2);
                 TreeView TriggerTree = new TreeView();
                 TriggerTree.Nodes.Add("E", "0");
-                int x = (int)Math.Truncate(Math.Log(GD.GroupSize, 2));
-                for (int i = 0; i <= x - 1; i++)
+                int x = (int)Math.Truncate(Math.Log(GD.Groups.Count, 2));
+                for (int i = 0; i < x; i++)
                     ExpandLevel(TriggerTree.Nodes[0]);
-                ExpandEngings(TriggerTree, (uint)(GD.GroupSize - Math.Pow(2, x)));
+                ExpandEngings(TriggerTree, (uint)(GD.Groups.Count - Math.Pow(2, x)));
                 TreeTemp = 1;
                 CalcIDs(TriggerTree.Nodes[0]);
-                Tree2Trigger(TriggerTree.Nodes[0], ref NewTriggers);
-                TriggerRecalculate(ref NewTriggers, ref GD.Groups, ref GD.Indexes, ref GD.Vertex, 0);
+                Tree2Trigger(TriggerTree.Nodes[0], NewTriggers);
+                TriggerRecalculate(NewTriggers, GD.Groups, GD.Tris, GD.Vertices, 0);
                 GD.Triggers = NewTriggers;
-                for (int i = 0; i <= LevelData.Records - 1; i++)
+                for (int i = 0; i <= fileData.Records - 1; i++)
                 {
-                    if (LevelData.Item[i].ID == 9)
+                    if (fileData.Item[i].ID == 9)
                     {
-                        LevelData.Put_Item(GD, CalculateIndexes(TreeView1.Nodes[0].Nodes[i]));
-                        i = LevelData.Records;
+                        fileData.Put_Item(GD, CalculateIndexes(TreeView1.Nodes[0].Nodes[i]));
+                        break;
                     }
                 }
                 ObjReader.Close();
@@ -4840,38 +4812,41 @@ namespace TwinsaityEditor
                 TreeTemp += 1;
             }
         }
-        private void Tree2Trigger(TreeNode Node, ref GeoData.VertexMaps[] Triggers)
+        private void Tree2Trigger(TreeNode Node, List<GeoData.Trigger> Triggers)
         {
             if (Node.Name == "P")
             {
-                Triggers[uint.Parse(Node.Text)].Flag1 = int.Parse(Node.Nodes[0].Text);
-                Triggers[uint.Parse(Node.Text)].Flag2 = int.Parse(Node.Nodes[1].Text);
-                Tree2Trigger(Node.Nodes[0], ref Triggers);
-                Tree2Trigger(Node.Nodes[1], ref Triggers);
+                GeoData.Trigger trg = Triggers[int.Parse(Node.Text)];
+                trg.Flag1 = int.Parse(Node.Nodes[0].Text);
+                trg.Flag2 = int.Parse(Node.Nodes[1].Text);
+                Tree2Trigger(Node.Nodes[0], Triggers);
+                Tree2Trigger(Node.Nodes[1], Triggers);
             }
             else if (Node.Name == "E")
             {
-                Triggers[uint.Parse(Node.Text)].Flag1 = -int.Parse(Node.Nodes[0].Text);
-                Triggers[uint.Parse(Node.Text)].Flag2 = -int.Parse(Node.Nodes[0].Text);
+                GeoData.Trigger trg = Triggers[int.Parse(Node.Text)];
+                trg.Flag1 = -int.Parse(Node.Nodes[0].Text);
+                trg.Flag2 = -int.Parse(Node.Nodes[0].Text);
             }
         }
-        private void TriggerRecalculate(ref GeoData.VertexMaps[] Triggers, ref GeoData.OffsetsMapping[] Groups, ref GeoData.Index[] Indexes, ref RM2.Coordinate4[] Vertexes, uint index)
+        private void TriggerRecalculate(List<GeoData.Trigger> Triggers, List<GeoData.GroupInfo> Groups, List<GeoData.ColTri> Indexes, List<Pos> Vertexes, int index)
         {
-            if (Triggers[index].Flag1 >= 0)
+            GeoData.Trigger trg = Triggers[index];
+            if (trg.Flag1 >= 0)
             {
-                TriggerRecalculate(ref Triggers, ref Groups, ref Indexes, ref Vertexes, (uint)Triggers[index].Flag1);
-                TriggerRecalculate(ref Triggers, ref Groups, ref Indexes, ref Vertexes, (uint)Triggers[index].Flag2);
-                Triggers[index].X1 = Math.Min(Triggers[Triggers[index].Flag1].X1, Triggers[Triggers[index].Flag2].X1);
-                Triggers[index].Y1 = Math.Min(Triggers[Triggers[index].Flag1].Y1, Triggers[Triggers[index].Flag2].Y1);
-                Triggers[index].Z1 = Math.Min(Triggers[Triggers[index].Flag1].Z1, Triggers[Triggers[index].Flag2].Z1);
-                Triggers[index].X2 = Math.Max(Triggers[Triggers[index].Flag1].X2, Triggers[Triggers[index].Flag2].X2);
-                Triggers[index].Y2 = Math.Max(Triggers[Triggers[index].Flag1].Y2, Triggers[Triggers[index].Flag2].Y2);
-                Triggers[index].Z2 = Math.Max(Triggers[Triggers[index].Flag1].Z2, Triggers[Triggers[index].Flag2].Z2);
+                TriggerRecalculate(Triggers, Groups, Indexes, Vertexes, trg.Flag1);
+                TriggerRecalculate(Triggers, Groups, Indexes, Vertexes, trg.Flag2);
+                trg.X1 = Math.Min(Triggers[trg.Flag1].X1, Triggers[trg.Flag2].X1);
+                trg.Y1 = Math.Min(Triggers[trg.Flag1].Y1, Triggers[trg.Flag2].Y1);
+                trg.Z1 = Math.Min(Triggers[trg.Flag1].Z1, Triggers[trg.Flag2].Z1);
+                trg.X2 = Math.Max(Triggers[trg.Flag1].X2, Triggers[trg.Flag2].X2);
+                trg.Y2 = Math.Max(Triggers[trg.Flag1].Y2, Triggers[trg.Flag2].Y2);
+                trg.Z2 = Math.Max(Triggers[trg.Flag1].Z2, Triggers[trg.Flag2].Z2);
             }
             else
             {
                 float x1 = 0f, x2 = 0f, y1 = 0f, y2 = 0f, z1 = 0f, z2 = 0f;
-                for (int i = (int)Groups[-Triggers[index].Flag1 - 1].Offset; i <= Groups[-Triggers[index].Flag1 - 1].Offset + Groups[-Triggers[index].Flag1 - 1].Size - 1; i++)
+                for (int i = (int)Groups[-trg.Flag1 - 1].Offset; i <= Groups[-trg.Flag1 - 1].Offset + Groups[-trg.Flag1 - 1].Size - 1; i++)
                 {
                     OpenTK.Vector3 a, b, c;
                     a.X = Vertexes[Indexes[i].Vert1].X;
@@ -4908,23 +4883,23 @@ namespace TwinsaityEditor
                     else
                         z2 = Math.Max(z2, Math.Max(a.Z, Math.Min(b.Z, c.Z)));
                 }
-                Triggers[index].X1 = x1;
-                Triggers[index].Y1 = y1;
-                Triggers[index].Z1 = z1;
-                Triggers[index].X2 = x2;
-                Triggers[index].Y2 = y2;
-                Triggers[index].Z2 = z2;
+                trg.X1 = x1;
+                trg.Y1 = y1;
+                trg.Z1 = z1;
+                trg.X2 = x2;
+                trg.Y2 = y2;
+                trg.Z2 = z2;
             }
         }
         private void TexturesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             int[] indexes = CalculateIndexes(TreeView1.SelectedNode);
-            BaseObject Obj = LevelData.Get_Item(indexes);
+            BaseObject Obj = fileData.Get_Item(indexes);
             if (Obj is Texture)
             {
                 _viewTexture.Hide();
-                _viewTexture.Textures = (Textures)LevelData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[0]));
-                _viewTexture.Materials = (Materials)LevelData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[1]));
+                _viewTexture.Textures = (Textures)fileData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[0]));
+                _viewTexture.Materials = (Materials)fileData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[1]));
                 _viewTexture.Mat = false;
                 _viewTexture.CurTex = (uint)TreeView1.SelectedNode.Index;
                 _viewTexture.Show();
@@ -4934,8 +4909,8 @@ namespace TwinsaityEditor
                 _viewTexture.Hide();
                 Material MAT = (Material)Obj;
                 uint TexID = MAT.Texture;
-                _viewTexture.Textures = (Textures)LevelData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[0]));
-                _viewTexture.Materials = (Materials)LevelData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[1]));
+                _viewTexture.Textures = (Textures)fileData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[0]));
+                _viewTexture.Materials = (Materials)fileData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[1]));
                 _viewTexture.Mat = true;
                 _viewTexture.CurTex = (uint)TreeView1.SelectedNode.Index;
                 _viewTexture.Show();
@@ -4949,9 +4924,9 @@ namespace TwinsaityEditor
             {
                 Twinsanity.GC GC = (Twinsanity.GC)Obj;
                 Texture[] Texture = new Texture[] { };
-                Materials Materials = (Materials)LevelData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[1]));
-                Textures Textures = (Textures)LevelData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[0]));
-                Models Models = (Models)LevelData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[2]));
+                Materials Materials = (Materials)fileData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[1]));
+                Textures Textures = (Textures)fileData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[0]));
+                Models Models = (Models)fileData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[2]));
                 Material[] MAT = new Material[] { };
                 for (int i = 0; i <= GC.MaterialNumber - 1; i++)
                 {
@@ -4994,8 +4969,8 @@ namespace TwinsaityEditor
             else if (Obj is Scenery)
             {
                 Scenery SCEN = (Scenery)Obj;
-                GCs GCs = (GCs)LevelData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[6]));
-                Terrains Ts = (Terrains)LevelData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[7]));
+                GCs GCs = (GCs)fileData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[6]));
+                Terrains Ts = (Terrains)fileData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[7]));
                 Twinsanity.GC[] SGC = new Twinsanity.GC[] { };
                 Scenery.Matrix4[] M = new Scenery.Matrix4[] { };
                 float[] Kf = new float[] { };
@@ -5053,9 +5028,9 @@ namespace TwinsaityEditor
                 {
                     Texture[] Texture = new Twinsanity.Texture[] { };
                     Model Model = new Model();
-                    Materials Materials = (Materials)LevelData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[1]));
-                    Textures Textures = (Textures)LevelData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[0]));
-                    Models Models = (Models)LevelData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[2]));
+                    Materials Materials = (Materials)fileData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[1]));
+                    Textures Textures = (Textures)fileData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[0]));
+                    Models Models = (Models)fileData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[2]));
                     Material[] MAT = new Material[] { };
                     for (int i = 0; i <= GC.MaterialNumber - 1; i++)
                     {
@@ -5146,15 +5121,15 @@ namespace TwinsaityEditor
         }
         private void ManagerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            BaseObject Obj = LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode));
+            BaseObject Obj = fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode));
             if (Obj is SoundDescription)
             {
                 SoundDescription SD = (SoundDescription)Obj;
-                BaseObject ParObj = LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
+                BaseObject ParObj = fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
                 System.IO.MemoryStream SoundBank = new System.IO.MemoryStream();
                 if (ParObj is SoundDescriptions)
                 {
-                    System.IO.MemoryStream PSoundBank = LevelData.Get_Stream(CalculateIndexes(TreeView1.SelectedNode.Parent.Parent.Nodes[TreeView1.SelectedNode.Parent.Index + 1]));
+                    System.IO.MemoryStream PSoundBank = fileData.Get_Stream(CalculateIndexes(TreeView1.SelectedNode.Parent.Parent.Nodes[TreeView1.SelectedNode.Parent.Index + 1]));
                     System.IO.BinaryReader Reader = new System.IO.BinaryReader(PSoundBank);
                     System.IO.BinaryWriter Writer = new System.IO.BinaryWriter(SoundBank);
                     PSoundBank.Position = SD.SoundOffset;
@@ -5184,17 +5159,17 @@ namespace TwinsaityEditor
 
         private void MHWorkerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            BaseObject Obj = LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode));
+            BaseObject Obj = fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode));
             if (Obj is SoundDescription)
             {
                 if (SaveWave.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     SoundDescription SD = (SoundDescription)Obj;
-                    BaseObject ParObj = LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
+                    BaseObject ParObj = fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
                     System.IO.MemoryStream SoundBank = new System.IO.MemoryStream();
                     if (ParObj is SoundDescriptions)
                     {
-                        System.IO.MemoryStream PSoundBank = LevelData.Get_Stream(CalculateIndexes(TreeView1.SelectedNode.Parent.Parent.Nodes[TreeView1.SelectedNode.Parent.Index + 1]));
+                        System.IO.MemoryStream PSoundBank = fileData.Get_Stream(CalculateIndexes(TreeView1.SelectedNode.Parent.Parent.Nodes[TreeView1.SelectedNode.Parent.Index + 1]));
                         System.IO.BinaryReader Reader = new System.IO.BinaryReader(PSoundBank);
                         System.IO.BinaryWriter Writer = new System.IO.BinaryWriter(SoundBank);
                         PSoundBank.Position = SD.SoundOffset;
@@ -5280,12 +5255,12 @@ namespace TwinsaityEditor
         {
             _utilTriggerTree.Hide();
             GeoData GD = new GeoData();
-            for (int i = 0; i <= LevelData.Records - 1; i++)
+            for (int i = 0; i <= fileData.Records - 1; i++)
             {
-                if (LevelData.Item[i].ID == 9)
+                if (fileData.Item[i].ID == 9)
                 {
-                    GD = (GeoData)LevelData.Item[i];
-                    i = LevelData.Records;
+                    GD = (GeoData)fileData.Item[i];
+                    break;
                 }
             }
             _utilTriggerTree.Trigg = GD.Triggers;
@@ -5304,7 +5279,7 @@ namespace TwinsaityEditor
 
         private void ExportModelToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            BaseObject Obj = LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode));
+            BaseObject Obj = fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode));
             if (Obj is Model)
             {
                 if (ObjSingleSave.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -5330,9 +5305,9 @@ namespace TwinsaityEditor
                     Twinsanity.GC GC = (Twinsanity.GC)Obj;
                     Texture[] Texture = new Twinsanity.Texture[] { };
                     Model Model = null;
-                    Materials Materials = (Materials)LevelData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[1]));
-                    Textures Textures = (Textures)LevelData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[0]));
-                    Models Models = (Models)LevelData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[2]));
+                    Materials Materials = (Materials)fileData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[1]));
+                    Textures Textures = (Textures)fileData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[0]));
+                    Models Models = (Models)fileData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[2]));
                     Material[] MAT = new Material[] { };
                     for (int i = 0; i <= GC.MaterialNumber - 1; i++)
                     {
@@ -5366,14 +5341,14 @@ namespace TwinsaityEditor
                             break;
                         }
                     }
-                    Bitmap[] BMP = new Bitmap[Texture.Length - 1 + 1];
-                    for (int i = 0; i <= BMP.Length - 1; i++)
+                    List<Bitmap> BMP = new List<Bitmap>(Texture.Length);
+                    for (int i = 0; i < BMP.Count; i++)
                     {
                         BMP[i] = new Bitmap(System.Convert.ToInt32(Texture[i].Width), System.Convert.ToInt32(Texture[i].Height));
                         for (int j = 0; j <= Texture[i].RawData.Length - 1; j++)
                             BMP[i].SetPixel((int)(j % Texture[i].Width), (int)(j / Texture[i].Width), Texture[i].RawData[j]);
                     }
-                    ExportModel(Model, BMP, ExtractBunch.SelectedPath);
+                    ExportModel(Model, BMP, null, ExtractBunch.SelectedPath);
                 }
             }
             else if (Obj is GCs)
@@ -5385,9 +5360,9 @@ namespace TwinsaityEditor
                         Twinsanity.GC GC = (Twinsanity.GC)Obj._Item[n];
                         Texture[] Texture = new Texture[] { };
                         Model Model = null;
-                        Materials Materials = (Materials)LevelData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[1]));
-                        Textures Textures = (Textures)LevelData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[0]));
-                        Models Models = (Models)LevelData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[2]));
+                        Materials Materials = (Materials)fileData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[1]));
+                        Textures Textures = (Textures)fileData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[0]));
+                        Models Models = (Models)fileData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[2]));
                         Material[] MAT = new Material[] { };
                         for (int i = 0; i <= GC.MaterialNumber - 1; i++)
                         {
@@ -5421,15 +5396,15 @@ namespace TwinsaityEditor
                                 break;
                             }
                         }
-                        Bitmap[] BMP = new Bitmap[Texture.Length - 1 + 1];
-                        for (int i = 0; i <= BMP.Length - 1; i++)
+                        List<Bitmap> BMP = new List<Bitmap>(Texture.Length);
+                        for (int i = 0; i < BMP.Count; i++)
                         {
                             BMP[i] = new Bitmap(System.Convert.ToInt32(Texture[i].Width), System.Convert.ToInt32(Texture[i].Height));
                             for (int j = 0; j <= Texture[i].RawData.Length - 1; j++)
                                 BMP[i].SetPixel((int)(j % Texture[i].Width), (int)(j / Texture[i].Width), Texture[i].RawData[j]);
                         }
                         System.IO.Directory.CreateDirectory(ExtractBunch.SelectedPath + @"\" + n.ToString());
-                        ExportModel(Model, BMP, ExtractBunch.SelectedPath + @"\" + n.ToString());
+                        ExportModel(Model, BMP, null, ExtractBunch.SelectedPath + @"\" + n.ToString());
                     }
                 }
             }
@@ -5438,48 +5413,42 @@ namespace TwinsaityEditor
                 if (ExtractBunch.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     Scenery SCEN = (Scenery)Obj;
-                    GCs GCs = (GCs)LevelData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[6]));
-                    Terrains Ts = (Terrains)LevelData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[7]));
-                    Twinsanity.GC[] SGC = new Twinsanity.GC[] { };
-                    Scenery.Matrix4[] M = new Scenery.Matrix4[] { };
-                    float[] Kf = new float[] { };
-                    for (int Si = 0; Si <= SCEN.E3.Length - 1; Si++)
+                    GCs GCs = (GCs)fileData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[6]));
+                    Terrains Ts = (Terrains)fileData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[7]));
+                    List<Twinsanity.GC> SGC = new List<Twinsanity.GC>();
+                    List<Scenery.Matrix4> M = new List<Scenery.Matrix4>();
+                    List<float> Kf = new List<float>();
+                    for (int Si = 0; Si < SCEN.E3.Length; Si++)
                     {
-                        for (int Sj = 0; Sj <= SCEN.E3[Si].GCCount - 1; Sj++)
+                        for (int Sj = 0; Sj < SCEN.E3[Si].GCCount; Sj++)
                         {
-                            for (int Sk = 0; Sk <= GCs.Records - 1; Sk++)
+                            for (int Sk = 0; Sk < GCs.Records; Sk++)
                             {
                                 if (GCs._Item[Sk].ID == SCEN.E3[Si].GCID[Sj])
                                 {
-                                    Array.Resize(ref SGC, SGC.Length + 1);
-                                    Array.Resize(ref M, M.Length + 1);
-                                    Array.Resize(ref Kf, Kf.Length + 1);
-                                    SGC[SGC.Length - 1] = (Twinsanity.GC)GCs._Item[Sk];
-                                    M[M.Length - 1] = SCEN.E3[Si].ChunkMatrix[Sj];
-                                    Kf[Kf.Length - 1] = 1;
+                                    SGC.Add((Twinsanity.GC)GCs._Item[Sk]);
+                                    M.Add(SCEN.E3[Si].ChunkMatrix[Sj]);
+                                    Kf.Add(1);
                                     break;
                                 }
                             }
                         }
-                        for (int Sj = 0; Sj <= SCEN.E3[Si].SBCount - 1; Sj++)
+                        for (int Sj = 0; Sj < SCEN.E3[Si].SBCount; Sj++)
                         {
-                            for (int Sk = 0; Sk <= Ts.Records - 1; Sk++)
+                            for (int Sk = 0; Sk < Ts.Records; Sk++)
                             {
                                 if (Ts._Item[Sk].ID == SCEN.E3[Si].SBID[Sj])
                                 {
                                     Terrain T = (Terrain)Ts._Item[Sk];
-                                    for (int Sn = 0; Sn <= T.Num - 1; Sn++)
+                                    for (int Sn = 0; Sn < T.Num; Sn++)
                                     {
-                                        for (int Tk = 0; Tk <= GCs.Records - 1; Tk++)
+                                        for (int Tk = 0; Tk < GCs.Records; Tk++)
                                         {
                                             if (GCs._Item[Tk].ID == T.IDS[3 - Sn])
                                             {
-                                                Array.Resize(ref SGC, SGC.Length + 1);
-                                                Array.Resize(ref M, M.Length + 1);
-                                                Array.Resize(ref Kf, Kf.Length + 1);
-                                                SGC[SGC.Length - 1] = (Twinsanity.GC)GCs._Item[Tk];
-                                                M[M.Length - 1] = SCEN.E3[Si].ChunkMatrix[SCEN.E3[Si].GCCount + Sj];
-                                                Kf[Kf.Length - 1] = T.K[Sn];
+                                                SGC.Add((Twinsanity.GC)GCs._Item[Tk]);
+                                                M.Add(SCEN.E3[Si].ChunkMatrix[SCEN.E3[Si].GCCount + Sj]);
+                                                Kf.Add(T.K[Sn]);
                                                 break;
                                             }
                                         }
@@ -5489,43 +5458,60 @@ namespace TwinsaityEditor
                         }
                     }
                     int n = 0;
-                    Bitmap[] TotalBMP = new Bitmap[] { };
+                    HashSet<Texture> TotalTex = new HashSet<Texture>();
+                    List<Bitmap> TotalBMP = new List<Bitmap>();
+                    List<int> texArray = new List<int>();
                     Model TotalModel = new Model();
                     TotalModel.SubModels = 0;
                     TotalModel.SubModel = new Model._SubModel[] { };
                     foreach (Twinsanity.GC GC in SGC)
                     {
-                        Texture[] Texture = new Twinsanity.Texture[] { };
                         Model Model = new Model();
-                        Materials Materials = (Materials)LevelData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[1]));
-                        Textures Textures = (Textures)LevelData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[0]));
-                        Models Models = (Models)LevelData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[2]));
-                        Material[] MAT = new Material[] { };
-                        for (int i = 0; i <= GC.MaterialNumber - 1; i++)
+                        Materials Materials = (Materials)fileData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[1]));
+                        Textures Textures = (Textures)fileData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[0]));
+                        Models Models = (Models)fileData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[2]));
+                        HashSet<Texture> Texture = new HashSet<Texture>();
+                        HashSet<Material> MAT = new HashSet<Material>();
+                        for (int i = 0; i < GC.MaterialNumber; i++)
                         {
-                            for (int j = 0; j <= Materials._Item.Length - 1; j++)
+                            for (int j = 0; j < Materials._Item.Length; j++)
                             {
                                 if (GC.Material[i] == Materials._Item[j].ID)
                                 {
-                                    Array.Resize(ref MAT, MAT.Length + 1);
-                                    MAT[MAT.Length - 1] = (Material)Materials._Item[j];
+                                    MAT.Add((Material)Materials._Item[j]);
                                     break;
                                 }
                             }
                         }
-                        for (int i = 0; i <= GC.MaterialNumber - 1; i++)
+                        List<Material> MatList = new List<Material>(MAT);
+                        for (int i = 0; i < MatList.Count; i++)
                         {
-                            for (int j = 0; j <= Textures._Item.Length - 1; j++)
+                            for (int j = 0; j < Textures._Item.Length; j++)
                             {
-                                if (MAT[i].Texture == Textures._Item[j].ID)
+                                if (MatList[i].Texture == Textures._Item[j].ID)
                                 {
-                                    Array.Resize(ref Texture, Texture.Length + 1);
-                                    Texture[Texture.Length - 1] = (Texture)Textures._Item[j];
+                                    if (!TotalTex.Contains((Texture)Textures._Item[j]))
+                                    {
+                                        Texture.Add((Texture)Textures._Item[j]);
+                                        TotalTex.Add((Texture)Textures._Item[j]);
+                                    }
                                     break;
                                 }
                             }
                         }
-                        for (int i = 0; i <= Models._Item.Length - 1; i++)
+                        List<Texture> TexList = new List<Texture>(Texture);
+                        for (int i = 0; i < MatList.Count; i++)
+                        {
+                            for (int j = 0; j < Textures._Item.Length; j++)
+                            {
+                                if (MatList[i].Texture == Textures._Item[j].ID)
+                                {
+                                    texArray.Add(TexList.IndexOf((Texture)Textures._Item[j]) + TotalBMP.Count);
+                                    break;
+                                }
+                            }
+                        }
+                        for (int i = 0; i < Models._Item.Length; i++)
                         {
                             if (Models._Item[i].ID == GC.Model)
                             {
@@ -5534,36 +5520,24 @@ namespace TwinsaityEditor
                                 break;
                             }
                         }
-                        Bitmap[] BMP = new Bitmap[Texture.Length - 1 + 1];
-                        for (int i = 0; i <= BMP.Length - 1; i++)
+                        List<Bitmap> BMP = new List<Bitmap>();
+                        for (int i = 0; i < TexList.Count; i++)
                         {
-                            BMP[i] = new Bitmap(System.Convert.ToInt32(Texture[i].Width), System.Convert.ToInt32(Texture[i].Height));
-                            for (int j = 0; j <= Texture[i].RawData.Length - 1; j++)
-                                BMP[i].SetPixel((int)(j % Texture[i].Width), (int)(j / Texture[i].Width), Texture[i].RawData[j]);
+                            Bitmap new_bmp = new Bitmap(System.Convert.ToInt32(TexList[i].Width), System.Convert.ToInt32(TexList[i].Height));
+                            for (int j = 0; j < TexList[i].RawData.Length; j++)
+                                new_bmp.SetPixel((int)(j % TexList[i].Width), (int)(j / TexList[i].Width), TexList[i].RawData[j]);
+                            BMP.Add(new_bmp);
                         }
-                        OpenTK.Matrix4 MATRIX = new OpenTK.Matrix4();
-                        MATRIX.M11 = M[n].x1;
-                        MATRIX.M12 = M[n].y1;
-                        MATRIX.M13 = M[n].z1;
-                        MATRIX.M14 = M[n].w1;
-                        MATRIX.M21 = M[n].x2;
-                        MATRIX.M22 = M[n].y2;
-                        MATRIX.M23 = M[n].z2;
-                        MATRIX.M24 = M[n].w2;
-                        MATRIX.M31 = M[n].x3;
-                        MATRIX.M32 = M[n].y3;
-                        MATRIX.M33 = M[n].z3;
-                        MATRIX.M34 = M[n].w3;
-                        MATRIX.M41 = M[n].x4;
-                        MATRIX.M42 = M[n].y4;
-                        MATRIX.M43 = M[n].z4;
-                        MATRIX.M44 = M[n].w4;
-                        for (int i = 0; i <= Model.SubModels - 1; i++)
+                        OpenTK.Matrix4 MATRIX = new OpenTK.Matrix4(M[n].x1, M[n].y1, M[n].z1, M[n].w1,
+                            M[n].x2, M[n].y2, M[n].z2, M[n].w2,
+                            M[n].x3, M[n].y3, M[n].z3, M[n].w3,
+                            M[n].x4, M[n].y4, M[n].z4, M[n].w4);
+                        for (int i = 0; i < Model.SubModels; i++)
                         {
-                            for (int j = 0; j <= Model.SubModel[i].Group.Length - 1; j++)
+                            for (int j = 0; j < Model.SubModel[i].Group.Length; j++)
                             {
                                 OpenTK.Vector4 v;
-                                for (int k = 0; k <= Model.SubModel[i].Group[j].Vertexes - 1; k++)
+                                for (int k = 0; k < Model.SubModel[i].Group[j].Vertexes; k++)
                                 {
                                     v = new OpenTK.Vector4(Model.SubModel[i].Group[j].Vertex[k].X, Model.SubModel[i].Group[j].Vertex[k].Y, Model.SubModel[i].Group[j].Vertex[k].Z, 1);
                                     v = OpenTK.Vector4.Transform(v,MATRIX);
@@ -5573,16 +5547,14 @@ namespace TwinsaityEditor
                                 }
                             }
                         }
-                        n += 1;
-                        int p = TotalBMP.Length;
-                        Array.Resize(ref TotalBMP, TotalBMP.Length + BMP.Length);
-                        BMP.CopyTo(TotalBMP, p);
-                        p = TotalModel.SubModels;
+                        n++;
+                        TotalBMP.AddRange(BMP);
+                        int p = TotalModel.SubModels;
                         Array.Resize(ref TotalModel.SubModel, TotalModel.SubModels + Model.SubModels);
                         TotalModel.SubModels += Model.SubModels;
                         Model.SubModel.CopyTo(TotalModel.SubModel, p);
                     }
-                    ExportModel(TotalModel, TotalBMP, ExtractBunch.SelectedPath + @"\");
+                    ExportModel(TotalModel, TotalBMP, texArray.ToArray(), ExtractBunch.SelectedPath + @"\");
                 }
             }
             else if (Obj is OGI)
@@ -5590,7 +5562,7 @@ namespace TwinsaityEditor
                 if (ExtractBunch.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     OGI OGI = (OGI)Obj;
-                    GCs GCs = (GCs)LevelData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[3]));
+                    GCs GCs = (GCs)fileData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[3]));
                     Twinsanity.GC[] OGC = new Twinsanity.GC[] { };
                     for (int nn = 0; nn <= OGI.GCNumber - 1; nn++)
                     {
@@ -5604,7 +5576,7 @@ namespace TwinsaityEditor
                         }
                     }
                     int n = 0;
-                    Bitmap[] TotalBMP = new Bitmap[] { };
+                    List<Bitmap> TotalBMP = new List<Bitmap>();
                     Model TotalModel = new Model();
                     TotalModel.SubModels = 0;
                     TotalModel.SubModel = new Model._SubModel[] { };
@@ -5612,9 +5584,9 @@ namespace TwinsaityEditor
                     {
                         Texture[] Texture = new Texture[] { };
                         Model Model = new Model();
-                        Materials Materials = (Materials)LevelData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[1]));
-                        Textures Textures = (Textures)LevelData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[0]));
-                        Models Models = (Models)LevelData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[2]));
+                        Materials Materials = (Materials)fileData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[1]));
+                        Textures Textures = (Textures)fileData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[0]));
+                        Models Models = (Models)fileData.Get_Item(CalculateIndexes(TreeView1.Nodes[0].Nodes[0].Nodes[2]));
                         Material[] MAT = new Material[] { };
                         for (int i = 0; i <= GC.MaterialNumber - 1; i++)
                         {
@@ -5649,11 +5621,11 @@ namespace TwinsaityEditor
                                 break;
                             }
                         }
-                        Bitmap[] BMP = new Bitmap[Texture.Length - 1 + 1];
-                        for (int i = 0; i <= BMP.Length - 1; i++)
+                        List<Bitmap> BMP = new List<Bitmap>(Texture.Length);
+                        for (int i = 0; i < BMP.Count; i++)
                         {
                             BMP[i] = new Bitmap(System.Convert.ToInt32(Texture[i].Width), System.Convert.ToInt32(Texture[i].Height));
-                            for (int j = 0; j <= Texture[i].RawData.Length - 1; j++)
+                            for (int j = 0; j < Texture[i].RawData.Length; j++)
                                 BMP[i].SetPixel((int)(j % Texture[i].Width), (int)(j / Texture[i].Width), Texture[i].RawData[j]);
                         }
                         OpenTK.Matrix4 MATRIX = new OpenTK.Matrix4();
@@ -5695,15 +5667,13 @@ namespace TwinsaityEditor
                             }
                         }
                         n += 1;
-                        int p = TotalBMP.Length;
-                        Array.Resize(ref TotalBMP, TotalBMP.Length + BMP.Length);
-                        BMP.CopyTo(TotalBMP, p);
-                        p = TotalModel.SubModels;
+                        TotalBMP.AddRange(BMP);
+                        int p = TotalModel.SubModels;
                         Array.Resize(ref TotalModel.SubModel, TotalModel.SubModels + Model.SubModels);
                         TotalModel.SubModels += Model.SubModels;
                         Model.SubModel.CopyTo(TotalModel.SubModel, p);
                     }
-                    ExportModel(TotalModel, TotalBMP, ExtractBunch.SelectedPath + @"\");
+                    ExportModel(TotalModel, TotalBMP, null, ExtractBunch.SelectedPath + @"\");
                 }
             }
         }
@@ -5754,13 +5724,13 @@ namespace TwinsaityEditor
             ObjWriter.Close();
             ObjFile.Close();
         }
-        private new void ExportModel(Model MDL, Bitmap[] TEX, string Path)
+        private new void ExportModel(Model MDL, List<Bitmap> TEX, int[] TEX_index, string Path)
         {
             System.IO.FileStream ObjFile = new System.IO.FileStream(Path + @"\mdl.obj", System.IO.FileMode.Create, System.IO.FileAccess.Write);
             System.IO.StreamWriter ObjWriter = new System.IO.StreamWriter(ObjFile);
             System.IO.FileStream MTLFile = new System.IO.FileStream(Path + @"\mtl.mtl", System.IO.FileMode.Create, System.IO.FileAccess.Write);
             System.IO.StreamWriter MTLWriter = new System.IO.StreamWriter(MTLFile);
-            for (int i = 0; i <= TEX.Length - 1; i++)
+            for (int i = 0; i < TEX.Count; i++)
             {
                 MTLWriter.WriteLine("newmtl mtl" + i.ToString());
                 MTLWriter.WriteLine("map_Kd mtl" + i.ToString() + ".png");
@@ -5770,17 +5740,17 @@ namespace TwinsaityEditor
             ObjWriter.WriteLine("# Model extracted with Twinsanity Editor by Neo_Kesha");
             ObjWriter.WriteLine("# Crash Twinsanity made by Travellers Tales");
             uint shift = 0;
-            if (TEX.Length > 0)
+            if (TEX.Count > 0)
                 ObjWriter.WriteLine("mtllib mtl.mtl");
-            for (int i = 0; i <= MDL.SubModels - 1; i++)
+            for (int i = 0; i < MDL.SubModels; i++)
             {
                 ObjWriter.WriteLine("o SubModel" + i.ToString());
-                if (TEX.Length > 0)
-                    ObjWriter.WriteLine("usemtl mtl" + i.ToString());
-                for (int j = 0; j <= MDL.SubModel[i].Group.Length - 1; j++)
+                if (TEX.Count > 0)
+                    ObjWriter.WriteLine("usemtl mtl" + TEX_index[i].ToString());
+                for (int j = 0; j < MDL.SubModel[i].Group.Length; j++)
                 {
                     // ObjWriter.WriteLine("g Group" + j.ToString)
-                    for (int k = 0; k <= MDL.SubModel[i].Group[j].Vertexes - 1; k++)
+                    for (int k = 0; k < MDL.SubModel[i].Group[j].Vertexes; k++)
                     {
                         {
                             var withBlock = MDL.SubModel[i].Group[j];
@@ -5795,7 +5765,7 @@ namespace TwinsaityEditor
                                 ObjWriter.WriteLine("vn 0 0 0");
                         }
                     }
-                    for (int k = 0; k <= MDL.SubModel[i].Group[j].Vertexes - 3; k++)
+                    for (int k = 0; k < MDL.SubModel[i].Group[j].Vertexes - 2; k++)
                     {
                         {
                             var withBlock = MDL.SubModel[i].Group[j];
@@ -6052,10 +6022,10 @@ namespace TwinsaityEditor
 
         private void Button13_Click(object sender, EventArgs e)
         {
-            BaseItem Obj = (BaseItem)LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode));
+            BaseItem Obj = (BaseItem)fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode));
             if (Obj is Instance)
             {
-                Instances INSTS = (Instances)LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
+                Instances INSTS = (Instances)fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
                 _editInstance.Hide();
                 _editInstance.UpdateTree(ref INSTS, TreeView1.SelectedNode.Parent.Parent.Index);
                 _editInstance.UpdateInstance(TreeView1.SelectedNode.Index);
@@ -6064,7 +6034,7 @@ namespace TwinsaityEditor
             }
             else if (Obj is Trigger)
             {
-                Triggers TRIGS = (Triggers)LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
+                Triggers TRIGS = (Triggers)fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
                 _editTrigger.Hide();
                 _editTrigger.UpdateTree(ref TRIGS, TreeView1.SelectedNode.Parent.Parent.Index);
                 _editTrigger.UpdateTrigger(TreeView1.SelectedNode.Index);
@@ -6073,7 +6043,7 @@ namespace TwinsaityEditor
             }
             else if (Obj is Twinsanity.GC)
             {
-                GCs GCS = (GCs)LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
+                GCs GCS = (GCs)fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
                 _editGC.Hide();
                 _editGC.UpdateTree(ref GCS);
                 _editGC.UpdateGC(TreeView1.SelectedNode.Index);
@@ -6082,7 +6052,7 @@ namespace TwinsaityEditor
             }
             else if (Obj is Position)
             {
-                Positions POSs = (Positions)LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
+                Positions POSs = (Positions)fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
                 _editPosition.Hide();
                 _editPosition.UpdateTree(ref POSs, (uint)TreeView1.SelectedNode.Parent.Parent.Index);
                 _editPosition.UpdatePos(TreeView1.SelectedNode.Index);
@@ -6091,7 +6061,7 @@ namespace TwinsaityEditor
             }
             else if (Obj is Path)
             {
-                Paths PATHs = (Paths)LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
+                Paths PATHs = (Paths)fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
                 _editPath.Hide();
                 _editPath.UpdateTree(ref PATHs, (uint)TreeView1.SelectedNode.Parent.Parent.Index);
                 _editPath.Pathes.SelectedNode = _editPath.Pathes.Nodes[TreeView1.SelectedNode.Index];
@@ -6100,7 +6070,7 @@ namespace TwinsaityEditor
             }
             else if (Obj is FuckingShit)
             {
-                FuckingShits FSs = (FuckingShits)LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
+                FuckingShits FSs = (FuckingShits)fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
                 _editFuckingShit.Hide();
                 _editFuckingShit.UpdateTree(ref FSs, (uint)TreeView1.SelectedNode.Parent.Parent.Index);
                 _editFuckingShit.UpdateFS(TreeView1.SelectedNode.Index);
@@ -6109,7 +6079,7 @@ namespace TwinsaityEditor
             }
             else if (Obj is Behavior)
             {
-                Behaviors BHs = (Behaviors)LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
+                Behaviors BHs = (Behaviors)fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
                 _editBehavior.Hide();
                 _editBehavior.UpdateTree(ref BHs, (uint)TreeView1.SelectedNode.Parent.Parent.Index);
                 _editBehavior.UpdateBeh(TreeView1.SelectedNode.Index);
@@ -6118,7 +6088,7 @@ namespace TwinsaityEditor
             }
             else if (Obj is SurfaceBehaviour)
             {
-                SurfaceBehaviours SBs = (SurfaceBehaviours)LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
+                SurfaceBehaviours SBs = (SurfaceBehaviours)fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
                 _editSurfBehavior.Hide();
                 _editSurfBehavior.UpdateTree(ref SBs, (uint)TreeView1.SelectedNode.Parent.Parent.Index);
                 _editSurfBehavior.UpdateSB(TreeView1.SelectedNode.Index);
@@ -6127,7 +6097,7 @@ namespace TwinsaityEditor
             }
             else if (Obj is GameObject)
             {
-                GameObjects GOs = (GameObjects)LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
+                GameObjects GOs = (GameObjects)fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
                 _editGameObject.Hide();
                 _editGameObject.UpdateTree(ref GOs, TreeView1.SelectedNode.Parent.Parent.Index);
                 _editGameObject.UpdateGO(TreeView1.SelectedNode.Index);
@@ -6136,7 +6106,7 @@ namespace TwinsaityEditor
             }
             else if (Obj is OGI)
             {
-                OGIs OGIs = (OGIs)LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
+                OGIs OGIs = (OGIs)fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
                 _editOGI.Hide();
                 _editOGI.UpdateTree(ref OGIs, TreeView1.SelectedNode.Parent.Parent.Index);
                 _editOGI.UpdateOGI(TreeView1.SelectedNode.Index);
@@ -6145,7 +6115,7 @@ namespace TwinsaityEditor
             }
             else if (Obj is Material)
             {
-                Materials Mtls = (Materials)LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
+                Materials Mtls = (Materials)fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
                 _editMaterial.Hide();
                 _editMaterial.UpdateTree(ref Mtls);
                 _editMaterial.UpdateMtl(TreeView1.SelectedNode.Index);
@@ -6154,7 +6124,7 @@ namespace TwinsaityEditor
             }
             else if (Obj is Terrain)
             {
-                Terrains Ts = (Terrains)LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
+                Terrains Ts = (Terrains)fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode.Parent));
                 _editTerrain.Hide();
                 _editTerrain.UpdateTree(ref Ts);
                 _editTerrain.UpdatePos(TreeView1.SelectedNode.Index);
@@ -6163,7 +6133,7 @@ namespace TwinsaityEditor
             }
             else if (Obj is ID4Model)
             {
-                ID4Model ID4 = (ID4Model)LevelData.Get_Item(CalculateIndexes(TreeView1.SelectedNode));
+                ID4Model ID4 = (ID4Model)fileData.Get_Item(CalculateIndexes(TreeView1.SelectedNode));
                 System.IO.FileStream File = new System.IO.FileStream(@"C:\mdl.obj", System.IO.FileMode.Create, System.IO.FileAccess.Write);
                 System.IO.StreamWriter Writer = new System.IO.StreamWriter(File);
                 int cnt = 0;

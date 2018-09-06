@@ -113,9 +113,8 @@ namespace Twinsanity
             {
                 while ((ByteStream.Position < ByteStream.Length))
                 {
-                    _Entries.Add(new Entry3());
+                    Entry3 withBlock = new Entry3();
                     {
-                        var withBlock = _Entries[_Entries.Count - 1];
                         withBlock.EntryHeader = BSReader.ReadUInt32();
                         withBlock.GCCount = BSReader.ReadUInt16();
                         withBlock.SBCount = BSReader.ReadUInt16();
@@ -160,14 +159,14 @@ namespace Twinsanity
                         }
                         tmp = 0;
                         var len = ByteStream.Position;
-                        while ((!(tmp == 5651)) & (ByteStream.Position < ByteStream.Length))
+                        while ((tmp != 5651) & (ByteStream.Position < ByteStream.Length))
                         {
                             tmp = BSReader.ReadByte();
                             if (tmp == 19)
                             {
                                 ByteStream.Position -= 1;
                                 tmp = BSReader.ReadUInt32();
-                                if (!(tmp == 5651))
+                                if (tmp != 5651)
                                     ByteStream.Position -= 3;
                                 else
                                     ByteStream.Position -= 4;
@@ -177,6 +176,7 @@ namespace Twinsanity
                         ByteStream.Position -= len;
                         withBlock.leftovers = BSReader.ReadBytes((int)len);
                     }
+                    _Entries.Add(withBlock);
                 }
                 E3 = _Entries.ToArray();
             }

@@ -1,12 +1,13 @@
 using System.Windows.Forms;
 using System;
 using Twinsanity;
+using System.Collections.Generic;
 
 namespace TwinsaityEditor
 {
     public partial class TriggerTreeForm
     {
-        public GeoData.VertexMaps[] Trigg;
+        public List<GeoData.Trigger> Trigg;
         private void TriggerTree_Load(object sender, EventArgs e)
         {
             TreeView1.Nodes.Clear();
