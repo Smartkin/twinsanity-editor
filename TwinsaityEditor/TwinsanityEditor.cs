@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
-using System.Runtime.InteropServices;
 
 namespace TwinsaityEditor
 {
@@ -21,7 +19,7 @@ namespace TwinsaityEditor
             Application.SetCompatibleTextRenderingDefault(false);
             /*try
             {*/
-                Application.Run(new TwinsanityEditorForm());
+                Application.Run(new MainForm());
             /*}catch(Exception ex)
             {
                 MessageBox.Show(ex.Message, "Unhandled exception occured!", MessageBoxButtons.OK, MessageBoxIcon.Error);

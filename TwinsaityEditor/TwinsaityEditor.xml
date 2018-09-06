@@ -4,6 +4,23 @@
         <name>TwinsaityEditor</name>
     </assembly>
     <members>
+        <member name="F:TwinsaityEditor.MainForm.components">
+            <summary>
+            Required designer variable.
+            </summary>
+        </member>
+        <member name="M:TwinsaityEditor.MainForm.Dispose(System.Boolean)">
+            <summary>
+            Clean up any resources being used.
+            </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        </member>
+        <member name="M:TwinsaityEditor.MainForm.InitializeComponent">
+            <summary>
+            Required method for Designer support - do not modify
+            the contents of this method with the code editor.
+            </summary>
+        </member>
         <member name="T:TwinsaityEditor.Properties.Resources">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
@@ -30,57 +47,17 @@
             The main entry point for the application.
             </summary>
         </member>
-        <member name="F:TwinsaityEditor.Viewers.RMViewer.components">
+        <member name="M:TwinsaityEditor.Viewers.SMViewer.Dispose(System.Boolean)">
             <summary> 
-            Required designer variable.
+            Clean up any resources being used.
             </summary>
+            <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         </member>
         <member name="M:TwinsaityEditor.Viewers.RMViewer.Dispose(System.Boolean)">
             <summary> 
             Clean up any resources being used.
             </summary>
             <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        </member>
-        <member name="M:TwinsaityEditor.Viewers.RMViewer.InitializeComponent">
-            <summary> 
-            Required method for Designer support - do not modify 
-            the contents of this method with the code editor.
-            </summary>
-        </member>
-        <member name="T:TwinsaityEditor.Context">
-            <summary>
-            Contains windows of every worker, utility, viewer and editor for public use
-            </summary>
-        </member>
-        <member name="T:TwinsaityEditor.TwinsanityEditorForm">
-            <summary>
-            The main form controlling everthing
-            </summary>
-        </member>
-        <member name="M:TwinsaityEditor.TwinsanityEditorForm.#ctor">
-            <summary>
-            Main initializer
-            </summary>
-        </member>
-        <member name="M:TwinsaityEditor.TwinsanityEditorForm.InitializeWorkers">
-            <summary>
-            Initializers workers(BDWorker, ELFPatcher, TextureImporter, etc.)
-            </summary>
-        </member>
-        <member name="M:TwinsaityEditor.TwinsanityEditorForm.InitializeUtilities">
-            <summary>
-            Initializers utilities(LibManager, InstanceScripter, Search, etc.)
-            </summary>
-        </member>
-        <member name="M:TwinsaityEditor.TwinsanityEditorForm.InitializeViewers">
-            <summary>
-            Initializers viewers(GeoDataViewer, HexViewer, ModelViewer, etc.)
-            </summary>
-        </member>
-        <member name="M:TwinsaityEditor.TwinsanityEditorForm.InitializeEditors">
-            <summary>
-            Initializers editors(InstanceEditor, GameObjectEditor, GCEditor, etc.)
-            </summary>
         </member>
     </members>
 </doc>

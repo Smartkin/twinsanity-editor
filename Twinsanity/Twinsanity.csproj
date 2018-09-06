@@ -66,21 +66,8 @@
   <ItemGroup>
     <Compile Include="ADPCM.cs" />
     <Compile Include="BDArchive.cs" />
-    <Compile Include="Items\Code\Animation.cs" />
-    <Compile Include="Items\Code\DemoGameObject.cs" />
-    <Compile Include="Items\Graphics\ID4Model.cs" />
-    <Compile Include="Items\Graphics\ID5Model.cs" />
-    <Compile Include="Items\Graphics\Terrain.cs" />
-    <Compile Include="Items\Instances\DemoInstance.cs" />
-    <Compile Include="Items\Instances\Trigger.cs" />
-    <Compile Include="Items\Instances\Position.cs" />
-    <Compile Include="Items\Instances\FuckingShit.cs" />
-    <Compile Include="Items\Instances\Path.cs" />
-    <Compile Include="Items\Instances\SurfaceBehaviour.cs" />
-    <Compile Include="Items\Instances\Behavior.cs" />
-    <Compile Include="Items\GeoData.cs" />
-    <Compile Include="Items\Scenery.cs" />
-    <Compile Include="Items\SubChunk.cs" />
+    <Compile Include="Items\TwinsItem.cs" />
+    <Compile Include="Items\ColData.cs" />
     <Compile Include="MetaData.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -92,47 +79,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="PSM.cs" />
-    <Compile Include="Sections\Code\Animations.cs" />
-    <Compile Include="Sections\BaseSection.cs" />
-    <Compile Include="Items\BaseItem.cs" />
-    <Compile Include="BaseObject.cs" />
-    <Compile Include="Sections\CodeSection.cs" />
-    <Compile Include="Items\Code\GameObject.cs" />
-    <Compile Include="Sections\Code\GameObjects.cs" />
-    <Compile Include="Items\Graphics\GC.cs" />
-    <Compile Include="Sections\Code\DemoGameObjects.cs" />
-    <Compile Include="Sections\Code\SoundbankDescriptions.cs" />
-    <Compile Include="Sections\Graphics\GCs.cs" />
-    <Compile Include="Sections\GraphicsSection.cs" />
-    <Compile Include="Items\Instances\Instance.cs" />
-    <Compile Include="Sections\Graphics\ID4Models.cs" />
-    <Compile Include="Sections\Graphics\Terrains.cs" />
-    <Compile Include="Sections\InstanceInfoSection.cs" />
-    <Compile Include="Sections\Instances\Instances.cs" />
-    <Compile Include="Items\Graphics\Material.cs" />
-    <Compile Include="Sections\Graphics\Materials.cs" />
-    <Compile Include="Items\Graphics\Model.cs" />
-    <Compile Include="Sections\Graphics\Models.cs" />
-    <Compile Include="Items\Code\OGI.cs" />
-    <Compile Include="Sections\Code\OGIs.cs" />
-    <Compile Include="RM2.cs" />
-    <Compile Include="Items\Code\Script.cs" />
-    <Compile Include="Sections\Code\Scripts.cs" />
-    <Compile Include="Items\Code\Sound.cs" />
-    <Compile Include="Items\Code\SoundDescription.cs" />
-    <Compile Include="Sections\Code\SoundDescriptions.cs" />
-    <Compile Include="Items\Graphics\Texture.cs" />
-    <Compile Include="Sections\Graphics\Textures.cs" />
-    <Compile Include="Sections\Instances\Triggers.cs" />
-    <Compile Include="Sections\Instances\Positions.cs" />
-    <Compile Include="Sections\Instances\Paths.cs" />
-    <Compile Include="Sections\Instances\FuckingShits.cs" />
-    <Compile Include="Sections\Instances\SurfaceBehaviours.cs" />
-    <Compile Include="Sections\Instances\Behavior.cs" />
-    <Compile Include="Sections\DemoCodeSection.cs" />
-    <Compile Include="Sections\Instances\DemoInstances.cs" />
-    <Compile Include="Sections\DemoInstanceInfoSection.cs" />
+    <Compile Include="Sections\TwinsSection.cs" />
+    <Compile Include="TwinsFile.cs" />
     <Compile Include="Types.cs" />
   </ItemGroup>
   <ItemGroup>

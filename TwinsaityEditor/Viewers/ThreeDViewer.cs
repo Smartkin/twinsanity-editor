@@ -18,36 +18,37 @@ namespace TwinsaityEditor.Viewers
             pos = new Vector3(0, 0, 0);
             rot = new Vector3(0, 0, 0);
             sca = new Vector3(1.0f, 1.0f, 1.0f);
+            range = 50f;
             input = new Timer
             {
-                Interval = 15,
+                Interval = 16,
                 Enabled = true
             };
             input.Tick += delegate (object sender, EventArgs e)
             {
-                float speed = 1.0f; //range / 100;
+                float speed = range / 100;
                 int v = 0, h = 0, d = 0;
                 if (k_w)
-                    d--;
-                if (k_a)
-                    h--;
-                if (k_s)
                     d++;
-                if (k_d)
+                if (k_a)
                     h++;
+                if (k_s)
+                    d--;
+                if (k_d)
+                    h--;
                 if (k_e)
                     v++;
                 if (k_q)
                     v--;
-                Matrix3 rot_x_matrix = Matrix3.CreateFromAxisAngle(new Vector3(speed, 0, 0), rot.X);
-                Matrix3 rot_y_matrix = Matrix3.CreateFromAxisAngle(new Vector3(0, speed, 0), rot.Y);
-                Matrix3 rot_z_matrix = Matrix3.CreateFromAxisAngle(new Vector3(0, 0, speed), rot.Z);
-                Vector3 rot_x_vector = Vector3.Transform(new Vector3(speed, 0, 0), rot_x_matrix);
-                Vector3 rot_y_vector = Vector3.Transform(new Vector3(0, speed, 0), rot_y_matrix);
-                Vector3 rot_z_vector = Vector3.Transform(new Vector3(0, 0, speed), rot_z_matrix);
-                pos.X += rot_y_vector.X * d + rot_x_vector.X * h;
-                pos.Y += rot_z_vector.Y * d + v;
-                pos.Z += rot_y_vector.Z * d + rot_x_vector.Z * h;
+                Vector3 delta = new Vector3(h, v, d) * speed;
+                Matrix4 rot_matrix = Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), rot.X);
+                rot_matrix *= Matrix4.CreateFromAxisAngle(new Vector3(1, 0, 0), rot.Y);
+                rot_matrix *= Matrix4.CreateFromAxisAngle(new Vector3(0, 0, 1), rot.Z);
+
+                Vector3 fin_delta = new Vector3(rot_matrix * new Vector4(delta, 1.0f));
+
+                pos -= fin_delta;
+
                 if ((h | v | d) != 0)
                     Invalidate();
             };
@@ -68,6 +69,25 @@ namespace TwinsaityEditor.Viewers
         {
             pos = new Vector3(0, 0, 0);
             rot = new Vector3(0, 0, 0);
+            Matrix4 view = Matrix4.Identity;
+            Matrix4 proj = Matrix4.Identity;
+            Matrix4 rot_matrix = Matrix4.Identity;//Matrix4.RotationYawPitchRoll(Rotation.X, Rotation.Y, Rotation.Z);
+
+            //Create rotation matrix
+            rot_matrix *= Matrix4.CreateRotationX(rot.X);
+            rot_matrix *= Matrix4.CreateRotationY(rot.Y);
+            rot_matrix *= Matrix4.CreateRotationZ(rot.Z);
+
+            //Setup view and projection matrix
+            Vector4 rot_vector = Vector4.Transform(new Vector4(0, 0, 1, 1), rot_matrix);
+            view = Matrix4.LookAt(pos, new Vector3(pos.X + rot_vector.X, pos.Y + rot_vector.Y, pos.Z + rot_vector.Z), new Vector3(0, 1, 0));
+            proj = Matrix4.CreatePerspectiveFieldOfView((float)Math.PI / 4, (float)this.Width / this.Height, 1.0f, 10000.0f);
+
+            //Apply the matrices
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadMatrix(ref proj);
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadMatrix(ref view);
             Invalidate();
         }
 
@@ -115,6 +135,16 @@ namespace TwinsaityEditor.Viewers
             }
             m_x = e.X;
             m_y = e.Y;
+        }
+
+        protected override void OnMouseWheel(MouseEventArgs e)
+        {
+            base.OnMouseWheel(e);
+            range += e.Delta * 5f;
+            if (range > 100f)
+                range = 100f;
+            else if (range < 25f)
+                range = 25f;
         }
 
         protected override bool IsInputKey(Keys keyData)
@@ -191,32 +221,41 @@ namespace TwinsaityEditor.Viewers
         protected override void OnPaint(PaintEventArgs e)
         {
             MakeCurrent();
+            GL.Viewport(Location, Size);
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+            GL.Frustum(-0.5, +0.5, -0.5, +0.5, 0.5, 1000.0);
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadIdentity();
+            GL.Scale(sca);
+            GL.Rotate(rot.Y * 180 / Math.PI, 1, 0, 0);
+            GL.Rotate(rot.X * 180 / Math.PI, 0, 1, 0);
+            //Vector3 delta = new Vector3(-1, -1, -1) * range;
+            //Matrix4 rot_matrix = Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), rot.X);
+            //rot_matrix *= Matrix4.CreateFromAxisAngle(new Vector3(1, 0, 0), rot.Y);
+            //rot_matrix *= Matrix4.CreateFromAxisAngle(new Vector3(0, 0, 1), rot.Z);
+
+            //Vector3 fin_delta = new Vector3(rot_matrix * new Vector4(delta, 1.0f));
+            GL.Translate(-pos);
+            //GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { 1f, 1f, 1f, 1f });
+            //GL.Light(LightName.Light0, LightParameter.Position, new float[] { 0, 0, 1f, 0 });
+            //GL.Light(LightName.Light0, LightParameter.QuadraticAttenuation, new float[] { 0.2f, 0.2f, 0.2f });
+            RenderObjects();
+            SwapBuffers();
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.AlphaTest);
             GL.DepthFunc(DepthFunction.Lequal);
             GL.AlphaFunc(AlphaFunction.Greater, 0);
-            GL.Viewport(Location, Size);
             GL.ClearColor(0, 0, 1.0f, 0);
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.Frustum(-0.01, +0.01, -0.01, +0.01, 0.01, ushort.MaxValue);
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadIdentity();
-            GL.Enable(EnableCap.Lighting);
-            GL.Enable(EnableCap.Light0);
-            float[] mat_diffuse = { 1.0f, 1.0f, 1.0f };
-            GL.Light(LightName.Light0, LightParameter.Position, new float[] { 1.0f, 1.0f, 0.0f, 1.0f });
-            GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { 1.0f, 1.0f, 1.0f, 1.0f });
-            GL.Translate(0, 0, -1);
-            GL.Scale(sca);
-            GL.Rotate(rot.Y * 180 / Math.PI, 1, 0, 0);
-            GL.Rotate(rot.X * 180 / Math.PI, 0, 1, 0);
-            GL.Translate(-pos.X, -pos.Y, -pos.Z);
-            RenderObjects();
-            SwapBuffers();
-            GL.Disable(EnableCap.DepthTest);
-            GL.Disable(EnableCap.AlphaTest);
+            //GL.Enable(EnableCap.ColorMaterial);
+            //GL.Enable(EnableCap.Lighting);
+            //GL.Enable(EnableCap.Light0);
+            base.OnLoad(e);
         }
 
         protected override void Dispose(bool disposing)
