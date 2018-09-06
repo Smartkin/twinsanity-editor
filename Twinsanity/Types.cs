@@ -2,14 +2,12 @@
 {
     public struct Pos
     {
-        private float x, y, z, w;
-
-        public Pos(float x, float y, float z, float w) : this()
+        public Pos(float x, float y, float z, float w)
         {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-            this.w = w;
+            X = x;
+            Y = y;
+            Z = z;
+            W = w;
         }
 
         public float X { get; set; }
