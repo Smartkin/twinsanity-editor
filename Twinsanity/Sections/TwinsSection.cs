@@ -54,5 +54,15 @@ namespace Twinsanity
                 reader.BaseStream.Position = sk;
             }
         }
+
+        protected override int GetSize()
+        {
+            int size = 0;
+            foreach (var item in SecInfo.Records.Values)
+            {
+                size += item.Size;
+            }
+            return size;
+        }
     }
 }
