@@ -20,6 +20,11 @@ namespace Twinsanity
             vertices = new List<Pos>();
         }
 
+        protected override int GetSize()
+        {
+            return (20 + triggers.Count * 32 + groups.Count * 8 + tris.Count * 8 + vertices.Count * 16);
+        }
+
         /// <summary>
         /// Update the object's memory stream with new data
         /// </summary>
