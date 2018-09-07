@@ -27,20 +27,35 @@ namespace TwinsaityEditor
             {
                 GenTreeNode(i, treeView1.TopNode);
             }
+            treeView1.TopNode.Expand();
+            treeView1.AfterSelect += TreeNodeSelect;
+        }
+
+        private void TreeNodeSelect(object sender, TreeViewEventArgs e)
+        {
+            if (!(e.Node.Tag is Controller))
+                return;
+            Controller c = (Controller)e.Node.Tag;
+            if (c.Dirty)
+            {
+                e.Node.Text = c.GetName();
+                c.Dirty = false;
+            }
+            textBox1.Lines = c.TextPrev;
         }
 
         private void GenTreeNode(KeyValuePair<uint, TwinsItem> a, TreeNode node)
         {
-            TreeNode new_node = new TreeNode("TwinsItem");
+            TreeNode new_node = new TreeNode();
             if (a.Value is TwinsSection)
             {
                 foreach (var i in ((TwinsSection)a.Value).SecInfo.Records)
                 {
                     GenTreeNode(i, new_node);
                 }
-                new_node.Text = "TwinsSection";
             }
-            new_node.Text += " [ID: " + a.Key + "]";
+            new_node.Tag = new ItemController(a.Key, a.Value);
+            new_node.Text = ((ItemController)new_node.Tag).GetName();
             node.Nodes.Add(new_node);
         }
 
