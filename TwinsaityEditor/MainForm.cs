@@ -53,9 +53,11 @@ namespace TwinsaityEditor
                 {
                     GenTreeNode(i, new_node);
                 }
+                new_node.Tag = new SectionController(a.Key, (TwinsSection)a.Value);
             }
-            new_node.Tag = new ItemController(a.Key, a.Value);
-            new_node.Text = ((ItemController)new_node.Tag).GetName();
+            else
+                new_node.Tag = new ItemController(a.Key, a.Value);
+            new_node.Text = ((Controller)new_node.Tag).GetName();
             node.Nodes.Add(new_node);
         }
 

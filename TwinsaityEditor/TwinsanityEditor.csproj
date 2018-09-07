@@ -147,6 +147,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Controllers\Controller.cs" />
+    <Compile Include="Controllers\SectionController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
