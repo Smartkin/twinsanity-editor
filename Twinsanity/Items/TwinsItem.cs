@@ -4,7 +4,7 @@ using System.IO;
 namespace Twinsanity
 {
     /// <summary>
-    /// Represents an Unknown Item in the chunk tree
+    /// Represents a generic item in the chunk tree
     /// </summary>
     public class TwinsItem
     {
@@ -30,6 +30,7 @@ namespace Twinsanity
         }
 
         public byte[] Data { get; set; }
+        public uint Offset { get; set; }
         public int Size { get => GetSize(); }
     }
 }

@@ -34,11 +34,12 @@ namespace Twinsanity
                 sub.ID = reader.ReadUInt32();
                 var sk = reader.BaseStream.Position;
                 reader.BaseStream.Position = sk - (i + 2) * 0xC + sub.Off;
-                var m = reader.ReadUInt32(); //get magic number [obsolete?]
-                reader.BaseStream.Position -= 4;
+                //var m = reader.ReadUInt32(); //get magic number [obsolete?]
+                //reader.BaseStream.Position -= 4;
                 if (Level >= 2) //if already on the 2nd level of sections, item
                 {
                     TwinsItem rec = new TwinsItem();
+                    rec.Offset = (uint)reader.BaseStream.Position;
                     rec.Load(reader, sub.Size);
                     sec_info.Records.Add(sub.ID, rec);
                 }
@@ -46,6 +47,7 @@ namespace Twinsanity
                 {
                     TwinsSection sec = new TwinsSection();
                     sec.Level = Level + 1;
+                    sec.Offset = (uint)reader.BaseStream.Position;
                     sec.Load(reader, sub.Size);
                     sec_info.Records.Add(sub.ID, sec);
                 }
