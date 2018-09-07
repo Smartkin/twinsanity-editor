@@ -50,6 +50,8 @@ namespace TwinsaityEditor
                 }
                 new_node.Tag = new SectionController(a.Key, (TwinsSection)a.Value);
             }
+            else if (a.Value is ColData)
+                new_node.Tag = new ColDataController(a.Key, (ColData)a.Value);
             else
                 new_node.Tag = new ItemController(a.Key, a.Value);
             new_node.Text = ((Controller)new_node.Tag).GetName();
