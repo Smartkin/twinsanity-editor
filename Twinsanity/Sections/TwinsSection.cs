@@ -39,6 +39,7 @@ namespace Twinsanity
                 if (Level >= 2) //if already on the 2nd level of sections, item
                 {
                     TwinsItem rec = new TwinsItem();
+                    rec.ID = sub.ID;
                     rec.Offset = (uint)reader.BaseStream.Position;
                     rec.Load(reader, sub.Size);
                     sec_info.Records.Add(sub.ID, rec);
@@ -46,6 +47,7 @@ namespace Twinsanity
                 else //section
                 {
                     TwinsSection sec = new TwinsSection();
+                    sec.ID = sub.ID;
                     sec.Level = Level + 1;
                     sec.Offset = (uint)reader.BaseStream.Position;
                     sec.Load(reader, sub.Size);

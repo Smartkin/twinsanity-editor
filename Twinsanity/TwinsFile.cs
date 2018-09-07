@@ -77,6 +77,7 @@ namespace Twinsanity
                             //}
                             {
                                 TwinsSection sec = new TwinsSection();
+                                sec.ID = sub.ID;
                                 var sk = reader.BaseStream.Position;
                                 reader.BaseStream.Position = sec.Offset = sub.Off;
                                 sec.Level = 1;
@@ -88,6 +89,7 @@ namespace Twinsanity
                         case 9:
                             {
                                 ColData rec = new ColData();
+                                rec.ID = sub.ID;
                                 var sk = reader.BaseStream.Position;
                                 reader.BaseStream.Position = rec.Offset = sub.Off;
                                 rec.Load(reader);
@@ -98,6 +100,7 @@ namespace Twinsanity
                         default:
                             {
                                 TwinsItem rec = new TwinsItem();
+                                rec.ID = sub.ID;
                                 var sk = reader.BaseStream.Position;
                                 reader.BaseStream.Position = rec.Offset = sub.Off;
                                 rec.Load(reader, sub.Size);

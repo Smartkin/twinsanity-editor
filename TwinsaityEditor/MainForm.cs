@@ -18,7 +18,7 @@ namespace TwinsaityEditor
         {
             treeView1.Nodes.Clear();
             treeView1.Nodes.Add("Root");
-            foreach (var i in fileData.SecInfo.Records)
+            foreach (var i in fileData.SecInfo.Records.Values)
             {
                 GenTreeNode(i, treeView1.TopNode);
             }
@@ -39,21 +39,21 @@ namespace TwinsaityEditor
             textBox1.Lines = c.TextPrev;
         }
 
-        private void GenTreeNode(KeyValuePair<uint, TwinsItem> a, TreeNode node)
+        private void GenTreeNode(TwinsItem a, TreeNode node)
         {
             TreeNode new_node = new TreeNode();
-            if (a.Value is TwinsSection)
+            if (a is TwinsSection)
             {
-                foreach (var i in ((TwinsSection)a.Value).SecInfo.Records)
+                foreach (var i in ((TwinsSection)a).SecInfo.Records.Values)
                 {
                     GenTreeNode(i, new_node);
                 }
-                new_node.Tag = new SectionController(a.Key, (TwinsSection)a.Value);
+                new_node.Tag = new SectionController((TwinsSection)a);
             }
-            else if (a.Value is ColData)
-                new_node.Tag = new ColDataController(a.Key, (ColData)a.Value);
+            else if (a is ColData)
+                new_node.Tag = new ColDataController((ColData)a);
             else
-                new_node.Tag = new ItemController(a.Key, a.Value);
+                new_node.Tag = new ItemController(a);
             new_node.Text = ((Controller)new_node.Tag).GetName();
             node.Nodes.Add(new_node);
         }

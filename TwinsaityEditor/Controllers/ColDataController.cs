@@ -5,24 +5,22 @@ namespace TwinsaityEditor
     public class ColDataController : Controller
     {
         private ColData data;
-        private uint id;
 
-        public ColDataController(uint id, ColData item)
+        public ColDataController(ColData item)
         {
-            this.id = id;
             data = item;
             GenText();
         }
 
         public override string GetName()
         {
-            return "Collision Data [ID: " + id + "]";
+            return "Collision Data [ID: " + data.ID + "]";
         }
 
         protected override void GenText()
         {
             TextPrev = new string[6 + data.Triggers.Count + data.Groups.Count + data.Tris.Count + data.Vertices.Count];
-            TextPrev[0] = "ID: " + id;
+            TextPrev[0] = "ID: " + data.ID;
             TextPrev[1] = "Offset: " + data.Offset + " Size: " + data.Size;
 
             TextPrev[2] = "TriggerCount: " + data.Triggers.Count;
