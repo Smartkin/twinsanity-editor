@@ -37,7 +37,7 @@ namespace TwinsaityEditor
 
             TextPrev[5 + data.Triggers.Count + data.Groups.Count + data.Tris.Count] = "VertexCount: " + data.Vertices.Count;
             for (int i = 0; i < data.Vertices.Count; ++i)
-                TextPrev[6 + data.Triggers.Count + data.Groups.Count + data.Tris.Count + i] = "Vertex" + i + ": (" + data.Vertices[i].X + ", " + data.Vertices[i].Y + ", " + data.Vertices[i].Z + ", " + data.Vertices[i].W;
+                TextPrev[6 + data.Triggers.Count + data.Groups.Count + data.Tris.Count + i] = "Vertex" + i + ": (" + data.Vertices[i].X + ", " + data.Vertices[i].Y + ", " + data.Vertices[i].Z + ", " + data.Vertices[i].W + ")";
         }
     }
 }
