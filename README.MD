@@ -1,15 +1,14 @@
 # Crash Twinsanity Editor
->Original made by Neo_Kesha
+>Original version made by Neo_Kesha
 
 ## Description
-This is a rewrite of Crash Twinsanity Editor, simply called TwinsanityEditor(TE). The original was writtern in VB and is now in the process of
-being converted to C#.
+This is a rewrite of the Crash Twinsanity Editor, simply called TwinsanityEditor (TE). The original version was written in VB (Visual Basic), and this is a repo of the version that was converted to C#.
 
 ## Current issues
-The state of the editor right now is broken to say the least. The only working features right now are loading RM2s/SM2s and that's pretty much it
-haven't tested anything else really.
+The state of the editor right now is ~~broken to say the least~~ unusable for editing (please use the old version for actual proper editing for now). The only working features right now are loading RM/SM files and that's pretty much it.
 Here's the list of what needs to be fixed:
 
+- everything
 - Model viewing
 - GeoData viewing
 - Scenery viewing
@@ -21,4 +20,4 @@ Here's the list of what needs to be fixed:
 - A lot of other small stuff
 
 ## Compiling
-The project requires .NET Framework v4.5 and VisualStudio 2017(2015 might work too) to be compiled.
+Just open your project in VisualStudio 2017 (2015 might work, untested) and compile it.
