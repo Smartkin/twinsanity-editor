@@ -16,7 +16,7 @@ namespace TwinsaityEditor
 
         public override string GetName()
         {
-            return "TwinsItem [ID: " + id + "]";
+            return "Item [ID: " + id + "]";
         }
 
         protected override void GenText()
