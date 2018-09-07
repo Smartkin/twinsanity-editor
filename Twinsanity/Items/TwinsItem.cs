@@ -8,7 +8,7 @@ namespace Twinsanity
     /// </summary>
     public class TwinsItem
     {
-        public virtual int GetSize()
+        protected virtual int GetSize()
         {
             if (Data == null) return -1;
             else return Data.Length;
