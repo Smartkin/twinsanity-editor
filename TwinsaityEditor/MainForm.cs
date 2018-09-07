@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Twinsanity;
 
@@ -69,13 +64,16 @@ namespace TwinsaityEditor
         private void openRM2ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "RM2/RMX files|*.rm*";
+            ofd.Filter = "RM2/RMX files|*.rm*|SM2/SMX files|*.sm*";
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 switch (ofd.FilterIndex)
                 {
                     case 1:
-                        fileData.LoadRM(ofd.FileName);
+                        fileData.LoadFile(ofd.FileName, false);
+                        break;
+                    case 2:
+                        fileData.LoadFile(ofd.FileName, true);
                         break;
                 }
                 GenTree();

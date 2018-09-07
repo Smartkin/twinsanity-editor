@@ -12,7 +12,7 @@ namespace Twinsanity
     }
 
     /// <summary>
-    /// Represents Twinsanity's chunk
+    /// Represents a Twinsanity RM/SM file, a full pair (+ .ptl in Xbox) corresponds to a full "chunk"
     /// </summary>
     public class TwinsFile
     {
@@ -24,9 +24,9 @@ namespace Twinsanity
         //private List<TwinsSubInfo> sub_list;
         
         /// <summary>
-        /// Load an RM2/RMX file
+        /// Load an RM/SM file. "rs" is a boolean that determines if the file being loaded is an RM (false) or an SM (true)
         /// </summary>
-        public void LoadRM(string path)
+        public void LoadFile(string path, bool rs)
         {
             if (!File.Exists(path))
                 return;
@@ -43,66 +43,96 @@ namespace Twinsanity
                 sub.Off = reader.ReadUInt32();
                 sub.Size = reader.ReadInt32();
                 sub.ID = reader.ReadUInt32();
-                switch (sub.ID)
+                if (!rs)
                 {
-                    case 0:
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 4:
-                    case 5:
-                    case 6:
-                    case 7:
-                    //{
-                    //    InstanceSection sec = new InstanceSection();
-                    //    InstInfo.Load(ref file, ref reader);
-                    //    sec_info.Sections.Add(sub.ID, sec);
-                    //    break;
-                    //}
-                    case 10:
-                    //{
-                    //    CodeSectionNew sec = new CodeSectionNew();
-                    //    Code.Load(ref file, ref reader);
-                    //    sec_info.Sections.Add(sub.ID, sec);
-                    //    break;
-                    //}
-                    case 11:
+                    switch (sub.ID)
+                    {
+                        case 0:
+                        case 1:
+                        case 2:
+                        case 3:
+                        case 4:
+                        case 5:
+                        case 6:
+                        case 7:
                         //{
-                        //    GraphicsSectionNew sec = new GraphicsSectionNew();
-                        //    Graphics.Load(ref file, ref reader);
+                        //    InstanceSection sec = new InstanceSection();
+                        //    InstInfo.Load(ref file, ref reader);
                         //    sec_info.Sections.Add(sub.ID, sec);
                         //    break;
                         //}
-                        {
-                            TwinsSection sec = new TwinsSection();
-                            var sk = reader.BaseStream.Position;
-                            reader.BaseStream.Position = sec.Offset = sub.Off;
-                            sec.Level = 1;
-                            sec.Load(reader, sub.Size);
-                            reader.BaseStream.Position = sk;
-                            sec_info.Records.Add(sub.ID, sec);
-                            break;
-                        }
-                    case 9:
-                        {
-                            ColData rec = new ColData();
-                            var sk = reader.BaseStream.Position;
-                            reader.BaseStream.Position = rec.Offset = sub.Off;
-                            rec.Load(reader);
-                            reader.BaseStream.Position = sk;
-                            sec_info.Records.Add(sub.ID, rec);
-                            break;
-                        }
-                    default:
-                        {
-                            TwinsItem rec = new TwinsItem();
-                            var sk = reader.BaseStream.Position;
-                            reader.BaseStream.Position = rec.Offset = sub.Off;
-                            rec.Load(reader, sub.Size);
-                            reader.BaseStream.Position = sk;
-                            sec_info.Records.Add(sub.ID, rec);
-                            break;
-                        }
+                        case 10:
+                        //{
+                        //    CodeSectionNew sec = new CodeSectionNew();
+                        //    Code.Load(ref file, ref reader);
+                        //    sec_info.Sections.Add(sub.ID, sec);
+                        //    break;
+                        //}
+                        case 11:
+                            //{
+                            //    GraphicsSectionNew sec = new GraphicsSectionNew();
+                            //    Graphics.Load(ref file, ref reader);
+                            //    sec_info.Sections.Add(sub.ID, sec);
+                            //    break;
+                            //}
+                            {
+                                TwinsSection sec = new TwinsSection();
+                                var sk = reader.BaseStream.Position;
+                                reader.BaseStream.Position = sec.Offset = sub.Off;
+                                sec.Level = 1;
+                                sec.Load(reader, sub.Size);
+                                reader.BaseStream.Position = sk;
+                                sec_info.Records.Add(sub.ID, sec);
+                                break;
+                            }
+                        case 9:
+                            {
+                                ColData rec = new ColData();
+                                var sk = reader.BaseStream.Position;
+                                reader.BaseStream.Position = rec.Offset = sub.Off;
+                                rec.Load(reader);
+                                reader.BaseStream.Position = sk;
+                                sec_info.Records.Add(sub.ID, rec);
+                                break;
+                            }
+                        default:
+                            {
+                                TwinsItem rec = new TwinsItem();
+                                var sk = reader.BaseStream.Position;
+                                reader.BaseStream.Position = rec.Offset = sub.Off;
+                                rec.Load(reader, sub.Size);
+                                reader.BaseStream.Position = sk;
+                                sec_info.Records.Add(sub.ID, rec);
+                                break;
+                            }
+                    }
+                }
+                else
+                {
+                    switch (sub.ID)
+                    {
+                        case 6:
+                            {
+                                TwinsSection sec = new TwinsSection();
+                                var sk = reader.BaseStream.Position;
+                                reader.BaseStream.Position = sec.Offset = sub.Off;
+                                sec.Level = 1;
+                                sec.Load(reader, sub.Size);
+                                reader.BaseStream.Position = sk;
+                                sec_info.Records.Add(sub.ID, sec);
+                                break;
+                            }
+                        default:
+                            {
+                                TwinsItem rec = new TwinsItem();
+                                var sk = reader.BaseStream.Position;
+                                reader.BaseStream.Position = rec.Offset = sub.Off;
+                                rec.Load(reader, sub.Size);
+                                reader.BaseStream.Position = sk;
+                                sec_info.Records.Add(sub.ID, rec);
+                                break;
+                            }
+                    }
                 }
             }
             reader.Close();
