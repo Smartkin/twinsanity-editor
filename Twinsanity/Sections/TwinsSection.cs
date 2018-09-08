@@ -66,7 +66,7 @@ namespace Twinsanity
         public int ContentSize { get => GetContentSize(); }
 
         /// <summary>
-        /// Loads a section from a file.
+        /// Loads the section from a file.
         /// </summary>
         /// <param name="reader">BinaryReader already seeked to where the section begins.</param>
         /// <param name="size">Size of the section.</param>
@@ -90,7 +90,7 @@ namespace Twinsanity
                 //reader.BaseStream.Position -= 4;
                 if (Level > 2) //if over the 2nd level of sections, assume item for safety
                 {
-                    MakeItem(reader, sub);
+                    LoadItem(reader, sub);
                 }
                 else //section
                 {
@@ -100,34 +100,34 @@ namespace Twinsanity
                             switch (sub.ID)
                             {
                                 case 0:
-                                    MakeSection(reader, sub, SectionType.Texture);
+                                    LoadSection(reader, sub, SectionType.Texture);
                                     break;
                                 case 1:
-                                    MakeSection(reader, sub, SectionType.Material);
+                                    LoadSection(reader, sub, SectionType.Material);
                                     break;
                                 case 2:
-                                    MakeSection(reader, sub, SectionType.Mesh);
+                                    LoadSection(reader, sub, SectionType.Mesh);
                                     break;
                                 case 3:
-                                    MakeSection(reader, sub, SectionType.Model);
+                                    LoadSection(reader, sub, SectionType.Model);
                                     break;
                                 case 4:
-                                    MakeSection(reader, sub, SectionType.ArmatureModel);
+                                    LoadSection(reader, sub, SectionType.ArmatureModel);
                                     break;
                                 case 5:
-                                    MakeSection(reader, sub, SectionType.ActorModel);
+                                    LoadSection(reader, sub, SectionType.ActorModel);
                                     break;
                                 case 6:
-                                    MakeSection(reader, sub, SectionType.StaticModel);
+                                    LoadSection(reader, sub, SectionType.StaticModel);
                                     break;
                                 case 7:
-                                    MakeSection(reader, sub, SectionType.SpecialModel);
+                                    LoadSection(reader, sub, SectionType.SpecialModel);
                                     break;
                                 case 8:
-                                    MakeSection(reader, sub, SectionType.Skybox);
+                                    LoadSection(reader, sub, SectionType.Skybox);
                                     break;
                                 default:
-                                    MakeItem(reader, sub);
+                                    LoadItem(reader, sub);
                                     break;
                             }
                             break;
@@ -135,34 +135,34 @@ namespace Twinsanity
                             switch (sub.ID)
                             {
                                 case 0:
-                                    MakeSection(reader, sub, SectionType.UnknownInstance);
+                                    LoadSection(reader, sub, SectionType.UnknownInstance);
                                     break;
                                 case 1:
-                                    MakeSection(reader, sub, SectionType.AIPosition);
+                                    LoadSection(reader, sub, SectionType.AIPosition);
                                     break;
                                 case 2:
-                                    MakeSection(reader, sub, SectionType.AIPath);
+                                    LoadSection(reader, sub, SectionType.AIPath);
                                     break;
                                 case 3:
-                                    MakeSection(reader, sub, SectionType.Position);
+                                    LoadSection(reader, sub, SectionType.Position);
                                     break;
                                 case 4:
-                                    MakeSection(reader, sub, SectionType.Path);
+                                    LoadSection(reader, sub, SectionType.Path);
                                     break;
                                 case 5:
-                                    MakeSection(reader, sub, SectionType.CollisionSurface);
+                                    LoadSection(reader, sub, SectionType.CollisionSurface);
                                     break;
                                 case 6:
-                                    MakeSection(reader, sub, SectionType.ObjectInstance);
+                                    LoadSection(reader, sub, SectionType.ObjectInstance);
                                     break;
                                 case 7:
-                                    MakeSection(reader, sub, SectionType.Trigger);
+                                    LoadSection(reader, sub, SectionType.Trigger);
                                     break;
                                 case 8:
-                                    MakeSection(reader, sub, SectionType.Camera);
+                                    LoadSection(reader, sub, SectionType.Camera);
                                     break;
                                 default:
-                                    MakeItem(reader, sub);
+                                    LoadItem(reader, sub);
                                     break;
                             }
                             break;
@@ -170,45 +170,45 @@ namespace Twinsanity
                             switch (sub.ID)
                             {
                                 case 0:
-                                    MakeSection(reader, sub, SectionType.Object);
+                                    LoadSection(reader, sub, SectionType.Object);
                                     break;
                                 case 1:
-                                    MakeSection(reader, sub, SectionType.Script);
+                                    LoadSection(reader, sub, SectionType.Script);
                                     break;
                                 case 2:
-                                    MakeSection(reader, sub, SectionType.Animation);
+                                    LoadSection(reader, sub, SectionType.Animation);
                                     break;
                                 case 3:
-                                    MakeSection(reader, sub, SectionType.OGI);
+                                    LoadSection(reader, sub, SectionType.OGI);
                                     break;
                                 case 4:
-                                    MakeSection(reader, sub, SectionType.CodeModel);
+                                    LoadSection(reader, sub, SectionType.CodeModel);
                                     break;
                                 case 7:
-                                    MakeSection(reader, sub, SectionType.SE_Eng);
+                                    LoadSection(reader, sub, SectionType.SE_Eng);
                                     break;
                                 case 8:
-                                    MakeSection(reader, sub, SectionType.SE_Fre);
+                                    LoadSection(reader, sub, SectionType.SE_Fre);
                                     break;
                                 case 9:
-                                    MakeSection(reader, sub, SectionType.SE_Ger);
+                                    LoadSection(reader, sub, SectionType.SE_Ger);
                                     break;
                                 case 10:
-                                    MakeSection(reader, sub, SectionType.SE_Spa);
+                                    LoadSection(reader, sub, SectionType.SE_Spa);
                                     break;
                                 case 11:
-                                    MakeSection(reader, sub, SectionType.SE_Ita);
+                                    LoadSection(reader, sub, SectionType.SE_Ita);
                                     break;
                                 case 12:
-                                    MakeSection(reader, sub, SectionType.SE_Jpn);
+                                    LoadSection(reader, sub, SectionType.SE_Jpn);
                                     break;
                                 default:
-                                    MakeItem(reader, sub);
+                                    LoadItem(reader, sub);
                                     break;
                             }
                             break;
                         default:
-                            MakeItem(reader, sub);
+                            LoadItem(reader, sub);
                             break;
                     }
                 }
@@ -216,7 +216,7 @@ namespace Twinsanity
             }
         }
 
-        private void MakeItem(BinaryReader reader, TwinsSubInfo sub)
+        private void LoadItem(BinaryReader reader, TwinsSubInfo sub)
         {
             TwinsItem rec = new TwinsItem {
                 ID = sub.ID,
@@ -226,7 +226,7 @@ namespace Twinsanity
             sec_info.Records.Add(sub.ID, rec);
         }
 
-        private void MakeSection(BinaryReader reader, TwinsSubInfo sub, SectionType type)
+        private void LoadSection(BinaryReader reader, TwinsSubInfo sub, SectionType type)
         {
             TwinsSection sec = new TwinsSection {
                 ID = sub.ID,
