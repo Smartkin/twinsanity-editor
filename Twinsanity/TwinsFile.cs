@@ -55,29 +55,17 @@ namespace Twinsanity
                         case 5:
                         case 6:
                         case 7:
-                        //{
-                        //    InstanceSection sec = new InstanceSection();
-                        //    InstInfo.Load(ref file, ref reader);
-                        //    sec_info.Sections.Add(sub.ID, sec);
-                        //    break;
-                        //}
                         case 10:
-                        //{
-                        //    CodeSectionNew sec = new CodeSectionNew();
-                        //    Code.Load(ref file, ref reader);
-                        //    sec_info.Sections.Add(sub.ID, sec);
-                        //    break;
-                        //}
                         case 11:
-                            //{
-                            //    GraphicsSectionNew sec = new GraphicsSectionNew();
-                            //    Graphics.Load(ref file, ref reader);
-                            //    sec_info.Sections.Add(sub.ID, sec);
-                            //    break;
-                            //}
                             {
                                 TwinsSection sec = new TwinsSection();
                                 sec.ID = sub.ID;
+                                if (sub.ID <= 7)
+                                    sec.Type = SectionType.Instance;
+                                else if (sub.ID == 10)
+                                    sec.Type = SectionType.Code;
+                                else if (sub.ID == 11)
+                                    sec.Type = SectionType.Graphics;
                                 var sk = reader.BaseStream.Position;
                                 reader.BaseStream.Position = sec.Offset = sub.Off;
                                 sec.Level = 1;
@@ -117,6 +105,7 @@ namespace Twinsanity
                         case 6:
                             {
                                 TwinsSection sec = new TwinsSection();
+                                sec.Type = SectionType.Graphics;
                                 var sk = reader.BaseStream.Position;
                                 reader.BaseStream.Position = sec.Offset = sub.Off;
                                 sec.Level = 1;
