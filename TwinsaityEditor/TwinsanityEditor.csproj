@@ -38,7 +38,8 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>TwinsaityEditor.xml</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
     <Prefer32Bit>false</Prefer32Bit>
     <WarningLevel>4</WarningLevel>
@@ -147,6 +148,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Controllers\Controller.cs" />
+    <Compile Include="Controllers\ColDataController.cs" />
     <Compile Include="Controllers\SectionController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
     <Compile Include="MainForm.cs">

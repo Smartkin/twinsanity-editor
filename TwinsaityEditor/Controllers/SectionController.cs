@@ -5,26 +5,25 @@ namespace TwinsaityEditor
     public class SectionController : Controller
     {
         private TwinsSection data;
-        private uint id;
 
-        public SectionController(uint id, TwinsSection item)
+        public SectionController(TwinsSection item)
         {
-            this.id = id;
+            Toolbar = ToolbarFlags.Search | ToolbarFlags.Add | ToolbarFlags.Create | ToolbarFlags.Export;
             data = item;
             GenText();
         }
 
         public override string GetName()
         {
-            return "Section [ID: " + id + "]";
+            return data.Type + " Section [ID: " + data.ID + "]";
         }
 
         protected override void GenText()
         {
             TextPrev = new string[3];
-            TextPrev[0] = "ID: " + id;
+            TextPrev[0] = "ID: " + data.ID;
             TextPrev[1] = "Offset: " + data.Offset + " Size: " + data.Size;
-            TextPrev[2] = "ContentSize: " + (data.Size - (data.SecInfo.Records.Count + 1) * 12) + " Element Count: " + data.SecInfo.Records.Count;
+            TextPrev[2] = "ContentSize: " + data.ContentSize + " Element Count: " + data.SecInfo.Records.Count;
         }
     }
 }

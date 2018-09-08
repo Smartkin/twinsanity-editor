@@ -5,24 +5,23 @@ namespace TwinsaityEditor
     public class ItemController : Controller
     {
         private TwinsItem data;
-        private uint id;
 
-        public ItemController(uint id, TwinsItem item)
+        public ItemController(TwinsItem item)
         {
-            this.id = id;
+            Toolbar = ToolbarFlags.Hex | ToolbarFlags.Extract | ToolbarFlags.Replace | ToolbarFlags.Delete;
             data = item;
             GenText();
         }
 
         public override string GetName()
         {
-            return "Item [ID: " + id + "]";
+            return "Item [ID: " + data.ID + "]";
         }
 
         protected override void GenText()
         {
             TextPrev = new string[2];
-            TextPrev[0] = "ID: " + id;
+            TextPrev[0] = "ID: " + data.ID;
             TextPrev[1] = "Offset: " + data.Offset + " Size: " + data.Size;
         }
     }

@@ -60,17 +60,18 @@
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.button11 = new System.Windows.Forms.Button();
-            this.button10 = new System.Windows.Forms.Button();
-            this.button9 = new System.Windows.Forms.Button();
-            this.button8 = new System.Windows.Forms.Button();
-            this.button7 = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.buttonEdt = new System.Windows.Forms.Button();
+            this.buttonScr = new System.Windows.Forms.Button();
+            this.buttonViw = new System.Windows.Forms.Button();
+            this.buttonExp = new System.Windows.Forms.Button();
+            this.buttonDel = new System.Windows.Forms.Button();
+            this.buttonCre = new System.Windows.Forms.Button();
+            this.buttonAdd = new System.Windows.Forms.Button();
+            this.buttonSrc = new System.Windows.Forms.Button();
+            this.buttonRep = new System.Windows.Forms.Button();
+            this.buttonExt = new System.Windows.Forms.Button();
+            this.buttonHex = new System.Windows.Forms.Button();
+
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -179,30 +180,30 @@
             // eLFPatcherToolStripMenuItem
             // 
             this.eLFPatcherToolStripMenuItem.Name = "eLFPatcherToolStripMenuItem";
-            this.eLFPatcherToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.eLFPatcherToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.eLFPatcherToolStripMenuItem.Text = "ELF Patcher";
             // 
             // e3ConverterToolStripMenuItem
             // 
             this.e3ConverterToolStripMenuItem.Name = "e3ConverterToolStripMenuItem";
-            this.e3ConverterToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.e3ConverterToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.e3ConverterToolStripMenuItem.Text = "E3 Converter";
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(149, 6);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(177, 6);
             // 
             // refreshLibraryToolStripMenuItem
             // 
             this.refreshLibraryToolStripMenuItem.Name = "refreshLibraryToolStripMenuItem";
-            this.refreshLibraryToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.refreshLibraryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.refreshLibraryToolStripMenuItem.Text = "Refresh Library";
             // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(149, 6);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(177, 6);
             // 
             // collisionTreeToolStripMenuItem
             // 
@@ -213,7 +214,7 @@
             this.exportToobjToolStripMenuItem,
             this.triggerTreeViewerToolStripMenuItem});
             this.collisionTreeToolStripMenuItem.Name = "collisionTreeToolStripMenuItem";
-            this.collisionTreeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.collisionTreeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.collisionTreeToolStripMenuItem.Text = "Collision Tree";
             // 
             // collisionTreeViewerToolStripMenuItem
@@ -249,13 +250,13 @@
             // graphicsToolStripMenuItem
             // 
             this.graphicsToolStripMenuItem.Name = "graphicsToolStripMenuItem";
-            this.graphicsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.graphicsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.graphicsToolStripMenuItem.Text = "Graphics";
             // 
             // soundToolStripMenuItem
             // 
             this.soundToolStripMenuItem.Name = "soundToolStripMenuItem";
-            this.soundToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.soundToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.soundToolStripMenuItem.Text = "Sound";
             // 
             // preferencesToolStripMenuItem
@@ -309,17 +310,18 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.button11);
-            this.groupBox1.Controls.Add(this.button10);
-            this.groupBox1.Controls.Add(this.button9);
-            this.groupBox1.Controls.Add(this.button8);
-            this.groupBox1.Controls.Add(this.button7);
-            this.groupBox1.Controls.Add(this.button6);
-            this.groupBox1.Controls.Add(this.button5);
-            this.groupBox1.Controls.Add(this.button4);
-            this.groupBox1.Controls.Add(this.button3);
-            this.groupBox1.Controls.Add(this.button2);
-            this.groupBox1.Controls.Add(this.button1);
+
+            this.groupBox1.Controls.Add(this.buttonEdt);
+            this.groupBox1.Controls.Add(this.buttonScr);
+            this.groupBox1.Controls.Add(this.buttonViw);
+            this.groupBox1.Controls.Add(this.buttonExp);
+            this.groupBox1.Controls.Add(this.buttonDel);
+            this.groupBox1.Controls.Add(this.buttonCre);
+            this.groupBox1.Controls.Add(this.buttonAdd);
+            this.groupBox1.Controls.Add(this.buttonSrc);
+            this.groupBox1.Controls.Add(this.buttonRep);
+            this.groupBox1.Controls.Add(this.buttonExt);
+            this.groupBox1.Controls.Add(this.buttonHex);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Right;
             this.groupBox1.Enabled = false;
             this.groupBox1.Location = new System.Drawing.Point(485, 0);
@@ -329,104 +331,116 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Toolbar";
             // 
-            // button11
+            // buttonEdt
             // 
-            this.button11.Location = new System.Drawing.Point(6, 309);
-            this.button11.Name = "button11";
-            this.button11.Size = new System.Drawing.Size(75, 23);
-            this.button11.TabIndex = 10;
-            this.button11.Text = "Edit";
-            this.button11.UseVisualStyleBackColor = true;
+            this.buttonEdt.Enabled = false;
+            this.buttonEdt.Location = new System.Drawing.Point(6, 309);
+            this.buttonEdt.Name = "buttonEdt";
+            this.buttonEdt.Size = new System.Drawing.Size(75, 23);
+            this.buttonEdt.TabIndex = 10;
+            this.buttonEdt.Text = "Edit";
+            this.buttonEdt.UseVisualStyleBackColor = true;
             // 
-            // button10
+            // buttonScr
             // 
-            this.button10.Location = new System.Drawing.Point(6, 280);
-            this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(75, 23);
-            this.button10.TabIndex = 9;
-            this.button10.Text = "Scripting";
-            this.button10.UseVisualStyleBackColor = true;
+            this.buttonScr.Enabled = false;
+            this.buttonScr.Location = new System.Drawing.Point(6, 280);
+            this.buttonScr.Name = "buttonScr";
+            this.buttonScr.Size = new System.Drawing.Size(75, 23);
+            this.buttonScr.TabIndex = 9;
+            this.buttonScr.Text = "Scripting";
+            this.buttonScr.UseVisualStyleBackColor = true;
             // 
-            // button9
+            // buttonViw
             // 
-            this.button9.Location = new System.Drawing.Point(6, 251);
-            this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(75, 23);
-            this.button9.TabIndex = 8;
-            this.button9.Text = "View/Play";
-            this.button9.UseVisualStyleBackColor = true;
+            this.buttonViw.Enabled = false;
+            this.buttonViw.Location = new System.Drawing.Point(6, 251);
+            this.buttonViw.Name = "buttonViw";
+            this.buttonViw.Size = new System.Drawing.Size(75, 23);
+            this.buttonViw.TabIndex = 8;
+            this.buttonViw.Text = "View/Play";
+            this.buttonViw.UseVisualStyleBackColor = true;
             // 
-            // button8
+            // buttonExp
             // 
-            this.button8.Location = new System.Drawing.Point(6, 222);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(75, 23);
-            this.button8.TabIndex = 7;
-            this.button8.Text = "Export";
-            this.button8.UseVisualStyleBackColor = true;
+            this.buttonExp.Enabled = false;
+            this.buttonExp.Location = new System.Drawing.Point(6, 222);
+            this.buttonExp.Name = "buttonExp";
+            this.buttonExp.Size = new System.Drawing.Size(75, 23);
+            this.buttonExp.TabIndex = 7;
+            this.buttonExp.Text = "Export";
+            this.buttonExp.UseVisualStyleBackColor = true;
             // 
-            // button7
+            // buttonDel
             // 
-            this.button7.Location = new System.Drawing.Point(6, 193);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(75, 23);
-            this.button7.TabIndex = 6;
-            this.button7.Text = "New";
-            this.button7.UseVisualStyleBackColor = true;
+            this.buttonDel.Enabled = false;
+            this.buttonDel.Location = new System.Drawing.Point(6, 193);
+            this.buttonDel.Name = "buttonDel";
+            this.buttonDel.Size = new System.Drawing.Size(75, 23);
+            this.buttonDel.TabIndex = 6;
+            this.buttonDel.Text = "Delete";
+            this.buttonDel.UseVisualStyleBackColor = true;
             // 
-            // button6
+            // buttonCre
             // 
-            this.button6.Location = new System.Drawing.Point(6, 164);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(75, 23);
-            this.button6.TabIndex = 5;
-            this.button6.Text = "Delete";
-            this.button6.UseVisualStyleBackColor = true;
+            this.buttonCre.Enabled = false;
+            this.buttonCre.Location = new System.Drawing.Point(6, 164);
+            this.buttonCre.Name = "buttonCre";
+            this.buttonCre.Size = new System.Drawing.Size(75, 23);
+            this.buttonCre.TabIndex = 5;
+            this.buttonCre.Text = "Create";
+            this.buttonCre.UseVisualStyleBackColor = true;
             // 
-            // button5
+            // buttonAdd
             // 
-            this.button5.Location = new System.Drawing.Point(6, 135);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(75, 23);
-            this.button5.TabIndex = 4;
-            this.button5.Text = "Add";
-            this.button5.UseVisualStyleBackColor = true;
+            this.buttonAdd.Enabled = false;
+            this.buttonAdd.Location = new System.Drawing.Point(6, 135);
+            this.buttonAdd.Name = "buttonAdd";
+            this.buttonAdd.Size = new System.Drawing.Size(75, 23);
+            this.buttonAdd.TabIndex = 4;
+            this.buttonAdd.Text = "Add";
+            this.buttonAdd.UseVisualStyleBackColor = true;
             // 
-            // button4
+            // buttonSrc
             // 
-            this.button4.Location = new System.Drawing.Point(6, 106);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 23);
-            this.button4.TabIndex = 3;
-            this.button4.Text = "Search";
-            this.button4.UseVisualStyleBackColor = true;
+            this.buttonSrc.Enabled = false;
+            this.buttonSrc.Location = new System.Drawing.Point(6, 106);
+            this.buttonSrc.Name = "buttonSrc";
+            this.buttonSrc.Size = new System.Drawing.Size(75, 23);
+            this.buttonSrc.TabIndex = 3;
+            this.buttonSrc.Text = "Search";
+            this.buttonSrc.UseVisualStyleBackColor = true;
             // 
-            // button3
+            // buttonRep
             // 
-            this.button3.Location = new System.Drawing.Point(6, 77);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 2;
-            this.button3.Text = "Replace";
-            this.button3.UseVisualStyleBackColor = true;
+            this.buttonRep.Enabled = false;
+            this.buttonRep.Location = new System.Drawing.Point(6, 77);
+            this.buttonRep.Name = "buttonRep";
+            this.buttonRep.Size = new System.Drawing.Size(75, 23);
+            this.buttonRep.TabIndex = 2;
+            this.buttonRep.Text = "Replace";
+            this.buttonRep.UseVisualStyleBackColor = true;
             // 
-            // button2
+            // buttonExt
             // 
-            this.button2.Location = new System.Drawing.Point(6, 48);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 1;
-            this.button2.Text = "Extract";
-            this.button2.UseVisualStyleBackColor = true;
+            this.buttonExt.Enabled = false;
+            this.buttonExt.Location = new System.Drawing.Point(6, 48);
+            this.buttonExt.Name = "buttonExt";
+            this.buttonExt.Size = new System.Drawing.Size(75, 23);
+            this.buttonExt.TabIndex = 1;
+            this.buttonExt.Text = "Extract";
+            this.buttonExt.UseVisualStyleBackColor = true;
             // 
-            // button1
+            // buttonHex
             // 
-            this.button1.Location = new System.Drawing.Point(6, 19);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Hex View";
-            this.button1.UseVisualStyleBackColor = true;
+            this.buttonHex.Enabled = false;
+            this.buttonHex.Location = new System.Drawing.Point(6, 19);
+            this.buttonHex.Name = "buttonHex";
+            this.buttonHex.Size = new System.Drawing.Size(75, 23);
+            this.buttonHex.TabIndex = 0;
+            this.buttonHex.Text = "Hex View";
+            this.buttonHex.UseVisualStyleBackColor = true;
+
             // 
             // MainForm
             // 
@@ -484,17 +498,17 @@
         private System.Windows.Forms.TreeView treeView1;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button button11;
-        private System.Windows.Forms.Button button10;
-        private System.Windows.Forms.Button button9;
-        private System.Windows.Forms.Button button8;
-        private System.Windows.Forms.Button button7;
-        private System.Windows.Forms.Button button6;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button buttonEdt;
+        private System.Windows.Forms.Button buttonScr;
+        private System.Windows.Forms.Button buttonViw;
+        private System.Windows.Forms.Button buttonExp;
+        private System.Windows.Forms.Button buttonDel;
+        private System.Windows.Forms.Button buttonCre;
+        private System.Windows.Forms.Button buttonAdd;
+        private System.Windows.Forms.Button buttonSrc;
+        private System.Windows.Forms.Button buttonRep;
+        private System.Windows.Forms.Button buttonExt;
+        private System.Windows.Forms.Button buttonHex;
         private System.Windows.Forms.ToolStripMenuItem preferencesToolStripMenuItem;
     }
 }
