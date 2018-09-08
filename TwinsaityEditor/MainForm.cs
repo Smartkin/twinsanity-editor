@@ -26,6 +26,7 @@ namespace TwinsaityEditor
     public partial class MainForm : Form
     {
         private TwinsFile fileData = new TwinsFile();
+        private string fileName;
 
         public MainForm()
         {
@@ -115,6 +116,7 @@ namespace TwinsaityEditor
                         fileData.LoadFile(ofd.FileName, true);
                         break;
                 }
+                fileName = ofd.FileName;
                 GenTree();
                 Text = "Twinsaity Editor by Neo_Kesha [" + ofd.FileName + "] ";
             }
@@ -126,6 +128,23 @@ namespace TwinsaityEditor
             {
                 c.ToolbarAction(ToolbarFlags.Hex);
             }
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "RM2/RMX files|*.rm*|SM2/SMX files|*.sm*";
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                fileData.SaveFile(sfd.FileName);
+                fileName = sfd.FileName;
+                Text = "Twinsaity Editor by Neo_Kesha [" + sfd.FileName + "] ";
+            }
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            fileData.SaveFile(fileName);
         }
     }
 }

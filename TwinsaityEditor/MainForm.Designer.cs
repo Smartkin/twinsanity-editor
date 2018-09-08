@@ -100,8 +100,8 @@
             this.newRM2ToolStripMenuItem,
             this.newSM2ToolStripMenuItem,
             this.toolStripMenuItem2,
-            this.saveAsToolStripMenuItem,
             this.saveToolStripMenuItem,
+            this.saveAsToolStripMenuItem,
             this.toolStripMenuItem3,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -111,53 +111,55 @@
             // openRM2ToolStripMenuItem
             // 
             this.openRM2ToolStripMenuItem.Name = "openRM2ToolStripMenuItem";
-            this.openRM2ToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
+            this.openRM2ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openRM2ToolStripMenuItem.Text = "Open";
             this.openRM2ToolStripMenuItem.Click += new System.EventHandler(this.openRM2ToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(122, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(177, 6);
             // 
             // newRM2ToolStripMenuItem
             // 
             this.newRM2ToolStripMenuItem.Name = "newRM2ToolStripMenuItem";
-            this.newRM2ToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
+            this.newRM2ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.newRM2ToolStripMenuItem.Text = "New RM2";
             // 
             // newSM2ToolStripMenuItem
             // 
             this.newSM2ToolStripMenuItem.Name = "newSM2ToolStripMenuItem";
-            this.newSM2ToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
+            this.newSM2ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.newSM2ToolStripMenuItem.Text = "New SM2";
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(122, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(177, 6);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
-            this.saveAsToolStripMenuItem.Text = "Save";
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveAsToolStripMenuItem.Text = "Save as...";
+            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
-            this.saveToolStripMenuItem.Text = "Save as...";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveToolStripMenuItem.Text = "Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(122, 6);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(177, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 

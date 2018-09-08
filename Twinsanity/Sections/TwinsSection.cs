@@ -238,6 +238,29 @@ namespace Twinsanity
             sec_info.Records.Add(sub.ID, sec);
         }
 
+        public override void Save(BinaryWriter writer)
+        {
+            if (size == 0)
+                return;
+            writer.Write(sec_info.Magic);
+            writer.Write(sec_info.Records.Count);
+            writer.Write(ContentSize);
+
+            var sec_off = sec_info.Records.Count * 12 + 12;
+            foreach (var i in sec_info.Records)
+            {
+                writer.Write(sec_off);
+                writer.Write(i.Value.Size);
+                writer.Write(i.Key);
+                sec_off += i.Value.Size;
+            }
+
+            foreach (var i in sec_info.Records.Values)
+            {
+                i.Save(writer);
+            }
+        }
+
         protected override int GetSize()
         {
             //int size = SecInfo.Records.Count * 12 + 12;
