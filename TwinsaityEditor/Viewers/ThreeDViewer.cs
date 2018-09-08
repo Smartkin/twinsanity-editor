@@ -3,7 +3,7 @@ using System.Windows.Forms;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
-namespace TwinsaityEditor.Viewers
+namespace TwinsaityEditor
 {
     public abstract class ThreeDViewer : GLControl
     {
@@ -124,8 +124,8 @@ namespace TwinsaityEditor.Viewers
             base.OnMouseMove(e);
             if (m_l)
             {
-                rot.X += (e.X - m_x) / 180.0f * (float)Math.PI;
-                rot.Y += (e.Y - m_y) / 180.0f * (float)Math.PI;
+                rot.X += (e.X - m_x) / 180.0f * (float)Math.PI / (Size.Width / 448f);
+                rot.Y += (e.Y - m_y) / 180.0f * (float)Math.PI / (Size.Height / 448f);
                 rot.X += rot.X > (float)Math.PI ? -2*(float)Math.PI : rot.X < -(float)Math.PI ? +2*(float)Math.PI : 0;
                 if (rot.Y > (float)Math.PI / 2)
                     rot.Y = (float)Math.PI / 2;
@@ -135,6 +135,7 @@ namespace TwinsaityEditor.Viewers
             }
             m_x = e.X;
             m_y = e.Y;
+            Invalidate();
         }
 
         protected override void OnMouseWheel(MouseEventArgs e)
@@ -251,7 +252,7 @@ namespace TwinsaityEditor.Viewers
             GL.Enable(EnableCap.AlphaTest);
             GL.DepthFunc(DepthFunction.Lequal);
             GL.AlphaFunc(AlphaFunction.Greater, 0);
-            GL.ClearColor(0, 0, 1.0f, 0);
+            GL.ClearColor(0, 0, 1, 1);
             //GL.Enable(EnableCap.ColorMaterial);
             //GL.Enable(EnableCap.Lighting);
             //GL.Enable(EnableCap.Light0);

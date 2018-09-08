@@ -3,21 +3,20 @@ using System.Drawing;
 using System.Windows.Forms;
 using Twinsanity;
 
-namespace TwinsaityEditor.Viewers
+namespace TwinsaityEditor
 {
     public class RMViewer : ThreeDViewer
     {
         private int dlist_col = -1, dlist_trg = -1;
         private ColData data;
         private Color[] colors = new[] { Color.Gray, Color.Green, Color.Red, Color.DarkBlue, Color.Yellow, Color.Pink, Color.DarkCyan, Color.DarkGreen, Color.DarkRed, Color.Brown, Color.DarkMagenta, Color.Orange, Color.DarkSeaGreen, Color.Bisque, Color.Coral };
-        private bool k_t;
-        //private int displaylist;
+        private bool show_trigger;
 
         public RMViewer(ColData data)
         {
             //initialize variables here
             dlist_col = dlist_trg = -1;
-            k_t = false;
+            show_trigger = false;
             this.data = data;
         }
 
@@ -55,13 +54,41 @@ namespace TwinsaityEditor.Viewers
             }
             else
                 GL.CallList(dlist_col);
-            if (k_t)
+            if (show_trigger)
             {
                 if (dlist_trg == -1)
                 {
                     dlist_trg = GL.GenLists(1);
                     GL.NewList(dlist_trg, ListMode.CompileAndExecute);
-                    GL.Begin(PrimitiveType.LineStrip);
+                    foreach (var i in data.Triggers)
+                    {
+                        if (i.Flag1 == i.Flag2 && i.Flag1 < 0)
+                            GL.Color3(Color.Cyan);
+                        else
+                            GL.Color3(Color.Red);
+                        GL.Begin(PrimitiveType.LineStrip);
+                        GL.Vertex3(-i.X1, i.Y1, i.Z1);
+                        GL.Vertex3(-i.X2, i.Y1, i.Z1);
+                        GL.Vertex3(-i.X2, i.Y2, i.Z1);
+                        GL.Vertex3(-i.X1, i.Y2, i.Z1);
+                        GL.Vertex3(-i.X1, i.Y1, i.Z1);
+                        GL.Vertex3(-i.X1, i.Y1, i.Z2);
+                        GL.Vertex3(-i.X2, i.Y1, i.Z2);
+                        GL.Vertex3(-i.X2, i.Y1, i.Z1);
+                        GL.End();
+                        GL.Begin(PrimitiveType.LineStrip);
+                        GL.Vertex3(-i.X1, i.Y1, i.Z2);
+                        GL.Vertex3(-i.X1, i.Y2, i.Z2);
+                        GL.Vertex3(-i.X2, i.Y2, i.Z2);
+                        GL.Vertex3(-i.X2, i.Y1, i.Z2);
+                        GL.End();
+                        GL.Begin(PrimitiveType.Lines);
+                        GL.Vertex3(-i.X1, i.Y2, i.Z2);
+                        GL.Vertex3(-i.X1, i.Y2, i.Z1);
+                        GL.Vertex3(-i.X2, i.Y2, i.Z2);
+                        GL.Vertex3(-i.X2, i.Y2, i.Z1);
+                        GL.End();
+                    }
                     GL.EndList();
                 }
                 else
@@ -87,18 +114,7 @@ namespace TwinsaityEditor.Viewers
             switch (e.KeyCode)
             {
                 case Keys.T:
-                    k_t = true;
-                    break;
-            }
-        }
-
-        protected override void OnKeyUp(KeyEventArgs e)
-        {
-            base.OnKeyUp(e);
-            switch (e.KeyCode)
-            {
-                case Keys.T:
-                    k_t = false;
+                    show_trigger = !show_trigger;
                     break;
             }
         }
