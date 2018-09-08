@@ -64,6 +64,11 @@ namespace Twinsanity
         public SectionType Type { get; set; }
         public int Level { get; set; }
 
+        /// <summary>
+        /// Loads a section from a file.
+        /// </summary>
+        /// <param name="reader">BinaryReader already seeked to where the section begins.</param>
+        /// <param name="size">Size of the section.</param>
         public override void Load(BinaryReader reader, int size)
         {
             this.size = size;
