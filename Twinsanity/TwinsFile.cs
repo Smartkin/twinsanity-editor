@@ -104,11 +104,13 @@ namespace Twinsanity
                     {
                         case 6:
                             {
-                                TwinsSection sec = new TwinsSection();
-                                sec.Type = SectionType.Graphics;
+                                TwinsSection sec = new TwinsSection {
+                                    ID = sub.ID,
+                                    Type = SectionType.Graphics,
+                                    Level = 1
+                                };
                                 var sk = reader.BaseStream.Position;
                                 reader.BaseStream.Position = sec.Offset = sub.Off;
-                                sec.Level = 1;
                                 sec.Load(reader, sub.Size);
                                 reader.BaseStream.Position = sk;
                                 sec_info.Records.Add(sub.ID, sec);
@@ -116,7 +118,9 @@ namespace Twinsanity
                             }
                         default:
                             {
-                                TwinsItem rec = new TwinsItem();
+                                TwinsItem rec = new TwinsItem {
+                                    ID = sub.ID
+                                };
                                 var sk = reader.BaseStream.Position;
                                 reader.BaseStream.Position = rec.Offset = sub.Off;
                                 rec.Load(reader, sub.Size);
