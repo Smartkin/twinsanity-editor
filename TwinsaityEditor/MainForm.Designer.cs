@@ -54,9 +54,11 @@
             this.triggerTreeViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.graphicsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.soundToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.treeView1 = new System.Windows.Forms.TreeView();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.button11 = new System.Windows.Forms.Button();
             this.button10 = new System.Windows.Forms.Button();
@@ -69,8 +71,6 @@
             this.button3 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -173,7 +173,7 @@
             this.graphicsToolStripMenuItem,
             this.soundToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
             // 
             // eLFPatcherToolStripMenuItem
@@ -219,31 +219,31 @@
             // collisionTreeViewerToolStripMenuItem
             // 
             this.collisionTreeViewerToolStripMenuItem.Name = "collisionTreeViewerToolStripMenuItem";
-            this.collisionTreeViewerToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.collisionTreeViewerToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.collisionTreeViewerToolStripMenuItem.Text = "Collision Tree Viewer";
             // 
             // clearCollisionTreeToolStripMenuItem
             // 
             this.clearCollisionTreeToolStripMenuItem.Name = "clearCollisionTreeToolStripMenuItem";
-            this.clearCollisionTreeToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.clearCollisionTreeToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.clearCollisionTreeToolStripMenuItem.Text = "Clear Collision Tree";
             // 
             // importCollisionTreeToolStripMenuItem
             // 
             this.importCollisionTreeToolStripMenuItem.Name = "importCollisionTreeToolStripMenuItem";
-            this.importCollisionTreeToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.importCollisionTreeToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.importCollisionTreeToolStripMenuItem.Text = "Import Collision Tree";
             // 
             // exportToobjToolStripMenuItem
             // 
             this.exportToobjToolStripMenuItem.Name = "exportToobjToolStripMenuItem";
-            this.exportToobjToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.exportToobjToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.exportToobjToolStripMenuItem.Text = "Export to .obj";
             // 
             // triggerTreeViewerToolStripMenuItem
             // 
             this.triggerTreeViewerToolStripMenuItem.Name = "triggerTreeViewerToolStripMenuItem";
-            this.triggerTreeViewerToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.triggerTreeViewerToolStripMenuItem.Size = new System.Drawing.Size(185, 22);
             this.triggerTreeViewerToolStripMenuItem.Text = "Trigger Tree Viewer";
             // 
             // graphicsToolStripMenuItem
@@ -257,6 +257,12 @@
             this.soundToolStripMenuItem.Name = "soundToolStripMenuItem";
             this.soundToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.soundToolStripMenuItem.Text = "Sound";
+            // 
+            // preferencesToolStripMenuItem
+            // 
+            this.preferencesToolStripMenuItem.Name = "preferencesToolStripMenuItem";
+            this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(80, 20);
+            this.preferencesToolStripMenuItem.Text = "Preferences";
             // 
             // aboutToolStripMenuItem
             // 
@@ -289,6 +295,17 @@
             this.treeView1.Name = "treeView1";
             this.treeView1.Size = new System.Drawing.Size(287, 345);
             this.treeView1.TabIndex = 0;
+            // 
+            // textBox1
+            // 
+            this.textBox1.AcceptsReturn = true;
+            this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBox1.Location = new System.Drawing.Point(0, 0);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBox1.Size = new System.Drawing.Size(485, 345);
+            this.textBox1.TabIndex = 0;
             // 
             // groupBox1
             // 
@@ -411,23 +428,6 @@
             this.button1.Text = "Hex View";
             this.button1.UseVisualStyleBackColor = true;
             // 
-            // textBox1
-            // 
-            this.textBox1.AcceptsReturn = true;
-            this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox1.Location = new System.Drawing.Point(0, 0);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(485, 345);
-            this.textBox1.TabIndex = 0;
-            // 
-            // preferencesToolStripMenuItem
-            // 
-            this.preferencesToolStripMenuItem.Name = "preferencesToolStripMenuItem";
-            this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(80, 20);
-            this.preferencesToolStripMenuItem.Text = "Preferences";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -438,7 +438,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
-            this.Text = "Twinsaity Editor by Neo_Kesha";
+            this.Text = "Twinsanity Editor by Neo_Kesha";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);

@@ -10,7 +10,7 @@ using System.Windows.Forms;
 using Twinsanity;
 
 /*  CURRENT ISSUES:
- *  Texture applying and rendering is completely wrong, some values need to be normalized for OpenGL
+ *  Texture applying and rendering is completely wrong, some values need to be normalized for OpenGL(Switch to shaders later to allow multiple renderings)
  *  Model doesn't draw until camera was rotated at least once
  */
 
