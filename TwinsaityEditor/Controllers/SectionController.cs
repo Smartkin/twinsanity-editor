@@ -8,6 +8,7 @@ namespace TwinsaityEditor
 
         public SectionController(TwinsSection item)
         {
+            Toolbar = ToolbarFlags.Search | ToolbarFlags.Add | ToolbarFlags.Create | ToolbarFlags.Export;
             data = item;
             GenText();
         }

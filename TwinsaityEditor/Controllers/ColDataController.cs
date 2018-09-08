@@ -8,6 +8,7 @@ namespace TwinsaityEditor
 
         public ColDataController(ColData item)
         {
+            Toolbar = ToolbarFlags.Hex | ToolbarFlags.Extract | ToolbarFlags.Replace | ToolbarFlags.View;
             data = item;
             GenText();
         }

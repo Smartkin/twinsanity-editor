@@ -8,6 +8,7 @@ namespace TwinsaityEditor
 
         public ItemController(TwinsItem item)
         {
+            Toolbar = ToolbarFlags.Hex | ToolbarFlags.Extract | ToolbarFlags.Replace | ToolbarFlags.Delete;
             data = item;
             GenText();
         }

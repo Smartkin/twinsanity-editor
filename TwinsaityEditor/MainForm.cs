@@ -1,10 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 using Twinsanity;
 
 namespace TwinsaityEditor
 {
+    /// <summary>
+    /// Flags corresponding to buttons in the toolbar to the right.
+    /// </summary>
+    [Flags]
+    public enum ToolbarFlags
+    {
+        Hex     = 0x0001,
+        Extract = 0x0002,
+        Replace = 0x0004,
+        Search  = 0x0008,
+        Add     = 0x0010,
+        Create  = 0x0020,
+        Delete  = 0x0040,
+        Export  = 0x0080,
+        View    = 0x0100,
+        Script  = 0x0200,
+        Edit    = 0x0400
+    }
+
     public partial class MainForm : Form
     {
         private TwinsFile fileData = new TwinsFile();
@@ -16,6 +34,7 @@ namespace TwinsaityEditor
 
         private void GenTree()
         {
+            groupBox1.Enabled = true;
             treeView1.Nodes.Clear();
             treeView1.Nodes.Add("Root");
             foreach (var i in fileData.SecInfo.Records.Values)
@@ -28,15 +47,33 @@ namespace TwinsaityEditor
 
         private void TreeNodeSelect(object sender, TreeViewEventArgs e)
         {
-            if (!(e.Node.Tag is Controller))
-                return;
-            Controller c = (Controller)e.Node.Tag;
-            if (c.Dirty)
+            if (e.Node.Tag is Controller)
             {
-                e.Node.Text = c.GetName();
-                c.Dirty = false;
+                Controller c = (Controller)e.Node.Tag;
+                if (c.Dirty)
+                {
+                    e.Node.Text = c.GetName();
+                    c.Dirty = false;
+                }
+                textBox1.Lines = c.TextPrev;
+                buttonHex.Enabled = (c.Toolbar & ToolbarFlags.Hex) != 0;
+                buttonExt.Enabled = (c.Toolbar & ToolbarFlags.Extract) != 0;
+                buttonRep.Enabled = (c.Toolbar & ToolbarFlags.Replace) != 0;
+                buttonAdd.Enabled = (c.Toolbar & ToolbarFlags.Add) != 0;
+                buttonCre.Enabled = (c.Toolbar & ToolbarFlags.Create) != 0;
+                buttonDel.Enabled = (c.Toolbar & ToolbarFlags.Delete) != 0;
+                buttonEdt.Enabled = (c.Toolbar & ToolbarFlags.Edit) != 0;
+                buttonExp.Enabled = (c.Toolbar & ToolbarFlags.Export) != 0;
+                buttonScr.Enabled = (c.Toolbar & ToolbarFlags.Script) != 0;
+                buttonSrc.Enabled = (c.Toolbar & ToolbarFlags.Search) != 0;
+                buttonViw.Enabled = (c.Toolbar & ToolbarFlags.View) != 0;
             }
-            textBox1.Lines = c.TextPrev;
+            else if (e.Node == treeView1.TopNode)
+            {
+                buttonHex.Enabled = buttonExt.Enabled = buttonRep.Enabled = buttonAdd.Enabled = buttonCre.Enabled = 
+                buttonDel.Enabled = buttonEdt.Enabled = buttonExp.Enabled = buttonScr.Enabled = buttonSrc.Enabled = 
+                buttonViw.Enabled = false;
+            }
         }
 
         private void GenTreeNode(TwinsItem a, TreeNode node)
