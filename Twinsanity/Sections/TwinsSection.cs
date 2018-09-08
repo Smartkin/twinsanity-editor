@@ -58,6 +58,7 @@ namespace Twinsanity
         private TwinsSecInfo sec_info;
         private readonly uint magic = 0x00010001;
         private readonly uint magicV2 = 0x00010003;
+        private int size;
 
         public TwinsSecInfo SecInfo { get => sec_info; set => sec_info = value; }
         public SectionType Type { get; set; }
@@ -65,6 +66,7 @@ namespace Twinsanity
 
         public override void Load(BinaryReader reader, int size)
         {
+            this.size = size;
             sec_info.Records = new Dictionary<uint, TwinsItem>();
             if (size < 0xC || ((sec_info.Magic = reader.ReadUInt32()) != magic && sec_info.Magic != magicV2))
                 return;
@@ -232,11 +234,11 @@ namespace Twinsanity
 
         protected override int GetSize()
         {
-            int size = SecInfo.Records.Count * 12 + 12;
-            foreach (var item in SecInfo.Records.Values)
-            {
-                size += item.Size;
-            }
+            //int size = SecInfo.Records.Count * 12 + 12;
+            //foreach (var item in SecInfo.Records.Values)
+            //{
+            //    size += item.Size;
+            //}
             return size;
         }
     }
