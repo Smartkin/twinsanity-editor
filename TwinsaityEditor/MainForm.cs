@@ -119,5 +119,11 @@ namespace TwinsaityEditor
                 Text = "Twinsaity Editor by Neo_Kesha [" + ofd.FileName + "] ";
             }
         }
+
+        private void graphicsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var fm = new Workers.TextureImport();
+            fm.Show();
+        }
     }
 }

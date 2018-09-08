@@ -56,10 +56,10 @@ namespace Twinsanity
                 RawData[i] = Palette[Index[i]];
         }
 
-        public void Import(Color[] RawData, uint pwidth, uint pheight, BlockFormats format, bool Mip)
+        public void Import(byte[] RawData, uint pwidth, uint pheight, BlockFormats format, bool Mip)
         {
-            byte[] Index = new byte[] { };
-            Color[] Palette = new Color[] { };
+            byte[] Index = (byte[])RawData.Clone();
+            Color[] Palette = new Color[256];
             byte[] MipIndex = new byte[] { };
             ARGB2INDEX(RawData, ref Index, ref Palette);
             Flip(ref Index, (ushort)pwidth, (ushort)pheight);
@@ -85,14 +85,12 @@ namespace Twinsanity
             DataUpdate();
         }
 
-        public void ARGB2INDEX(Color[] RawData, ref byte[] Index, ref Color[] Palette)
+        public void ARGB2INDEX(byte[] RawData, ref byte[] Index, ref Color[] Palette)
         {
-            Array.Resize(ref Palette, 256);
-            Array.Resize(ref Index, RawData.Length);
             int cnt = -1;
-            for (int n = 0; n <= RawData.Length - 1; n++)
+            for (int n = 0; n < RawData.Length; n += 3) 
             {
-                Color c = RawData[n];
+                Color c = Color.FromArgb(255,RawData[n],RawData[n+1],RawData[n+2]);
                 bool flag = true;
                 for (int i = 0; i <= cnt; i++)
                 {
@@ -110,11 +108,11 @@ namespace Twinsanity
                 if (cnt == 255)
                     break;
             }
-            for (int n = 0; n <= RawData.Length - 1; n++)
+            for (int n = 0; n < RawData.Length; n += 3)
             {
                 float MinUnMath = -1.0F;
                 byte MaxIndex = 0;
-                Color c = RawData[n];
+                Color c = Color.FromArgb(255, RawData[n], RawData[n + 1], RawData[n + 2]);
                 bool flag = false;
                 for (int i = 0; i <= 255; i++)
                 {
@@ -135,6 +133,7 @@ namespace Twinsanity
                 if (!flag)
                     Index[n] = MaxIndex;
             }
+            return;
         }
 
         protected override void DataUpdate()
