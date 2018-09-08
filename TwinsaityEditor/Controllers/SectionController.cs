@@ -22,7 +22,7 @@ namespace TwinsaityEditor
             TextPrev = new string[3];
             TextPrev[0] = "ID: " + data.ID;
             TextPrev[1] = "Offset: " + data.Offset + " Size: " + data.Size;
-            TextPrev[2] = "ContentSize: " + (data.Size - (data.SecInfo.Records.Count + 1) * 12) + " Element Count: " + data.SecInfo.Records.Count;
+            TextPrev[2] = "ContentSize: " + data.ContentSize + " Element Count: " + data.SecInfo.Records.Count;
         }
     }
 }

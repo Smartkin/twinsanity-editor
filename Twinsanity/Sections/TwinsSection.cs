@@ -63,6 +63,7 @@ namespace Twinsanity
         public TwinsSecInfo SecInfo { get => sec_info; set => sec_info = value; }
         public SectionType Type { get; set; }
         public int Level { get; set; }
+        public int ContentSize { get => GetContentSize(); }
 
         /// <summary>
         /// Loads a section from a file.
@@ -245,6 +246,14 @@ namespace Twinsanity
             //    size += item.Size;
             //}
             return size;
+        }
+
+        private int GetContentSize()
+        {
+            int c_size = 0;
+            foreach (var i in SecInfo.Records.Values)
+                c_size += i.Size;
+            return c_size;
         }
     }
 }
