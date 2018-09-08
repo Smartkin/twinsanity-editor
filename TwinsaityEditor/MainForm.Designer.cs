@@ -340,6 +340,7 @@
             this.buttonEdt.TabIndex = 10;
             this.buttonEdt.Text = "Edit";
             this.buttonEdt.UseVisualStyleBackColor = true;
+            this.buttonEdt.Click += new System.EventHandler(this.buttonEdt_Click);
             // 
             // buttonScr
             // 
@@ -350,6 +351,7 @@
             this.buttonScr.TabIndex = 9;
             this.buttonScr.Text = "Scripting";
             this.buttonScr.UseVisualStyleBackColor = true;
+            this.buttonScr.Click += new System.EventHandler(this.buttonScr_Click);
             // 
             // buttonViw
             // 
@@ -360,6 +362,7 @@
             this.buttonViw.TabIndex = 8;
             this.buttonViw.Text = "View/Play";
             this.buttonViw.UseVisualStyleBackColor = true;
+            this.buttonViw.Click += new System.EventHandler(this.buttonViw_Click);
             // 
             // buttonExp
             // 
@@ -370,6 +373,7 @@
             this.buttonExp.TabIndex = 7;
             this.buttonExp.Text = "Export";
             this.buttonExp.UseVisualStyleBackColor = true;
+            this.buttonExp.Click += new System.EventHandler(this.buttonExp_Click);
             // 
             // buttonDel
             // 
@@ -380,6 +384,7 @@
             this.buttonDel.TabIndex = 6;
             this.buttonDel.Text = "Delete";
             this.buttonDel.UseVisualStyleBackColor = true;
+            this.buttonDel.Click += new System.EventHandler(this.buttonDel_Click);
             // 
             // buttonCre
             // 
@@ -390,6 +395,7 @@
             this.buttonCre.TabIndex = 5;
             this.buttonCre.Text = "Create";
             this.buttonCre.UseVisualStyleBackColor = true;
+            this.buttonCre.Click += new System.EventHandler(this.buttonCre_Click);
             // 
             // buttonAdd
             // 
@@ -400,6 +406,7 @@
             this.buttonAdd.TabIndex = 4;
             this.buttonAdd.Text = "Add";
             this.buttonAdd.UseVisualStyleBackColor = true;
+            this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
             // 
             // buttonSrc
             // 
@@ -410,6 +417,7 @@
             this.buttonSrc.TabIndex = 3;
             this.buttonSrc.Text = "Search";
             this.buttonSrc.UseVisualStyleBackColor = true;
+            this.buttonSrc.Click += new System.EventHandler(this.buttonSrc_Click);
             // 
             // buttonRep
             // 
@@ -420,6 +428,7 @@
             this.buttonRep.TabIndex = 2;
             this.buttonRep.Text = "Replace";
             this.buttonRep.UseVisualStyleBackColor = true;
+            this.buttonRep.Click += new System.EventHandler(this.buttonRep_Click);
             // 
             // buttonExt
             // 
