@@ -119,5 +119,13 @@ namespace TwinsaityEditor
                 Text = "Twinsaity Editor by Neo_Kesha [" + ofd.FileName + "] ";
             }
         }
+
+        private void buttonHex_Click(object sender, EventArgs e)
+        {
+            if (treeView1.SelectedNode.Tag is Controller c && (c.Toolbar & ToolbarFlags.Hex) != 0)
+            {
+                c.ToolbarAction(ToolbarFlags.Hex);
+            }
+        }
     }
 }

@@ -179,30 +179,30 @@
             // eLFPatcherToolStripMenuItem
             // 
             this.eLFPatcherToolStripMenuItem.Name = "eLFPatcherToolStripMenuItem";
-            this.eLFPatcherToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.eLFPatcherToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.eLFPatcherToolStripMenuItem.Text = "ELF Patcher";
             // 
             // e3ConverterToolStripMenuItem
             // 
             this.e3ConverterToolStripMenuItem.Name = "e3ConverterToolStripMenuItem";
-            this.e3ConverterToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.e3ConverterToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.e3ConverterToolStripMenuItem.Text = "E3 Converter";
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(177, 6);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(149, 6);
             // 
             // refreshLibraryToolStripMenuItem
             // 
             this.refreshLibraryToolStripMenuItem.Name = "refreshLibraryToolStripMenuItem";
-            this.refreshLibraryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.refreshLibraryToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.refreshLibraryToolStripMenuItem.Text = "Refresh Library";
             // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(177, 6);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(149, 6);
             // 
             // collisionTreeToolStripMenuItem
             // 
@@ -213,7 +213,7 @@
             this.exportToobjToolStripMenuItem,
             this.triggerTreeViewerToolStripMenuItem});
             this.collisionTreeToolStripMenuItem.Name = "collisionTreeToolStripMenuItem";
-            this.collisionTreeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.collisionTreeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.collisionTreeToolStripMenuItem.Text = "Collision Tree";
             // 
             // collisionTreeViewerToolStripMenuItem
@@ -249,13 +249,13 @@
             // graphicsToolStripMenuItem
             // 
             this.graphicsToolStripMenuItem.Name = "graphicsToolStripMenuItem";
-            this.graphicsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.graphicsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.graphicsToolStripMenuItem.Text = "Graphics";
             // 
             // soundToolStripMenuItem
             // 
             this.soundToolStripMenuItem.Name = "soundToolStripMenuItem";
-            this.soundToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.soundToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.soundToolStripMenuItem.Text = "Sound";
             // 
             // preferencesToolStripMenuItem
@@ -438,6 +438,7 @@
             this.buttonHex.TabIndex = 0;
             this.buttonHex.Text = "Hex View";
             this.buttonHex.UseVisualStyleBackColor = true;
+            this.buttonHex.Click += new System.EventHandler(this.buttonHex_Click);
             // 
             // MainForm
             // 

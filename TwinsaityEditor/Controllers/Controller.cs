@@ -19,6 +19,6 @@
         /// Function called when a toolbar button is clicked.
         /// </summary>
         /// <param name="button">The button clicked.</param>
-        public virtual void ToolbarAction(short button) { }
+        public virtual void ToolbarAction(ToolbarFlags button) { }
     }
 }

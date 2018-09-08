@@ -24,5 +24,15 @@ namespace TwinsaityEditor
             TextPrev[0] = "ID: " + data.ID;
             TextPrev[1] = "Offset: " + data.Offset + " Size: " + data.Size;
         }
+
+        public override void ToolbarAction(ToolbarFlags button)
+        {
+            switch (button)
+            {
+                case ToolbarFlags.Hex:
+                    //do hex stuff here
+                    break;
+            }
+        }
     }
 }
