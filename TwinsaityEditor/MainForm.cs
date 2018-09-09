@@ -59,6 +59,7 @@ namespace TwinsaityEditor
                 if (c.Dirty)
                 {
                     e.Node.Text = c.GetName();
+                    c.GenText();
                     c.Dirty = false;
                 }
                 textBox1.Lines = c.TextPrev;

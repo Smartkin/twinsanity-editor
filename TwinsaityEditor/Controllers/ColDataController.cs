@@ -3,16 +3,15 @@ using Twinsanity;
 
 namespace TwinsaityEditor
 {
-    public class ColDataController : Controller
+    public class ColDataController : ItemController
     {
         private ColData data;
         private Form frm;
 
-        public ColDataController(ColData item)
+        public ColDataController(ColData item) : base(item)
         {
             Toolbar = ToolbarFlags.Hex | ToolbarFlags.Extract | ToolbarFlags.Replace | ToolbarFlags.View;
             data = item;
-            GenText();
         }
 
         public override string GetName()
@@ -20,7 +19,7 @@ namespace TwinsaityEditor
             return "Collision Data [ID: " + data.ID + "]";
         }
 
-        protected override void GenText()
+        public override void GenText()
         {
             TextPrev = new string[6 + data.Triggers.Count + data.Groups.Count + data.Tris.Count + data.Vertices.Count];
             TextPrev[0] = "ID: " + data.ID;
@@ -45,6 +44,7 @@ namespace TwinsaityEditor
 
         public override void ToolbarAction(ToolbarFlags button)
         {
+            base.ToolbarAction(button);
             switch (button)
             {
                 case ToolbarFlags.View:

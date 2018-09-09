@@ -66,6 +66,8 @@
   <ItemGroup>
     <Compile Include="ADPCM.cs" />
     <Compile Include="BDArchive.cs" />
+    <Compile Include="Items\BaseItem.cs" />
+    <Compile Include="Items\Graphics\Texture.cs" />
     <Compile Include="Items\TwinsItem.cs" />
     <Compile Include="Items\ColData.cs" />
     <Compile Include="MetaData.cs" />
@@ -83,7 +85,6 @@
     <Compile Include="TwinsFile.cs" />
     <Compile Include="Types.cs" />
     <Compile Include="PSM.cs" />
-    <Compile Include="Items\BaseItem.cs" />
     <Compile Include="BaseObject.cs" />
     <Compile Include="Items\Code\GameObject.cs" />
     <Compile Include="Items\Graphics\GC.cs" />
@@ -94,7 +95,6 @@
     <Compile Include="Items\Code\Script.cs" />
     <Compile Include="Items\Code\Sound.cs" />
     <Compile Include="Items\Code\SoundDescription.cs" />
-    <Compile Include="Items\Graphics\Texture.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
