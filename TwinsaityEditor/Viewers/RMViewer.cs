@@ -28,7 +28,7 @@ namespace TwinsaityEditor
                 dlist_col = GL.GenLists(1);
                 GL.NewList(dlist_col, ListMode.CompileAndExecute);
                 GL.Begin(PrimitiveType.Triangles);
-                foreach (ColData.ColTri tri in data.Tris)
+                foreach (var tri in data.Tris)
                 {
                     GL.Color3(colors[tri.Surface % colors.Length]);
                     Pos v1 = data.Vertices[tri.Vert1], v2 = data.Vertices[tri.Vert2], v3 = data.Vertices[tri.Vert3];
@@ -41,7 +41,7 @@ namespace TwinsaityEditor
                 }
                 GL.End();
                 GL.Color3(Color.Black);
-                foreach (ColData.ColTri tri in data.Tris)
+                foreach (var tri in data.Tris)
                 {
                     GL.Begin(PrimitiveType.LineLoop);
                     Pos v1 = data.Vertices[tri.Vert1], v2 = data.Vertices[tri.Vert2], v3 = data.Vertices[tri.Vert3];
@@ -94,7 +94,6 @@ namespace TwinsaityEditor
                 else
                     GL.CallList(dlist_trg);
             }
-            //throw new NotImplementedException();
         }
 
         protected override bool IsInputKey(Keys keyData)
