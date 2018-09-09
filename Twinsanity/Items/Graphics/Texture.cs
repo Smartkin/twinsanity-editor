@@ -133,7 +133,6 @@ namespace Twinsanity
                 if (!flag)
                     Index[n] = MaxIndex;
             }
-            return;
         }
 
         protected override void DataUpdate()
