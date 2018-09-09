@@ -20,5 +20,7 @@
         /// </summary>
         /// <param name="button">The button clicked.</param>
         public virtual void ToolbarAction(ToolbarFlags button) { }
+
+        public virtual void Dispose() { }
     }
 }

@@ -36,14 +36,19 @@ namespace TwinsaityEditor
         private void GenTree()
         {
             groupBox1.Enabled = true;
-            treeView1.Nodes.Clear();
+            treeView1.BeginUpdate();
+            treeView1.AfterSelect += TreeNodeSelect;
+            if (treeView1.TopNode != null)
+                DisposeNode(treeView1.TopNode);
+            //treeView1.Nodes.Clear();
             treeView1.Nodes.Add("Root");
+            treeView1.Select();
             foreach (var i in fileData.SecInfo.Records.Values)
             {
                 GenTreeNode(i, treeView1.TopNode);
             }
             treeView1.TopNode.Expand();
-            treeView1.AfterSelect += TreeNodeSelect;
+            treeView1.EndUpdate();
         }
 
         private void TreeNodeSelect(object sender, TreeViewEventArgs e)
@@ -94,6 +99,21 @@ namespace TwinsaityEditor
                 new_node.Tag = new ItemController(a);
             new_node.Text = ((Controller)new_node.Tag).GetName();
             node.Nodes.Add(new_node);
+        }
+
+        /// <summary>
+        /// Dispose of a node.
+        /// </summary>
+        /// <param name="node">Node to be disposed of.</param>
+        private void DisposeNode(TreeNode node)
+        {
+            if (node == null)
+                throw new ArgumentNullException("node");
+            if (node.Tag is Controller c)
+                c.Dispose();
+            for (int i = node.Nodes.Count - 1; i > 0; --i)
+                DisposeNode(node.Nodes[i]);
+            node.Remove();
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)

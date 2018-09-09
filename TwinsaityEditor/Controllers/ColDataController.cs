@@ -61,5 +61,11 @@ namespace TwinsaityEditor
                     break;
             }
         }
+
+        public override void Dispose()
+        {
+            if (frm != null)
+                frm.Close();
+        }
     }
 }
