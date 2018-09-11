@@ -1,4 +1,4 @@
-00# Crash Twinsanity Editor
+## Crash Twinsanity Editor
 >Original version made by Neo_Kesha
 
 ## Description
