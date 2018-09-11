@@ -88,129 +88,150 @@ namespace Twinsanity
                 reader.BaseStream.Position = sk - (i + 2) * 0xC + sub.Off;
                 //var m = reader.ReadUInt32(); //get magic number [obsolete?]
                 //reader.BaseStream.Position -= 4;
-                if (Level > 2) //if over the 2nd level of sections, assume item for safety
+                switch (Type)
                 {
-                    LoadItem(reader, sub);
-                }
-                else //section
-                {
-                    switch (Type)
-                    {
-                        case SectionType.Graphics:
-                            switch (sub.ID)
-                            {
-                                case 0:
-                                    LoadSection(reader, sub, SectionType.Texture);
-                                    break;
-                                case 1:
-                                    LoadSection(reader, sub, SectionType.Material);
-                                    break;
-                                case 2:
-                                    LoadSection(reader, sub, SectionType.Mesh);
-                                    break;
-                                case 3:
-                                    LoadSection(reader, sub, SectionType.Model);
-                                    break;
-                                case 4:
-                                    LoadSection(reader, sub, SectionType.ArmatureModel);
-                                    break;
-                                case 5:
-                                    LoadSection(reader, sub, SectionType.ActorModel);
-                                    break;
-                                case 6:
-                                    LoadSection(reader, sub, SectionType.StaticModel);
-                                    break;
-                                case 7:
-                                    LoadSection(reader, sub, SectionType.SpecialModel);
-                                    break;
-                                case 8:
-                                    LoadSection(reader, sub, SectionType.Skybox);
-                                    break;
-                                default:
-                                    LoadItem(reader, sub);
-                                    break;
-                            }
-                            break;
-                        case SectionType.Instance:
-                            switch (sub.ID)
-                            {
-                                case 0:
-                                    LoadSection(reader, sub, SectionType.UnknownInstance);
-                                    break;
-                                case 1:
-                                    LoadSection(reader, sub, SectionType.AIPosition);
-                                    break;
-                                case 2:
-                                    LoadSection(reader, sub, SectionType.AIPath);
-                                    break;
-                                case 3:
-                                    LoadSection(reader, sub, SectionType.Position);
-                                    break;
-                                case 4:
-                                    LoadSection(reader, sub, SectionType.Path);
-                                    break;
-                                case 5:
-                                    LoadSection(reader, sub, SectionType.CollisionSurface);
-                                    break;
-                                case 6:
-                                    LoadSection(reader, sub, SectionType.ObjectInstance);
-                                    break;
-                                case 7:
-                                    LoadSection(reader, sub, SectionType.Trigger);
-                                    break;
-                                case 8:
-                                    LoadSection(reader, sub, SectionType.Camera);
-                                    break;
-                                default:
-                                    LoadItem(reader, sub);
-                                    break;
-                            }
-                            break;
-                        case SectionType.Code:
-                            switch (sub.ID)
-                            {
-                                case 0:
-                                    LoadSection(reader, sub, SectionType.Object);
-                                    break;
-                                case 1:
-                                    LoadSection(reader, sub, SectionType.Script);
-                                    break;
-                                case 2:
-                                    LoadSection(reader, sub, SectionType.Animation);
-                                    break;
-                                case 3:
-                                    LoadSection(reader, sub, SectionType.OGI);
-                                    break;
-                                case 4:
-                                    LoadSection(reader, sub, SectionType.CodeModel);
-                                    break;
-                                case 7:
-                                    LoadSection(reader, sub, SectionType.SE_Eng);
-                                    break;
-                                case 8:
-                                    LoadSection(reader, sub, SectionType.SE_Fre);
-                                    break;
-                                case 9:
-                                    LoadSection(reader, sub, SectionType.SE_Ger);
-                                    break;
-                                case 10:
-                                    LoadSection(reader, sub, SectionType.SE_Spa);
-                                    break;
-                                case 11:
-                                    LoadSection(reader, sub, SectionType.SE_Ita);
-                                    break;
-                                case 12:
-                                    LoadSection(reader, sub, SectionType.SE_Jpn);
-                                    break;
-                                default:
-                                    LoadItem(reader, sub);
-                                    break;
-                            }
-                            break;
-                        default:
-                            LoadItem(reader, sub);
-                            break;
-                    }
+                    case SectionType.Graphics:
+                        switch (sub.ID)
+                        {
+                            case 0:
+                                LoadSection(reader, sub, SectionType.Texture);
+                                break;
+                            case 1:
+                                LoadSection(reader, sub, SectionType.Material);
+                                break;
+                            case 2:
+                                LoadSection(reader, sub, SectionType.Mesh);
+                                break;
+                            case 3:
+                                LoadSection(reader, sub, SectionType.Model);
+                                break;
+                            case 4:
+                                LoadSection(reader, sub, SectionType.ArmatureModel);
+                                break;
+                            case 5:
+                                LoadSection(reader, sub, SectionType.ActorModel);
+                                break;
+                            case 6:
+                                LoadSection(reader, sub, SectionType.StaticModel);
+                                break;
+                            case 7:
+                                LoadSection(reader, sub, SectionType.SpecialModel);
+                                break;
+                            case 8:
+                                LoadSection(reader, sub, SectionType.Skybox);
+                                break;
+                            default:
+                                LoadItem(reader, sub);
+                                break;
+                        }
+                        break;
+                    case SectionType.Instance:
+                        switch (sub.ID)
+                        {
+                            case 0:
+                                LoadSection(reader, sub, SectionType.UnknownInstance);
+                                break;
+                            case 1:
+                                LoadSection(reader, sub, SectionType.AIPosition);
+                                break;
+                            case 2:
+                                LoadSection(reader, sub, SectionType.AIPath);
+                                break;
+                            case 3:
+                                LoadSection(reader, sub, SectionType.Position);
+                                break;
+                            case 4:
+                                LoadSection(reader, sub, SectionType.Path);
+                                break;
+                            case 5:
+                                LoadSection(reader, sub, SectionType.CollisionSurface);
+                                break;
+                            case 6:
+                                LoadSection(reader, sub, SectionType.ObjectInstance);
+                                break;
+                            case 7:
+                                LoadSection(reader, sub, SectionType.Trigger);
+                                break;
+                            case 8:
+                                LoadSection(reader, sub, SectionType.Camera);
+                                break;
+                            default:
+                                LoadItem(reader, sub);
+                                break;
+                        }
+                        break;
+                    case SectionType.Code:
+                        switch (sub.ID)
+                        {
+                            case 0:
+                                LoadSection(reader, sub, SectionType.Object);
+                                break;
+                            case 1:
+                                LoadSection(reader, sub, SectionType.Script);
+                                break;
+                            case 2:
+                                LoadSection(reader, sub, SectionType.Animation);
+                                break;
+                            case 3:
+                                LoadSection(reader, sub, SectionType.OGI);
+                                break;
+                            case 4:
+                                LoadSection(reader, sub, SectionType.CodeModel);
+                                break;
+                            case 7:
+                                LoadSection(reader, sub, SectionType.SE_Eng);
+                                break;
+                            case 8:
+                                LoadSection(reader, sub, SectionType.SE_Fre);
+                                break;
+                            case 9:
+                                LoadSection(reader, sub, SectionType.SE_Ger);
+                                break;
+                            case 10:
+                                LoadSection(reader, sub, SectionType.SE_Spa);
+                                break;
+                            case 11:
+                                LoadSection(reader, sub, SectionType.SE_Ita);
+                                break;
+                            case 12:
+                                LoadSection(reader, sub, SectionType.SE_Jpn);
+                                break;
+                            default:
+                                LoadItem(reader, sub);
+                                break;
+                        }
+                        break;
+                    case SectionType.Texture:
+                        {
+                            Texture rec = new Texture { ID = sub.ID, Offset = (uint)reader.BaseStream.Position };
+                            rec.Load(reader);
+                            sec_info.Records.Add(sub.ID, rec);
+                        }
+                        break;
+                    case SectionType.Material:
+                        {
+                            Material rec = new Material { ID = sub.ID, Offset = (uint)reader.BaseStream.Position };
+                            rec.Load(reader);
+                            sec_info.Records.Add(sub.ID, rec);
+                        }
+                        break;
+                    case SectionType.Mesh:
+                        {
+                            Mesh rec = new Mesh { ID = sub.ID, Offset = (uint)reader.BaseStream.Position };
+                            rec.Load(reader);
+                            sec_info.Records.Add(sub.ID, rec);
+                        }
+                        break;
+                    case SectionType.Model:
+                        {
+                            Model rec = new Model { ID = sub.ID, Offset = (uint)reader.BaseStream.Position };
+                            rec.Load(reader);
+                            sec_info.Records.Add(sub.ID, rec);
+                        }
+                        break;
+                    default:
+                        LoadItem(reader, sub);
+                        break;
                 }
                 reader.BaseStream.Position = sk;
             }
