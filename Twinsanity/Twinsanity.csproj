@@ -86,7 +86,6 @@
     <Compile Include="Sections\TwinsSection.cs" />
     <Compile Include="TwinsFile.cs" />
     <Compile Include="Types.cs" />
-    <Compile Include="PSM.cs" />
     <Compile Include="BaseObject.cs" />
     <Compile Include="Items\Code\GameObject.cs" />
     <Compile Include="Items\Graphics\Model.cs" />

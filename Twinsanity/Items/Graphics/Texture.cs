@@ -16,8 +16,6 @@ namespace Twinsanity
         private byte[] tex_space = new byte[32], unk = new byte[176];
         private byte[] pixels, mippixels;
         private Color[] palette, pixel_data;
-
-        private Bitmap tex;
         
         public int Width { get => (int)Math.Pow(2, w); }
         public int Height { get => (int)Math.Pow(2, h); }

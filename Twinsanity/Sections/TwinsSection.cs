@@ -263,11 +263,6 @@ namespace Twinsanity
 
         protected override int GetSize()
         {
-            //int size = SecInfo.Records.Count * 12 + 12;
-            //foreach (var item in SecInfo.Records.Values)
-            //{
-            //    size += item.Size;
-            //}
             return size;
         }
 

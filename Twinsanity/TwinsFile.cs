@@ -20,9 +20,9 @@ namespace Twinsanity
         private TwinsSecInfo sec_info;
 
         public TwinsSecInfo SecInfo { get => sec_info; set => sec_info = value; }
+        public int ContentSize { get => GetContentSize(); }
+        public int Size { get => ContentSize + SecInfo.Records.Count * 12 + 12; }
 
-        //private List<TwinsSubInfo> sub_list;
-        
         /// <summary>
         /// Load an RM/SM file. "rs" is a boolean that determines if the file being loaded is an RM (false) or an SM (true)
         /// </summary>
@@ -104,7 +104,8 @@ namespace Twinsanity
                     {
                         case 6:
                             {
-                                TwinsSection sec = new TwinsSection {
+                                TwinsSection sec = new TwinsSection
+                                {
                                     ID = sub.ID,
                                     Type = SectionType.Graphics,
                                     Level = 1
@@ -118,7 +119,8 @@ namespace Twinsanity
                             }
                         default:
                             {
-                                TwinsItem rec = new TwinsItem {
+                                TwinsItem rec = new TwinsItem
+                                {
                                     ID = sub.ID
                                 };
                                 var sk = reader.BaseStream.Position;
@@ -134,7 +136,7 @@ namespace Twinsanity
             reader.Close();
             file.Close();
         }
-        
+
         /// <summary>
         /// Save the file.
         /// </summary>
@@ -166,23 +168,14 @@ namespace Twinsanity
 
             writer.Close();
             file.Close();
-            /*
-            Recalculate();
-            FileStream file = new FileStream(Path, FileMode.Create, FileAccess.Write);
-            BinaryWriter Writer = new BinaryWriter(file);
-            Writer.Write(Header);
-            Writer.Write(Records);
-            Writer.Write(Size);
-            for (int i = 0; i <= Records - 1; i++)
-            {
-                Writer.Write(Item[i].Offset);
-                Writer.Write(Item[i].Size);
-                Writer.Write(Item[i].ID);
-            }
-            for (int i = 0; i <= Records - 1; i++)
-                Item[i].Save(ref file, ref Writer);
-            file.Close();
-            */
         }
+        
+        private int GetContentSize()
+        {
+            int c_size = 0;
+            foreach (var i in SecInfo.Records.Values)
+                c_size += i.Size;
+            return c_size;
         }
     }
+}

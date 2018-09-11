@@ -41,7 +41,11 @@ namespace TwinsaityEditor
             if (treeView1.TopNode != null)
                 DisposeNode(treeView1.TopNode);
             //treeView1.Nodes.Clear();
-            treeView1.Nodes.Add("Root");
+            TreeNode new_node = new TreeNode {
+                Tag = new FileController(fileData)
+            };
+            new_node.Text = ((Controller)new_node.Tag).GetName();
+            treeView1.Nodes.Add(new_node);
             treeView1.Select();
             foreach (var i in fileData.SecInfo.Records.Values)
             {
@@ -53,9 +57,8 @@ namespace TwinsaityEditor
 
         private void TreeNodeSelect(object sender, TreeViewEventArgs e)
         {
-            if (e.Node.Tag is Controller)
+            if (e.Node.Tag is Controller c)
             {
-                Controller c = (Controller)e.Node.Tag;
                 if (c.Dirty)
                 {
                     e.Node.Text = c.GetName();
@@ -77,8 +80,8 @@ namespace TwinsaityEditor
             }
             else if (e.Node == treeView1.TopNode)
             {
-                buttonHex.Enabled = buttonExt.Enabled = buttonRep.Enabled = buttonAdd.Enabled = buttonCre.Enabled = 
-                buttonDel.Enabled = buttonEdt.Enabled = buttonExp.Enabled = buttonScr.Enabled = buttonSrc.Enabled = 
+                buttonHex.Enabled = buttonExt.Enabled = buttonRep.Enabled = buttonAdd.Enabled = buttonCre.Enabled =
+                buttonDel.Enabled = buttonEdt.Enabled = buttonExp.Enabled = buttonScr.Enabled = buttonSrc.Enabled =
                 buttonViw.Enabled = false;
             }
         }
