@@ -30,6 +30,7 @@ namespace Twinsanity
                 int cnt, offset;
                 cnt = 0;
                 offset = (int)(reader.BaseStream.Position - sk);
+                sub.Groups = new List<Group>();
                 while ((cnt < sub.VertexCount) && (reader.BaseStream.Position - sk < offset + sub.BlockSize))
                 {
                     Group grp = new Group {
@@ -48,7 +49,7 @@ namespace Twinsanity
                     };
                     cnt += grp.VertexCount;
                     uint head = reader.ReadUInt32();
-                    while (head != 14000000)
+                    while (head != 0x14000000)
                     {
                         switch (head & 255)
                         {
