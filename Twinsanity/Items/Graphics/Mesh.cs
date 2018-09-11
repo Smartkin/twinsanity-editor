@@ -27,9 +27,7 @@ namespace Twinsanity
                     Something = reader.ReadUInt32(),
                     Null2 = reader.ReadUInt32()
                 };
-                int cnt, offset;
-                cnt = 0;
-                offset = (int)(reader.BaseStream.Position - sk);
+                int cnt = 0, offset = (int)(reader.BaseStream.Position - sk) - 12;
                 sub.Groups = new List<Group>();
                 while ((cnt < sub.VertexCount) && (reader.BaseStream.Position - sk < offset + sub.BlockSize))
                 {
