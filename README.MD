@@ -1,4 +1,4 @@
-# Crash Twinsanity Editor
+## Crash Twinsanity Editor
 >Original version made by Neo_Kesha
 
 ## Description
@@ -13,7 +13,7 @@ Here's the list of what needs to be fixed:
 - GeoData viewing
 - Scenery viewing
 - Sounds playback
-- Buttons working properly(In the future design overwhole)
+- Buttons working properly(In the future design overhaul)
 - Ditch any unnecessery dependency(OpenTK should be suffice for sounds and graphics)
 - General code refactoing(Having 6k lines of code file doesn't seem practical)
 - More API optimizations?
