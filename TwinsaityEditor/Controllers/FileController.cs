@@ -4,7 +4,7 @@ namespace TwinsaityEditor
 {
     public class FileController : Controller
     {
-        private TwinsFile data;
+        private static TwinsFile data;
 
         public FileController(TwinsFile item)
         {
@@ -22,6 +22,11 @@ namespace TwinsaityEditor
             TextPrev = new string[2];
             TextPrev[0] = "Size: " + data.Size;
             TextPrev[1] = "ContentSize: " + data.ContentSize + " Element Count: " + data.SecInfo.Records.Count;
+        }
+
+        public static string GetMaterialName(uint id)
+        {
+            return ((Material)((TwinsSection)((TwinsSection)data.SecInfo.Records[11]).SecInfo.Records[1]).SecInfo.Records[id]).Name; //lol
         }
     }
 }
