@@ -45,6 +45,7 @@ namespace TwinsaityEditor
                 Tag = new FileController(fileData)
             };
             new_node.Text = ((Controller)new_node.Tag).GetName();
+            ((Controller)new_node.Tag).GenText();
             treeView1.Nodes.Add(new_node);
             treeView1.Select();
             foreach (var i in fileData.SecInfo.Records.Values)
@@ -108,6 +109,7 @@ namespace TwinsaityEditor
             else
                 new_node.Tag = new ItemController(a);
             new_node.Text = ((Controller)new_node.Tag).GetName();
+            ((Controller)new_node.Tag).GenText();
             node.Nodes.Add(new_node);
         }
 

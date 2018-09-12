@@ -6,7 +6,7 @@
         /// <summary>
         /// Determines whether text preview needs to be regenerated or not.
         /// </summary>
-        public bool Dirty { get; set; } = true;
+        public bool Dirty { get; set; }
         /// <summary>
         /// FLAGS. Determines which buttons are enabled on the toolbar for this controller.
         /// </summary>
