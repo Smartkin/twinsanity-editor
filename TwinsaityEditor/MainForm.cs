@@ -40,7 +40,7 @@ namespace TwinsaityEditor
             treeView1.AfterSelect += TreeNodeSelect;
             if (treeView1.TopNode != null)
                 DisposeNode(treeView1.TopNode);
-            //treeView1.Nodes.Clear();
+            treeView1.Nodes.Clear();
             TreeNode new_node = new TreeNode {
                 Tag = new FileController(fileData)
             };
@@ -97,6 +97,8 @@ namespace TwinsaityEditor
                 }
                 new_node.Tag = new SectionController((TwinsSection)a);
             }
+            else if (a is Texture)
+                new_node.Tag = new TextureController((Texture)a);
             else if (a is ColData)
                 new_node.Tag = new ColDataController((ColData)a);
             else
