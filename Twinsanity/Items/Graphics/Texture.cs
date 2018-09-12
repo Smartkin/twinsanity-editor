@@ -10,15 +10,16 @@ namespace Twinsanity
     /// </summary>
     public class Texture : TwinsItem
     {
-        private int w, h, type;
+        private short w, h;
+        private int type;
         private ushort pal_size;
         private byte m, pal_flag;
         private byte[] tex_space = new byte[32], unk = new byte[176];
         private byte[] pixels, mippixels;
         private Color[] palette, pixel_data;
         
-        public int Width { get => (int)Math.Pow(2, w); }
-        public int Height { get => (int)Math.Pow(2, h); }
+        public int Width { get => 1 << w; }
+        public int Height { get => 1 << h; }
         //public byte HeaderSize;
         //public ushort ImagePages;
         //public ushort Reserved;
@@ -139,9 +140,9 @@ namespace Twinsanity
         public override void Load(BinaryReader reader)
         {
             var size = reader.ReadInt32();
-            reader.BaseStream.Position = 0;
+            reader.BaseStream.Position -= 4;
             Data = reader.ReadBytes(size + 4);
-            reader.BaseStream.Position = 4;
+            reader.BaseStream.Position -= size;
             var key = reader.ReadUInt32();
             w = reader.ReadInt16();
             h = reader.ReadInt16();
@@ -155,9 +156,9 @@ namespace Twinsanity
             {
                 case 1:
                     {
-                        //pixels = new byte[Width * Height];
+                        pixels = new byte[Width * Height];
                         mippixels = new byte[Width / 2 * Height];
-                        //palette = new Color[(size & 0xFFFFFF00) >> 4];
+                        palette = new Color[(size & 0xFFFFFF00) >> 4];
                         pixel_data = new Color[Width * Height];
                         if ((Width == 32) && (Height == 8))
                         {
