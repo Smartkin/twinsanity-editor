@@ -150,6 +150,7 @@
     <Compile Include="Controllers\Controller.cs" />
     <Compile Include="Controllers\ColDataController.cs" />
     <Compile Include="Controllers\FileController.cs" />
+    <Compile Include="Controllers\MeshController.cs" />
     <Compile Include="Controllers\MaterialController.cs" />
     <Compile Include="Controllers\TextureController.cs" />
     <Compile Include="Controllers\SectionController.cs" />
