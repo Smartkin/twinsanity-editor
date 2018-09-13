@@ -1,48 +1,46 @@
-using System;
+using System.IO;
 
 namespace Twinsanity
 {
-    public class Script : BaseItem
+    public class Script : TwinsItem
     {
-        public new string NodeName = "Script";
+        public string Name { get; set; }
 
-        public ushort InsideID = 0;
-        public byte Mask = 0;
-        public byte Flag = 0;
-        public string Name = "";
-        public byte[] ScriptArray = new byte[] { 0, 0, 0, 0 };
+        private ushort id;
+        private byte mask;
+        private byte flag;
+        private byte[] script;
 
-        public override void UpdateStream()
+        public override void Save(BinaryWriter writer)
         {
-            System.IO.MemoryStream NewStream = new System.IO.MemoryStream();
-            System.IO.BinaryWriter NSWriter = new System.IO.BinaryWriter(NewStream);
-            NSWriter.Write(InsideID);
-            NSWriter.Write(Mask);
-            NSWriter.Write(Flag);
-            if (Flag == 0)
+            writer.Write(id);
+            writer.Write(mask);
+            writer.Write(flag);
+            if (flag == 0)
             {
-                NSWriter.Write(Name.Length);
-                for (int i = 0; i <= Name.Length - 1; i++)
-                    NSWriter.Write(Name[i]);
+                writer.Write(Name.Length);
+                writer.Write(Name.ToCharArray(), 0, Name.Length);
             }
-            NSWriter.Write(ScriptArray);
-            ByteStream = NewStream;
-            Size = (uint)ByteStream.Length;
+            writer.Write(script);
         }
 
-        protected override void DataUpdate()
+        public override void Load(BinaryReader reader, int size)
         {
-            System.IO.BinaryReader BSReader = new System.IO.BinaryReader(ByteStream);
-            ByteStream.Position = 0;
-            InsideID = BSReader.ReadUInt16();
-            Mask = BSReader.ReadByte();
-            Flag = BSReader.ReadByte();
-            if (Flag == 0)
+            var sk = reader.BaseStream.Position;
+            id = reader.ReadUInt16();
+            mask = reader.ReadByte();
+            flag = reader.ReadByte();
+            if (flag == 0)
             {
-                int len = BSReader.ReadInt32();
-                Name = new string(BSReader.ReadChars(len));
+                int len = reader.ReadInt32();
+                Name = new string(reader.ReadChars(len));
             }
-            ScriptArray = BSReader.ReadBytes((int)(ByteStream.Length - ByteStream.Position));
+            script = reader.ReadBytes(size - (int)(reader.BaseStream.Position - sk));
+        }
+
+        protected override int GetSize()
+        {
+            return 4 + script.Length + (flag == 0 ? 4 + Name.Length : 0);
         }
     }
 }
