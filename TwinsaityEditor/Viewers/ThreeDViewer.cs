@@ -135,7 +135,6 @@ namespace TwinsaityEditor
             }
             m_x = e.X;
             m_y = e.Y;
-            Invalidate();
         }
 
         protected override void OnMouseWheel(MouseEventArgs e)

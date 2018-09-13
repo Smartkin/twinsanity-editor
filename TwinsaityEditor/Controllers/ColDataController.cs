@@ -54,7 +54,7 @@ namespace TwinsaityEditor
                         frm.FormClosed += delegate {
                             frm = null;
                         };
-                        RMViewer viewer = new RMViewer(data) { Dock = DockStyle.Fill };
+                        RMViewer viewer = new RMViewer(data, ref FileController.GetFile()) { Dock = DockStyle.Fill };
                         frm.Controls.Add(viewer);
                         frm.Show();
                     }

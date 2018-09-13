@@ -44,5 +44,10 @@ namespace TwinsaityEditor
                 return ((Script)((TwinsSection)((TwinsSection)data.SecInfo.Records[10]).SecInfo.Records[1]).SecInfo.Records[id]).Name; //lol
             else return string.Empty;
         }
+
+        public static ref TwinsFile GetFile()
+        {
+            return ref data;
+        }
     }
 }
