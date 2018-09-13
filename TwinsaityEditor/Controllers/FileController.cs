@@ -28,5 +28,15 @@ namespace TwinsaityEditor
         {
             return ((Material)((TwinsSection)((TwinsSection)data.SecInfo.Records[11]).SecInfo.Records[1]).SecInfo.Records[id]).Name; //lol
         }
+
+        public static string GetObjectName(uint id)
+        {
+            return ((GameObject)((TwinsSection)((TwinsSection)data.SecInfo.Records[10]).SecInfo.Records[0]).SecInfo.Records[id]).Name; //lol
+        }
+
+        //public static string GetScriptName(uint id)
+        //{
+        //    return ((Script)((TwinsSection)((TwinsSection)data.SecInfo.Records[10]).SecInfo.Records[0]).SecInfo.Records[id]).Name; //lol
+        //}
     }
 }

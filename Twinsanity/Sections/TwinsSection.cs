@@ -229,6 +229,13 @@ namespace Twinsanity
                             sec_info.Records.Add(sub.ID, rec);
                         }
                         break;
+                    case SectionType.Object:
+                        {
+                            GameObject rec = new GameObject { ID = sub.ID, Offset = (uint)reader.BaseStream.Position };
+                            rec.Load(reader, sub.Size);
+                            sec_info.Records.Add(sub.ID, rec);
+                        }
+                        break;
                     default:
                         LoadItem(reader, sub);
                         break;

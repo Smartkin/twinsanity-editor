@@ -106,6 +106,8 @@ namespace TwinsaityEditor
                 new_node.Tag = new MeshController((Mesh)a);
             else if (a is Model)
                 new_node.Tag = new ModelController((Model)a);
+            else if (a is GameObject)
+                new_node.Tag = new ObjectController((GameObject)a);
             else if (a is ColData)
                 new_node.Tag = new ColDataController((ColData)a);
             else

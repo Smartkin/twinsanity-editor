@@ -1,320 +1,284 @@
 using System;
+using System.IO;
 
 namespace Twinsanity
 {
-    public class GameObject : BaseItem
+    public class GameObject : TwinsItem
     {
-        public new string NodeName = "GameObject";
+        private int size;
+        
+        public uint Class1 { get; set; } // ??;??;??;??
+        public uint Class2 { get; set; } // Pairs;Scripts;GameObjects;SomeShit
+        public uint Class3 { get; set; } // Sounds;00;00;00
+        public uint[] UI32 { get; set; }
+        public ushort[] OGIs { get; set; } = new ushort[0];
+        public ushort[] Anims { get; set; } = new ushort[0];
+        public ushort[] Scripts { get; set; } = new ushort[0];
+        public ushort[] Objects { get; set; } = new ushort[0];
+        public ushort[] Sounds { get; set; } = new ushort[0];
+        public uint PHeader { get; set; } // Inst;Pos;Path;00
+        public uint PUI32 { get; set; }
+        //private int pUi321.Length = 0;
+        //private int pUi322.Length = 1;
+        //private int pUi323.Length = 2;
+        private uint[] pUi321 = new uint[0];
+        private float[] pUi322 = new float[0];
+        private uint[] pUi323 = new uint[0];
+        private uint flag;
+        private ushort[] cObjects = new ushort[0];
+        private ushort[] cOGIs = new ushort[0];
+        private ushort[] cAnims = new ushort[0];
+        private ushort[] cCM = new ushort[0];
+        private ushort[] cScripts = new ushort[0];
+        private ushort[] cUnk = new ushort[0];
+        private ushort[] cSounds = new ushort[0];
+        private int scriptLen;
+        private ushort[] scriptParams = new ushort[0];
+        private byte[] scriptData = new byte[0];
 
-        public uint Class1, Class2, Class3; // ??;??;??;??;Pairs;Scripts;GameObjects;SomeShit;Sounds;00;00;00
-        public string Name = "";
-        public int UnkI32Number;
-        public int OGINumber;
-        public int AnimationNumber;
-        public int ScriptNumber;
-        public int GameObjectNumber;
-        public int SoundNumber;
-        public uint[] UnkI32;
-        public ushort[] OGI;
-        public ushort[] Animation;
-        public ushort[] Script;
-        public ushort[] _GameObject;
-        public ushort[] Sound;
-        public uint ParametersHeader = 131328; // Inst;Pos;Path;00
-        public uint ParametersUnkI32 = 270;
-        public int ParametersUnkI321Number = 0;
-        public int ParametersUnkI322Number = 1;
-        public int ParametersUnkI323Number = 2;
-        public uint[] ParametersUnkI321;
-        public float[] ParametersUnkI322 = new float[] { 1.0f };
-        public uint[] ParametersUnkI323 = new uint[] { 0, 0 };
-        public uint ChildFlag = 0;
-        public int ChildObjectNumber;
-        public int ChildOGINumber;
-        public int ChildAnimationNumber;
-        public int ChildID4Number;
-        public int ChildScriptNumber;
-        public int ChildUnknownNumber;
-        public int ChildSoundNumber;
-        public ushort[] ChildObject;
-        public ushort[] ChildOGI;
-        public ushort[] ChildAnimation;
-        public ushort[] ChildID4;
-        public ushort[] ChildScript;
-        public ushort[] ChildUnknown;
-        public ushort[] ChildSound;
-        public int ScriptLength;
-        public ushort[] ScriptParameters;
-        public byte[] ScriptArray;
+        public string Name { get; set; }
 
-        public override void UpdateStream()
+        public override void Save(BinaryWriter writer)
         {
-            System.IO.MemoryStream NewStream = new System.IO.MemoryStream();
-            System.IO.BinaryWriter NSWriter = new System.IO.BinaryWriter(NewStream);
-            NSWriter.Write(Class1);
-            byte b = (byte)Math.Max(OGINumber, AnimationNumber);
-            Class2 = b;
-            b = (byte)ScriptNumber;
-            Class2 += (uint)b * 256;
-            b = (byte)GameObjectNumber;
-            Class2 += (uint)b * 256 * 256;
-            b = (byte)UnkI32Number;
-            Class2 += (uint)b * 256 * 256 * 256;
-            NSWriter.Write(Class2);
-            Class3 = (uint)SoundNumber;
-            NSWriter.Write(Class3);
-            NSWriter.Write(Name.Length);
-            for (int i = 0; i <= Name.Length - 1; i++)
-                NSWriter.Write(Name[i]);
-            NSWriter.Write(UnkI32Number);
-            for (int i = 0; i <= UnkI32Number - 1; i++)
-                NSWriter.Write(UnkI32[i]);
-            NSWriter.Write(OGINumber);
-            for (int i = 0; i <= OGINumber - 1; i++)
-                NSWriter.Write(OGI[i]);
-            NSWriter.Write(AnimationNumber);
-            for (int i = 0; i <= AnimationNumber - 1; i++)
-                NSWriter.Write(Animation[i]);
-            NSWriter.Write(ScriptNumber);
-            for (int i = 0; i <= ScriptNumber - 1; i++)
-                NSWriter.Write(Script[i]);
-            NSWriter.Write(GameObjectNumber);
-            for (int i = 0; i <= GameObjectNumber - 1; i++)
-                NSWriter.Write(_GameObject[i]);
-            NSWriter.Write(SoundNumber);
-            for (int i = 0; i <= SoundNumber - 1; i++)
-                NSWriter.Write(Sound[i]);
-            b = (byte)ParametersUnkI321Number;
-            ParametersHeader = b;
-            b = (byte)ParametersUnkI322Number;
-            ParametersHeader += (uint)b * 256;
-            b = (byte)ParametersUnkI323Number;
-            ParametersHeader += (uint)b * 256 * 256;
-            if (ParametersHeader > 0)
+            var sk = writer.BaseStream.Position;
+
+            writer.Write(Class1);
+            Class2 = (uint)((byte)Math.Max(OGIs.Length, Anims.Length)
+                | ((byte)Scripts.Length << 8)
+                | ((byte)Objects.Length << 16)
+                | ((byte)UI32.Length << 24));
+            writer.Write(Class2);
+            Class3 = (uint)Sounds.Length;
+            writer.Write(Class3);
+            writer.Write(Name.Length);
+            writer.Write(Name.ToCharArray(), 0, Name.Length);
+            writer.Write(UI32.Length);
+            for (int i = 0; i < UI32.Length; ++i)
+                writer.Write(UI32[i]);
+            writer.Write(OGIs.Length);
+            for (int i = 0; i < OGIs.Length; ++i)
+                writer.Write(OGIs[i]);
+            writer.Write(Anims.Length);
+            for (int i = 0; i < Anims.Length; ++i)
+                writer.Write(Anims[i]);
+            writer.Write(Scripts.Length);
+            for (int i = 0; i < Scripts.Length; ++i)
+                writer.Write(Scripts[i]);
+            writer.Write(Objects.Length);
+            for (int i = 0; i < Objects.Length; ++i)
+                writer.Write(Objects[i]);
+            writer.Write(Sounds.Length);
+            for (int i = 0; i < Sounds.Length; ++i)
+                writer.Write(Sounds[i]);
+            PHeader = (uint)((byte)pUi321.Length
+                | (pUi322.Length << 8)
+                | (pUi323.Length << 16));
+            if (PHeader > 0)
             {
-                NSWriter.Write(ParametersHeader);
-                NSWriter.Write(ParametersUnkI32);
-                NSWriter.Write(ParametersUnkI321Number);
-                for (int i = 0; i <= ParametersUnkI321Number - 1; i++)
-                    NSWriter.Write(ParametersUnkI321[i]);
-                NSWriter.Write(ParametersUnkI322Number);
-                for (int i = 0; i <= ParametersUnkI322Number - 1; i++)
-                    NSWriter.Write(ParametersUnkI322[i]);
-                NSWriter.Write(ParametersUnkI323Number);
-                for (int i = 0; i <= ParametersUnkI323Number - 1; i++)
-                    NSWriter.Write(ParametersUnkI323[i]);
+                writer.Write(PHeader);
+                writer.Write(PUI32);
+                writer.Write(pUi321.Length);
+                for (int i = 0; i < pUi321.Length; ++i)
+                    writer.Write(pUi321[i]);
+                writer.Write(pUi322.Length);
+                for (int i = 0; i < pUi322.Length; ++i)
+                    writer.Write(pUi322[i]);
+                writer.Write(pUi323.Length);
+                for (int i = 0; i < pUi323.Length; ++i)
+                    writer.Write(pUi323[i]);
             }
-            NSWriter.Write(ChildFlag);
-            if (ChildFlag > 0)
+            writer.Write(flag);
+            if (flag > 0)
             {
-                string str = Convert.ToString(ChildFlag, 2);
-                while (str.Length < 8)
-                    str = "0" + str;
-                bool GameObjectFlag = (str[7] == '1');
-                bool OGIFlag = (str[6] == '1');
-                bool AnimationFlag = (str[5] == '1');
-                bool ID4Flag = (str[4] == '1');
-                bool ScriptFlag = (str[3] == '1');
-                bool UnknownFlag = (str[2] == '1');
-                bool SoundFlag = (str[1] == '1');
-                if (GameObjectFlag)
+                if ((flag & 0x01) != 0)
                 {
-                    NSWriter.Write(ChildObjectNumber);
-                    for (int i = 0; i <= ChildObjectNumber - 1; i++)
-                        NSWriter.Write(ChildObject[i]);
+                    writer.Write(cObjects.Length);
+                    for (int i = 0; i < cObjects.Length; ++i)
+                        writer.Write(cObjects[i]);
                 }
-                if (OGIFlag)
+                if ((flag & 0x02) != 0)
                 {
-                    NSWriter.Write(ChildOGINumber);
-                    for (int i = 0; i <= ChildOGINumber - 1; i++)
-                        NSWriter.Write(ChildOGI[i]);
+                    writer.Write(cOGIs.Length);
+                    for (int i = 0; i < cOGIs.Length; ++i)
+                        writer.Write(cOGIs[i]);
                 }
-                if (AnimationFlag)
+                if ((flag & 0x04) != 0)
                 {
-                    NSWriter.Write(ChildAnimationNumber);
-                    for (int i = 0; i <= ChildAnimationNumber - 1; i++)
-                        NSWriter.Write(ChildAnimation[i]);
+                    writer.Write(cAnims.Length);
+                    for (int i = 0; i < cAnims.Length; ++i)
+                        writer.Write(cAnims[i]);
                 }
-                if (ID4Flag)
+                if ((flag & 0x08) != 0)
                 {
-                    NSWriter.Write(ChildID4Number);
-                    for (int i = 0; i <= ChildID4Number - 1; i++)
-                        NSWriter.Write(ChildID4[i]);
+                    writer.Write(cCM.Length);
+                    for (int i = 0; i < cCM.Length; ++i)
+                        writer.Write(cCM[i]);
                 }
-                if (ScriptFlag)
+                if ((flag & 0x10) != 0)
                 {
-                    NSWriter.Write(ChildScriptNumber);
-                    for (int i = 0; i <= ChildScriptNumber - 1; i++)
-                        NSWriter.Write(ChildScript[i]);
+                    writer.Write(cScripts.Length);
+                    for (int i = 0; i < cScripts.Length; ++i)
+                        writer.Write(cScripts[i]);
                 }
-                if (UnknownFlag)
+                if ((flag & 0x20) != 0)
                 {
-                    NSWriter.Write(ChildUnknownNumber);
-                    for (int i = 0; i <= ChildUnknownNumber - 1; i++)
-                        NSWriter.Write(ChildUnknown[i]);
+                    writer.Write(cUnk.Length);
+                    for (int i = 0; i < cUnk.Length; ++i)
+                        writer.Write(cUnk[i]);
                 }
-                if (SoundFlag)
+                if ((flag & 0x40) != 0)
                 {
-                    NSWriter.Write(ChildSoundNumber);
-                    for (int i = 0; i <= ChildSoundNumber - 1; i++)
-                        NSWriter.Write(ChildSound[i]);
+                    writer.Write(cSounds.Length);
+                    for (int i = 0; i < cSounds.Length; ++i)
+                        writer.Write(cSounds[i]);
                 }
-                NSWriter.Write(ScriptLength);
-                if (ScriptLength > 1)
+                writer.Write(scriptLen);
+                if (scriptLen > 1)
                 {
-                    for (int i = 0; i <= 17; i++)
-                        NSWriter.Write(ScriptParameters[i]);
+                    for (int i = 0; i < 18; ++i)
+                        writer.Write(scriptParams[i]);
                 }
-                NSWriter.Write(ScriptArray);
+                writer.Write(scriptData);
             }
-            ByteStream = NewStream;
-            Size = (uint)ByteStream.Length;
+            size = (int)(writer.BaseStream.Position - sk);
         }
 
-        protected override void DataUpdate()
+        public override void Load(BinaryReader reader, int size)
         {
-            System.IO.BinaryReader BSReader = new System.IO.BinaryReader(ByteStream);
-            ByteStream.Position = 0;
-            Class1 = BSReader.ReadUInt32();
-            Class2 = BSReader.ReadUInt32();
-            Class3 = BSReader.ReadUInt32();
-            int Len = BSReader.ReadInt32();
-            Name = new string(BSReader.ReadChars(Len));
+            var sk = reader.BaseStream.Position;
 
-            UnkI32Number = BSReader.ReadInt32();
-            Array.Resize(ref UnkI32, UnkI32Number);
-            for (int i = 0; i <= UnkI32Number - 1; i++)
-                UnkI32[i] = BSReader.ReadUInt32();
+            Class1 = reader.ReadUInt32();
+            Class2 = reader.ReadUInt32();
+            Class3 = reader.ReadUInt32();
+            var len = reader.ReadInt32();
+            Name = new string(reader.ReadChars(len));
 
-            OGINumber = BSReader.ReadInt32();
-            Array.Resize(ref OGI, OGINumber);
-            for (int i = 0; i <= OGINumber - 1; i++)
-                OGI[i] = BSReader.ReadUInt16();
+            var cnt = reader.ReadInt32();
+            UI32 = new uint[cnt];
+            for (int i = 0; i < cnt; ++i)
+                UI32[i] = reader.ReadUInt32();
 
-            AnimationNumber = BSReader.ReadInt32();
-            Array.Resize(ref Animation, AnimationNumber);
-            for (int i = 0; i <= AnimationNumber - 1; i++)
-                Animation[i] = BSReader.ReadUInt16();
+            cnt = reader.ReadInt32();
+            OGIs = new ushort[cnt];
+            for (int i = 0; i < cnt; ++i)
+                OGIs[i] = reader.ReadUInt16();
 
-            ScriptNumber = BSReader.ReadInt32();
-            Array.Resize(ref Script, ScriptNumber);
-            for (int i = 0; i <= ScriptNumber - 1; i++)
-                Script[i] = BSReader.ReadUInt16();
+            cnt = reader.ReadInt32();
+            Anims = new ushort[cnt];
+            for (int i = 0; i < cnt; ++i)
+                Anims[i] = reader.ReadUInt16();
 
-            GameObjectNumber = BSReader.ReadInt32();
-            Array.Resize(ref _GameObject, GameObjectNumber);
-            for (int i = 0; i <= GameObjectNumber - 1; i++)
-                _GameObject[i] = BSReader.ReadUInt16();
+            cnt = reader.ReadInt32();
+            Scripts = new ushort[cnt];
+            for (int i = 0; i < cnt; ++i)
+                Scripts[i] = reader.ReadUInt16();
 
-            SoundNumber = BSReader.ReadInt32();
-            Array.Resize(ref Sound, SoundNumber);
-            for (int i = 0; i <= SoundNumber - 1; i++)
-                Sound[i] = BSReader.ReadUInt16();
+            cnt = reader.ReadInt32();
+            Objects = new ushort[cnt];
+            for (int i = 0; i < cnt; ++i)
+                Objects[i] = reader.ReadUInt16();
 
-            uint choose = BSReader.ReadUInt32();
-            if (choose > 255)
+            cnt = reader.ReadInt32();
+            Sounds = new ushort[cnt];
+            for (int i = 0; i < cnt; ++i)
+                Sounds[i] = reader.ReadUInt16();
+
+            flag = reader.ReadUInt32();
+            if (flag > 255)
             {
-                ParametersHeader = choose;
-                ParametersUnkI32 = BSReader.ReadUInt32();
+                PHeader = flag;
+                PUI32 = reader.ReadUInt32();
 
-                ParametersUnkI321Number = BSReader.ReadInt32();
-                Array.Resize(ref ParametersUnkI321, ParametersUnkI321Number);
-                for (int i = 0; i <= ParametersUnkI321Number - 1; i++)
-                    ParametersUnkI321[i] = BSReader.ReadUInt32();
+                cnt = reader.ReadInt32();
+                pUi321 = new uint[cnt];
+                for (int i = 0; i < cnt; ++i)
+                    pUi321[i] = reader.ReadUInt32();
 
-                ParametersUnkI322Number = BSReader.ReadInt32();
-                Array.Resize(ref ParametersUnkI322, ParametersUnkI322Number);
-                for (int i = 0; i <= ParametersUnkI322Number - 1; i++)
-                    ParametersUnkI322[i] = BSReader.ReadSingle();
+                cnt = reader.ReadInt32();
+                pUi322 = new float[cnt];
+                for (int i = 0; i < cnt; ++i)
+                    pUi322[i] = reader.ReadSingle();
 
-                ParametersUnkI323Number = BSReader.ReadInt32();
-                Array.Resize(ref ParametersUnkI323, ParametersUnkI323Number);
-                for (int i = 0; i <= ParametersUnkI323Number - 1; i++)
-                    ParametersUnkI323[i] = BSReader.ReadUInt32();
-                choose = BSReader.ReadUInt32();
+                cnt = reader.ReadInt32();
+                pUi323 = new uint[cnt];
+                for (int i = 0; i < cnt; ++i)
+                    pUi323[i] = reader.ReadUInt32();
+                flag = reader.ReadUInt32();
             }
             else
             {
-                ParametersHeader = 0;
-                ParametersUnkI32 = 0;
-                ParametersUnkI321Number = 0;
-                ParametersUnkI321 = new uint[] { };
-                ParametersUnkI322Number = 0;
-                ParametersUnkI322 = new float[] { };
-                ParametersUnkI323Number = 0;
-                ParametersUnkI323 = new uint[] { };
+                PHeader = 0;
+                PUI32 = 0;
+                pUi321 = new uint[] { };
+                pUi322 = new float[] { };
+                pUi323 = new uint[] { };
             }
-            ChildFlag = choose;
-            if (choose > 0)
+            if (flag > 0)
             {
-                string str = Convert.ToString(ChildFlag, 2);
-                while (str.Length < 8)
-                    str = "0" + str;
-                bool GameObjectFlag = (str[7] == '1');
-                bool OGIFlag = (str[6] == '1');
-                bool AnimationFlag = (str[5] == '1');
-                bool ID4Flag = (str[4] == '1');
-                bool ScriptFlag = (str[3] == '1');
-                bool UnknownFlag = (str[2] == '1');
-                bool SoundFlag = (str[1] == '1');
-                if (GameObjectFlag)
+                if ((flag & 0x00000001) != 0)
                 {
-                    ChildObjectNumber = BSReader.ReadInt32();
-                    Array.Resize(ref ChildObject, ChildObjectNumber);
-                    for (int i = 0; i <= ChildObjectNumber - 1; i++)
-                        ChildObject[i] = BSReader.ReadUInt16();
+                    cnt = reader.ReadInt32();
+                    cObjects = new ushort[cnt];
+                    for (int i = 0; i < cnt; ++i)
+                        cObjects[i] = reader.ReadUInt16();
                 }
-                if (OGIFlag)
+                if ((flag & 0x00000002) != 0)
                 {
-                    ChildOGINumber = BSReader.ReadInt32();
-                    Array.Resize(ref ChildOGI, ChildOGINumber);
-                    for (int i = 0; i <= ChildOGINumber - 1; i++)
-                        ChildOGI[i] = BSReader.ReadUInt16();
+                    cnt = reader.ReadInt32();
+                    cOGIs = new ushort[cnt];
+                    for (int i = 0; i < cnt; ++i)
+                        cOGIs[i] = reader.ReadUInt16();
                 }
-                if (AnimationFlag)
+                if ((flag & 0x00000004) != 0)
                 {
-                    ChildAnimationNumber = BSReader.ReadInt32();
-                    Array.Resize(ref ChildAnimation, ChildAnimationNumber);
-                    for (int i = 0; i <= ChildAnimationNumber - 1; i++)
-                        ChildAnimation[i] = BSReader.ReadUInt16();
+                    cnt = reader.ReadInt32();
+                    cAnims = new ushort[cnt];
+                    for (int i = 0; i < cnt; ++i)
+                        cAnims[i] = reader.ReadUInt16();
                 }
-                if (ID4Flag)
+                if ((flag & 0x00000008) != 0)
                 {
-                    ChildID4Number = BSReader.ReadInt32();
-                    Array.Resize(ref ChildID4, ChildID4Number);
-                    for (int i = 0; i <= ChildID4Number - 1; i++)
-                        ChildID4[i] = BSReader.ReadUInt16();
+                    cnt = reader.ReadInt32();
+                    cCM = new ushort[cnt];
+                    for (int i = 0; i < cnt; ++i)
+                        cCM[i] = reader.ReadUInt16();
                 }
-                if (ScriptFlag)
+                if ((flag & 0x00000010) != 0)
                 {
-                    ChildScriptNumber = BSReader.ReadInt32();
-                    Array.Resize(ref ChildScript, ChildScriptNumber);
-                    for (int i = 0; i <= ChildScriptNumber - 1; i++)
-                        ChildScript[i] = BSReader.ReadUInt16();
+                    cnt = reader.ReadInt32();
+                    cScripts = new ushort[cnt];
+                    for (int i = 0; i < cnt; ++i)
+                        cScripts[i] = reader.ReadUInt16();
                 }
-                if (UnknownFlag)
+                if ((flag & 0x00000020) != 0)
                 {
-                    ChildUnknownNumber = BSReader.ReadInt32();
-                    Array.Resize(ref ChildUnknown, ChildUnknownNumber);
-                    for (int i = 0; i <= ChildUnknownNumber - 1; i++)
-                        ChildUnknown[i] = BSReader.ReadUInt16();
+                    cnt = reader.ReadInt32();
+                    cUnk = new ushort[cnt];
+                    for (int i = 0; i < cnt; ++i)
+                        cUnk[i] = reader.ReadUInt16();
                 }
-                if (SoundFlag)
+                if ((flag & 0x00000040) != 0)
                 {
-                    ChildSoundNumber = BSReader.ReadInt32();
-                    Array.Resize(ref ChildSound, ChildSoundNumber);
-                    for (int i = 0; i <= ChildSoundNumber - 1; i++)
-                        ChildSound[i] = BSReader.ReadUInt16();
+                    cnt = reader.ReadInt32();
+                    cSounds = new ushort[cnt];
+                    for (int i = 0; i < cnt; ++i)
+                        cSounds[i] = reader.ReadUInt16();
                 }
-                ScriptLength = (int)BSReader.ReadUInt32();
-                if (ScriptLength > 1)
+                scriptLen = (int)reader.ReadUInt32();
+                if (scriptLen > 1)
                 {
-                    Array.Resize(ref ScriptParameters, 18);
-                    for (int i = 0; i <= 17; i++)
-                        ScriptParameters[i] = BSReader.ReadUInt16();
+                    scriptParams = new ushort[18];
+                    for (int i = 0; i < 18; ++i)
+                        scriptParams[i] = reader.ReadUInt16();
                 }
-                ScriptArray = BSReader.ReadBytes((int)(ByteStream.Length - ByteStream.Position));
+                scriptData = reader.ReadBytes((int)(size - (reader.BaseStream.Position - sk)));
             }
+            this.size = size;
+        }
+
+        protected override int GetSize()
+        {
+            return size;
         }
     }
 }
