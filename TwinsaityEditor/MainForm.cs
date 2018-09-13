@@ -110,6 +110,8 @@ namespace TwinsaityEditor
                 new_node.Tag = new ObjectController((GameObject)a);
             else if (a is Script)
                 new_node.Tag = new ScriptController((Script)a);
+            else if (a is Instance)
+                new_node.Tag = new InstanceController((Instance)a);
             else if (a is ColData)
                 new_node.Tag = new ColDataController((ColData)a);
             else

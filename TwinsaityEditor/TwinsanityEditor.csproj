@@ -150,6 +150,7 @@
     <Compile Include="Controllers\Controller.cs" />
     <Compile Include="Controllers\ColDataController.cs" />
     <Compile Include="Controllers\FileController.cs" />
+    <Compile Include="Controllers\InstanceController.cs" />
     <Compile Include="Controllers\ScriptController.cs" />
     <Compile Include="Controllers\ObjectController.cs" />
     <Compile Include="Controllers\ModelController.cs" />

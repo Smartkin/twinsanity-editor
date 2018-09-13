@@ -243,6 +243,13 @@ namespace Twinsanity
                             sec_info.Records.Add(sub.ID, rec);
                         }
                         break;
+                    case SectionType.ObjectInstance:
+                        {
+                            Instance rec = new Instance { ID = sub.ID, Offset = (uint)reader.BaseStream.Position };
+                            rec.Load(reader);
+                            sec_info.Records.Add(sub.ID, rec);
+                        }
+                        break;
                     default:
                         LoadItem(reader, sub);
                         break;
