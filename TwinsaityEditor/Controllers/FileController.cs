@@ -26,17 +26,23 @@ namespace TwinsaityEditor
 
         public static string GetMaterialName(uint id)
         {
-            return ((Material)((TwinsSection)((TwinsSection)data.SecInfo.Records[11]).SecInfo.Records[1]).SecInfo.Records[id]).Name; //lol
+            if (data.SecInfo.Records.ContainsKey(11) && ((TwinsSection)data.SecInfo.Records[11]).SecInfo.Records.ContainsKey(1) && ((TwinsSection)((TwinsSection)data.SecInfo.Records[11]).SecInfo.Records[1]).SecInfo.Records.ContainsKey(id))
+                return ((Material)((TwinsSection)((TwinsSection)data.SecInfo.Records[11]).SecInfo.Records[1]).SecInfo.Records[id]).Name; //lol
+            else return string.Empty;
         }
 
         public static string GetObjectName(uint id)
         {
-            return ((GameObject)((TwinsSection)((TwinsSection)data.SecInfo.Records[10]).SecInfo.Records[0]).SecInfo.Records[id]).Name; //lol
+            if (data.SecInfo.Records.ContainsKey(10) && ((TwinsSection)data.SecInfo.Records[10]).SecInfo.Records.ContainsKey(0) && ((TwinsSection)((TwinsSection)data.SecInfo.Records[10]).SecInfo.Records[0]).SecInfo.Records.ContainsKey(id))
+                return ((GameObject)((TwinsSection)((TwinsSection)data.SecInfo.Records[10]).SecInfo.Records[0]).SecInfo.Records[id]).Name; //lol
+            else return string.Empty;
         }
 
         public static string GetScriptName(uint id)
         {
-            return ((Script)((TwinsSection)((TwinsSection)data.SecInfo.Records[10]).SecInfo.Records[0]).SecInfo.Records[id]).Name; //lol
+            if (data.SecInfo.Records.ContainsKey(10) && ((TwinsSection)data.SecInfo.Records[10]).SecInfo.Records.ContainsKey(1) && ((TwinsSection)((TwinsSection)data.SecInfo.Records[10]).SecInfo.Records[1]).SecInfo.Records.ContainsKey(id))
+                return ((Script)((TwinsSection)((TwinsSection)data.SecInfo.Records[10]).SecInfo.Records[1]).SecInfo.Records[id]).Name; //lol
+            else return string.Empty;
         }
     }
 }
