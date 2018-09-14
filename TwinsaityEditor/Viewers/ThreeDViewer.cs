@@ -218,7 +218,7 @@ namespace TwinsaityEditor
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
-            GL.Frustum(-0.5, +0.5, -0.5, +0.5, 0.5, 1000.0);
+            GL.Frustum(-0.75, +0.75, -0.75, +0.75, 0.75, 750.0);
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
             GL.Scale(sca);
