@@ -140,7 +140,7 @@ namespace TwinsaityEditor
         protected override void OnMouseWheel(MouseEventArgs e)
         {
             base.OnMouseWheel(e);
-            range += e.Delta * 5f;
+            range -= e.Delta;
             if (range > 100f)
                 range = 100f;
             else if (range < 25f)
@@ -231,16 +231,14 @@ namespace TwinsaityEditor
             GL.Scale(sca);
             GL.Rotate(rot.Y * 180 / Math.PI, 1, 0, 0);
             GL.Rotate(rot.X * 180 / Math.PI, 0, 1, 0);
-            //Vector3 delta = new Vector3(-1, -1, -1) * range;
-            //Matrix4 rot_matrix = Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), rot.X);
-            //rot_matrix *= Matrix4.CreateFromAxisAngle(new Vector3(1, 0, 0), rot.Y);
-            //rot_matrix *= Matrix4.CreateFromAxisAngle(new Vector3(0, 0, 1), rot.Z);
+            GL.Rotate(rot.Z * 180 / Math.PI, 0, 0, 1);
+            Vector3 delta = new Vector3(0, 0, -1) * range / 25f;
+            Matrix4 rot_matrix = Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), rot.X);
+            rot_matrix *= Matrix4.CreateFromAxisAngle(new Vector3(1, 0, 0), rot.Y);
+            rot_matrix *= Matrix4.CreateFromAxisAngle(new Vector3(0, 0, 1), rot.Z);
 
-            //Vector3 fin_delta = new Vector3(rot_matrix * new Vector4(delta, 1.0f));
-            GL.Translate(-pos);
-            //GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { 1f, 1f, 1f, 1f });
-            //GL.Light(LightName.Light0, LightParameter.Position, new float[] { 0, 0, 1f, 0 });
-            //GL.Light(LightName.Light0, LightParameter.QuadraticAttenuation, new float[] { 0.2f, 0.2f, 0.2f });
+            Vector3 fin_delta = new Vector3(rot_matrix * new Vector4(delta, 1.0f));
+            GL.Translate(-pos + fin_delta);
             RenderObjects();
             SwapBuffers();
         }
@@ -252,9 +250,16 @@ namespace TwinsaityEditor
             GL.DepthFunc(DepthFunction.Lequal);
             GL.AlphaFunc(AlphaFunction.Greater, 0);
             GL.ClearColor(0, 0, 1, 1);
-            //GL.Enable(EnableCap.ColorMaterial);
-            //GL.Enable(EnableCap.Lighting);
-            //GL.Enable(EnableCap.Light0);
+            GL.Enable(EnableCap.ColorMaterial);
+            //GL.ShadeModel(ShadingModel.Flat);
+            GL.Light(LightName.Light0, LightParameter.Position, new float[] { 0, 0, 0, 1 });
+            //GL.Light(LightName.Light0, LightParameter.Ambient, new float[] { 0.3f, 0.3f, 0.3f, 1.0f });
+            GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { 1.0f, 1.0f, 1.0f, 1.0f });
+            //GL.Light(LightName.Light0, LightParameter.Specular, new float[] { 1.0f, 1.0f, 1.0f, 1.0f });
+            GL.LightModel(LightModelParameter.LightModelTwoSide, 1);
+            GL.Enable(EnableCap.Lighting);
+            GL.Enable(EnableCap.Light0);
+            GL.Enable(EnableCap.Normalize);
             base.OnLoad(e);
         }
 
