@@ -14,9 +14,9 @@ namespace Twinsanity
             else return Data.Length;
         }
 
-        public virtual byte[] Save()
+        public virtual void Save(BinaryWriter writer)
         {
-            return Data;
+            writer.Write(Data);
         }
 
         public virtual void Load(BinaryReader reader)

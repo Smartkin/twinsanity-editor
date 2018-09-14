@@ -26,6 +26,7 @@ namespace TwinsaityEditor
     public partial class MainForm : Form
     {
         private TwinsFile fileData = new TwinsFile();
+        private string fileName;
 
         public MainForm()
         {
@@ -35,24 +36,34 @@ namespace TwinsaityEditor
         private void GenTree()
         {
             groupBox1.Enabled = true;
+            treeView1.BeginUpdate();
+            treeView1.AfterSelect += TreeNodeSelect;
+            if (treeView1.TopNode != null)
+                DisposeNode(treeView1.TopNode);
             treeView1.Nodes.Clear();
-            treeView1.Nodes.Add("Root");
+            TreeNode new_node = new TreeNode {
+                Tag = new FileController(fileData)
+            };
+            new_node.Text = ((Controller)new_node.Tag).GetName();
+            ((Controller)new_node.Tag).GenText();
+            treeView1.Nodes.Add(new_node);
+            treeView1.Select();
             foreach (var i in fileData.SecInfo.Records.Values)
             {
                 GenTreeNode(i, treeView1.TopNode);
             }
             treeView1.TopNode.Expand();
-            treeView1.AfterSelect += TreeNodeSelect;
+            treeView1.EndUpdate();
         }
 
         private void TreeNodeSelect(object sender, TreeViewEventArgs e)
         {
-            if (e.Node.Tag is Controller)
+            if (e.Node.Tag is Controller c)
             {
-                Controller c = (Controller)e.Node.Tag;
                 if (c.Dirty)
                 {
                     e.Node.Text = c.GetName();
+                    c.GenText();
                     c.Dirty = false;
                 }
                 textBox1.Lines = c.TextPrev;
@@ -70,8 +81,8 @@ namespace TwinsaityEditor
             }
             else if (e.Node == treeView1.TopNode)
             {
-                buttonHex.Enabled = buttonExt.Enabled = buttonRep.Enabled = buttonAdd.Enabled = buttonCre.Enabled = 
-                buttonDel.Enabled = buttonEdt.Enabled = buttonExp.Enabled = buttonScr.Enabled = buttonSrc.Enabled = 
+                buttonHex.Enabled = buttonExt.Enabled = buttonRep.Enabled = buttonAdd.Enabled = buttonCre.Enabled =
+                buttonDel.Enabled = buttonEdt.Enabled = buttonExp.Enabled = buttonScr.Enabled = buttonSrc.Enabled =
                 buttonViw.Enabled = false;
             }
         }
@@ -87,12 +98,42 @@ namespace TwinsaityEditor
                 }
                 new_node.Tag = new SectionController((TwinsSection)a);
             }
+            else if (a is Texture)
+                new_node.Tag = new TextureController((Texture)a);
+            else if (a is Material)
+                new_node.Tag = new MaterialController((Material)a);
+            else if (a is Mesh)
+                new_node.Tag = new MeshController((Mesh)a);
+            else if (a is Model)
+                new_node.Tag = new ModelController((Model)a);
+            else if (a is GameObject)
+                new_node.Tag = new ObjectController((GameObject)a);
+            else if (a is Script)
+                new_node.Tag = new ScriptController((Script)a);
+            else if (a is Instance)
+                new_node.Tag = new InstanceController((Instance)a);
             else if (a is ColData)
                 new_node.Tag = new ColDataController((ColData)a);
             else
                 new_node.Tag = new ItemController(a);
             new_node.Text = ((Controller)new_node.Tag).GetName();
+            ((Controller)new_node.Tag).GenText();
             node.Nodes.Add(new_node);
+        }
+
+        /// <summary>
+        /// Dispose of a node.
+        /// </summary>
+        /// <param name="node">Node to be disposed of.</param>
+        private void DisposeNode(TreeNode node)
+        {
+            if (node == null)
+                throw new ArgumentNullException("node");
+            if (node.Tag is Controller c)
+                c.Dispose();
+            for (int i = node.Nodes.Count - 1; i > 0; --i)
+                DisposeNode(node.Nodes[i]);
+            node.Remove();
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -115,15 +156,93 @@ namespace TwinsaityEditor
                         fileData.LoadFile(ofd.FileName, true);
                         break;
                 }
+                fileName = ofd.FileName;
                 GenTree();
                 Text = "Twinsaity Editor by Neo_Kesha [" + ofd.FileName + "] ";
             }
         }
 
-        private void graphicsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void buttonHex_Click(object sender, EventArgs e)
         {
-            var fm = new Workers.TextureImport();
-            fm.Show();
+            if (treeView1.SelectedNode.Tag is Controller c && (c.Toolbar & ToolbarFlags.Hex) != 0)
+                c.ToolbarAction(ToolbarFlags.Hex);
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "RM2/RMX files|*.rm*|SM2/SMX files|*.sm*";
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                fileData.SaveFile(sfd.FileName);
+                fileName = sfd.FileName;
+                Text = "Twinsaity Editor by Neo_Kesha [" + sfd.FileName + "] ";
+            }
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            fileData.SaveFile(fileName);
+        }
+
+        private void buttonExt_Click(object sender, EventArgs e)
+        {
+            if (treeView1.SelectedNode.Tag is Controller c && (c.Toolbar & ToolbarFlags.Extract) != 0)
+                c.ToolbarAction(ToolbarFlags.Extract);
+        }
+
+        private void buttonRep_Click(object sender, EventArgs e)
+        {
+            if (treeView1.SelectedNode.Tag is Controller c && (c.Toolbar & ToolbarFlags.Replace) != 0)
+                c.ToolbarAction(ToolbarFlags.Replace);
+        }
+
+        private void buttonSrc_Click(object sender, EventArgs e)
+        {
+            if (treeView1.SelectedNode.Tag is Controller c && (c.Toolbar & ToolbarFlags.Search) != 0)
+                c.ToolbarAction(ToolbarFlags.Search);
+        }
+
+        private void buttonAdd_Click(object sender, EventArgs e)
+        {
+            if (treeView1.SelectedNode.Tag is Controller c && (c.Toolbar & ToolbarFlags.Add) != 0)
+                c.ToolbarAction(ToolbarFlags.Add);
+        }
+
+        private void buttonCre_Click(object sender, EventArgs e)
+        {
+            if (treeView1.SelectedNode.Tag is Controller c && (c.Toolbar & ToolbarFlags.Create) != 0)
+                c.ToolbarAction(ToolbarFlags.Create);
+        }
+
+        private void buttonDel_Click(object sender, EventArgs e)
+        {
+            if (treeView1.SelectedNode.Tag is Controller c && (c.Toolbar & ToolbarFlags.Delete) != 0)
+                c.ToolbarAction(ToolbarFlags.Delete);
+        }
+
+        private void buttonExp_Click(object sender, EventArgs e)
+        {
+            if (treeView1.SelectedNode.Tag is Controller c && (c.Toolbar & ToolbarFlags.Export) != 0)
+                c.ToolbarAction(ToolbarFlags.Export);
+        }
+
+        private void buttonViw_Click(object sender, EventArgs e)
+        {
+            if (treeView1.SelectedNode.Tag is Controller c && (c.Toolbar & ToolbarFlags.View) != 0)
+                c.ToolbarAction(ToolbarFlags.View);
+        }
+
+        private void buttonScr_Click(object sender, EventArgs e)
+        {
+            if (treeView1.SelectedNode.Tag is Controller c && (c.Toolbar & ToolbarFlags.Script) != 0)
+                c.ToolbarAction(ToolbarFlags.Script);
+        }
+
+        private void buttonEdt_Click(object sender, EventArgs e)
+        {
+            if (treeView1.SelectedNode.Tag is Controller c && (c.Toolbar & ToolbarFlags.Edit) != 0)
+                c.ToolbarAction(ToolbarFlags.Edit);
         }
     }
 }

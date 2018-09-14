@@ -10,15 +10,15 @@ namespace TwinsaityEditor.Viewers
     public partial class SMViewer : ThreeDViewer
     {
         private int displaylist;
-        //private List<Model> data;
+        //private List<Mesh> data;
         private Color[] colors = new[] { Color.Gray, Color.Green, Color.Red, Color.DarkBlue, Color.Yellow, Color.Pink, Color.DarkCyan, Color.DarkGreen, Color.DarkRed, Color.Brown, Color.DarkMagenta, Color.Orange, Color.DarkSeaGreen, Color.Bisque, Color.Coral };
         //private int displaylist;
 
-        public SMViewer()//Model data)
+        public SMViewer()//Mesh data)
         {
             //initialize variables here
             displaylist = -1;
-            //this.data = new List<Model> { data };
+            //this.data = new List<Mesh> { data };
         }
 
         protected override void RenderObjects()
@@ -29,7 +29,7 @@ namespace TwinsaityEditor.Viewers
                 displaylist = GL.GenLists(1);
                 GL.NewList(displaylist, ListMode.CompileAndExecute);
                 GL.Begin(PrimitiveType.Triangles);
-                //foreach (Model mdl in data)
+                //foreach (Mesh mdl in data)
                 {
 
                 }

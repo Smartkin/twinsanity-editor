@@ -4,11 +4,11 @@ using Twinsanity;
 
 namespace TwinsaityEditor
 {
-    public class ItemController : Controller
+    public class ModelController : Controller
     {
-        private TwinsItem data;
+        private Model data;
 
-        public ItemController(TwinsItem item)
+        public ModelController(Model item)
         {
             Toolbar = ToolbarFlags.Hex | ToolbarFlags.Extract | ToolbarFlags.Replace | ToolbarFlags.Delete;
             data = item;
@@ -16,14 +16,18 @@ namespace TwinsaityEditor
 
         public override string GetName()
         {
-            return "Item [ID: " + data.ID + "]";
+            return "Model [ID: " + data.ID + "]";
         }
 
         public override void GenText()
         {
-            TextPrev = new string[2];
+            TextPrev = new string[4 + data.MaterialIDs.Length];
             TextPrev[0] = "ID: " + data.ID;
             TextPrev[1] = "Offset: " + data.Offset + " Size: " + data.Size;
+            TextPrev[2] = "Header: " + data.Header + " MaterialCount: " + data.MaterialIDs.Length;
+            for (int i = 0; i < data.MaterialIDs.Length; ++i)
+                TextPrev[3 + i] = FileController.GetMaterialName(data.MaterialIDs[i]);
+            TextPrev[3 + data.MaterialIDs.Length] = "Mesh: " + data.MeshID;
         }
 
         public override void ToolbarAction(ToolbarFlags button)

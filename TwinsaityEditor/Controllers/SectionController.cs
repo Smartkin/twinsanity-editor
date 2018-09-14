@@ -10,7 +10,6 @@ namespace TwinsaityEditor
         {
             Toolbar = ToolbarFlags.Search | ToolbarFlags.Add | ToolbarFlags.Create | ToolbarFlags.Export;
             data = item;
-            GenText();
         }
 
         public override string GetName()
@@ -18,7 +17,7 @@ namespace TwinsaityEditor
             return data.Type + " Section [ID: " + data.ID + "]";
         }
 
-        protected override void GenText()
+        public override void GenText()
         {
             TextPrev = new string[3];
             TextPrev[0] = "ID: " + data.ID;

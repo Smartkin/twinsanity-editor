@@ -53,6 +53,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -66,6 +67,9 @@
   <ItemGroup>
     <Compile Include="ADPCM.cs" />
     <Compile Include="BDArchive.cs" />
+    <Compile Include="Items\BaseItem.cs" />
+    <Compile Include="Items\Graphics\Material.cs" />
+    <Compile Include="Items\Graphics\Texture.cs" />
     <Compile Include="Items\TwinsItem.cs" />
     <Compile Include="Items\ColData.cs" />
     <Compile Include="MetaData.cs" />
@@ -82,19 +86,15 @@
     <Compile Include="Sections\TwinsSection.cs" />
     <Compile Include="TwinsFile.cs" />
     <Compile Include="Types.cs" />
-    <Compile Include="PSM.cs" />
-    <Compile Include="Items\BaseItem.cs" />
     <Compile Include="BaseObject.cs" />
     <Compile Include="Items\Code\GameObject.cs" />
-    <Compile Include="Items\Graphics\GC.cs" />
-    <Compile Include="Items\Instances\Instance.cs" />
-    <Compile Include="Items\Graphics\Material.cs" />
     <Compile Include="Items\Graphics\Model.cs" />
+    <Compile Include="Items\Instances\Instance.cs" />
+    <Compile Include="Items\Graphics\Mesh.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Items\Code\Script.cs" />
     <Compile Include="Items\Code\Sound.cs" />
     <Compile Include="Items\Code\SoundDescription.cs" />
-    <Compile Include="Items\Graphics\Texture.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

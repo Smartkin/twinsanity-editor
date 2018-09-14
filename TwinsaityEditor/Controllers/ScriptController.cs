@@ -4,11 +4,11 @@ using Twinsanity;
 
 namespace TwinsaityEditor
 {
-    public class ItemController : Controller
+    public class ScriptController : Controller
     {
-        private TwinsItem data;
+        private Script data;
 
-        public ItemController(TwinsItem item)
+        public ScriptController(Script item)
         {
             Toolbar = ToolbarFlags.Hex | ToolbarFlags.Extract | ToolbarFlags.Replace | ToolbarFlags.Delete;
             data = item;
@@ -16,13 +16,13 @@ namespace TwinsaityEditor
 
         public override string GetName()
         {
-            return "Item [ID: " + data.ID + "]";
+            return (data.Name != null ? data.Name : "Script") + " [ID: " + data.ID + "]";
         }
 
         public override void GenText()
         {
             TextPrev = new string[2];
-            TextPrev[0] = "ID: " + data.ID;
+            TextPrev[0] = "ID: " + data.ID + (data.Name != null ? " Name: " + data.Name : string.Empty);
             TextPrev[1] = "Offset: " + data.Offset + " Size: " + data.Size;
         }
 

@@ -1,131 +1,128 @@
-using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Twinsanity
 {
-    public class Instance : BaseItem
+    public class Instance : TwinsItem
     {
-        public new string NodeName = "Instance";
-        public float X, Y, Z;
-        public float W = 1;
-        public ushort RX, RY, RZ;
-        public ushort COMRX, COMRY, COMRZ;
-        public int Size1, Size2, Size3;
-        public int SomeNum1 = 10;
-        public int SomeNum2 = 10;
-        public int SomeNum3 = 10;
-        public ushort[] Something1, Something2, Something3;
-        public ushort ObjectID;
-        public uint AfterOID = 4294967295;
-        public uint ParametersHeader = 131328;
-        public uint UnkI32 = 270;
-        public int UnkI321Number = 0;
-        public int UnkI322Number = 1;
-        public int UnkI323Number = 2;
-        public uint[] UnkI321;
-        public float[] UnkI322 = new[] { 1f };
-        public uint[] UnkI323 = new[] { 0u, 0u };
+        private Pos pos;
+        private List<ushort> s1 = new List<ushort>(), s2 = new List<ushort>(), s3 = new List<ushort>();
 
-        public override void UpdateStream()
+        public Pos Pos { get => pos; set => pos = value; }
+        public ushort RotX { get; set; }
+        public ushort RotY { get; set; }
+        public ushort RotZ { get; set; }
+        public ushort COMRotX { get; set; }
+        public ushort COMRotY { get; set; }
+        public ushort COMRotZ { get; set; }
+        public List<ushort> S1 { get => s1; set => s1 = value; }
+        public List<ushort> S2 { get => s2; set => s2 = value; }
+        public List<ushort> S3 { get => s3; set => s3 = value; }
+        public int SomeNum1 { get; set; }
+        public int SomeNum2 { get; set; }
+        public int SomeNum3 { get; set; }
+        public ushort ObjectID { get; set; }
+        public uint AfterOID { get; set; }
+        public uint PHeader { get; set; }
+        public uint UnkI32 { get; set; }
+        public uint[] UnkI321 { get; set; }
+        public float[] UnkI322 { get; set; }
+        public uint[] UnkI323 { get; set; }
+
+        public override void Save(BinaryWriter writer)
         {
-            System.IO.MemoryStream NewStream = new System.IO.MemoryStream();
-            System.IO.BinaryWriter NSWriter = new System.IO.BinaryWriter(NewStream);
-            NSWriter.Write(X);
-            NSWriter.Write(Y);
-            NSWriter.Write(Z);
-            NSWriter.Write(W);
-            NSWriter.Write(RX);
-            NSWriter.Write(COMRX);
-            NSWriter.Write(RY);
-            NSWriter.Write(COMRY);
-            NSWriter.Write(RZ);
-            NSWriter.Write(COMRZ);
-            NSWriter.Write(Size1);
-            NSWriter.Write(Size1);
-            NSWriter.Write(SomeNum1);
-            for (int i = 0; i <= Size1 - 1; i++)
-                NSWriter.Write(Something1[i]);
-            NSWriter.Write(Size2);
-            NSWriter.Write(Size2);
-            NSWriter.Write(SomeNum2);
-            for (int i = 0; i <= Size2 - 1; i++)
-                NSWriter.Write(Something2[i]);
-            NSWriter.Write(Size3);
-            NSWriter.Write(Size3);
-            NSWriter.Write(SomeNum3);
-            for (int i = 0; i <= Size3 - 1; i++)
-                NSWriter.Write(Something3[i]);
-            NSWriter.Write(ObjectID);
-            NSWriter.Write(AfterOID);
-            byte b;
-            b = (byte)UnkI321Number;
-            ParametersHeader = b;
-            b = (byte)UnkI322Number;
-            ParametersHeader += (uint)b * 256;
-            b = (byte)UnkI323Number;
-            ParametersHeader += (uint)b * 256 * 256;
-            NSWriter.Write(ParametersHeader);
-            NSWriter.Write(UnkI32);
-            NSWriter.Write(UnkI321Number);
-            for (int i = 0; i <= UnkI321Number - 1; i++)
-                NSWriter.Write(UnkI321[i]);
-            NSWriter.Write(UnkI322Number);
-            for (int i = 0; i <= UnkI322Number - 1; i++)
-                NSWriter.Write(UnkI322[i]);
-            NSWriter.Write(UnkI323Number);
-            for (int i = 0; i <= UnkI323Number - 1; i++)
-                NSWriter.Write(UnkI323[i]);
-            ByteStream = NewStream;
-            Size = (uint)ByteStream.Length;
+            writer.Write(Pos.X);
+            writer.Write(Pos.Y);
+            writer.Write(Pos.Z);
+            writer.Write(Pos.W);
+            writer.Write(RotX);
+            writer.Write(COMRotX);
+            writer.Write(RotY);
+            writer.Write(COMRotY);
+            writer.Write(RotZ);
+            writer.Write(COMRotZ);
+            writer.Write(S1.Count);
+            writer.Write(S1.Count);
+            writer.Write(SomeNum1);
+            for (int i = 0; i < S1.Count; ++i)
+                writer.Write(S1[i]);
+            writer.Write(S2.Count);
+            writer.Write(S2.Count);
+            writer.Write(SomeNum2);
+            for (int i = 0; i < S2.Count; ++i)
+                writer.Write(S2[i]);
+            writer.Write(S3.Count);
+            writer.Write(S3.Count);
+            writer.Write(SomeNum3);
+            for (int i = 0; i < S3.Count; ++i)
+                writer.Write(S3[i]);
+            writer.Write(ObjectID);
+            writer.Write(AfterOID);
+            writer.Write(PHeader);
+            PHeader = (uint)((byte)UnkI321.Length
+                | (UnkI322.Length << 8)
+                | (UnkI323.Length << 16));
+            writer.Write(UnkI32);
+            writer.Write(UnkI321.Length);
+            for (int i = 0; i < UnkI321.Length; ++i)
+                writer.Write(UnkI321[i]);
+            writer.Write(UnkI322.Length);
+            for (int i = 0; i < UnkI322.Length; ++i)
+                writer.Write(UnkI322[i]);
+            writer.Write(UnkI323.Length);
+            for (int i = 0; i < UnkI323.Length; ++i)
+                writer.Write(UnkI323[i]);
         }
 
-        protected override void DataUpdate()
+        public override void Load(BinaryReader reader)
         {
-            System.IO.BinaryReader BSReader = new System.IO.BinaryReader(ByteStream);
-            ByteStream.Position = 0;
-            X = BSReader.ReadSingle();
-            Y = BSReader.ReadSingle();
-            Z = BSReader.ReadSingle();
-            W = BSReader.ReadSingle();
-            RX = BSReader.ReadUInt16();
-            COMRX = BSReader.ReadUInt16();
-            RY = BSReader.ReadUInt16();
-            COMRY = BSReader.ReadUInt16();
-            RZ = BSReader.ReadUInt16();
-            COMRZ = BSReader.ReadUInt16();
-            Size1 = BSReader.ReadInt32();
-            Size1 = BSReader.ReadInt32();
-            SomeNum1 = BSReader.ReadInt32();
-            Array.Resize(ref Something1, Size1);
-            for (int i = 0; i <= Size1 - 1; i++)
-                Something1[i] = BSReader.ReadUInt16();
-            Size2 = BSReader.ReadInt32();
-            Size2 = BSReader.ReadInt32();
-            SomeNum2 = BSReader.ReadInt32();
-            Array.Resize(ref Something2, Size2);
-            for (int i = 0; i <= Size2 - 1; i++)
-                Something2[i] = BSReader.ReadUInt16();
-            Size3 = BSReader.ReadInt32();
-            Size3 = BSReader.ReadInt32();
-            SomeNum3 = BSReader.ReadInt32();
-            Array.Resize(ref Something3, Size3);
-            for (int i = 0; i <= Size3 - 1; i++)
-                Something3[i] = BSReader.ReadUInt16();
-            ObjectID = BSReader.ReadUInt16();
-            AfterOID = BSReader.ReadUInt32();
-            ParametersHeader = BSReader.ReadUInt32();
-            UnkI32 = BSReader.ReadUInt32();
-            UnkI321Number = BSReader.ReadInt32();
-            Array.Resize(ref UnkI321, UnkI321Number);
-            for (int i = 0; i <= UnkI321Number - 1; i++)
-                UnkI321[i] = BSReader.ReadUInt32();
-            UnkI322Number = BSReader.ReadInt32();
-            Array.Resize(ref UnkI322, UnkI322Number);
-            for (int i = 0; i <= UnkI322Number - 1; i++)
-                UnkI322[i] = BSReader.ReadSingle();
-            UnkI323Number = BSReader.ReadInt32();
-            Array.Resize(ref UnkI323, UnkI323Number);
-            for (int i = 0; i <= UnkI323Number - 1; i++)
-                UnkI323[i] = BSReader.ReadUInt32();
+            pos = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+            RotX = reader.ReadUInt16();
+            COMRotX = reader.ReadUInt16();
+            RotY = reader.ReadUInt16();
+            COMRotY = reader.ReadUInt16();
+            RotZ = reader.ReadUInt16();
+            COMRotZ = reader.ReadUInt16();
+
+            var size = reader.ReadInt32();
+            size = reader.ReadInt32();
+            SomeNum1 = reader.ReadInt32();
+            S1.Clear();
+            for (int i = 0; i < size; ++i)
+                S1.Add(reader.ReadUInt16());
+            size = reader.ReadInt32();
+            size = reader.ReadInt32();
+            SomeNum2 = reader.ReadInt32();
+            S2.Clear();
+            for (int i = 0; i < size; ++i)
+                S2.Add(reader.ReadUInt16());
+            size = reader.ReadInt32();
+            size = reader.ReadInt32();
+            SomeNum3 = reader.ReadInt32();
+            S3.Clear();
+            for (int i = 0; i < size; ++i)
+                S3.Add(reader.ReadUInt16());
+            ObjectID = reader.ReadUInt16();
+            AfterOID = reader.ReadUInt32();
+            PHeader = reader.ReadUInt32();
+            UnkI32 = reader.ReadUInt32();
+            size = reader.ReadInt32();
+            UnkI321 = new uint[size];
+            for (int i = 0; i < size; ++i)
+                UnkI321[i] = reader.ReadUInt32();
+            size = reader.ReadInt32();
+            UnkI322 = new float[size];
+            for (int i = 0; i < size; ++i)
+                UnkI322[i] = reader.ReadSingle();
+            size = reader.ReadInt32();
+            UnkI323 = new uint[size];
+            for (int i = 0; i < size; ++i)
+                UnkI323[i] = reader.ReadUInt32();
+        }
+
+        protected override int GetSize()
+        {
+            return 90 + (S1.Count + S2.Count + S3.Count) * 2 + (UnkI321.Length + UnkI322.Length + UnkI323.Length) * 4;
         }
     }
 }

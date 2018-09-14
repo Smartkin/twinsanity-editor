@@ -26,12 +26,10 @@ namespace Twinsanity
         }
 
         /// <summary>
-        /// Update the object's memory stream with new data
+        /// Write converted binary data to file.
         /// </summary>
-        public override byte[] Save()
+        public override void Save(BinaryWriter writer)
         {
-            MemoryStream stream = new MemoryStream();
-            BinaryWriter writer = new BinaryWriter(stream);
             if (someNumber > 0)
             {
                 writer.Write(someNumber);
@@ -57,10 +55,10 @@ namespace Twinsanity
                 }
                 for (int i = 0; i < tris.Count; i++)
                 {
-                    long tmp = ((uint)tris[i].Vert1 & mask) |
-                        (((uint)tris[i].Vert2 & mask) << 18) |
-                        (((uint)tris[i].Vert3 & mask) << 18*2) |
-                        (((uint)tris[i].Surface & 0x3FF) << 18*3);
+                    ulong tmp = (ulong)tris[i].Vert1 & mask;
+                    tmp |= (ulong)(tris[i].Vert2 & mask) << 18;
+                    tmp |= (ulong)(tris[i].Vert3 & mask) << 36;
+                    tmp |= (ulong)(tris[i].Surface & 0x3FF) << 54;
                     writer.Write(tmp);
                 }
                 for (int i = 0; i < vertices.Count; i++)
@@ -71,7 +69,6 @@ namespace Twinsanity
                     writer.Write(vertices[i].W);
                 }
             }
-            return stream.ToArray();
         }
 
         /////////PARENTS FUNCTION//////////

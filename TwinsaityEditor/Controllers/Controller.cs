@@ -13,12 +13,14 @@
         public ToolbarFlags Toolbar { get; set; }
 
         public abstract string GetName();
-        protected abstract void GenText();
+        public abstract void GenText();
 
         /// <summary>
         /// Function called when a toolbar button is clicked.
         /// </summary>
         /// <param name="button">The button clicked.</param>
-        public virtual void ToolbarAction(short button) { }
+        public virtual void ToolbarAction(ToolbarFlags button) { }
+
+        public virtual void Dispose() { }
     }
 }
