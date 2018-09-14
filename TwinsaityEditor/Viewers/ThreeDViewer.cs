@@ -20,11 +20,6 @@ namespace TwinsaityEditor
             rot = new Vector3(0, 0, 0);
             sca = new Vector3(1.0f, 1.0f, 1.0f);
             range = 100;
-            input = new Timer
-            {
-                Interval = 16,
-                Enabled = true
-            };
             _inputHandle = (sender, e) =>
             {
                 if (e is MouseEventArgs)
@@ -136,7 +131,6 @@ namespace TwinsaityEditor
                     rot.Y = (float)Math.PI / 2;
                 if (rot.Y < (float)-Math.PI / 2)
                     rot.Y = (float)-Math.PI / 2;
-                _inputHandle(null, e);
             }
             m_x = e.X;
             m_y = e.Y;
@@ -255,9 +249,9 @@ namespace TwinsaityEditor
             GL.Enable(EnableCap.AlphaTest);
             GL.DepthFunc(DepthFunction.Lequal);
             GL.AlphaFunc(AlphaFunction.Greater, 0);
-            GL.ClearColor(0, 0, 1, 1); //Add clear color to Preferences later
+            GL.ClearColor(0, 0, 1, 1); //TODO: Add clear color to Preferences later
             GL.Enable(EnableCap.ColorMaterial);
-            //GL.ShadeModel(ShadingModel.Flat);
+            //GL.ShadeModel(ShadingModel.Flat); //TODO: Add to preferences
             GL.Light(LightName.Light0, LightParameter.Position, new float[] { 0, 0, 0, 1 });
             //GL.Light(LightName.Light0, LightParameter.Ambient, new float[] { 0.3f, 0.3f, 0.3f, 1.0f });
             GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { 1.0f, 1.0f, 1.0f, 1.0f });

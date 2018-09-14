@@ -87,6 +87,7 @@ namespace TwinsaityEditor.Workers
 
         private void btnImport_Click(object sender, EventArgs e)
         {
+            throw new NotImplementedException("Texture importing is currently not implemented.");
             if (listImages.Items.Count == 0)
             {
                 MessageBox.Show("No images to import were selected!", "Import error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -150,12 +151,12 @@ namespace TwinsaityEditor.Workers
                             file.Dispose();
                         };*/
 
-                        tex.Import(rawData, width, height, bf, mip);
+                        //tex.Import(rawData, width, height, bf, mip);
                         
                         //Save the image
                         FileStream file = new FileStream(fdbSave.FileName + "\\" + item.Text.Remove(item.Text.Length - 4, 4), FileMode.Create, FileAccess.Write);
                         BinaryWriter writer = new BinaryWriter(file);
-                        writer.Write(tex.ByteStream.ToArray());
+                        writer.Write(tex.Data);
 
                         writer.Close();
                         file.Close();
