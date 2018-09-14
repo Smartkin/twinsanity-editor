@@ -176,6 +176,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="TwinsanityEditor.cs" />
+    <Compile Include="VectorFuncs.cs" />
     <Compile Include="Viewers\SMViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
