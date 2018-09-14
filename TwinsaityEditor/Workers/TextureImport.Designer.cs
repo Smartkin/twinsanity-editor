@@ -37,7 +37,6 @@
             this.lbImageList = new System.Windows.Forms.Label();
             this.btnImport = new System.Windows.Forms.Button();
             this.pbImport = new System.Windows.Forms.ProgressBar();
-            this.pbRawData = new System.Windows.Forms.ProgressBar();
             this.SuspendLayout();
             // 
             // ofdSelect
@@ -124,26 +123,17 @@
             // 
             // pbImport
             // 
-            this.pbImport.Location = new System.Drawing.Point(12, 204);
+            this.pbImport.Location = new System.Drawing.Point(12, 192);
             this.pbImport.Name = "pbImport";
-            this.pbImport.Size = new System.Drawing.Size(194, 10);
+            this.pbImport.Size = new System.Drawing.Size(194, 22);
             this.pbImport.TabIndex = 6;
             this.pbImport.Visible = false;
-            // 
-            // pbRawData
-            // 
-            this.pbRawData.Location = new System.Drawing.Point(12, 192);
-            this.pbRawData.Name = "pbRawData";
-            this.pbRawData.Size = new System.Drawing.Size(194, 10);
-            this.pbRawData.TabIndex = 7;
-            this.pbRawData.Visible = false;
             // 
             // TextureImport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(218, 226);
-            this.Controls.Add(this.pbRawData);
             this.Controls.Add(this.pbImport);
             this.Controls.Add(this.btnImport);
             this.Controls.Add(this.lbImageList);
@@ -170,6 +160,5 @@
         private System.Windows.Forms.Label lbImageList;
         private System.Windows.Forms.Button btnImport;
         private System.Windows.Forms.ProgressBar pbImport;
-        private System.Windows.Forms.ProgressBar pbRawData;
     }
 }
