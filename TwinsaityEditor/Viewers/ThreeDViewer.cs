@@ -9,7 +9,7 @@ namespace TwinsaityEditor
     {
         private Vector3 pos, rot, sca;
         private float range;
-        private Timer input, refresh;
+        private Timer refresh;
         private bool k_w, k_a, k_s, k_d, k_e, k_q, m_l, m_r;
         private int m_x, m_y;
         private EventHandler _inputHandle;
@@ -20,11 +20,7 @@ namespace TwinsaityEditor
             rot = new Vector3(0, 0, 0);
             sca = new Vector3(1.0f, 1.0f, 1.0f);
             range = 50f;
-            input = new Timer
-            {
-                Interval = 16,
-                Enabled = true
-            };
+
             _inputHandle = (sender, e) =>
             {
                 float speed = range / 100;
@@ -53,14 +49,16 @@ namespace TwinsaityEditor
                 if ((h | v | d) != 0)
                     Invalidate();
             };
-            input.Tick += _inputHandle;
+
             refresh = new Timer
             {
-                Interval = 100,
+                Interval = (int)Math.Round(1.0/60*1000), //Set to 60fps by default, add to Preferences later
                 Enabled = true
             };
+
             refresh.Tick += delegate (object sender, EventArgs e)
             {
+                _inputHandle(sender, e);
                 Invalidate();
             };
         }
@@ -73,12 +71,7 @@ namespace TwinsaityEditor
             rot = new Vector3(0, 0, 0);
             Matrix4 view = Matrix4.Identity;
             Matrix4 proj = Matrix4.Identity;
-            Matrix4 rot_matrix = Matrix4.Identity;//Matrix4.RotationYawPitchRoll(Rotation.X, Rotation.Y, Rotation.Z);
-
-            //Create rotation matrix
-            rot_matrix *= Matrix4.CreateRotationX(rot.X);
-            rot_matrix *= Matrix4.CreateRotationY(rot.Y);
-            rot_matrix *= Matrix4.CreateRotationZ(rot.Z);
+            Matrix4 rot_matrix = Utils.MatrixWrapper.RotateMatrix4(rot.X, rot.Y, rot.Z);
 
             //Setup view and projection matrix
             Vector4 rot_vector = Vector4.Transform(new Vector4(0, 0, 1, 1), rot_matrix);
@@ -90,7 +83,6 @@ namespace TwinsaityEditor
             GL.LoadMatrix(ref proj);
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadMatrix(ref view);
-            Invalidate();
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
@@ -133,8 +125,6 @@ namespace TwinsaityEditor
                     rot.Y = (float)Math.PI / 2;
                 if (rot.Y < (float)-Math.PI / 2)
                     rot.Y = (float)-Math.PI / 2;
-                _inputHandle(null, e);
-                Invalidate();
             }
             m_x = e.X;
             m_y = e.Y;
@@ -252,7 +242,7 @@ namespace TwinsaityEditor
             GL.Enable(EnableCap.AlphaTest);
             GL.DepthFunc(DepthFunction.Lequal);
             GL.AlphaFunc(AlphaFunction.Greater, 0);
-            GL.ClearColor(0, 0, 1, 1);
+            GL.ClearColor(0, 0, 1, 1); //Add clear color to Preferences later
             GL.Enable(EnableCap.ColorMaterial);
             //GL.ShadeModel(ShadingModel.Flat);
             GL.Light(LightName.Light0, LightParameter.Position, new float[] { 0, 0, 0, 1 });
@@ -268,7 +258,6 @@ namespace TwinsaityEditor
 
         protected override void Dispose(bool disposing)
         {
-            input.Dispose();
             refresh.Dispose();
             base.Dispose(disposing);
         }
