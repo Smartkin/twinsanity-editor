@@ -1,4 +1,5 @@
-﻿using OpenTK.Graphics.OpenGL;
+﻿using OpenTK;
+using OpenTK.Graphics.OpenGL;
 using System.Drawing;
 using System.Windows.Forms;
 using Twinsanity;
@@ -35,25 +36,16 @@ namespace TwinsaityEditor
                 foreach (var tri in data.Tris)
                 {
                     GL.Color3(colors[tri.Surface % colors.Length]);
-                    Pos v1 = data.Vertices[tri.Vert1], v2 = data.Vertices[tri.Vert2], v3 = data.Vertices[tri.Vert3];
-                    GL.Vertex3(-v1.X, v1.Y, v1.Z);
-                    GL.Vertex3(-v2.X, v2.Y, v2.Z);
-                    GL.Vertex3(-v3.X, v3.Y, v3.Z);
-                    /*GL.Normal3(TwinsanityEditorForm.CalcNormal(new Vector3(data.Vertices[tri.Vert1].X, data.Vertices[tri.Vert1].Y, data.Vertices[tri.Vert1].Z),
-                        new Vector3(data.Vertices[tri.Vert2].X, data.Vertices[tri.Vert2].Y, data.Vertices[tri.Vert2].Z),
-                        new Vector3(data.Vertices[tri.Vert3].X, data.Vertices[tri.Vert3].Y, data.Vertices[tri.Vert3].Z)));*/
+                    Vector3 v1 = new Vector3(-data.Vertices[tri.Vert1].X, data.Vertices[tri.Vert1].Y, data.Vertices[tri.Vert1].Z);
+                    Vector3 v2 = new Vector3(-data.Vertices[tri.Vert2].X, data.Vertices[tri.Vert2].Y, data.Vertices[tri.Vert2].Z);
+                    Vector3 v3 = new Vector3(-data.Vertices[tri.Vert3].X, data.Vertices[tri.Vert3].Y, data.Vertices[tri.Vert3].Z);
+                    //GL.Normal3(VectorFuncs.CrossProduct(v2 - v1, v3 - v1));
+                    GL.Normal3(VectorFuncs.CalcNormal(v1, v2, v3));
+                    GL.Vertex3(v1.X, v1.Y, v1.Z);
+                    GL.Vertex3(v2.X, v2.Y, v2.Z);
+                    GL.Vertex3(v3.X, v3.Y, v3.Z);
                 }
                 GL.End();
-                GL.Color3(Color.Black);
-                foreach (var tri in data.Tris)
-                {
-                    GL.Begin(PrimitiveType.LineLoop);
-                    Pos v1 = data.Vertices[tri.Vert1], v2 = data.Vertices[tri.Vert2], v3 = data.Vertices[tri.Vert3];
-                    GL.Vertex3(-v1.X, v1.Y, v1.Z);
-                    GL.Vertex3(-v2.X, v2.Y, v2.Z);
-                    GL.Vertex3(-v3.X, v3.Y, v3.Z);
-                    GL.End();
-                }
                 GL.EndList();
             }
             else
@@ -108,7 +100,7 @@ namespace TwinsaityEditor
                         foreach (Instance j in ((TwinsSection)((TwinsSection)file.SecInfo.Records[i]).SecInfo.Records[6]).SecInfo.Records.Values)
                         {
                             GL.PushMatrix();
-                            GL.Translate(-j.Pos.X, j.Pos.Y + 0.5, j.Pos.Z);
+                            GL.Translate(-j.Pos.X, j.Pos.Y, j.Pos.Z);
                             GL.Rotate(-j.RotX / (float)ushort.MaxValue * 360f, 1, 0, 0);
                             GL.Rotate(-j.RotY / (float)ushort.MaxValue * 360f, 0, 1, 0);
                             GL.Rotate(-j.RotZ / (float)ushort.MaxValue * 360f, 0, 0, 1);
@@ -126,26 +118,26 @@ namespace TwinsaityEditor
                             GL.End();
                             GL.Color3(colors[colors.Length - i - 1]);
                             GL.Begin(PrimitiveType.LineStrip);
-                            GL.Vertex3(-indicator_size, -indicator_size, -indicator_size);
-                            GL.Vertex3(+indicator_size, -indicator_size, -indicator_size);
-                            GL.Vertex3(+indicator_size, +indicator_size, -indicator_size);
-                            GL.Vertex3(-indicator_size, +indicator_size, -indicator_size);
-                            GL.Vertex3(-indicator_size, -indicator_size, -indicator_size);
-                            GL.Vertex3(-indicator_size, -indicator_size, +indicator_size);
-                            GL.Vertex3(+indicator_size, -indicator_size, +indicator_size);
-                            GL.Vertex3(+indicator_size, -indicator_size, -indicator_size);
+                            GL.Vertex3(-indicator_size, -indicator_size + 0.5, -indicator_size);
+                            GL.Vertex3(+indicator_size, -indicator_size + 0.5, -indicator_size);
+                            GL.Vertex3(+indicator_size, +indicator_size + 0.5, -indicator_size);
+                            GL.Vertex3(-indicator_size, +indicator_size + 0.5, -indicator_size);
+                            GL.Vertex3(-indicator_size, -indicator_size + 0.5, -indicator_size);
+                            GL.Vertex3(-indicator_size, -indicator_size + 0.5, +indicator_size);
+                            GL.Vertex3(+indicator_size, -indicator_size + 0.5, +indicator_size);
+                            GL.Vertex3(+indicator_size, -indicator_size + 0.5, -indicator_size);
                             GL.End();
                             GL.Begin(PrimitiveType.LineStrip);
-                            GL.Vertex3(-indicator_size, -indicator_size, +indicator_size);
-                            GL.Vertex3(-indicator_size, +indicator_size, +indicator_size);
-                            GL.Vertex3(+indicator_size, +indicator_size, +indicator_size);
-                            GL.Vertex3(+indicator_size, -indicator_size, +indicator_size);
+                            GL.Vertex3(-indicator_size, -indicator_size + 0.5, +indicator_size);
+                            GL.Vertex3(-indicator_size, +indicator_size + 0.5, +indicator_size);
+                            GL.Vertex3(+indicator_size, +indicator_size + 0.5, +indicator_size);
+                            GL.Vertex3(+indicator_size, -indicator_size + 0.5, +indicator_size);
                             GL.End();
                             GL.Begin(PrimitiveType.Lines);
-                            GL.Vertex3(-indicator_size, +indicator_size, +indicator_size);
-                            GL.Vertex3(-indicator_size, +indicator_size, -indicator_size);
-                            GL.Vertex3(+indicator_size, +indicator_size, +indicator_size);
-                            GL.Vertex3(+indicator_size, +indicator_size, -indicator_size);
+                            GL.Vertex3(-indicator_size, +indicator_size + 0.5, +indicator_size);
+                            GL.Vertex3(-indicator_size, +indicator_size + 0.5, -indicator_size);
+                            GL.Vertex3(+indicator_size, +indicator_size + 0.5, +indicator_size);
+                            GL.Vertex3(+indicator_size, +indicator_size + 0.5, -indicator_size);
                             GL.End();
                             GL.PopMatrix();
                         }
