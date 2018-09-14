@@ -75,12 +75,17 @@ namespace Twinsanity
         /// <returns>Whether replacement was successful or not</returns>
         public int ReplacePSMSegment(System.Drawing.Bitmap Image, int index)
         {
-            System.Drawing.Color[] RawData = new System.Drawing.Color[Image.Width * Image.Height - 1 + 1];
-            for (int x = 0; x <= Image.Width - 1; x++)
+            byte[] RawData;
+            /*for (int x = 0; x <= Image.Width - 1; x++)
             {
                 for (int y = 0; y <= Image.Height - 1; y++)
                     RawData[x + y * Image.Width] = Image.GetPixel(x, y);
-            }
+            }*/
+
+            System.Drawing.Imaging.BitmapData data = Image.LockBits(new System.Drawing.Rectangle(0, 0, Image.Width, Image.Height), System.Drawing.Imaging.ImageLockMode.ReadWrite, Image.PixelFormat);
+            RawData = new byte[Math.Abs(data.Stride) * Image.Height];
+            System.Runtime.InteropServices.Marshal.Copy(data.Scan0, RawData, 0, RawData.Length);
+
             Texture.BlockFormats fmt;
             if (Image.Width == 128)
             {
