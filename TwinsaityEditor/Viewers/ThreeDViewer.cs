@@ -12,6 +12,7 @@ namespace TwinsaityEditor
         private Timer input, refresh;
         private bool k_w, k_a, k_s, k_d, k_e, k_q, m_l, m_r;
         private int m_x, m_y;
+        private EventHandler _inputHandle;
 
         public ThreeDViewer()
         {
@@ -24,7 +25,7 @@ namespace TwinsaityEditor
                 Interval = 16,
                 Enabled = true
             };
-            input.Tick += delegate (object sender, EventArgs e)
+            _inputHandle = (sender, e) =>
             {
                 float speed = range / 100;
                 int v = 0, h = 0, d = 0;
@@ -52,6 +53,7 @@ namespace TwinsaityEditor
                 if ((h | v | d) != 0)
                     Invalidate();
             };
+            input.Tick += _inputHandle;
             refresh = new Timer
             {
                 Interval = 100,
@@ -131,6 +133,7 @@ namespace TwinsaityEditor
                     rot.Y = (float)Math.PI / 2;
                 if (rot.Y < (float)-Math.PI / 2)
                     rot.Y = (float)-Math.PI / 2;
+                _inputHandle(null, e);
                 Invalidate();
             }
             m_x = e.X;
