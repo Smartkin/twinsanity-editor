@@ -11,6 +11,7 @@ namespace Twinsanity
         private List<ColTri> tris;
         private List<Pos> vertices;
         private readonly uint mask = 0x3FFFF;
+        private bool isEmpty;
 
         public ColData()
         {
@@ -22,7 +23,7 @@ namespace Twinsanity
 
         protected override int GetSize()
         {
-            return (20 + triggers.Count * 32 + groups.Count * 8 + tris.Count * 8 + vertices.Count * 16);
+            return isEmpty ? 0 : (20 + triggers.Count * 32 + groups.Count * 8 + tris.Count * 8 + vertices.Count * 16);
         }
 
         /// <summary>
@@ -30,6 +31,7 @@ namespace Twinsanity
         /// </summary>
         public override void Save(BinaryWriter writer)
         {
+            if (isEmpty) return;
             if (someNumber > 0)
             {
                 writer.Write(someNumber);
@@ -72,8 +74,13 @@ namespace Twinsanity
         }
 
         /////////PARENTS FUNCTION//////////
-        public override void Load(BinaryReader reader)
+        public override void Load(BinaryReader reader, int size)
         {
+            if (size < 20)
+            {
+                isEmpty = true;
+                return;
+            }
             someNumber = reader.ReadUInt32();
             uint triggerCount = reader.ReadUInt32();
             uint groupCount = reader.ReadUInt32();

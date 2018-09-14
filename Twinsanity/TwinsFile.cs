@@ -78,7 +78,7 @@ namespace Twinsanity
                                 ColData rec = new ColData() { ID = sub.ID };
                                 var sk = reader.BaseStream.Position;
                                 reader.BaseStream.Position = rec.Offset = sub.Off;
-                                rec.Load(reader);
+                                rec.Load(reader, sub.Size);
                                 reader.BaseStream.Position = sk;
                                 sec_info.Records.Add(sub.ID, rec);
                                 break;
