@@ -1,6 +1,6 @@
 ﻿using OpenTK;
 
-namespace TwinsaityEditor
+namespace TwinsaityEditor.Utils
 {
     public static class VectorFuncs
     {
