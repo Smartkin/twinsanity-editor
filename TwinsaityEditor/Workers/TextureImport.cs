@@ -55,9 +55,6 @@ namespace TwinsaityEditor.Workers
             pbImport.Top += hei_change;
             pbImport.Width = listImages.Width;
 
-            pbRawData.Top += hei_change;
-            pbRawData.Width = listImages.Width;
-
             _prevSize = Size;
         }
 
@@ -96,7 +93,6 @@ namespace TwinsaityEditor.Workers
                 var fdbSave = new CommonOpenFileDialog();
                 fdbSave.IsFolderPicker = true;
 
-                pbRawData.Show();
                 pbImport.Show();
                 if (fdbSave.ShowDialog(Handle) == CommonFileDialogResult.Ok)
                 {
@@ -119,10 +115,6 @@ namespace TwinsaityEditor.Workers
 
                         System.Drawing.Imaging.BitmapData data = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), System.Drawing.Imaging.ImageLockMode.ReadWrite, bitmap.PixelFormat);
                         rawData = new byte[Math.Abs(data.Stride) * bitmap.Height];
-
-                        pbRawData.Value = 0;
-                        pbRawData.Maximum = rawData.Length - 1;
-                        pbRawData.Step = 1;
                         
                         /*for (var i = 0; i < rawData.Length; ++i)
                         {
@@ -150,12 +142,12 @@ namespace TwinsaityEditor.Workers
                             file.Dispose();
                         };*/
 
-                        tex.Import(rawData, width, height, bf, mip);
+                        //tex.Import(rawData, width, height, bf, mip);
                         
                         //Save the image
                         FileStream file = new FileStream(fdbSave.FileName + "\\" + item.Text.Remove(item.Text.Length - 4, 4), FileMode.Create, FileAccess.Write);
                         BinaryWriter writer = new BinaryWriter(file);
-                        writer.Write(tex.ByteStream.ToArray());
+                        //writer.Write(tex.ByteStream.ToArray());
 
                         writer.Close();
                         file.Close();
@@ -175,13 +167,7 @@ namespace TwinsaityEditor.Workers
                     MessageBox.Show("Import finished! Imported " + listImages.Items.Count.ToString() + " images.", "Import finished", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 pbImport.Hide();
-                pbRawData.Hide();
             }
-        }
-
-        private void Worker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            throw new NotImplementedException();
         }
     }
 }
