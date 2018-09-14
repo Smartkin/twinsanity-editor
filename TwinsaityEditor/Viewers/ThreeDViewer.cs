@@ -19,7 +19,7 @@ namespace TwinsaityEditor
             pos = new Vector3(0, 0, 0);
             rot = new Vector3(0, 0, 0);
             sca = new Vector3(1.0f, 1.0f, 1.0f);
-            range = 50f;
+            range = 100;
             input = new Timer
             {
                 Interval = 16,
@@ -27,31 +27,38 @@ namespace TwinsaityEditor
             };
             _inputHandle = (sender, e) =>
             {
-                float speed = range / 100;
-                int v = 0, h = 0, d = 0;
-                if (k_w)
-                    d++;
-                if (k_a)
-                    h++;
-                if (k_s)
-                    d--;
-                if (k_d)
-                    h--;
-                if (k_e)
-                    v++;
-                if (k_q)
-                    v--;
-                Vector3 delta = new Vector3(h, v, d) * speed;
-                Matrix4 rot_matrix = Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), rot.X);
-                rot_matrix *= Matrix4.CreateFromAxisAngle(new Vector3(1, 0, 0), rot.Y);
-                rot_matrix *= Matrix4.CreateFromAxisAngle(new Vector3(0, 0, 1), rot.Z);
-
-                Vector3 fin_delta = new Vector3(rot_matrix * new Vector4(delta, 1.0f));
-
-                pos -= fin_delta;
-
-                if ((h | v | d) != 0)
+                if (e is MouseEventArgs)
+                {
                     Invalidate();
+                }
+                else
+                {
+                    float speed = range / 250;
+                    int v = 0, h = 0, d = 0;
+                    if (k_w)
+                        d++;
+                    if (k_a)
+                        h++;
+                    if (k_s)
+                        d--;
+                    if (k_d)
+                        h--;
+                    if (k_e)
+                        v++;
+                    if (k_q)
+                        v--;
+                    Vector3 delta = new Vector3(h, v, d) * speed;
+                    Matrix4 rot_matrix = Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), rot.X);
+                    rot_matrix *= Matrix4.CreateFromAxisAngle(new Vector3(1, 0, 0), rot.Y);
+                    rot_matrix *= Matrix4.CreateFromAxisAngle(new Vector3(0, 0, 1), rot.Z);
+
+                    Vector3 fin_delta = new Vector3(rot_matrix * new Vector4(delta, 1.0f));
+
+                    pos -= fin_delta;
+
+                    if ((h | v | d) != 0)
+                        Invalidate();
+                }
             };
             input.Tick += _inputHandle;
             refresh = new Timer
@@ -126,15 +133,14 @@ namespace TwinsaityEditor
             base.OnMouseMove(e);
             if (m_l)
             {
-                rot.X += (e.X - m_x) / 180.0f * (float)Math.PI / (Size.Width / 448f);
-                rot.Y += (e.Y - m_y) / 180.0f * (float)Math.PI / (Size.Height / 448f);
+                rot.X += (e.X - m_x) / 180.0f * (float)Math.PI / (Size.Width / 480f);
+                rot.Y += (e.Y - m_y) / 180.0f * (float)Math.PI / (Size.Height / 480f);
                 rot.X += rot.X > (float)Math.PI ? -2*(float)Math.PI : rot.X < -(float)Math.PI ? +2*(float)Math.PI : 0;
                 if (rot.Y > (float)Math.PI / 2)
                     rot.Y = (float)Math.PI / 2;
                 if (rot.Y < (float)-Math.PI / 2)
                     rot.Y = (float)-Math.PI / 2;
                 _inputHandle(null, e);
-                Invalidate();
             }
             m_x = e.X;
             m_y = e.Y;
@@ -143,11 +149,12 @@ namespace TwinsaityEditor
         protected override void OnMouseWheel(MouseEventArgs e)
         {
             base.OnMouseWheel(e);
-            range -= e.Delta;
-            if (range > 100f)
-                range = 100f;
-            else if (range < 25f)
-                range = 25f;
+            range -= e.Delta / 120 * 30;
+            if (range > 500f)
+                range = 500f;
+            else if (range < 50)
+                range = 50;
+            _inputHandle(null, e);
         }
 
         protected override bool IsInputKey(Keys keyData)
