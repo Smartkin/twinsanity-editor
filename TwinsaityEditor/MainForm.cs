@@ -112,6 +112,8 @@ namespace TwinsaityEditor
                 new_node.Tag = new ScriptController((Script)a);
             else if (a is Instance)
                 new_node.Tag = new InstanceController((Instance)a);
+            else if (a is Trigger)
+                new_node.Tag = new TriggerController((Trigger)a);
             else if (a is ColData)
                 new_node.Tag = new ColDataController((ColData)a);
             else

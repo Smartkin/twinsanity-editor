@@ -45,6 +45,13 @@ namespace TwinsaityEditor
             else return string.Empty;
         }
 
+        public static Instance GetInstance(uint sector, uint id)
+        {
+            if (data.SecInfo.Records.ContainsKey(sector) && ((TwinsSection)data.SecInfo.Records[sector]).SecInfo.Records.ContainsKey(6) && ((TwinsSection)((TwinsSection)data.SecInfo.Records[sector]).SecInfo.Records[6]).SecInfo.Records.ContainsKey(id))
+                return ((Instance)((TwinsSection)((TwinsSection)data.SecInfo.Records[sector]).SecInfo.Records[6]).SecInfo.Records[id]);
+            else throw new System.MissingFieldException("The requested instance could not be found.");
+        }
+
         public static ref TwinsFile GetFile()
         {
             return ref data;

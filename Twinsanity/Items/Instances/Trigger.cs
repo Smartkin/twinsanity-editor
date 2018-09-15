@@ -1,74 +1,72 @@
 using System;
+using System.IO;
 
 namespace Twinsanity
 {
-    public class Trigger : BaseItem
+    public class Trigger : TwinsItem
     {
-        public new string NodeName = "Trigger";
-        public uint SomeUInt32;
-        public uint SomeNumber;
-        public uint SomeFlag;
-        public RM2.Coordinate4[] Coordinate = new RM2.Coordinate4[4];
-        public int SectionSize;
-        public uint SectionHead;
-        public ushort[] SomeUInt16;
-        public ushort SomeUInt161;
-        public ushort SomeUInt162;
-        public ushort SomeUInt163;
-        public ushort SomeUInt164;
-        
+        public uint SomeUInt32 { get; set; }
+        public uint SomeNumber { get; set; }
+        public float SomeFloat { get; set; }
+        public Pos[] Coords { get; set; } = new Pos[3];
+        public uint SectionHead { get; set; }
+        public ushort[] Instances { get; set; }
+        public ushort SomeUInt161 { get; set; }
+        public ushort SomeUInt162 { get; set; }
+        public ushort SomeUInt163 { get; set; }
+        public ushort SomeUInt164 { get; set; }
 
-        public override void UpdateStream()
+
+        public override void Save(BinaryWriter writer)
         {
-            System.IO.MemoryStream NewStream = new System.IO.MemoryStream();
-            System.IO.BinaryWriter NSWriter = new System.IO.BinaryWriter(NewStream);
-            NSWriter.Write(SomeUInt32);
-            NSWriter.Write(SomeNumber);
-            NSWriter.Write(SomeFlag);
-            for (int i = 0; i <= 2; i++)
+            writer.Write(SomeUInt32);
+            writer.Write(SomeNumber);
+            writer.Write(SomeFloat);
+            for (int i = 0; i < 3; ++i)
             {
-                NSWriter.Write(Coordinate[i].X);
-                NSWriter.Write(Coordinate[i].Y);
-                NSWriter.Write(Coordinate[i].Z);
-                NSWriter.Write(Coordinate[i].W);
+                writer.Write(Coords[i].X);
+                writer.Write(Coords[i].Y);
+                writer.Write(Coords[i].Z);
+                writer.Write(Coords[i].W);
             }
-            NSWriter.Write(SectionSize);
-            NSWriter.Write(SectionSize);
-            NSWriter.Write(SectionHead);
-            for (int i = 0; i <= SectionSize - 1; i++)
-                NSWriter.Write(SomeUInt16[i]);
-            NSWriter.Write(SomeUInt161);
-            NSWriter.Write(SomeUInt162);
-            NSWriter.Write(SomeUInt163);
-            NSWriter.Write(SomeUInt164);
-            ByteStream = NewStream;
-            Size = (uint)ByteStream.Length;
+            writer.Write(Instances.Length);
+            writer.Write(Instances.Length);
+            writer.Write(SectionHead);
+            for (int i = 0; i < Instances.Length; ++i)
+                writer.Write(Instances[i]);
+            writer.Write(SomeUInt161);
+            writer.Write(SomeUInt162);
+            writer.Write(SomeUInt163);
+            writer.Write(SomeUInt164);
         }
 
-        protected override void DataUpdate()
+        public override void Load(BinaryReader reader, int size)
         {
-            System.IO.BinaryReader BSReader = new System.IO.BinaryReader(ByteStream);
-            ByteStream.Position = 0;
-            SomeUInt32 = BSReader.ReadUInt32();
-            SomeNumber = BSReader.ReadUInt32();
-            SomeFlag = BSReader.ReadUInt32();
-            for (int i = 0; i <= 2; i++)
+            SomeUInt32 = reader.ReadUInt32();
+            SomeNumber = reader.ReadUInt32();
+            SomeFloat = reader.ReadSingle();
+            for (int i = 0; i < 3; ++i)
             {
-                Coordinate[i].X = BSReader.ReadSingle();
-                Coordinate[i].Y = BSReader.ReadSingle();
-                Coordinate[i].Z = BSReader.ReadSingle();
-                Coordinate[i].W = BSReader.ReadSingle();
+                Coords[i].X = reader.ReadSingle();
+                Coords[i].Y = reader.ReadSingle();
+                Coords[i].Z = reader.ReadSingle();
+                Coords[i].W = reader.ReadSingle();
             }
-            SectionSize = BSReader.ReadInt32();
-            SectionSize = BSReader.ReadInt32();
-            SectionHead = BSReader.ReadUInt32();
-            Array.Resize(ref SomeUInt16, SectionSize);
-            for (int i = 0; i <= SectionSize - 1; i++)
-                SomeUInt16[i] = BSReader.ReadUInt16();
-            SomeUInt161 = BSReader.ReadUInt16();
-            SomeUInt162 = BSReader.ReadUInt16();
-            SomeUInt163 = BSReader.ReadUInt16();
-            SomeUInt164 = BSReader.ReadUInt16();
+            var n = reader.ReadInt32();
+            n  = reader.ReadInt32();
+            SectionHead = reader.ReadUInt32();
+            Instances = new ushort[n];
+            for (int i = 0; i < n; ++i)
+                Instances[i] = reader.ReadUInt16();
+            SomeUInt161 = reader.ReadUInt16();
+            SomeUInt162 = reader.ReadUInt16();
+            SomeUInt163 = reader.ReadUInt16();
+            SomeUInt164 = reader.ReadUInt16();
+        }
+
+        protected override int GetSize()
+        {
+            return 80 + Instances.Length * 2;
         }
     }
 }
