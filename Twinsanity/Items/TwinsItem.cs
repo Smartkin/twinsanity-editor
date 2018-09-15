@@ -19,11 +19,6 @@ namespace Twinsanity
             writer.Write(Data);
         }
 
-        public virtual void Load(BinaryReader reader)
-        {
-            throw new NotImplementedException("TwinsItem::Load: Function Load(BinaryReader reader) cannot be used in TwinsItem.");
-        }
-
         public virtual void Load(BinaryReader reader, int size)
         {
             Data = reader.ReadBytes(size);
@@ -33,5 +28,6 @@ namespace Twinsanity
         public uint Offset { get; set; }
         public uint ID { get; set; }
         public int Size { get => GetSize(); }
+        public TwinsSection Parent { get; set; }
     }
 }

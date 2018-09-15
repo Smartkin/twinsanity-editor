@@ -74,7 +74,7 @@ namespace Twinsanity
                 writer.Write(UnkI323[i]);
         }
 
-        public override void Load(BinaryReader reader)
+        public override void Load(BinaryReader reader, int size)
         {
             pos = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
             RotX = reader.ReadUInt16();
@@ -84,39 +84,39 @@ namespace Twinsanity
             RotZ = reader.ReadUInt16();
             COMRotZ = reader.ReadUInt16();
 
-            var size = reader.ReadInt32();
-            size = reader.ReadInt32();
+            var n = reader.ReadInt32();
+            n = reader.ReadInt32();
             SomeNum1 = reader.ReadInt32();
             S1.Clear();
-            for (int i = 0; i < size; ++i)
+            for (int i = 0; i < n; ++i)
                 S1.Add(reader.ReadUInt16());
-            size = reader.ReadInt32();
-            size = reader.ReadInt32();
+            n = reader.ReadInt32();
+            n = reader.ReadInt32();
             SomeNum2 = reader.ReadInt32();
             S2.Clear();
-            for (int i = 0; i < size; ++i)
+            for (int i = 0; i < n; ++i)
                 S2.Add(reader.ReadUInt16());
-            size = reader.ReadInt32();
-            size = reader.ReadInt32();
+            n = reader.ReadInt32();
+            n = reader.ReadInt32();
             SomeNum3 = reader.ReadInt32();
             S3.Clear();
-            for (int i = 0; i < size; ++i)
+            for (int i = 0; i < n; ++i)
                 S3.Add(reader.ReadUInt16());
             ObjectID = reader.ReadUInt16();
             AfterOID = reader.ReadUInt32();
             PHeader = reader.ReadUInt32();
             UnkI32 = reader.ReadUInt32();
-            size = reader.ReadInt32();
-            UnkI321 = new uint[size];
-            for (int i = 0; i < size; ++i)
+            n = reader.ReadInt32();
+            UnkI321 = new uint[n];
+            for (int i = 0; i < n; ++i)
                 UnkI321[i] = reader.ReadUInt32();
-            size = reader.ReadInt32();
-            UnkI322 = new float[size];
-            for (int i = 0; i < size; ++i)
+            n = reader.ReadInt32();
+            UnkI322 = new float[n];
+            for (int i = 0; i < n; ++i)
                 UnkI322[i] = reader.ReadSingle();
-            size = reader.ReadInt32();
-            UnkI323 = new uint[size];
-            for (int i = 0; i < size; ++i)
+            n = reader.ReadInt32();
+            UnkI323 = new uint[n];
+            for (int i = 0; i < n; ++i)
                 UnkI323[i] = reader.ReadUInt32();
         }
 

@@ -22,7 +22,7 @@ namespace Twinsanity
             writer.Write(MeshID);
         }
 
-        public override void Load(BinaryReader reader)
+        public override void Load(BinaryReader reader, int size)
         {
             Header = reader.ReadUInt32();
             var count = reader.ReadInt32();

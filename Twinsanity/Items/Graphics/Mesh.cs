@@ -10,7 +10,7 @@ namespace Twinsanity
 
         public List<SubModel> SubModels { get => submodels; set => submodels = value; }
 
-        public override void Load(BinaryReader reader)
+        public override void Load(BinaryReader reader, int size)
         {
             var sk = reader.BaseStream.Position;
             var count = reader.ReadInt32();

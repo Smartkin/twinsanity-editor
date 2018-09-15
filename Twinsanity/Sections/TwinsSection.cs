@@ -121,7 +121,7 @@ namespace Twinsanity
                                 LoadSection(reader, sub, SectionType.Skybox);
                                 break;
                             default:
-                                LoadItem(reader, sub);
+                                LoadItem<TwinsItem>(reader, sub);
                                 break;
                         }
                         break;
@@ -156,7 +156,7 @@ namespace Twinsanity
                                 LoadSection(reader, sub, SectionType.Camera);
                                 break;
                             default:
-                                LoadItem(reader, sub);
+                                LoadItem<TwinsItem>(reader, sub);
                                 break;
                         }
                         break;
@@ -197,72 +197,65 @@ namespace Twinsanity
                                 LoadSection(reader, sub, SectionType.SE_Jpn);
                                 break;
                             default:
-                                LoadItem(reader, sub);
+                                LoadItem<TwinsItem>(reader, sub);
                                 break;
                         }
                         break;
                     case SectionType.Texture:
                         {
-                            Texture rec = new Texture { ID = sub.ID, Offset = (uint)reader.BaseStream.Position };
-                            rec.Load(reader);
-                            sec_info.Records.Add(sub.ID, rec);
+                            LoadItem<Texture>(reader, sub);
                         }
                         break;
                     case SectionType.Material:
                         {
-                            Material rec = new Material { ID = sub.ID, Offset = (uint)reader.BaseStream.Position };
-                            rec.Load(reader);
-                            sec_info.Records.Add(sub.ID, rec);
+                            LoadItem<Material>(reader, sub);
                         }
                         break;
                     case SectionType.Mesh:
                         {
-                            Mesh rec = new Mesh { ID = sub.ID, Offset = (uint)reader.BaseStream.Position };
-                            rec.Load(reader);
-                            sec_info.Records.Add(sub.ID, rec);
+                            LoadItem<Mesh>(reader, sub);
                         }
                         break;
                     case SectionType.Model:
                         {
-                            Model rec = new Model { ID = sub.ID, Offset = (uint)reader.BaseStream.Position };
-                            rec.Load(reader);
-                            sec_info.Records.Add(sub.ID, rec);
+                            LoadItem<Model>(reader, sub);
                         }
                         break;
                     case SectionType.Object:
                         {
-                            GameObject rec = new GameObject { ID = sub.ID, Offset = (uint)reader.BaseStream.Position };
-                            rec.Load(reader, sub.Size);
-                            sec_info.Records.Add(sub.ID, rec);
+                            LoadItem<GameObject>(reader, sub);
                         }
                         break;
                     case SectionType.Script:
                         {
-                            Script rec = new Script { ID = sub.ID, Offset = (uint)reader.BaseStream.Position };
-                            rec.Load(reader, sub.Size);
-                            sec_info.Records.Add(sub.ID, rec);
+                            LoadItem<Script>(reader, sub);
                         }
                         break;
                     case SectionType.ObjectInstance:
                         {
-                            Instance rec = new Instance { ID = sub.ID, Offset = (uint)reader.BaseStream.Position };
-                            rec.Load(reader);
-                            sec_info.Records.Add(sub.ID, rec);
+                            LoadItem<Instance>(reader, sub);
+                        }
+                        break;
+                    case SectionType.Trigger:
+                        {
+                            LoadItem<Trigger>(reader, sub);
                         }
                         break;
                     default:
-                        LoadItem(reader, sub);
+                        LoadItem<TwinsItem>(reader, sub);
                         break;
                 }
                 reader.BaseStream.Position = sk;
             }
         }
 
-        private void LoadItem(BinaryReader reader, TwinsSubInfo sub)
+        private void LoadItem<T>(BinaryReader reader, TwinsSubInfo sub) where T : TwinsItem, new()
         {
-            TwinsItem rec = new TwinsItem {
+            T rec = new T
+            {
                 ID = sub.ID,
-                Offset = (uint)reader.BaseStream.Position
+                Offset = (uint)reader.BaseStream.Position,
+                Parent = this
             };
             rec.Load(reader, sub.Size);
             sec_info.Records.Add(sub.ID, rec);
@@ -274,7 +267,8 @@ namespace Twinsanity
                 ID = sub.ID,
                 Level = Level + 1,
                 Offset = (uint)reader.BaseStream.Position,
-                Type = type
+                Type = type,
+                Parent = this
             };
             sec.Load(reader, sub.Size);
             sec_info.Records.Add(sub.ID, sec);

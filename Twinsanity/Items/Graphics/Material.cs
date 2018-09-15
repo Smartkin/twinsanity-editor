@@ -37,7 +37,7 @@ namespace Twinsanity
             writer.Write(Last);
         }
 
-        public override void Load(BinaryReader reader)
+        public override void Load(BinaryReader reader, int size)
         {
             Header = reader.ReadInt32();
             Unknown = reader.ReadInt32();

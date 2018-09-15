@@ -137,12 +137,12 @@ namespace Twinsanity
             }
         }
 
-        public override void Load(BinaryReader reader)
+        public override void Load(BinaryReader reader, int size)
         {
-            var size = reader.ReadInt32();
+            var n = reader.ReadInt32();
             reader.BaseStream.Position -= 4;
-            Data = reader.ReadBytes(size + 4);
-            reader.BaseStream.Position -= size;
+            Data = reader.ReadBytes(n + 4);
+            reader.BaseStream.Position -= n;
             var key = reader.ReadUInt32();
             w = reader.ReadInt16();
             h = reader.ReadInt16();
@@ -158,7 +158,7 @@ namespace Twinsanity
                     {
                         pixels = new byte[Width * Height];
                         mippixels = new byte[Width / 2 * Height];
-                        palette = new Color[(size & 0xFFFFFF00) >> 4];
+                        palette = new Color[(n & 0xFFFFFF00) >> 4];
                         pixel_data = new Color[Width * Height];
                         if ((Width == 32) && (Height == 8))
                         {
