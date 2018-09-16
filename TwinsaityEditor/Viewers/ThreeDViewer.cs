@@ -144,7 +144,6 @@ namespace TwinsaityEditor
                 range = 500f;
             else if (range < 50)
                 range = 50;
-            _inputHandle(null, e);
         }
 
         protected override bool IsInputKey(Keys keyData)
