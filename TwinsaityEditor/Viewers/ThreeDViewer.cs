@@ -16,6 +16,7 @@ namespace TwinsaityEditor
 
         public ThreeDViewer()
         {
+            ParentChanged += ThreeDViewer_ParentChanged;
             pos = new Vector3(0, 0, 0);
             rot = new Vector3(0, 0, 0);
             sca = new Vector3(1.0f, 1.0f, 1.0f);
@@ -67,6 +68,13 @@ namespace TwinsaityEditor
                 _inputHandle(sender, e);
                 Invalidate();
             };
+        }
+
+        private void ThreeDViewer_ParentChanged(object sender, EventArgs e)
+        {
+            Form par = (Form)Parent;
+            par.Icon = Properties.Resources.icon;
+            ParentChanged -= ThreeDViewer_ParentChanged;
         }
 
         protected abstract void RenderObjects();
