@@ -146,16 +146,28 @@ namespace TwinsaityEditor
         private void openRM2ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "RM2/RMX files|*.rm*|SM2/SMX files|*.sm*";
+            ofd.Filter = "RM2 files|*.rm2|SM2 files|*.sm2|RMX files|*.rmx|SMX files|*.smx|Demo RM2 files|*.rm2|Demo SM2 files|*.sm2";
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 switch (ofd.FilterIndex)
                 {
                     case 1:
-                        fileData.LoadFile(ofd.FileName, false);
+                        fileData.LoadFile(ofd.FileName, TwinsFile.FileType.RM2);
                         break;
                     case 2:
-                        fileData.LoadFile(ofd.FileName, true);
+                        fileData.LoadFile(ofd.FileName, TwinsFile.FileType.SM2);
+                        break;
+                    case 3:
+                        fileData.LoadFile(ofd.FileName, TwinsFile.FileType.RMX);
+                        break;
+                    case 4:
+                        fileData.LoadFile(ofd.FileName, TwinsFile.FileType.SMX);
+                        break;
+                    case 5:
+                        fileData.LoadFile(ofd.FileName, TwinsFile.FileType.DemoRM2);
+                        break;
+                    case 6:
+                        fileData.LoadFile(ofd.FileName, TwinsFile.FileType.DemoSM2);
                         break;
                 }
                 fileName = ofd.FileName;

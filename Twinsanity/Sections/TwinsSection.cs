@@ -10,13 +10,13 @@ namespace Twinsanity
     /// </summary>
     public enum SectionType {
         Null,
-        Graphics,
+        Graphics, GraphicsX,
         Code,
         Instance,
 
-        Texture,
+        Texture, TextureX,
         Material,
-        Mesh,
+        Mesh, MeshX,
         Model,
         ArmatureModel,
         ActorModel,
@@ -91,16 +91,23 @@ namespace Twinsanity
                 switch (Type)
                 {
                     case SectionType.Graphics:
+                    case SectionType.GraphicsX:
                         switch (sub.ID)
                         {
                             case 0:
-                                LoadSection(reader, sub, SectionType.Texture);
+                                if (Type == SectionType.Graphics)
+                                    LoadSection(reader, sub, SectionType.Texture);
+                                else
+                                    LoadSection(reader, sub, SectionType.TextureX);
                                 break;
                             case 1:
                                 LoadSection(reader, sub, SectionType.Material);
                                 break;
                             case 2:
-                                LoadSection(reader, sub, SectionType.Mesh);
+                                if (Type == SectionType.Graphics)
+                                    LoadSection(reader, sub, SectionType.Mesh);
+                                else
+                                    LoadSection(reader, sub, SectionType.MeshX);
                                 break;
                             case 3:
                                 LoadSection(reader, sub, SectionType.Model);
@@ -202,44 +209,34 @@ namespace Twinsanity
                         }
                         break;
                     case SectionType.Texture:
-                        {
-                            LoadItem<Texture>(reader, sub);
-                        }
+                        LoadItem<Texture>(reader, sub);
+                        break;
+                    case SectionType.TextureX: //XBOX textures
+                        LoadItem<TwinsItem>(reader, sub);
                         break;
                     case SectionType.Material:
-                        {
-                            LoadItem<Material>(reader, sub);
-                        }
+                        LoadItem<Material>(reader, sub);
                         break;
                     case SectionType.Mesh:
-                        {
-                            LoadItem<Mesh>(reader, sub);
-                        }
+                        LoadItem<Mesh>(reader, sub);
+                        break;
+                    case SectionType.MeshX: //XBOX meshes
+                        LoadItem<TwinsItem>(reader, sub);
                         break;
                     case SectionType.Model:
-                        {
-                            LoadItem<Model>(reader, sub);
-                        }
+                        LoadItem<Model>(reader, sub);
                         break;
                     case SectionType.Object:
-                        {
-                            LoadItem<GameObject>(reader, sub);
-                        }
+                        LoadItem<GameObject>(reader, sub);
                         break;
                     case SectionType.Script:
-                        {
-                            LoadItem<Script>(reader, sub);
-                        }
+                        LoadItem<Script>(reader, sub);
                         break;
                     case SectionType.ObjectInstance:
-                        {
-                            LoadItem<Instance>(reader, sub);
-                        }
+                        LoadItem<Instance>(reader, sub);
                         break;
                     case SectionType.Trigger:
-                        {
-                            LoadItem<Trigger>(reader, sub);
-                        }
+                        LoadItem<Trigger>(reader, sub);
                         break;
                     default:
                         LoadItem<TwinsItem>(reader, sub);
