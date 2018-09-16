@@ -51,6 +51,7 @@ namespace TwinsaityEditor
             }
             else
                 GL.CallList(dlist_col);
+
             if (show_col_nodes)
             {
                 if (dlist_trg == -1)
@@ -135,6 +136,7 @@ namespace TwinsaityEditor
                     }
                 }
             }
+
             //Draw triggers (transparent surfaces)
             for (uint i = 0; i <= 7; ++i)
             {
@@ -247,6 +249,7 @@ namespace TwinsaityEditor
                     }
                 }
             }
+
         }
 
         protected override bool IsInputKey(Keys keyData)

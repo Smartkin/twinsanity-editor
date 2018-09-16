@@ -59,7 +59,7 @@ namespace TwinsaityEditor
 
             refresh = new Timer
             {
-                Interval = (int)Math.Round(1.0/60*1000), //Set to 60fps by default, add to Preferences later
+                Interval = (int)Math.Round(1.0/60*1000), //Set to 60fps by default, TODO: Add to Preferences later
                 Enabled = true
             };
 
@@ -247,6 +247,7 @@ namespace TwinsaityEditor
             Vector3 fin_delta = new Vector3(rot_matrix * new Vector4(delta, 1.0f));
             GL.Translate(-pos + fin_delta);
             RenderObjects();
+            DrawText();
             SwapBuffers();
         }
 
@@ -270,6 +271,11 @@ namespace TwinsaityEditor
             GL.Enable(EnableCap.Light0);
             GL.Enable(EnableCap.Normalize);
             base.OnLoad(e);
+        }
+
+        protected void DrawText()
+        {
+            
         }
 
         protected override void Dispose(bool disposing)
