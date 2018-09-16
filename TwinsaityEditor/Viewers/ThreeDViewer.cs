@@ -225,7 +225,7 @@ namespace TwinsaityEditor
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
-            GL.Frustum(-0.75, +0.75, -0.75, +0.75, 0.75, 750.0);
+            GL.Frustum(-0.75, +0.75, -0.75, +0.75, 0.8, 1000.0);
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
             GL.Scale(sca);
@@ -247,8 +247,10 @@ namespace TwinsaityEditor
         {
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.AlphaTest);
+            GL.Enable(EnableCap.Blend);
             GL.DepthFunc(DepthFunction.Lequal);
             GL.AlphaFunc(AlphaFunction.Greater, 0);
+            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
             GL.ClearColor(0, 0, 1, 1); //TODO: Add clear color to Preferences later
             GL.Enable(EnableCap.ColorMaterial);
             //GL.ShadeModel(ShadingModel.Flat); //TODO: Add to preferences
