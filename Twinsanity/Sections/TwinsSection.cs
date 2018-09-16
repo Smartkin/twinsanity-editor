@@ -11,8 +11,8 @@ namespace Twinsanity
     public enum SectionType {
         Null,
         Graphics, GraphicsX,
-        Code,
-        Instance,
+        Code, CodeDemo,
+        Instance, InstanceDemo,
 
         Texture, TextureX,
         Material,
@@ -24,7 +24,7 @@ namespace Twinsanity
         SpecialModel,
         Skybox,
 
-        Object,
+        Object, ObjectDemo,
         Script,
         Animation,
         OGI,
@@ -42,7 +42,7 @@ namespace Twinsanity
         Position,
         Path,
         CollisionSurface,
-        ObjectInstance,
+        ObjectInstance, ObjectInstanceDemo,
         Trigger,
         Camera
     }
@@ -133,6 +133,7 @@ namespace Twinsanity
                         }
                         break;
                     case SectionType.Instance:
+                    case SectionType.InstanceDemo:
                         switch (sub.ID)
                         {
                             case 0:
@@ -154,7 +155,10 @@ namespace Twinsanity
                                 LoadSection(reader, sub, SectionType.CollisionSurface);
                                 break;
                             case 6:
-                                LoadSection(reader, sub, SectionType.ObjectInstance);
+                                if (Type == SectionType.InstanceDemo)
+                                    LoadSection(reader, sub, SectionType.ObjectInstanceDemo);
+                                else
+                                    LoadSection(reader, sub, SectionType.ObjectInstance);
                                 break;
                             case 7:
                                 LoadSection(reader, sub, SectionType.Trigger);
@@ -168,10 +172,14 @@ namespace Twinsanity
                         }
                         break;
                     case SectionType.Code:
+                    case SectionType.CodeDemo:
                         switch (sub.ID)
                         {
                             case 0:
-                                LoadSection(reader, sub, SectionType.Object);
+                                if (Type == SectionType.CodeDemo)
+                                    LoadSection(reader, sub, SectionType.ObjectDemo);
+                                else
+                                    LoadSection(reader, sub, SectionType.Object);
                                 break;
                             case 1:
                                 LoadSection(reader, sub, SectionType.Script);
@@ -229,11 +237,17 @@ namespace Twinsanity
                     case SectionType.Object:
                         LoadItem<GameObject>(reader, sub);
                         break;
+                    case SectionType.ObjectDemo: //PS2 DEMO objects
+                        LoadItem<TwinsItem>(reader, sub);
+                        break;
                     case SectionType.Script:
                         LoadItem<Script>(reader, sub);
                         break;
                     case SectionType.ObjectInstance:
                         LoadItem<Instance>(reader, sub);
+                        break;
+                    case SectionType.ObjectInstanceDemo: //PS2 DEMO instances
+                        LoadItem<TwinsItem>(reader, sub);
                         break;
                     case SectionType.Trigger:
                         LoadItem<Trigger>(reader, sub);

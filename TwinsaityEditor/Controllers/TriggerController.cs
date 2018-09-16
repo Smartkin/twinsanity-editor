@@ -1,6 +1,5 @@
 ﻿using System.Windows.Forms;
 using System.IO;
-using System;
 using Twinsanity;
 
 namespace TwinsaityEditor

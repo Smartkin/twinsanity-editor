@@ -112,7 +112,7 @@ namespace TwinsaityEditor
                 new_node.Tag = new ScriptController((Script)a);
             else if (a is Instance)
                 new_node.Tag = new InstanceController((Instance)a);
-            else if (a is Trigger)
+            else if (a is Trigger && fileData.Type != TwinsFile.FileType.DemoRM2) //trigger controller assumes final instance format
                 new_node.Tag = new TriggerController((Trigger)a);
             else if (a is ColData)
                 new_node.Tag = new ColDataController((ColData)a);

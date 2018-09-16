@@ -22,6 +22,7 @@ namespace Twinsanity
         public TwinsSecInfo SecInfo { get => sec_info; set => sec_info = value; }
         public int ContentSize { get => GetContentSize(); }
         public int Size { get => ContentSize + SecInfo.Records.Count * 12 + 12; }
+        public FileType Type { get; set; }
 
         /// <summary>
         /// Load an RM/SM file.
@@ -35,6 +36,7 @@ namespace Twinsanity
             sec_info.Records = new Dictionary<uint, TwinsItem>();
             FileStream file = new FileStream(path, FileMode.Open, FileAccess.Read);
             BinaryReader reader = new BinaryReader(file);
+            Type = type;
             if ((sec_info.Magic = reader.ReadUInt32()) != magic)
                 throw new ArgumentException("TwinsFile::LoadRM2File: Magic number is wrong.");
             var count = reader.ReadInt32();
@@ -66,9 +68,15 @@ namespace Twinsanity
                                     {
                                         TwinsSection sec = new TwinsSection() { ID = sub.ID };
                                         if (sub.ID <= 7)
-                                            sec.Type = SectionType.Instance;
+                                            if (type == FileType.DemoRM2)
+                                                sec.Type = SectionType.InstanceDemo;
+                                            else
+                                                sec.Type = SectionType.Instance;
                                         else if (sub.ID == 10)
-                                            sec.Type = SectionType.Code;
+                                            if (type == FileType.DemoRM2)
+                                                sec.Type = SectionType.CodeDemo;
+                                            else
+                                                sec.Type = SectionType.Code;
                                         else if (sub.ID == 11)
                                             if (type == FileType.RMX)
                                                 sec.Type = SectionType.GraphicsX;
