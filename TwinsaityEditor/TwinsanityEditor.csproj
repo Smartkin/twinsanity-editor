@@ -182,6 +182,8 @@
     <Compile Include="Controllers\TextureController.cs" />
     <Compile Include="Controllers\SectionController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
+    <Compile Include="FontWrapper\FontFormat.cs" />
+    <Compile Include="FontWrapper\FontService.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -239,6 +241,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ico.ico" />
+    <None Include="Fonts\arial.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -273,12 +278,11 @@
   <Target Name="BeforeBuild">
   </Target> -->
   <ItemGroup>
-	<Binaries Include="$(OutputPath)*.dll"/>  
+    <Binaries Include="$(OutputPath)*.dll" />
   </ItemGroup>
   <Target Name="MoveLibraries" AfterTargets="AfterBuild">
-	<MakeDir Directories="$(OutputPath)Libraries"/>
-	<Move SourceFiles="@(Binaries)" DestinationFolder="$(OutputPath)Libraries"/>
-	<Delete Files="@(Binaries)"/>
+    <MakeDir Directories="$(OutputPath)Libraries" />
+    <Move SourceFiles="@(Binaries)" DestinationFolder="$(OutputPath)Libraries" />
+    <Delete Files="@(Binaries)" />
   </Target>
-
 </Project>

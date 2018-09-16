@@ -29,5 +29,7 @@ namespace TwinsaityEditor
             }*/
         }
 
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern bool SetDllDirectory(string path);
     }
 }

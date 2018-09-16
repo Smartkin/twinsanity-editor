@@ -1,4 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Windows.Forms;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
@@ -13,14 +17,27 @@ namespace TwinsaityEditor
         private bool k_w, k_a, k_s, k_d, k_e, k_q, m_l, m_r;
         private int m_x, m_y;
         private EventHandler _inputHandle;
+        private FontWrapper.FontService _fntService;
+        private List<int> _textTextureList;
+
+        protected List<string> viewerMessageList;
 
         public ThreeDViewer()
         {
-            ParentChanged += ThreeDViewer_ParentChanged;
+            _textTextureList = new List<int>();
+            viewerMessageList = new List<string>();
+            viewerMessageList.Add("HELLO");
+            viewerMessageList.Add("ASS");
+            _fntService = new FontWrapper.FontService();
+            List<FileInfo> fonts = (List<FileInfo>)_fntService.GetFontFiles(new System.IO.DirectoryInfo("Fonts/"), false);
+            _fntService.SetFont(fonts[0].FullName);
+            _fntService.SetSize(12f);
+
             pos = new Vector3(0, 0, 0);
             rot = new Vector3(0, 0, 0);
             sca = new Vector3(1.0f, 1.0f, 1.0f);
             range = 100;
+
             _inputHandle = (sender, e) =>
             {
                 if (e is MouseEventArgs)
@@ -68,6 +85,10 @@ namespace TwinsaityEditor
                 _inputHandle(sender, e);
                 Invalidate();
             };
+
+            ParentChanged += ThreeDViewer_ParentChanged;
+
+            //InitTextRender();
         }
 
         private void ThreeDViewer_ParentChanged(object sender, EventArgs e)
@@ -270,12 +291,82 @@ namespace TwinsaityEditor
             GL.Enable(EnableCap.Lighting);
             GL.Enable(EnableCap.Light0);
             GL.Enable(EnableCap.Normalize);
+            InitTextRender();
             base.OnLoad(e);
         }
 
-        protected void DrawText()
+        protected virtual void DrawText()
         {
-            
+            GL.Begin(PrimitiveType.Quads);
+            for (int i = 0; i < _textTextureList.Count; ++i) 
+            {
+                int texture = _textTextureList[i];
+
+                GL.BindTexture(TextureTarget.Texture2D, texture);
+                GL.TexCoord2(1f, 0f);
+                GL.Vertex2(1f, 1f + i * 3f);
+
+                GL.TexCoord2(0f, 0f);
+                GL.Vertex2(-1f, 1f + i * 3f);
+
+                GL.TexCoord2(0f, 1f);
+                GL.Vertex2(-1f, -1f + i * 3f);
+
+                GL.TexCoord2(1f, 1f);
+                GL.Vertex2(1f, -1f + i * 3f);
+            }
+            GL.End();
+            GL.BindTexture(TextureTarget.Texture2D, 0);
+        }
+
+        protected int LoadTextTexture(ref Bitmap text, int quality = 1, bool flip_y = false)
+        {
+            if (flip_y)
+                text.RotateFlip(RotateFlipType.RotateNoneFlipY);
+
+            //int texture = GL.GenTexture();
+            int texture;
+            GL.GenTextures(1, out texture);
+
+            GL.BindTexture(TextureTarget.Texture2D, texture);
+
+            switch(quality)
+            {
+                case 0:
+                default:
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)All.Linear);
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Linear);
+                    break;
+                case 1:
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)All.Nearest);
+                    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Nearest);
+                    break;
+            }
+
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)All.ClampToEdge);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)All.ClampToEdge);
+
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, text.Width, text.Height, 0, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, IntPtr.Zero);
+
+            BitmapData data = text.LockBits(new Rectangle(0, 0, text.Width, text.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+            GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, text.Width, text.Height, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
+
+            text.UnlockBits(data);
+
+            GL.BindTexture(TextureTarget.Texture2D, 0);
+
+            return texture;
+        }
+
+        private void InitTextRender()
+        {
+            foreach(var text in viewerMessageList)
+            {
+                Bitmap bmp = _fntService.RenderString(text, Color.White, Color.Black);
+                _textTextureList.Add(LoadTextTexture(ref bmp));
+                bmp.Dispose();
+            }
         }
 
         protected override void Dispose(bool disposing)
