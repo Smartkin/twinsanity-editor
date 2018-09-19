@@ -1,5 +1,10 @@
-﻿namespace TwinsaityEditor
+﻿using System.Windows.Forms;
+using System;
+
+namespace TwinsaityEditor
 {
+    public delegate void ControllerAddMenuDelegate();
+
     public abstract class Controller
     {
         public string[] TextPrev { get; set; }
@@ -11,6 +16,41 @@
         /// FLAGS. Determines which buttons are enabled on the toolbar for this controller.
         /// </summary>
         public ToolbarFlags Toolbar { get; set; }
+        public TreeNode Node { get; set; }
+        public ContextMenu ContextMenu { get; set; } = new ContextMenu();
+        
+        public Controller()
+        {
+            Node = new TreeNode { Tag = this, ContextMenu = ContextMenu };
+        }
+
+        public void AddNode(Controller controller)
+        {
+            Node.Nodes.Add(controller.Node);
+        }
+
+        protected void AddMenu(string text, ControllerAddMenuDelegate func)
+        {
+            EventHandler handler = delegate (object sender, EventArgs e)
+            {
+                func();
+            };
+            ContextMenu.MenuItems.Add(text, handler);
+        }
+
+        /// <summary>
+        /// Dispose of a node.
+        /// </summary>
+        /// <param name="node">Node to be disposed of.</param>
+        public void DisposeNode(TreeNode node)
+        {
+            if (node == null)
+                throw new ArgumentNullException("node");
+            ((Controller)node.Tag).Dispose();
+            while (node.Nodes.Count > 0)
+                DisposeNode(node.Nodes[0]);
+            node.Remove();
+        }
 
         public abstract string GetName();
         public abstract void GenText();

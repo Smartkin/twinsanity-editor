@@ -39,19 +39,17 @@ namespace TwinsaityEditor
             groupBox1.Enabled = true;
             treeView1.BeginUpdate();
             treeView1.AfterSelect += TreeNodeSelect;
-            if (treeView1.TopNode != null)
-                DisposeNode(treeView1.TopNode);
+            if (treeView1.TopNode != null && treeView1.TopNode.Tag is Controller c)
+                c.DisposeNode(treeView1.TopNode);
             treeView1.Nodes.Clear();
-            TreeNode new_node = new TreeNode {
-                Tag = new FileController(fileData)
-            };
-            new_node.Text = ((Controller)new_node.Tag).GetName();
-            ((Controller)new_node.Tag).GenText();
-            treeView1.Nodes.Add(new_node);
+            FileController controller = new FileController(fileData);
+            controller.Node.Text = controller.GetName();
+            controller.GenText();
+            treeView1.Nodes.Add(controller.Node);
             treeView1.Select();
             foreach (var i in fileData.SecInfo.Records.Values)
             {
-                GenTreeNode(i, treeView1.TopNode);
+                GenTreeNode(i, controller);
             }
             treeView1.TopNode.Expand();
             treeView1.EndUpdate();
@@ -88,57 +86,42 @@ namespace TwinsaityEditor
             }
         }
 
-        private void GenTreeNode(TwinsItem a, TreeNode node)
+        public void GenTreeNode(TwinsItem a, Controller controller)
         {
-            TreeNode new_node = new TreeNode();
+            Controller c;
             if (a is TwinsSection)
             {
+                c = new SectionController((TwinsSection)a);
                 foreach (var i in ((TwinsSection)a).SecInfo.Records.Values)
                 {
-                    GenTreeNode(i, new_node);
+                    GenTreeNode(i, c);
                 }
-                new_node.Tag = new SectionController((TwinsSection)a);
             }
             else if (a is Texture)
-                new_node.Tag = new TextureController((Texture)a);
+                c = new TextureController((Texture)a);
             else if (a is Material)
-                new_node.Tag = new MaterialController((Material)a);
+                c = new MaterialController((Material)a);
             else if (a is Mesh)
-                new_node.Tag = new MeshController((Mesh)a);
+                c = new MeshController((Mesh)a);
             else if (a is Model)
-                new_node.Tag = new ModelController((Model)a);
+                c = new ModelController((Model)a);
             else if (a is GameObject)
-                new_node.Tag = new ObjectController((GameObject)a);
+                c = new ObjectController((GameObject)a);
             else if (a is Script)
-                new_node.Tag = new ScriptController((Script)a);
+                c = new ScriptController((Script)a);
             else if (a is Instance)
-                new_node.Tag = new InstanceController((Instance)a);
+                c = new InstanceController((Instance)a);
             else if (a is Trigger && fileData.Type != TwinsFile.FileType.DemoRM2) //trigger controller assumes final instance format
-                new_node.Tag = new TriggerController((Trigger)a);
+                c = new TriggerController((Trigger)a);
             else if (a is ColData)
-                new_node.Tag = new ColDataController((ColData)a);
+                c = new ColDataController((ColData)a);
             else if (a is ChunkLinks)
-                new_node.Tag = new ChunkLinksController((ChunkLinks)a);
+                c = new ChunkLinksController((ChunkLinks)a);
             else
-                new_node.Tag = new ItemController(a);
-            new_node.Text = ((Controller)new_node.Tag).GetName();
-            ((Controller)new_node.Tag).GenText();
-            node.Nodes.Add(new_node);
-        }
-
-        /// <summary>
-        /// Dispose of a node.
-        /// </summary>
-        /// <param name="node">Node to be disposed of.</param>
-        private void DisposeNode(TreeNode node)
-        {
-            if (node == null)
-                throw new ArgumentNullException("node");
-            if (node.Tag is Controller c)
-                c.Dispose();
-            for (int i = node.Nodes.Count - 1; i > 0; --i)
-                DisposeNode(node.Nodes[i]);
-            node.Remove();
+                c = new ItemController(a);
+            c.Node.Text = c.GetName();
+            c.GenText();
+            controller.AddNode(c);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -278,7 +261,7 @@ namespace TwinsaityEditor
         {
             if (rmForm == null)
             {
-                rmForm = new Form { Size = new System.Drawing.Size(448, 448) };
+                rmForm = new Form { Size = new System.Drawing.Size(480, 480) };
                 rmForm.FormClosed += delegate {
                     rmForm = null;
                 };
