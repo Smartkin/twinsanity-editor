@@ -68,6 +68,7 @@
     <Compile Include="ADPCM.cs" />
     <Compile Include="BDArchive.cs" />
     <Compile Include="Items\BaseItem.cs" />
+    <Compile Include="Items\ChunkLinks.cs" />
     <Compile Include="Items\Graphics\Material.cs" />
     <Compile Include="Items\Graphics\Texture.cs" />
     <Compile Include="Items\Instances\Trigger.cs" />

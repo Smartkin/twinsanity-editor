@@ -116,6 +116,8 @@ namespace TwinsaityEditor
                 new_node.Tag = new TriggerController((Trigger)a);
             else if (a is ColData)
                 new_node.Tag = new ColDataController((ColData)a);
+            else if (a is ChunkLinks)
+                new_node.Tag = new ChunkLinksController((ChunkLinks)a);
             else
                 new_node.Tag = new ItemController(a);
             new_node.Text = ((Controller)new_node.Tag).GetName();

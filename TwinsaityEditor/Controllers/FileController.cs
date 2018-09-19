@@ -47,9 +47,17 @@ namespace TwinsaityEditor
 
         public static Instance GetInstance(uint sector, uint id)
         {
-            if (data.SecInfo.Records.ContainsKey(sector) && ((TwinsSection)data.SecInfo.Records[sector]).SecInfo.Records.ContainsKey(6) && ((TwinsSection)((TwinsSection)data.SecInfo.Records[sector]).SecInfo.Records[6]).SecInfo.Records.ContainsKey(id))
-                return ((Instance)((TwinsSection)((TwinsSection)data.SecInfo.Records[sector]).SecInfo.Records[6]).SecInfo.Records[id]);
-            else throw new System.MissingFieldException("The requested instance could not be found.");
+            if (data.SecInfo.Records.ContainsKey(sector) && ((TwinsSection)data.SecInfo.Records[sector]).SecInfo.Records.ContainsKey(6))// && ((TwinsSection)((TwinsSection)data.SecInfo.Records[sector]).SecInfo.Records[6]).SecInfo.Records.ContainsKey(id))
+            {
+                int i = 0;
+                foreach (var j in ((TwinsSection)((TwinsSection)data.SecInfo.Records[sector]).SecInfo.Records[6]).SecInfo.Records)
+                {
+                    if (i++ == id)
+                        return (Instance)j.Value;
+                }
+                throw new System.ArgumentException("The requested section does not have an instance in the specified position.");
+            }
+            else throw new System.ArgumentException("The requested section does not have an object instance section.");
         }
 
         public static ref TwinsFile GetFile()

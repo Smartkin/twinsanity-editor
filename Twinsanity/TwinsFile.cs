@@ -134,6 +134,16 @@ namespace Twinsanity
                                         sec_info.Records.Add(sub.ID, sec);
                                         break;
                                     }
+                                case 5:
+                                    {
+                                        ChunkLinks rec = new ChunkLinks { ID = sub.ID };
+                                        var sk = reader.BaseStream.Position;
+                                        reader.BaseStream.Position = rec.Offset = sub.Off;
+                                        rec.Load(reader, sub.Size);
+                                        reader.BaseStream.Position = sk;
+                                        sec_info.Records.Add(sub.ID, rec);
+                                        break;
+                                    }
                                 default:
                                     {
                                         TwinsItem rec = new TwinsItem { ID = sub.ID };

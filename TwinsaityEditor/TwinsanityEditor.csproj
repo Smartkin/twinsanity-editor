@@ -172,6 +172,7 @@
     <Compile Include="Controllers\Controller.cs" />
     <Compile Include="Controllers\ColDataController.cs" />
     <Compile Include="Controllers\FileController.cs" />
+    <Compile Include="Controllers\ChunkLinksController.cs" />
     <Compile Include="Controllers\TriggerController.cs" />
     <Compile Include="Controllers\InstanceController.cs" />
     <Compile Include="Controllers\ScriptController.cs" />
