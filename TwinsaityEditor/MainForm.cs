@@ -27,6 +27,7 @@ namespace TwinsaityEditor
     {
         private TwinsFile fileData = new TwinsFile();
         private string fileName;
+        private Form rmForm;
 
         public MainForm()
         {
@@ -155,21 +156,33 @@ namespace TwinsaityEditor
                 {
                     case 1:
                         fileData.LoadFile(ofd.FileName, TwinsFile.FileType.RM2);
+                        rMViewerToolStripMenuItem.Enabled = true;
+                        sMViewerToolStripMenuItem.Enabled = false;
                         break;
                     case 2:
                         fileData.LoadFile(ofd.FileName, TwinsFile.FileType.SM2);
+                        sMViewerToolStripMenuItem.Enabled = true;
+                        rMViewerToolStripMenuItem.Enabled = false;
                         break;
                     case 3:
                         fileData.LoadFile(ofd.FileName, TwinsFile.FileType.RMX);
+                        rMViewerToolStripMenuItem.Enabled = true;
+                        sMViewerToolStripMenuItem.Enabled = false;
                         break;
                     case 4:
                         fileData.LoadFile(ofd.FileName, TwinsFile.FileType.SMX);
+                        sMViewerToolStripMenuItem.Enabled = true;
+                        rMViewerToolStripMenuItem.Enabled = false;
                         break;
                     case 5:
                         fileData.LoadFile(ofd.FileName, TwinsFile.FileType.DemoRM2);
+                        rMViewerToolStripMenuItem.Enabled = true;
+                        sMViewerToolStripMenuItem.Enabled = false;
                         break;
                     case 6:
                         fileData.LoadFile(ofd.FileName, TwinsFile.FileType.DemoSM2);
+                        sMViewerToolStripMenuItem.Enabled = true;
+                        rMViewerToolStripMenuItem.Enabled = false;
                         break;
                 }
                 fileName = ofd.FileName;
@@ -259,6 +272,20 @@ namespace TwinsaityEditor
         {
             if (treeView1.SelectedNode.Tag is Controller c && (c.Toolbar & ToolbarFlags.Edit) != 0)
                 c.ToolbarAction(ToolbarFlags.Edit);
+        }
+
+        private void rMViewerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (rmForm == null)
+            {
+                rmForm = new Form { Size = new System.Drawing.Size(448, 448) };
+                rmForm.FormClosed += delegate {
+                    rmForm = null;
+                };
+                RMViewer viewer = new RMViewer(fileData.SecInfo.Records.ContainsKey(9) ? (ColData)fileData.SecInfo.Records[9] : null, ref FileController.GetFile()) { Dock = DockStyle.Fill };
+                rmForm.Controls.Add(viewer);
+                rmForm.Show();
+            }
         }
     }
 }

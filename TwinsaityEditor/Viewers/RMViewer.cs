@@ -29,68 +29,72 @@ namespace TwinsaityEditor
         protected override void RenderObjects()
         {
             //put all object rendering code here
-            if (dlist_col == -1) //if collision tree display list is non-existant
+            //draw collision
+            if (data != null)
             {
-                dlist_col = GL.GenLists(1);
-                GL.NewList(dlist_col, ListMode.CompileAndExecute);
-                GL.Begin(PrimitiveType.Triangles);
-                foreach (var tri in data.Tris)
+                if (dlist_col == -1) //if collision tree display list is non-existant
                 {
-                    GL.Color3(colors[tri.Surface % colors.Length]);
-                    Vector3 v1 = new Vector3(-data.Vertices[tri.Vert1].X, data.Vertices[tri.Vert1].Y, data.Vertices[tri.Vert1].Z);
-                    Vector3 v2 = new Vector3(-data.Vertices[tri.Vert2].X, data.Vertices[tri.Vert2].Y, data.Vertices[tri.Vert2].Z);
-                    Vector3 v3 = new Vector3(-data.Vertices[tri.Vert3].X, data.Vertices[tri.Vert3].Y, data.Vertices[tri.Vert3].Z);
-                    //GL.Normal3(VectorFuncs.CrossProduct(v2 - v1, v3 - v1));
-                    GL.Normal3(Utils.VectorFuncs.CalcNormal(v1, v2, v3));
-                    GL.Vertex3(v1.X, v1.Y, v1.Z);
-                    GL.Vertex3(v2.X, v2.Y, v2.Z);
-                    GL.Vertex3(v3.X, v3.Y, v3.Z);
-                }
-                GL.End();
-                GL.EndList();
-            }
-            else
-                GL.CallList(dlist_col);
-
-            if (show_col_nodes)
-            {
-                if (dlist_trg == -1)
-                {
-                    dlist_trg = GL.GenLists(1);
-                    GL.NewList(dlist_trg, ListMode.CompileAndExecute);
-                    foreach (var i in data.Triggers)
+                    dlist_col = GL.GenLists(1);
+                    GL.NewList(dlist_col, ListMode.CompileAndExecute);
+                    GL.Begin(PrimitiveType.Triangles);
+                    foreach (var tri in data.Tris)
                     {
-                        if (i.Flag1 == i.Flag2 && i.Flag1 < 0)
-                            GL.Color3(Color.Cyan);
-                        else
-                            GL.Color3(Color.Red);
-                        GL.Begin(PrimitiveType.LineStrip);
-                        GL.Vertex3(-i.X1, i.Y1, i.Z1);
-                        GL.Vertex3(-i.X2, i.Y1, i.Z1);
-                        GL.Vertex3(-i.X2, i.Y2, i.Z1);
-                        GL.Vertex3(-i.X1, i.Y2, i.Z1);
-                        GL.Vertex3(-i.X1, i.Y1, i.Z1);
-                        GL.Vertex3(-i.X1, i.Y1, i.Z2);
-                        GL.Vertex3(-i.X2, i.Y1, i.Z2);
-                        GL.Vertex3(-i.X2, i.Y1, i.Z1);
-                        GL.End();
-                        GL.Begin(PrimitiveType.LineStrip);
-                        GL.Vertex3(-i.X1, i.Y1, i.Z2);
-                        GL.Vertex3(-i.X1, i.Y2, i.Z2);
-                        GL.Vertex3(-i.X2, i.Y2, i.Z2);
-                        GL.Vertex3(-i.X2, i.Y1, i.Z2);
-                        GL.End();
-                        GL.Begin(PrimitiveType.Lines);
-                        GL.Vertex3(-i.X1, i.Y2, i.Z2);
-                        GL.Vertex3(-i.X1, i.Y2, i.Z1);
-                        GL.Vertex3(-i.X2, i.Y2, i.Z2);
-                        GL.Vertex3(-i.X2, i.Y2, i.Z1);
-                        GL.End();
+                        GL.Color3(colors[tri.Surface % colors.Length]);
+                        Vector3 v1 = new Vector3(-data.Vertices[tri.Vert1].X, data.Vertices[tri.Vert1].Y, data.Vertices[tri.Vert1].Z);
+                        Vector3 v2 = new Vector3(-data.Vertices[tri.Vert2].X, data.Vertices[tri.Vert2].Y, data.Vertices[tri.Vert2].Z);
+                        Vector3 v3 = new Vector3(-data.Vertices[tri.Vert3].X, data.Vertices[tri.Vert3].Y, data.Vertices[tri.Vert3].Z);
+                        //GL.Normal3(VectorFuncs.CrossProduct(v2 - v1, v3 - v1));
+                        GL.Normal3(Utils.VectorFuncs.CalcNormal(v1, v2, v3));
+                        GL.Vertex3(v1.X, v1.Y, v1.Z);
+                        GL.Vertex3(v2.X, v2.Y, v2.Z);
+                        GL.Vertex3(v3.X, v3.Y, v3.Z);
                     }
+                    GL.End();
                     GL.EndList();
                 }
                 else
-                    GL.CallList(dlist_trg);
+                    GL.CallList(dlist_col);
+
+                if (show_col_nodes)
+                {
+                    if (dlist_trg == -1)
+                    {
+                        dlist_trg = GL.GenLists(1);
+                        GL.NewList(dlist_trg, ListMode.CompileAndExecute);
+                        foreach (var i in data.Triggers)
+                        {
+                            if (i.Flag1 == i.Flag2 && i.Flag1 < 0)
+                                GL.Color3(Color.Cyan);
+                            else
+                                GL.Color3(Color.Red);
+                            GL.Begin(PrimitiveType.LineStrip);
+                            GL.Vertex3(-i.X1, i.Y1, i.Z1);
+                            GL.Vertex3(-i.X2, i.Y1, i.Z1);
+                            GL.Vertex3(-i.X2, i.Y2, i.Z1);
+                            GL.Vertex3(-i.X1, i.Y2, i.Z1);
+                            GL.Vertex3(-i.X1, i.Y1, i.Z1);
+                            GL.Vertex3(-i.X1, i.Y1, i.Z2);
+                            GL.Vertex3(-i.X2, i.Y1, i.Z2);
+                            GL.Vertex3(-i.X2, i.Y1, i.Z1);
+                            GL.End();
+                            GL.Begin(PrimitiveType.LineStrip);
+                            GL.Vertex3(-i.X1, i.Y1, i.Z2);
+                            GL.Vertex3(-i.X1, i.Y2, i.Z2);
+                            GL.Vertex3(-i.X2, i.Y2, i.Z2);
+                            GL.Vertex3(-i.X2, i.Y1, i.Z2);
+                            GL.End();
+                            GL.Begin(PrimitiveType.Lines);
+                            GL.Vertex3(-i.X1, i.Y2, i.Z2);
+                            GL.Vertex3(-i.X1, i.Y2, i.Z1);
+                            GL.Vertex3(-i.X2, i.Y2, i.Z2);
+                            GL.Vertex3(-i.X2, i.Y2, i.Z1);
+                            GL.End();
+                        }
+                        GL.EndList();
+                    }
+                    else
+                        GL.CallList(dlist_trg);
+                }
             }
 
             //Draw instances (solid surfaces)
