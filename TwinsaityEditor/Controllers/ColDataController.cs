@@ -6,12 +6,11 @@ namespace TwinsaityEditor
     public class ColDataController : ItemController
     {
         private ColData data;
-        private Form frm;
 
         public ColDataController(ColData item) : base(item)
         {
-            Toolbar = ToolbarFlags.Hex | ToolbarFlags.Extract | ToolbarFlags.Replace | ToolbarFlags.View;
             data = item;
+            AddMenu("Open RMViewer", Menu_OpenRMViewer);
         }
 
         public override string GetName()
@@ -42,30 +41,9 @@ namespace TwinsaityEditor
                 TextPrev[6 + data.Triggers.Count + data.Groups.Count + data.Tris.Count + i] = "Vertex" + i + ": (" + data.Vertices[i].X + ", " + data.Vertices[i].Y + ", " + data.Vertices[i].Z + ", " + data.Vertices[i].W + ")";
         }
 
-        public override void ToolbarAction(ToolbarFlags button)
+        private void Menu_OpenRMViewer()
         {
-            base.ToolbarAction(button);
-            switch (button)
-            {
-                case ToolbarFlags.View:
-                    if (frm == null)
-                    {
-                        frm = new Form() { Size = new System.Drawing.Size(448, 448) };
-                        frm.FormClosed += delegate {
-                            frm = null;
-                        };
-                        RMViewer viewer = new RMViewer(data, ref FileController.GetFile()) { Dock = DockStyle.Fill };
-                        frm.Controls.Add(viewer);
-                        frm.Show();
-                    }
-                    break;
-            }
-        }
-
-        public override void Dispose()
-        {
-            if (frm != null)
-                frm.Close();
+            MainForm.OpenRMViewer();
         }
     }
 }

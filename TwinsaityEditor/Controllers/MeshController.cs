@@ -1,18 +1,15 @@
-﻿using System.Windows.Forms;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System;
 using Twinsanity;
 
 namespace TwinsaityEditor
 {
-    public class MeshController : Controller
+    public class MeshController : ItemController
     {
         private Mesh data;
 
-        public MeshController(Mesh item)
+        public MeshController(Mesh item) : base(item)
         {
-            Toolbar = ToolbarFlags.Hex | ToolbarFlags.Extract | ToolbarFlags.Replace | ToolbarFlags.Delete | ToolbarFlags.View;
             data = item;
         }
 
@@ -38,30 +35,6 @@ namespace TwinsaityEditor
             TextPrev[1] = "Offset: " + data.Offset + " Size: " + data.Size;
             TextPrev[2] = "SubMesh Count: " + data.SubModels.Count;
             Array.Copy(ex_lines.ToArray(), 0, TextPrev, 3, ex_lines.Count);
-        }
-
-        public override void ToolbarAction(ToolbarFlags button)
-        {
-            switch (button)
-            {
-                case ToolbarFlags.Hex:
-                    //do hex stuff here
-                    break;
-                case ToolbarFlags.Extract:
-                    {
-                        SaveFileDialog sfd = new SaveFileDialog();
-                        sfd.FileName = GetName().Replace(":", string.Empty);
-                        if (sfd.ShowDialog() == DialogResult.OK)
-                        {
-                            FileStream file = new FileStream(sfd.FileName, FileMode.Create, FileAccess.Write);
-                            BinaryWriter writer = new BinaryWriter(file);
-                            data.Save(writer);
-                            writer.Close();
-                            file.Close();
-                        }
-                    }
-                    break;
-            }
         }
     }
 }

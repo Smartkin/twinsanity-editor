@@ -4,13 +4,12 @@ using Twinsanity;
 
 namespace TwinsaityEditor
 {
-    public class TriggerController : Controller
+    public class TriggerController : ItemController
     {
         private Trigger data;
 
-        public TriggerController(Trigger item)
+        public TriggerController(Trigger item) : base(item)
         {
-            Toolbar = ToolbarFlags.Hex | ToolbarFlags.Extract | ToolbarFlags.Replace | ToolbarFlags.Delete;
             data = item;
         }
 
@@ -37,30 +36,6 @@ namespace TwinsaityEditor
             }
 
             TextPrev[7 + data.Instances.Length] = "Arguments: " + data.SomeUInt161 + " " + data.SomeUInt162 + " " + data.SomeUInt163 + " " + data.SomeUInt164;
-        }
-
-        public override void ToolbarAction(ToolbarFlags button)
-        {
-            switch (button)
-            {
-                case ToolbarFlags.Hex:
-                    //do hex stuff here
-                    break;
-                case ToolbarFlags.Extract:
-                    {
-                        SaveFileDialog sfd = new SaveFileDialog();
-                        sfd.FileName = GetName().Replace(":", string.Empty);
-                        if (sfd.ShowDialog() == DialogResult.OK)
-                        {
-                            FileStream file = new FileStream(sfd.FileName, FileMode.Create, FileAccess.Write);
-                            BinaryWriter writer = new BinaryWriter(file);
-                            data.Save(writer);
-                            writer.Close();
-                            file.Close();
-                        }
-                    }
-                    break;
-            }
         }
     }
 }

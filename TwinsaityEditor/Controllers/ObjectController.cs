@@ -1,17 +1,14 @@
-﻿using System.Windows.Forms;
-using System.IO;
-using System;
+﻿using System;
 using Twinsanity;
 
 namespace TwinsaityEditor
 {
-    public class ObjectController : Controller
+    public class ObjectController : ItemController
     {
         private GameObject data;
 
-        public ObjectController(GameObject item)
+        public ObjectController(GameObject item) : base(item)
         {
-            Toolbar = ToolbarFlags.Hex | ToolbarFlags.Extract | ToolbarFlags.Replace | ToolbarFlags.Delete;
             data = item;
         }
 
@@ -51,30 +48,6 @@ namespace TwinsaityEditor
             TextPrev[9 + data.UI32.Length + data.OGIs.Length + data.Anims.Length + data.Scripts.Length + data.Objects.Length] = "SoundCount: " + data.Sounds.Length;
             for (int i = 0; i < data.Sounds.Length; ++i)
                 TextPrev[10 + data.UI32.Length + data.OGIs.Length + data.Anims.Length + data.Scripts.Length + data.Objects.Length + i] = data.Sounds[i].ToString();
-        }
-
-        public override void ToolbarAction(ToolbarFlags button)
-        {
-            switch (button)
-            {
-                case ToolbarFlags.Hex:
-                    //do hex stuff here
-                    break;
-                case ToolbarFlags.Extract:
-                    {
-                        SaveFileDialog sfd = new SaveFileDialog();
-                        sfd.FileName = GetName().Replace(":", string.Empty);
-                        if (sfd.ShowDialog() == DialogResult.OK)
-                        {
-                            FileStream file = new FileStream(sfd.FileName, FileMode.Create, FileAccess.Write);
-                            BinaryWriter writer = new BinaryWriter(file);
-                            data.Save(writer);
-                            writer.Close();
-                            file.Close();
-                        }
-                    }
-                    break;
-            }
         }
     }
 }

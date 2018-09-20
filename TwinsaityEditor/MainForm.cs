@@ -4,30 +4,11 @@ using Twinsanity;
 
 namespace TwinsaityEditor
 {
-    /// <summary>
-    /// Flags corresponding to buttons in the toolbar to the right.
-    /// </summary>
-    [Flags]
-    public enum ToolbarFlags
-    {
-        Hex     = 0x0001,
-        Extract = 0x0002,
-        Replace = 0x0004,
-        Search  = 0x0008,
-        Add     = 0x0010,
-        Create  = 0x0020,
-        Delete  = 0x0040,
-        Export  = 0x0080,
-        View    = 0x0100,
-        Script  = 0x0200,
-        Edit    = 0x0400
-    }
-
     public partial class MainForm : Form
     {
-        private TwinsFile fileData = new TwinsFile();
+        private static TwinsFile fileData = new TwinsFile();
+        private static Form rmForm;
         private string fileName;
-        private Form rmForm;
 
         public MainForm()
         {
@@ -36,7 +17,6 @@ namespace TwinsaityEditor
 
         private void GenTree()
         {
-            groupBox1.Enabled = true;
             treeView1.BeginUpdate();
             treeView1.AfterSelect += TreeNodeSelect;
             if (treeView1.TopNode != null && treeView1.TopNode.Tag is Controller c)
@@ -66,23 +46,6 @@ namespace TwinsaityEditor
                     c.Dirty = false;
                 }
                 textBox1.Lines = c.TextPrev;
-                buttonHex.Enabled = (c.Toolbar & ToolbarFlags.Hex) != 0;
-                buttonExt.Enabled = (c.Toolbar & ToolbarFlags.Extract) != 0;
-                buttonRep.Enabled = (c.Toolbar & ToolbarFlags.Replace) != 0;
-                buttonAdd.Enabled = (c.Toolbar & ToolbarFlags.Add) != 0;
-                buttonCre.Enabled = (c.Toolbar & ToolbarFlags.Create) != 0;
-                buttonDel.Enabled = (c.Toolbar & ToolbarFlags.Delete) != 0;
-                buttonEdt.Enabled = (c.Toolbar & ToolbarFlags.Edit) != 0;
-                buttonExp.Enabled = (c.Toolbar & ToolbarFlags.Export) != 0;
-                buttonScr.Enabled = (c.Toolbar & ToolbarFlags.Script) != 0;
-                buttonSrc.Enabled = (c.Toolbar & ToolbarFlags.Search) != 0;
-                buttonViw.Enabled = (c.Toolbar & ToolbarFlags.View) != 0;
-            }
-            else if (e.Node == treeView1.TopNode)
-            {
-                buttonHex.Enabled = buttonExt.Enabled = buttonRep.Enabled = buttonAdd.Enabled = buttonCre.Enabled =
-                buttonDel.Enabled = buttonEdt.Enabled = buttonExp.Enabled = buttonScr.Enabled = buttonSrc.Enabled =
-                buttonViw.Enabled = false;
             }
         }
 
@@ -176,8 +139,7 @@ namespace TwinsaityEditor
 
         private void buttonHex_Click(object sender, EventArgs e)
         {
-            if (treeView1.SelectedNode.Tag is Controller c && (c.Toolbar & ToolbarFlags.Hex) != 0)
-                c.ToolbarAction(ToolbarFlags.Hex);
+            
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -197,78 +159,27 @@ namespace TwinsaityEditor
             fileData.SaveFile(fileName);
         }
 
-        private void buttonExt_Click(object sender, EventArgs e)
-        {
-            if (treeView1.SelectedNode.Tag is Controller c && (c.Toolbar & ToolbarFlags.Extract) != 0)
-                c.ToolbarAction(ToolbarFlags.Extract);
-        }
-
-        private void buttonRep_Click(object sender, EventArgs e)
-        {
-            if (treeView1.SelectedNode.Tag is Controller c && (c.Toolbar & ToolbarFlags.Replace) != 0)
-                c.ToolbarAction(ToolbarFlags.Replace);
-        }
-
-        private void buttonSrc_Click(object sender, EventArgs e)
-        {
-            if (treeView1.SelectedNode.Tag is Controller c && (c.Toolbar & ToolbarFlags.Search) != 0)
-                c.ToolbarAction(ToolbarFlags.Search);
-        }
-
-        private void buttonAdd_Click(object sender, EventArgs e)
-        {
-            if (treeView1.SelectedNode.Tag is Controller c && (c.Toolbar & ToolbarFlags.Add) != 0)
-                c.ToolbarAction(ToolbarFlags.Add);
-        }
-
-        private void buttonCre_Click(object sender, EventArgs e)
-        {
-            if (treeView1.SelectedNode.Tag is Controller c && (c.Toolbar & ToolbarFlags.Create) != 0)
-                c.ToolbarAction(ToolbarFlags.Create);
-        }
-
-        private void buttonDel_Click(object sender, EventArgs e)
-        {
-            if (treeView1.SelectedNode.Tag is Controller c && (c.Toolbar & ToolbarFlags.Delete) != 0)
-                c.ToolbarAction(ToolbarFlags.Delete);
-        }
-
-        private void buttonExp_Click(object sender, EventArgs e)
-        {
-            if (treeView1.SelectedNode.Tag is Controller c && (c.Toolbar & ToolbarFlags.Export) != 0)
-                c.ToolbarAction(ToolbarFlags.Export);
-        }
-
-        private void buttonViw_Click(object sender, EventArgs e)
-        {
-            if (treeView1.SelectedNode.Tag is Controller c && (c.Toolbar & ToolbarFlags.View) != 0)
-                c.ToolbarAction(ToolbarFlags.View);
-        }
-
-        private void buttonScr_Click(object sender, EventArgs e)
-        {
-            if (treeView1.SelectedNode.Tag is Controller c && (c.Toolbar & ToolbarFlags.Script) != 0)
-                c.ToolbarAction(ToolbarFlags.Script);
-        }
-
-        private void buttonEdt_Click(object sender, EventArgs e)
-        {
-            if (treeView1.SelectedNode.Tag is Controller c && (c.Toolbar & ToolbarFlags.Edit) != 0)
-                c.ToolbarAction(ToolbarFlags.Edit);
-        }
-
         private void rMViewerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenRMViewer();
+        }
+
+        public static void OpenRMViewer()
         {
             if (rmForm == null)
             {
-                rmForm = new Form { Size = new System.Drawing.Size(480, 480) };
-                rmForm.FormClosed += delegate {
+                rmForm = new Form { Size = new System.Drawing.Size(480, 480), Text = "Initiating renderer..." };
+                rmForm.FormClosed += delegate
+                {
                     rmForm = null;
                 };
+                rmForm.Show();
                 RMViewer viewer = new RMViewer(fileData.SecInfo.Records.ContainsKey(9) ? (ColData)fileData.SecInfo.Records[9] : null, ref FileController.GetFile()) { Dock = DockStyle.Fill };
                 rmForm.Controls.Add(viewer);
-                rmForm.Show();
+                rmForm.Text = "RMViewer";
             }
+            else
+                rmForm.Select();
         }
     }
 }

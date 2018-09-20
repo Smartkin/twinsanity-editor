@@ -1,17 +1,14 @@
-﻿using System.Windows.Forms;
-using System.IO;
-using System;
+﻿using System;
 using Twinsanity;
 
 namespace TwinsaityEditor
 {
-    public class ChunkLinksController : Controller
+    public class ChunkLinksController : ItemController
     {
         private ChunkLinks data;
 
-        public ChunkLinksController(ChunkLinks item)
+        public ChunkLinksController(ChunkLinks item) : base(item)
         {
-            Toolbar = ToolbarFlags.Hex | ToolbarFlags.Extract | ToolbarFlags.Replace | ToolbarFlags.Delete;
             data = item;
         }
 
@@ -32,30 +29,6 @@ namespace TwinsaityEditor
                 TextPrev[5 + i * 5] = "Type: " + data.Links[i].Type;
                 TextPrev[6 + i * 5] = "Directory: " + new string(data.Links[i].Path);
                 TextPrev[7 + i * 5] = "Flags: " + Convert.ToString(data.Links[i].Flags, 16).ToUpper();
-            }
-        }
-
-        public override void ToolbarAction(ToolbarFlags button)
-        {
-            switch (button)
-            {
-                case ToolbarFlags.Hex:
-                    //do hex stuff here
-                    break;
-                case ToolbarFlags.Extract:
-                    {
-                        SaveFileDialog sfd = new SaveFileDialog();
-                        sfd.FileName = GetName().Replace(":", string.Empty);
-                        if (sfd.ShowDialog() == DialogResult.OK)
-                        {
-                            FileStream file = new FileStream(sfd.FileName, FileMode.Create, FileAccess.Write);
-                            BinaryWriter writer = new BinaryWriter(file);
-                            data.Save(writer);
-                            writer.Close();
-                            file.Close();
-                        }
-                    }
-                    break;
             }
         }
     }

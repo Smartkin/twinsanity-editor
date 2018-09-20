@@ -8,7 +8,6 @@ namespace TwinsaityEditor
 
         public FileController(TwinsFile item)
         {
-            Toolbar = ToolbarFlags.Search;
             data = item;
         }
 

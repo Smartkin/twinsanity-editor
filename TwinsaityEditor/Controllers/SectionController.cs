@@ -9,7 +9,6 @@ namespace TwinsaityEditor
 
         public SectionController(TwinsSection item)
         {
-            Toolbar = ToolbarFlags.Search | ToolbarFlags.Add | ToolbarFlags.Create | ToolbarFlags.Export;
             data = item;
             if (item.Type != SectionType.Texture && item.Type != SectionType.TextureX
                 && item.Type != SectionType.Material && item.Type != SectionType.Mesh
