@@ -4,16 +4,6 @@ namespace TwinsaityEditor.Utils
 {
     public static class VectorFuncs
     {
-        public static Vector3 CrossProduct(Vector3 v1, Vector3 v2)
-        {
-            float x, y, z;
-            x = v1.Y * v2.Z - v2.Y * v1.Z;
-            y = v1.X * v2.Z - v2.X * v1.Z * -1;
-            z = v1.X * v2.Y - v2.X * v1.Y;
-
-            return new Vector3(x, y, z);
-        }
-
         public static Vector3 CalcNormal(Vector3 Vert1, Vector3 Vert2, Vector3 Vert3)
         {
             float x1 = Vert1.X;
