@@ -110,33 +110,19 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Include="Resources\128x128" />
-    <None Include="Resources\128x1281" />
     <None Include="Resources\128x128mip" />
-    <None Include="Resources\128x128mip1" />
     <None Include="Resources\128x256" />
-    <None Include="Resources\128x2561" />
     <None Include="Resources\128x32mip" />
-    <None Include="Resources\128x32mip1" />
     <None Include="Resources\128x64mip" />
-    <None Include="Resources\128x64mip1" />
     <None Include="Resources\16x16mip" />
-    <None Include="Resources\16x16mip1" />
     <None Include="Resources\32x16mip" />
-    <None Include="Resources\32x16mip1" />
     <None Include="Resources\32x32mip" />
-    <None Include="Resources\32x32mip1" />
     <None Include="Resources\32x64" />
-    <None Include="Resources\32x641" />
     <None Include="Resources\32x64mip" />
-    <None Include="Resources\32x64mip1" />
     <None Include="Resources\32x8" />
-    <None Include="Resources\32x81" />
     <None Include="Resources\64x32mip" />
-    <None Include="Resources\64x32mip1" />
     <None Include="Resources\64x64" />
-    <None Include="Resources\64x641" />
     <None Include="Resources\64x64mip" />
-    <None Include="Resources\64x64mip1" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
