@@ -172,30 +172,30 @@
             // eLFPatcherToolStripMenuItem
             // 
             this.eLFPatcherToolStripMenuItem.Name = "eLFPatcherToolStripMenuItem";
-            this.eLFPatcherToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.eLFPatcherToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.eLFPatcherToolStripMenuItem.Text = "ELF Patcher";
             // 
             // e3ConverterToolStripMenuItem
             // 
             this.e3ConverterToolStripMenuItem.Name = "e3ConverterToolStripMenuItem";
-            this.e3ConverterToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.e3ConverterToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.e3ConverterToolStripMenuItem.Text = "E3 Converter";
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(149, 6);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(177, 6);
             // 
             // refreshLibraryToolStripMenuItem
             // 
             this.refreshLibraryToolStripMenuItem.Name = "refreshLibraryToolStripMenuItem";
-            this.refreshLibraryToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.refreshLibraryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.refreshLibraryToolStripMenuItem.Text = "Refresh Library";
             // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(149, 6);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(177, 6);
             // 
             // collisionTreeToolStripMenuItem
             // 
@@ -206,7 +206,7 @@
             this.exportToobjToolStripMenuItem,
             this.triggerTreeViewerToolStripMenuItem});
             this.collisionTreeToolStripMenuItem.Name = "collisionTreeToolStripMenuItem";
-            this.collisionTreeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.collisionTreeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.collisionTreeToolStripMenuItem.Text = "Collision Tree";
             // 
             // collisionTreeViewerToolStripMenuItem
@@ -242,13 +242,13 @@
             // graphicsToolStripMenuItem
             // 
             this.graphicsToolStripMenuItem.Name = "graphicsToolStripMenuItem";
-            this.graphicsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.graphicsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.graphicsToolStripMenuItem.Text = "Graphics";
             // 
             // soundToolStripMenuItem
             // 
             this.soundToolStripMenuItem.Name = "soundToolStripMenuItem";
-            this.soundToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.soundToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.soundToolStripMenuItem.Text = "Sound";
             // 
             // viewersToolStripMenuItem
@@ -264,7 +264,7 @@
             // 
             this.rMViewerToolStripMenuItem.Enabled = false;
             this.rMViewerToolStripMenuItem.Name = "rMViewerToolStripMenuItem";
-            this.rMViewerToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
+            this.rMViewerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.rMViewerToolStripMenuItem.Text = "RM Viewer";
             this.rMViewerToolStripMenuItem.Click += new System.EventHandler(this.rMViewerToolStripMenuItem_Click);
             // 
@@ -272,7 +272,7 @@
             // 
             this.sMViewerToolStripMenuItem.Enabled = false;
             this.sMViewerToolStripMenuItem.Name = "sMViewerToolStripMenuItem";
-            this.sMViewerToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
+            this.sMViewerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.sMViewerToolStripMenuItem.Text = "SM Viewer";
             // 
             // preferencesToolStripMenuItem
@@ -291,6 +291,7 @@
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.Location = new System.Drawing.Point(0, 24);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(5);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1

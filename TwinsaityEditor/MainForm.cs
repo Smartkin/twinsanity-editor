@@ -137,11 +137,6 @@ namespace TwinsaityEditor
             }
         }
 
-        private void buttonHex_Click(object sender, EventArgs e)
-        {
-            
-        }
-
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveFileDialog sfd = new SaveFileDialog();
