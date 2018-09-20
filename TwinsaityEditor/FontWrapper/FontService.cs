@@ -11,7 +11,7 @@ using SharpFont;
 
 namespace TwinsaityEditor.FontWrapper
 {
-    public class FontService
+    public class FontService : IDisposable
     {
         private Library _lib;
 

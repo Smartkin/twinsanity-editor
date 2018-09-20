@@ -5,7 +5,7 @@ namespace TwinsaityEditor
 {
     public delegate void ControllerAddMenuDelegate();
 
-    public abstract class Controller
+    public abstract class Controller : IDisposable
     {
         public string[] TextPrev { get; set; }
         /// <summary>

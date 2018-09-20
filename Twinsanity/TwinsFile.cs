@@ -160,7 +160,6 @@ namespace Twinsanity
                 }
             }
             reader.Close();
-            file.Close();
         }
 
         /// <summary>
@@ -193,7 +192,6 @@ namespace Twinsanity
             }
 
             writer.Close();
-            file.Close();
         }
         
         private int GetContentSize()

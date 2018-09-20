@@ -36,7 +36,6 @@ namespace TwinsaityEditor
                 BinaryWriter writer = new BinaryWriter(file);
                 data.Save(writer);
                 writer.Close();
-                file.Close();
             }
         }
     }
