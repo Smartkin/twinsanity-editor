@@ -1,5 +1,3 @@
-using System;
-
 namespace Twinsanity
 {
     public class SoundDescription : BaseItem

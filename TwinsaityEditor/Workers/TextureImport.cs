@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Collections.Generic;
 using System.IO;
-using System.ComponentModel;
 using System.Windows.Forms;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Twinsanity;

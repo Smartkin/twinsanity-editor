@@ -1,11 +1,7 @@
 ﻿/**
  * Code taken from https://github.com/Robmaister/SharpFont/blob/master/Source/Examples/FontFormat.cs
  */
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TwinsaityEditor.FontWrapper
 {
@@ -18,7 +14,7 @@ namespace TwinsaityEditor.FontWrapper
         public FontFormat(string name, string ext)
         {
             if (!ext.StartsWith(".")) ext = "." + ext;
-            this.Name = name; this.FileExtension = ext;
+            Name = name; FileExtension = ext;
         }
     }
 

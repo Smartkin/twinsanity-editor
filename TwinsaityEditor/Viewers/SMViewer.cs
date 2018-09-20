@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using OpenTK;
+﻿using System.Drawing;
 using OpenTK.Graphics.OpenGL;
-using Twinsanity;
 
 namespace TwinsaityEditor.Viewers
 {
