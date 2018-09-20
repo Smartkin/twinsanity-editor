@@ -9,9 +9,11 @@ namespace TwinsaityEditor
 {
     public class RMViewer : ThreeDViewer
     {
+        //add to preferences later
+        private static Color[] colors = new[] { Color.Gray, Color.Green, Color.Red, Color.DarkBlue, Color.Yellow, Color.Pink, Color.DarkCyan, Color.DarkGreen, Color.DarkRed, Color.Brown, Color.DarkMagenta, Color.Orange, Color.DarkSeaGreen, Color.Bisque, Color.Coral };
+
         private int dlist_col = -1, dlist_trg = -1;
         private ColData data;
-        private Color[] colors = new[] { Color.Gray, Color.Green, Color.Red, Color.DarkBlue, Color.Yellow, Color.Pink, Color.DarkCyan, Color.DarkGreen, Color.DarkRed, Color.Brown, Color.DarkMagenta, Color.Orange, Color.DarkSeaGreen, Color.Bisque, Color.Coral };
         private bool show_col_nodes, show_triggers;
         private TwinsFile file;
 
