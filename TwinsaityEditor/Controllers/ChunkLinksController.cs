@@ -14,7 +14,7 @@ namespace TwinsaityEditor
 
         public override string GetName()
         {
-            return "Chunk Links [ID: " + data.ID + "]";
+            return "Chunk Links [ID " + data.ID + "]";
         }
 
         public override void GenText()

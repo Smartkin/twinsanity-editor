@@ -15,9 +15,9 @@ namespace TwinsaityEditor
         public override string GetName()
         {
             if (FileController.GetObjectName(data.ObjectID) != string.Empty)
-                return FileController.GetObjectName(data.ObjectID) + " Instance [ID: " + data.ID + "]";
+                return FileController.GetObjectName(data.ObjectID) + " Instance [ID " + data.ID + "]";
             else
-                return "Instance [ID: " + data.ID + "]";
+                return "Instance [ID " + data.ID + "]";
         }
 
         public override void GenText()

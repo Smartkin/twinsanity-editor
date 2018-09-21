@@ -13,7 +13,7 @@ namespace TwinsaityEditor
 
         public override string GetName()
         {
-            return "Trigger [ID: " + data.ID + "]";
+            return "Trigger [ID " + data.ID + "]";
         }
 
         public override void GenText()

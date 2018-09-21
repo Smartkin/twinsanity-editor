@@ -15,7 +15,7 @@ namespace TwinsaityEditor
 
         public override string GetName()
         {
-            return "Mesh [ID: " + data.ID + "]";
+            return "Mesh [ID " + data.ID + "]";
         }
 
         public override void GenText()

@@ -14,7 +14,7 @@ namespace TwinsaityEditor
 
         public override string GetName()
         {
-            return "Collision Data [ID: " + data.ID + "]";
+            return "Collision Data [ID " + data.ID + "]";
         }
 
         public override void GenText()

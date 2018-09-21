@@ -13,7 +13,7 @@ namespace TwinsaityEditor
 
         public override string GetName()
         {
-            return (data.Name != null ? data.Name : "Script") + " [ID: " + data.ID + "]";
+            return (data.Name != null ? data.Name : "Script") + " [ID " + data.ID + "]";
         }
 
         public override void GenText()
