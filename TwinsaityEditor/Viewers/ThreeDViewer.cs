@@ -25,9 +25,11 @@ namespace TwinsaityEditor
         public ThreeDViewer()
         {
             _textTextureList = new List<int>();
-            viewerMessageList = new List<string>();
-            viewerMessageList.Add("HELLO");
-            viewerMessageList.Add("ASS");
+            viewerMessageList = new List<string> {
+                "HELLO",
+                "ASS",
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!_/:?"
+            };
             _fntService = new FontWrapper.FontService();
             List<FileInfo> fonts = (List<FileInfo>)_fntService.GetFontFiles(new DirectoryInfo("Fonts/"), false);
             _fntService.SetFont(fonts[0].FullName);
@@ -297,20 +299,20 @@ namespace TwinsaityEditor
 
         protected virtual void DrawText()
         {
-            GL.Begin(PrimitiveType.Quads);
             GL.Color3(Color.White);
-            for (int i = 0; i < _textTextureList.Count; ++i) 
+            for (int i = 0; i < _textTextureList.Count; ++i)
             {
                 int texture = _textTextureList[i];
 
                 GL.BindTexture(TextureTarget.Texture2D, texture);
 
-                GL.TexCoord2(0.0f, 1.0f); GL.Vertex2(-0.6f, -0.4f);
-                GL.TexCoord2(1.0f, 1.0f); GL.Vertex2(0.6f, -0.4f);
-                GL.TexCoord2(1.0f, 0.0f); GL.Vertex2(0.6f, 0.4f);
-                GL.TexCoord2(0.0f, 0.0f); GL.Vertex2(-0.6f, 0.4f);
+                GL.Begin(PrimitiveType.Quads);
+                GL.TexCoord2(0, 1); GL.Vertex2(-1, -1 + i * 3);
+                GL.TexCoord2(1, 1); GL.Vertex2(1, -1 + i * 3);
+                GL.TexCoord2(1, 0); GL.Vertex2(1, 1 + i * 3);
+                GL.TexCoord2(0, 0); GL.Vertex2(-1, 1 + i * 3);
+                GL.End();
             }
-            GL.End();
             GL.BindTexture(TextureTarget.Texture2D, 0);
         }
 
@@ -354,7 +356,7 @@ namespace TwinsaityEditor
         {
             foreach(var text in viewerMessageList)
             {
-                Bitmap bmp = _fntService.RenderString(text, Color.White, Color.Black);
+                Bitmap bmp = _fntService.RenderString(text, Color.White, Color.Transparent);
                 _textTextureList.Add(LoadTextTexture(ref bmp));
                 bmp.Dispose();
             }
