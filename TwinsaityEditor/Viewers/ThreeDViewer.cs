@@ -1,11 +1,11 @@
-﻿using System;
+﻿using OpenTK;
+using OpenTK.Graphics.OpenGL;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
-using OpenTK;
-using OpenTK.Graphics.OpenGL;
 
 namespace TwinsaityEditor
 {
@@ -29,7 +29,7 @@ namespace TwinsaityEditor
             viewerMessageList.Add("HELLO");
             viewerMessageList.Add("ASS");
             _fntService = new FontWrapper.FontService();
-            List<FileInfo> fonts = (List<FileInfo>)_fntService.GetFontFiles(new System.IO.DirectoryInfo("Fonts/"), false);
+            List<FileInfo> fonts = (List<FileInfo>)_fntService.GetFontFiles(new DirectoryInfo("Fonts/"), false);
             _fntService.SetFont(fonts[0].FullName);
             _fntService.SetSize(12f);
 
@@ -87,8 +87,6 @@ namespace TwinsaityEditor
             };
 
             ParentChanged += ThreeDViewer_ParentChanged;
-
-            //InitTextRender();
         }
 
         private void ThreeDViewer_ParentChanged(object sender, EventArgs e)
@@ -277,15 +275,17 @@ namespace TwinsaityEditor
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.AlphaTest);
             GL.Enable(EnableCap.Blend);
+            GL.Enable(EnableCap.Texture2D);
             GL.DepthFunc(DepthFunction.Lequal);
             GL.AlphaFunc(AlphaFunction.Greater, 0);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+            GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
             GL.ClearColor(0, 0, 1, 1); //TODO: Add clear color to Preferences later
             GL.Enable(EnableCap.ColorMaterial);
             //GL.ShadeModel(ShadingModel.Flat); //TODO: Add to preferences
             GL.Light(LightName.Light0, LightParameter.Position, new float[] { 0, 0, 0, 1 });
             //GL.Light(LightName.Light0, LightParameter.Ambient, new float[] { 0.3f, 0.3f, 0.3f, 1.0f });
-            GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { 1.0f, 1.0f, 1.0f, 1.0f });
+            //GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { 1.0f, 1.0f, 1.0f, 1.0f });
             //GL.Light(LightName.Light0, LightParameter.Specular, new float[] { 1.0f, 1.0f, 1.0f, 1.0f });
             GL.LightModel(LightModelParameter.LightModelTwoSide, 1);
             GL.Enable(EnableCap.Lighting);
@@ -298,22 +298,17 @@ namespace TwinsaityEditor
         protected virtual void DrawText()
         {
             GL.Begin(PrimitiveType.Quads);
+            GL.Color3(Color.White);
             for (int i = 0; i < _textTextureList.Count; ++i) 
             {
                 int texture = _textTextureList[i];
 
                 GL.BindTexture(TextureTarget.Texture2D, texture);
-                GL.TexCoord2(1f, 0f);
-                GL.Vertex2(1f, 1f + i * 3f);
 
-                GL.TexCoord2(0f, 0f);
-                GL.Vertex2(-1f, 1f + i * 3f);
-
-                GL.TexCoord2(0f, 1f);
-                GL.Vertex2(-1f, -1f + i * 3f);
-
-                GL.TexCoord2(1f, 1f);
-                GL.Vertex2(1f, -1f + i * 3f);
+                GL.TexCoord2(0.0f, 1.0f); GL.Vertex2(-0.6f, -0.4f);
+                GL.TexCoord2(1.0f, 1.0f); GL.Vertex2(0.6f, -0.4f);
+                GL.TexCoord2(1.0f, 0.0f); GL.Vertex2(0.6f, 0.4f);
+                GL.TexCoord2(0.0f, 0.0f); GL.Vertex2(-0.6f, 0.4f);
             }
             GL.End();
             GL.BindTexture(TextureTarget.Texture2D, 0);
@@ -324,13 +319,11 @@ namespace TwinsaityEditor
             if (flip_y)
                 text.RotateFlip(RotateFlipType.RotateNoneFlipY);
 
-            //int texture = GL.GenTexture();
-            int texture;
-            GL.GenTextures(1, out texture);
+            GL.GenTextures(1, out int texture);
 
             GL.BindTexture(TextureTarget.Texture2D, texture);
 
-            switch(quality)
+            switch (quality)
             {
                 case 0:
                 default:
@@ -343,14 +336,12 @@ namespace TwinsaityEditor
                     break;
             }
 
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)All.ClampToEdge);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)All.ClampToEdge);
-
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, text.Width, text.Height, 0, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, IntPtr.Zero);
+            //GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)All.ClampToEdge);
+            //GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)All.ClampToEdge);
 
             BitmapData data = text.LockBits(new Rectangle(0, 0, text.Width, text.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
-            GL.TexSubImage2D(TextureTarget.Texture2D, 0, 0, 0, text.Width, text.Height, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, data.Width, data.Height, 0, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, data.Scan0);
 
             text.UnlockBits(data);
 

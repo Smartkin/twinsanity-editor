@@ -15,10 +15,10 @@ namespace TwinsaityEditor.FontWrapper
     {
         private Library _lib;
 
-        internal Face FontFace { get { return _fontFace; } set { SetFont(value); } }
+        internal Face FontFace { get => _fontFace; set => SetFont(value); }
         private Face _fontFace;
 
-        internal float Size { get { return _size; } set { SetSize(value); } }
+        internal float Size { get => _size; set => SetSize(value); }
         private float _size;
 
         internal FontFormatCollection SupportedFormats { get; private set; }
