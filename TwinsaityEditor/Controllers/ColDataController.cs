@@ -1,4 +1,7 @@
-﻿using Twinsanity;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Windows.Forms;
+using Twinsanity;
 
 namespace TwinsaityEditor
 {
@@ -10,6 +13,7 @@ namespace TwinsaityEditor
         {
             data = item;
             AddMenu("Open RMViewer", Menu_OpenRMViewer);
+            AddMenu("Export Collision Model", Menu_Export);
         }
 
         public override string GetName()
@@ -43,6 +47,40 @@ namespace TwinsaityEditor
         private void Menu_OpenRMViewer()
         {
             MainForm.OpenRMViewer();
+        }
+
+        private void Menu_Export()
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Wavefront OBJ file (*.obj)|*.obj";
+            sfd.FileName = MainForm.SafeFileName;
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                StreamWriter writer = new StreamWriter(new FileStream(sfd.FileName, FileMode.Create, FileAccess.Write));
+                writer.WriteLine("# Generated using the TwinsanityEditor @ https://github.com/Smartkin/twinsanity-editor");
+                writer.WriteLine();
+                foreach (var i in data.Vertices)
+                {
+                    writer.WriteLine("v {0} {1} {2}", i.X, i.Y, i.Z);
+                }
+                Dictionary<int, List<ColData.ColTri>> polys = new Dictionary<int, List<ColData.ColTri>>();
+                foreach (var i in data.Tris)
+                {
+                    if (!polys.ContainsKey(i.Surface))
+                        polys.Add(i.Surface, new List<ColData.ColTri>());
+                    polys[i.Surface].Add(i);
+                }
+                //???
+                foreach (var d in polys)
+                {
+                    writer.WriteLine("o Surface {0}", d.Key);
+                    foreach (var i in d.Value)
+                    {
+                        writer.WriteLine("f {0} {1} {2}", i.Vert1 + 1, i.Vert2 + 1, i.Vert3 + 1);
+                    }
+                }
+                writer.Close();
+            }
         }
     }
 }
