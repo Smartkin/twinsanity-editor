@@ -275,16 +275,11 @@
     <Error Condition="!Exists('packages\SharpFont.Dependencies.2.6\build\SharpFont.Dependencies.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\SharpFont.Dependencies.2.6\build\SharpFont.Dependencies.props'))" />
     <Error Condition="!Exists('packages\SharpFont.4.0.1\build\SharpFont.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\SharpFont.4.0.1\build\SharpFont.props'))" />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>call "$(ProjectDir)CopyLibs.bat"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target> -->
-  <ItemGroup>
-    <Binaries Include="$(OutputPath)*.dll" />
-  </ItemGroup>
-  <Target Name="MoveLibraries" AfterTargets="AfterBuild">
-    <MakeDir Directories="$(OutputPath)Libraries" />
-    <Move SourceFiles="@(Binaries)" DestinationFolder="$(OutputPath)Libraries" />
-    <Delete Files="@(Binaries)" />
-  </Target>
 </Project>
