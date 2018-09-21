@@ -8,7 +8,9 @@ namespace TwinsaityEditor
     {
         private static TwinsFile fileData = new TwinsFile();
         private static Form rmForm, exeForm;
-        private string fileName;
+        private static string fileName;
+
+        public static string SafeFileName { get; set; }
 
         public MainForm()
         {
@@ -132,6 +134,7 @@ namespace TwinsaityEditor
                         break;
                 }
                 fileName = ofd.FileName;
+                SafeFileName = ofd.SafeFileName;
                 GenTree();
                 Text = "Twinsaity Editor by Neo_Kesha [" + ofd.FileName + "] ";
             }
