@@ -7,7 +7,7 @@ namespace TwinsaityEditor
     public partial class MainForm : Form
     {
         private static TwinsFile fileData = new TwinsFile();
-        private static Form rmForm;
+        private static Form rmForm, exeForm;
         private string fileName;
 
         public MainForm()
@@ -175,6 +175,26 @@ namespace TwinsaityEditor
             }
             else
                 rmForm.Select();
+        }
+
+        private void eLFPatcherToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenEXETool();
+        }
+
+        public static void OpenEXETool()
+        {
+            if (exeForm == null)
+            {
+                exeForm = new Workers.EXEPatcher();
+                exeForm.FormClosed += delegate
+                {
+                    exeForm = null;
+                };
+                exeForm.Show();
+            }
+            else
+                exeForm.Select();
         }
     }
 }

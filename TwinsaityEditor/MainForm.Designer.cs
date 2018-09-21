@@ -113,12 +113,14 @@
             // 
             // newRM2ToolStripMenuItem
             // 
+            this.newRM2ToolStripMenuItem.Enabled = false;
             this.newRM2ToolStripMenuItem.Name = "newRM2ToolStripMenuItem";
             this.newRM2ToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
             this.newRM2ToolStripMenuItem.Text = "New RM2";
             // 
             // newSM2ToolStripMenuItem
             // 
+            this.newSM2ToolStripMenuItem.Enabled = false;
             this.newSM2ToolStripMenuItem.Name = "newSM2ToolStripMenuItem";
             this.newSM2ToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
             this.newSM2ToolStripMenuItem.Text = "New SM2";
@@ -173,10 +175,12 @@
             // 
             this.eLFPatcherToolStripMenuItem.Name = "eLFPatcherToolStripMenuItem";
             this.eLFPatcherToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.eLFPatcherToolStripMenuItem.Text = "ELF Patcher";
+            this.eLFPatcherToolStripMenuItem.Text = "EXE Patcher";
+            this.eLFPatcherToolStripMenuItem.Click += new System.EventHandler(this.eLFPatcherToolStripMenuItem_Click);
             // 
             // e3ConverterToolStripMenuItem
             // 
+            this.e3ConverterToolStripMenuItem.Enabled = false;
             this.e3ConverterToolStripMenuItem.Name = "e3ConverterToolStripMenuItem";
             this.e3ConverterToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.e3ConverterToolStripMenuItem.Text = "E3 Converter";
@@ -188,6 +192,7 @@
             // 
             // refreshLibraryToolStripMenuItem
             // 
+            this.refreshLibraryToolStripMenuItem.Enabled = false;
             this.refreshLibraryToolStripMenuItem.Name = "refreshLibraryToolStripMenuItem";
             this.refreshLibraryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.refreshLibraryToolStripMenuItem.Text = "Refresh Library";
@@ -205,6 +210,7 @@
             this.importCollisionTreeToolStripMenuItem,
             this.exportToobjToolStripMenuItem,
             this.triggerTreeViewerToolStripMenuItem});
+            this.collisionTreeToolStripMenuItem.Enabled = false;
             this.collisionTreeToolStripMenuItem.Name = "collisionTreeToolStripMenuItem";
             this.collisionTreeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.collisionTreeToolStripMenuItem.Text = "Collision Tree";
@@ -241,12 +247,14 @@
             // 
             // graphicsToolStripMenuItem
             // 
+            this.graphicsToolStripMenuItem.Enabled = false;
             this.graphicsToolStripMenuItem.Name = "graphicsToolStripMenuItem";
             this.graphicsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.graphicsToolStripMenuItem.Text = "Graphics";
             // 
             // soundToolStripMenuItem
             // 
+            this.soundToolStripMenuItem.Enabled = false;
             this.soundToolStripMenuItem.Name = "soundToolStripMenuItem";
             this.soundToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.soundToolStripMenuItem.Text = "Sound";
@@ -264,7 +272,7 @@
             // 
             this.rMViewerToolStripMenuItem.Enabled = false;
             this.rMViewerToolStripMenuItem.Name = "rMViewerToolStripMenuItem";
-            this.rMViewerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.rMViewerToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.rMViewerToolStripMenuItem.Text = "RM Viewer";
             this.rMViewerToolStripMenuItem.Click += new System.EventHandler(this.rMViewerToolStripMenuItem_Click);
             // 
@@ -272,17 +280,19 @@
             // 
             this.sMViewerToolStripMenuItem.Enabled = false;
             this.sMViewerToolStripMenuItem.Name = "sMViewerToolStripMenuItem";
-            this.sMViewerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.sMViewerToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.sMViewerToolStripMenuItem.Text = "SM Viewer";
             // 
             // preferencesToolStripMenuItem
             // 
+            this.preferencesToolStripMenuItem.Enabled = false;
             this.preferencesToolStripMenuItem.Name = "preferencesToolStripMenuItem";
             this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(80, 20);
             this.preferencesToolStripMenuItem.Text = "Preferences";
             // 
             // aboutToolStripMenuItem
             // 
+            this.aboutToolStripMenuItem.Enabled = false;
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
             this.aboutToolStripMenuItem.Text = "About";
