@@ -207,12 +207,6 @@
     <Compile Include="Viewers\ThreeDViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Workers\ELFPatcher.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Workers\ELFPatcher.Designer.cs">
-      <DependentUpon>ELFPatcher.cs</DependentUpon>
-    </Compile>
     <Compile Include="Workers\EXEPatcher.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -236,9 +230,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Viewers\ThreeDViewer.resx">
       <DependentUpon>ThreeDViewer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Workers\ELFPatcher.resx">
-      <DependentUpon>ELFPatcher.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Workers\GameExeTool.resx">
       <DependentUpon>EXEPatcher.cs</DependentUpon>
