@@ -13,9 +13,6 @@ namespace TwinsaityEditor
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool SetDllDirectory(string path);
 
-        [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern IntPtr LoadLibrary(string fileName);
-
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
