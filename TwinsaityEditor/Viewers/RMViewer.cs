@@ -136,6 +136,7 @@ namespace TwinsaityEditor
                             GL.Vertex3(+indicator_size, +indicator_size + 0.5, +indicator_size);
                             GL.Vertex3(+indicator_size, +indicator_size + 0.5, -indicator_size);
                             GL.End();
+                            RenderString(j.ID.ToString());
                             GL.PopMatrix();
                         }
                     }
