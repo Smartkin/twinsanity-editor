@@ -19,7 +19,7 @@ namespace TwinsaityEditor
         private EventHandler _inputHandle;
         private FontWrapper.FontService _fntService;
         private Dictionary<char, int> textureCharMap = new Dictionary<char, int>();
-        private float size = 32;
+        private float size = 48;
 
         public ThreeDViewer()
         {
@@ -333,7 +333,7 @@ namespace TwinsaityEditor
 
         protected void RenderString(string s)
         {
-            float spacing = 0.75f;
+            float spacing = 2 / 3f;
             float x = (s.Length + 1) * (-spacing / 2f);
             foreach (char c in s)
             {
