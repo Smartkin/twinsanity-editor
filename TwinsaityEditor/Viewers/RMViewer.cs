@@ -14,14 +14,14 @@ namespace TwinsaityEditor
 
         private bool show_col_nodes, show_triggers;
         private int dlist_col = -1, dlist_trg = -1;
-        private int[] dlist_inst = new int[7] { -1, -1, -1, -1, -1, -1, -1 };
-        private int[] dlist_trig = new int[7] { -1, -1, -1, -1, -1, -1, -1 };
+        private int[] dlist_inst = new int[8] { -1, -1, -1, -1, -1, -1, -1, -1 };
+        private int[] dlist_trig = new int[8] { -1, -1, -1, -1, -1, -1, -1, -1 };
         private ColData data;
         private TwinsFile file;
 
         private float indicator_size = 0.5f;
 
-        public static bool[] InstancesChanged { get; set; } = new bool[7] { false, false, false, false, false, false, false };
+        public static bool[] InstancesChanged { get; set; } = new bool[8] { false, false, false, false, false, false, false, false };
 
         public RMViewer(ColData data, ref TwinsFile file)
         {
