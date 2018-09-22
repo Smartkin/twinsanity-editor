@@ -74,11 +74,12 @@ namespace Twinsanity
 
         public override void Load(BinaryReader reader, int size)
         {
+            Links.Clear();
             var count = reader.ReadInt32();
             for (int i = 0; i < count; ++i)
             {
                 ChunkLink link = new ChunkLink();
-                link.Type = reader.ReadUInt32();
+                link.Type = reader.ReadInt32();
                 link.Path = reader.ReadChars(reader.ReadInt32());
                 link.Flags = reader.ReadUInt32();
                 link.ObjectMatrix = new Pos[4];
@@ -97,9 +98,9 @@ namespace Twinsanity
                     link.ChunkMatrix[j].Z = reader.ReadSingle();
                     link.ChunkMatrix[j].W = reader.ReadSingle();
                 }
-                link.LoadWall = new Pos[4];
                 if ((link.Flags & 0x80000) != 0)
                 {
+                    link.LoadWall = new Pos[4];
                     for (int j = 0; j < 4; ++j)
                     {
                         link.LoadWall[j].X = reader.ReadSingle();
@@ -111,7 +112,7 @@ namespace Twinsanity
                 if (link.Type == 1 || link.Type == 3) //type 1/3 continue here
                 {
                     link.Unknown = new short[15];
-                    for (int j = 0; j < 4; ++j)
+                    for (int j = 0; j < 15; ++j)
                     {
                         link.Unknown[j] = reader.ReadInt16();
                     }
@@ -160,7 +161,7 @@ namespace Twinsanity
         #region STRUCTURES
         public struct ChunkLink
         {
-            public uint Type;
+            public int Type;
             public char[] Path;
             public uint Flags;
             public Pos[] ObjectMatrix; // 4
