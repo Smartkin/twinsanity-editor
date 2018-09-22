@@ -11,7 +11,7 @@ namespace TwinsaityEditor
         public ItemController(TwinsItem item)
         {
             data = item;
-            AddMenu("Extract to file", Menu_ExtractItem);
+            AddMenu("Extract raw data to file", Menu_ExtractItem);
         }
 
         public override string GetName()
