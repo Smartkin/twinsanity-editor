@@ -58,6 +58,7 @@ namespace TwinsaityEditor
 
                 if (show_col_nodes)
                 {
+                    GL.Disable(EnableCap.Lighting);
                     if (dlist_trg == -1)
                     {
                         dlist_trg = GL.GenLists(1);
@@ -95,6 +96,7 @@ namespace TwinsaityEditor
                     }
                     else
                         GL.CallList(dlist_trg);
+                    GL.Enable(EnableCap.Lighting);
                 }
             }
 
@@ -108,6 +110,7 @@ namespace TwinsaityEditor
                         foreach (Instance j in ((TwinsSection)((TwinsSection)file.SecInfo.Records[i]).SecInfo.Records[6]).SecInfo.Records.Values)
                         {
                             GL.PushMatrix();
+                            GL.Disable(EnableCap.Lighting);
                             GL.Translate(-j.Pos.X, j.Pos.Y, j.Pos.Z);
                             GL.Rotate(-j.RotX / (float)ushort.MaxValue * 360f, 1, 0, 0);
                             GL.Rotate(-j.RotY / (float)ushort.MaxValue * 360f, 0, 1, 0);
@@ -137,6 +140,7 @@ namespace TwinsaityEditor
                             GL.Vertex3(+indicator_size, +indicator_size + 0.5, -indicator_size);
                             GL.End();
                             RenderString(j.ID.ToString());
+                            GL.Enable(EnableCap.Lighting);
                             GL.PopMatrix();
                         }
                     }
