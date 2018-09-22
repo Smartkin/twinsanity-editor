@@ -98,12 +98,15 @@ namespace Twinsanity
                     link.ChunkMatrix[j].W = reader.ReadSingle();
                 }
                 link.LoadWall = new Pos[4];
-                for (int j = 0; j < 4; ++j)
+                if ((link.Flags & 0x80000) != 0)
                 {
-                    link.LoadWall[j].X = reader.ReadSingle();
-                    link.LoadWall[j].Y = reader.ReadSingle();
-                    link.LoadWall[j].Z = reader.ReadSingle();
-                    link.LoadWall[j].W = reader.ReadSingle();
+                    for (int j = 0; j < 4; ++j)
+                    {
+                        link.LoadWall[j].X = reader.ReadSingle();
+                        link.LoadWall[j].Y = reader.ReadSingle();
+                        link.LoadWall[j].Z = reader.ReadSingle();
+                        link.LoadWall[j].W = reader.ReadSingle();
+                    }
                 }
                 if (link.Type == 1 || link.Type == 3) //type 1/3 continue here
                 {
