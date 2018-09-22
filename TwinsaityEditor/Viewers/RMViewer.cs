@@ -12,12 +12,16 @@ namespace TwinsaityEditor
         //add to preferences later
         private static Color[] colors = new[] { Color.Gray, Color.Green, Color.Red, Color.DarkBlue, Color.Yellow, Color.Pink, Color.DarkCyan, Color.DarkGreen, Color.DarkRed, Color.Brown, Color.DarkMagenta, Color.Orange, Color.DarkSeaGreen, Color.Bisque, Color.Coral };
 
-        private int dlist_col = -1, dlist_trg = -1;
-        private ColData data;
         private bool show_col_nodes, show_triggers;
+        private int dlist_col = -1, dlist_trg = -1;
+        private int[] dlist_inst = new int[7] { -1, -1, -1, -1, -1, -1, -1 };
+        private int[] dlist_trig = new int[7] { -1, -1, -1, -1, -1, -1, -1 };
+        private ColData data;
         private TwinsFile file;
 
-        private readonly float indicator_size = 0.5f;
+        private float indicator_size = 0.5f;
+
+        public static bool[] InstancesChanged { get; set; } = new bool[7] { false, false, false, false, false, false, false };
 
         public RMViewer(ColData data, ref TwinsFile file)
         {
@@ -105,45 +109,59 @@ namespace TwinsaityEditor
             {
                 if (file.SecInfo.Records.ContainsKey(i))
                 {
-                    if (((TwinsSection)file.SecInfo.Records[i]).SecInfo.Records.ContainsKey(6))
+                    if (InstancesChanged[i])
                     {
-                        foreach (Instance j in ((TwinsSection)((TwinsSection)file.SecInfo.Records[i]).SecInfo.Records[6]).SecInfo.Records.Values)
-                        {
-                            GL.PushMatrix();
-                            GL.Disable(EnableCap.Lighting);
-                            GL.Translate(-j.Pos.X, j.Pos.Y, j.Pos.Z);
-                            GL.Rotate(-j.RotX / (float)ushort.MaxValue * 360f, 1, 0, 0);
-                            GL.Rotate(-j.RotY / (float)ushort.MaxValue * 360f, 0, 1, 0);
-                            GL.Rotate(-j.RotZ / (float)ushort.MaxValue * 360f, 0, 0, 1);
-                            DrawAxes(0, 0, 0, 0.5f);
-                            GL.Color3(colors[colors.Length - i - 1]);
-                            GL.Begin(PrimitiveType.LineStrip);
-                            GL.Vertex3(-indicator_size, -indicator_size + 0.5, -indicator_size);
-                            GL.Vertex3(+indicator_size, -indicator_size + 0.5, -indicator_size);
-                            GL.Vertex3(+indicator_size, +indicator_size + 0.5, -indicator_size);
-                            GL.Vertex3(-indicator_size, +indicator_size + 0.5, -indicator_size);
-                            GL.Vertex3(-indicator_size, -indicator_size + 0.5, -indicator_size);
-                            GL.Vertex3(-indicator_size, -indicator_size + 0.5, +indicator_size);
-                            GL.Vertex3(+indicator_size, -indicator_size + 0.5, +indicator_size);
-                            GL.Vertex3(+indicator_size, -indicator_size + 0.5, -indicator_size);
-                            GL.End();
-                            GL.Begin(PrimitiveType.LineStrip);
-                            GL.Vertex3(-indicator_size, -indicator_size + 0.5, +indicator_size);
-                            GL.Vertex3(-indicator_size, +indicator_size + 0.5, +indicator_size);
-                            GL.Vertex3(+indicator_size, +indicator_size + 0.5, +indicator_size);
-                            GL.Vertex3(+indicator_size, -indicator_size + 0.5, +indicator_size);
-                            GL.End();
-                            GL.Begin(PrimitiveType.Lines);
-                            GL.Vertex3(-indicator_size, +indicator_size + 0.5, +indicator_size);
-                            GL.Vertex3(-indicator_size, +indicator_size + 0.5, -indicator_size);
-                            GL.Vertex3(+indicator_size, +indicator_size + 0.5, +indicator_size);
-                            GL.Vertex3(+indicator_size, +indicator_size + 0.5, -indicator_size);
-                            GL.End();
-                            RenderString(j.ID.ToString());
-                            GL.Enable(EnableCap.Lighting);
-                            GL.PopMatrix();
-                        }
+                        GL.DeleteLists(dlist_inst[i], 1);
+                        dlist_inst[i] = -1;
+                        InstancesChanged[i] = false;
                     }
+                    if (dlist_inst[i] == -1)
+                    {
+                        dlist_inst[i] = GL.GenLists(1);
+                        GL.NewList(dlist_inst[i], ListMode.CompileAndExecute);
+                        if (((TwinsSection)file.SecInfo.Records[i]).SecInfo.Records.ContainsKey(6))
+                        {
+                            foreach (Instance j in ((TwinsSection)((TwinsSection)file.SecInfo.Records[i]).SecInfo.Records[6]).SecInfo.Records.Values)
+                            {
+                                GL.PushMatrix();
+                                GL.Disable(EnableCap.Lighting);
+                                GL.Translate(-j.Pos.X, j.Pos.Y, j.Pos.Z);
+                                GL.Rotate(-j.RotX / (float)ushort.MaxValue * 360f, 1, 0, 0);
+                                GL.Rotate(-j.RotY / (float)ushort.MaxValue * 360f, 0, 1, 0);
+                                GL.Rotate(-j.RotZ / (float)ushort.MaxValue * 360f, 0, 0, 1);
+                                DrawAxes(0, 0, 0, 0.5f);
+                                GL.Color3(colors[colors.Length - i - 1]);
+                                GL.Begin(PrimitiveType.LineStrip);
+                                GL.Vertex3(-indicator_size, -indicator_size + 0.5, -indicator_size);
+                                GL.Vertex3(+indicator_size, -indicator_size + 0.5, -indicator_size);
+                                GL.Vertex3(+indicator_size, +indicator_size + 0.5, -indicator_size);
+                                GL.Vertex3(-indicator_size, +indicator_size + 0.5, -indicator_size);
+                                GL.Vertex3(-indicator_size, -indicator_size + 0.5, -indicator_size);
+                                GL.Vertex3(-indicator_size, -indicator_size + 0.5, +indicator_size);
+                                GL.Vertex3(+indicator_size, -indicator_size + 0.5, +indicator_size);
+                                GL.Vertex3(+indicator_size, -indicator_size + 0.5, -indicator_size);
+                                GL.End();
+                                GL.Begin(PrimitiveType.LineStrip);
+                                GL.Vertex3(-indicator_size, -indicator_size + 0.5, +indicator_size);
+                                GL.Vertex3(-indicator_size, +indicator_size + 0.5, +indicator_size);
+                                GL.Vertex3(+indicator_size, +indicator_size + 0.5, +indicator_size);
+                                GL.Vertex3(+indicator_size, -indicator_size + 0.5, +indicator_size);
+                                GL.End();
+                                GL.Begin(PrimitiveType.Lines);
+                                GL.Vertex3(-indicator_size, +indicator_size + 0.5, +indicator_size);
+                                GL.Vertex3(-indicator_size, +indicator_size + 0.5, -indicator_size);
+                                GL.Vertex3(+indicator_size, +indicator_size + 0.5, +indicator_size);
+                                GL.Vertex3(+indicator_size, +indicator_size + 0.5, -indicator_size);
+                                GL.End();
+                                RenderString(j.ID.ToString());
+                                GL.Enable(EnableCap.Lighting);
+                                GL.PopMatrix();
+                            }
+                        }
+                        GL.EndList();
+                    }
+                    else
+                        GL.CallList(dlist_inst[i]);
                 }
             }
 
@@ -322,6 +340,12 @@ namespace TwinsaityEditor
                 GL.DeleteLists(dlist_trg, 1);
                 dlist_trg = -1;
             }
+            for (int i = 0; i < dlist_inst.Length; ++i)
+                if (dlist_inst[i] != -1)
+                {
+                    GL.DeleteLists(dlist_inst[i], 1);
+                    dlist_inst[i] = -1;
+                }
             base.Dispose(disposing);
         }
     }

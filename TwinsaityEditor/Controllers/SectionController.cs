@@ -53,6 +53,8 @@ namespace TwinsaityEditor
                 ((MainForm)Node.TreeView.FindForm()).GenTreeNode(i.Value, this);
             }
             Node.TreeView.EndUpdate();
+            if (data.Type == SectionType.ObjectInstance)
+                RMViewer.InstancesChanged[data.Parent.ID] = true;
         }
 
         private void Menu_ReOrderByID_Desc()
@@ -70,6 +72,8 @@ namespace TwinsaityEditor
                 ((MainForm)Node.TreeView.FindForm()).GenTreeNode(i.Value, this);
             }
             Node.TreeView.EndUpdate();
+            if (data.Type == SectionType.ObjectInstance)
+                RMViewer.InstancesChanged[data.Parent.ID] = true;
         }
 
         private void Menu_ReIDByOrder()
@@ -87,6 +91,8 @@ namespace TwinsaityEditor
                 ((MainForm)Node.TreeView.FindForm()).GenTreeNode(i.Value, this);
             }
             Node.TreeView.EndUpdate();
+            if (data.Type == SectionType.ObjectInstance)
+                RMViewer.InstancesChanged[data.Parent.ID] = true;
         }
     }
 }
