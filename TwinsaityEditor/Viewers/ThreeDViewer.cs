@@ -291,8 +291,8 @@ namespace TwinsaityEditor
 
         protected virtual void DrawText()
         {
-            GL.Color3(Color.White);
-            RenderString("0123456789ABCDEFGHIJKLMNP1RSTUVWXYZabcdefghijklmnopqrstuvwxyz !_/:?");
+            //GL.Color3(Color.White);
+            //RenderString("0123456789ABCDEFGHIJKLMNP1RSTUVWXYZabcdefghijklmnopqrstuvwxyz !_/:?");
         }
 
         protected int LoadTextTexture(ref Bitmap text, int quality = 1, bool flip_y = false)
@@ -359,7 +359,7 @@ namespace TwinsaityEditor
 
         private void GenCharTex(char c)
         {
-            Bitmap bmp = _fntService.RenderString(c.ToString(), Color.White, Color.Transparent);
+            Bitmap bmp = _fntService.RenderString(c.ToString(), Color.White, Color.FromArgb(0x00, 0xFF, 0xFF, 0xFF));
             textureCharMap.Add(c, LoadTextTexture(ref bmp));
             bmp.Dispose();
         }
