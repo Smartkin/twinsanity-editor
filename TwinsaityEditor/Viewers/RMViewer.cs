@@ -194,6 +194,7 @@ namespace TwinsaityEditor
 
                             GL.End();
 
+                            GL.Disable(EnableCap.Lighting);
                             GL.Disable(EnableCap.DepthTest);
                             GL.LineWidth(2);
                             GL.Begin(PrimitiveType.Lines);
@@ -206,8 +207,6 @@ namespace TwinsaityEditor
                             GL.End();
                             GL.LineWidth(1);
 
-                            GL.Color4(Color.Black);
-
                             GL.Begin(PrimitiveType.LineLoop);
                             GL.Vertex3(-j.Coords[2].X, -j.Coords[2].Y, -j.Coords[2].Z);
                             GL.Vertex3(j.Coords[2].X, -j.Coords[2].Y, -j.Coords[2].Z);
@@ -249,10 +248,10 @@ namespace TwinsaityEditor
                             GL.Vertex3(j.Coords[2].X, j.Coords[2].Y, j.Coords[2].Z);
                             GL.Vertex3(-j.Coords[2].X, j.Coords[2].Y, j.Coords[2].Z);
                             GL.End();
-
-
+                            
                             DrawAxes(0, 0, 0, Math.Min(j.Coords[2].X, Math.Min(j.Coords[2].Y, j.Coords[2].Z)) / 2);
                             GL.Enable(EnableCap.DepthTest);
+                            GL.Enable(EnableCap.Lighting);
 
                             GL.PopMatrix();
                         }
