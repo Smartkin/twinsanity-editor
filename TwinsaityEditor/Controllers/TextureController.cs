@@ -4,24 +4,24 @@ namespace TwinsaityEditor
 {
     public class TextureController : ItemController
     {
-        private Texture data;
+        public new Texture Data { get; set; }
 
         public TextureController(Texture item) : base(item)
         {
-            data = item;
+            Data = item;
         }
 
         public override string GetName()
         {
-            return "Texture [ID " + data.ID + "]";
+            return "Texture [ID " + Data.ID + "]";
         }
 
         public override void GenText()
         {
             TextPrev = new string[3];
-            TextPrev[0] = "ID: " + data.ID;
-            TextPrev[1] = "Offset: " + data.Offset + " Size: " + data.Size;
-            TextPrev[2] = "Image Size: " + data.Width + "x" + data.Height;
+            TextPrev[0] = "ID: " + Data.ID;
+            TextPrev[1] = "Offset: " + Data.Offset + " Size: " + Data.Size;
+            TextPrev[2] = "Image Size: " + Data.Width + "x" + Data.Height;
         }
     }
 }

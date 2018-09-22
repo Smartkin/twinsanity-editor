@@ -174,7 +174,8 @@ namespace TwinsaityEditor
                     rmForm = null;
                 };
                 rmForm.Show();
-                RMViewer viewer = new RMViewer(fileData.SecInfo.Records.ContainsKey(9) ? (ColData)fileData.SecInfo.Records[9] : null, ref FileController.GetFile()) { Dock = DockStyle.Fill };
+                TwinsFile file = FileController.GetFile();
+                RMViewer viewer = new RMViewer(fileData.SecInfo.Records.ContainsKey(9) ? (ColData)fileData.SecInfo.Records[9] : null, ref file) { Dock = DockStyle.Fill };
                 rmForm.Controls.Add(viewer);
                 rmForm.Text = "RMViewer";
             }

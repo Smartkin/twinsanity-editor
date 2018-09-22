@@ -4,27 +4,27 @@ namespace TwinsaityEditor
 {
     public class ModelController : ItemController
     {
-        private Model data;
+        public new Model Data { get; set; }
 
         public ModelController(Model item) : base(item)
         {
-            data = item;
+            Data = item;
         }
 
         public override string GetName()
         {
-            return "Model [ID " + data.ID + "]";
+            return "Model [ID " + Data.ID + "]";
         }
 
         public override void GenText()
         {
-            TextPrev = new string[4 + data.MaterialIDs.Length];
-            TextPrev[0] = "ID: " + data.ID;
-            TextPrev[1] = "Offset: " + data.Offset + " Size: " + data.Size;
-            TextPrev[2] = "Header: " + data.Header + " MaterialCount: " + data.MaterialIDs.Length;
-            for (int i = 0; i < data.MaterialIDs.Length; ++i)
-                TextPrev[3 + i] = FileController.GetMaterialName(data.MaterialIDs[i]);
-            TextPrev[3 + data.MaterialIDs.Length] = "Mesh: " + data.MeshID;
+            TextPrev = new string[4 + Data.MaterialIDs.Length];
+            TextPrev[0] = "ID: " + Data.ID;
+            TextPrev[1] = "Offset: " + Data.Offset + " Size: " + Data.Size;
+            TextPrev[2] = "Header: " + Data.Header + " MaterialCount: " + Data.MaterialIDs.Length;
+            for (int i = 0; i < Data.MaterialIDs.Length; ++i)
+                TextPrev[3 + i] = FileController.GetMaterialName(Data.MaterialIDs[i]);
+            TextPrev[3 + Data.MaterialIDs.Length] = "Mesh: " + Data.MeshID;
         }
     }
 }

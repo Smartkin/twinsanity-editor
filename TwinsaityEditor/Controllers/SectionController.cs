@@ -5,11 +5,11 @@ namespace TwinsaityEditor
 {
     public class SectionController : Controller
     {
-        private TwinsSection data;
+        public TwinsSection Data { get; set; }
 
         public SectionController(TwinsSection item)
         {
-            data = item;
+            Data = item;
             if (item.Type != SectionType.Texture && item.Type != SectionType.TextureX
                 && item.Type != SectionType.Material && item.Type != SectionType.Mesh
                 && item.Type != SectionType.MeshX && item.Type != SectionType.Model
@@ -29,15 +29,15 @@ namespace TwinsaityEditor
 
         public override string GetName()
         {
-            return data.Type + " Section [ID " + data.ID + "]";
+            return Data.Type + " Section [ID " + Data.ID + "]";
         }
 
         public override void GenText()
         {
             TextPrev = new string[3];
-            TextPrev[0] = "ID: " + data.ID;
-            TextPrev[1] = "Offset: " + data.Offset + " Size: " + data.Size;
-            TextPrev[2] = "ContentSize: " + data.ContentSize + " Element Count: " + data.SecInfo.Records.Count;
+            TextPrev[0] = "ID: " + Data.ID;
+            TextPrev[1] = "Offset: " + Data.Offset + " Size: " + Data.Size;
+            TextPrev[2] = "ContentSize: " + Data.ContentSize + " Element Count: " + Data.SecInfo.Records.Count;
         }
 
         private void Menu_ReOrderByID_Asc()
@@ -45,16 +45,16 @@ namespace TwinsaityEditor
             Node.TreeView.BeginUpdate();
             while (Node.Nodes.Count > 0)
                 DisposeNode(Node.Nodes[0]);
-            SortedDictionary<uint, TwinsItem> sdic = new SortedDictionary<uint, TwinsItem>(data.SecInfo.Records);
-            data.SecInfo.Records.Clear();
+            SortedDictionary<uint, TwinsItem> sdic = new SortedDictionary<uint, TwinsItem>(Data.SecInfo.Records);
+            Data.SecInfo.Records.Clear();
             foreach (var i in sdic)
             {
-                data.SecInfo.Records.Add(i.Key, i.Value);
+                Data.SecInfo.Records.Add(i.Key, i.Value);
                 ((MainForm)Node.TreeView.FindForm()).GenTreeNode(i.Value, this);
             }
             Node.TreeView.EndUpdate();
-            if (data.Type == SectionType.ObjectInstance)
-                RMViewer.InstancesChanged[data.Parent.ID] = true;
+            if (Data.Type == SectionType.ObjectInstance)
+                RMViewer.InstancesChanged[Data.Parent.ID] = true;
         }
 
         private void Menu_ReOrderByID_Desc()
@@ -63,17 +63,17 @@ namespace TwinsaityEditor
             while (Node.Nodes.Count > 0)
                 DisposeNode(Node.Nodes[0]);
             SortedDictionary<uint, TwinsItem> sdic = new SortedDictionary<uint, TwinsItem>(new Utils.DescendingComparer<uint>());
-            foreach (var i in data.SecInfo.Records)
+            foreach (var i in Data.SecInfo.Records)
                 sdic.Add(i.Key, i.Value);
-            data.SecInfo.Records.Clear();
+            Data.SecInfo.Records.Clear();
             foreach (var i in sdic)
             {
-                data.SecInfo.Records.Add(i.Key, i.Value);
+                Data.SecInfo.Records.Add(i.Key, i.Value);
                 ((MainForm)Node.TreeView.FindForm()).GenTreeNode(i.Value, this);
             }
             Node.TreeView.EndUpdate();
-            if (data.Type == SectionType.ObjectInstance)
-                RMViewer.InstancesChanged[data.Parent.ID] = true;
+            if (Data.Type == SectionType.ObjectInstance)
+                RMViewer.InstancesChanged[Data.Parent.ID] = true;
         }
 
         private void Menu_ReIDByOrder()
@@ -81,18 +81,18 @@ namespace TwinsaityEditor
             Node.TreeView.BeginUpdate();
             while (Node.Nodes.Count > 0)
                 DisposeNode(Node.Nodes[0]);
-            Dictionary<uint, TwinsItem> dic = new Dictionary<uint, TwinsItem>(data.SecInfo.Records);
-            data.SecInfo.Records.Clear();
+            Dictionary<uint, TwinsItem> dic = new Dictionary<uint, TwinsItem>(Data.SecInfo.Records);
+            Data.SecInfo.Records.Clear();
             uint id = 0;
             foreach(var i in dic)
             {
                 i.Value.ID = id;
-                data.SecInfo.Records.Add(id++, i.Value);
+                Data.SecInfo.Records.Add(id++, i.Value);
                 ((MainForm)Node.TreeView.FindForm()).GenTreeNode(i.Value, this);
             }
             Node.TreeView.EndUpdate();
-            if (data.Type == SectionType.ObjectInstance)
-                RMViewer.InstancesChanged[data.Parent.ID] = true;
+            if (Data.Type == SectionType.ObjectInstance)
+                RMViewer.InstancesChanged[Data.Parent.ID] = true;
         }
     }
 }

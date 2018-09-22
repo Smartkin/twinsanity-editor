@@ -4,26 +4,26 @@ namespace TwinsaityEditor
 {
     public class MaterialController : ItemController
     {
-        private Material data;
+        public new Material Data { get; set; }
 
         public MaterialController(Material item) : base(item)
         {
-            data = item;
+            Data = item;
         }
 
         public override string GetName()
         {
-            return data.Name + " [ID " + data.ID + "]";
+            return Data.Name + " [ID " + Data.ID + "]";
         }
 
         public override void GenText()
         {
             TextPrev = new string[5];
-            TextPrev[0] = "ID: " + data.ID;
-            TextPrev[1] = "Offset: " + data.Offset + " Size: " + data.Size;
-            TextPrev[2] = "Name: " + data.Name + " Texture ID: " + data.Tex;
-            TextPrev[3] = "Integers: " + data.ValuesI[0] + " " + data.ValuesI[1] + " " + data.ValuesI[2] + " " + data.ValuesI[3];
-            TextPrev[4] = "Floats: " + data.ValuesF[0] + " " + data.ValuesF[1] + " " + data.ValuesF[2] + " " + data.ValuesF[3];
+            TextPrev[0] = "ID: " + Data.ID;
+            TextPrev[1] = "Offset: " + Data.Offset + " Size: " + Data.Size;
+            TextPrev[2] = "Name: " + Data.Name + " Texture ID: " + Data.Tex;
+            TextPrev[3] = "Integers: " + Data.ValuesI[0] + " " + Data.ValuesI[1] + " " + Data.ValuesI[2] + " " + Data.ValuesI[3];
+            TextPrev[4] = "Floats: " + Data.ValuesF[0] + " " + Data.ValuesF[1] + " " + Data.ValuesF[2] + " " + Data.ValuesF[3];
         }
     }
 }

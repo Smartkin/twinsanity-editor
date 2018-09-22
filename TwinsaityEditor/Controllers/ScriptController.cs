@@ -4,23 +4,23 @@ namespace TwinsaityEditor
 {
     public class ScriptController : ItemController
     {
-        private Script data;
+        public new Script Data { get; set; }
 
         public ScriptController(Script item) : base(item)
         {
-            data = item;
+            Data = item;
         }
 
         public override string GetName()
         {
-            return (data.Name != null ? data.Name : "Script") + " [ID " + data.ID + "]";
+            return (Data.Name != null ? Data.Name : "Script") + " [ID " + Data.ID + "]";
         }
 
         public override void GenText()
         {
             TextPrev = new string[2];
-            TextPrev[0] = "ID: " + data.ID + (data.Name != null ? " Name: " + data.Name : string.Empty);
-            TextPrev[1] = "Offset: " + data.Offset + " Size: " + data.Size;
+            TextPrev[0] = "ID: " + Data.ID + (Data.Name != null ? " Name: " + Data.Name : string.Empty);
+            TextPrev[1] = "Offset: " + Data.Offset + " Size: " + Data.Size;
         }
     }
 }

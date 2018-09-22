@@ -6,24 +6,24 @@ namespace TwinsaityEditor
 {
     public class ItemController : Controller
     {
-        private TwinsItem data;
+        public TwinsItem Data { get; set; }
 
         public ItemController(TwinsItem item)
         {
-            data = item;
+            Data = item;
             AddMenu("Extract raw data to file", Menu_ExtractItem);
         }
 
         public override string GetName()
         {
-            return "Item [ID " + data.ID + "]";
+            return "Item [ID " + Data.ID + "]";
         }
 
         public override void GenText()
         {
             TextPrev = new string[2];
-            TextPrev[0] = "ID: " + data.ID;
-            TextPrev[1] = "Offset: " + data.Offset + " Size: " + data.Size;
+            TextPrev[0] = "ID: " + Data.ID;
+            TextPrev[1] = "Offset: " + Data.Offset + " Size: " + Data.Size;
         }
 
         private void Menu_ExtractItem()
@@ -34,7 +34,7 @@ namespace TwinsaityEditor
             {
                 FileStream file = new FileStream(sfd.FileName, FileMode.Create, FileAccess.Write);
                 BinaryWriter writer = new BinaryWriter(file);
-                data.Save(writer);
+                Data.Save(writer);
                 writer.Close();
             }
         }

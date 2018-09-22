@@ -5,30 +5,30 @@ namespace TwinsaityEditor
 {
     public class ChunkLinksController : ItemController
     {
-        private ChunkLinks data;
+        public new ChunkLinks Data { get; set; }
 
         public ChunkLinksController(ChunkLinks item) : base(item)
         {
-            data = item;
+            Data = item;
         }
 
         public override string GetName()
         {
-            return "Chunk Links [ID " + data.ID + "]";
+            return "Chunk Links [ID " + Data.ID + "]";
         }
 
         public override void GenText()
         {
-            TextPrev = new string[3 + data.Links.Count * 5];
-            TextPrev[0] = "ID: " + data.ID;
-            TextPrev[1] = "Offset: " + data.Offset + " Size: " + data.Size;
-            TextPrev[2] = "LinkCount: " + data.Links.Count;
-            for (int i = 0; i < data.Links.Count; ++i)
+            TextPrev = new string[3 + Data.Links.Count * 5];
+            TextPrev[0] = "ID: " + Data.ID;
+            TextPrev[1] = "Offset: " + Data.Offset + " Size: " + Data.Size;
+            TextPrev[2] = "LinkCount: " + Data.Links.Count;
+            for (int i = 0; i < Data.Links.Count; ++i)
             {
                 TextPrev[4 + i * 5] = "Link" + i;
-                TextPrev[5 + i * 5] = "Type: " + data.Links[i].Type;
-                TextPrev[6 + i * 5] = "Directory: " + new string(data.Links[i].Path);
-                TextPrev[7 + i * 5] = "Flags: " + Convert.ToString(data.Links[i].Flags, 16).ToUpper();
+                TextPrev[5 + i * 5] = "Type: " + Data.Links[i].Type;
+                TextPrev[6 + i * 5] = "Directory: " + new string(Data.Links[i].Path);
+                TextPrev[7 + i * 5] = "Flags: " + Convert.ToString(Data.Links[i].Flags, 16).ToUpper();
             }
         }
     }
