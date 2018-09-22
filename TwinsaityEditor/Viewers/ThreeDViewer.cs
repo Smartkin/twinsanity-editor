@@ -18,22 +18,15 @@ namespace TwinsaityEditor
         private int m_x, m_y;
         private EventHandler _inputHandle;
         private FontWrapper.FontService _fntService;
-        private List<int> _textTextureList;
-
-        protected List<string> viewerMessageList;
+        private Dictionary<char, int> textureCharMap = new Dictionary<char, int>();
+        private float size = 32;
 
         public ThreeDViewer()
         {
-            _textTextureList = new List<int>();
-            viewerMessageList = new List<string> {
-                "HELLO",
-                "ASS",
-                "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!_/:?"
-            };
             _fntService = new FontWrapper.FontService();
             List<FileInfo> fonts = (List<FileInfo>)_fntService.GetFontFiles(new DirectoryInfo("Fonts/"), false);
             _fntService.SetFont(fonts[0].FullName);
-            _fntService.SetSize(12f);
+            _fntService.SetSize(size);
 
             pos = new Vector3(0, 0, 0);
             rot = new Vector3(0, 0, 0);
@@ -293,27 +286,13 @@ namespace TwinsaityEditor
             GL.Enable(EnableCap.Lighting);
             GL.Enable(EnableCap.Light0);
             GL.Enable(EnableCap.Normalize);
-            InitTextRender();
             base.OnLoad(e);
         }
 
         protected virtual void DrawText()
         {
             GL.Color3(Color.White);
-            for (int i = 0; i < _textTextureList.Count; ++i)
-            {
-                int texture = _textTextureList[i];
-
-                GL.BindTexture(TextureTarget.Texture2D, texture);
-
-                GL.Begin(PrimitiveType.Quads);
-                GL.TexCoord2(0, 1); GL.Vertex2(-1, -1 + i * 3);
-                GL.TexCoord2(1, 1); GL.Vertex2(1, -1 + i * 3);
-                GL.TexCoord2(1, 0); GL.Vertex2(1, 1 + i * 3);
-                GL.TexCoord2(0, 0); GL.Vertex2(-1, 1 + i * 3);
-                GL.End();
-            }
-            GL.BindTexture(TextureTarget.Texture2D, 0);
+            RenderString("0123456789ABCDEFGHIJKLMNP1RSTUVWXYZabcdefghijklmnopqrstuvwxyz !_/:?");
         }
 
         protected int LoadTextTexture(ref Bitmap text, int quality = 1, bool flip_y = false)
@@ -352,14 +331,37 @@ namespace TwinsaityEditor
             return texture;
         }
 
-        private void InitTextRender()
+        protected void RenderString(string s)
         {
-            foreach(var text in viewerMessageList)
+            float spacing = 0.75f;
+            float x = (s.Length + 1) * (-spacing / 2f);
+            foreach (char c in s)
             {
-                Bitmap bmp = _fntService.RenderString(text, Color.White, Color.Transparent);
-                _textTextureList.Add(LoadTextTexture(ref bmp));
-                bmp.Dispose();
+                x += spacing;
+                if (c == ' ')
+                    continue;
+                if (!textureCharMap.ContainsKey(c))
+                    GenCharTex(c);
+                GL.BindTexture(TextureTarget.Texture2D, textureCharMap[c]);
+                GL.GetTexLevelParameter(TextureTarget.Texture2D, 0, GetTextureParameter.TextureWidth, out float w);
+                GL.GetTexLevelParameter(TextureTarget.Texture2D, 0, GetTextureParameter.TextureHeight, out float h);
+                w /= size*2;
+                h /= size;
+                GL.Begin(PrimitiveType.Quads);
+                GL.TexCoord2(0, 1); GL.Vertex2(x-w, 0);
+                GL.TexCoord2(1, 1); GL.Vertex2(x+w, 0);
+                GL.TexCoord2(1, 0); GL.Vertex2(x+w, h);
+                GL.TexCoord2(0, 0); GL.Vertex2(x-w, h);
+                GL.End();
             }
+            GL.BindTexture(TextureTarget.Texture2D, 0);
+        }
+
+        private void GenCharTex(char c)
+        {
+            Bitmap bmp = _fntService.RenderString(c.ToString(), Color.White, Color.Transparent);
+            textureCharMap.Add(c, LoadTextTexture(ref bmp));
+            bmp.Dispose();
         }
 
         protected override void Dispose(bool disposing)
