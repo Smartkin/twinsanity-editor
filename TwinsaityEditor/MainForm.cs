@@ -23,6 +23,7 @@ namespace TwinsaityEditor
             treeView1.AfterSelect += TreeNodeSelect;
             if (treeView1.TopNode != null && treeView1.TopNode.Tag is Controller c)
                 c.DisposeNode(treeView1.TopNode);
+            rmForm.Close();
             treeView1.Nodes.Clear();
             FileController controller = new FileController(fileData);
             controller.Node.Text = controller.GetName();
