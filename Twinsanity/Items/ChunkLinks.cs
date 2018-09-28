@@ -13,6 +13,7 @@ namespace Twinsanity
         /////////PARENTS FUNCTION//////////
         public override void Save(BinaryWriter writer)
         {
+            writer.Write(Links.Count);
             foreach (var i in Links)
             {
                 writer.Write(i.Type);
