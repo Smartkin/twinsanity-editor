@@ -1,4 +1,5 @@
 ﻿using OpenTK;
+using Twinsanity;
 
 namespace TwinsaityEditor.Utils
 {
@@ -19,6 +20,25 @@ namespace TwinsaityEditor.Utils
             float ny = ((z1 - z2) * (x1 - x3)) - ((x1 - x2) * (z1 - z3));
             float nz = ((x1 - x2) * (y1 - y3)) - ((y1 - y2) * (x1 - x3));
             return new Vector3(nx, ny, nz);
+        }
+
+        public static Vector4 FromPos(Pos pos)
+        {
+            return new Vector4(pos.X, pos.Y, pos.Z, pos.W);
+        }
+
+        public static Vector4 NormalizeW(this Vector4 v)
+        {
+            v.X *= v.W;
+            v.Y *= v.W;
+            v.Z *= v.W;
+            v.W /= v.W;
+            return v;
+        }
+
+        public static Pos ToPos(this Vector4 v)
+        {
+            return new Pos(v.X, v.Y, v.Z, v.W);
         }
     }
 }
