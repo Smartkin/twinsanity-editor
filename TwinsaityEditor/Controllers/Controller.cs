@@ -8,10 +8,6 @@ namespace TwinsaityEditor
     public abstract class Controller : IDisposable
     {
         public string[] TextPrev { get; set; }
-        /// <summary>
-        /// Determines whether text preview needs to be regenerated or not.
-        /// </summary>
-        public bool Dirty { get; set; }
         public TreeNode Node { get; set; }
         public ContextMenu ContextMenu { get; set; } = new ContextMenu();
         
@@ -48,8 +44,14 @@ namespace TwinsaityEditor
             node.Remove();
         }
 
-        public abstract string GetName();
-        public abstract void GenText();
+        protected abstract string GetName();
+        protected abstract void GenText();
+
+        public void UpdateText()
+        {
+            GenText();
+            Node.Text = GetName();
+        }
 
         public virtual void Dispose() { }
     }

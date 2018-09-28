@@ -16,12 +16,12 @@ namespace TwinsaityEditor
             AddMenu("Export Collision Model", Menu_Export);
         }
 
-        public override string GetName()
+        protected override string GetName()
         {
             return "Collision Data [ID " + Data.ID + "]";
         }
 
-        public override void GenText()
+        protected override void GenText()
         {
             TextPrev = new string[6 + Data.Triggers.Count + Data.Groups.Count + Data.Tris.Count + Data.Vertices.Count];
             TextPrev[0] = "ID: " + Data.ID;

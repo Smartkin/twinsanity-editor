@@ -11,12 +11,12 @@ namespace TwinsaityEditor
             Data = item;
         }
 
-        public override string GetName()
+        protected override string GetName()
         {
             return (Data.Name != null ? Data.Name : "Script") + " [ID " + Data.ID + "]";
         }
 
-        public override void GenText()
+        protected override void GenText()
         {
             TextPrev = new string[2];
             TextPrev[0] = "ID: " + Data.ID + (Data.Name != null ? " Name: " + Data.Name : string.Empty);

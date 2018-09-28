@@ -14,12 +14,12 @@ namespace TwinsaityEditor
             AddMenu("Extract raw data to file", Menu_ExtractItem);
         }
 
-        public override string GetName()
+        protected override string GetName()
         {
             return "Item [ID " + Data.ID + "]";
         }
 
-        public override void GenText()
+        protected override void GenText()
         {
             TextPrev = new string[2];
             TextPrev[0] = "ID: " + Data.ID;

@@ -11,12 +11,12 @@ namespace TwinsaityEditor
             Data = item;
         }
 
-        public override string GetName()
+        protected override string GetName()
         {
             return "File";
         }
 
-        public override void GenText()
+        protected override void GenText()
         {
             TextPrev = new string[2];
             TextPrev[0] = "Size: " + Data.Size;

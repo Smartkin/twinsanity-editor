@@ -11,12 +11,12 @@ namespace TwinsaityEditor
             Data = item;
         }
 
-        public override string GetName()
+        protected override string GetName()
         {
             return "Texture [ID " + Data.ID + "]";
         }
 
-        public override void GenText()
+        protected override void GenText()
         {
             TextPrev = new string[3];
             TextPrev[0] = "ID: " + Data.ID;

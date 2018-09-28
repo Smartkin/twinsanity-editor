@@ -12,7 +12,7 @@ namespace TwinsaityEditor
             Data = item;
         }
 
-        public override string GetName()
+        protected override string GetName()
         {
             if (FileController.GetObjectName(Data.ObjectID) != string.Empty)
                 return FileController.GetObjectName(Data.ObjectID) + " Instance [ID " + Data.ID + "]";
@@ -20,7 +20,7 @@ namespace TwinsaityEditor
                 return "Instance [ID " + Data.ID + "]";
         }
 
-        public override void GenText()
+        protected override void GenText()
         {
             string obj_name = FileController.GetObjectName(Data.ObjectID);
             TextPrev = new string[12 + Data.S1.Count + Data.S2.Count + Data.S3.Count + Data.UnkI321.Length + Data.UnkI322.Length + Data.UnkI323.Length];

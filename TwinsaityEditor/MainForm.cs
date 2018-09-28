@@ -34,8 +34,7 @@ namespace TwinsaityEditor
                 editChunkLinks.Close();
             treeView1.Nodes.Clear();
             FileController controller = new FileController(fileData);
-            controller.Node.Text = controller.GetName();
-            controller.GenText();
+            controller.UpdateText();
             treeView1.Nodes.Add(controller.Node);
             treeView1.Select();
             foreach (var i in fileData.SecInfo.Records.Values)
@@ -50,12 +49,6 @@ namespace TwinsaityEditor
         {
             if (e.Node.Tag is Controller c)
             {
-                if (c.Dirty)
-                {
-                    e.Node.Text = c.GetName();
-                    c.GenText();
-                    c.Dirty = false;
-                }
                 textBox1.Lines = c.TextPrev;
             }
         }
@@ -93,8 +86,7 @@ namespace TwinsaityEditor
                 c = new ChunkLinksController((ChunkLinks)a);
             else
                 c = new ItemController(a);
-            c.Node.Text = c.GetName();
-            c.GenText();
+            c.UpdateText();
             controller.AddNode(c);
         }
 

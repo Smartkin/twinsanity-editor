@@ -11,12 +11,12 @@ namespace TwinsaityEditor
             Data = item;
         }
 
-        public override string GetName()
+        protected override string GetName()
         {
             return "Trigger [ID " + Data.ID + "]";
         }
 
-        public override void GenText()
+        protected override void GenText()
         {
             TextPrev = new string[8 + Data.Instances.Length];
             TextPrev[0] = "ID: " + Data.ID;
