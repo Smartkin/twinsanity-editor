@@ -284,7 +284,7 @@ namespace TwinsaityEditor
                 return;
             controller.Data.Links.RemoveAt(listBox1.SelectedIndex);
             listBox1.Items.RemoveAt(listBox1.SelectedIndex);
-            groupBox1.Enabled = groupBox2.Enabled = groupBox3.Enabled = false;
+            groupBox1.Enabled = groupBox2.Enabled = groupBox3.Enabled = groupBox6.Enabled = groupBox9.Enabled = groupBox8.Enabled = groupBox7.Enabled = false;
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -292,7 +292,7 @@ namespace TwinsaityEditor
             if (ignore_value_change) return;
             link.Path = textBox1.Text.ToCharArray();
             controller.Data.Links[listBox1.SelectedIndex] = link;
-            listBox1.Text = textBox1.Text;
+            listBox1.Items[listBox1.SelectedIndex] = textBox1.Text;
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
