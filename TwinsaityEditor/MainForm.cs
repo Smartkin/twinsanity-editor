@@ -182,7 +182,8 @@ namespace TwinsaityEditor
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            fileData.SaveFile(fileName);
+            if (MessageBox.Show("Overwrite original file?", "Save", MessageBoxButtons.OKCancel) == DialogResult.OK)
+                fileData.SaveFile(fileName);
         }
 
         private void rMViewerToolStripMenuItem_Click(object sender, EventArgs e)
