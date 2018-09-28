@@ -6,8 +6,11 @@ namespace TwinsaityEditor
 {
     public partial class MainForm : Form
     {
+        public enum Editors { ChunkLinks };
+
         private static TwinsFile fileData = new TwinsFile();
-        private static Form rmForm, exeForm;
+        private static Form rmForm, smForm, exeForm;
+        private static Form editChunkLinks;
         private static string fileName;
 
         public static string SafeFileName { get; set; }
@@ -21,10 +24,14 @@ namespace TwinsaityEditor
         {
             treeView1.BeginUpdate();
             treeView1.AfterSelect += TreeNodeSelect;
+            treeView1.NodeMouseDoubleClick += TreeNodeOpenEditor;
+            treeView1.KeyDown += treeView1_KeyDown;
             if (treeView1.TopNode != null && treeView1.TopNode.Tag is Controller c)
                 c.DisposeNode(treeView1.TopNode);
             if (rmForm != null)
                 rmForm.Close();
+            if (editChunkLinks != null)
+                editChunkLinks.Close();
             treeView1.Nodes.Clear();
             FileController controller = new FileController(fileData);
             controller.Node.Text = controller.GetName();
@@ -89,6 +96,25 @@ namespace TwinsaityEditor
             c.Node.Text = c.GetName();
             c.GenText();
             controller.AddNode(c);
+        }
+
+        private void TreeNodeOpenEditor(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            if (e.Node.Tag is Controller c)
+            {
+                if (c is ChunkLinksController)
+                    OpenEditor(Editors.ChunkLinks, c);
+            }
+        }
+
+        private void treeView1_KeyDown(object sender, KeyEventArgs e)
+        {
+            TreeView tree = (TreeView)sender;
+            if (e.KeyCode == Keys.Enter && tree.SelectedNode.Tag is Controller c)
+            {
+                if (c is ChunkLinksController)
+                    OpenEditor(Editors.ChunkLinks, c);
+            }
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -183,9 +209,33 @@ namespace TwinsaityEditor
                 rmForm.Select();
         }
 
+        public static void OpenSMViewer()
+        {
+            if (smForm == null)
+            {
+                smForm = new Form { Size = new System.Drawing.Size(480, 480), Text = "Initiating renderer..." };
+                smForm.FormClosed += delegate
+                {
+                    smForm = null;
+                };
+                smForm.Show();
+                TwinsFile file = FileController.GetFile();
+                SMViewer viewer = new SMViewer(ref file) { Dock = DockStyle.Fill };
+                smForm.Controls.Add(viewer);
+                smForm.Text = "SMViewer";
+            }
+            else
+                smForm.Select();
+        }
+
         private void eLFPatcherToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenEXETool();
+        }
+
+        private void sMViewerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenSMViewer();
         }
 
         public static void OpenEXETool()
@@ -201,6 +251,39 @@ namespace TwinsaityEditor
             }
             else
                 exeForm.Select();
+        }
+
+        public static void OpenEditor(Editors editor, Controller cont)
+        {
+            Form editForm = null;
+            switch (editor)
+            {
+                case Editors.ChunkLinks:
+                    editForm = editChunkLinks;
+                    break;
+            }
+
+            if (editForm == null)
+            {
+                switch (editor)
+                {
+                    case Editors.ChunkLinks:
+                        editForm = editChunkLinks = new ChunkLinksEditor((ChunkLinksController)cont);
+                        break;
+                }
+                editForm.FormClosed += delegate
+                {
+                    switch (editor)
+                    {
+                        case Editors.ChunkLinks:
+                            editChunkLinks = null;
+                            break;
+                    }
+                };
+                editForm.Show();
+            }
+            else
+                editForm.Select();
         }
     }
 }

@@ -79,7 +79,7 @@
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(863, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(721, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -174,7 +174,7 @@
             // eLFPatcherToolStripMenuItem
             // 
             this.eLFPatcherToolStripMenuItem.Name = "eLFPatcherToolStripMenuItem";
-            this.eLFPatcherToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.eLFPatcherToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.eLFPatcherToolStripMenuItem.Text = "EXE Patcher";
             this.eLFPatcherToolStripMenuItem.Click += new System.EventHandler(this.eLFPatcherToolStripMenuItem_Click);
             // 
@@ -182,25 +182,25 @@
             // 
             this.e3ConverterToolStripMenuItem.Enabled = false;
             this.e3ConverterToolStripMenuItem.Name = "e3ConverterToolStripMenuItem";
-            this.e3ConverterToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.e3ConverterToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.e3ConverterToolStripMenuItem.Text = "E3 Converter";
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(177, 6);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(149, 6);
             // 
             // refreshLibraryToolStripMenuItem
             // 
             this.refreshLibraryToolStripMenuItem.Enabled = false;
             this.refreshLibraryToolStripMenuItem.Name = "refreshLibraryToolStripMenuItem";
-            this.refreshLibraryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.refreshLibraryToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.refreshLibraryToolStripMenuItem.Text = "Refresh Library";
             // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(177, 6);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(149, 6);
             // 
             // collisionTreeToolStripMenuItem
             // 
@@ -212,7 +212,7 @@
             this.triggerTreeViewerToolStripMenuItem});
             this.collisionTreeToolStripMenuItem.Enabled = false;
             this.collisionTreeToolStripMenuItem.Name = "collisionTreeToolStripMenuItem";
-            this.collisionTreeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.collisionTreeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.collisionTreeToolStripMenuItem.Text = "Collision Tree";
             // 
             // collisionTreeViewerToolStripMenuItem
@@ -249,14 +249,14 @@
             // 
             this.graphicsToolStripMenuItem.Enabled = false;
             this.graphicsToolStripMenuItem.Name = "graphicsToolStripMenuItem";
-            this.graphicsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.graphicsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.graphicsToolStripMenuItem.Text = "Graphics";
             // 
             // soundToolStripMenuItem
             // 
             this.soundToolStripMenuItem.Enabled = false;
             this.soundToolStripMenuItem.Name = "soundToolStripMenuItem";
-            this.soundToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.soundToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.soundToolStripMenuItem.Text = "Sound";
             // 
             // viewersToolStripMenuItem
@@ -272,7 +272,7 @@
             // 
             this.rMViewerToolStripMenuItem.Enabled = false;
             this.rMViewerToolStripMenuItem.Name = "rMViewerToolStripMenuItem";
-            this.rMViewerToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
+            this.rMViewerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.rMViewerToolStripMenuItem.Text = "RM Viewer";
             this.rMViewerToolStripMenuItem.Click += new System.EventHandler(this.rMViewerToolStripMenuItem_Click);
             // 
@@ -280,8 +280,9 @@
             // 
             this.sMViewerToolStripMenuItem.Enabled = false;
             this.sMViewerToolStripMenuItem.Name = "sMViewerToolStripMenuItem";
-            this.sMViewerToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
+            this.sMViewerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.sMViewerToolStripMenuItem.Text = "SM Viewer";
+            this.sMViewerToolStripMenuItem.Click += new System.EventHandler(this.sMViewerToolStripMenuItem_Click);
             // 
             // preferencesToolStripMenuItem
             // 
@@ -311,8 +312,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.textBox1);
-            this.splitContainer1.Size = new System.Drawing.Size(863, 345);
-            this.splitContainer1.SplitterDistance = 287;
+            this.splitContainer1.Size = new System.Drawing.Size(721, 345);
+            this.splitContainer1.SplitterDistance = 280;
             this.splitContainer1.TabIndex = 1;
             // 
             // treeView1
@@ -320,7 +321,7 @@
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(287, 345);
+            this.treeView1.Size = new System.Drawing.Size(280, 345);
             this.treeView1.TabIndex = 0;
             // 
             // textBox1
@@ -331,14 +332,14 @@
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(572, 345);
+            this.textBox1.Size = new System.Drawing.Size(437, 345);
             this.textBox1.TabIndex = 0;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(863, 369);
+            this.ClientSize = new System.Drawing.Size(721, 369);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

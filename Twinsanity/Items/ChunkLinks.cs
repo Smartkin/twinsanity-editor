@@ -99,9 +99,9 @@ namespace Twinsanity
                     link.ChunkMatrix[j].Z = reader.ReadSingle();
                     link.ChunkMatrix[j].W = reader.ReadSingle();
                 }
+                link.LoadWall = new Pos[4];
                 if ((link.Flags & 0x80000) != 0)
                 {
-                    link.LoadWall = new Pos[4];
                     for (int j = 0; j < 4; ++j)
                     {
                         link.LoadWall[j].X = reader.ReadSingle();
@@ -110,14 +110,17 @@ namespace Twinsanity
                         link.LoadWall[j].W = reader.ReadSingle();
                     }
                 }
+                link.Unknown = new short[15];
+                link.LoadArea = new Pos[8];
+                link.AreaMatrix = new Pos[6];
+                link.UnknownMatrix = new Pos[6];
+                link.Bytes = new byte[60];
                 if (link.Type == 1 || link.Type == 3) //type 1/3 continue here
                 {
-                    link.Unknown = new short[15];
                     for (int j = 0; j < 15; ++j)
                     {
                         link.Unknown[j] = reader.ReadInt16();
                     }
-                    link.LoadArea = new Pos[8];
                     for (int j = 0; j < 8; ++j)
                     {
                         link.LoadArea[j].X = reader.ReadSingle();
@@ -125,7 +128,6 @@ namespace Twinsanity
                         link.LoadArea[j].Z = reader.ReadSingle();
                         link.LoadArea[j].W = reader.ReadSingle();
                     }
-                    link.AreaMatrix = new Pos[6];
                     for (int j = 0; j < 6; ++j)
                     {
                         link.AreaMatrix[j].X = reader.ReadSingle();
@@ -133,7 +135,6 @@ namespace Twinsanity
                         link.AreaMatrix[j].Z = reader.ReadSingle();
                         link.AreaMatrix[j].W = reader.ReadSingle();
                     }
-                    link.UnknownMatrix = new Pos[6];
                     for (int j = 0; j < 6; ++j)
                     {
                         link.UnknownMatrix[j].X = reader.ReadSingle();
