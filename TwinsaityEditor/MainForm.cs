@@ -13,6 +13,8 @@ namespace TwinsaityEditor
         private static Form editChunkLinks;
         private static string fileName;
 
+        private TreeNode previousNode;
+
         public static string SafeFileName { get; set; }
 
         public MainForm()
@@ -27,7 +29,7 @@ namespace TwinsaityEditor
             treeView1.NodeMouseDoubleClick += TreeNodeOpenEditor;
             treeView1.KeyDown += treeView1_KeyDown;
             if (treeView1.TopNode != null && treeView1.TopNode.Tag is Controller c)
-                c.DisposeNode(treeView1.TopNode);
+                Controller.DisposeNode(treeView1.TopNode);
             if (rmForm != null)
                 rmForm.Close();
             if (editChunkLinks != null)
@@ -47,16 +49,20 @@ namespace TwinsaityEditor
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            if (e.Node.Tag is Controller c)
-                ControllerNodeSelect(c);
+            if (previousNode != null && previousNode.Tag is Controller c1)
+                c1.Selected = false;
+            if (e.Node.Tag is Controller c2)
+                ControllerNodeSelect(c2);
+            previousNode = e.Node;
         }
 
         public void ControllerNodeSelect(Controller c)
         {
+            c.Selected = true;
             textBox1.Lines = c.TextPrev;
         }
 
-        public void GenTreeNode(TwinsItem a, Controller controller)
+        public static void GenTreeNode(TwinsItem a, Controller controller)
         {
             Controller c;
             if (a is TwinsSection)

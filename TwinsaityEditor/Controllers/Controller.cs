@@ -7,6 +7,7 @@ namespace TwinsaityEditor
 
     public abstract class Controller : IDisposable
     {
+        public bool Selected { get; set; }
         public string[] TextPrev { get; set; }
         public TreeNode Node { get; set; }
         public ContextMenu ContextMenu { get; set; } = new ContextMenu();
@@ -34,7 +35,7 @@ namespace TwinsaityEditor
         /// Dispose of a node.
         /// </summary>
         /// <param name="node">Node to be disposed of.</param>
-        public void DisposeNode(TreeNode node)
+        public static void DisposeNode(TreeNode node)
         {
             if (node == null)
                 throw new ArgumentNullException("node");
@@ -51,7 +52,7 @@ namespace TwinsaityEditor
         {
             GenText();
             Node.Text = GetName();
-            if (Node.IsSelected)
+            if (Selected)
                 ((MainForm)Node.TreeView.TopLevelControl).ControllerNodeSelect(this);
         }
 

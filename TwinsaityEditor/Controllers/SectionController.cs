@@ -70,7 +70,7 @@ namespace TwinsaityEditor
             foreach (var i in sdic)
             {
                 slist.Add(Data.Records[i.Value]);
-                ((MainForm)Node.TreeView.FindForm()).GenTreeNode(Data.Records[i.Value], this);
+                MainForm.GenTreeNode(Data.Records[i.Value], this);
             }
             Data.Records = slist;
             Node.TreeView.EndUpdate();
