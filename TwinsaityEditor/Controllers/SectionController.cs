@@ -42,6 +42,11 @@ namespace TwinsaityEditor
 
         private void Menu_ReOrderByID_Asc()
         {
+            if (Data.Type == SectionType.ObjectInstance)
+            {
+                RMViewer.InstancesChanged[Data.Parent.ID] = true;
+                MainForm.CloseInstanceEditor((int)Data.Parent.ID);
+            }
             Node.TreeView.BeginUpdate();
             while (Node.Nodes.Count > 0)
                 DisposeNode(Node.Nodes[0]);
@@ -50,12 +55,10 @@ namespace TwinsaityEditor
             foreach (var i in sdic)
             {
                 slist.Add(Data.Records[i.Value]);
-                ((MainForm)Node.TreeView.FindForm()).GenTreeNode(Data.Records[i.Value], this);
+                MainForm.GenTreeNode(Data.Records[i.Value], this);
             }
             Data.Records = slist;
             Node.TreeView.EndUpdate();
-            if (Data.Type == SectionType.ObjectInstance)
-                RMViewer.InstancesChanged[Data.Parent.ID] = true;
         }
 
         private void Menu_ReOrderByID_Desc()
@@ -80,6 +83,11 @@ namespace TwinsaityEditor
 
         private void Menu_ReIDByOrder()
         {
+            if (Data.Type == SectionType.ObjectInstance)
+            {
+                RMViewer.InstancesChanged[Data.Parent.ID] = true;
+                MainForm.CloseInstanceEditor((int)Data.Parent.ID);
+            }
             Node.TreeView.BeginUpdate();
             while (Node.Nodes.Count > 0)
                 DisposeNode(Node.Nodes[0]);
@@ -88,11 +96,9 @@ namespace TwinsaityEditor
             {
                 Data.Records[i].ID = (uint)i;
                 Data.RecordIDs.Add((uint)i, i);
-                ((MainForm)Node.TreeView.FindForm()).GenTreeNode(Data.Records[i], this);
+                MainForm.GenTreeNode(Data.Records[i], this);
             }
             Node.TreeView.EndUpdate();
-            if (Data.Type == SectionType.ObjectInstance)
-                RMViewer.InstancesChanged[Data.Parent.ID] = true;
         }
     }
 }
