@@ -17,11 +17,12 @@ namespace Twinsanity
     public class TwinsFile
     {
         private readonly uint magic = 0x00010001;
-        private TwinsSecInfo sec_info;
 
-        public TwinsSecInfo SecInfo { get => sec_info; set => sec_info = value; }
+        public uint Magic { get; set; }
+        public List<TwinsItem> Records;
+        public Dictionary<uint, int> RecordIDs;
         public int ContentSize { get => GetContentSize(); }
-        public int Size { get => ContentSize + SecInfo.Records.Count * 12 + 12; }
+        public int Size { get => ContentSize + Records.Count * 12 + 12; }
         public FileType Type { get; set; }
 
         /// <summary>
@@ -33,11 +34,12 @@ namespace Twinsanity
         {
             if (!File.Exists(path))
                 return;
-            sec_info.Records = new Dictionary<uint, TwinsItem>();
+            Records = new List<TwinsItem>();
+            RecordIDs = new Dictionary<uint, int>();
             FileStream file = new FileStream(path, FileMode.Open, FileAccess.Read);
             BinaryReader reader = new BinaryReader(file);
             Type = type;
-            if ((sec_info.Magic = reader.ReadUInt32()) != magic)
+            if ((Magic = reader.ReadUInt32()) != magic)
                 throw new ArgumentException("TwinsFile::LoadRM2File: Magic number is wrong.");
             var count = reader.ReadInt32();
             var sec_size = reader.ReadUInt32();
@@ -87,7 +89,8 @@ namespace Twinsanity
                                         sec.Level = 1;
                                         sec.Load(reader, sub.Size);
                                         reader.BaseStream.Position = sk;
-                                        sec_info.Records.Add(sub.ID, sec);
+                                        RecordIDs.Add(sub.ID, Records.Count);
+                                        Records.Add(sec);
                                         break;
                                     }
                                 case 9:
@@ -97,7 +100,8 @@ namespace Twinsanity
                                         reader.BaseStream.Position = rec.Offset = sub.Off;
                                         rec.Load(reader, sub.Size);
                                         reader.BaseStream.Position = sk;
-                                        sec_info.Records.Add(sub.ID, rec);
+                                        RecordIDs.Add(sub.ID, Records.Count);
+                                        Records.Add(rec);
                                         break;
                                     }
                                 default:
@@ -107,7 +111,8 @@ namespace Twinsanity
                                         reader.BaseStream.Position = rec.Offset = sub.Off;
                                         rec.Load(reader, sub.Size);
                                         reader.BaseStream.Position = sk;
-                                        sec_info.Records.Add(sub.ID, rec);
+                                        RecordIDs.Add(sub.ID, Records.Count);
+                                        Records.Add(rec);
                                         break;
                                     }
                             }
@@ -131,7 +136,8 @@ namespace Twinsanity
                                         reader.BaseStream.Position = sec.Offset = sub.Off;
                                         sec.Load(reader, sub.Size);
                                         reader.BaseStream.Position = sk;
-                                        sec_info.Records.Add(sub.ID, sec);
+                                        RecordIDs.Add(sub.ID, Records.Count);
+                                        Records.Add(sec);
                                         break;
                                     }
                                 case 5:
@@ -141,7 +147,8 @@ namespace Twinsanity
                                         reader.BaseStream.Position = rec.Offset = sub.Off;
                                         rec.Load(reader, sub.Size);
                                         reader.BaseStream.Position = sk;
-                                        sec_info.Records.Add(sub.ID, rec);
+                                        RecordIDs.Add(sub.ID, Records.Count);
+                                        Records.Add(rec);
                                         break;
                                     }
                                 default:
@@ -151,7 +158,8 @@ namespace Twinsanity
                                         reader.BaseStream.Position = rec.Offset = sub.Off;
                                         rec.Load(reader, sub.Size);
                                         reader.BaseStream.Position = sk;
-                                        sec_info.Records.Add(sub.ID, rec);
+                                        RecordIDs.Add(sub.ID, Records.Count);
+                                        Records.Add(rec);
                                         break;
                                     }
                             }
@@ -170,23 +178,20 @@ namespace Twinsanity
         {
             FileStream file = new FileStream(path, FileMode.Create, FileAccess.Write);
             BinaryWriter writer = new BinaryWriter(file);
-            writer.Write(sec_info.Magic);
-            writer.Write(sec_info.Records.Count);
-            int size = 0;
-            foreach (var i in sec_info.Records.Values)
-                size += i.Size;
-            writer.Write(size);
+            writer.Write(Magic);
+            writer.Write(Records.Count);
+            writer.Write(ContentSize);
 
-            var sec_off = sec_info.Records.Count * 12 + 12;
-            foreach (var i in sec_info.Records)
+            var sec_off = Records.Count * 12 + 12;
+            foreach (var i in Records)
             {
                 writer.Write(sec_off);
-                writer.Write(i.Value.Size);
-                writer.Write(i.Key);
-                sec_off += i.Value.Size;
+                writer.Write(i.Size);
+                writer.Write(i.ID);
+                sec_off += i.Size;
             }
 
-            foreach (var i in sec_info.Records.Values)
+            foreach (var i in Records)
             {
                 i.Save(writer);
             }
@@ -197,9 +202,14 @@ namespace Twinsanity
         private int GetContentSize()
         {
             int c_size = 0;
-            foreach (var i in SecInfo.Records.Values)
+            foreach (var i in Records)
                 c_size += i.Size;
             return c_size;
+        }
+
+        public TwinsItem GetItem(uint id)
+        {
+            return Records[RecordIDs[id]];
         }
 
         public enum FileType { RM2, SM2, DemoRM2, DemoSM2, RMX, SMX };

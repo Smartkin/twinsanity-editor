@@ -47,20 +47,15 @@ namespace Twinsanity
         Camera
     }
 
-    public struct TwinsSecInfo
-    {
-        public uint Magic;
-        public Dictionary<uint, TwinsItem> Records;
-    }
-
     public class TwinsSection : TwinsItem
     {
-        private TwinsSecInfo sec_info;
         private readonly uint magic = 0x00010001;
         private readonly uint magicV2 = 0x00010003;
         private int size;
 
-        public TwinsSecInfo SecInfo { get => sec_info; set => sec_info = value; }
+        public uint Magic { get; set; }
+        public List<TwinsItem> Records;
+        public Dictionary<uint, int> RecordIDs;
         public SectionType Type { get; set; }
         public int Level { get; set; }
         public int ContentSize { get => GetContentSize(); }
@@ -73,8 +68,9 @@ namespace Twinsanity
         public override void Load(BinaryReader reader, int size)
         {
             this.size = size;
-            sec_info.Records = new Dictionary<uint, TwinsItem>();
-            if (size < 0xC || ((sec_info.Magic = reader.ReadUInt32()) != magic && sec_info.Magic != magicV2))
+            Records = new List<TwinsItem>();
+            RecordIDs = new Dictionary<uint, int>();
+            if (size < 0xC || ((Magic = reader.ReadUInt32()) != magic && Magic != magicV2))
                 return;
             var count = reader.ReadInt32();
             var sec_size = reader.ReadUInt32();
@@ -269,7 +265,8 @@ namespace Twinsanity
                 Parent = this
             };
             rec.Load(reader, sub.Size);
-            sec_info.Records.Add(sub.ID, rec);
+            RecordIDs.Add(sub.ID, Records.Count);
+            Records.Add(rec);
         }
 
         private void LoadSection(BinaryReader reader, TwinsSubInfo sub, SectionType type)
@@ -282,27 +279,28 @@ namespace Twinsanity
                 Parent = this
             };
             sec.Load(reader, sub.Size);
-            sec_info.Records.Add(sub.ID, sec);
+            RecordIDs.Add(sub.ID, Records.Count);
+            Records.Add(sec);
         }
 
         public override void Save(BinaryWriter writer)
         {
             if (size == 0)
                 return;
-            writer.Write(sec_info.Magic);
-            writer.Write(sec_info.Records.Count);
+            writer.Write(Magic);
+            writer.Write(Records.Count);
             writer.Write(ContentSize);
 
-            var sec_off = sec_info.Records.Count * 12 + 12;
-            foreach (var i in sec_info.Records)
+            var sec_off = Records.Count * 12 + 12;
+            foreach (var i in Records)
             {
                 writer.Write(sec_off);
-                writer.Write(i.Value.Size);
-                writer.Write(i.Key);
-                sec_off += i.Value.Size;
+                writer.Write(i.Size);
+                writer.Write(i.ID);
+                sec_off += i.Size;
             }
 
-            foreach (var i in sec_info.Records.Values)
+            foreach (var i in Records)
             {
                 i.Save(writer);
             }
@@ -316,9 +314,14 @@ namespace Twinsanity
         private int GetContentSize()
         {
             int c_size = 0;
-            foreach (var i in SecInfo.Records.Values)
+            foreach (var i in Records)
                 c_size += i.Size;
             return c_size;
+        }
+
+        public TwinsItem GetItem(uint id)
+        {
+            return Records[RecordIDs[id]];
         }
     }
 }

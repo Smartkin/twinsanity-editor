@@ -41,9 +41,9 @@ namespace TwinsaityEditor
             else
                 GL.CallList(displaylist);
 
-            if (file.SecInfo.Records.ContainsKey(5))
+            if (file.RecordIDs.ContainsKey(5))
             {
-                ChunkLinks links = (ChunkLinks)file.SecInfo.Records[5];
+                ChunkLinks links = (ChunkLinks)file.GetItem(5);
                 GL.Disable(EnableCap.Lighting);
                 GL.Begin(PrimitiveType.Quads);
                 for (int i = 0; i < links.Links.Count; ++i)

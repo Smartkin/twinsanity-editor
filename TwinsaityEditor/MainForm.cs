@@ -37,7 +37,7 @@ namespace TwinsaityEditor
             controller.UpdateText();
             treeView1.Nodes.Add(controller.Node);
             treeView1.Select();
-            foreach (var i in fileData.SecInfo.Records.Values)
+            foreach (var i in fileData.Records)
             {
                 GenTreeNode(i, controller);
             }
@@ -62,7 +62,7 @@ namespace TwinsaityEditor
             if (a is TwinsSection)
             {
                 c = new SectionController((TwinsSection)a);
-                foreach (var i in ((TwinsSection)a).SecInfo.Records.Values)
+                foreach (var i in ((TwinsSection)a).Records)
                 {
                     GenTreeNode(i, c);
                 }
@@ -197,7 +197,7 @@ namespace TwinsaityEditor
                 };
                 rmForm.Show();
                 TwinsFile file = FileController.GetFile();
-                RMViewer viewer = new RMViewer(fileData.SecInfo.Records.ContainsKey(9) ? (ColData)fileData.SecInfo.Records[9] : null, ref file) { Dock = DockStyle.Fill };
+                RMViewer viewer = new RMViewer(fileData.RecordIDs.ContainsKey(9) ? (ColData)fileData.GetItem(9) : null, ref file) { Dock = DockStyle.Fill };
                 rmForm.Controls.Add(viewer);
                 rmForm.Text = "RMViewer";
             }

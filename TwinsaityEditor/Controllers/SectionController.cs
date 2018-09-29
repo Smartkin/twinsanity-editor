@@ -37,7 +37,7 @@ namespace TwinsaityEditor
             TextPrev = new string[3];
             TextPrev[0] = "ID: " + Data.ID;
             TextPrev[1] = "Offset: " + Data.Offset + " Size: " + Data.Size;
-            TextPrev[2] = "ContentSize: " + Data.ContentSize + " Element Count: " + Data.SecInfo.Records.Count;
+            TextPrev[2] = "ContentSize: " + Data.ContentSize + " Element Count: " + Data.Records.Count;
         }
 
         private void Menu_ReOrderByID_Asc()
@@ -45,13 +45,14 @@ namespace TwinsaityEditor
             Node.TreeView.BeginUpdate();
             while (Node.Nodes.Count > 0)
                 DisposeNode(Node.Nodes[0]);
-            SortedDictionary<uint, TwinsItem> sdic = new SortedDictionary<uint, TwinsItem>(Data.SecInfo.Records);
-            Data.SecInfo.Records.Clear();
+            SortedDictionary<uint, int> sdic = new SortedDictionary<uint, int>(Data.RecordIDs);
+            List<TwinsItem> slist = new List<TwinsItem>();
             foreach (var i in sdic)
             {
-                Data.SecInfo.Records.Add(i.Key, i.Value);
-                ((MainForm)Node.TreeView.FindForm()).GenTreeNode(i.Value, this);
+                slist.Add(Data.Records[i.Value]);
+                ((MainForm)Node.TreeView.FindForm()).GenTreeNode(Data.Records[i.Value], this);
             }
+            Data.Records = slist;
             Node.TreeView.EndUpdate();
             if (Data.Type == SectionType.ObjectInstance)
                 RMViewer.InstancesChanged[Data.Parent.ID] = true;
@@ -62,15 +63,16 @@ namespace TwinsaityEditor
             Node.TreeView.BeginUpdate();
             while (Node.Nodes.Count > 0)
                 DisposeNode(Node.Nodes[0]);
-            SortedDictionary<uint, TwinsItem> sdic = new SortedDictionary<uint, TwinsItem>(new Utils.DescendingComparer<uint>());
-            foreach (var i in Data.SecInfo.Records)
+            SortedDictionary<uint, int> sdic = new SortedDictionary<uint, int>(new Utils.DescendingComparer<uint>());
+            foreach (var i in Data.RecordIDs)
                 sdic.Add(i.Key, i.Value);
-            Data.SecInfo.Records.Clear();
+            List<TwinsItem> slist = new List<TwinsItem>();
             foreach (var i in sdic)
             {
-                Data.SecInfo.Records.Add(i.Key, i.Value);
-                ((MainForm)Node.TreeView.FindForm()).GenTreeNode(i.Value, this);
+                slist.Add(Data.Records[i.Value]);
+                ((MainForm)Node.TreeView.FindForm()).GenTreeNode(Data.Records[i.Value], this);
             }
+            Data.Records = slist;
             Node.TreeView.EndUpdate();
             if (Data.Type == SectionType.ObjectInstance)
                 RMViewer.InstancesChanged[Data.Parent.ID] = true;
@@ -81,14 +83,12 @@ namespace TwinsaityEditor
             Node.TreeView.BeginUpdate();
             while (Node.Nodes.Count > 0)
                 DisposeNode(Node.Nodes[0]);
-            Dictionary<uint, TwinsItem> dic = new Dictionary<uint, TwinsItem>(Data.SecInfo.Records);
-            Data.SecInfo.Records.Clear();
-            uint id = 0;
-            foreach(var i in dic)
+            Data.RecordIDs.Clear();
+            for (int i = 0; i < Data.Records.Count; ++i)
             {
-                i.Value.ID = id;
-                Data.SecInfo.Records.Add(id++, i.Value);
-                ((MainForm)Node.TreeView.FindForm()).GenTreeNode(i.Value, this);
+                Data.Records[i].ID = (uint)i;
+                Data.RecordIDs.Add((uint)i, i);
+                ((MainForm)Node.TreeView.FindForm()).GenTreeNode(Data.Records[i], this);
             }
             Node.TreeView.EndUpdate();
             if (Data.Type == SectionType.ObjectInstance)

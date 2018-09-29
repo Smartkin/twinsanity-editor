@@ -104,7 +104,7 @@ namespace TwinsaityEditor
             //Draw instances (solid surfaces)
             for (uint i = 0; i <= 7; ++i)
             {
-                if (file.SecInfo.Records.ContainsKey(i))
+                if (file.RecordIDs.ContainsKey(i))
                 {
                     if (InstancesChanged[i])
                     {
@@ -116,9 +116,9 @@ namespace TwinsaityEditor
                     {
                         dlist_inst[i] = GL.GenLists(1);
                         GL.NewList(dlist_inst[i], ListMode.CompileAndExecute);
-                        if (((TwinsSection)file.SecInfo.Records[i]).SecInfo.Records.ContainsKey(6))
+                        if (((TwinsSection)file.GetItem(i)).RecordIDs.ContainsKey(6))
                         {
-                            foreach (Instance j in ((TwinsSection)((TwinsSection)file.SecInfo.Records[i]).SecInfo.Records[6]).SecInfo.Records.Values)
+                            foreach (Instance j in ((TwinsSection)((TwinsSection)file.GetItem(i)).GetItem(6)).Records)
                             {
                                 GL.PushMatrix();
                                 GL.Disable(EnableCap.Lighting);
@@ -165,11 +165,11 @@ namespace TwinsaityEditor
             //Draw triggers (transparent surfaces)
             for (uint i = 0; i <= 7; ++i)
             {
-                if (file.SecInfo.Records.ContainsKey(i))
+                if (file.RecordIDs.ContainsKey(i))
                 {
-                    if (((TwinsSection)file.SecInfo.Records[i]).SecInfo.Records.ContainsKey(7) && show_triggers)
+                    if (((TwinsSection)file.GetItem(i)).RecordIDs.ContainsKey(7) && show_triggers)
                     {
-                        foreach (Trigger j in ((TwinsSection)((TwinsSection)file.SecInfo.Records[i]).SecInfo.Records[7]).SecInfo.Records.Values)
+                        foreach (Trigger j in ((TwinsSection)((TwinsSection)file.GetItem(i)).GetItem(7)).Records)
                         {
                             GL.PushMatrix();
                             GL.Translate(-j.Coords[1].X, j.Coords[1].Y, j.Coords[1].Z);
@@ -273,7 +273,6 @@ namespace TwinsaityEditor
                     }
                 }
             }
-
         }
 
         protected override bool IsInputKey(Keys keyData)
