@@ -58,10 +58,10 @@ namespace Twinsanity
                 writer.Write(S3[i]);
             writer.Write(ObjectID);
             writer.Write(AfterOID);
-            writer.Write(PHeader);
             PHeader = (uint)((byte)UnkI321.Length
                 | (UnkI322.Length << 8)
                 | (UnkI323.Length << 16));
+            writer.Write(PHeader);
             writer.Write(UnkI32);
             writer.Write(UnkI321.Length);
             for (int i = 0; i < UnkI321.Length; ++i)
