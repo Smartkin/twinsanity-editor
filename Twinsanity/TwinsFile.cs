@@ -177,7 +177,7 @@ namespace Twinsanity
         public void SaveFile(string path)
         {
             FileStream file = new FileStream(path, FileMode.Create, FileAccess.Write);
-            BinaryWriter writer = new BinaryWriter(file);
+            BinaryWriter writer = new BinaryWriter(file, System.Text.Encoding.ASCII);
             writer.Write(Magic);
             writer.Write(Records.Count);
             writer.Write(ContentSize);

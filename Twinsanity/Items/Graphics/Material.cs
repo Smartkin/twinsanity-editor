@@ -23,7 +23,9 @@ namespace Twinsanity
             writer.Write(Unknown);
             writer.Write(Type);
             writer.Write(Name.Length + 1);
-            writer.Write(Name);
+            foreach (char c in Name)
+                writer.Write(c);
+            writer.Write((byte)0);
             writer.Write(UnkArray1);
             writer.Write(ValuesI[0]);
             writer.Write(ValuesI[1]);
