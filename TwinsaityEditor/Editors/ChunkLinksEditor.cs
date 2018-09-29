@@ -281,11 +281,15 @@ namespace TwinsaityEditor
 
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (listBox1.SelectedIndex == -1)
+            var sel_i = listBox1.SelectedIndex;
+            if (sel_i == -1)
                 return;
-            controller.Data.Links.RemoveAt(listBox1.SelectedIndex);
-            listBox1.Items.RemoveAt(listBox1.SelectedIndex);
-            groupBox1.Enabled = groupBox2.Enabled = groupBox3.Enabled = groupBox6.Enabled = groupBox9.Enabled = groupBox8.Enabled = groupBox7.Enabled = false;
+            controller.Data.Links.RemoveAt(sel_i);
+            listBox1.Items.RemoveAt(sel_i);
+            if (sel_i >= listBox1.Items.Count) sel_i = listBox1.Items.Count - 1;
+            listBox1.SelectedIndex = sel_i;
+            if (listBox1.Items.Count == 0)
+                groupBox1.Enabled = groupBox2.Enabled = groupBox3.Enabled = groupBox6.Enabled = groupBox9.Enabled = groupBox8.Enabled = groupBox7.Enabled = false;
             controller.UpdateText();
         }
 
