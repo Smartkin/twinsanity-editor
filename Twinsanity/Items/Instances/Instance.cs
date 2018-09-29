@@ -7,6 +7,8 @@ namespace Twinsanity
     {
         private Pos pos;
         private List<ushort> s1 = new List<ushort>(), s2 = new List<ushort>(), s3 = new List<ushort>();
+        private List<uint> u1 = new List<uint>(), u3 = new List<uint>();
+        private List<float> u2 = new List<float>();
 
         public Pos Pos { get => pos; set => pos = value; }
         public ushort RotX { get; set; }
@@ -25,9 +27,9 @@ namespace Twinsanity
         public uint AfterOID { get; set; }
         public uint PHeader { get; set; }
         public uint UnkI32 { get; set; }
-        public uint[] UnkI321 { get; set; }
-        public float[] UnkI322 { get; set; }
-        public uint[] UnkI323 { get; set; }
+        public List<uint> UnkI321 { get => u1; set => u1 = value; }
+        public List<float> UnkI322 { get => u2; set => u2 = value; }
+        public List<uint> UnkI323 { get => u3; set => u3 = value; }
 
         public override void Save(BinaryWriter writer)
         {
@@ -58,19 +60,19 @@ namespace Twinsanity
                 writer.Write(S3[i]);
             writer.Write(ObjectID);
             writer.Write(AfterOID);
-            PHeader = (uint)((byte)UnkI321.Length
-                | (UnkI322.Length << 8)
-                | (UnkI323.Length << 16));
+            PHeader = (uint)((byte)UnkI321.Count
+                | (UnkI322.Count << 8)
+                | (UnkI323.Count << 16));
             writer.Write(PHeader);
             writer.Write(UnkI32);
-            writer.Write(UnkI321.Length);
-            for (int i = 0; i < UnkI321.Length; ++i)
+            writer.Write(UnkI321.Count);
+            for (int i = 0; i < UnkI321.Count; ++i)
                 writer.Write(UnkI321[i]);
-            writer.Write(UnkI322.Length);
-            for (int i = 0; i < UnkI322.Length; ++i)
+            writer.Write(UnkI322.Count);
+            for (int i = 0; i < UnkI322.Count; ++i)
                 writer.Write(UnkI322[i]);
-            writer.Write(UnkI323.Length);
-            for (int i = 0; i < UnkI323.Length; ++i)
+            writer.Write(UnkI323.Count);
+            for (int i = 0; i < UnkI323.Count; ++i)
                 writer.Write(UnkI323[i]);
         }
 
@@ -107,22 +109,22 @@ namespace Twinsanity
             PHeader = reader.ReadUInt32();
             UnkI32 = reader.ReadUInt32();
             n = reader.ReadInt32();
-            UnkI321 = new uint[n];
+            UnkI321.Clear();
             for (int i = 0; i < n; ++i)
-                UnkI321[i] = reader.ReadUInt32();
+                UnkI321.Add(reader.ReadUInt32());
             n = reader.ReadInt32();
-            UnkI322 = new float[n];
+            UnkI322.Clear();
             for (int i = 0; i < n; ++i)
-                UnkI322[i] = reader.ReadSingle();
+                UnkI322.Add(reader.ReadSingle());
             n = reader.ReadInt32();
-            UnkI323 = new uint[n];
+            UnkI323.Clear();
             for (int i = 0; i < n; ++i)
-                UnkI323[i] = reader.ReadUInt32();
+                UnkI323.Add(reader.ReadUInt32());
         }
 
         protected override int GetSize()
         {
-            return 90 + (S1.Count + S2.Count + S3.Count) * 2 + (UnkI321.Length + UnkI322.Length + UnkI323.Length) * 4;
+            return 90 + (S1.Count + S2.Count + S3.Count) * 2 + (UnkI321.Count + UnkI322.Count + UnkI323.Count) * 4;
         }
     }
 }
