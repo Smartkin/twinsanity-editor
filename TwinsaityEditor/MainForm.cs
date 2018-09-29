@@ -6,11 +6,16 @@ namespace TwinsaityEditor
 {
     public partial class MainForm : Form
     {
-        public enum Editors { ChunkLinks };
+        public enum Editors
+        {
+            ChunkLinks,
+            Instance
+        };
 
         private static TwinsFile fileData = new TwinsFile();
         private static Form rmForm, smForm, exeForm;
         private static Form editChunkLinks;
+        private static Form[] editInstances = new Form[8];
         private static string fileName;
 
         private TreeNode previousNode;
@@ -102,20 +107,22 @@ namespace TwinsaityEditor
         private void TreeNodeOpenEditor(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (e.Node.Tag is Controller c)
-            {
-                if (c is ChunkLinksController)
-                    OpenEditor(Editors.ChunkLinks, c);
-            }
+                CheckOpenEditor(c);
         }
 
         private void treeView1_KeyDown(object sender, KeyEventArgs e)
         {
             TreeView tree = (TreeView)sender;
             if (e.KeyCode == Keys.Enter && tree.SelectedNode.Tag is Controller c)
-            {
-                if (c is ChunkLinksController)
-                    OpenEditor(Editors.ChunkLinks, c);
-            }
+                CheckOpenEditor(c);
+        }
+
+        private void CheckOpenEditor(Controller c)
+        {
+            if (c is ChunkLinksController)
+                OpenEditor(ref editChunkLinks, Editors.ChunkLinks, c);
+            else if (c is InstanceController)
+                OpenEditor(ref editInstances[((InstanceController)c).Data.Parent.Parent.ID], Editors.Instance, (Controller)c.Node.Parent.Tag);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -255,37 +262,24 @@ namespace TwinsaityEditor
                 exeForm.Select();
         }
 
-        public static void OpenEditor(Editors editor, Controller cont)
+        public static void OpenEditor(ref Form editor_var, Editors editor, Controller cont)
         {
-            Form editForm = null;
-            switch (editor)
-            {
-                case Editors.ChunkLinks:
-                    editForm = editChunkLinks;
-                    break;
-            }
-
-            if (editForm == null)
+            if (editor_var == null || editor_var.IsDisposed)
             {
                 switch (editor)
                 {
-                    case Editors.ChunkLinks:
-                        editForm = editChunkLinks = new ChunkLinksEditor((ChunkLinksController)cont);
-                        break;
+                    case Editors.ChunkLinks: editor_var = new ChunkLinksEditor((ChunkLinksController)cont); break;
+                    case Editors.Instance: editor_var = new InstanceEditor((SectionController)cont); break;
                 }
-                editForm.FormClosed += delegate
-                {
-                    switch (editor)
-                    {
-                        case Editors.ChunkLinks:
-                            editChunkLinks = null;
-                            break;
-                    }
-                };
-                editForm.Show();
+                editor_var.Show();
             }
             else
-                editForm.Select();
+                editor_var.Select();
+        }
+
+        public static void CloseInstanceEditor(int id)
+        {
+            editInstances[id].Close();
         }
     }
 }
