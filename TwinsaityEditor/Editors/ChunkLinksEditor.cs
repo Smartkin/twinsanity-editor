@@ -276,6 +276,7 @@ namespace TwinsaityEditor
             listBox1.Items.Add("link");
             ChunkLinks.ChunkLink link = new ChunkLinks.ChunkLink { Path = "link".ToCharArray(), ObjectMatrix = new Pos[4], ChunkMatrix = new Pos[4] };
             controller.Data.Links.Add(link);
+            controller.UpdateText();
         }
 
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -285,6 +286,7 @@ namespace TwinsaityEditor
             controller.Data.Links.RemoveAt(listBox1.SelectedIndex);
             listBox1.Items.RemoveAt(listBox1.SelectedIndex);
             groupBox1.Enabled = groupBox2.Enabled = groupBox3.Enabled = groupBox6.Enabled = groupBox9.Enabled = groupBox8.Enabled = groupBox7.Enabled = false;
+            controller.UpdateText();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -293,6 +295,7 @@ namespace TwinsaityEditor
             link.Path = textBox1.Text.ToCharArray();
             controller.Data.Links[listBox1.SelectedIndex] = link;
             listBox1.Items[listBox1.SelectedIndex] = textBox1.Text;
+            controller.UpdateText();
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -301,6 +304,7 @@ namespace TwinsaityEditor
             link.Type = comboBox1.SelectedIndex;
             controller.Data.Links[listBox1.SelectedIndex] = link;
             groupBox9.Enabled = groupBox8.Enabled = groupBox7.Enabled = (link.Type == 1 || link.Type == 3);
+            controller.UpdateText();
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
@@ -309,6 +313,7 @@ namespace TwinsaityEditor
             if (uint.TryParse(textBox2.Text, System.Globalization.NumberStyles.HexNumber, null, out o))
                 link.Flags = o;
             controller.Data.Links[listBox1.SelectedIndex] = link;
+            controller.UpdateText();
         }
 
         private void numericUpDown27_ValueChanged(object sender, EventArgs e)

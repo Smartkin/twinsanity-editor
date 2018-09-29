@@ -23,7 +23,7 @@ namespace TwinsaityEditor
         private void GenTree()
         {
             treeView1.BeginUpdate();
-            treeView1.AfterSelect += TreeNodeSelect;
+            treeView1.AfterSelect += treeView1_AfterSelect;
             treeView1.NodeMouseDoubleClick += TreeNodeOpenEditor;
             treeView1.KeyDown += treeView1_KeyDown;
             if (treeView1.TopNode != null && treeView1.TopNode.Tag is Controller c)
@@ -45,12 +45,15 @@ namespace TwinsaityEditor
             treeView1.EndUpdate();
         }
 
-        private void TreeNodeSelect(object sender, TreeViewEventArgs e)
+        private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
             if (e.Node.Tag is Controller c)
-            {
-                textBox1.Lines = c.TextPrev;
-            }
+                ControllerNodeSelect(c);
+        }
+
+        public void ControllerNodeSelect(Controller c)
+        {
+            textBox1.Lines = c.TextPrev;
         }
 
         public void GenTreeNode(TwinsItem a, Controller controller)

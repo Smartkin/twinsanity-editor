@@ -51,6 +51,8 @@ namespace TwinsaityEditor
         {
             GenText();
             Node.Text = GetName();
+            if (Node.IsSelected)
+                ((MainForm)Node.TreeView.TopLevelControl).ControllerNodeSelect(this);
         }
 
         public virtual void Dispose() { }
