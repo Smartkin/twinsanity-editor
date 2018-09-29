@@ -25,10 +25,10 @@ namespace TwinsaityEditor
             TextPrev[2] = "LinkCount: " + Data.Links.Count;
             for (int i = 0; i < Data.Links.Count; ++i)
             {
-                TextPrev[3 + i * 5] = "Link" + i;
-                TextPrev[4 + i * 5] = "Type: " + Data.Links[i].Type;
-                TextPrev[5 + i * 5] = "Directory: " + new string(Data.Links[i].Path);
-                TextPrev[6 + i * 5] = "Flags: " + Convert.ToString(Data.Links[i].Flags, 16).ToUpper();
+                TextPrev[3 + i * 4] = "Link" + i;
+                TextPrev[4 + i * 4] = "Type: " + Data.Links[i].Type;
+                TextPrev[5 + i * 4] = "Directory: " + new string(Data.Links[i].Path);
+                TextPrev[6 + i * 4] = "Flags: " + Convert.ToString(Data.Links[i].Flags, 16).ToUpper();
             }
         }
     }
