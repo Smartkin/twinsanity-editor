@@ -34,16 +34,19 @@ namespace Twinsanity
                     writer.Write(i.ChunkMatrix[j].Z);
                     writer.Write(i.ChunkMatrix[j].W);
                 }
-                for (int j = 0; j < 4; ++j)
+                if ((i.Flags & 0x80000) != 0)
                 {
-                    writer.Write(i.LoadWall[j].X);
-                    writer.Write(i.LoadWall[j].Y);
-                    writer.Write(i.LoadWall[j].Z);
-                    writer.Write(i.LoadWall[j].W);
+                    for (int j = 0; j < 4; ++j)
+                    {
+                        writer.Write(i.LoadWall[j].X);
+                        writer.Write(i.LoadWall[j].Y);
+                        writer.Write(i.LoadWall[j].Z);
+                        writer.Write(i.LoadWall[j].W);
+                    }
                 }
                 if (i.Type == 1 || i.Type == 3) //type 1/3 continue here
                 {
-                    for (int j = 0; j < 4; ++j)
+                    for (int j = 0; j < 15; ++j)
                     {
                         writer.Write(i.Unknown[j]);
                     }
@@ -153,7 +156,9 @@ namespace Twinsanity
             int size = 4;
             foreach (var i in Links)
             {
-                size += i.Path.Length + 204;
+                size += i.Path.Length + 8 + 132;
+                if ((i.Flags & 0x80000) != 0)
+                    size += 64;
                 if (i.Type == 1 || i.Type == 3)
                     size += 410;
             }
