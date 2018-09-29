@@ -32,16 +32,14 @@ namespace TwinsaityEditor
 
         public static string GetObjectName(uint id)
         {
-            if (Data.RecordIDs.ContainsKey(10) && ((TwinsSection)Data.GetItem(10)).RecordIDs.ContainsKey(0) && ((TwinsSection)((TwinsSection)Data.GetItem(10)).GetItem(0)).RecordIDs.ContainsKey(id))
-                return ((GameObject)((TwinsSection)((TwinsSection)Data.GetItem(10)).GetItem(0)).GetItem(id)).Name; //lol
-            else return string.Empty;
+            try { return ((GameObject)((TwinsSection)((TwinsSection)Data.GetItem(10)).GetItem(0)).GetItem(id)).Name; }
+            catch { return string.Empty; }
         }
 
         public static string GetScriptName(uint id)
         {
-            if (Data.RecordIDs.ContainsKey(10) && ((TwinsSection)Data.GetItem(10)).RecordIDs.ContainsKey(1) && ((TwinsSection)((TwinsSection)Data.GetItem(10)).GetItem(1)).RecordIDs.ContainsKey(id))
-                return ((Script)((TwinsSection)((TwinsSection)Data.GetItem(10)).GetItem(1)).GetItem(id)).Name; //lol
-            else return string.Empty;
+            try { return ((Script)((TwinsSection)((TwinsSection)Data.GetItem(10)).GetItem(1)).GetItem(id)).Name; } //lol
+            catch { return string.Empty; }
         }
 
         public static Instance GetInstance(uint sector, uint id)

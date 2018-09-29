@@ -28,17 +28,17 @@ namespace TwinsaityEditor
             TextPrev[1] = "Offset: " + Data.Offset + " Size: " + Data.Size;
             TextPrev[2] = "Object ID " + Data.ObjectID + (obj_name != string.Empty ? " (" + FileController.GetObjectName(Data.ObjectID) + ")" : string.Empty);
             TextPrev[3] = "Position (" + Data.Pos.X + ", " + Data.Pos.Y + ", " + Data.Pos.Z + ", " + Data.Pos.W + ")";
-            TextPrev[4] = "Rotation (" + Data.RotX + "/" + Data.COMRotX + " | " + Data.RotY + "/" + Data.COMRotY + " | " + Data.RotZ + "/" + Data.COMRotZ + ")";
+            TextPrev[4] = "Rotation (" + Data.RotX + " | " + Data.RotY + " | " + Data.RotZ + ")";
 
-            TextPrev[5] = "Instances: " + Data.S1.Count + " SomeNum1: " + Data.SomeNum1;
+            TextPrev[5] = "Instances: " + Data.S1.Count;
             for (int i = 0; i < Data.S1.Count; ++i)
                 TextPrev[6 + i] = Data.S1[i].ToString();
 
-            TextPrev[6 + Data.S1.Count] = "Positions: " + Data.S2.Count + " SomeNum2: " + Data.SomeNum2;
+            TextPrev[6 + Data.S1.Count] = "Positions: " + Data.S2.Count;
             for (int i = 0; i < Data.S2.Count; ++i)
                 TextPrev[7 + Data.S1.Count + i] = Data.S2[i].ToString();
 
-            TextPrev[7 + Data.S1.Count + Data.S2.Count] = "Paths: " + Data.S3.Count + " SomeNum3: " + Data.SomeNum3;
+            TextPrev[7 + Data.S1.Count + Data.S2.Count] = "Paths: " + Data.S3.Count;
             for (int i = 0; i < Data.S3.Count; ++i)
                 TextPrev[8 + Data.S1.Count + Data.S2.Count + i] = Data.S3[i].ToString();
             
