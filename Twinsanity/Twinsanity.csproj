@@ -71,6 +71,7 @@
     <Compile Include="Items\ChunkLinks.cs" />
     <Compile Include="Items\Graphics\Material.cs" />
     <Compile Include="Items\Graphics\Texture.cs" />
+    <Compile Include="Items\Instances\Position.cs" />
     <Compile Include="Items\Instances\Trigger.cs" />
     <Compile Include="Items\TwinsItem.cs" />
     <Compile Include="Items\ColData.cs" />

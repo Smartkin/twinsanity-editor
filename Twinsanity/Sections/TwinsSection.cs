@@ -239,6 +239,9 @@ namespace Twinsanity
                     case SectionType.Script:
                         LoadItem<Script>(reader, sub);
                         break;
+                    case SectionType.Position:
+                        LoadItem<Position>(reader, sub);
+                        break;
                     case SectionType.ObjectInstance:
                         LoadItem<Instance>(reader, sub);
                         break;
