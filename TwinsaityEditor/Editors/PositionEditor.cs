@@ -1,63 +1,107 @@
-using System.Windows.Forms;
-using System;
+﻿using System.Windows.Forms;
+using Twinsanity;
 
 namespace TwinsaityEditor
 {
-    public partial class PositionEditor
+    public partial class PositionEditor : Form
     {
+        private SectionController controller;
+        private Position pos;
 
-        private TwinsanityEditorForm twinsanityEditorForm;
+        private bool ignore_value_change;
 
-        public PositionEditor(TwinsanityEditorForm TEF)
+        public PositionEditor(SectionController c)
         {
-            twinsanityEditorForm = TEF;
+            controller = c;
             InitializeComponent();
+            PopulateList();
+            numericUpDown2.ValueChanged += numericUpDown1_ValueChanged;
+            numericUpDown3.ValueChanged += numericUpDown1_ValueChanged;
+            numericUpDown4.ValueChanged += numericUpDown1_ValueChanged;
         }
 
-        private int IISIndex;
-        private uint ItemId;
-        public void UpdateTree(ref Twinsanity.Positions POSs, uint Index)
+        private void PopulateList()
         {
-            PosTree.BeginUpdate();
-            for (int i = 0; i <= POSs._Item.Length - 1; i++)
-                PosTree.Nodes.Add("ID: " + POSs._Item[i].ID.ToString());
-            PosTree.EndUpdate();
-            IISIndex = (int)Index;
+            listBox1.Items.Clear();
+            foreach (Position i in controller.Data.Records)
+            {
+                listBox1.Items.Add("ID " + i.ID);
+            }
         }
 
-        public void UpdatePos(int Index)
+        private void listBox1_SelectedIndexChanged(object sender, System.EventArgs e)
         {
-            Twinsanity.Position Pos = (Twinsanity.Position)twinsanityEditorForm.LevelData.Get_Item(TwinsanityEditorForm.CalculateIndexes(twinsanityEditorForm.TreeView1.Nodes[0].Nodes[IISIndex].Nodes[3].Nodes[Index]));
-            XVal.Text = Pos.Pos.X.ToString();
-            YVal.Text = Pos.Pos.Y.ToString();
-            ZVal.Text = Pos.Pos.Z.ToString();
-            ItemId = Pos.ID;
-            this.Text = "ID: " + Pos.ID.ToString();
+            if (listBox1.SelectedIndex == -1) return;
+            ignore_value_change = true;
+
+            pos = (Position)controller.Data.Records[listBox1.SelectedIndex];
+            splitContainer1.Panel2.Enabled = true;
+
+            numericUpDown1.Value = (decimal)pos.Pos.X;
+            numericUpDown2.Value = (decimal)pos.Pos.Y;
+            numericUpDown3.Value = (decimal)pos.Pos.Z;
+            numericUpDown4.Value = (decimal)pos.Pos.W;
+            numericUpDown5.Value = pos.ID;
+
+            ignore_value_change = false;
         }
 
-        public void ApplyPos(int Index)
+        private void numericUpDown1_ValueChanged(object sender, System.EventArgs e)
         {
-            Twinsanity.Position Pos = new Twinsanity.Position();
-            Pos.Pos.X = float.Parse(XVal.Text);
-            Pos.Pos.Y = float.Parse(YVal.Text);
-            Pos.Pos.Z = float.Parse(ZVal.Text);
-            Pos.ID = ItemId;
-            twinsanityEditorForm.LevelData.Put_Item(Pos, TwinsanityEditorForm.CalculateIndexes(twinsanityEditorForm.TreeView1.Nodes[0].Nodes[IISIndex].Nodes[3].Nodes[Index]));
+            if (ignore_value_change) return;
+            pos.Pos = new Pos((float)numericUpDown1.Value, (float)numericUpDown2.Value, (float)numericUpDown3.Value, (float)numericUpDown4.Value);
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[pos.ID]].Tag).UpdateText();
         }
 
-        private void Apply_Click(object sender, EventArgs e)
+        private void addToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
-            ApplyPos(PosTree.SelectedNode.Index);
+            if (controller.Data.RecordIDs.Count >= ushort.MaxValue) return;
+            uint id;
+            for (id = 0; id < uint.MaxValue; ++id)
+            {
+                if (!controller.Data.RecordIDs.ContainsKey(id))
+                    break;
+            }
+            Position new_pos = new Position { ID = id };
+            controller.Data.AddItem(id, new_pos);
+            MainForm.GenTreeNode(new_pos, controller);
+            pos = new_pos;
+            listBox1.Items.Add("ID " + pos.ID);
+            controller.UpdateText();
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[pos.ID]].Tag).UpdateText();
         }
 
-        private void Revert_Click(object sender, EventArgs e)
+        private void removeToolStripMenuItem_Click(object sender, System.EventArgs e)
         {
-            UpdatePos(PosTree.SelectedNode.Index);
+            var sel_i = listBox1.SelectedIndex;
+            if (sel_i == -1)
+                return;
+            Controller.DisposeNode(controller.Node.Nodes[controller.Data.RecordIDs[pos.ID]]);
+            controller.Data.RemoveItem(pos.ID);
+            listBox1.Items.RemoveAt(sel_i);
+            if (sel_i >= listBox1.Items.Count) sel_i = listBox1.Items.Count - 1;
+            listBox1.SelectedIndex = sel_i;
+            if (listBox1.Items.Count == 0)
+                splitContainer1.Panel2.Enabled = false;
+            controller.UpdateText();
         }
 
-        private void PosTree_AfterSelect(object sender, TreeViewEventArgs e)
+        private void numericUpDown5_ValueChanged(object sender, System.EventArgs e)
         {
-            UpdatePos(PosTree.SelectedNode.Index);
+            if (ignore_value_change) return;
+            if (controller.Data.RecordIDs.ContainsKey((uint)numericUpDown5.Value))
+            {
+                MessageBox.Show("The specified ID already exists.");
+                ignore_value_change = true;
+                numericUpDown5.Value = pos.ID;
+                ignore_value_change = false;
+                return;
+            }
+            controller.Data.RecordIDs.Remove(pos.ID);
+            pos.ID = (uint)numericUpDown5.Value;
+            controller.Data.RecordIDs.Add(pos.ID, listBox1.SelectedIndex);
+            listBox1.Items[listBox1.SelectedIndex] = "ID " + pos.ID;
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[pos.ID]].Tag).UpdateText();
         }
     }
 }

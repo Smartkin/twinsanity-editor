@@ -9,13 +9,14 @@ namespace TwinsaityEditor
         public enum Editors
         {
             ChunkLinks,
+            Position,
             Instance
         };
 
         private static TwinsFile fileData = new TwinsFile();
         private static Form rmForm, smForm, exeForm;
         private static Form editChunkLinks;
-        private static Form[] editInstances = new Form[8];
+        private static Form[] editInstances = new Form[8], editPositions = new Form[8];
         private static string fileName;
 
         private TreeNode previousNode;
@@ -123,6 +124,8 @@ namespace TwinsaityEditor
         {
             if (c is ChunkLinksController)
                 OpenEditor(ref editChunkLinks, Editors.ChunkLinks, c);
+            else if (c is PositionController)
+                OpenEditor(ref editPositions[((PositionController)c).Data.Parent.Parent.ID], Editors.Position, (Controller)c.Node.Parent.Tag);
             else if (c is InstanceController)
                 OpenEditor(ref editInstances[((InstanceController)c).Data.Parent.Parent.ID], Editors.Instance, (Controller)c.Node.Parent.Tag);
         }
@@ -271,6 +274,7 @@ namespace TwinsaityEditor
                 switch (editor)
                 {
                     case Editors.ChunkLinks: editor_var = new ChunkLinksEditor((ChunkLinksController)cont); break;
+                    case Editors.Position: editor_var = new PositionEditor((SectionController)cont); break;
                     case Editors.Instance: editor_var = new InstanceEditor((SectionController)cont); break;
                 }
                 editor_var.Show();
@@ -282,6 +286,11 @@ namespace TwinsaityEditor
         public static void CloseInstanceEditor(int id)
         {
             editInstances[id].Close();
+        }
+
+        public static void ClosePositionEditor(int id)
+        {
+            editPositions[id].Close();
         }
     }
 }

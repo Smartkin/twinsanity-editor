@@ -18,7 +18,7 @@ namespace TwinsaityEditor
                 && item.Type != SectionType.Skybox)
             {
                 AddMenu("Re-order by ID (asc.)", Menu_ReOrderByID_Asc);
-                if (item.Type == SectionType.ObjectInstance)
+                if (item.Type == SectionType.ObjectInstance || item.Type == SectionType.Position)
                     AddMenu("Re-ID by order", Menu_ReIDByOrder);
             }
             else
@@ -46,6 +46,10 @@ namespace TwinsaityEditor
             {
                 RMViewer.InstancesChanged[Data.Parent.ID] = true;
                 MainForm.CloseInstanceEditor((int)Data.Parent.ID);
+            }
+            else if (Data.Type == SectionType.Position)
+            {
+                MainForm.ClosePositionEditor((int)Data.Parent.ID);
             }
             Node.TreeView.BeginUpdate();
             while (Node.Nodes.Count > 0)
@@ -87,6 +91,10 @@ namespace TwinsaityEditor
             {
                 RMViewer.InstancesChanged[Data.Parent.ID] = true;
                 MainForm.CloseInstanceEditor((int)Data.Parent.ID);
+            }
+            else if (Data.Type == SectionType.Position)
+            {
+                MainForm.ClosePositionEditor((int)Data.Parent.ID);
             }
             Node.TreeView.BeginUpdate();
             while (Node.Nodes.Count > 0)
