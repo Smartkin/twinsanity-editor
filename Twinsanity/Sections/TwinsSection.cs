@@ -323,5 +323,27 @@ namespace Twinsanity
         {
             return Records[RecordIDs[id]];
         }
+
+        public void AddItem(uint id, TwinsItem item)
+        {
+            RecordIDs.Add(id, Records.Count);
+            Records.Add(item);
+        }
+
+        public void RemoveItem(uint id)
+        {
+            var index = RecordIDs[id];
+            RecordIDs.Remove(id);
+            Records.RemoveAt(index);
+            var new_recs = new Dictionary<uint, int>(RecordIDs);
+            RecordIDs.Clear();
+            foreach (var i in new_recs)
+            {
+                if (i.Value >= index)
+                    RecordIDs.Add(i.Key, i.Value - 1);
+                else
+                    RecordIDs.Add(i.Key, i.Value);
+            }
+        }
     }
 }
