@@ -274,7 +274,14 @@ namespace TwinsaityEditor
         private void addToolStripMenuItem_Click(object sender, EventArgs e)
         {
             listBox1.Items.Add("link");
-            ChunkLinks.ChunkLink link = new ChunkLinks.ChunkLink { Path = "link".ToCharArray(), ObjectMatrix = new Pos[4], ChunkMatrix = new Pos[4] };
+            ChunkLinks.ChunkLink link = new ChunkLinks.ChunkLink { Path = "link".ToCharArray(), ObjectMatrix = new Pos[4], ChunkMatrix = new Pos[4], LoadWall = new Pos[4], LoadArea = new Pos[8], AreaMatrix = new Pos[6], UnknownMatrix = new Pos[6] };
+            link.ObjectMatrix[3].W = link.ChunkMatrix[3].W =
+                link.LoadWall[0].W = link.LoadWall[1].W = link.LoadWall[2].W = link.LoadWall[3].W =
+                link.LoadArea[0].W = link.LoadArea[1].W = link.LoadArea[2].W = link.LoadArea[3].W =
+                link.LoadArea[4].W = link.LoadArea[5].W = link.LoadArea[6].W = link.LoadArea[7].W =
+                link.UnknownMatrix[0].W = link.UnknownMatrix[1].W = link.UnknownMatrix[2].W = link.UnknownMatrix[3].W = link.UnknownMatrix[4].W = link.UnknownMatrix[5].W = 1;
+            link.Unknown = new short[15] { 0, 0, 8, 12, 6, 3, 3, 128, 224, 272, 320, 326, 356, 380, 0 };
+            link.Bytes = new byte[60] { 0, 5, 10, 15, 20, 25, 4, 2, 3, 1, 0, 4, 4, 5, 3, 2, 4, 6, 7, 5, 4, 4, 0, 1, 7, 6, 4, 3, 5, 7, 1, 4, 4, 2, 0, 6, 0, 1, 1, 3, 3, 2, 2, 0, 3, 5, 5, 4, 4, 2, 5, 7, 7, 6, 6, 4, 7, 1, 0, 6, };
             controller.Data.Links.Add(link);
             controller.UpdateText();
         }
@@ -307,7 +314,12 @@ namespace TwinsaityEditor
             if (ignore_value_change) return;
             link.Type = comboBox1.SelectedIndex;
             controller.Data.Links[listBox1.SelectedIndex] = link;
-            groupBox9.Enabled = groupBox8.Enabled = groupBox7.Enabled = (link.Type == 1 || link.Type == 3);
+            if (groupBox9.Enabled = groupBox8.Enabled = groupBox7.Enabled = (link.Type == 1 || link.Type == 3))
+            {
+                GetLoadAreaPos();
+                GetAreaMatrix1Pos();
+                GetAreaMatrix2Pos();
+            }
             controller.UpdateText();
         }
 
@@ -317,6 +329,10 @@ namespace TwinsaityEditor
             if (uint.TryParse(textBox2.Text, System.Globalization.NumberStyles.HexNumber, null, out o))
                 link.Flags = o;
             controller.Data.Links[listBox1.SelectedIndex] = link;
+            if (groupBox6.Enabled = (link.Flags & 0x80000) != 0)
+            {
+                GetLoadWallPos();
+            }
             controller.UpdateText();
         }
 
