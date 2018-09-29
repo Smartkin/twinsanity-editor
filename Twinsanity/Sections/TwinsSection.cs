@@ -29,12 +29,12 @@ namespace Twinsanity
         Animation,
         OGI,
         CodeModel,
-        SE_Eng,
-        SE_Fre,
-        SE_Ger,
-        SE_Spa,
-        SE_Ita,
-        SE_Jpn,
+        //SE_Eng,
+        //SE_Fre,
+        //SE_Ger,
+        //SE_Spa,
+        //SE_Ita,
+        //SE_Jpn,
 
         UnknownInstance,
         AIPosition,
@@ -189,24 +189,24 @@ namespace Twinsanity
                             case 4:
                                 LoadSection(reader, sub, SectionType.CodeModel);
                                 break;
-                            case 7:
-                                LoadSection(reader, sub, SectionType.SE_Eng);
-                                break;
-                            case 8:
-                                LoadSection(reader, sub, SectionType.SE_Fre);
-                                break;
-                            case 9:
-                                LoadSection(reader, sub, SectionType.SE_Ger);
-                                break;
-                            case 10:
-                                LoadSection(reader, sub, SectionType.SE_Spa);
-                                break;
-                            case 11:
-                                LoadSection(reader, sub, SectionType.SE_Ita);
-                                break;
-                            case 12:
-                                LoadSection(reader, sub, SectionType.SE_Jpn);
-                                break;
+                            //case 7:
+                            //    LoadSection(reader, sub, SectionType.SE_Eng);
+                            //    break;
+                            //case 8:
+                            //    LoadSection(reader, sub, SectionType.SE_Fre);
+                            //    break;
+                            //case 9:
+                            //    LoadSection(reader, sub, SectionType.SE_Ger);
+                            //    break;
+                            //case 10:
+                            //    LoadSection(reader, sub, SectionType.SE_Spa);
+                            //    break;
+                            //case 11:
+                            //    LoadSection(reader, sub, SectionType.SE_Ita);
+                            //    break;
+                            //case 12:
+                            //    LoadSection(reader, sub, SectionType.SE_Jpn);
+                            //    break;
                             default:
                                 LoadItem<TwinsItem>(reader, sub);
                                 break;
@@ -308,7 +308,10 @@ namespace Twinsanity
 
         protected override int GetSize()
         {
-            return size;
+            if (size < 0xC)
+                return size;
+            else
+                return (Records.Count + 1) * 12 + ContentSize;
         }
 
         private int GetContentSize()

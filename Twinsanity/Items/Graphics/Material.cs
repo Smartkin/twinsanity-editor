@@ -14,6 +14,7 @@ namespace Twinsanity
         public byte[] UnkArray2 { get; set; }
         public float[] ValuesF { get; set; } = new float[4];
         public int[] ValuesI { get; set; } = new int[4];
+        public byte[] Remain { get; set; }
 
 
         public override void Save(BinaryWriter writer)
@@ -35,10 +36,12 @@ namespace Twinsanity
             writer.Write(ValuesF[3]);
             writer.Write(Tex);
             writer.Write(Last);
+            writer.Write(Remain);
         }
 
         public override void Load(BinaryReader reader, int size)
         {
+            var sk = reader.BaseStream.Position;
             Header = reader.ReadInt32();
             Unknown = reader.ReadInt32();
             Type = reader.ReadInt32();
@@ -59,11 +62,12 @@ namespace Twinsanity
             ValuesF[3] = reader.ReadSingle();
             Tex = reader.ReadUInt32();
             Last = reader.ReadUInt32();
+            Remain = reader.ReadBytes(size - (int)(reader.BaseStream.Position - sk));
         }
 
         protected override int GetSize()
         {
-            return 115 + Name.Length;
+            return 115 + Name.Length + Remain.Length;
         }
     }
 }
