@@ -32,8 +32,9 @@ namespace TwinsaityEditor
 
         public static string GetObjectName(uint id)
         {
-            try { return ((GameObject)((TwinsSection)((TwinsSection)Data.GetItem(10)).GetItem(0)).GetItem(id)).Name; }
-            catch { return string.Empty; }
+            if (Data.RecordIDs.ContainsKey(10) && ((TwinsSection)Data.GetItem(10)).RecordIDs.ContainsKey(0) && ((TwinsSection)((TwinsSection)Data.GetItem(10)).GetItem(0)).RecordIDs.ContainsKey(id))
+                return ((GameObject)((TwinsSection)((TwinsSection)Data.GetItem(10)).GetItem(0)).GetItem(id)).Name; //lol
+            else return string.Empty;
         }
 
         public static string GetScriptName(uint id)
