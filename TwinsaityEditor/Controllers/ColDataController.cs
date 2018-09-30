@@ -7,6 +7,8 @@ namespace TwinsaityEditor
 {
     public class ColDataController : ItemController
     {
+        public static CollisionImporter importer;
+
         public new ColData Data { get; set; }
 
         public ColDataController(ColData item) : base(item)
@@ -14,6 +16,7 @@ namespace TwinsaityEditor
             Data = item;
             AddMenu("Open RMViewer", Menu_OpenRMViewer);
             AddMenu("Export Collision Model", Menu_Export);
+            AddMenu("Import Collision Model", Menu_Import);
         }
 
         protected override string GetName()
@@ -81,6 +84,21 @@ namespace TwinsaityEditor
                 }
                 writer.Close();
             }
+        }
+
+        private void Menu_Import()
+        {
+            if (importer == null)
+            {
+                importer = new CollisionImporter(this);
+                importer.FormClosed += delegate
+                {
+                    importer = null;
+                };
+                importer.Show();
+            }
+            else
+                importer.Select();
         }
     }
 }
