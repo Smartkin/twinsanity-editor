@@ -44,7 +44,6 @@ namespace TwinsaityEditor
         {
             if (Data.Type == SectionType.ObjectInstance)
             {
-                RMViewer.InstancesChanged[Data.Parent.ID] = true;
                 MainForm.CloseInstanceEditor((int)Data.Parent.ID);
             }
             else if (Data.Type == SectionType.Position)
@@ -81,15 +80,12 @@ namespace TwinsaityEditor
             }
             Data.Records = slist;
             Node.TreeView.EndUpdate();
-            if (Data.Type == SectionType.ObjectInstance)
-                RMViewer.InstancesChanged[Data.Parent.ID] = true;
         }
 
         private void Menu_ReIDByOrder()
         {
             if (Data.Type == SectionType.ObjectInstance)
             {
-                RMViewer.InstancesChanged[Data.Parent.ID] = true;
                 MainForm.CloseInstanceEditor((int)Data.Parent.ID);
             }
             else if (Data.Type == SectionType.Position)

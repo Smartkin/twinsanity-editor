@@ -16,8 +16,6 @@ namespace TwinsaityEditor
 
         private float indicator_size = 0.5f;
 
-        public static bool[] InstancesChanged { get; set; } = new bool[8] { false, false, false, false, false, false, false, false };
-
         public RMViewer(ColData data, ref TwinsFile file)
         {
             //initialize variables here

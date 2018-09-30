@@ -141,7 +141,6 @@ namespace TwinsaityEditor
             controller.Data.RecordIDs.Add(ins.ID, listBox1.SelectedIndex);
             listBox1.Items[listBox1.SelectedIndex] = GenTextForList(ins);
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
-            RMViewer.InstancesChanged[controller.Data.Parent.ID] = true;
         }
 
         private void comboBox1_TextChanged(object sender, EventArgs e)
@@ -174,7 +173,6 @@ namespace TwinsaityEditor
             pos.X = (float)numericUpDown2.Value;
             ins.Pos = pos;
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
-            RMViewer.InstancesChanged[controller.Data.Parent.ID] = true;
         }
 
         private void numericUpDown3_ValueChanged(object sender, EventArgs e)
@@ -184,7 +182,6 @@ namespace TwinsaityEditor
             pos.Y = (float)numericUpDown3.Value;
             ins.Pos = pos;
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
-            RMViewer.InstancesChanged[controller.Data.Parent.ID] = true;
         }
 
         private void numericUpDown4_ValueChanged(object sender, EventArgs e)
@@ -194,7 +191,6 @@ namespace TwinsaityEditor
             pos.Z = (float)numericUpDown4.Value;
             ins.Pos = pos;
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
-            RMViewer.InstancesChanged[controller.Data.Parent.ID] = true;
         }
 
         private void numericUpDown5_ValueChanged(object sender, EventArgs e)
@@ -211,7 +207,6 @@ namespace TwinsaityEditor
             ins.RotX = (ushort)trackBar1.Value;
             GetXRot();
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
-            RMViewer.InstancesChanged[controller.Data.Parent.ID] = true;
         }
 
         private void trackBar2_Scroll(object sender, EventArgs e)
@@ -219,7 +214,6 @@ namespace TwinsaityEditor
             ins.RotY = (ushort)trackBar2.Value;
             GetYRot();
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
-            RMViewer.InstancesChanged[controller.Data.Parent.ID] = true;
         }
 
         private void trackBar3_Scroll(object sender, EventArgs e)
@@ -227,7 +221,6 @@ namespace TwinsaityEditor
             ins.RotZ = (ushort)trackBar3.Value;
             GetZRot();
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
-            RMViewer.InstancesChanged[controller.Data.Parent.ID] = true;
         }
 
         private void numericUpDown6_ValueChanged(object sender, EventArgs e)
@@ -238,7 +231,6 @@ namespace TwinsaityEditor
             GetXRot();
             ignore_rot1 = false;
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
-            RMViewer.InstancesChanged[controller.Data.Parent.ID] = true;
         }
 
         private void numericUpDown13_ValueChanged(object sender, EventArgs e)
@@ -259,7 +251,6 @@ namespace TwinsaityEditor
             GetYRot();
             ignore_rot1 = false;
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
-            RMViewer.InstancesChanged[controller.Data.Parent.ID] = true;
         }
 
         private void numericUpDown14_ValueChanged(object sender, EventArgs e)
@@ -387,7 +378,6 @@ namespace TwinsaityEditor
             listBox1.Items.Add(GenTextForList(ins));
             controller.UpdateText();
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
-            RMViewer.InstancesChanged[controller.Data.Parent.ID] = true;
         }
 
         private void removeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -403,7 +393,6 @@ namespace TwinsaityEditor
             if (listBox1.Items.Count == 0)
                 tabControl1.Enabled = false;
             controller.UpdateText();
-            RMViewer.InstancesChanged[controller.Data.Parent.ID] = true;
         }
 
         private void numericUpDown8_ValueChanged(object sender, EventArgs e)
@@ -414,7 +403,6 @@ namespace TwinsaityEditor
             GetZRot();
             ignore_rot1 = false;
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
-            RMViewer.InstancesChanged[controller.Data.Parent.ID] = true;
         }
 
         private void numericUpDown15_ValueChanged(object sender, EventArgs e)
