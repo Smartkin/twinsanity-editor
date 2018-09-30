@@ -58,7 +58,7 @@ namespace TwinsaityEditor
                 }
                 else if (Data is Position)
                 {
-                    MainForm.CloseInstanceEditor((int)Data.Parent.Parent.ID);
+                    MainForm.ClosePositionEditor((int)Data.Parent.Parent.ID);
                     ((Position)Data).Load(reader, (int)reader.BaseStream.Length);
                 }
                 else
