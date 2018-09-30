@@ -283,6 +283,17 @@ namespace TwinsaityEditor
                 editor_var.Select();
         }
 
+        public static void CloseEditor(Editors editor)
+        {
+            Form editorForm = null;
+            switch(editor)
+            {
+                case Editors.ChunkLinks: editorForm = editChunkLinks; break;
+            }
+            if (editorForm != null && !editorForm.IsDisposed)
+                editorForm.Close();
+        }
+
         public static void CloseInstanceEditor(int id)
         {
             editInstances[id].Close();
