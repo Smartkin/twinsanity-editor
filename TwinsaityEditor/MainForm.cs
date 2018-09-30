@@ -40,6 +40,15 @@ namespace TwinsaityEditor
                 rmForm.Close();
             if (editChunkLinks != null)
                 editChunkLinks.Close();
+            if (ColDataController.importer != null)
+                ColDataController.importer.Close();
+            for (int i = 0; i < 8; ++i)
+            {
+                if (editInstances[i] != null && !editInstances[i].IsDisposed)
+                    editInstances[i].Close();
+                if (editPositions[i] != null && !editPositions[i].IsDisposed)
+                    editPositions[i].Close();
+            }
             treeView1.Nodes.Clear();
             FileController controller = new FileController(fileData);
             controller.UpdateText();
@@ -296,12 +305,20 @@ namespace TwinsaityEditor
 
         public static void CloseInstanceEditor(int id)
         {
-            editInstances[id].Close();
+            if (editInstances[id] != null && !editInstances[id].IsDisposed)
+                editInstances[id].Close();
         }
 
         public static void ClosePositionEditor(int id)
         {
-            editPositions[id].Close();
+            if (editPositions[id] != null && !editPositions[id].IsDisposed)
+                editPositions[id].Close();
+        }
+
+        public static void CloseRMViewer()
+        {
+            if (rmForm != null && !rmForm.IsDisposed)
+                rmForm.Close();
         }
     }
 }
