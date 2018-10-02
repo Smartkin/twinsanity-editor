@@ -66,6 +66,17 @@ namespace TwinsaityEditor
                 {
                     writer.WriteLine("v {0} {1} {2}", i.X, i.Y, i.Z);
                 }
+                //int g = 0;
+                //foreach (var i in Data.Groups)
+                //{
+                //    writer.WriteLine("o Group {0}", g++);
+                //    for (int d = (int)i.Offset; d < i.Size + i.Offset; ++d)
+                //    {
+                //        writer.WriteLine("f {0} {1} {2}", Data.Tris[d].Vert1 + 1, Data.Tris[d].Vert2 + 1, Data.Tris[d].Vert3 + 1);
+                //    }
+                //}
+                //writer.Close();
+                //return;
                 Dictionary<int, List<ColData.ColTri>> polys = new Dictionary<int, List<ColData.ColTri>>();
                 foreach (var i in Data.Tris)
                 {
