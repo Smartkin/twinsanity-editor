@@ -10,6 +10,7 @@ namespace TwinsaityEditor
     {
         private ColDataController controller;
         private List<ColModel> models = new List<ColModel>();
+        private Dictionary<int, int> vertGroups;
 
         private int vertexCount, triCount, groupCount, triggerCount;
 
@@ -53,7 +54,9 @@ namespace TwinsaityEditor
             {
                 for (int i = 0; i < ofd.FileNames.Length; ++i)
                 {
-                    ColModel model = new ColModel { vtx = new List<Pos>(), tris = new List<ColData.ColTri>(), groups = new List<ColData.GroupInfo>() };
+                    vertGroups = new Dictionary<int, int>();
+                    int grp = 0;
+                    ColModel model = new ColModel { vtx = new List<Pos>(), groups = new List<ColData.GroupInfo>(), triIndices = new List<List<ColData.ColTri>>() };
                     StreamReader reader = new StreamReader(ofd.FileNames[i]);
                     while(!reader.EndOfStream)
                     {
@@ -64,19 +67,44 @@ namespace TwinsaityEditor
                                 model.vtx.Add(new Pos(-float.Parse(str[1].Replace(".", ".")), float.Parse(str[2].Replace(".", ".")), float.Parse(str[3].Replace(".", ".")), 1));
                                 break;
                             case "f":
-                                model.tris.Add(new ColData.ColTri { Vert1 = int.Parse(str[1].Split('/')[0]) - 1, Vert2 = int.Parse(str[2].Split('/')[0]) - 1, Vert3 = int.Parse(str[3].Split('/')[0]) - 1 });
+                                int v1 = int.Parse(str[1].Split('/')[0]) - 1;
+                                int v2 = int.Parse(str[2].Split('/')[0]) - 1;
+                                int v3 = int.Parse(str[3].Split('/')[0]) - 1;
+                                if (vertGroups.TryGetValue(v1, out grp) || vertGroups.TryGetValue(v2, out grp) || vertGroups.TryGetValue(v3, out grp))
                                 {
-                                    ColData.GroupInfo grp = model.groups[model.groups.Count - 1];
-                                    ++grp.Size;
-                                    model.groups[model.groups.Count - 1] = grp;
+                                    if (model.groups[grp].Size >= numericUpDown1.Value)
+                                    {
+                                        DiscardGroup(grp);
+                                        grp = model.groups.Count;
+                                        model.groups.Add(new ColData.GroupInfo());
+                                        model.triIndices.Add(new List<ColData.ColTri>());
+                                    }
+                                    if (!vertGroups.ContainsKey(v1))
+                                        vertGroups.Add(v1, grp);
+                                    if (!vertGroups.ContainsKey(v2))
+                                        vertGroups.Add(v2, grp);
+                                    if (!vertGroups.ContainsKey(v3))
+                                        vertGroups.Add(v3, grp);
                                 }
-                                break;
-                            case "o":
-                                model.groups.Add(new ColData.GroupInfo { Offset = (uint)model.tris.Count });
+                                else
+                                {
+                                    grp = model.groups.Count;
+                                    model.groups.Add(new ColData.GroupInfo());
+                                    model.triIndices.Add(new List<ColData.ColTri>());
+                                    vertGroups.Add(v1, grp);
+                                    vertGroups.Add(v2, grp);
+                                    vertGroups.Add(v3, grp);
+                                }
+                                model.triIndices[grp].Add(new ColData.ColTri { Vert1 = v1, Vert2 = v2, Vert3 = v3 });
                                 break;
                         }
                     }
                     reader.Close();
+                    //GenerateGroups();
+                    CheckMergeGroups(ref model);
+                    GenerateGroupOff(ref model);
+                    if (model.groups.Count == 0)
+                        continue;
                     listBox1.Items.Add(ofd.FileNames[i]);
                     models.Add(model);
                     vertexCount += model.vtx.Count;
@@ -90,7 +118,7 @@ namespace TwinsaityEditor
 
         private void button3_Click(object sender, EventArgs e)
         {
-            //import
+            //generate
             MainForm.CloseRMViewer();
             controller.Data.Vertices.Clear();
             controller.Data.Tris.Clear();
@@ -117,7 +145,7 @@ namespace TwinsaityEditor
                 }
                 poly_off += models[i].tris.Count;
             }
-            ColData.Trigger[] triggers = new ColData.Trigger[controller.Data.Groups.Count * 2];
+            ColData.Trigger[] triggers = new ColData.Trigger[controller.Data.Groups.Count * 2 - 1];
             TreeView TriggerTree = new TreeView();
             TriggerTree.Nodes.Add("E", "0");
             int x = (int)Math.Truncate(Math.Log(controller.Data.Groups.Count, 2));
@@ -153,6 +181,7 @@ namespace TwinsaityEditor
                 DoubleExpand(Nodes[i]);
             }
         }
+
         private void ExpandEngings(TreeView Tree, uint d)
         {
             TreeNode[] Nodes = Tree.Nodes.Find("E", true);
@@ -200,45 +229,47 @@ namespace TwinsaityEditor
         {
             if (Triggers[index].Flag1 >= 0)
             {
+                float pad = 0;
                 TriggerRecalculate(Triggers, Groups, Indexes, Vertexes, Triggers[index].Flag1);
                 TriggerRecalculate(Triggers, Groups, Indexes, Vertexes, Triggers[index].Flag2);
-                Triggers[index].X1 = Math.Min(Triggers[Triggers[index].Flag1].X1, Triggers[Triggers[index].Flag2].X1);
-                Triggers[index].Y1 = Math.Min(Triggers[Triggers[index].Flag1].Y1, Triggers[Triggers[index].Flag2].Y1);
-                Triggers[index].Z1 = Math.Min(Triggers[Triggers[index].Flag1].Z1, Triggers[Triggers[index].Flag2].Z1);
-                Triggers[index].X2 = Math.Max(Triggers[Triggers[index].Flag1].X2, Triggers[Triggers[index].Flag2].X2);
-                Triggers[index].Y2 = Math.Max(Triggers[Triggers[index].Flag1].Y2, Triggers[Triggers[index].Flag2].Y2);
-                Triggers[index].Z2 = Math.Max(Triggers[Triggers[index].Flag1].Z2, Triggers[Triggers[index].Flag2].Z2);
+                Triggers[index].X1 = Math.Min(Triggers[Triggers[index].Flag1].X1, Triggers[Triggers[index].Flag2].X1) - pad;
+                Triggers[index].Y1 = Math.Min(Triggers[Triggers[index].Flag1].Y1, Triggers[Triggers[index].Flag2].Y1) - pad;
+                Triggers[index].Z1 = Math.Min(Triggers[Triggers[index].Flag1].Z1, Triggers[Triggers[index].Flag2].Z1) - pad;
+                Triggers[index].X2 = Math.Max(Triggers[Triggers[index].Flag1].X2, Triggers[Triggers[index].Flag2].X2) + pad;
+                Triggers[index].Y2 = Math.Max(Triggers[Triggers[index].Flag1].Y2, Triggers[Triggers[index].Flag2].Y2) + pad;
+                Triggers[index].Z2 = Math.Max(Triggers[Triggers[index].Flag1].Z2, Triggers[Triggers[index].Flag2].Z2) + pad;
             }
             else
             {
                 float x1 = 0f, x2 = 0f, y1 = 0f, y2 = 0f, z1 = 0f, z2 = 0f;
+                float pad = 0;
                 for (int i = (int)Groups[-Triggers[index].Flag1 - 1].Offset; i < Groups[-Triggers[index].Flag1 - 1].Offset + Groups[-Triggers[index].Flag1 - 1].Size; ++i)
                 {
                     Pos a = Vertexes[Indexes[i].Vert1], b = Vertexes[Indexes[i].Vert2], c = Vertexes[Indexes[i].Vert3];
                     if (x1 == 0)
-                        x1 = Math.Min(a.X, Math.Min(b.X, c.X));
+                        x1 = Math.Min(a.X, Math.Min(b.X, c.X)) - pad;
                     else
-                        x1 = Math.Min(x1, Math.Min(a.X, Math.Min(b.X, c.X)));
+                        x1 = Math.Min(x1, Math.Min(a.X, Math.Min(b.X, c.X))) - pad;
                     if (y1 == 0)
-                        y1 = Math.Min(a.Y, Math.Min(b.Y, c.Y));
+                        y1 = Math.Min(a.Y, Math.Min(b.Y, c.Y)) - pad;
                     else
-                        y1 = Math.Min(y1, Math.Min(a.Y, Math.Min(b.Y, c.Y)));
+                        y1 = Math.Min(y1, Math.Min(a.Y, Math.Min(b.Y, c.Y))) - pad;
                     if (z1 == 0)
-                        z1 = Math.Min(a.Z, Math.Min(b.Z, c.Z));
+                        z1 = Math.Min(a.Z, Math.Min(b.Z, c.Z)) - pad;
                     else
-                        z1 = Math.Min(z1, Math.Min(a.Z, Math.Min(b.Z, c.Z)));
+                        z1 = Math.Min(z1, Math.Min(a.Z, Math.Min(b.Z, c.Z))) - pad;
                     if (x2 == 0)
-                        x2 = Math.Max(a.X, Math.Max(b.X, c.X));
+                        x2 = Math.Max(a.X, Math.Max(b.X, c.X)) + pad;
                     else
-                        x2 = Math.Max(x2, Math.Max(a.X, Math.Min(b.X, c.X)));
+                        x2 = Math.Max(x2, Math.Max(a.X, Math.Max(b.X, c.X))) + pad;
                     if (y2 == 0)
-                        y2 = Math.Max(a.Y, Math.Max(b.Y, c.Y));
+                        y2 = Math.Max(a.Y, Math.Max(b.Y, c.Y)) + pad;
                     else
-                        y2 = Math.Max(y2, Math.Max(a.Y, Math.Min(b.Y, c.Y)));
+                        y2 = Math.Max(y2, Math.Max(a.Y, Math.Max(b.Y, c.Y))) + pad;
                     if (z2 == 0)
                         z2 = Math.Max(a.Z, Math.Max(b.Z, c.Z));
                     else
-                        z2 = Math.Max(z2, Math.Max(a.Z, Math.Min(b.Z, c.Z)));
+                        z2 = Math.Max(z2, Math.Max(a.Z, Math.Max(b.Z, c.Z))) + pad;
                 }
                 Triggers[index].X1 = x1;
                 Triggers[index].Y1 = y1;
@@ -254,6 +285,7 @@ namespace TwinsaityEditor
             public List<Pos> vtx;
             public List<ColData.ColTri> tris;
             public List<ColData.GroupInfo> groups;
+            public List<List<ColData.ColTri>> triIndices;
             public int surface;
         }
 
@@ -276,6 +308,65 @@ namespace TwinsaityEditor
                 $"Group Count: {groupCount}" + Environment.NewLine +
                 $"Triangle Count: {triCount}" + Environment.NewLine +
                 $"Vertex Count: {vertexCount}";
+        }
+
+        private void DiscardGroup(int grp)
+        {
+            var dic = new Dictionary<int, int>(vertGroups);
+            foreach (var i in dic)
+                if (i.Value == grp)
+                    vertGroups.Remove(i.Key);
+        }
+
+        private void GenerateGroupOff(ref ColModel model)
+        {
+            model.tris = new List<ColData.ColTri>();
+            uint off = 0;
+            for (int i = 0; i < model.groups.Count; ++i)
+            {
+                ColData.GroupInfo grp = model.groups[i];
+                grp.Offset = off;
+                grp.Size = (uint)model.triIndices[i].Count;
+                off += grp.Size;
+                model.tris.AddRange(model.triIndices[i]);
+                model.groups[i] = grp;
+            }
+        }
+
+        private void CheckMergeGroups(ref ColModel model)
+        {
+            HashSet<int> groups_to_delete = new HashSet<int>();
+            for (int i = 0; i < model.groups.Count; ++i)
+            {
+                if (groups_to_delete.Contains(i)) continue;
+                HashSet<int> verts = new HashSet<int>();
+                for (int j = 0; j < model.triIndices[i].Count; ++j)
+                {
+                    verts.Add(model.triIndices[i][j].Vert1);
+                    verts.Add(model.triIndices[i][j].Vert2);
+                    verts.Add(model.triIndices[i][j].Vert3);
+                }
+                for (int j = i + 1; j < model.groups.Count; ++j)
+                {
+                    if ((model.triIndices[i].Count + model.triIndices[j].Count) > numericUpDown1.Value) continue;
+                    for (int k = 0; k < model.triIndices[j].Count; ++k)
+                    {
+                        if (verts.Contains(model.triIndices[j][k].Vert1) || verts.Contains(model.triIndices[j][k].Vert3) || verts.Contains(model.triIndices[j][k].Vert3))
+                        {
+                            model.triIndices[i].AddRange(model.triIndices[j]);
+                            groups_to_delete.Add(j);
+                            break;
+                        }
+                    }
+                }
+            }
+            List<int> delete_list = new List<int>(groups_to_delete);
+            delete_list.Sort();
+            for (int i = delete_list.Count - 1; i >= 0; --i)
+            {
+                model.groups.RemoveAt(delete_list[i]);
+                model.triIndices.RemoveAt(delete_list[i]);
+            }
         }
     }
 }
