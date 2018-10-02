@@ -427,6 +427,27 @@ namespace TwinsaityEditor
             controller.Data.Links[listBox1.SelectedIndex].UnknownMatrix[u2_i] = pos;
         }
 
+        private void numericUpDown24_ValueChanged(object sender, EventArgs e)
+        {
+            Pos pos = link.LoadWall[pos_i];
+            pos.W = (float)numericUpDown24.Value;
+            controller.Data.Links[listBox1.SelectedIndex].LoadWall[pos_i] = pos;
+        }
+
+        private void numericUpDown22_ValueChanged(object sender, EventArgs e)
+        {
+            Pos pos = link.LoadArea[areap_i];
+            pos.W = (float)numericUpDown22.Value;
+            controller.Data.Links[listBox1.SelectedIndex].LoadArea[areap_i] = pos;
+        }
+
+        private void numericUpDown34_ValueChanged(object sender, EventArgs e)
+        {
+            Pos pos = link.UnknownMatrix[u2_i];
+            pos.W = (float)numericUpDown34.Value;
+            controller.Data.Links[listBox1.SelectedIndex].UnknownMatrix[u2_i] = pos;
+        }
+
         private void GetAreaMatrix2Pos()
         {
             numericUpDown33.Value = (decimal)link.UnknownMatrix[u2_i].X;
