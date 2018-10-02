@@ -82,7 +82,7 @@ namespace Twinsanity
             var count = reader.ReadInt32();
             for (int i = 0; i < count; ++i)
             {
-                ChunkLink link = new ChunkLink();
+                ChunkLink link = new ChunkLink() { Unknown = new short[15] { 0, 0, 8, 12, 6, 3, 3, 128, 224, 272, 320, 326, 356, 380, 0 }, Bytes = new byte[60] { 0, 5, 10, 15, 20, 25, 4, 2, 3, 1, 0, 4, 4, 5, 3, 2, 4, 6, 7, 5, 4, 4, 0, 1, 7, 6, 4, 3, 5, 7, 1, 4, 4, 2, 0, 6, 0, 1, 1, 3, 3, 2, 2, 0, 3, 5, 5, 4, 4, 2, 5, 7, 7, 6, 6, 4, 7, 1, 0, 6, } };
                 link.Type = reader.ReadInt32();
                 link.Path = reader.ReadChars(reader.ReadInt32());
                 link.Flags = reader.ReadUInt32();
