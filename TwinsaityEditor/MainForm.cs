@@ -270,7 +270,6 @@ namespace TwinsaityEditor
                 {
                     exeForm = null;
                 };
-                exeForm.Show();
             }
             else
                 exeForm.Select();

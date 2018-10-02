@@ -39,6 +39,7 @@ namespace TwinsaityEditor.Workers
                         ver = GameVersion.PAL;
                         break;
                 }
+                Show();
             }
             else
                 Close();
