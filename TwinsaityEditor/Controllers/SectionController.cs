@@ -1,5 +1,8 @@
 ﻿using Twinsanity;
 using System.Collections.Generic;
+using System.Windows.Forms;
+using Microsoft.WindowsAPICodePack.Dialogs;
+using System.IO;
 
 namespace TwinsaityEditor
 {
@@ -24,6 +27,10 @@ namespace TwinsaityEditor
             else
             {
                 AddMenu("Re-order by ID (desc.)", Menu_ReOrderByID_Desc);
+            }
+            if (item.Type == SectionType.Mesh || item.Type == SectionType.MeshX)
+            {
+                AddMenu("Export all meshes to PLY", Menu_ExportAllPLY);
             }
         }
 
@@ -103,6 +110,21 @@ namespace TwinsaityEditor
                 MainForm.GenTreeNode(Data.Records[i], this);
             }
             Node.TreeView.EndUpdate();
+        }
+
+        private void Menu_ExportAllPLY()
+        {
+            var fdbSave = new CommonOpenFileDialog { IsFolderPicker = true };
+            if (fdbSave.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                foreach (TreeNode n in Node.Nodes)
+                {
+                    if (n.Tag is MeshController c)
+                    {
+                        File.WriteAllBytes(fdbSave.FileName + "\\" + n.Text + ".ply", c.ExportPLY());
+                    }
+                }
+            }
         }
     }
 }
