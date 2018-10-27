@@ -66,16 +66,20 @@ namespace Twinsanity
 
                             case 4:
                                 {
-                                    grp.WeightHead = head;
-                                    grp.Weight = new Weight[grp.VertexCount];
+                                    grp.VDataHead = head;
+                                    grp.VData = new VertexData[grp.VertexCount];
                                     for (int j = 0; j < grp.VertexCount; j++)
                                     {
-                                        grp.Weight[j].X = reader.ReadSingle();
-                                        grp.Weight[j].Y = reader.ReadSingle();
-                                        grp.Weight[j].Z = reader.ReadSingle();
-                                        grp.Weight[j].SomeByte = reader.ReadByte();
-                                        grp.Weight[j].CONN = reader.ReadByte();
-                                        grp.Weight[j].Null1 = reader.ReadUInt16();
+                                        grp.VData[j].R = reader.ReadByte();
+                                        grp.VData[j].PX = reader.ReadByte();
+                                        grp.VData[j].X = reader.ReadUInt16();
+                                        grp.VData[j].G = reader.ReadByte();
+                                        grp.VData[j].PY = reader.ReadByte();
+                                        grp.VData[j].Y = reader.ReadUInt16();
+                                        grp.VData[j].B = reader.ReadByte();
+                                        grp.VData[j].SomeFloat = reader.ReadSingle();
+                                        grp.VData[j].CONN = reader.ReadByte();
+                                        grp.VData[j].Null1 = reader.ReadUInt16();
                                     }
 
                                     break;
@@ -125,76 +129,76 @@ namespace Twinsanity
             writer.Write(SubModels.Count);
             for (int i = 0; i < SubModels.Count; ++i)
             {
+                var sub = SubModels[i];
+                writer.Write(sub.VertexCount);
+                writer.Write(sub.BlockSize);
+                writer.Write(sub.k);
+                writer.Write(sub.c);
+                writer.Write(sub.Null1);
+                writer.Write(sub.Something);
+                writer.Write(sub.Null2);
+                for (int a = 0; a < sub.Groups.Count; ++a)
                 {
-                    var sub = SubModels[i];
-                    writer.Write(sub.VertexCount);
-                    writer.Write(sub.BlockSize);
-                    writer.Write(sub.k);
-                    writer.Write(sub.c);
-                    writer.Write(sub.Null1);
-                    writer.Write(sub.Something);
-                    writer.Write(sub.Null2);
-                    for (int a = 0; a < sub.Groups.Count; ++a)
+                    var group = sub.Groups[a];
+                    writer.Write(group.SomeNum1);
+                    writer.Write(group.VertexCount);
+                    writer.Write(group.Some80h);
+                    writer.Write(group.Null1);
+                    writer.Write(group.SomeNum2);
+                    writer.Write(group.SomeNum3);
+                    writer.Write(group.Null2);
+                    writer.Write(group.Signature1);
+                    writer.Write(group.SomeShit1);
+                    writer.Write(group.SomeShit2);
+                    writer.Write(group.SomeShit3);
+                    writer.Write(group.Signature2);
+                    if (group.VertHead > 0) //vertex positions
                     {
+                        writer.Write(group.VertHead);
+                        for (int j = 0; j < group.VertexCount; ++j)
                         {
-                            var group = sub.Groups[a];
-                            writer.Write(group.SomeNum1);
-                            writer.Write(group.VertexCount);
-                            writer.Write(group.Some80h);
-                            writer.Write(group.Null1);
-                            writer.Write(group.SomeNum2);
-                            writer.Write(group.SomeNum3);
-                            writer.Write(group.Null2);
-                            writer.Write(group.Signature1);
-                            writer.Write(group.SomeShit1);
-                            writer.Write(group.SomeShit2);
-                            writer.Write(group.SomeShit3);
-                            writer.Write(group.Signature2);
-                            if (group.VertHead > 0)
-                            {
-                                writer.Write(group.VertHead);
-                                for (int j = 0; j < group.VertexCount; ++j)
-                                {
-                                    writer.Write(group.Vertex[j].X);
-                                    writer.Write(group.Vertex[j].Y);
-                                    writer.Write(group.Vertex[j].Z);
-                                }
-                            }
-                            if (group.WeightHead > 0)
-                            {
-                                writer.Write(group.WeightHead);
-                                for (int j = 0; j < group.VertexCount; ++j)
-                                {
-                                    writer.Write(group.Weight[j].X);
-                                    writer.Write(group.Weight[j].Y);
-                                    writer.Write(group.Weight[j].Z);
-                                    writer.Write(group.Weight[j].SomeByte);
-                                    writer.Write(group.Weight[j].CONN);
-                                    writer.Write(group.Weight[j].Null1);
-                                }
-                            }
-                            if (group.UVHead > 0)
-                            {
-                                writer.Write(group.UVHead);
-                                for (int j = 0; j < group.VertexCount; ++j)
-                                {
-                                    writer.Write(group.UV[j].X);
-                                    writer.Write(group.UV[j].Y);
-                                    writer.Write(group.UV[j].Z);
-                                }
-                            }
-                            if (group.ShiteHead > 0)
-                            {
-                                writer.Write(group.ShiteHead);
-                                for (int j = 0; j < group.VertexCount; ++j)
-                                    writer.Write(group.Shit[j]);
-                            }
-                            writer.Write(group.EndSignature1);
-                            writer.Write(group.EndSignature2);
+                            writer.Write(group.Vertex[j].X);
+                            writer.Write(group.Vertex[j].Y);
+                            writer.Write(group.Vertex[j].Z);
                         }
                     }
-                    writer.Write(sub.Groups[sub.Groups.Count - 1].leftovers);
+                    if (group.VDataHead > 0) //vertex data
+                    {
+                        writer.Write(group.VDataHead);
+                        for (int j = 0; j < group.VertexCount; ++j)
+                        {
+                            writer.Write(group.VData[j].R);
+                            writer.Write(group.VData[j].PX);
+                            writer.Write(group.VData[j].X);
+                            writer.Write(group.VData[j].G);
+                            writer.Write(group.VData[j].PY);
+                            writer.Write(group.VData[j].Y);
+                            writer.Write(group.VData[j].B);
+                            writer.Write(group.VData[j].SomeFloat);
+                            writer.Write(group.VData[j].CONN);
+                            writer.Write(group.VData[j].Null1);
+                        }
+                    }
+                    if (group.UVHead > 0) //textures?
+                    {
+                        writer.Write(group.UVHead);
+                        for (int j = 0; j < group.VertexCount; ++j)
+                        {
+                            writer.Write(group.UV[j].X);
+                            writer.Write(group.UV[j].Y);
+                            writer.Write(group.UV[j].Z);
+                        }
+                    }
+                    if (group.ShiteHead > 0) //lighting?
+                    {
+                        writer.Write(group.ShiteHead);
+                        for (int j = 0; j < group.VertexCount; ++j)
+                            writer.Write(group.Shit[j]);
+                    }
+                    writer.Write(group.EndSignature1);
+                    writer.Write(group.EndSignature2);
                 }
+                writer.Write(sub.Groups[sub.Groups.Count - 1].leftovers);
             }
         }
 
@@ -211,7 +215,7 @@ namespace Twinsanity
                     {
                         size += 4 + 12 * j.VertexCount;
                     }
-                    if (j.WeightHead > 0)
+                    if (j.VDataHead > 0)
                     {
                         size += 4 + 16 * j.VertexCount;
                     }
@@ -256,7 +260,7 @@ namespace Twinsanity
                         else
                             withBlock.VertexCount = (byte)(RawData[i].Length - 33 * (SubModel[i].Group.Length - 1));
                         Array.Resize(ref withBlock.Vertex, withBlock.VertexCount);
-                        Array.Resize(ref withBlock.Weight, withBlock.VertexCount);
+                        Array.Resize(ref withBlock.VertexData, withBlock.VertexCount);
                         Array.Resize(ref withBlock.UV, withBlock.VertexCount);
                         Array.Resize(ref withBlock.Shit, withBlock.VertexCount);
                         withBlock.Some80h = 128;
@@ -270,7 +274,7 @@ namespace Twinsanity
                         withBlock.SomeShit3 = (uint)withBlock.VertexCount + withBlock.Some80h << 8;
                         withBlock.Signature2 = 0x1000104;
                         withBlock.VertHead = 0x68008003 + (uint)withBlock.VertexCount * 65536;  // 0x0380XX68
-                        withBlock.WeightHead = 0x6C008004 + (uint)withBlock.VertexCount * 65536;
+                        withBlock.VDataHead = 0x6C008004 + (uint)withBlock.VertexCount * 65536;
                         withBlock.UVHead = 0x68008005 + (uint)withBlock.VertexCount * 65536;
                         withBlock.ShiteHead = 0x6E008006 + (uint)withBlock.VertexCount * 65536;
                         for (int k = 0; k <= withBlock.VertexCount - 1; k++)
@@ -278,11 +282,11 @@ namespace Twinsanity
                             withBlock.Vertex[k].X = RawData[i][k + offset].X;
                             withBlock.Vertex[k].Y = RawData[i][k + offset].Y;
                             withBlock.Vertex[k].Z = RawData[i][k + offset].Z;
-                            withBlock.Weight[k].X = RawData[i][k + offset].U;
-                            withBlock.Weight[k].Y = RawData[i][k + offset].V;
-                            withBlock.Weight[k].Z = RawData[i][k + offset].W;
-                            withBlock.Weight[k].SomeByte = 127;
-                            withBlock.Weight[k].CONN = RawData[i][k + offset].CONN == true ? (byte)0 : (byte)128;
+                            withBlock.VertexData[k].X = RawData[i][k + offset].U;
+                            withBlock.VertexData[k].Y = RawData[i][k + offset].V;
+                            withBlock.VertexData[k].Z = RawData[i][k + offset].W;
+                            withBlock.VertexData[k].SomeByte = 127;
+                            withBlock.VertexData[k].CONN = RawData[i][k + offset].CONN == true ? (byte)0 : (byte)128;
                             withBlock.UV[k].X = RawData[i][k + offset].Nx;
                             withBlock.UV[k].Y = RawData[i][k + offset].Ny;
                             withBlock.UV[k].Z = RawData[i][k + offset].Nz;
@@ -327,8 +331,8 @@ namespace Twinsanity
             public uint Signature2;
             public uint VertHead;
             public Position3[] Vertex;
-            public uint WeightHead;
-            public Weight[] Weight;
+            public uint VDataHead;
+            public VertexData[] VData;
             public uint UVHead;
             public Position3[] UV;
             public uint ShiteHead;
@@ -341,10 +345,12 @@ namespace Twinsanity
         {
             public float X, Y, Z;
         }
-        public struct Weight
+        public struct VertexData
         {
-            public float X, Y, Z;
-            public byte SomeByte;
+            public byte R, G, B;
+            public byte PX, PY;
+            public ushort X, Y;
+            public float SomeFloat;
             public byte CONN;
             public ushort Null1;
         }
