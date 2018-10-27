@@ -228,6 +228,7 @@ namespace Twinsanity
                         LoadItem<TwinsItem>(reader, sub);
                         break;
                     case SectionType.Model:
+                    case SectionType.StaticModel:
                         LoadItem<Model>(reader, sub);
                         break;
                     case SectionType.Object:

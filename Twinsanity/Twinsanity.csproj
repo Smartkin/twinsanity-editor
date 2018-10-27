@@ -87,7 +87,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Sections\TwinsSection.cs" />
+    <Compile Include="TwinsSection.cs" />
     <Compile Include="TwinsFile.cs" />
     <Compile Include="Types.cs" />
     <Compile Include="BaseObject.cs" />
@@ -125,6 +125,9 @@
     <None Include="Resources\64x32mip" />
     <None Include="Resources\64x64" />
     <None Include="Resources\64x64mip" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Sections\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
