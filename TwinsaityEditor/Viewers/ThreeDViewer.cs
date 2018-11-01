@@ -99,7 +99,7 @@ namespace TwinsaityEditor
         private void ResetCamera()
         {
             pos = new Vector3(0, 0, 0);
-            rot = new Vector3(0, 0, 0);
+            rot = new Vector3((float)Math.PI, 0, 0);
             Matrix4 view = Matrix4.Identity;
             Matrix4 proj = Matrix4.Identity;
             Matrix4 rot_matrix = Utils.MatrixWrapper.RotateMatrix4(rot.X, rot.Y, rot.Z);
@@ -278,7 +278,7 @@ namespace TwinsaityEditor
             GL.AlphaFunc(AlphaFunction.Greater, 0);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
             GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
-            GL.ClearColor(0, 0, 1, 1); //TODO: Add clear color to Preferences later
+            GL.ClearColor(Color.MidnightBlue); //TODO: Add clear color to Preferences later
             GL.Enable(EnableCap.ColorMaterial);
             //GL.ShadeModel(ShadingModel.Flat); //TODO: Add to preferences
             GL.Light(LightName.Light0, LightParameter.Position, new float[] { 0, 0, 0, 1 });
