@@ -1,4 +1,6 @@
 ﻿using Twinsanity;
+using System.IO;
+using System.Windows.Forms;
 
 namespace TwinsaityEditor
 {
@@ -9,6 +11,7 @@ namespace TwinsaityEditor
         public ModelController(Model item) : base(item)
         {
             Data = item;
+            AddMenu("Export mesh to PLY", Menu_ExportPLY);
         }
 
         protected override string GetName()
@@ -25,6 +28,16 @@ namespace TwinsaityEditor
             for (int i = 0; i < Data.MaterialIDs.Length; ++i)
                 TextPrev[3 + i] = FileController.GetMaterialName(Data.MaterialIDs[i]);
             TextPrev[3 + Data.MaterialIDs.Length] = "Mesh: " + Data.MeshID;
+        }
+
+        private void Menu_ExportPLY()
+        {
+            if (MessageBox.Show("PLY export is experimental, material and texture information will not be exported. Continue anyway?", "Export Warning", MessageBoxButtons.YesNo) == DialogResult.No) return;
+            SaveFileDialog sfd = new SaveFileDialog { Filter = "PLY files (*.ply)|*.ply", FileName = GetName() };
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                File.WriteAllBytes(sfd.FileName, ((Mesh)((TwinsSection)Data.Parent.Parent.GetItem(2)).GetItem(Data.MeshID)).ToPLY());
+            }
         }
     }
 }

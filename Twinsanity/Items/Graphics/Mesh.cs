@@ -303,6 +303,82 @@ namespace Twinsanity
             UpdateStream();*/
         }
 
+        public byte[] ToPLY()
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                using (StreamWriter ply = new StreamWriter(stream) { AutoFlush = true })
+                {
+                    int vertexcount = 0, polycount = 0;
+                    for (int i = 0; i < SubModels.Count; ++i)
+                    {
+                        for (int a = 0; a < SubModels[i].Groups.Count; ++a)
+                        {
+                            if (SubModels[i].Groups[a].VertHead > 0 && SubModels[i].Groups[a].VDataHead > 0)
+                            {
+                                vertexcount += SubModels[i].Groups[a].VertexCount;
+                                for (int f = 0; f < SubModels[i].Groups[a].VertexCount - 2; ++f)
+                                {
+                                    if (SubModels[i].Groups[a].VData[f + 2].CONN != 128)
+                                        ++polycount;
+                                }
+                            }
+                        }
+                    }
+                    ply.WriteLine("ply");
+                    ply.WriteLine("format ascii 1.0");
+                    ply.WriteLine("element vertex {0}", vertexcount);
+                    ply.WriteLine("property float x");
+                    ply.WriteLine("property float y");
+                    ply.WriteLine("property float z");
+                    ply.WriteLine("property uchar red");
+                    ply.WriteLine("property uchar green");
+                    ply.WriteLine("property uchar blue");
+                    ply.WriteLine("element face {0}", polycount);
+                    ply.WriteLine("property list uchar int vertex_index");
+                    ply.WriteLine("end_header");
+                    foreach (var s in SubModels) //vertices
+                    {
+                        foreach (var g in s.Groups)
+                        {
+                            if (g.VertHead > 0 && g.VDataHead > 0)
+                                for (int i = 0; i < g.VertexCount; ++i)
+                                {
+                                    byte red, green, blue;
+                                    red = g.VData[i].R;
+                                    green = g.VData[i].G;
+                                    blue = g.VData[i].B;
+                                    //if (g.ShiteHead > 0)
+                                    //{
+                                    //    red = (byte)((g.Shit[i] & 0xFF00) >> 8);
+                                    //    green = (byte)((g.Shit[i] & 0xFF0000) >> 16);
+                                    //    blue = (byte)((g.Shit[i] & 0xFF000000) >> 24);
+                                    //}
+                                    ply.WriteLine("{0} {1} {2} {3} {4} {5}", -g.Vertex[i].X, g.Vertex[i].Y, g.Vertex[i].Z, red, green, blue);
+                                }
+                        }
+                    }
+                    vertexcount = 0;
+                    foreach (var s in SubModels) //polys
+                    {
+                        foreach (var g in s.Groups)
+                        {
+                            if (g.VertHead > 0 && g.VDataHead > 0)
+                            {
+                                for (int i = 0; i < g.VertexCount - 2; ++i)
+                                {
+                                    if (g.VData[i + 2].CONN != 128)
+                                        ply.WriteLine("3 {0} {1} {2}", vertexcount + ((i & 0x1) == 0x1 ? i + 1 : i + 0), vertexcount + ((i & 0x1) == 0x1 ? i + 0 : i + 1), vertexcount + ((i & 0x1) == 0x1 ? i + 2 : i + 2));
+                                }
+                                vertexcount += g.VertexCount;
+                            }
+                        }
+                    }
+                    return stream.ToArray();
+                }
+            }
+        }
+
         #region STRUCTURES
         public struct SubModel
         {

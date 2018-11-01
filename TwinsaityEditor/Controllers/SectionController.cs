@@ -28,7 +28,7 @@ namespace TwinsaityEditor
             {
                 AddMenu("Re-order by ID (desc.)", Menu_ReOrderByID_Desc);
             }
-            if (item.Type == SectionType.Mesh || item.Type == SectionType.MeshX)
+            if (item.Type == SectionType.Mesh || item.Type == SectionType.MeshX || item.Type == SectionType.Model || item.Type == SectionType.StaticModel)
             {
                 AddMenu("Export all meshes to PLY", Menu_ExportAllPLY);
             }
@@ -114,14 +114,23 @@ namespace TwinsaityEditor
 
         private void Menu_ExportAllPLY()
         {
+            if (Data.Type == SectionType.Model || Data.Type == SectionType.StaticModel)
+                if (MessageBox.Show("PLY export is experimental, material and texture information will not be exported. Continue anyway?", "Export Warning", MessageBoxButtons.YesNo) == DialogResult.No) return;
             var fdbSave = new CommonOpenFileDialog { IsFolderPicker = true };
             if (fdbSave.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 foreach (TreeNode n in Node.Nodes)
                 {
-                    if (n.Tag is MeshController c)
+                    string fname = fdbSave.FileName + @"\" + n.Text + ".ply";
+                    if (n.Tag is MeshController)
                     {
-                        File.WriteAllBytes(fdbSave.FileName + "\\" + n.Text + ".ply", c.ExportPLY());
+                        MeshController c = (MeshController)n.Tag;
+                        File.WriteAllBytes(fname, c.Data.ToPLY());
+                    }
+                    else if (n.Tag is ModelController)
+                    {
+                        ModelController c = (ModelController)n.Tag;
+                        File.WriteAllBytes(fname, ((Mesh)((TwinsSection)Data.Parent.GetItem(2)).GetItem(c.Data.MeshID)).ToPLY());
                     }
                 }
             }
