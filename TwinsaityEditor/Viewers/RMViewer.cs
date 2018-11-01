@@ -42,7 +42,7 @@ namespace TwinsaityEditor
                         Vector3 v1 = new Vector3(-data.Vertices[tri.Vert1].X, data.Vertices[tri.Vert1].Y, data.Vertices[tri.Vert1].Z);
                         Vector3 v2 = new Vector3(-data.Vertices[tri.Vert2].X, data.Vertices[tri.Vert2].Y, data.Vertices[tri.Vert2].Z);
                         Vector3 v3 = new Vector3(-data.Vertices[tri.Vert3].X, data.Vertices[tri.Vert3].Y, data.Vertices[tri.Vert3].Z);
-                        GL.Normal3(Utils.VectorFuncs.CalcNormal(v1, v2, v3));
+                        GL.Normal3(VectorFuncs.CalcNormal(v1, v2, v3));
                         GL.Vertex3(v1.X, v1.Y, v1.Z);
                         GL.Vertex3(v2.X, v2.Y, v2.Z);
                         GL.Vertex3(v3.X, v3.Y, v3.Z);

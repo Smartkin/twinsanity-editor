@@ -1,7 +1,6 @@
 ﻿using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using Twinsanity;
-using TwinsaityEditor.Utils;
 using System.Drawing;
 using System;
 
@@ -62,14 +61,14 @@ namespace TwinsaityEditor
                 {
                     if (links.Links[i].Type == 1 || links.Links[i].Type == 3)
                     {
-                        Vector4 v1 = VectorFuncs.FromPos(links.Links[i].LoadArea[0]);
-                        Vector4 v2 = VectorFuncs.FromPos(links.Links[i].LoadArea[1]);
-                        Vector4 v3 = VectorFuncs.FromPos(links.Links[i].LoadArea[2]);
-                        Vector4 v4 = VectorFuncs.FromPos(links.Links[i].LoadArea[3]);
-                        Vector4 v5 = VectorFuncs.FromPos(links.Links[i].LoadArea[4]);
-                        Vector4 v6 = VectorFuncs.FromPos(links.Links[i].LoadArea[5]);
-                        Vector4 v7 = VectorFuncs.FromPos(links.Links[i].LoadArea[6]);
-                        Vector4 v8 = VectorFuncs.FromPos(links.Links[i].LoadArea[7]);
+                        Vector4 v1 = VectorFuncs.Pos2Vector4(links.Links[i].LoadArea[0]);
+                        Vector4 v2 = VectorFuncs.Pos2Vector4(links.Links[i].LoadArea[1]);
+                        Vector4 v3 = VectorFuncs.Pos2Vector4(links.Links[i].LoadArea[2]);
+                        Vector4 v4 = VectorFuncs.Pos2Vector4(links.Links[i].LoadArea[3]);
+                        Vector4 v5 = VectorFuncs.Pos2Vector4(links.Links[i].LoadArea[4]);
+                        Vector4 v6 = VectorFuncs.Pos2Vector4(links.Links[i].LoadArea[5]);
+                        Vector4 v7 = VectorFuncs.Pos2Vector4(links.Links[i].LoadArea[6]);
+                        Vector4 v8 = VectorFuncs.Pos2Vector4(links.Links[i].LoadArea[7]);
                         GL.Color4(Color.FromArgb(0xFF, colors[i % colors.Length]));
                         GL.Begin(PrimitiveType.TriangleStrip);
                         //GL.Vertex4(v1); GL.Vertex4(v2); GL.Vertex4(v3); GL.Vertex4(v4); GL.Vertex4(v5); GL.Vertex4(v6); GL.Vertex4(v7); GL.Vertex4(v8);
@@ -87,12 +86,12 @@ namespace TwinsaityEditor
                         float max_z = Math.Max(v1.Z, Math.Max(v2.Z, Math.Max(v3.Z, Math.Max(v4.Z, Math.Max(v5.Z, Math.Max(v6.Z, Math.Max(v7.Z, v8.Z)))))));
                         GL.PushMatrix();
                         GL.Translate((min_x + max_x) / 2, (min_y + max_y) / 2, (min_z + max_z) / 2);
-                        v1 = VectorFuncs.FromPos(links.Links[i].AreaMatrix[0]);
-                        v2 = VectorFuncs.FromPos(links.Links[i].AreaMatrix[1]);
-                        v3 = VectorFuncs.FromPos(links.Links[i].AreaMatrix[2]);
-                        v4 = VectorFuncs.FromPos(links.Links[i].AreaMatrix[3]);
-                        v5 = VectorFuncs.FromPos(links.Links[i].AreaMatrix[4]);
-                        v6 = VectorFuncs.FromPos(links.Links[i].AreaMatrix[5]);
+                        v1 = VectorFuncs.Pos2Vector4(links.Links[i].AreaMatrix[0]);
+                        v2 = VectorFuncs.Pos2Vector4(links.Links[i].AreaMatrix[1]);
+                        v3 = VectorFuncs.Pos2Vector4(links.Links[i].AreaMatrix[2]);
+                        v4 = VectorFuncs.Pos2Vector4(links.Links[i].AreaMatrix[3]);
+                        v5 = VectorFuncs.Pos2Vector4(links.Links[i].AreaMatrix[4]);
+                        v6 = VectorFuncs.Pos2Vector4(links.Links[i].AreaMatrix[5]);
                         GL.Begin(PrimitiveType.Lines);
                         GL.Vertex2(0, 0); GL.Vertex4(v1.NormalizeW());
                         GL.Vertex2(0, 0); GL.Vertex4(v2.NormalizeW());

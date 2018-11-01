@@ -1,7 +1,7 @@
 ﻿using OpenTK;
 using Twinsanity;
 
-namespace TwinsaityEditor.Utils
+namespace TwinsaityEditor
 {
     public static class VectorFuncs
     {
@@ -22,9 +22,19 @@ namespace TwinsaityEditor.Utils
             return new Vector3(nx, ny, nz);
         }
 
-        public static Vector4 FromPos(Pos pos)
+        public static Vector4 Pos2Vector4(Pos pos)
         {
             return new Vector4(pos.X, pos.Y, pos.Z, pos.W);
+        }
+
+        public static Vector3 Pos2Vector3(Pos pos)
+        {
+            return new Vector3(pos.X, pos.Y, pos.Z);
+        }
+
+        public static Pos ToPos(this Vector4 v)
+        {
+            return new Pos(v.X, v.Y, v.Z, v.W);
         }
 
         public static Vector4 NormalizeW(this Vector4 v)
@@ -34,11 +44,6 @@ namespace TwinsaityEditor.Utils
             v.Z *= v.W;
             v.W /= v.W;
             return v;
-        }
-
-        public static Pos ToPos(this Vector4 v)
-        {
-            return new Pos(v.X, v.Y, v.Z, v.W);
         }
     }
 }
