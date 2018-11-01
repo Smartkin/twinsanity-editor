@@ -100,6 +100,8 @@ namespace TwinsaityEditor
                 c = new ScriptController((Script)a);
             else if (a is Position)
                 c = new PositionController((Position)a);
+            else if (a is Path)
+                c = new PathController((Path)a);
             else if (a is Instance)
                 c = new InstanceController((Instance)a);
             else if (a is Trigger && fileData.Type != TwinsFile.FileType.DemoRM2) //trigger controller assumes final instance format

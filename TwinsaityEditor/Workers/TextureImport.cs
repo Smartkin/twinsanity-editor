@@ -67,7 +67,7 @@ namespace TwinsaityEditor.Workers
 
                 foreach (var imageName in ofdSelect.FileNames)
                 {
-                    var formatStr = Path.GetFileName(imageName);
+                    var formatStr = System.IO.Path.GetFileName(imageName);
 
                     _imagePaths.Add(formatStr, imageName);
 

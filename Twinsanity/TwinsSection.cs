@@ -243,6 +243,9 @@ namespace Twinsanity
                     case SectionType.Position:
                         LoadItem<Position>(reader, sub);
                         break;
+                    case SectionType.Path:
+                        LoadItem<Path>(reader, sub);
+                        break;
                     case SectionType.ObjectInstance:
                         LoadItem<Instance>(reader, sub);
                         break;

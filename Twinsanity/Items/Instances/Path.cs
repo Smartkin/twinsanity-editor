@@ -1,57 +1,55 @@
-using System;
+using System.IO;
+using System.Collections.Generic;
 
 namespace Twinsanity
 {
-    public class Path : BaseItem
+    public class Path : TwinsItem
     {
-        public new string NodeName = "Path";
-        public RM2.Coordinate4[] Pos = new RM2.Coordinate4[] { };
-        public Something[] SomeInts = new Something[] { };
+        private List<Pos> positions = new List<Pos>();
+        private List<PathParam> pathParams = new List<PathParam>();
 
-        public override void UpdateStream()
+        public List<Pos> Positions { get => positions; set => positions = value; }
+        public List<PathParam> Params { get => pathParams; set => pathParams = value; }
+
+        public override void Save(BinaryWriter writer)
         {
-            System.IO.MemoryStream NewStream = new System.IO.MemoryStream();
-            System.IO.BinaryWriter NSWriter = new System.IO.BinaryWriter(NewStream);
-            NSWriter.Write(Pos.Length);
-            for (int i = 0; i <= Pos.Length - 1; i++)
+            writer.Write(Positions.Count);
+            foreach (var p in Positions)
             {
-                NSWriter.Write(Pos[i].X);
-                NSWriter.Write(Pos[i].Y);
-                NSWriter.Write(Pos[i].Z);
-                NSWriter.Write(Pos[i].W);
+                writer.Write(p.X);
+                writer.Write(p.Y);
+                writer.Write(p.Z);
+                writer.Write(p.W);
             }
-            NSWriter.Write(SomeInts.Length);
-            for (int i = 0; i <= SomeInts.Length - 1; i++)
+            writer.Write(Params.Count);
+            foreach (var p in Params)
             {
-                NSWriter.Write(SomeInts[i].Int1);
-                NSWriter.Write(SomeInts[i].Int2);
+                writer.Write(p.Int1);
+                writer.Write(p.Int2);
             }
-            ByteStream = NewStream;
-            Size = (uint)ByteStream.Length;
         }
 
-        protected override void DataUpdate()
+        public override void Load(BinaryReader reader, int size)
         {
-            System.IO.BinaryReader BSReader = new System.IO.BinaryReader(ByteStream);
-            ByteStream.Position = 0;
-            Array.Resize(ref Pos, BSReader.ReadInt32());
-            for (int i = 0; i <= Pos.Length - 1; i++)
+            int count = reader.ReadInt32();
+            for (int i = 0; i < count; ++i)
             {
-                Pos[i].X = BSReader.ReadSingle();
-                Pos[i].Y = BSReader.ReadSingle();
-                Pos[i].Z = BSReader.ReadSingle();
-                Pos[i].W = BSReader.ReadSingle();
+                positions.Add(new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle()));
             }
-            Array.Resize(ref SomeInts, BSReader.ReadInt32());
-            for (int i = 0; i <= SomeInts.Length - 1; i++)
+            count = reader.ReadInt32();
+            for (int i = 0; i < count; ++i)
             {
-                SomeInts[i].Int1 = BSReader.ReadUInt32();
-                SomeInts[i].Int2 = BSReader.ReadUInt32();
+                pathParams.Add(new PathParam { Int1 = reader.ReadUInt32(), Int2 = reader.ReadUInt32() });
             }
+        }
+
+        protected override int GetSize()
+        {
+            return 8 + Positions.Count * 16 + Params.Count * 8;
         }
 
         #region STRUCTURES
-        public struct Something
+        public struct PathParam
         {
             public uint Int1;
             public uint Int2;

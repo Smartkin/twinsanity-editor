@@ -109,10 +109,10 @@ namespace TwinsaityEditor
                 {
                     if (((TwinsSection)file.GetItem(i)).RecordIDs.ContainsKey(3)) //positions
                     {
+                        GL.Disable(EnableCap.Lighting);
                         foreach (Position j in ((TwinsSection)((TwinsSection)file.GetItem(i)).GetItem(3)).Records)
                         {
                             GL.PushMatrix();
-                            GL.Disable(EnableCap.Lighting);
                             GL.Translate(j.Pos.X, j.Pos.Y, j.Pos.Z);
                             DrawAxes(0, 0, 0, 0.5f);
                             if (SelectedItem != j)
@@ -130,17 +130,53 @@ namespace TwinsaityEditor
                             GL.End();
                             GL.Scale(0.5, 0.5, 0.5);
                             RenderString(j.ID.ToString());
-                            GL.Enable(EnableCap.Lighting);
                             GL.PopMatrix();
                         }
+                        GL.Enable(EnableCap.Lighting);
+                    }
+
+                    if (((TwinsSection)file.GetItem(i)).RecordIDs.ContainsKey(4)) //paths
+                    {
+                        GL.Disable(EnableCap.Lighting);
+                        foreach (Path j in ((TwinsSection)((TwinsSection)file.GetItem(i)).GetItem(4)).Records)
+                        {
+                            if (SelectedItem != j)
+                            {
+                                GL.PointSize(5);
+                                GL.LineWidth(1);
+                                GL.Color3(colors[colors.Length - i * 2 - 2]);
+                            }
+                            else
+                            {
+                                GL.PointSize(10);
+                                GL.LineWidth(2);
+                                GL.Color3(Color.White);
+                            }
+                            for (int k = 0; k < j.Positions.Count; ++k)
+                            {
+                                GL.PushMatrix();
+                                GL.Translate(j.Positions[k].X, j.Positions[k].Y, j.Positions[k].Z);
+                                DrawAxes(0, 0, 0, 0.5f);
+                                GL.Scale(0.5, 0.5, 0.5);
+                                RenderString(j.ID.ToString()+"|"+k+"/"+j.Positions.Count);
+                                GL.PopMatrix();
+                            }
+                            GL.Begin(PrimitiveType.LineStrip);
+                            for (int k = 0; k < j.Positions.Count; ++k)
+                            {
+                                GL.Vertex3(j.Positions[k].X, j.Positions[k].Y, j.Positions[k].Z);
+                            }
+                            GL.End();
+                        }
+                        GL.Enable(EnableCap.Lighting);
                     }
 
                     if (((TwinsSection)file.GetItem(i)).RecordIDs.ContainsKey(6)) //instances
                     {
+                        GL.Disable(EnableCap.Lighting);
                         foreach (Instance j in ((TwinsSection)((TwinsSection)file.GetItem(i)).GetItem(6)).Records)
                         {
                             GL.PushMatrix();
-                            GL.Disable(EnableCap.Lighting);
                             GL.Translate(j.Pos.X, j.Pos.Y, j.Pos.Z);
                             DrawAxes(0, 0, 0, 0.5f);
                             GL.Rotate(+j.RotX / (float)(ushort.MaxValue + 1) * 360f, 1, 0, 0);
@@ -179,9 +215,9 @@ namespace TwinsaityEditor
                             GL.Vertex3(+indicator_size, +indicator_size + 0.5, -indicator_size);
                             GL.End();
                             RenderString(j.ID.ToString());
-                            GL.Enable(EnableCap.Lighting);
                             GL.PopMatrix();
                         }
+                        GL.Enable(EnableCap.Lighting);
                     }
                 }
             }
