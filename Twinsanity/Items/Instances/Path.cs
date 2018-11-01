@@ -24,8 +24,8 @@ namespace Twinsanity
             writer.Write(Params.Count);
             foreach (var p in Params)
             {
-                writer.Write(p.Int1);
-                writer.Write(p.Int2);
+                writer.Write(p.P1);
+                writer.Write(p.P2);
             }
         }
 
@@ -39,7 +39,7 @@ namespace Twinsanity
             count = reader.ReadInt32();
             for (int i = 0; i < count; ++i)
             {
-                pathParams.Add(new PathParam { Int1 = reader.ReadUInt32(), Int2 = reader.ReadUInt32() });
+                pathParams.Add(new PathParam { P1 = reader.ReadSingle(), P2 = reader.ReadSingle() });
             }
         }
 
@@ -51,8 +51,8 @@ namespace Twinsanity
         #region STRUCTURES
         public struct PathParam
         {
-            public uint Int1;
-            public uint Int2;
+            public float P1;
+            public float P2;
         }
         #endregion
     }

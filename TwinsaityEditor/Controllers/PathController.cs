@@ -29,7 +29,7 @@ namespace TwinsaityEditor
             TextPrev[3 + Data.Positions.Count] = "Params: " + Data.Positions.Count;
             for (int i = 0; i < Data.Params.Count; ++i)
             {
-                TextPrev[4 + Data.Positions.Count + i] = "Param" + i + ": " + Data.Params[i].Int1 + ", " + Data.Params[i].Int2;
+                TextPrev[4 + Data.Positions.Count + i] = "Param" + i + ": " + Data.Params[i].P2 + ", " + Data.Params[i].P2;
             }
         }
     }
