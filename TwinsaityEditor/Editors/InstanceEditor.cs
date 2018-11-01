@@ -16,8 +16,8 @@ namespace TwinsaityEditor
         public InstanceEditor(SectionController c)
         {
             controller = c;
-            Text += " (Section " + c.Data.ID + ")";
             InitializeComponent();
+            Text = "Instance Editor (Section " + c.Data.Parent.ID + ")";
             PopulateList();
             comboBox1.TextChanged += comboBox1_TextChanged;
         }

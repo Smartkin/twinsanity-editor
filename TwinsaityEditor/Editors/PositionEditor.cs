@@ -14,6 +14,7 @@ namespace TwinsaityEditor
         {
             controller = c;
             InitializeComponent();
+            Text = "Position Editor (Section " + c.Data.Parent.ID + ")";
             PopulateList();
             numericUpDown2.ValueChanged += numericUpDown1_ValueChanged;
             numericUpDown3.ValueChanged += numericUpDown1_ValueChanged;
