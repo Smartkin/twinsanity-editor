@@ -135,8 +135,13 @@ namespace TwinsaityEditor
                 OpenEditor(ref editPositions[((PositionController)c).Data.Parent.Parent.ID], Editors.Position, (Controller)c.Node.Parent.Tag);
             else if (c is InstanceController)
                 OpenEditor(ref editInstances[((InstanceController)c).Data.Parent.Parent.ID], Editors.Instance, (Controller)c.Node.Parent.Tag);
-            else if (c is SectionController && ((SectionController)c).Data.Type == SectionType.ObjectInstance)
-                OpenEditor(ref editInstances[((SectionController)c).Data.Parent.ID], Editors.Instance, c);
+            else if (c is SectionController s && !c.Node.IsExpanded)
+            {
+                if (s.Data.Type == SectionType.ObjectInstance)
+                    OpenEditor(ref editInstances[s.Data.Parent.ID], Editors.Instance, c);
+                else if (s.Data.Type == SectionType.Position)
+                    OpenEditor(ref editInstances[s.Data.Parent.ID], Editors.Instance, c);
+            }
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
