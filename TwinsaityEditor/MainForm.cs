@@ -21,6 +21,8 @@ namespace TwinsaityEditor
 
         private TreeNode previousNode;
 
+        private static RMViewer rmViewer;
+        public static RMViewer RMViewer { get => rmViewer; }
         public static string SafeFileName { get; set; }
 
         public MainForm()
@@ -36,19 +38,15 @@ namespace TwinsaityEditor
             treeView1.KeyDown += treeView1_KeyDown;
             if (treeView1.TopNode != null && treeView1.TopNode.Tag is Controller c)
                 Controller.DisposeNode(treeView1.TopNode);
-            if (rmForm != null)
-                rmForm.Close();
-            if (editChunkLinks != null)
-                editChunkLinks.Close();
             if (ColDataController.importer != null)
                 ColDataController.importer.Close();
-            for (int i = 0; i < 8; ++i)
+            CloseEditor(Editors.ChunkLinks);
+            for (int i = 0; i <= 7; ++i)
             {
-                if (editInstances[i] != null && !editInstances[i].IsDisposed)
-                    editInstances[i].Close();
-                if (editPositions[i] != null && !editPositions[i].IsDisposed)
-                    editPositions[i].Close();
+                CloseInstanceEditor(i);
+                ClosePositionEditor(i);
             }
+            CloseRMViewer();
             treeView1.Nodes.Clear();
             FileController controller = new FileController(fileData);
             controller.UpdateText();
@@ -219,15 +217,16 @@ namespace TwinsaityEditor
         {
             if (rmForm == null)
             {
-                rmForm = new Form { Size = new System.Drawing.Size(480, 480), Text = "Initiating renderer..." };
+                rmForm = new Form { Size = new System.Drawing.Size(480, 480), Text = "Initiating viewer..." };
                 rmForm.FormClosed += delegate
                 {
                     rmForm = null;
+                    rmViewer = null;
                 };
                 rmForm.Show();
                 TwinsFile file = FileController.GetFile();
-                RMViewer viewer = new RMViewer(fileData.RecordIDs.ContainsKey(9) ? (ColData)fileData.GetItem(9) : null, ref file) { Dock = DockStyle.Fill };
-                rmForm.Controls.Add(viewer);
+                rmViewer = new RMViewer(fileData.RecordIDs.ContainsKey(9) ? (ColData)fileData.GetItem(9) : null, ref file) { Dock = DockStyle.Fill };
+                rmForm.Controls.Add(rmViewer);
                 rmForm.Text = "RMViewer";
             }
             else
