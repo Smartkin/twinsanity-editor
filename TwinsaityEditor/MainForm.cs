@@ -137,7 +137,7 @@ namespace TwinsaityEditor
                 OpenEditor(ref editPositions[((PositionController)c).Data.Parent.Parent.ID], Editors.Position, (Controller)c.Node.Parent.Tag);
             else if (c is InstanceController)
                 OpenEditor(ref editInstances[((InstanceController)c).Data.Parent.Parent.ID], Editors.Instance, (Controller)c.Node.Parent.Tag);
-            else if (c is SectionController s && !c.Node.IsExpanded)
+            else if (c is SectionController s && !(c.Node.IsExpanded && c.Node.Nodes.Count > 0))
             {
                 if (s.Data.Type == SectionType.ObjectInstance)
                     OpenEditor(ref editInstances[s.Data.Parent.ID], Editors.Instance, c);

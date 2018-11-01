@@ -140,26 +140,28 @@ namespace TwinsaityEditor
                         GL.Disable(EnableCap.Lighting);
                         foreach (Path j in ((TwinsSection)((TwinsSection)file.GetItem(i)).GetItem(4)).Records)
                         {
-                            if (SelectedItem != j)
-                            {
-                                GL.PointSize(5);
-                                GL.LineWidth(1);
-                                GL.Color3(colors[colors.Length - i * 2 - 2]);
-                            }
-                            else
-                            {
-                                GL.PointSize(10);
-                                GL.LineWidth(2);
-                                GL.Color3(Color.White);
-                            }
                             for (int k = 0; k < j.Positions.Count; ++k)
                             {
                                 GL.PushMatrix();
                                 GL.Translate(j.Positions[k].X, j.Positions[k].Y, j.Positions[k].Z);
                                 DrawAxes(0, 0, 0, 0.5f);
                                 GL.Scale(0.5, 0.5, 0.5);
-                                RenderString(j.ID.ToString()+"|"+k+"/"+j.Positions.Count);
+                                if (SelectedItem != j)
+                                    GL.Color3(colors[colors.Length - i * 2 - 2]);
+                                else
+                                    GL.Color3(Color.White);
+                                RenderString(j.ID.ToString()+"|"+(k+1)+"/"+j.Positions.Count);
                                 GL.PopMatrix();
+                            }
+                            if (SelectedItem != j)
+                            {
+                                GL.PointSize(5);
+                                GL.LineWidth(1);
+                            }
+                            else
+                            {
+                                GL.PointSize(10);
+                                GL.LineWidth(2);
                             }
                             GL.Begin(PrimitiveType.LineStrip);
                             for (int k = 0; k < j.Positions.Count; ++k)
