@@ -26,7 +26,7 @@ namespace TwinsaityEditor
             {
                 TextPrev[3 + i] = "Point" + i + ": " + Data.Positions[i].X + ", " + Data.Positions[i].Y + ", " + Data.Positions[i].Z;
             }
-            TextPrev[3 + Data.Positions.Count] = "Params: " + Data.Positions.Count;
+            TextPrev[3 + Data.Positions.Count] = "Params: " + Data.Params.Count;
             for (int i = 0; i < Data.Params.Count; ++i)
             {
                 TextPrev[4 + Data.Positions.Count + i] = "Param" + i + ": " + Data.Params[i].P2 + ", " + Data.Params[i].P2;
