@@ -140,7 +140,7 @@ namespace TwinsaityEditor
                 if (s.Data.Type == SectionType.ObjectInstance)
                     OpenEditor(ref editInstances[s.Data.Parent.ID], Editors.Instance, c);
                 else if (s.Data.Type == SectionType.Position)
-                    OpenEditor(ref editInstances[s.Data.Parent.ID], Editors.Instance, c);
+                    OpenEditor(ref editPositions[s.Data.Parent.ID], Editors.Position, c);
             }
         }
 
