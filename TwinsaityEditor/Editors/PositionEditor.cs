@@ -35,6 +35,7 @@ namespace TwinsaityEditor
             ignore_value_change = true;
 
             pos = (Position)controller.Data.Records[listBox1.SelectedIndex];
+            MainForm.RMSelectItem(pos);
             splitContainer1.Panel2.Enabled = true;
 
             numericUpDown1.Value = (decimal)pos.Pos.X;

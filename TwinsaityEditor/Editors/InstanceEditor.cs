@@ -43,6 +43,7 @@ namespace TwinsaityEditor
             ignore_value_change = true;
 
             ins = (Instance)controller.Data.Records[listBox1.SelectedIndex];
+            MainForm.RMSelectItem(ins);
             tabControl1.Enabled = true;
 
             string obj_name = FileController.GetObjectName(ins.ObjectID);

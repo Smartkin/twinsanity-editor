@@ -282,9 +282,6 @@ namespace TwinsaityEditor
             GL.Enable(EnableCap.ColorMaterial);
             //GL.ShadeModel(ShadingModel.Flat); //TODO: Add to preferences
             GL.Light(LightName.Light0, LightParameter.Position, new float[] { 0, 0, 0, 1 });
-            //GL.Light(LightName.Light0, LightParameter.Ambient, new float[] { 0.3f, 0.3f, 0.3f, 1.0f });
-            //GL.Light(LightName.Light0, LightParameter.Diffuse, new float[] { 1.0f, 1.0f, 1.0f, 1.0f });
-            //GL.Light(LightName.Light0, LightParameter.Specular, new float[] { 1.0f, 1.0f, 1.0f, 1.0f });
             GL.LightModel(LightModelParameter.LightModelTwoSide, 1);
             GL.Enable(EnableCap.Lighting);
             GL.Enable(EnableCap.Light0);
@@ -365,6 +362,11 @@ namespace TwinsaityEditor
             Bitmap bmp = _fntService.RenderString(c.ToString(), Color.White, Color.FromArgb(0x00, 0xFF, 0xFF, 0xFF));
             textureCharMap.Add(c, LoadTextTexture(ref bmp));
             bmp.Dispose();
+        }
+
+        protected void SetPosition(Vector3 pos)
+        {
+            this.pos = pos;
         }
 
         protected override void Dispose(bool disposing)

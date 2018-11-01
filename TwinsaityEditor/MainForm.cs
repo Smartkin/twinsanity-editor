@@ -320,5 +320,11 @@ namespace TwinsaityEditor
             if (rmForm != null && !rmForm.IsDisposed)
                 rmForm.Close();
         }
+
+        public static void RMSelectItem(TwinsItem item)
+        {
+            if (rmViewer != null)
+                rmViewer.SelectItem(item);
+        }
     }
 }

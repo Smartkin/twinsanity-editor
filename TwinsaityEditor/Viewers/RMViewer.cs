@@ -16,6 +16,8 @@ namespace TwinsaityEditor
 
         private float indicator_size = 0.5f;
 
+        public TwinsItem SelectedItem { get; set; } = null;
+
         public RMViewer(ColData data, ref TwinsFile file)
         {
             //initialize variables here
@@ -28,6 +30,7 @@ namespace TwinsaityEditor
         protected override void RenderObjects()
         {
             //put all object rendering code here
+
             //draw collision
             if (data != null)
             {
@@ -104,7 +107,7 @@ namespace TwinsaityEditor
             {
                 if (file.RecordIDs.ContainsKey(i))
                 {
-                    if (((TwinsSection)file.GetItem(i)).RecordIDs.ContainsKey(3))
+                    if (((TwinsSection)file.GetItem(i)).RecordIDs.ContainsKey(3)) //positions
                     {
                         foreach (Position j in ((TwinsSection)((TwinsSection)file.GetItem(i)).GetItem(3)).Records)
                         {
@@ -112,30 +115,47 @@ namespace TwinsaityEditor
                             GL.Disable(EnableCap.Lighting);
                             GL.Translate(j.Pos.X, j.Pos.Y, j.Pos.Z);
                             DrawAxes(0, 0, 0, 0.5f);
-                            GL.Scale(0.5, 0.5, 0.5);
-                            GL.PointSize(5);
-                            GL.Color3(colors[colors.Length - i * 2 - 2]);
+                            if (SelectedItem != j)
+                            {
+                                GL.PointSize(5);
+                                GL.Color3(colors[colors.Length - i * 2 - 2]);
+                            }
+                            else
+                            {
+                                GL.PointSize(10);
+                                GL.Color3(Color.White);
+                            }
                             GL.Begin(PrimitiveType.Points);
                             GL.Vertex3(0, 0, 0);
                             GL.End();
+                            GL.Scale(0.5, 0.5, 0.5);
                             RenderString(j.ID.ToString());
                             GL.Enable(EnableCap.Lighting);
                             GL.PopMatrix();
                         }
                     }
 
-                    if (((TwinsSection)file.GetItem(i)).RecordIDs.ContainsKey(6))
+                    if (((TwinsSection)file.GetItem(i)).RecordIDs.ContainsKey(6)) //instances
                     {
                         foreach (Instance j in ((TwinsSection)((TwinsSection)file.GetItem(i)).GetItem(6)).Records)
                         {
                             GL.PushMatrix();
                             GL.Disable(EnableCap.Lighting);
                             GL.Translate(j.Pos.X, j.Pos.Y, j.Pos.Z);
+                            DrawAxes(0, 0, 0, 0.5f);
                             GL.Rotate(+j.RotX / (float)(ushort.MaxValue + 1) * 360f, 1, 0, 0);
                             GL.Rotate(+j.RotY / (float)(ushort.MaxValue + 1) * 360f, 0, 1, 0);
                             GL.Rotate(+j.RotZ / (float)(ushort.MaxValue + 1) * 360f, 0, 0, 1);
-                            DrawAxes(0, 0, 0, 0.5f);
-                            GL.Color3(colors[colors.Length - i*2 - 1]);
+                            if (SelectedItem == j)
+                            {
+                                GL.Color3(Color.White);
+                                GL.LineWidth(2);
+                            }
+                            else
+                            {
+                                GL.Color3(colors[colors.Length - i * 2 - 1]);
+                                GL.LineWidth(1);
+                            }
                             GL.Begin(PrimitiveType.LineStrip);
                             GL.Vertex3(-indicator_size, -indicator_size + 0.5, -indicator_size);
                             GL.Vertex3(+indicator_size, -indicator_size + 0.5, -indicator_size);
@@ -308,21 +328,37 @@ namespace TwinsaityEditor
 
         private void DrawAxes(float x, float y, float z, float size)
         {
+            float new_ind_size = indicator_size * size;
             GL.PushMatrix();
             GL.Translate(x, y, z);
             GL.Begin(PrimitiveType.Lines);
             GL.Color3(1f, 0f, 0f);
-            float new_ind_size = indicator_size * size;
             GL.Vertex3(+new_ind_size, 0, 0);
-            GL.Vertex3(-new_ind_size, 0, 0);
+            GL.Vertex3(-new_ind_size/2, 0, 0);
             GL.Color3(0f, 1f, 0f);
             GL.Vertex3(0, +new_ind_size, 0);
-            GL.Vertex3(0, -new_ind_size, 0);
+            GL.Vertex3(0, -new_ind_size/2, 0);
             GL.Color3(0f, 0f, 1f);
             GL.Vertex3(0, 0, +new_ind_size);
-            GL.Vertex3(0, 0, -new_ind_size);
+            GL.Vertex3(0, 0, -new_ind_size/2);
             GL.End();
             GL.PopMatrix();
+        }
+
+        public void SelectItem(TwinsItem item)
+        {
+            if (item is Instance)
+            {
+                Instance i = (Instance)item;
+                SetPosition(new Vector3(-i.Pos.X, i.Pos.Y, i.Pos.Z));
+                SelectedItem = item;
+            }
+            else if (item is Position)
+            {
+                Position i = (Position)item;
+                SetPosition(new Vector3(-i.Pos.X, i.Pos.Y, i.Pos.Z));
+                SelectedItem = item;
+            }
         }
 
         /// <summary> 
