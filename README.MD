@@ -11,12 +11,12 @@ Here's the list of what needs to be fixed:
 - [ ] Model viewing
 - [x] Collision viewing
 - [ ] Scenery viewing
-- [ ] Sound playback
-- [ ] Fully functional editing GUI
-- [ ] Ditch any unnecessery dependencies (OpenTK should suffice for sounds and graphics)
-- [ ] General code refactoring and rewriting (having 6k lines of code doesn't seem practical)
-- [ ] More API optimizations?
-- [ ] A lot of other smaller stuff
+- [X] Sound playback
+- [X] Fully functional editing GUI
+- [X] Ditch any unnecessery dependencies (OpenTK should suffice for sounds and graphics)
+- [X] General code refactoring and rewriting (having 6k lines of code doesn't seem practical)
+- [X] More API optimizations?
+- [X] A lot of other smaller stuff
 
 ## Compiling
 Just open your project in VisualStudio 2017 (2015 might work, untested) and compile it.
