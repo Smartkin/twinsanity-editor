@@ -103,10 +103,5 @@ namespace TwinsaityEditor
             }
             else throw new System.ArgumentException("The requested section does not have an object instance section.");
         }
-
-        public TwinsFile GetFile()
-        {
-            return Data;
-        }
     }
 }
