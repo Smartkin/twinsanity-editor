@@ -350,6 +350,10 @@ namespace TwinsaityEditor
                 vtx[0][i * 3 + 1] = new Vertex(v2, nor, colors[data.Tris[i].Surface % colors.Length]);
                 vtx[0][i * 3 + 2] = new Vertex(v3, nor, colors[data.Tris[i].Surface % colors.Length]);
             }
+            if (vbo_id != null)
+            {
+                UpdateVBO(0);
+            }
         }
 
         private void LoadInstances()
@@ -428,6 +432,10 @@ namespace TwinsaityEditor
                     }
                 }
             }
+            if (vbo_id != null)
+            {
+                UpdateVBO(1);
+            }
         }
 
         private void LoadColNodes()
@@ -467,6 +475,10 @@ namespace TwinsaityEditor
                 coln_vtx_offs[l++] = m;
                 vtx[2][m++] = new Vertex(new Vector3(-i.X2, i.Y2, i.Z2), new Vector3(), cur_color);
                 vtx[2][m++] = new Vertex(new Vector3(-i.X2, i.Y2, i.Z1), new Vector3(), cur_color);
+            }
+            if (vbo_id != null)
+            {
+                UpdateVBO(2);
             }
         }
 

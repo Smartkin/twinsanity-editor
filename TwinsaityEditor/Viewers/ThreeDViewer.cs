@@ -28,6 +28,8 @@ namespace TwinsaityEditor
         private float size = 48;
         protected int[] vbo_id;
         protected int vbo_count;
+        private int[] vbo_sizes;
+
 
         public ThreeDViewer()
         {
@@ -295,15 +297,18 @@ namespace TwinsaityEditor
             base.OnLoad(e);
         }
 
-        protected void InitVBO()
+        private void InitVBO()
         {
             vbo_id = new int[vbo_count];
+            vbo_sizes = new int[vbo_count];
             //Generate a buffer
             GL.GenBuffers(vbo_count, vbo_id);
             for (int i = 0; i < vbo_count; ++i)
             {
                 //Ignore this buffer if the vertex buffer is null
                 if (vtx[i] == null) continue;
+                //Store size in order to be compared with later
+                vbo_sizes[i] = vtx[i].Length;
                 //Bind newly-generated buffer to the array buffer
                 GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_id[i]);
                 //Allocate data for vertex buffer...
@@ -311,6 +316,19 @@ namespace TwinsaityEditor
                 //unbind buffer (safety)
                 GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             }
+        }
+
+        protected void UpdateVBO(int id)
+        {
+            //Bind newly-generated buffer to the array buffer
+            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_id[id]);
+            //Allocate data for vertex buffer...
+            if (vtx[id].Length > vbo_sizes[id])
+                GL.BufferData(BufferTarget.ArrayBuffer, Marshal.SizeOf(typeof(Vertex)) * vtx[id].Length, vtx[id], BufferUsageHint.StaticDraw);
+            else
+                GL.BufferSubData(BufferTarget.ArrayBuffer, (IntPtr)0, Marshal.SizeOf(typeof(Vertex)) * vtx[id].Length, vtx[id]);
+            //unbind buffer (safety)
+            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
         }
 
         protected virtual void DrawText()
