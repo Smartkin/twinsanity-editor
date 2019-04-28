@@ -25,7 +25,7 @@ namespace TwinsaityEditor
         private EventHandler _inputHandle;
         private FontWrapper.FontService _fntService;
         private Dictionary<char, int> textureCharMap = new Dictionary<char, int>();
-        private float size = 48;
+        private readonly float size = 48, zNear = 0.8f, zFar = 1000f;
         protected int[] vbo_id;
         protected int vbo_count;
         private int[] vbo_sizes;
@@ -114,7 +114,7 @@ namespace TwinsaityEditor
             //Setup view and projection matrix
             Vector4 rot_vector = Vector4.Transform(new Vector4(0, 0, 1, 1), rot_matrix);
             view = Matrix4.LookAt(pos, new Vector3(pos.X + rot_vector.X, pos.Y + rot_vector.Y, pos.Z + rot_vector.Z), new Vector3(0, 1, 0));
-            proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, (float)this.Width / this.Height, 1.0f, 10000.0f);
+            proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, (float)Width / Height, zNear, zFar);
 
             //Apply the matrices
             GL.MatrixMode(MatrixMode.Projection);
@@ -256,13 +256,13 @@ namespace TwinsaityEditor
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
-            GL.Frustum(-0.75, +0.75, -0.75, +0.75, 0.8, 1000.0);
+            GL.Frustum(-0.75, +0.75, -0.75, +0.75, zNear, zFar);
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
             GL.Scale(sca);
-            GL.Rotate(rot.Y * 180 / Math.PI, 1, 0, 0);
-            GL.Rotate(rot.X * 180 / Math.PI, 0, 1, 0);
-            GL.Rotate(rot.Z * 180 / Math.PI, 0, 0, 1);
+            GL.Rotate(MathHelper.RadiansToDegrees(rot.Y), 1, 0, 0);
+            GL.Rotate(MathHelper.RadiansToDegrees(rot.X), 0, 1, 0);
+            GL.Rotate(MathHelper.RadiansToDegrees(rot.Z), 0, 0, 1);
             Vector3 delta = new Vector3(0, 0, -1) * range / 25f;
             Matrix4 rot_matrix = Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), rot.X);
             rot_matrix *= Matrix4.CreateFromAxisAngle(new Vector3(1, 0, 0), rot.Y);
