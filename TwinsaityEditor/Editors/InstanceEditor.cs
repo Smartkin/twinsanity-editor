@@ -14,7 +14,7 @@ namespace TwinsaityEditor
         private FileController TFController { get; set; }
         private TwinsFile File { get => TFController.Data; }
 
-        private bool ignore_value_change, ignore_rot1, ignore_rot2;
+        private bool ignore_value_change;
 
         public InstanceEditor(FileController file, SectionController c)
         {
@@ -46,6 +46,8 @@ namespace TwinsaityEditor
             if (listBox1.SelectedIndex == -1) return;
             ignore_value_change = true;
 
+            this.SuspendDrawing();
+
             ins = (Instance)controller.Data.Records[listBox1.SelectedIndex];
             ((MainForm)Tag).RMSelectItem(ins);
             tabControl1.Enabled = true;
@@ -58,7 +60,7 @@ namespace TwinsaityEditor
             numericUpDown3.Value = (decimal)ins.Pos.Y;
             numericUpDown4.Value = (decimal)ins.Pos.Z;
             numericUpDown5.Value = (decimal)ins.Pos.W;
-            GetXRot(); GetYRot(); GetZRot();
+            GetXRot(false, false, false); GetYRot(false, false, false); GetZRot(false, false, false);
             textBox1.Text = Convert.ToString(ins.UnkI32, 16);
 
             numericUpDown9.Value = ins.SomeNum1;
@@ -92,11 +94,14 @@ namespace TwinsaityEditor
             textBox5.Lines = lines;
 
             ignore_value_change = false;
+
+            this.ResumeDrawing();
         }
 
-        private void GetXRot()
+        private void GetXRot(bool ignore_slider, bool ignore_rot1, bool ignore_rot2)
         {
-            trackBar1.Value = ins.RotX;
+            if (!ignore_slider)
+                trackBar1.Value = ins.RotX;
             if (!ignore_rot1)
                 numericUpDown6.Value = ins.RotX;
             if (!ignore_rot2)
@@ -104,9 +109,10 @@ namespace TwinsaityEditor
             label6.Text = string.Format(angleFormat, ins.RotX / (float)(ushort.MaxValue + 1) * 360f);
         }
 
-        private void GetYRot()
+        private void GetYRot(bool ignore_slider, bool ignore_rot1, bool ignore_rot2)
         {
-            trackBar2.Value = ins.RotY;
+            if (!ignore_slider)
+                trackBar2.Value = ins.RotY;
             if (!ignore_rot1)
                 numericUpDown7.Value = ins.RotY;
             if (!ignore_rot2)
@@ -114,9 +120,10 @@ namespace TwinsaityEditor
             label7.Text = string.Format(angleFormat, ins.RotY / (float)(ushort.MaxValue + 1) * 360f);
         }
 
-        private void GetZRot()
+        private void GetZRot(bool ignore_slider, bool ignore_rot1, bool ignore_rot2)
         {
-            trackBar3.Value = ins.RotZ;
+            if (!ignore_slider)
+                trackBar3.Value = ins.RotZ;
             if (!ignore_rot1)
                 numericUpDown8.Value = ins.RotZ;
             if (!ignore_rot2)
@@ -210,31 +217,29 @@ namespace TwinsaityEditor
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
             ins.RotX = (ushort)trackBar1.Value;
-            GetXRot();
-            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
+            GetXRot(true, false, false);
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateTextBox();
         }
 
         private void trackBar2_Scroll(object sender, EventArgs e)
         {
             ins.RotY = (ushort)trackBar2.Value;
-            GetYRot();
-            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
+            GetYRot(true, false, false);
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateTextBox();
         }
 
         private void trackBar3_Scroll(object sender, EventArgs e)
         {
             ins.RotZ = (ushort)trackBar3.Value;
-            GetZRot();
-            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
+            GetZRot(true, false, false);
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateTextBox();
         }
 
         private void numericUpDown6_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
             ins.RotX = (ushort)numericUpDown6.Value;
-            ignore_rot1 = true;
-            GetXRot();
-            ignore_rot1 = false;
+            GetXRot(false, true, false);
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
         }
 
@@ -242,9 +247,7 @@ namespace TwinsaityEditor
         {
             if (ignore_value_change) return;
             ins.COMRotX = (ushort)numericUpDown13.Value;
-            ignore_rot2 = true;
-            GetXRot();
-            ignore_rot2 = false;
+            GetXRot(false, false, true);
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
         }
 
@@ -252,9 +255,7 @@ namespace TwinsaityEditor
         {
             if (ignore_value_change) return;
             ins.RotY = (ushort)numericUpDown7.Value;
-            ignore_rot1 = true;
-            GetYRot();
-            ignore_rot1 = false;
+            GetYRot(false, true, false);
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
         }
 
@@ -262,9 +263,7 @@ namespace TwinsaityEditor
         {
             if (ignore_value_change) return;
             ins.COMRotY = (ushort)numericUpDown14.Value;
-            ignore_rot2 = true;
-            GetYRot();
-            ignore_rot2 = false;
+            GetYRot(false, false, true);
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
         }
 
@@ -404,9 +403,7 @@ namespace TwinsaityEditor
         {
             if (ignore_value_change) return;
             ins.RotZ = (ushort)numericUpDown8.Value;
-            ignore_rot1 = true;
-            GetZRot();
-            ignore_rot1 = false;
+            GetZRot(false, true, false);
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
         }
 
@@ -414,9 +411,7 @@ namespace TwinsaityEditor
         {
             if (ignore_value_change) return;
             ins.COMRotZ = (ushort)numericUpDown15.Value;
-            ignore_rot2 = true;
-            GetZRot();
-            ignore_rot2 = false;
+            GetZRot(false, false, true);
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
         }
     }
