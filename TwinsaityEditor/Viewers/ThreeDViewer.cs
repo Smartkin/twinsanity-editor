@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace TwinsaityEditor
@@ -13,6 +14,8 @@ namespace TwinsaityEditor
     {
         //add to preferences later
         protected static Color[] colors = new[] { Color.Gray, Color.SlateGray, Color.DodgerBlue, Color.OrangeRed, Color.Red, Color.Pink, Color.LimeGreen, Color.DarkSlateBlue, Color.SaddleBrown, Color.LightSteelBlue, Color.SandyBrown, Color.Peru, Color.RoyalBlue, Color.DimGray, Color.Coral, Color.AliceBlue, Color.LightGray, Color.Cyan, Color.MediumTurquoise, Color.DarkSlateGray, Color.DarkSalmon, Color.DarkRed, Color.DarkCyan, Color.MediumVioletRed, Color.MediumOrchid, Color.DarkGray, Color.Yellow, Color.Goldenrod };
+
+        protected Vertex[][] vtx;
 
         private Vector3 pos, rot, sca;
         private float range;
@@ -23,6 +26,8 @@ namespace TwinsaityEditor
         private FontWrapper.FontService _fntService;
         private Dictionary<char, int> textureCharMap = new Dictionary<char, int>();
         private float size = 48;
+        protected int[] vbo_id;
+        protected int vbo_count;
 
         public ThreeDViewer()
         {
@@ -277,7 +282,7 @@ namespace TwinsaityEditor
             GL.DepthFunc(DepthFunction.Lequal);
             GL.AlphaFunc(AlphaFunction.Greater, 0);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-            GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
+            GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Fastest);
             GL.ClearColor(Color.MidnightBlue); //TODO: Add clear color to Preferences later
             GL.Enable(EnableCap.ColorMaterial);
             //GL.ShadeModel(ShadingModel.Flat); //TODO: Add to preferences
@@ -286,7 +291,26 @@ namespace TwinsaityEditor
             GL.Enable(EnableCap.Lighting);
             GL.Enable(EnableCap.Light0);
             GL.Enable(EnableCap.Normalize);
+            InitVBO();
             base.OnLoad(e);
+        }
+
+        protected void InitVBO()
+        {
+            vbo_id = new int[vbo_count];
+            //Generate a buffer
+            GL.GenBuffers(vbo_count, vbo_id);
+            for (int i = 0; i < vbo_count; ++i)
+            {
+                //Ignore this buffer if the vertex buffer is null
+                if (vtx[i] == null) continue;
+                //Bind newly-generated buffer to the array buffer
+                GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_id[i]);
+                //Allocate data for vertex buffer...
+                GL.BufferData(BufferTarget.ArrayBuffer, Marshal.SizeOf(typeof(Vertex)) * vtx[i].Length, vtx[i], BufferUsageHint.StaticDraw);
+                //unbind buffer (safety)
+                GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            }
         }
 
         protected virtual void DrawText()

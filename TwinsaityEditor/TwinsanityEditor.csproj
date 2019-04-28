@@ -215,6 +215,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="TwinsanityEditor.cs" />
+    <Compile Include="Types.cs" />
     <Compile Include="Utils\DictUtils.cs" />
     <Compile Include="Utils\MatrixWrapper.cs" />
     <Compile Include="Utils\VectorFuncs.cs" />
