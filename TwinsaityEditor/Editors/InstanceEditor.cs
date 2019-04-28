@@ -24,6 +24,12 @@ namespace TwinsaityEditor
             Text = "Instance Editor (Section " + c.Data.Parent.ID + ")";
             PopulateList();
             comboBox1.TextChanged += comboBox1_TextChanged;
+            FormClosed += InstanceEditor_FormClosed;
+        }
+
+        private void InstanceEditor_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            TFController.RMSelectItem(null);
         }
 
         private void PopulateList()
