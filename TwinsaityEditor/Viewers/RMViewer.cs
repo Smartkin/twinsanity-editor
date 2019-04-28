@@ -484,7 +484,19 @@ namespace TwinsaityEditor
 
         public void SelectItem(TwinsItem item)
         {
-            if (item is Instance)
+            if (item == null)
+            {
+                if (SelectedItem is Instance)
+                {
+                    SelectedItem = null;
+                    LoadInstances();
+                }
+                else if (SelectedItem is Position)
+                {
+                    SelectedItem = null;
+                }
+            }
+            else if (item is Instance)
             {
                 Instance i = (Instance)item;
                 SetPosition(new Vector3(-i.Pos.X, i.Pos.Y, i.Pos.Z));
