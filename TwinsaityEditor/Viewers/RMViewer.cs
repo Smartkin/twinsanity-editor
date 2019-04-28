@@ -153,11 +153,14 @@ namespace TwinsaityEditor
                         foreach (Instance ins in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(6)).Records)
                         {
                             GL.PushMatrix();
-                            GL.Translate(ins.Pos.X, ins.Pos.Y, ins.Pos.Z);
+                            GL.Scale(-1, 1, 1);
+                            GL.Translate(-ins.Pos.X, ins.Pos.Y, ins.Pos.Z);
                             //DrawAxes(0, 0, 0, 0.5f);
-                            GL.Rotate(+ins.RotX / (float)(ushort.MaxValue + 1) * 360f, 1, 0, 0);
-                            GL.Rotate(+ins.RotY / (float)(ushort.MaxValue + 1) * 360f, 0, 1, 0);
-                            GL.Rotate(+ins.RotZ / (float)(ushort.MaxValue + 1) * 360f, 0, 0, 1);
+                            Matrix4 rot_ins = Matrix4.Identity;
+                            rot_ins *= Matrix4.CreateRotationX(ins.RotX / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
+                            rot_ins *= Matrix4.CreateRotationY(-ins.RotY / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
+                            rot_ins *= Matrix4.CreateRotationZ(-ins.RotZ / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
+                            GL.MultMatrix(ref rot_ins);
                             if (SelectedItem == ins)
                             {
                                 GL.Color3(Color.White);
