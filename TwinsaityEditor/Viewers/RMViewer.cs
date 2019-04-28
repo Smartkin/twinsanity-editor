@@ -122,7 +122,7 @@ namespace TwinsaityEditor
                                     GL.Color3(colors[colors.Length - i * 2 - 2]);
                                 else
                                     GL.Color3(Color.White);
-                                RenderString(pth.ID.ToString()+":"+(k+1));
+                                RenderString(pth.ID.ToString()+":"+k);
                                 GL.PopMatrix();
                             }
                             if (SelectedItem != pth)
