@@ -398,9 +398,9 @@ namespace TwinsaityEditor
                 {
                     foreach (Instance ins in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(6)).Records)
                     {
-                        Matrix3 rot_ins = Matrix3.CreateRotationX(ins.RotX / (float)(ushort.MaxValue + 1) * 2f * (float)Math.PI);
+                        Matrix3 rot_ins = Matrix3.CreateRotationZ(-ins.RotZ / (float)(ushort.MaxValue + 1) * 2f * (float)Math.PI);
                         rot_ins *= Matrix3.CreateRotationY(-ins.RotY / (float)(ushort.MaxValue + 1) * 2f * (float)Math.PI);
-                        rot_ins *= Matrix3.CreateRotationZ(ins.RotZ / (float)(ushort.MaxValue + 1) * 2f * (float)Math.PI);
+                        rot_ins *= Matrix3.CreateRotationX(ins.RotX / (float)(ushort.MaxValue + 1) * 2f * (float)Math.PI);
                         Vector3 pos_ins = ins.Pos.ToVec3();
                         pos_ins.X = -pos_ins.X;
                         inst_vtx_offs[l++] = m;
