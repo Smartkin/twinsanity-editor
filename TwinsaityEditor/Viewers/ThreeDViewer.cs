@@ -81,7 +81,7 @@ namespace TwinsaityEditor
 
             refresh = new Timer
             {
-                Interval = (int)Math.Round(1.0f/60*1000), //Set to 60fps by default, TODO: Add to Preferences later
+                Interval = (int)Math.Round(1.0/60*1000), //Set to ~60fps by default, TODO: Add to Preferences later
                 Enabled = true
             };
 
@@ -114,7 +114,7 @@ namespace TwinsaityEditor
             //Setup view and projection matrix
             Vector4 rot_vector = Vector4.Transform(new Vector4(0, 0, 1, 1), rot_matrix);
             view = Matrix4.LookAt(pos, new Vector3(pos.X + rot_vector.X, pos.Y + rot_vector.Y, pos.Z + rot_vector.Z), new Vector3(0, 1, 0));
-            proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.Pi / 4, (float)this.Width / this.Height, 1.0f, 10000.0f);
+            proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, (float)this.Width / this.Height, 1.0f, 10000.0f);
 
             //Apply the matrices
             GL.MatrixMode(MatrixMode.Projection);
@@ -158,11 +158,11 @@ namespace TwinsaityEditor
             {
                 rot.X += (e.X - m_x) / 180.0f * MathHelper.Pi / (Size.Width / 480f);
                 rot.Y += (e.Y - m_y) / 180.0f * MathHelper.Pi / (Size.Height / 480f);
-                rot.X += rot.X > MathHelper.Pi ? -2*MathHelper.Pi : rot.X < -MathHelper.Pi ? +2*MathHelper.Pi : 0;
-                if (rot.Y > MathHelper.Pi / 2)
-                    rot.Y = MathHelper.Pi / 2;
-                if (rot.Y < -MathHelper.Pi / 2)
-                    rot.Y = -MathHelper.Pi / 2;
+                rot.X += rot.X > MathHelper.Pi ? -MathHelper.TwoPi : rot.X < -MathHelper.Pi ? MathHelper.TwoPi : 0;
+                if (rot.Y > MathHelper.PiOver2)
+                    rot.Y = MathHelper.PiOver2;
+                if (rot.Y < -MathHelper.PiOver2)
+                    rot.Y = -MathHelper.PiOver2;
             }
             m_x = e.X;
             m_y = e.Y;
