@@ -11,10 +11,14 @@ namespace TwinsaityEditor
         private SectionController controller;
         private Instance ins;
         
+        private FileController TFController { get; set; }
+        private TwinsFile File { get => TFController.Data; }
+
         private bool ignore_value_change, ignore_rot1, ignore_rot2;
 
         public InstanceEditor(SectionController c)
         {
+            TFController = ((MainForm)Tag).CurCont;
             controller = c;
             InitializeComponent();
             Text = "Instance Editor (Section " + c.Data.Parent.ID + ")";
@@ -30,10 +34,10 @@ namespace TwinsaityEditor
                 listBox1.Items.Add(GenTextForList(i));
             }
             comboBox1.Items.Clear();
-            var s_dic = new SortedDictionary<uint, int>(((TwinsSection)((TwinsSection)FileController.GetFile().GetItem(10)).GetItem(0)).RecordIDs);
+            var s_dic = new SortedDictionary<uint, int>(((TwinsSection)((TwinsSection)File.GetItem(10)).GetItem(0)).RecordIDs);
             foreach (var i in s_dic)
             {
-                comboBox1.Items.Add(i.Key + " (" + FileController.GetObjectName(i.Key) + ")");
+                comboBox1.Items.Add(i.Key + " (" + TFController.GetObjectName(i.Key) + ")");
             }
         }
 
@@ -43,10 +47,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
 
             ins = (Instance)controller.Data.Records[listBox1.SelectedIndex];
-            MainForm.RMSelectItem(ins);
+            ((MainForm)Tag).RMSelectItem(ins);
             tabControl1.Enabled = true;
 
-            string obj_name = FileController.GetObjectName(ins.ObjectID);
+            string obj_name = TFController.GetObjectName(ins.ObjectID);
             comboBox1.Text = ins.ObjectID.ToString() + ((obj_name == string.Empty) ? string.Empty : (" (" + obj_name + ")"));
             numericUpDown1.Value = ins.ID;
             numericUpDown12.Value = listBox1.SelectedIndex;
@@ -122,7 +126,7 @@ namespace TwinsaityEditor
 
         private string GenTextForList(Instance instance)
         {
-            string obj_name = FileController.GetObjectName(instance.ObjectID);
+            string obj_name = TFController.GetObjectName(instance.ObjectID);
             return "ID " + instance.ID + ((obj_name == string.Empty) ? string.Empty : (" (" + obj_name + ")"));
         }
 
@@ -374,7 +378,7 @@ namespace TwinsaityEditor
             }
             Instance new_ins = new Instance { ID = id, AfterOID = 0xFFFFFFFF, Pos = new Pos(0, 0, 0, 1) };
             controller.Data.AddItem(id, new_ins);
-            MainForm.GenTreeNode(new_ins, controller);
+            ((MainForm)Tag).GenTreeNode(new_ins, controller);
             ins = new_ins;
             listBox1.Items.Add(GenTextForList(ins));
             controller.UpdateText();

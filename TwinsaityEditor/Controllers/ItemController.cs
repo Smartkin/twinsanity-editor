@@ -7,9 +7,11 @@ namespace TwinsaityEditor
     public class ItemController : Controller
     {
         public TwinsItem Data { get; set; }
+        protected FileController MainFile { get; private set; }
 
-        public ItemController(TwinsItem item)
+        public ItemController(MainForm topform, TwinsItem item) : base(topform)
         {
+            MainFile = TopForm.CurCont;
             Data = item;
             AddMenu("Extract raw data to file", Menu_ExtractItem);
             AddMenu("Replace raw data with new file", Menu_ReplaceItem);
@@ -48,17 +50,17 @@ namespace TwinsaityEditor
                 BinaryReader reader = new BinaryReader(new FileStream(ofd.FileName, FileMode.Open, FileAccess.Read));
                 if (Data is ChunkLinks)
                 {
-                    MainForm.CloseEditor(MainForm.Editors.ChunkLinks);
+                    TopForm.CloseEditor(MainForm.Editors.ChunkLinks);
                     ((ChunkLinks)Data).Load(reader, (int)reader.BaseStream.Length);
                 }
                 else if (Data is Instance)
                 {
-                    MainForm.CloseInstanceEditor((int)Data.Parent.Parent.ID);
+                    TopForm.CloseInstanceEditor((int)Data.Parent.Parent.ID);
                     ((Instance)Data).Load(reader, (int)reader.BaseStream.Length);
                 }
                 else if (Data is Position)
                 {
-                    MainForm.ClosePositionEditor((int)Data.Parent.Parent.ID);
+                    TopForm.ClosePositionEditor((int)Data.Parent.Parent.ID);
                     ((Position)Data).Load(reader, (int)reader.BaseStream.Length);
                 }
                 else

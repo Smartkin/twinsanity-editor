@@ -6,7 +6,7 @@ namespace TwinsaityEditor
     {
         public new Path Data { get; set; }
 
-        public PathController(Path item) : base(item)
+        public PathController(MainForm topform, Path item) : base (topform, item)
         {
             Data = item;
         }

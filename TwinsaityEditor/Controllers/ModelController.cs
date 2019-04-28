@@ -8,7 +8,7 @@ namespace TwinsaityEditor
     {
         public new Model Data { get; set; }
 
-        public ModelController(Model item) : base(item)
+        public ModelController(MainForm topform, Model item) : base (topform, item)
         {
             Data = item;
             AddMenu("Export mesh to PLY", Menu_ExportPLY);
@@ -26,7 +26,7 @@ namespace TwinsaityEditor
             TextPrev[1] = "Offset: " + Data.Offset + " Size: " + Data.Size;
             TextPrev[2] = "Header: " + Data.Header + " MaterialCount: " + Data.MaterialIDs.Length;
             for (int i = 0; i < Data.MaterialIDs.Length; ++i)
-                TextPrev[3 + i] = FileController.GetMaterialName(Data.MaterialIDs[i]);
+                TextPrev[3 + i] = MainFile.GetMaterialName(Data.MaterialIDs[i]);
             TextPrev[3 + Data.MaterialIDs.Length] = "Mesh: " + Data.MeshID;
         }
 

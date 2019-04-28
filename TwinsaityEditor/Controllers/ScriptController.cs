@@ -6,7 +6,7 @@ namespace TwinsaityEditor
     {
         public new Script Data { get; set; }
 
-        public ScriptController(Script item) : base(item)
+        public ScriptController(MainForm topform, Script item) : base (topform, item)
         {
             Data = item;
         }

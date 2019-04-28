@@ -7,13 +7,15 @@ namespace TwinsaityEditor
 
     public abstract class Controller : IDisposable
     {
+        protected MainForm TopForm { get; private set; }
         public bool Selected { get; set; }
         public string[] TextPrev { get; set; }
         public TreeNode Node { get; set; }
         public ContextMenu ContextMenu { get; set; } = new ContextMenu();
         
-        public Controller()
+        public Controller(MainForm topform)
         {
+            TopForm = topform;
             Node = new TreeNode { Tag = this, ContextMenu = ContextMenu };
         }
 

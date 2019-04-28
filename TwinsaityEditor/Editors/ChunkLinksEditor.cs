@@ -121,56 +121,56 @@ namespace TwinsaityEditor
             ignore_value_change = false;
             return;
             //broken
-            Vector3 pos = new Vector3(), rot = new Vector3(), sca = new Vector3();
-            float w = 1;
-            Matrix4 m = new Matrix4(
-                link.ObjectMatrix[0].X, link.ObjectMatrix[1].X, link.ObjectMatrix[2].X, link.ObjectMatrix[3].X,
-                link.ObjectMatrix[0].Y, link.ObjectMatrix[1].Y, link.ObjectMatrix[2].Y, link.ObjectMatrix[3].Y,
-                link.ObjectMatrix[0].Z, link.ObjectMatrix[1].Z, link.ObjectMatrix[2].Z, link.ObjectMatrix[3].Z,
-                link.ObjectMatrix[0].W, link.ObjectMatrix[1].W, link.ObjectMatrix[2].W, link.ObjectMatrix[3].W
-                );
-            MatrixWrapper.DecomposeMatrix(ref m, ref pos, ref rot, ref sca, ref w);
-            //no touchy
-            numericUpDown4.Value = (decimal)w;
+            //Vector3 pos = new Vector3(), rot = new Vector3(), sca = new Vector3();
+            //float w = 1;
+            //Matrix4 m = new Matrix4(
+            //    link.ObjectMatrix[0].X, link.ObjectMatrix[1].X, link.ObjectMatrix[2].X, link.ObjectMatrix[3].X,
+            //    link.ObjectMatrix[0].Y, link.ObjectMatrix[1].Y, link.ObjectMatrix[2].Y, link.ObjectMatrix[3].Y,
+            //    link.ObjectMatrix[0].Z, link.ObjectMatrix[1].Z, link.ObjectMatrix[2].Z, link.ObjectMatrix[3].Z,
+            //    link.ObjectMatrix[0].W, link.ObjectMatrix[1].W, link.ObjectMatrix[2].W, link.ObjectMatrix[3].W
+            //    );
+            //MatrixWrapper.DecomposeMatrix(ref m, ref pos, ref rot, ref sca, ref w);
+            ////no touchy
+            //numericUpDown4.Value = (decimal)w;
 
-            //position
-            numericUpDown1.Value = (decimal)pos.X;
-            numericUpDown2.Value = (decimal)pos.Y;
-            numericUpDown3.Value = (decimal)pos.Z;
+            ////position
+            //numericUpDown1.Value = (decimal)pos.X;
+            //numericUpDown2.Value = (decimal)pos.Y;
+            //numericUpDown3.Value = (decimal)pos.Z;
 
-            //scale
-            numericUpDown10.Value = (decimal)sca.X;
-            numericUpDown9.Value = (decimal)sca.Y;
-            numericUpDown8.Value = (decimal)sca.Z;
+            ////scale
+            //numericUpDown10.Value = (decimal)sca.X;
+            //numericUpDown9.Value = (decimal)sca.Y;
+            //numericUpDown8.Value = (decimal)sca.Z;
 
-            //rotation
-            numericUpDown7.Value = (decimal)rot.X;
-            numericUpDown6.Value = (decimal)rot.Y;
-            numericUpDown5.Value = (decimal)rot.Z;
+            ////rotation
+            //numericUpDown7.Value = (decimal)rot.X;
+            //numericUpDown6.Value = (decimal)rot.Y;
+            //numericUpDown5.Value = (decimal)rot.Z;
 
-            m = new Matrix4(link.ChunkMatrix[0].X, link.ChunkMatrix[1].X, link.ChunkMatrix[2].X, link.ChunkMatrix[3].X,
-                link.ChunkMatrix[0].Y, link.ChunkMatrix[1].Y, link.ChunkMatrix[2].Y, link.ChunkMatrix[3].Y,
-                link.ChunkMatrix[0].Z, link.ChunkMatrix[1].Z, link.ChunkMatrix[2].Z, link.ChunkMatrix[3].Z,
-                link.ChunkMatrix[0].W, link.ChunkMatrix[1].W, link.ChunkMatrix[2].W, link.ChunkMatrix[3].W
-                );
-            MatrixWrapper.DecomposeMatrix(ref m, ref pos, ref rot, ref sca, ref w);
-            //no touchy
-            numericUpDown17.Value = (decimal)w;
+            //m = new Matrix4(link.ChunkMatrix[0].X, link.ChunkMatrix[1].X, link.ChunkMatrix[2].X, link.ChunkMatrix[3].X,
+            //    link.ChunkMatrix[0].Y, link.ChunkMatrix[1].Y, link.ChunkMatrix[2].Y, link.ChunkMatrix[3].Y,
+            //    link.ChunkMatrix[0].Z, link.ChunkMatrix[1].Z, link.ChunkMatrix[2].Z, link.ChunkMatrix[3].Z,
+            //    link.ChunkMatrix[0].W, link.ChunkMatrix[1].W, link.ChunkMatrix[2].W, link.ChunkMatrix[3].W
+            //    );
+            //MatrixWrapper.DecomposeMatrix(ref m, ref pos, ref rot, ref sca, ref w);
+            ////no touchy
+            //numericUpDown17.Value = (decimal)w;
 
-            //position
-            numericUpDown20.Value = (decimal)pos.X;
-            numericUpDown19.Value = (decimal)pos.Y;
-            numericUpDown18.Value = (decimal)pos.Z;
+            ////position
+            //numericUpDown20.Value = (decimal)pos.X;
+            //numericUpDown19.Value = (decimal)pos.Y;
+            //numericUpDown18.Value = (decimal)pos.Z;
 
-            //scale
-            numericUpDown13.Value = (decimal)sca.X;
-            numericUpDown12.Value = (decimal)sca.Y;
-            numericUpDown11.Value = (decimal)sca.Z;
+            ////scale
+            //numericUpDown13.Value = (decimal)sca.X;
+            //numericUpDown12.Value = (decimal)sca.Y;
+            //numericUpDown11.Value = (decimal)sca.Z;
 
-            //rotation
-            numericUpDown16.Value = (decimal)rot.X;
-            numericUpDown15.Value = (decimal)rot.Y;
-            numericUpDown14.Value = (decimal)rot.Z;
+            ////rotation
+            //numericUpDown16.Value = (decimal)rot.X;
+            //numericUpDown15.Value = (decimal)rot.Y;
+            //numericUpDown14.Value = (decimal)rot.Z;
         }
 
         private void GetLoadWallPos()
@@ -481,17 +481,17 @@ namespace TwinsaityEditor
             controller.Data.Links[listBox1.SelectedIndex] = link;
             return;
             //broken
-            Matrix4 rot_mat = MatrixWrapper.RotateMatrix4((float)numericUpDown7.Value, (float)numericUpDown6.Value, (float)numericUpDown5.Value);
-            Matrix4 sca_mat = Matrix4.CreateScale((float)numericUpDown10.Value, (float)numericUpDown9.Value, (float)numericUpDown8.Value);
-            Matrix4 pos_mat = Matrix4.CreateTranslation((float)numericUpDown1.Value, (float)numericUpDown2.Value, (float)numericUpDown3.Value);
-            Matrix4 new_mat = pos_mat * sca_mat * rot_mat;
+            //Matrix4 rot_mat = MatrixWrapper.RotateMatrix4((float)numericUpDown7.Value, (float)numericUpDown6.Value, (float)numericUpDown5.Value);
+            //Matrix4 sca_mat = Matrix4.CreateScale((float)numericUpDown10.Value, (float)numericUpDown9.Value, (float)numericUpDown8.Value);
+            //Matrix4 pos_mat = Matrix4.CreateTranslation((float)numericUpDown1.Value, (float)numericUpDown2.Value, (float)numericUpDown3.Value);
+            //Matrix4 new_mat = pos_mat * sca_mat * rot_mat;
 
-            link.ObjectMatrix[0] = new_mat.Row0.ToPos();
-            link.ObjectMatrix[1] = new_mat.Row1.ToPos();
-            link.ObjectMatrix[2] = new_mat.Row2.ToPos();
-            link.ObjectMatrix[3] = new_mat.Row3.ToPos();
+            //link.ObjectMatrix[0] = new_mat.Row0.ToPos();
+            //link.ObjectMatrix[1] = new_mat.Row1.ToPos();
+            //link.ObjectMatrix[2] = new_mat.Row2.ToPos();
+            //link.ObjectMatrix[3] = new_mat.Row3.ToPos();
 
-            listBox1_SelectedIndexChanged(null, null);
+            //listBox1_SelectedIndexChanged(null, null);
         }
 
         private void UpdateChunkMatrix()

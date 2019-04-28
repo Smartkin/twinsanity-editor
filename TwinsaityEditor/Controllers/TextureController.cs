@@ -6,7 +6,7 @@ namespace TwinsaityEditor
     {
         public new Texture Data { get; set; }
 
-        public TextureController(Texture item) : base(item)
+        public TextureController(MainForm topform, Texture item) : base (topform, item)
         {
             Data = item;
         }

@@ -36,7 +36,7 @@ namespace TwinsaityEditor
             ignore_value_change = true;
 
             pos = (Position)controller.Data.Records[listBox1.SelectedIndex];
-            MainForm.RMSelectItem(pos);
+            ((MainForm)Tag).RMSelectItem(pos);
             splitContainer1.Panel2.Enabled = true;
 
             numericUpDown1.Value = (decimal)pos.Pos.X;
@@ -66,7 +66,7 @@ namespace TwinsaityEditor
             }
             Position new_pos = new Position { ID = id };
             controller.Data.AddItem(id, new_pos);
-            MainForm.GenTreeNode(new_pos, controller);
+            ((MainForm)Tag).GenTreeNode(new_pos, controller);
             pos = new_pos;
             listBox1.Items.Add("ID " + pos.ID);
             controller.UpdateText();

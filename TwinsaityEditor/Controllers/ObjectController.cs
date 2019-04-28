@@ -7,7 +7,7 @@ namespace TwinsaityEditor
     {
         public new GameObject Data { get; set; }
 
-        public ObjectController(GameObject item) : base(item)
+        public ObjectController(MainForm topform, GameObject item) : base (topform, item)
         {
             Data = item;
         }

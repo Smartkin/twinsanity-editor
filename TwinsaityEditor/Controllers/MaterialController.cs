@@ -6,7 +6,7 @@ namespace TwinsaityEditor
     {
         public new Material Data { get; set; }
 
-        public MaterialController(Material item) : base(item)
+        public MaterialController(MainForm topform, Material item) : base (topform, item)
         {
             Data = item;
         }

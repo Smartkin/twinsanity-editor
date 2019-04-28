@@ -11,9 +11,7 @@ namespace TwinsaityEditor
     public class RMViewer : ThreeDViewer
     {
         private bool show_col_nodes, show_triggers;
-        private int dlist_col = -1, dlist_trg = -1;
-        private ColData data;
-        private TwinsFile file;
+        private FileController file;
         private int[] inst_vtx_counts, inst_vtx_offs;
         private int[] coln_vtx_counts, coln_vtx_offs;
 
@@ -21,16 +19,14 @@ namespace TwinsaityEditor
 
         public TwinsItem SelectedItem { get; set; } = null;
 
-        public RMViewer(ColData data, ref TwinsFile file)
+        public RMViewer(FileController file)
         {
             //initialize variables here
-            dlist_col = dlist_trg = -1;
             show_col_nodes = show_triggers = false;
-            this.data = data;
             this.file = file;
             vbo_count = 3;
             vtx = new Vertex[vbo_count][];
-            if (data != null)
+            if (file.Data.RecordIDs.ContainsKey(9))
             {
                 LoadColTree();
                 LoadColNodes();
@@ -45,7 +41,7 @@ namespace TwinsaityEditor
             GL.EnableClientState(ArrayCap.ColorArray);
             GL.EnableClientState(ArrayCap.NormalArray);
             //draw collision
-            if (data != null)
+            if (file.Data.RecordIDs.ContainsKey(9))
             {
                 GL.PushMatrix();
                 GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_id[0]);
@@ -84,11 +80,11 @@ namespace TwinsaityEditor
             GL.Scale(-1, 1, 1);
             for (uint i = 0; i <= 7; ++i)
             {
-                if (file.RecordIDs.ContainsKey(i))
+                if (file.Data.RecordIDs.ContainsKey(i))
                 {
-                    if (((TwinsSection)file.GetItem(i)).RecordIDs.ContainsKey(3)) //positions
+                    if (((TwinsSection)file.Data.GetItem(i)).RecordIDs.ContainsKey(3)) //positions
                     {
-                        foreach (Position pos in ((TwinsSection)((TwinsSection)file.GetItem(i)).GetItem(3)).Records)
+                        foreach (Position pos in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(3)).Records)
                         {
                             GL.PushMatrix();
                             GL.Translate(pos.Pos.X, pos.Pos.Y, pos.Pos.Z);
@@ -112,9 +108,9 @@ namespace TwinsaityEditor
                         }
                     }
 
-                    if (((TwinsSection)file.GetItem(i)).RecordIDs.ContainsKey(4)) //paths
+                    if (((TwinsSection)file.Data.GetItem(i)).RecordIDs.ContainsKey(4)) //paths
                     {
-                        foreach (Path pth in ((TwinsSection)((TwinsSection)file.GetItem(i)).GetItem(4)).Records)
+                        foreach (Path pth in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(4)).Records)
                         {
                             for (int k = 0; k < pth.Positions.Count; ++k)
                             {
@@ -148,9 +144,9 @@ namespace TwinsaityEditor
                         }
                     }
 
-                    if (((TwinsSection)file.GetItem(i)).RecordIDs.ContainsKey(6)) //instances
+                    if (((TwinsSection)file.Data.GetItem(i)).RecordIDs.ContainsKey(6)) //instances
                     {
-                        foreach (Instance ins in ((TwinsSection)((TwinsSection)file.GetItem(i)).GetItem(6)).Records)
+                        foreach (Instance ins in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(6)).Records)
                         {
                             GL.PushMatrix();
                             GL.Translate(ins.Pos.X, ins.Pos.Y, ins.Pos.Z);
@@ -179,11 +175,11 @@ namespace TwinsaityEditor
             //Draw triggers (transparent surfaces)
             for (uint i = 0; i <= 7; ++i)
             {
-                if (file.RecordIDs.ContainsKey(i))
+                if (file.Data.RecordIDs.ContainsKey(i))
                 {
-                    if (((TwinsSection)file.GetItem(i)).RecordIDs.ContainsKey(7) && show_triggers)
+                    if (((TwinsSection)file.Data.GetItem(i)).RecordIDs.ContainsKey(7) && show_triggers)
                     {
-                        foreach (Trigger trg in ((TwinsSection)((TwinsSection)file.GetItem(i)).GetItem(7)).Records)
+                        foreach (Trigger trg in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(7)).Records)
                         {
                             GL.PushMatrix();
                             GL.Translate(trg.Coords[1].X, trg.Coords[1].Y, trg.Coords[1].Z);
@@ -229,7 +225,7 @@ namespace TwinsaityEditor
                             GL.Begin(PrimitiveType.Lines);
                             for (int k = 0; k < trg.Instances.Length; ++k)
                             {
-                                Instance inst = FileController.GetInstance(trg.Parent.Parent.ID, trg.Instances[k]);
+                                Instance inst = file.GetInstance(trg.Parent.Parent.ID, trg.Instances[k]);
                                 GL.Vertex3(0, 0, 0);
                                 GL.Vertex3(inst.Pos.X - trg.Coords[1].X, inst.Pos.Y - trg.Coords[1].Y, inst.Pos.Z - trg.Coords[1].Z);
                             }
@@ -339,6 +335,7 @@ namespace TwinsaityEditor
 
         private void LoadColTree()
         {
+            ColData data = (ColData)file.Data.GetItem(9);
             vtx[0] = new Vertex[data.Tris.Count * 3];
             for (int i = 0; i < data.Tris.Count; ++i)
             {
@@ -361,11 +358,11 @@ namespace TwinsaityEditor
             int inst_count = 0;
             for (uint i = 0; i <= 7; ++i)
             {
-                record_exists[i] = file.RecordIDs.ContainsKey(i);
+                record_exists[i] = file.Data.RecordIDs.ContainsKey(i);
                 if (record_exists[i])
                 {
-                    if (((TwinsSection)file.GetItem(i)).RecordIDs.ContainsKey(6))
-                        inst_count += ((TwinsSection)((TwinsSection)file.GetItem(i)).GetItem(6)).Records.Count;
+                    if (((TwinsSection)file.Data.GetItem(i)).RecordIDs.ContainsKey(6))
+                        inst_count += ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(6)).Records.Count;
                     else record_exists[i] = false;
                 }
             }
@@ -389,9 +386,9 @@ namespace TwinsaityEditor
             for (uint i = 0; i <= 7; ++i)
             {
                 if (!record_exists[i]) continue;
-                if (((TwinsSection)file.GetItem(i)).RecordIDs.ContainsKey(6))
+                if (((TwinsSection)file.Data.GetItem(i)).RecordIDs.ContainsKey(6))
                 {
-                    foreach (Instance ins in ((TwinsSection)((TwinsSection)file.GetItem(i)).GetItem(6)).Records)
+                    foreach (Instance ins in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(6)).Records)
                     {
                         Matrix3 rot_ins = Matrix3.CreateRotationX(ins.RotX / (float)(ushort.MaxValue + 1) * 2f * (float)Math.PI);
                         rot_ins *= Matrix3.CreateRotationY(-ins.RotY / (float)(ushort.MaxValue + 1) * 2f * (float)Math.PI);
@@ -435,6 +432,7 @@ namespace TwinsaityEditor
 
         private void LoadColNodes()
         {
+            ColData data = (ColData)file.Data.GetItem(9);
             vtx[2] = new Vertex[data.Triggers.Count * 16];
             coln_vtx_counts = new int[4 * data.Triggers.Count];
             coln_vtx_offs = new int[4 * data.Triggers.Count];
@@ -495,16 +493,6 @@ namespace TwinsaityEditor
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (dlist_col != -1)
-            {
-                GL.DeleteLists(dlist_col, 1);
-                dlist_col = -1;
-            }
-            if (dlist_trg != -1)
-            {
-                GL.DeleteLists(dlist_trg, 1);
-                dlist_trg = -1;
-            }
             base.Dispose(disposing);
         }
     }

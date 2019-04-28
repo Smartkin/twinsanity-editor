@@ -6,7 +6,7 @@ namespace TwinsaityEditor
     {
         public new Trigger Data { get; set; }
 
-        public TriggerController(Trigger item) : base(item)
+        public TriggerController(MainForm topform, Trigger item) : base (topform, item)
         {
             Data = item;
         }
@@ -29,7 +29,7 @@ namespace TwinsaityEditor
             TextPrev[6] = "Instances: " + Data.Instances.Length;
             for (int i = 0; i < Data.Instances.Length; ++i)
             {
-                string obj_name = FileController.GetObjectName(FileController.GetInstance(Data.Parent.Parent.ID, Data.Instances[i]).ObjectID);
+                string obj_name = MainFile.GetObjectName(MainFile.GetInstance(Data.Parent.Parent.ID, Data.Instances[i]).ObjectID);
                 TextPrev[7 + i] = "Instance " + Data.Instances[i] + (obj_name != string.Empty ? " (" + obj_name + ")" : string.Empty);
             }
 

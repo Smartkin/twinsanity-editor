@@ -7,7 +7,7 @@ namespace TwinsaityEditor
     {
         public new ChunkLinks Data { get; set; }
 
-        public ChunkLinksController(ChunkLinks item) : base(item)
+        public ChunkLinksController(MainForm topform, ChunkLinks item) : base (topform, item)
         {
             Data = item;
         }

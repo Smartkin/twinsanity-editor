@@ -10,7 +10,7 @@ namespace TwinsaityEditor
     {
         public new Mesh Data { get; set; }
 
-        public MeshController(Mesh item) : base(item)
+        public MeshController(MainForm topform, Mesh item) : base (topform, item)
         {
             Data = item;
             AddMenu("Export to PLY", Menu_ExportPLY);

@@ -11,7 +11,7 @@ namespace TwinsaityEditor
 
         public new ColData Data { get; set; }
 
-        public ColDataController(ColData item) : base(item)
+        public ColDataController(MainForm topform, ColData item) : base (topform, item)
         {
             Data = item;
             AddMenu("Open RMViewer", Menu_OpenRMViewer);
@@ -49,14 +49,14 @@ namespace TwinsaityEditor
 
         private void Menu_OpenRMViewer()
         {
-            MainForm.OpenRMViewer();
+            TopForm.OpenRMViewer();
         }
 
         private void Menu_Export()
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "Wavefront OBJ file (*.obj)|*.obj";
-            sfd.FileName = MainForm.SafeFileName;
+            sfd.FileName = MainFile.SafeFileName;
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 StreamWriter writer = new StreamWriter(new FileStream(sfd.FileName, FileMode.Create, FileAccess.Write));

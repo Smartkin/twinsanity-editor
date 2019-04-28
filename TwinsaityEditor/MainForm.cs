@@ -13,17 +13,21 @@ namespace TwinsaityEditor
             Instance
         };
 
-        private static TwinsFile fileData = new TwinsFile();
-        private static Form rmForm, smForm, exeForm;
-        private static Form editChunkLinks;
-        private static Form[] editInstances = new Form[8], editPositions = new Form[8];
-        private static string fileName;
+        //private static TwinsFile fileData = new TwinsFile();
+        private Form rmForm, smForm, exeForm;
+        private Form editChunkLinks;
+        private Form[] editInstances = new Form[8], editPositions = new Form[8];
+        //private static string fileName;
 
         private TreeNode previousNode;
 
-        private static RMViewer rmViewer;
-        public static RMViewer RMViewer { get => rmViewer; }
-        public static string SafeFileName { get; set; }
+        public FileController FilesController { get => (FileController)Tag; }
+        public FileController CurCont { get => FilesController; } //get currently selected file controller
+        public TwinsFile CurFile { get => CurCont.Data; } //get currently selected file
+
+        private RMViewer rmViewer;
+        public RMViewer RMViewer { get => rmViewer; }
+        //public static string SafeFileName { get; set; }
 
         public MainForm()
         {
@@ -48,13 +52,12 @@ namespace TwinsaityEditor
             }
             CloseRMViewer();
             treeView1.Nodes.Clear();
-            FileController controller = new FileController(fileData);
-            controller.UpdateText();
-            treeView1.Nodes.Add(controller.Node);
+            CurCont.UpdateText();
+            treeView1.Nodes.Add(CurCont.Node);
             treeView1.Select();
-            foreach (var i in fileData.Records)
+            foreach (var i in CurFile.Records)
             {
-                GenTreeNode(i, controller);
+                GenTreeNode(i, CurCont);
             }
             treeView1.TopNode.Expand();
             treeView1.EndUpdate();
@@ -75,43 +78,43 @@ namespace TwinsaityEditor
             textBox1.Lines = c.TextPrev;
         }
 
-        public static void GenTreeNode(TwinsItem a, Controller controller)
+        public void GenTreeNode(TwinsItem a, Controller controller)
         {
             Controller c;
             if (a is TwinsSection)
             {
-                c = new SectionController((TwinsSection)a);
+                c = new SectionController(this, (TwinsSection)a);
                 foreach (var i in ((TwinsSection)a).Records)
                 {
                     GenTreeNode(i, c);
                 }
             }
             else if (a is Texture)
-                c = new TextureController((Texture)a);
+                c = new TextureController(this, (Texture)a);
             else if (a is Material)
-                c = new MaterialController((Material)a);
+                c = new MaterialController(this, (Material)a);
             else if (a is Mesh)
-                c = new MeshController((Mesh)a);
+                c = new MeshController(this, (Mesh)a);
             else if (a is Model)
-                c = new ModelController((Model)a);
+                c = new ModelController(this, (Model)a);
             else if (a is GameObject)
-                c = new ObjectController((GameObject)a);
+                c = new ObjectController(this, (GameObject)a);
             else if (a is Script)
-                c = new ScriptController((Script)a);
+                c = new ScriptController(this, (Script)a);
             else if (a is Position)
-                c = new PositionController((Position)a);
+                c = new PositionController(this, (Position)a);
             else if (a is Path)
-                c = new PathController((Path)a);
+                c = new PathController(this, (Path)a);
             else if (a is Instance)
-                c = new InstanceController((Instance)a);
-            else if (a is Trigger && fileData.Type != TwinsFile.FileType.DemoRM2) //trigger controller assumes final instance format
-                c = new TriggerController((Trigger)a);
+                c = new InstanceController(this, (Instance)a);
+            else if (a is Trigger && CurFile.Type != TwinsFile.FileType.DemoRM2) //trigger controller assumes final instance format
+                c = new TriggerController(this, (Trigger)a);
             else if (a is ColData)
-                c = new ColDataController((ColData)a);
+                c = new ColDataController(this, (ColData)a);
             else if (a is ChunkLinks)
-                c = new ChunkLinksController((ChunkLinks)a);
+                c = new ChunkLinksController(this, (ChunkLinks)a);
             else
-                c = new ItemController(a);
+                c = new ItemController(this, a);
             c.UpdateText();
             controller.AddNode(c);
         }
@@ -157,41 +160,42 @@ namespace TwinsaityEditor
             ofd.Filter = "RM2 files|*.rm2|SM2 files|*.sm2|RMX files|*.rmx|SMX files|*.smx|Demo RM2 files|*.rm2|Demo SM2 files|*.sm2";
             if (ofd.ShowDialog() == DialogResult.OK)
             {
+                Tag = new FileController(this, new TwinsFile());
                 switch (ofd.FilterIndex)
                 {
                     case 1:
-                        fileData.LoadFile(ofd.FileName, TwinsFile.FileType.RM2);
+                        CurFile.LoadFile(ofd.FileName, TwinsFile.FileType.RM2);
                         rMViewerToolStripMenuItem.Enabled = true;
                         sMViewerToolStripMenuItem.Enabled = false;
                         break;
                     case 2:
-                        fileData.LoadFile(ofd.FileName, TwinsFile.FileType.SM2);
+                        CurFile.LoadFile(ofd.FileName, TwinsFile.FileType.SM2);
                         sMViewerToolStripMenuItem.Enabled = true;
                         rMViewerToolStripMenuItem.Enabled = false;
                         break;
                     case 3:
-                        fileData.LoadFile(ofd.FileName, TwinsFile.FileType.RMX);
+                        CurFile.LoadFile(ofd.FileName, TwinsFile.FileType.RMX);
                         rMViewerToolStripMenuItem.Enabled = true;
                         sMViewerToolStripMenuItem.Enabled = false;
                         break;
                     case 4:
-                        fileData.LoadFile(ofd.FileName, TwinsFile.FileType.SMX);
+                        CurFile.LoadFile(ofd.FileName, TwinsFile.FileType.SMX);
                         sMViewerToolStripMenuItem.Enabled = true;
                         rMViewerToolStripMenuItem.Enabled = false;
                         break;
                     case 5:
-                        fileData.LoadFile(ofd.FileName, TwinsFile.FileType.DemoRM2);
+                        CurFile.LoadFile(ofd.FileName, TwinsFile.FileType.DemoRM2);
                         rMViewerToolStripMenuItem.Enabled = true;
                         sMViewerToolStripMenuItem.Enabled = false;
                         break;
                     case 6:
-                        fileData.LoadFile(ofd.FileName, TwinsFile.FileType.DemoSM2);
+                        CurFile.LoadFile(ofd.FileName, TwinsFile.FileType.DemoSM2);
                         sMViewerToolStripMenuItem.Enabled = true;
                         rMViewerToolStripMenuItem.Enabled = false;
                         break;
                 }
-                fileName = ofd.FileName;
-                SafeFileName = ofd.SafeFileName;
+                CurCont.FileName = ofd.FileName;
+                CurCont.SafeFileName = ofd.SafeFileName;
                 GenTree();
                 Text = "Twinsaity Editor by Neo_Kesha [" + ofd.FileName + "] ";
             }
@@ -203,8 +207,8 @@ namespace TwinsaityEditor
             sfd.Filter = "RM2/RMX files|*.rm*|SM2/SMX files|*.sm*";
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                fileData.SaveFile(sfd.FileName);
-                fileName = sfd.FileName;
+                CurFile.SaveFile(sfd.FileName);
+                CurCont.FileName = sfd.FileName;
                 Text = "Twinsaity Editor by Neo_Kesha [" + sfd.FileName + "] ";
             }
         }
@@ -212,7 +216,7 @@ namespace TwinsaityEditor
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Overwrite original file?", "Save", MessageBoxButtons.OKCancel) == DialogResult.OK)
-                fileData.SaveFile(fileName);
+                CurFile.SaveFile(CurCont.FileName);
         }
 
         private void rMViewerToolStripMenuItem_Click(object sender, EventArgs e)
@@ -220,7 +224,7 @@ namespace TwinsaityEditor
             OpenRMViewer();
         }
 
-        public static void OpenRMViewer()
+        public void OpenRMViewer()
         {
             if (rmForm == null)
             {
@@ -231,8 +235,7 @@ namespace TwinsaityEditor
                     rmViewer = null;
                 };
                 rmForm.Show();
-                TwinsFile file = FileController.GetFile();
-                rmViewer = new RMViewer(fileData.RecordIDs.ContainsKey(9) ? (ColData)fileData.GetItem(9) : null, ref file) { Dock = DockStyle.Fill };
+                rmViewer = new RMViewer(CurCont) { Dock = DockStyle.Fill, Tag = this };
                 rmForm.Controls.Add(rmViewer);
                 rmForm.Text = "RMViewer";
             }
@@ -240,7 +243,7 @@ namespace TwinsaityEditor
                 rmForm.Select();
         }
 
-        public static void OpenSMViewer()
+        public void OpenSMViewer()
         {
             if (smForm == null)
             {
@@ -250,8 +253,8 @@ namespace TwinsaityEditor
                     smForm = null;
                 };
                 smForm.Show();
-                TwinsFile file = FileController.GetFile();
-                SMViewer viewer = new SMViewer(ref file) { Dock = DockStyle.Fill };
+                TwinsFile file = CurFile;
+                SMViewer viewer = new SMViewer(ref file) { Dock = DockStyle.Fill, Tag = this };
                 smForm.Controls.Add(viewer);
                 smForm.Text = "SMViewer";
             }
@@ -269,7 +272,7 @@ namespace TwinsaityEditor
             OpenSMViewer();
         }
 
-        public static void OpenEXETool()
+        public void OpenEXETool()
         {
             if (exeForm == null)
             {
@@ -283,15 +286,15 @@ namespace TwinsaityEditor
                 exeForm.Select();
         }
 
-        public static void OpenEditor(ref Form editor_var, Editors editor, Controller cont)
+        public void OpenEditor(ref Form editor_var, Editors editor, Controller cont)
         {
             if (editor_var == null || editor_var.IsDisposed)
             {
                 switch (editor)
                 {
-                    case Editors.ChunkLinks: editor_var = new ChunkLinksEditor((ChunkLinksController)cont); break;
-                    case Editors.Position: editor_var = new PositionEditor((SectionController)cont); break;
-                    case Editors.Instance: editor_var = new InstanceEditor((SectionController)cont); break;
+                    case Editors.ChunkLinks: editor_var = new ChunkLinksEditor((ChunkLinksController)cont) { Tag = this }; break;
+                    case Editors.Position: editor_var = new PositionEditor((SectionController)cont) { Tag = this }; break;
+                    case Editors.Instance: editor_var = new InstanceEditor((SectionController)cont) { Tag = this }; break;
                 }
                 editor_var.Show();
             }
@@ -299,7 +302,7 @@ namespace TwinsaityEditor
                 editor_var.Select();
         }
 
-        public static void CloseEditor(Editors editor)
+        public void CloseEditor(Editors editor)
         {
             Form editorForm = null;
             switch(editor)
@@ -310,25 +313,25 @@ namespace TwinsaityEditor
                 editorForm.Close();
         }
 
-        public static void CloseInstanceEditor(int id)
+        public void CloseInstanceEditor(int id)
         {
             if (editInstances[id] != null && !editInstances[id].IsDisposed)
                 editInstances[id].Close();
         }
 
-        public static void ClosePositionEditor(int id)
+        public void ClosePositionEditor(int id)
         {
             if (editPositions[id] != null && !editPositions[id].IsDisposed)
                 editPositions[id].Close();
         }
 
-        public static void CloseRMViewer()
+        public void CloseRMViewer()
         {
             if (rmForm != null && !rmForm.IsDisposed)
                 rmForm.Close();
         }
 
-        public static void RMSelectItem(TwinsItem item)
+        public void RMSelectItem(TwinsItem item)
         {
             if (rmViewer != null)
                 rmViewer.SelectItem(item);

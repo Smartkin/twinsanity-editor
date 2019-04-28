@@ -7,26 +7,26 @@ namespace TwinsaityEditor
     {
         public new Instance Data { get; set; }
 
-        public InstanceController(Instance item) : base(item)
+        public InstanceController(MainForm topform, Instance item) : base (topform, item)
         {
             Data = item;
         }
 
         protected override string GetName()
         {
-            if (FileController.GetObjectName(Data.ObjectID) != string.Empty)
-                return FileController.GetObjectName(Data.ObjectID) + " Instance [ID " + Data.ID + "]";
+            if (MainFile.GetObjectName(Data.ObjectID) != string.Empty)
+                return MainFile.GetObjectName(Data.ObjectID) + " Instance [ID " + Data.ID + "]";
             else
                 return "Instance [ID " + Data.ID + "]";
         }
 
         protected override void GenText()
         {
-            string obj_name = FileController.GetObjectName(Data.ObjectID);
+            string obj_name = MainFile.GetObjectName(Data.ObjectID);
             TextPrev = new string[12 + Data.S1.Count + Data.S2.Count + Data.S3.Count + Data.UnkI321.Count + Data.UnkI322.Count + Data.UnkI323.Count];
             TextPrev[0] = "ID: " + Data.ID;
             TextPrev[1] = "Offset: " + Data.Offset + " Size: " + Data.Size;
-            TextPrev[2] = "Object ID " + Data.ObjectID + (obj_name != string.Empty ? " (" + FileController.GetObjectName(Data.ObjectID) + ")" : string.Empty);
+            TextPrev[2] = "Object ID " + Data.ObjectID + (obj_name != string.Empty ? " (" + MainFile.GetObjectName(Data.ObjectID) + ")" : string.Empty);
             TextPrev[3] = "Position (" + Data.Pos.X + ", " + Data.Pos.Y + ", " + Data.Pos.Z + ", " + Data.Pos.W + ")";
             TextPrev[4] = "Rotation (" + Data.RotX + " | " + Data.RotY + " | " + Data.RotZ + ")";
 

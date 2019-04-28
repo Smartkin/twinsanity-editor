@@ -6,7 +6,7 @@ namespace TwinsaityEditor
     {
         public new Position Data { get; set; }
 
-        public PositionController(Position item) : base(item)
+        public PositionController(MainForm topform, Position item) : base (topform, item)
         {
             Data = item;
         }
