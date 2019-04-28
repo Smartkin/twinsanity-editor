@@ -138,6 +138,10 @@ namespace TwinsaityEditor
                             GL.Begin(PrimitiveType.LineStrip);
                             for (int k = 0; k < pth.Positions.Count; ++k)
                             {
+                                if (SelectedItem != pth)
+                                    GL.Color3(colors[colors.Length - i * 2 - 2]);
+                                else
+                                    GL.Color3(Color.White);
                                 GL.Vertex3(pth.Positions[k].X, pth.Positions[k].Y, pth.Positions[k].Z);
                             }
                             GL.End();
