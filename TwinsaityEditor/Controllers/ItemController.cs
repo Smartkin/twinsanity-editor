@@ -7,7 +7,7 @@ namespace TwinsaityEditor
     public class ItemController : Controller
     {
         public TwinsItem Data { get; set; }
-        protected FileController MainFile { get; private set; }
+        public FileController MainFile { get; private set; }
 
         public ItemController(MainForm topform, TwinsItem item) : base(topform)
         {

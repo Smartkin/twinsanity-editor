@@ -1,4 +1,5 @@
 ﻿using Twinsanity;
+using System.Windows.Forms;
 
 namespace TwinsaityEditor
 {
@@ -8,6 +9,11 @@ namespace TwinsaityEditor
 
         public string FileName { get; set; }
         public string SafeFileName { get; set; }
+
+        //Viewers
+        private Form rmForm;
+        private RMViewer rmViewer;
+        public RMViewer RMViewer { get => rmViewer; }
 
         public FileController(MainForm topform, TwinsFile item) : base(topform)
         {
@@ -24,6 +30,43 @@ namespace TwinsaityEditor
             TextPrev = new string[2];
             TextPrev[0] = "Size: " + Data.Size;
             TextPrev[1] = "ContentSize: " + Data.ContentSize + " Element Count: " + Data.Records.Count;
+        }
+
+        public void OpenRMViewer()
+        {
+            if (rmForm == null)
+            {
+                rmForm = new Form { Size = new System.Drawing.Size(480, 480), Text = "Initiating viewer..." };
+                rmForm.FormClosed += delegate
+                {
+                    rmForm = null;
+                    rmViewer = null;
+                };
+                rmForm.Show();
+                rmViewer = new RMViewer(this) { Dock = DockStyle.Fill, Tag = TopForm };
+                rmForm.Controls.Add(rmViewer);
+                rmForm.Text = "RMViewer";
+            }
+            else
+                rmForm.Select();
+        }
+
+        public void RMViewer_LoadInstances()
+        {
+            if (rmViewer != null)
+                rmViewer.LoadInstances();
+        }
+
+        public void RMSelectItem(TwinsItem item)
+        {
+            if (rmViewer != null)
+                rmViewer.SelectItem(item);
+        }
+
+        public void CloseRMViewer()
+        {
+            if (rmForm != null && !rmForm.IsDisposed)
+                rmForm.Close();
         }
 
         public string GetMaterialName(uint id)

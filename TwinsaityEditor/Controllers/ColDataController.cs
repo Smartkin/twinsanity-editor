@@ -49,7 +49,7 @@ namespace TwinsaityEditor
 
         private void Menu_OpenRMViewer()
         {
-            TopForm.OpenRMViewer();
+            MainFile.OpenRMViewer();
         }
 
         private void Menu_Export()

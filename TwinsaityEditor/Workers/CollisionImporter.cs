@@ -119,7 +119,7 @@ namespace TwinsaityEditor
         private void button3_Click(object sender, EventArgs e)
         {
             //generate
-            ((MainForm)Tag).CloseRMViewer();
+            controller.MainFile.CloseRMViewer();
             controller.Data.Vertices.Clear();
             controller.Data.Tris.Clear();
             controller.Data.Groups.Clear();

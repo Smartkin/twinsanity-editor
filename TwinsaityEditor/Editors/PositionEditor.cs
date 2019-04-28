@@ -8,10 +8,14 @@ namespace TwinsaityEditor
         private SectionController controller;
         private Position pos;
 
+        private FileController TFController { get; set; }
+        private TwinsFile File { get => TFController.Data; }
+
         private bool ignore_value_change;
 
-        public PositionEditor(SectionController c)
+        public PositionEditor(FileController file, SectionController c)
         {
+            TFController = file;
             controller = c;
             InitializeComponent();
             Text = "Position Editor (Section " + c.Data.Parent.ID + ")";
@@ -36,7 +40,7 @@ namespace TwinsaityEditor
             ignore_value_change = true;
 
             pos = (Position)controller.Data.Records[listBox1.SelectedIndex];
-            ((MainForm)Tag).RMSelectItem(pos);
+            TFController.RMSelectItem(pos);
             splitContainer1.Panel2.Enabled = true;
 
             numericUpDown1.Value = (decimal)pos.Pos.X;

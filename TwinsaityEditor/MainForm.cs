@@ -14,7 +14,7 @@ namespace TwinsaityEditor
         };
 
         //private static TwinsFile fileData = new TwinsFile();
-        private Form rmForm, smForm, exeForm;
+        private Form smForm, exeForm;
         private Form editChunkLinks;
         private Form[] editInstances = new Form[8], editPositions = new Form[8];
         //private static string fileName;
@@ -24,9 +24,8 @@ namespace TwinsaityEditor
         public FileController FilesController { get => (FileController)Tag; }
         public FileController CurCont { get => FilesController; } //get currently selected file controller
         public TwinsFile CurFile { get => CurCont.Data; } //get currently selected file
-
-        private RMViewer rmViewer;
-        public RMViewer RMViewer { get => rmViewer; }
+        
+        public RMViewer RMViewer { get => CurCont.RMViewer; }
         //public static string SafeFileName { get; set; }
 
         public MainForm()
@@ -50,7 +49,7 @@ namespace TwinsaityEditor
                 CloseInstanceEditor(i);
                 ClosePositionEditor(i);
             }
-            CloseRMViewer();
+            CurCont.CloseRMViewer();
             treeView1.Nodes.Clear();
             CurCont.UpdateText();
             treeView1.Nodes.Add(CurCont.Node);
@@ -221,26 +220,7 @@ namespace TwinsaityEditor
 
         private void rMViewerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenRMViewer();
-        }
-
-        public void OpenRMViewer()
-        {
-            if (rmForm == null)
-            {
-                rmForm = new Form { Size = new System.Drawing.Size(480, 480), Text = "Initiating viewer..." };
-                rmForm.FormClosed += delegate
-                {
-                    rmForm = null;
-                    rmViewer = null;
-                };
-                rmForm.Show();
-                rmViewer = new RMViewer(CurCont) { Dock = DockStyle.Fill, Tag = this };
-                rmForm.Controls.Add(rmViewer);
-                rmForm.Text = "RMViewer";
-            }
-            else
-                rmForm.Select();
+            CurCont.OpenRMViewer();
         }
 
         public void OpenSMViewer()
@@ -293,7 +273,7 @@ namespace TwinsaityEditor
                 switch (editor)
                 {
                     case Editors.ChunkLinks: editor_var = new ChunkLinksEditor((ChunkLinksController)cont) { Tag = this }; break;
-                    case Editors.Position: editor_var = new PositionEditor((SectionController)cont) { Tag = this }; break;
+                    case Editors.Position: editor_var = new PositionEditor(CurCont, (SectionController)cont) { Tag = this }; break;
                     case Editors.Instance: editor_var = new InstanceEditor(CurCont, (SectionController)cont) { Tag = this }; break;
                 }
                 editor_var.Show();
@@ -323,18 +303,6 @@ namespace TwinsaityEditor
         {
             if (editPositions[id] != null && !editPositions[id].IsDisposed)
                 editPositions[id].Close();
-        }
-
-        public void CloseRMViewer()
-        {
-            if (rmForm != null && !rmForm.IsDisposed)
-                rmForm.Close();
-        }
-
-        public void RMSelectItem(TwinsItem item)
-        {
-            if (rmViewer != null)
-                rmViewer.SelectItem(item);
         }
     }
 }

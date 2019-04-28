@@ -333,7 +333,7 @@ namespace TwinsaityEditor
             GL.PopMatrix();
         }
 
-        private void LoadColTree()
+        public void LoadColTree()
         {
             ColData data = (ColData)file.Data.GetItem(9);
             vtx[0] = new Vertex[data.Tris.Count * 3];
@@ -356,7 +356,7 @@ namespace TwinsaityEditor
             }
         }
 
-        private void LoadInstances()
+        public void LoadInstances()
         {
             bool[] record_exists = new bool[8];
             int inst_count = 0;
@@ -438,7 +438,7 @@ namespace TwinsaityEditor
             }
         }
 
-        private void LoadColNodes()
+        public void LoadColNodes()
         {
             ColData data = (ColData)file.Data.GetItem(9);
             vtx[2] = new Vertex[data.Triggers.Count * 16];

@@ -49,7 +49,7 @@ namespace TwinsaityEditor
             this.SuspendDrawing();
 
             ins = (Instance)controller.Data.Records[listBox1.SelectedIndex];
-            ((MainForm)Tag).RMSelectItem(ins);
+            TFController.RMSelectItem(ins);
             tabControl1.Enabled = true;
 
             string obj_name = TFController.GetObjectName(ins.ObjectID);
@@ -153,6 +153,7 @@ namespace TwinsaityEditor
             controller.Data.RecordIDs.Add(ins.ID, listBox1.SelectedIndex);
             listBox1.Items[listBox1.SelectedIndex] = GenTextForList(ins);
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
+            TFController.RMViewer_LoadInstances();
         }
 
         private void comboBox1_TextChanged(object sender, EventArgs e)
@@ -185,6 +186,7 @@ namespace TwinsaityEditor
             pos.X = (float)numericUpDown2.Value;
             ins.Pos = pos;
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
+            TFController.RMViewer_LoadInstances();
         }
 
         private void numericUpDown3_ValueChanged(object sender, EventArgs e)
@@ -194,6 +196,7 @@ namespace TwinsaityEditor
             pos.Y = (float)numericUpDown3.Value;
             ins.Pos = pos;
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
+            TFController.RMViewer_LoadInstances();
         }
 
         private void numericUpDown4_ValueChanged(object sender, EventArgs e)
@@ -203,6 +206,7 @@ namespace TwinsaityEditor
             pos.Z = (float)numericUpDown4.Value;
             ins.Pos = pos;
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
+            TFController.RMViewer_LoadInstances();
         }
 
         private void numericUpDown5_ValueChanged(object sender, EventArgs e)
@@ -241,6 +245,7 @@ namespace TwinsaityEditor
             ins.RotX = (ushort)numericUpDown6.Value;
             GetXRot(false, true, false);
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
+            TFController.RMViewer_LoadInstances();
         }
 
         private void numericUpDown13_ValueChanged(object sender, EventArgs e)
@@ -257,6 +262,7 @@ namespace TwinsaityEditor
             ins.RotY = (ushort)numericUpDown7.Value;
             GetYRot(false, true, false);
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
+            TFController.RMViewer_LoadInstances();
         }
 
         private void numericUpDown14_ValueChanged(object sender, EventArgs e)
@@ -405,6 +411,7 @@ namespace TwinsaityEditor
             ins.RotZ = (ushort)numericUpDown8.Value;
             GetZRot(false, true, false);
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
+            TFController.RMViewer_LoadInstances();
         }
 
         private void numericUpDown15_ValueChanged(object sender, EventArgs e)
