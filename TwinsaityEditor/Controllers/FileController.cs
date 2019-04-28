@@ -36,7 +36,7 @@ namespace TwinsaityEditor
         {
             if (rmForm == null)
             {
-                rmForm = new Form { Size = new System.Drawing.Size(480, 480), Text = "Initiating viewer..." };
+                rmForm = new Form { Size = new System.Drawing.Size(480, 480), Text = "Initializing viewer..." };
                 rmForm.FormClosed += delegate
                 {
                     rmForm = null;
