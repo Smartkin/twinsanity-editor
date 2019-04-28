@@ -81,7 +81,7 @@ namespace TwinsaityEditor
 
             refresh = new Timer
             {
-                Interval = (int)Math.Round(1.0/60*1000), //Set to 60fps by default, TODO: Add to Preferences later
+                Interval = (int)Math.Round(1.0f/60*1000), //Set to 60fps by default, TODO: Add to Preferences later
                 Enabled = true
             };
 
@@ -161,8 +161,8 @@ namespace TwinsaityEditor
                 rot.X += rot.X > MathHelper.Pi ? -2*MathHelper.Pi : rot.X < -MathHelper.Pi ? +2*MathHelper.Pi : 0;
                 if (rot.Y > MathHelper.Pi / 2)
                     rot.Y = MathHelper.Pi / 2;
-                if (rot.Y < (float)-Math.PI / 2)
-                    rot.Y = (float)-Math.PI / 2;
+                if (rot.Y < -MathHelper.Pi / 2)
+                    rot.Y = -MathHelper.Pi / 2;
             }
             m_x = e.X;
             m_y = e.Y;
