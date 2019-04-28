@@ -294,7 +294,7 @@ namespace TwinsaityEditor
                 {
                     case Editors.ChunkLinks: editor_var = new ChunkLinksEditor((ChunkLinksController)cont) { Tag = this }; break;
                     case Editors.Position: editor_var = new PositionEditor((SectionController)cont) { Tag = this }; break;
-                    case Editors.Instance: editor_var = new InstanceEditor((SectionController)cont) { Tag = this }; break;
+                    case Editors.Instance: editor_var = new InstanceEditor(CurCont, (SectionController)cont) { Tag = this }; break;
                 }
                 editor_var.Show();
             }

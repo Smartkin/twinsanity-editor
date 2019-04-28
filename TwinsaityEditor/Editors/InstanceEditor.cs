@@ -16,9 +16,9 @@ namespace TwinsaityEditor
 
         private bool ignore_value_change, ignore_rot1, ignore_rot2;
 
-        public InstanceEditor(SectionController c)
+        public InstanceEditor(FileController file, SectionController c)
         {
-            TFController = ((MainForm)Tag).CurCont;
+            TFController = file;
             controller = c;
             InitializeComponent();
             Text = "Instance Editor (Section " + c.Data.Parent.ID + ")";
