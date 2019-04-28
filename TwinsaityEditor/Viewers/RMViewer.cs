@@ -400,8 +400,8 @@ namespace TwinsaityEditor
                         Vector3 pos_ins = ins.Pos.ToVec3();
                         pos_ins.X = -pos_ins.X;
                         inst_vtx_offs[l++] = m;
-                        vtx[1][m++] = new Vertex(new Vector3(indicator_size * 0.75f, 0, 0) + pos_ins, new Vector3(), Color.Red);
-                        vtx[1][m++] = new Vertex(new Vector3(-indicator_size * 0.375f, 0, 0) + pos_ins, new Vector3(), Color.Red);
+                        vtx[1][m++] = new Vertex(new Vector3(-indicator_size * 0.75f, 0, 0) + pos_ins, new Vector3(), Color.Red);
+                        vtx[1][m++] = new Vertex(new Vector3(+indicator_size * 0.375f, 0, 0) + pos_ins, new Vector3(), Color.Red);
                         inst_vtx_offs[l++] = m;
                         vtx[1][m++] = new Vertex(new Vector3(0, indicator_size * 0.75f, 0) + pos_ins, new Vector3(), Color.Green);
                         vtx[1][m++] = new Vertex(new Vector3(0, -indicator_size * 0.375f, 0) + pos_ins, new Vector3(), Color.Green);
