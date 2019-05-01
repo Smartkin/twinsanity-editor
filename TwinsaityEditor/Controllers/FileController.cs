@@ -1,4 +1,5 @@
 ﻿using Twinsanity;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace TwinsaityEditor
@@ -9,6 +10,7 @@ namespace TwinsaityEditor
 
         public string FileName { get; set; }
         public string SafeFileName { get; set; }
+        public Dictionary<uint, string> ObjectNames { get; set; }
 
         //Viewers
         private Form rmForm;
@@ -30,6 +32,19 @@ namespace TwinsaityEditor
             TextPrev = new string[2];
             TextPrev[0] = "Size: " + Data.Size;
             TextPrev[1] = "ContentSize: " + Data.ContentSize + " Element Count: " + Data.Records.Count;
+        }
+
+        public void LoadFile(string path, TwinsFile.FileType type)
+        {
+            Data.LoadFile(path, type);
+            ObjectNames = new Dictionary<uint, string>();
+            if (Data.RecordIDs.ContainsKey(10) && ((TwinsSection)Data.GetItem(10)).RecordIDs.ContainsKey(0))
+            {
+                foreach (GameObject obj in ((TwinsSection)((TwinsSection)Data.GetItem(10)).GetItem(0)).Records)
+                {
+                    ObjectNames.Add(obj.ID, obj.Name);
+                }
+            }
         }
 
         public void OpenRMViewer()
@@ -78,8 +93,8 @@ namespace TwinsaityEditor
 
         public string GetObjectName(uint id)
         {
-            if (Data.RecordIDs.ContainsKey(10) && ((TwinsSection)Data.GetItem(10)).RecordIDs.ContainsKey(0) && ((TwinsSection)((TwinsSection)Data.GetItem(10)).GetItem(0)).RecordIDs.ContainsKey(id))
-                return ((GameObject)((TwinsSection)((TwinsSection)Data.GetItem(10)).GetItem(0)).GetItem(id)).Name; //lol
+            if (ObjectNames.ContainsKey(id))
+                return ObjectNames[id];
             else return string.Empty;
         }
 

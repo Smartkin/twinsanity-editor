@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using Twinsanity;
 
@@ -21,12 +22,10 @@ namespace TwinsaityEditor
 
         private TreeNode previousNode;
 
+        //private List<FileController> FilesOpened { get; }
         public FileController FilesController { get => (FileController)Tag; }
         public FileController CurCont { get => FilesController; } //get currently selected file controller
         public TwinsFile CurFile { get => CurCont.Data; } //get currently selected file
-        
-        public RMViewer RMViewer { get => CurCont.RMViewer; }
-        //public static string SafeFileName { get; set; }
 
         public MainForm()
         {
@@ -163,32 +162,32 @@ namespace TwinsaityEditor
                 switch (ofd.FilterIndex)
                 {
                     case 1:
-                        CurFile.LoadFile(ofd.FileName, TwinsFile.FileType.RM2);
+                        CurCont.LoadFile(ofd.FileName, TwinsFile.FileType.RM2);
                         rMViewerToolStripMenuItem.Enabled = true;
                         sMViewerToolStripMenuItem.Enabled = false;
                         break;
                     case 2:
-                        CurFile.LoadFile(ofd.FileName, TwinsFile.FileType.SM2);
+                        CurCont.LoadFile(ofd.FileName, TwinsFile.FileType.SM2);
                         sMViewerToolStripMenuItem.Enabled = true;
                         rMViewerToolStripMenuItem.Enabled = false;
                         break;
                     case 3:
-                        CurFile.LoadFile(ofd.FileName, TwinsFile.FileType.RMX);
+                        CurCont.LoadFile(ofd.FileName, TwinsFile.FileType.RMX);
                         rMViewerToolStripMenuItem.Enabled = true;
                         sMViewerToolStripMenuItem.Enabled = false;
                         break;
                     case 4:
-                        CurFile.LoadFile(ofd.FileName, TwinsFile.FileType.SMX);
+                        CurCont.LoadFile(ofd.FileName, TwinsFile.FileType.SMX);
                         sMViewerToolStripMenuItem.Enabled = true;
                         rMViewerToolStripMenuItem.Enabled = false;
                         break;
                     case 5:
-                        CurFile.LoadFile(ofd.FileName, TwinsFile.FileType.DemoRM2);
+                        CurCont.LoadFile(ofd.FileName, TwinsFile.FileType.DemoRM2);
                         rMViewerToolStripMenuItem.Enabled = true;
                         sMViewerToolStripMenuItem.Enabled = false;
                         break;
                     case 6:
-                        CurFile.LoadFile(ofd.FileName, TwinsFile.FileType.DemoSM2);
+                        CurCont.LoadFile(ofd.FileName, TwinsFile.FileType.DemoSM2);
                         sMViewerToolStripMenuItem.Enabled = true;
                         rMViewerToolStripMenuItem.Enabled = false;
                         break;
