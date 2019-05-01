@@ -121,7 +121,7 @@ namespace TwinsaityEditor
 
             lines = new string[ins.UnkI321.Count];
             for (int i = 0; i < ins.UnkI321.Count; ++i)
-                lines[i] = ins.UnkI321[i].ToString();
+                lines[i] = Convert.ToString(ins.UnkI321[i], 16);
             textBox7.Lines = lines;
             lines = new string[ins.UnkI322.Count];
             for (int i = 0; i < ins.UnkI322.Count; ++i)

@@ -672,7 +672,7 @@
             this.groupBox9.Size = new System.Drawing.Size(160, 122);
             this.groupBox9.TabIndex = 5;
             this.groupBox9.TabStop = false;
-            this.groupBox9.Text = "IVars 2";
+            this.groupBox9.Text = "IVars";
             // 
             // textBox5
             // 
@@ -735,7 +735,7 @@
             this.groupBox10.Size = new System.Drawing.Size(160, 122);
             this.groupBox10.TabIndex = 4;
             this.groupBox10.TabStop = false;
-            this.groupBox10.Text = "FVars 1";
+            this.groupBox10.Text = "FVars";
             // 
             // textBox6
             // 
@@ -798,10 +798,11 @@
             this.groupBox11.Size = new System.Drawing.Size(160, 122);
             this.groupBox11.TabIndex = 3;
             this.groupBox11.TabStop = false;
-            this.groupBox11.Text = "IVars 1";
+            this.groupBox11.Text = "Flags";
             // 
             // textBox7
             // 
+            this.textBox7.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.textBox7.Location = new System.Drawing.Point(6, 19);
             this.textBox7.Multiline = true;
             this.textBox7.Name = "textBox7";
