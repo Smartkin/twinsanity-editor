@@ -10,7 +10,7 @@ namespace TwinsaityEditor
 
         public string FileName { get; set; }
         public string SafeFileName { get; set; }
-        public Dictionary<uint, string> ObjectNames { get; set; }
+        public Dictionary<uint, string> ObjectNames { get; set; } = new Dictionary<uint, string>();
 
         public TwinsItem SelectedItem { get; set; } = null;
 
@@ -39,7 +39,7 @@ namespace TwinsaityEditor
         public void LoadFile(string path, TwinsFile.FileType type)
         {
             Data.LoadFile(path, type);
-            ObjectNames = new Dictionary<uint, string>();
+            ObjectNames.Clear();
             if (Data.RecordIDs.ContainsKey(10) && ((TwinsSection)Data.GetItem(10)).RecordIDs.ContainsKey(0))
             {
                 foreach (GameObject obj in ((TwinsSection)((TwinsSection)Data.GetItem(10)).GetItem(0)).Records)
