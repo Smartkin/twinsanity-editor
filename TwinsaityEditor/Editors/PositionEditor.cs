@@ -40,7 +40,7 @@ namespace TwinsaityEditor
             ignore_value_change = true;
 
             pos = (Position)controller.Data.Records[listBox1.SelectedIndex];
-            TFController.RMSelectItem(pos);
+            TFController.SelectItem(pos);
             splitContainer1.Panel2.Enabled = true;
 
             numericUpDown1.Value = (decimal)pos.Pos.X;

@@ -12,6 +12,8 @@ namespace TwinsaityEditor
         public string SafeFileName { get; set; }
         public Dictionary<uint, string> ObjectNames { get; set; }
 
+        public TwinsItem SelectedItem { get; set; } = null;
+
         //Viewers
         private Form rmForm;
         private RMViewer rmViewer;
@@ -72,16 +74,17 @@ namespace TwinsaityEditor
                 rmViewer.LoadInstances();
         }
 
-        public void RMSelectItem(TwinsItem item)
-        {
-            if (rmViewer != null)
-                rmViewer.SelectItem(item);
-        }
-
         public void CloseRMViewer()
         {
             if (rmForm != null && !rmForm.IsDisposed)
                 rmForm.Close();
+        }
+
+        public void SelectItem(TwinsItem item)
+        {
+            SelectedItem = item;
+            if (rmViewer != null)
+                rmViewer.UpdateSelected();
         }
 
         public string GetMaterialName(uint id)

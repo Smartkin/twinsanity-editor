@@ -17,8 +17,6 @@ namespace TwinsaityEditor
 
         private float indicator_size = 0.5f;
 
-        public TwinsItem SelectedItem { get; set; } = null;
-
         public RMViewer(FileController file)
         {
             //initialize variables here
@@ -89,7 +87,7 @@ namespace TwinsaityEditor
                             GL.PushMatrix();
                             GL.Translate(pos.Pos.X, pos.Pos.Y, pos.Pos.Z);
                             DrawAxes(0, 0, 0, 0.5f);
-                            if (SelectedItem != pos)
+                            if (file.SelectedItem != pos)
                             {
                                 GL.PointSize(5);
                                 GL.Color3(colors[colors.Length - i * 2 - 2]);
@@ -118,14 +116,14 @@ namespace TwinsaityEditor
                                 GL.Translate(pth.Positions[k].X, pth.Positions[k].Y, pth.Positions[k].Z);
                                 DrawAxes(0, 0, 0, 0.5f);
                                 GL.Scale(0.5, 0.5, 0.5);
-                                if (SelectedItem != pth)
+                                if (file.SelectedItem != pth)
                                     GL.Color3(colors[colors.Length - i * 2 - 2]);
                                 else
                                     GL.Color3(Color.White);
                                 RenderString(pth.ID.ToString()+":"+k);
                                 GL.PopMatrix();
                             }
-                            if (SelectedItem != pth)
+                            if (file.SelectedItem != pth)
                             {
                                 GL.PointSize(5);
                                 GL.LineWidth(1);
@@ -138,7 +136,7 @@ namespace TwinsaityEditor
                             GL.Begin(PrimitiveType.LineStrip);
                             for (int k = 0; k < pth.Positions.Count; ++k)
                             {
-                                if (SelectedItem != pth)
+                                if (file.SelectedItem != pth)
                                     GL.Color3(colors[colors.Length - i * 2 - 2]);
                                 else
                                     GL.Color3(Color.White);
@@ -161,7 +159,7 @@ namespace TwinsaityEditor
                             rot_ins *= Matrix4.CreateRotationY(-ins.RotY / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
                             rot_ins *= Matrix4.CreateRotationZ(-ins.RotZ / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
                             GL.MultMatrix(ref rot_ins);
-                            if (SelectedItem == ins)
+                            if (file.SelectedItem == ins)
                             {
                                 GL.Color3(Color.White);
                                 //GL.LineWidth(2);
@@ -417,7 +415,7 @@ namespace TwinsaityEditor
                         vtx[1][m++] = new Vertex(new Vector3(0, 0, indicator_size * 0.75f) + pos_ins, new Vector3(), Color.Blue);
                         vtx[1][m++] = new Vertex(new Vector3(0, 0, -indicator_size * 0.375f) + pos_ins, new Vector3(), Color.Blue);
                         inst_vtx_offs[l++] = m;
-                        Color cur_color = (SelectedItem == ins) ? Color.White : colors[colors.Length - i * 2 - 1];
+                        Color cur_color = (file.SelectedItem == ins) ? Color.White : colors[colors.Length - i * 2 - 1];
                         vtx[1][m++] = new Vertex(new Vector3(-indicator_size, -indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, new Vector3(), cur_color);
                         vtx[1][m++] = new Vertex(new Vector3(+indicator_size, -indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, new Vector3(), cur_color);
                         vtx[1][m++] = new Vertex(new Vector3(+indicator_size, +indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, new Vector3(), cur_color);
@@ -490,32 +488,28 @@ namespace TwinsaityEditor
             }
         }
 
-        public void SelectItem(TwinsItem item)
+        public void UpdateSelected()
         {
-            if (item == null)
+            if (file.SelectedItem == null)
             {
-                if (SelectedItem is Instance)
+                if (file.SelectedItem is Instance)
                 {
-                    SelectedItem = null;
                     LoadInstances();
                 }
-                else if (SelectedItem is Position)
+                else if (file.SelectedItem is Position)
                 {
-                    SelectedItem = null;
                 }
             }
-            else if (item is Instance)
+            else if (file.SelectedItem is Instance)
             {
-                Instance i = (Instance)item;
+                Instance i = (Instance)file.SelectedItem;
                 SetPosition(new Vector3(-i.Pos.X, i.Pos.Y, i.Pos.Z));
-                SelectedItem = item;
                 LoadInstances();
             }
-            else if (item is Position)
+            else if (file.SelectedItem is Position)
             {
-                Position i = (Position)item;
+                Position i = (Position)file.SelectedItem;
                 SetPosition(new Vector3(-i.Pos.X, i.Pos.Y, i.Pos.Z));
-                SelectedItem = item;
             }
         }
 

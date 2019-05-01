@@ -24,12 +24,13 @@ namespace TwinsaityEditor
             Text = "Instance Editor (Section " + c.Data.Parent.ID + ")";
             PopulateList();
             comboBox1.TextChanged += comboBox1_TextChanged;
+            tabControl1.SelectedIndexChanged += tabControl1_SelectedIndexChanged;
             FormClosed += InstanceEditor_FormClosed;
         }
 
         private void InstanceEditor_FormClosed(object sender, FormClosedEventArgs e)
         {
-            TFController.RMSelectItem(null);
+            TFController.SelectItem(null);
         }
 
         private void PopulateList()
@@ -54,10 +55,38 @@ namespace TwinsaityEditor
 
             this.SuspendDrawing();
 
-            ins = (Instance)controller.Data.Records[listBox1.SelectedIndex];
-            TFController.RMSelectItem(ins);
+            TFController.SelectItem((Instance)controller.Data.Records[listBox1.SelectedIndex]);
+            ins = (Instance)TFController.SelectedItem;
             tabControl1.Enabled = true;
+            tabControl1.Tag = 0x00;
+            if (tabControl1.SelectedIndex == 0)
+            {
+                UpdateTab1();
+            }
+            else if (tabControl1.SelectedIndex == 1)
+            {
+                UpdateTab2();
+            }
 
+            ignore_value_change = false;
+
+            this.ResumeDrawing();
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabControl1.SelectedIndex == 0 && ((int)tabControl1.Tag & 0x01) == 0)
+            {
+                UpdateTab1();
+            }
+            else if (tabControl1.SelectedIndex == 1 && ((int)tabControl1.Tag & 0x02) == 0)
+            {
+                UpdateTab2();
+            }
+        }
+
+        private void UpdateTab1()
+        {
             string obj_name = TFController.GetObjectName(ins.ObjectID);
             comboBox1.Text = ins.ObjectID.ToString() + ((obj_name == string.Empty) ? string.Empty : (" (" + obj_name + ")"));
             numericUpDown1.Value = ins.ID;
@@ -68,7 +97,11 @@ namespace TwinsaityEditor
             numericUpDown5.Value = (decimal)ins.Pos.W;
             GetXRot(false, false, false); GetYRot(false, false, false); GetZRot(false, false, false);
             textBox1.Text = Convert.ToString(ins.UnkI32, 16);
+            tabControl1.Tag = (int)tabControl1.Tag | 0x01;
+        }
 
+        private void UpdateTab2()
+        {
             numericUpDown9.Value = ins.SomeNum1;
             numericUpDown10.Value = ins.SomeNum2;
             numericUpDown11.Value = ins.SomeNum3;
@@ -98,10 +131,7 @@ namespace TwinsaityEditor
             for (int i = 0; i < ins.UnkI323.Count; ++i)
                 lines[i] = ins.UnkI323[i].ToString();
             textBox5.Lines = lines;
-
-            ignore_value_change = false;
-
-            this.ResumeDrawing();
+            tabControl1.Tag = (int)tabControl1.Tag | 0x02;
         }
 
         private void GetXRot(bool ignore_slider, bool ignore_rot1, bool ignore_rot2)
