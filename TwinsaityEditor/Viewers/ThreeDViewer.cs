@@ -25,7 +25,7 @@ namespace TwinsaityEditor
         private EventHandler _inputHandle;
         private FontWrapper.FontService _fntService;
         private Dictionary<char, int> textureCharMap = new Dictionary<char, int>();
-        private readonly float size = 48, zNear = 0.8f, zFar = 1000f;
+        private readonly float size = 24f, zNear = 0.5f, zFar = 1500f;
         protected int[] vbo_id;
         protected int vbo_count;
         private int[] vbo_sizes;
