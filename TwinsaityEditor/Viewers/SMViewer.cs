@@ -20,6 +20,11 @@ namespace TwinsaityEditor
             this.file = file;
         }
 
+        protected override void RenderHUD()
+        {
+            return;
+        }
+
         protected override void RenderObjects()
         {
             //put all object rendering code here

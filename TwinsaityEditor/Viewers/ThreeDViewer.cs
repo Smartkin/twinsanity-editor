@@ -30,6 +30,8 @@ namespace TwinsaityEditor
         protected int vbo_count;
         private int[] vbo_sizes;
 
+        protected long timeRenderObj = 0, timeRenderObj_min = long.MaxValue, timeRenderObj_max = 0;
+        protected long timeRenderHud = 0, timeRenderHud_min = long.MaxValue, timeRenderHud_max = 0;
 
         public ThreeDViewer()
         {
@@ -102,6 +104,7 @@ namespace TwinsaityEditor
         }
 
         protected abstract void RenderObjects();
+        protected abstract void RenderHUD();
 
         private void ResetCamera()
         {
@@ -270,8 +273,18 @@ namespace TwinsaityEditor
 
             Vector3 fin_delta = new Vector3(rot_matrix * new Vector4(delta, 1.0f));
             GL.Translate(-pos + fin_delta);
+            var watch = System.Diagnostics.Stopwatch.StartNew();
             RenderObjects();
+            watch.Stop();
+            timeRenderObj = watch.ElapsedMilliseconds;
+            timeRenderObj_max = Math.Max(timeRenderObj_max, timeRenderObj);
+            timeRenderObj_min = Math.Min(timeRenderObj_min, timeRenderObj);
+            watch = System.Diagnostics.Stopwatch.StartNew();
             DrawText();
+            watch.Stop();
+            timeRenderHud = watch.ElapsedMilliseconds;
+            timeRenderHud_max = Math.Max(timeRenderHud_max, timeRenderHud);
+            timeRenderHud_min = Math.Min(timeRenderHud_min, timeRenderHud);
             SwapBuffers();
         }
 
@@ -333,11 +346,21 @@ namespace TwinsaityEditor
 
         protected virtual void DrawText()
         {
-            //GL.Color3(Color.White);
-            //RenderString("0123456789ABCDEFGHIJKLMNP1RSTUVWXYZabcdefghijklmnopqrstuvwxyz !_/:?");
+            GL.DepthMask(false);
+            GL.Disable(EnableCap.DepthTest);
+            GL.Disable(EnableCap.Lighting);
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+            GL.Ortho(0, Width, Height, 0, -1, 10);
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadIdentity();
+            RenderHUD();
+            GL.DepthMask(true);
+            GL.Enable(EnableCap.DepthTest);
+            GL.Enable(EnableCap.Lighting);
         }
 
-        protected int LoadTextTexture(ref Bitmap text, int quality = 1, bool flip_y = false)
+        protected int LoadTextTexture(ref Bitmap text, int quality = 0, bool flip_y = false)
         {
             if (flip_y)
                 text.RotateFlip(RotateFlipType.RotateNoneFlipY);
@@ -395,6 +418,52 @@ namespace TwinsaityEditor
                 GL.TexCoord2(1, 0); GL.Vertex2(x+w, h);
                 GL.TexCoord2(0, 0); GL.Vertex2(x-w, h);
                 GL.End();
+            }
+            GL.BindTexture(TextureTarget.Texture2D, 0);
+        }
+
+        protected void RenderString2D(string s, float x, float y, float text_size)
+        {
+            text_size /= size;
+            float w = 0, h = 0;
+            foreach (char c in s)
+            {
+                if (c == ' ')
+                    continue;
+                if (!textureCharMap.ContainsKey(c))
+                    GenCharTex(c);
+                GL.BindTexture(TextureTarget.Texture2D, textureCharMap[c]);
+                GL.GetTexLevelParameter(TextureTarget.Texture2D, 0, GetTextureParameter.TextureWidth, out float c_w);
+                GL.GetTexLevelParameter(TextureTarget.Texture2D, 0, GetTextureParameter.TextureHeight, out float c_h);
+                w = Math.Max(c_w, w);
+                h = Math.Max(c_h, h);
+            }
+            w *= text_size;
+            h *= 0.5f * text_size;
+            //x += w / 2;
+            y += h;
+            foreach (char c in s)
+            {
+                if (c != ' ')
+                {
+                    GL.BindTexture(TextureTarget.Texture2D, textureCharMap[c]);
+                    GL.GetTexLevelParameter(TextureTarget.Texture2D, 0, GetTextureParameter.TextureWidth, out float c_w);
+                    GL.GetTexLevelParameter(TextureTarget.Texture2D, 0, GetTextureParameter.TextureHeight, out float c_h);
+                    c_w *= 0.5f * text_size;
+                    c_h *= 0.5f * text_size;
+                    x += c_w;
+                    x -= (float)(Math.IEEERemainder(x, 1) - Math.IEEERemainder(c_w, 1));
+                    y -= (float)(Math.IEEERemainder(y, 1) - Math.IEEERemainder(c_h, 1));
+                    GL.Begin(PrimitiveType.Quads);
+                    GL.TexCoord2(0, 1); GL.Vertex2(x - c_w, y + c_h);
+                    GL.TexCoord2(1, 1); GL.Vertex2(x + c_w, y + c_h);
+                    GL.TexCoord2(1, 0); GL.Vertex2(x + c_w, y - c_h);
+                    GL.TexCoord2(0, 0); GL.Vertex2(x - c_w, y - c_h);
+                    GL.End();
+                    x += c_w + 1;
+                }
+                else
+                    x += w;
             }
             GL.BindTexture(TextureTarget.Texture2D, 0);
         }

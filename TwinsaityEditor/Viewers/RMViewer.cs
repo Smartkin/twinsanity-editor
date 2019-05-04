@@ -32,6 +32,12 @@ namespace TwinsaityEditor
             LoadInstances();
         }
 
+        protected override void RenderHUD()
+        {
+            GL.Color3(Color.White);
+            RenderString2D($"RenderObjects: {timeRenderObj}ms (max: {timeRenderObj_max}ms, min: {timeRenderObj_min}ms)", 0, 0, 10f);
+        }
+
         protected override void RenderObjects()
         {
             //put all object rendering code here
