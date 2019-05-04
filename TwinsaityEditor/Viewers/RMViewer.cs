@@ -15,7 +15,7 @@ namespace TwinsaityEditor
         private int[] inst_vtx_counts, inst_vtx_offs;
         private int[] coln_vtx_counts, coln_vtx_offs;
 
-        private float indicator_size = 0.5f;
+        private readonly float indicator_size = 0.5f;
 
         public RMViewer(FileController file)
         {
@@ -506,16 +506,14 @@ namespace TwinsaityEditor
                 {
                 }
             }
-            else if (file.SelectedItem is Instance)
+            else if (file.SelectedItem is Instance ins)
             {
-                Instance i = (Instance)file.SelectedItem;
-                SetPosition(new Vector3(-i.Pos.X, i.Pos.Y, i.Pos.Z));
+                SetPosition(new Vector3(-ins.Pos.X, ins.Pos.Y, ins.Pos.Z));
                 LoadInstances();
             }
-            else if (file.SelectedItem is Position)
+            else if (file.SelectedItem is Position pos)
             {
-                Position i = (Position)file.SelectedItem;
-                SetPosition(new Vector3(-i.Pos.X, i.Pos.Y, i.Pos.Z));
+                SetPosition(new Vector3(-pos.Pos.X, pos.Pos.Y, pos.Pos.Z));
             }
         }
 
