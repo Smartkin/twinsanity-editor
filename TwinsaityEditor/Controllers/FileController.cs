@@ -11,6 +11,7 @@ namespace TwinsaityEditor
         public string FileName { get; set; }
         public string SafeFileName { get; set; }
         public Dictionary<uint, string> ObjectNames { get; set; } = new Dictionary<uint, string>();
+        public Dictionary<uint, string> MaterialNames { get; set; } = new Dictionary<uint, string>();
 
         public TwinsItem SelectedItem { get; set; } = null;
 
@@ -45,6 +46,14 @@ namespace TwinsaityEditor
                 foreach (GameObject obj in ((TwinsSection)((TwinsSection)Data.GetItem(10)).GetItem(0)).Records)
                 {
                     ObjectNames.Add(obj.ID, obj.Name);
+                }
+            }
+            MaterialNames.Clear();
+            if (Data.RecordIDs.ContainsKey(11) && ((TwinsSection)Data.GetItem(11)).RecordIDs.ContainsKey(1))
+            {
+                foreach (Material mat in ((TwinsSection)((TwinsSection)Data.GetItem(11)).GetItem(1)).Records)
+                {
+                    MaterialNames.Add(mat.ID, mat.Name);
                 }
             }
         }
@@ -89,8 +98,8 @@ namespace TwinsaityEditor
 
         public string GetMaterialName(uint id)
         {
-            if (Data.RecordIDs.ContainsKey(11) && ((TwinsSection)Data.GetItem(11)).RecordIDs.ContainsKey(1) && ((TwinsSection)((TwinsSection)Data.GetItem(11)).GetItem(1)).RecordIDs.ContainsKey(id))
-                return ((Material)((TwinsSection)((TwinsSection)Data.GetItem(11)).GetItem(1)).GetItem(id)).Name; //lol
+            if (MaterialNames.ContainsKey(id))
+                return MaterialNames[id];
             else return string.Empty;
         }
 
