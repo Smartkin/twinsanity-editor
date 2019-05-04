@@ -124,6 +124,9 @@ namespace TwinsaityEditor
             GL.LoadMatrix(ref proj);
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadMatrix(ref view);
+
+            timeRenderObj = 0; timeRenderObj_min = long.MaxValue; timeRenderObj_max = 0;
+            timeRenderHud = 0; timeRenderHud_min = long.MaxValue; timeRenderHud_max = 0;
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
@@ -424,46 +427,38 @@ namespace TwinsaityEditor
 
         protected void RenderString2D(string s, float x, float y, float text_size)
         {
-            text_size /= size;
-            float w = 0, h = 0;
+            float text_size_fac = text_size / size;
             foreach (char c in s)
             {
-                if (c == ' ')
-                    continue;
-                if (!textureCharMap.ContainsKey(c))
-                    GenCharTex(c);
-                GL.BindTexture(TextureTarget.Texture2D, textureCharMap[c]);
-                GL.GetTexLevelParameter(TextureTarget.Texture2D, 0, GetTextureParameter.TextureWidth, out float c_w);
-                GL.GetTexLevelParameter(TextureTarget.Texture2D, 0, GetTextureParameter.TextureHeight, out float c_h);
-                w = Math.Max(c_w, w);
-                h = Math.Max(c_h, h);
-            }
-            w *= text_size;
-            h *= 0.5f * text_size;
-            //x += w / 2;
-            y += h;
-            foreach (char c in s)
-            {
+                var face = _fntService.FontFace;
+
+                face.LoadGlyph(face.GetCharIndex(c), SharpFont.LoadFlags.Default, SharpFont.LoadTarget.Normal);
+
+                float gAdvanceX = (float)face.Glyph.Advance.X * text_size_fac;
+                float gBearingX = (float)face.Glyph.Metrics.HorizontalBearingX * text_size_fac;
+
+                x += gBearingX;
+
+                float glyphTop = (float)(size - face.Glyph.Metrics.HorizontalBearingY) * text_size_fac;
+
                 if (c != ' ')
                 {
+                    if (!textureCharMap.ContainsKey(c))
+                        GenCharTex(c);
                     GL.BindTexture(TextureTarget.Texture2D, textureCharMap[c]);
                     GL.GetTexLevelParameter(TextureTarget.Texture2D, 0, GetTextureParameter.TextureWidth, out float c_w);
                     GL.GetTexLevelParameter(TextureTarget.Texture2D, 0, GetTextureParameter.TextureHeight, out float c_h);
-                    c_w *= 0.5f * text_size;
-                    c_h *= 0.5f * text_size;
-                    x += c_w;
-                    x -= (float)(Math.IEEERemainder(x, 1) - Math.IEEERemainder(c_w, 1));
-                    y -= (float)(Math.IEEERemainder(y, 1) - Math.IEEERemainder(c_h, 1));
+                    c_w *= text_size_fac;
+                    c_h *= text_size_fac;
                     GL.Begin(PrimitiveType.Quads);
-                    GL.TexCoord2(0, 1); GL.Vertex2(x - c_w, y + c_h);
-                    GL.TexCoord2(1, 1); GL.Vertex2(x + c_w, y + c_h);
-                    GL.TexCoord2(1, 0); GL.Vertex2(x + c_w, y - c_h);
-                    GL.TexCoord2(0, 0); GL.Vertex2(x - c_w, y - c_h);
+                    GL.TexCoord2(0, 1); GL.Vertex2(x, y + glyphTop + c_h);
+                    GL.TexCoord2(1, 1); GL.Vertex2(x + c_w, y + glyphTop + c_h);
+                    GL.TexCoord2(1, 0); GL.Vertex2(x + c_w, y + glyphTop);
+                    GL.TexCoord2(0, 0); GL.Vertex2(x, y + glyphTop);
                     GL.End();
-                    x += c_w + 1;
                 }
-                else
-                    x += w;
+
+                x += gAdvanceX;
             }
             GL.BindTexture(TextureTarget.Texture2D, 0);
         }
