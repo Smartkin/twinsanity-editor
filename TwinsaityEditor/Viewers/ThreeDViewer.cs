@@ -25,6 +25,9 @@ namespace TwinsaityEditor
         private EventHandler _inputHandle;
         private FontWrapper.FontService _fntService;
         private Dictionary<char, int> textureCharMap = new Dictionary<char, int>();
+        private Dictionary<char, float> charAdvanceX = new Dictionary<char, float>();
+        private Dictionary<char, float> charBearingX = new Dictionary<char, float>();
+        private Dictionary<char, float> charBearingY = new Dictionary<char, float>();
         private readonly float size = 24f, zNear = 0.5f, zFar = 1500f;
         protected int[] vbo_id;
         protected int vbo_count;
@@ -83,7 +86,7 @@ namespace TwinsaityEditor
 
             refresh = new Timer
             {
-                Interval = (int)Math.Round(1.0/60*1000), //Set to ~60fps by default, TODO: Add to Preferences later
+                Interval = (int)Math.Floor(1.0/60*1000), //Set to ~60fps by default, TODO: Add to Preferences later
                 Enabled = true
             };
 
@@ -428,18 +431,18 @@ namespace TwinsaityEditor
         protected void RenderString2D(string s, float x, float y, float text_size)
         {
             float text_size_fac = text_size / size;
+            float start_x = x;
             foreach (char c in s)
             {
-                var face = _fntService.FontFace;
+                if (!charAdvanceX.ContainsKey(c))
+                    AddCharData(c);
 
-                face.LoadGlyph(face.GetCharIndex(c), SharpFont.LoadFlags.Default, SharpFont.LoadTarget.Normal);
-
-                float gAdvanceX = (float)face.Glyph.Advance.X * text_size_fac;
-                float gBearingX = (float)face.Glyph.Metrics.HorizontalBearingX * text_size_fac;
+                float gAdvanceX = charAdvanceX[c] * text_size_fac;
+                float gBearingX = charBearingX[c] * text_size_fac;
 
                 x += gBearingX;
 
-                float glyphTop = (float)(size - face.Glyph.Metrics.HorizontalBearingY) * text_size_fac;
+                float glyphTop = (size - charBearingY[c]) * text_size_fac;
 
                 if (c != ' ')
                 {
@@ -468,6 +471,16 @@ namespace TwinsaityEditor
             Bitmap bmp = _fntService.RenderString(c.ToString(), Color.White, Color.FromArgb(0x00, 0xFF, 0xFF, 0xFF));
             textureCharMap.Add(c, LoadTextTexture(ref bmp));
             bmp.Dispose();
+        }
+
+        private void AddCharData(char c)
+        {
+            var face = _fntService.FontFace;
+            face.LoadGlyph(face.GetCharIndex(c), SharpFont.LoadFlags.Default, SharpFont.LoadTarget.Normal);
+
+            charAdvanceX.Add(c, (float)face.Glyph.Advance.X);
+            charBearingX.Add(c, (float)face.Glyph.Metrics.HorizontalBearingX);
+            charBearingY.Add(c, (float)face.Glyph.Metrics.HorizontalBearingY);
         }
 
         protected void SetPosition(Vector3 pos)
