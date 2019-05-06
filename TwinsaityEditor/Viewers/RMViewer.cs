@@ -10,32 +10,38 @@ namespace TwinsaityEditor
 {
     public class RMViewer : ThreeDViewer
     {
+        private static readonly float indicator_size = 0.5f;
+
         private bool show_col_nodes, show_triggers;
         private FileController file;
         private int[] inst_vtx_counts, inst_vtx_offs;
         private int[] coln_vtx_counts, coln_vtx_offs;
 
-        private readonly float indicator_size = 0.5f;
-
-        public RMViewer(FileController file)
+        public RMViewer(FileController file, ref Form pform)
         {
             //initialize variables here
             show_col_nodes = show_triggers = false;
             this.file = file;
+            Tag = pform;
             vbo_count = 3;
             vtx = new Vertex[vbo_count][];
             if (file.Data.RecordIDs.ContainsKey(9))
             {
+                pform.Text = "Loading collision tree...";
                 LoadColTree();
+                pform.Text = "Loading collision nodes...";
                 LoadColNodes();
             }
+            pform.Text = "Loading instances...";
             LoadInstances();
+            pform.Text = "Initializing...";
         }
 
         protected override void RenderHUD()
         {
             GL.Color3(Color.White);
-            RenderString2D($"RenderObjects: {timeRenderObj}ms (max: {timeRenderObj_max}ms, min: {timeRenderObj_min}ms)", 0, 0, 10f);
+            RenderString2D($"RenderObjects: {timeRenderObj}ms (max: {timeRenderObj_max}ms, min: {timeRenderObj_min}ms)", 0, 0, 8);
+            RenderString2D($"RenderHUD: {timeRenderHud}ms (max: {timeRenderHud_max}ms, min: {timeRenderHud_min}ms)", 0, 8, 8);
         }
 
         protected override void RenderObjects()

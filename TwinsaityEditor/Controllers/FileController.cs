@@ -17,8 +17,7 @@ namespace TwinsaityEditor
 
         //Viewers
         private Form rmForm;
-        private RMViewer rmViewer;
-        public RMViewer RMViewer { get => rmViewer; }
+        public RMViewer RMViewer { get; private set; }
 
         public FileController(MainForm topform, TwinsFile item) : base(topform)
         {
@@ -66,11 +65,11 @@ namespace TwinsaityEditor
                 rmForm.FormClosed += delegate
                 {
                     rmForm = null;
-                    rmViewer = null;
+                    RMViewer = null;
                 };
                 rmForm.Show();
-                rmViewer = new RMViewer(this) { Dock = DockStyle.Fill, Tag = TopForm };
-                rmForm.Controls.Add(rmViewer);
+                RMViewer = new RMViewer(this, ref rmForm) { Dock = DockStyle.Fill };
+                rmForm.Controls.Add(RMViewer);
                 rmForm.Text = "RMViewer";
             }
             else
@@ -79,8 +78,8 @@ namespace TwinsaityEditor
 
         public void RMViewer_LoadInstances()
         {
-            if (rmViewer != null)
-                rmViewer.LoadInstances();
+            if (RMViewer != null)
+                RMViewer.LoadInstances();
         }
 
         public void CloseRMViewer()
@@ -92,8 +91,8 @@ namespace TwinsaityEditor
         public void SelectItem(TwinsItem item)
         {
             SelectedItem = item;
-            if (rmViewer != null)
-                rmViewer.UpdateSelected();
+            if (RMViewer != null)
+                RMViewer.UpdateSelected();
         }
 
         public string GetMaterialName(uint id)
