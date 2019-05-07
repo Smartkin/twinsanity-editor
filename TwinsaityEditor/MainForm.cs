@@ -151,6 +151,8 @@ namespace TwinsaityEditor
             ofd.Filter = "RM2 files|*.rm2|SM2 files|*.sm2|RMX files|*.rmx|SMX files|*.smx|Demo RM2 files|*.rm2|Demo SM2 files|*.sm2";
             if (ofd.ShowDialog() == DialogResult.OK)
             {
+                if (CurCont != null)
+                    CurCont.Dispose();
                 Tag = new FileController(this, new TwinsFile());
                 switch (ofd.FilterIndex)
                 {

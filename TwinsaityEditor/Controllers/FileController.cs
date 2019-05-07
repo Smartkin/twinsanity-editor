@@ -38,8 +38,9 @@ namespace TwinsaityEditor
 
         public void LoadFile(string path, TwinsFile.FileType type)
         {
+            Data = new TwinsFile();
             Data.LoadFile(path, type);
-            ObjectNames.Clear();
+            FileName = path;
             if (Data.RecordIDs.ContainsKey(10) && ((TwinsSection)Data.GetItem(10)).RecordIDs.ContainsKey(0))
             {
                 foreach (GameObject obj in ((TwinsSection)((TwinsSection)Data.GetItem(10)).GetItem(0)).Records)
@@ -47,13 +48,27 @@ namespace TwinsaityEditor
                     ObjectNames.Add(obj.ID, obj.Name);
                 }
             }
-            MaterialNames.Clear();
             if (Data.RecordIDs.ContainsKey(11) && ((TwinsSection)Data.GetItem(11)).RecordIDs.ContainsKey(1))
             {
                 foreach (Material mat in ((TwinsSection)((TwinsSection)Data.GetItem(11)).GetItem(1)).Records)
                 {
                     MaterialNames.Add(mat.ID, mat.Name);
                 }
+            }
+        }
+
+        public void CloseFile()
+        {
+            ObjectNames.Clear();
+            MaterialNames.Clear();
+            Data = null;
+            FileName = SafeFileName = "";
+            CloseRMViewer();
+            CloseEditor(Editors.ChunkLinks);
+            for (int i = 0; i <= 7; ++i)
+            {
+                CloseInstanceEditor(i);
+                ClosePositionEditor(i);
             }
         }
 
@@ -128,6 +143,12 @@ namespace TwinsaityEditor
                 throw new System.ArgumentException("The requested section does not have an instance in the specified position.");
             }
             else throw new System.ArgumentException("The requested section does not have an object instance section.");
+        }
+
+        public override void Dispose()
+        {
+            CloseFile();
+            base.Dispose();
         }
     }
 }
