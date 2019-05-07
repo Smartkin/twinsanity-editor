@@ -83,9 +83,10 @@ namespace TwinsaityEditor
                     RMViewer = null;
                 };
                 rmForm.Show();
-                RMViewer = new RMViewer(this, ref rmForm) { Dock = DockStyle.Fill };
-                rmForm.Controls.Add(RMViewer);
+                RMViewer rmViewer = new RMViewer(this, ref rmForm) { Dock = DockStyle.Fill };
+                rmForm.Controls.Add(rmViewer);
                 rmForm.Text = "RMViewer";
+                RMViewer = rmViewer;
             }
             else
                 rmForm.Select();
