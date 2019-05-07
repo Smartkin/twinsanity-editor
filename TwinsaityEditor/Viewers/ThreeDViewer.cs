@@ -28,7 +28,8 @@ namespace TwinsaityEditor
         private Dictionary<char, float> charAdvanceX = new Dictionary<char, float>();
         private Dictionary<char, float> charBearingX = new Dictionary<char, float>();
         private Dictionary<char, float> charBearingY = new Dictionary<char, float>();
-        private readonly float size = 24f, zNear = 0.5f, zFar = 1500f;
+        private static readonly float size = 24f, zNear = 0.5f, zFar = 1500f;
+        protected static readonly float indicator_size = 0.5f;
         protected int[] vbo_id;
         protected int vbo_count;
         private int[] vbo_sizes;
@@ -112,21 +113,7 @@ namespace TwinsaityEditor
         private void ResetCamera()
         {
             pos = new Vector3(0, 0, 0);
-            rot = new Vector3(MathHelper.Pi, 0, 0);
-            Matrix4 view = Matrix4.Identity;
-            Matrix4 proj = Matrix4.Identity;
-            Matrix4 rot_matrix = Utils.MatrixWrapper.RotateMatrix4(rot.X, rot.Y, rot.Z);
-
-            //Setup view and projection matrix
-            Vector4 rot_vector = Vector4.Transform(new Vector4(0, 0, 1, 1), rot_matrix);
-            view = Matrix4.LookAt(pos, new Vector3(pos.X + rot_vector.X, pos.Y + rot_vector.Y, pos.Z + rot_vector.Z), new Vector3(0, 1, 0));
-            proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, (float)Width / Height, zNear, zFar);
-
-            //Apply the matrices
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadMatrix(ref proj);
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadMatrix(ref view);
+            rot = new Vector3(0, 0, 0);
 
             timeRenderObj = 0; timeRenderObj_min = long.MaxValue; timeRenderObj_max = 0;
             timeRenderHud = 0; timeRenderHud_min = long.MaxValue; timeRenderHud_max = 0;
@@ -264,8 +251,10 @@ namespace TwinsaityEditor
             GL.Viewport(Location, Size);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.Frustum(-0.75, +0.75, -0.75, +0.75, zNear, zFar);
+            var proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver3, (float)Width/Height, zNear, zFar);
+            GL.LoadMatrix(ref proj);
+            //GL.LoadIdentity();
+            //GL.Frustum(-zNear, +zNear, -zNear, +zNear, zNear, zFar);
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
             GL.Scale(sca);
@@ -277,8 +266,9 @@ namespace TwinsaityEditor
             rot_matrix *= Matrix4.CreateFromAxisAngle(new Vector3(1, 0, 0), rot.Y);
             rot_matrix *= Matrix4.CreateFromAxisAngle(new Vector3(0, 0, 1), rot.Z);
 
-            Vector3 fin_delta = new Vector3(rot_matrix * new Vector4(delta, 1.0f));
+            Vector3 fin_delta = new Vector3(rot_matrix * new Vector4(delta, 1f));
             GL.Translate(-pos + fin_delta);
+            DrawAxes(pos.X, pos.Y, pos.Z, 1);
             var watch = System.Diagnostics.Stopwatch.StartNew();
             RenderObjects();
             watch.Stop();
@@ -303,13 +293,12 @@ namespace TwinsaityEditor
             GL.DepthFunc(DepthFunction.Lequal);
             GL.AlphaFunc(AlphaFunction.Greater, 0);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-            GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Fastest);
+            GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
             GL.ClearColor(Color.MidnightBlue); //TODO: Add clear color to Preferences later
             GL.Enable(EnableCap.ColorMaterial);
             //GL.ShadeModel(ShadingModel.Flat); //TODO: Add to preferences
             GL.Light(LightName.Light0, LightParameter.Position, new float[] { 0, 0, 0, 1 });
             GL.LightModel(LightModelParameter.LightModelTwoSide, 1);
-            GL.Enable(EnableCap.Lighting);
             GL.Enable(EnableCap.Light0);
             GL.Enable(EnableCap.Normalize);
             InitVBO();
@@ -348,6 +337,25 @@ namespace TwinsaityEditor
                 GL.BufferSubData(BufferTarget.ArrayBuffer, (IntPtr)0, Marshal.SizeOf(typeof(Vertex)) * vtx[id].Length, vtx[id]);
             //unbind buffer (safety)
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+        }
+
+        protected void DrawAxes(float x, float y, float z, float size)
+        {
+            float new_ind_size = indicator_size * size;
+            GL.PushMatrix();
+            GL.Translate(x, y, z);
+            GL.Begin(PrimitiveType.Lines);
+            GL.Color3(1f, 0f, 0f);
+            GL.Vertex3(+new_ind_size, 0, 0);
+            GL.Vertex3(-new_ind_size / 2, 0, 0);
+            GL.Color3(0f, 1f, 0f);
+            GL.Vertex3(0, +new_ind_size, 0);
+            GL.Vertex3(0, -new_ind_size / 2, 0);
+            GL.Color3(0f, 0f, 1f);
+            GL.Vertex3(0, 0, +new_ind_size);
+            GL.Vertex3(0, 0, -new_ind_size / 2);
+            GL.End();
+            GL.PopMatrix();
         }
 
         protected virtual void DrawText()

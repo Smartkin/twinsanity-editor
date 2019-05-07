@@ -10,7 +10,6 @@ namespace TwinsaityEditor
 {
     public class RMViewer : ThreeDViewer
     {
-        private static readonly float indicator_size = 0.5f;
 
         private bool show_col_nodes, show_triggers;
         private FileController file;
@@ -53,6 +52,7 @@ namespace TwinsaityEditor
             //draw collision
             if (file.Data.RecordIDs.ContainsKey(9))
             {
+                GL.Enable(EnableCap.Lighting);
                 GL.PushMatrix();
                 GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_id[0]);
                 GL.VertexPointer(3, VertexPointerType.Float, Marshal.SizeOf(typeof(Vertex)), Marshal.OffsetOf(typeof(Vertex), "pos"));
@@ -60,20 +60,18 @@ namespace TwinsaityEditor
                 GL.NormalPointer(NormalPointerType.Float, Marshal.SizeOf(typeof(Vertex)), Marshal.OffsetOf(typeof(Vertex), "nor"));
                 GL.DrawArrays(PrimitiveType.Triangles, 0, vtx[0].Length);
                 GL.PopMatrix();
+                GL.Disable(EnableCap.Lighting);
 
                 if (show_col_nodes)
                 {
-                    GL.Disable(EnableCap.Lighting);
                     GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_id[2]);
                     GL.VertexPointer(3, VertexPointerType.Float, Marshal.SizeOf(typeof(Vertex)), Marshal.OffsetOf(typeof(Vertex), "pos"));
                     GL.ColorPointer(4, ColorPointerType.UnsignedByte, Marshal.SizeOf(typeof(Vertex)), Marshal.OffsetOf(typeof(Vertex), "col"));
                     GL.NormalPointer(NormalPointerType.Float, Marshal.SizeOf(typeof(Vertex)), Marshal.OffsetOf(typeof(Vertex), "nor"));
                     GL.MultiDrawArrays(PrimitiveType.LineStrip, coln_vtx_offs, coln_vtx_counts, coln_vtx_offs.Length);
-                    GL.Enable(EnableCap.Lighting);
                 }
             }
-
-            GL.Disable(EnableCap.Lighting);
+            
             GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_id[1]);
             GL.VertexPointer(3, VertexPointerType.Float, Marshal.SizeOf(typeof(Vertex)), Marshal.OffsetOf(typeof(Vertex), "pos"));
             GL.ColorPointer(4, ColorPointerType.UnsignedByte, Marshal.SizeOf(typeof(Vertex)), Marshal.OffsetOf(typeof(Vertex), "col"));
@@ -187,8 +185,8 @@ namespace TwinsaityEditor
                     }
                 }
             }
-            GL.Enable(EnableCap.Lighting);
 
+            GL.Enable(EnableCap.Lighting);
             //Draw triggers (transparent surfaces)
             for (uint i = 0; i <= 7; ++i)
             {
@@ -300,6 +298,7 @@ namespace TwinsaityEditor
                     }
                 }
             }
+            GL.Disable(EnableCap.Lighting);
 
             GL.PopMatrix();
             //Immediate mode drawing END
@@ -329,25 +328,6 @@ namespace TwinsaityEditor
                     show_triggers = !show_triggers;
                     break;
             }
-        }
-
-        private void DrawAxes(float x, float y, float z, float size)
-        {
-            float new_ind_size = indicator_size * size;
-            GL.PushMatrix();
-            GL.Translate(x, y, z);
-            GL.Begin(PrimitiveType.Lines);
-            GL.Color3(1f, 0f, 0f);
-            GL.Vertex3(+new_ind_size, 0, 0);
-            GL.Vertex3(-new_ind_size/2, 0, 0);
-            GL.Color3(0f, 1f, 0f);
-            GL.Vertex3(0, +new_ind_size, 0);
-            GL.Vertex3(0, -new_ind_size/2, 0);
-            GL.Color3(0f, 0f, 1f);
-            GL.Vertex3(0, 0, +new_ind_size);
-            GL.Vertex3(0, 0, -new_ind_size/2);
-            GL.End();
-            GL.PopMatrix();
         }
 
         public void LoadColTree()
