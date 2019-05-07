@@ -10,6 +10,7 @@ namespace TwinsaityEditor
 {
     public class RMViewer : ThreeDViewer
     {
+        private static readonly int circle_res = 16;
 
         private bool show_col_nodes, show_triggers;
         private FileController file;
@@ -109,6 +110,30 @@ namespace TwinsaityEditor
                             }
                             GL.Begin(PrimitiveType.Points);
                             GL.Vertex3(0, 0, 0);
+                            GL.End();
+                            GL.Begin(PrimitiveType.LineLoop);
+                            for (int j = 0; j < circle_res; ++j)
+                            {
+                                Vector3 vec = new Vector3(0, 0, indicator_size);
+                                vec *= Matrix3.Identity * Matrix3.CreateRotationX(MathHelper.TwoPi / 16 * j);
+                                GL.Vertex3(vec);
+                            }
+                            GL.End();
+                            GL.Begin(PrimitiveType.LineLoop);
+                            for (int j = 0; j < circle_res; ++j)
+                            {
+                                Vector3 vec = new Vector3(0, 0, indicator_size);
+                                vec *= Matrix3.Identity * Matrix3.CreateRotationY(MathHelper.TwoPi / 16 * j);
+                                GL.Vertex3(vec);
+                            }
+                            GL.End();
+                            GL.Begin(PrimitiveType.LineLoop);
+                            for (int j = 0; j < circle_res; ++j)
+                            {
+                                Vector3 vec = new Vector3(0, indicator_size, 0);
+                                vec *= Matrix3.Identity * Matrix3.CreateRotationZ(MathHelper.TwoPi / 16 * j);
+                                GL.Vertex3(vec);
+                            }
                             GL.End();
                             GL.Scale(0.5, 0.5, 0.5);
                             RenderString(pos.ID.ToString());
