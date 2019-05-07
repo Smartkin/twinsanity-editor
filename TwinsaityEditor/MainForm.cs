@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 using Twinsanity;
 
@@ -7,12 +6,6 @@ namespace TwinsaityEditor
 {
     public partial class MainForm : Form
     {
-        public enum Editors
-        {
-            ChunkLinks,
-            Position,
-            Instance
-        };
 
         //private static TwinsFile fileData = new TwinsFile();
         private Form smForm, exeForm;
