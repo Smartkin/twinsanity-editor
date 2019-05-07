@@ -21,4 +21,6 @@ namespace TwinsaityEditor
         public Vector3 Nor { get => nor; set => nor = value; }
         public uint Col { get => col; set => col = value; }
     }
+
+    public enum TextAnchor { TopLeft, TopMiddle, TopRight, BotLeft, BotMiddle, BotRight };
 }
