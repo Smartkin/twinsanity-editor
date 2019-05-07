@@ -6,10 +6,7 @@ namespace TwinsaityEditor
 {
     public partial class MainForm : Form
     {
-
-        //private static TwinsFile fileData = new TwinsFile();
         private Form smForm, exeForm;
-        //private static string fileName;
 
         private TreeNode previousNode;
 
