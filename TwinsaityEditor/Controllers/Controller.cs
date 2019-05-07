@@ -55,21 +55,21 @@ namespace TwinsaityEditor
             GenText();
             Node.Text = GetName();
             if (Selected)
-                ((MainForm)Node.TreeView.TopLevelControl).ControllerNodeSelect(this);
+                TopForm.ControllerNodeSelect(this);
         }
 
         public void UpdateTextBox()
         {
             GenText();
             if (Selected)
-                ((MainForm)Node.TreeView.TopLevelControl).ControllerNodeSelect(this);
+                TopForm.ControllerNodeSelect(this);
         }
 
         public void UpdateName()
         {
             Node.Text = GetName();
             if (Selected)
-                ((MainForm)Node.TreeView.TopLevelControl).ControllerNodeSelect(this);
+                TopForm.ControllerNodeSelect(this);
         }
 
         public virtual void Dispose() { }
