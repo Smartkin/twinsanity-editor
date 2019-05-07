@@ -39,6 +39,8 @@ namespace TwinsaityEditor
             if (listBox1.SelectedIndex == -1) return;
             ignore_value_change = true;
 
+            this.SuspendDrawing();
+
             pos = (Position)controller.Data.Records[listBox1.SelectedIndex];
             TFController.SelectItem(pos);
             splitContainer1.Panel2.Enabled = true;
@@ -50,6 +52,8 @@ namespace TwinsaityEditor
             numericUpDown5.Value = pos.ID;
 
             ignore_value_change = false;
+
+            this.ResumeDrawing();
         }
 
         private void numericUpDown1_ValueChanged(object sender, System.EventArgs e)
