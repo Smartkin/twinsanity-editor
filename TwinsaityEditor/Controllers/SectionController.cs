@@ -9,9 +9,11 @@ namespace TwinsaityEditor
     public class SectionController : Controller
     {
         public TwinsSection Data { get; set; }
+        public FileController MainFile { get; private set; }
 
         public SectionController(MainForm topform, TwinsSection item) : base (topform)
         {
+            MainFile = TopForm.CurCont;
             Data = item;
             if (item.Type != SectionType.Texture && item.Type != SectionType.TextureX
                 && item.Type != SectionType.Material && item.Type != SectionType.Mesh
@@ -22,7 +24,10 @@ namespace TwinsaityEditor
             {
                 AddMenu("Re-order by ID (asc.)", Menu_ReOrderByID_Asc);
                 if (item.Type == SectionType.ObjectInstance || item.Type == SectionType.Position)
+                {
                     AddMenu("Re-ID by order", Menu_ReIDByOrder);
+                    AddMenu("Open editor", Menu_OpenEditor);
+                }
             }
             else
             {
@@ -51,11 +56,11 @@ namespace TwinsaityEditor
         {
             if (Data.Type == SectionType.ObjectInstance)
             {
-                TopForm.CloseInstanceEditor((int)Data.Parent.ID);
+                MainFile.CloseInstanceEditor((int)Data.Parent.ID);
             }
             else if (Data.Type == SectionType.Position)
             {
-                TopForm.ClosePositionEditor((int)Data.Parent.ID);
+                MainFile.ClosePositionEditor((int)Data.Parent.ID);
             }
             Node.TreeView.BeginUpdate();
             while (Node.Nodes.Count > 0)
@@ -93,11 +98,11 @@ namespace TwinsaityEditor
         {
             if (Data.Type == SectionType.ObjectInstance)
             {
-                TopForm.CloseInstanceEditor((int)Data.Parent.ID);
+                MainFile.CloseInstanceEditor((int)Data.Parent.ID);
             }
             else if (Data.Type == SectionType.Position)
             {
-                TopForm.ClosePositionEditor((int)Data.Parent.ID);
+                MainFile.ClosePositionEditor((int)Data.Parent.ID);
             }
             Node.TreeView.BeginUpdate();
             while (Node.Nodes.Count > 0)
@@ -110,6 +115,11 @@ namespace TwinsaityEditor
                 TopForm.GenTreeNode(Data.Records[i], this);
             }
             Node.TreeView.EndUpdate();
+        }
+
+        private void Menu_OpenEditor()
+        {
+            MainFile.CheckOpenEditor(this);
         }
 
         private void Menu_ExportAllPLY()

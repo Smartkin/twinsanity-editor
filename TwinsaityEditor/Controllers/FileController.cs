@@ -15,6 +15,10 @@ namespace TwinsaityEditor
 
         public TwinsItem SelectedItem { get; set; } = null;
 
+        //Editors
+        private Form editChunkLinks;
+        private Form[] editInstances = new Form[8], editPositions = new Form[8];
+
         //Viewers
         private Form rmForm;
         public RMViewer RMViewer { get; private set; }
@@ -70,6 +74,62 @@ namespace TwinsaityEditor
                 CloseInstanceEditor(i);
                 ClosePositionEditor(i);
             }
+        }
+
+        public void CheckOpenEditor(Controller c)
+        {
+            if (c is ChunkLinksController)
+                OpenEditor(ref editChunkLinks, Editors.ChunkLinks, c);
+            else if (c is PositionController)
+                OpenEditor(ref editPositions[((PositionController)c).Data.Parent.Parent.ID], Editors.Position, (Controller)c.Node.Parent.Tag);
+            else if (c is InstanceController)
+                OpenEditor(ref editInstances[((InstanceController)c).Data.Parent.Parent.ID], Editors.Instance, (Controller)c.Node.Parent.Tag);
+            else if (c is SectionController s)
+            {
+                if (s.Data.Type == SectionType.ObjectInstance)
+                    OpenEditor(ref editInstances[s.Data.Parent.ID], Editors.Instance, c);
+                else if (s.Data.Type == SectionType.Position)
+                    OpenEditor(ref editPositions[s.Data.Parent.ID], Editors.Position, c);
+            }
+        }
+
+        public void OpenEditor(ref Form editor_var, Editors editor, Controller cont)
+        {
+            if (editor_var == null || editor_var.IsDisposed)
+            {
+                switch (editor)
+                {
+                    case Editors.ChunkLinks: editor_var = new ChunkLinksEditor((ChunkLinksController)cont) { Tag = TopForm }; break;
+                    case Editors.Position: editor_var = new PositionEditor(this, (SectionController)cont) { Tag = TopForm }; break;
+                    case Editors.Instance: editor_var = new InstanceEditor(this, (SectionController)cont) { Tag = TopForm }; break;
+                }
+                editor_var.Show();
+            }
+            else
+                editor_var.Select();
+        }
+
+        public void CloseEditor(Editors editor)
+        {
+            Form editorForm = null;
+            switch (editor)
+            {
+                case Editors.ChunkLinks: editorForm = editChunkLinks; break;
+            }
+            if (editorForm != null && !editorForm.IsDisposed)
+                editorForm.Close();
+        }
+
+        public void CloseInstanceEditor(int id)
+        {
+            if (editInstances[id] != null && !editInstances[id].IsDisposed)
+                editInstances[id].Close();
+        }
+
+        public void ClosePositionEditor(int id)
+        {
+            if (editPositions[id] != null && !editPositions[id].IsDisposed)
+                editPositions[id].Close();
         }
 
         public void OpenRMViewer()

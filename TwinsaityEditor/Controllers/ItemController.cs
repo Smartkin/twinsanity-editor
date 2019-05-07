@@ -50,17 +50,17 @@ namespace TwinsaityEditor
                 BinaryReader reader = new BinaryReader(new FileStream(ofd.FileName, FileMode.Open, FileAccess.Read));
                 if (Data is ChunkLinks)
                 {
-                    TopForm.CloseEditor(MainForm.Editors.ChunkLinks);
+                    MainFile.CloseEditor(Editors.ChunkLinks);
                     ((ChunkLinks)Data).Load(reader, (int)reader.BaseStream.Length);
                 }
                 else if (Data is Instance)
                 {
-                    TopForm.CloseInstanceEditor((int)Data.Parent.Parent.ID);
+                    MainFile.CloseInstanceEditor((int)Data.Parent.Parent.ID);
                     ((Instance)Data).Load(reader, (int)reader.BaseStream.Length);
                 }
                 else if (Data is Position)
                 {
-                    TopForm.ClosePositionEditor((int)Data.Parent.Parent.ID);
+                    MainFile.ClosePositionEditor((int)Data.Parent.Parent.ID);
                     ((Position)Data).Load(reader, (int)reader.BaseStream.Length);
                 }
                 else

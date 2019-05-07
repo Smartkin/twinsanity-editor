@@ -9,8 +9,6 @@ namespace TwinsaityEditor
 
         //private static TwinsFile fileData = new TwinsFile();
         private Form smForm, exeForm;
-        private Form editChunkLinks;
-        private Form[] editInstances = new Form[8], editPositions = new Form[8];
         //private static string fileName;
 
         private TreeNode previousNode;
@@ -19,6 +17,8 @@ namespace TwinsaityEditor
         public FileController FilesController { get => (FileController)Tag; }
         public FileController CurCont { get => FilesController; } //get currently selected file controller
         public TwinsFile CurFile { get => CurCont.Data; } //get currently selected file
+        //public FileController DefaultCont { get; private set; }
+        //public TwinsFile DefaultFile { get => DefaultCont.Data; }
 
         public MainForm()
         {
@@ -29,19 +29,11 @@ namespace TwinsaityEditor
         {
             treeView1.BeginUpdate();
             treeView1.AfterSelect += treeView1_AfterSelect;
-            treeView1.NodeMouseDoubleClick += TreeNodeOpenEditor;
             treeView1.KeyDown += treeView1_KeyDown;
             if (treeView1.TopNode != null && treeView1.TopNode.Tag is Controller c)
                 Controller.DisposeNode(treeView1.TopNode);
             if (ColDataController.importer != null)
                 ColDataController.importer.Close();
-            CloseEditor(Editors.ChunkLinks);
-            for (int i = 0; i <= 7; ++i)
-            {
-                CloseInstanceEditor(i);
-                ClosePositionEditor(i);
-            }
-            CurCont.CloseRMViewer();
             treeView1.Nodes.Clear();
             CurCont.UpdateText();
             treeView1.Nodes.Add(CurCont.Node);
@@ -110,34 +102,11 @@ namespace TwinsaityEditor
             controller.AddNode(c);
         }
 
-        private void TreeNodeOpenEditor(object sender, TreeNodeMouseClickEventArgs e)
-        {
-            if (e.Node.Tag is Controller c)
-                CheckOpenEditor(c);
-        }
-
         private void treeView1_KeyDown(object sender, KeyEventArgs e)
         {
             TreeView tree = (TreeView)sender;
             if (e.KeyCode == Keys.Enter && tree.SelectedNode.Tag is Controller c)
-                CheckOpenEditor(c);
-        }
-
-        private void CheckOpenEditor(Controller c)
-        {
-            if (c is ChunkLinksController)
-                OpenEditor(ref editChunkLinks, Editors.ChunkLinks, c);
-            else if (c is PositionController)
-                OpenEditor(ref editPositions[((PositionController)c).Data.Parent.Parent.ID], Editors.Position, (Controller)c.Node.Parent.Tag);
-            else if (c is InstanceController)
-                OpenEditor(ref editInstances[((InstanceController)c).Data.Parent.Parent.ID], Editors.Instance, (Controller)c.Node.Parent.Tag);
-            else if (c is SectionController s && !(c.Node.IsExpanded && c.Node.Nodes.Count > 0))
-            {
-                if (s.Data.Type == SectionType.ObjectInstance)
-                    OpenEditor(ref editInstances[s.Data.Parent.ID], Editors.Instance, c);
-                else if (s.Data.Type == SectionType.Position)
-                    OpenEditor(ref editPositions[s.Data.Parent.ID], Editors.Position, c);
-            }
+                CurCont.CheckOpenEditor(c);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -258,45 +227,6 @@ namespace TwinsaityEditor
             }
             else
                 exeForm.Select();
-        }
-
-        public void OpenEditor(ref Form editor_var, Editors editor, Controller cont)
-        {
-            if (editor_var == null || editor_var.IsDisposed)
-            {
-                switch (editor)
-                {
-                    case Editors.ChunkLinks: editor_var = new ChunkLinksEditor((ChunkLinksController)cont) { Tag = this }; break;
-                    case Editors.Position: editor_var = new PositionEditor(CurCont, (SectionController)cont) { Tag = this }; break;
-                    case Editors.Instance: editor_var = new InstanceEditor(CurCont, (SectionController)cont) { Tag = this }; break;
-                }
-                editor_var.Show();
-            }
-            else
-                editor_var.Select();
-        }
-
-        public void CloseEditor(Editors editor)
-        {
-            Form editorForm = null;
-            switch(editor)
-            {
-                case Editors.ChunkLinks: editorForm = editChunkLinks; break;
-            }
-            if (editorForm != null && !editorForm.IsDisposed)
-                editorForm.Close();
-        }
-
-        public void CloseInstanceEditor(int id)
-        {
-            if (editInstances[id] != null && !editInstances[id].IsDisposed)
-                editInstances[id].Close();
-        }
-
-        public void ClosePositionEditor(int id)
-        {
-            if (editPositions[id] != null && !editPositions[id].IsDisposed)
-                editPositions[id].Close();
         }
     }
 }
