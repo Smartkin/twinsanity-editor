@@ -26,14 +26,14 @@ namespace TwinsaityEditor
 
         protected override void GenText()
         {
-            TextPrev = new string[6 + Data.Triggers.Count + Data.Groups.Count + Data.Tris.Count + Data.Vertices.Count];
+            TextPrev = new string[6];// + Data.Triggers.Count + Data.Groups.Count + Data.Tris.Count + Data.Vertices.Count];
             TextPrev[0] = "ID: " + Data.ID;
             TextPrev[1] = "Offset: " + Data.Offset + " Size: " + Data.Size;
             TextPrev[2] = "TriggerCount: " + Data.Triggers.Count;
             TextPrev[3] = "GroupCount: " + Data.Groups.Count;
             TextPrev[4] = "PolyCount: " + Data.Tris.Count;
             TextPrev[5] = "VertexCount: " + Data.Vertices.Count;
-
+            /*
             for (int i = 0; i < Data.Triggers.Count; ++i)
                 TextPrev[6 + i] = "Trigger" + i + ": " + "(" + Data.Triggers[i].X1 + ", " + Data.Triggers[i].Y1 + ", " + Data.Triggers[i].Z1 + ")~(" + Data.Triggers[i].X2 + ", " + Data.Triggers[i].Y2 + ", " + Data.Triggers[i].Z2 + ") | Nodes: " + Data.Triggers[i].Flag1 + "~" + Data.Triggers[i].Flag2;
             
@@ -45,6 +45,7 @@ namespace TwinsaityEditor
 
             for (int i = 0; i < Data.Vertices.Count; ++i)
                 TextPrev[6 + Data.Triggers.Count + Data.Groups.Count + Data.Tris.Count + i] = "Vertex" + i + ": (" + Data.Vertices[i].X + ", " + Data.Vertices[i].Y + ", " + Data.Vertices[i].Z + ", " + Data.Vertices[i].W + ")";
+                */
         }
 
         private void Menu_OpenRMViewer()
