@@ -41,7 +41,7 @@ namespace TwinsaityEditor
         {
             GL.Color3(Color.White);
             RenderString2D($"RenderObjects: {timeRenderObj}ms (max: {timeRenderObj_max}ms, min: {timeRenderObj_min}ms)", 0, 0, 8);
-            RenderString2D($"RenderHUD: {timeRenderHud}ms (max: {timeRenderHud_max}ms, min: {timeRenderHud_min}ms)", 0, 8, 8);
+            RenderString2D($"RenderHUD: {timeRenderHud}ms (max: {timeRenderHud_max}ms, min: {timeRenderHud_min}ms)", Width, Height, 8, TextAnchor.BotRight);
         }
 
         protected override void RenderObjects()
@@ -463,6 +463,7 @@ namespace TwinsaityEditor
 
         public void LoadColNodes()
         {
+            float min_x = float.MaxValue, min_y = float.MaxValue, min_z = float.MaxValue, max_x = float.MinValue, max_y = float.MinValue, max_z = float.MinValue;
             ColData data = (ColData)file.Data.GetItem(9);
             vtx[2] = new Vertex[data.Triggers.Count * 16];
             coln_vtx_counts = new int[4 * data.Triggers.Count];
@@ -498,7 +499,14 @@ namespace TwinsaityEditor
                 coln_vtx_offs[l++] = m;
                 vtx[2][m++] = new Vertex(new Vector3(-i.X2, i.Y2, i.Z2), new Vector3(), cur_color);
                 vtx[2][m++] = new Vertex(new Vector3(-i.X2, i.Y2, i.Z1), new Vector3(), cur_color);
+                min_x = Math.Min(min_x, i.X1);
+                min_y = Math.Min(min_y, i.Y1);
+                min_z = Math.Min(min_z, i.Z1);
+                max_x = Math.Max(max_x, i.X2);
+                max_y = Math.Max(max_y, i.Y2);
+                max_z = Math.Max(max_z, i.Z2);
             }
+            zFar = Math.Max(0.5f, Math.Max(max_x - min_x, Math.Max(max_y - min_y, max_z - min_z)));
             if (vbo_id != null)
             {
                 UpdateVBO(2);

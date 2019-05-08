@@ -20,7 +20,7 @@ namespace TwinsaityEditor
         private Vector3 pos, rot, sca;
         private float range;
         private Timer refresh;
-        private bool k_w, k_a, k_s, k_d, k_e, k_q, m_l, m_r;
+        private bool k_w, k_a, k_s, k_d, k_e, k_q, m_l;
         private int m_x, m_y;
         private EventHandler _inputHandle;
         private FontWrapper.FontService _fntService;
@@ -28,7 +28,8 @@ namespace TwinsaityEditor
         private Dictionary<char, float> charAdvanceX = new Dictionary<char, float>();
         private Dictionary<char, float> charBearingX = new Dictionary<char, float>();
         private Dictionary<char, float> charBearingY = new Dictionary<char, float>();
-        private static readonly float size = 24f, zNear = 0.5f, zFar = 1500f;
+        private Dictionary<char, float> charHeight = new Dictionary<char, float>();
+        protected static float size = 24f, zNear = 0.5f, zFar = 1500f;
         protected static readonly float indicator_size = 0.5f;
         protected int[] vbo_id;
         protected int vbo_count;
@@ -127,9 +128,9 @@ namespace TwinsaityEditor
                 case MouseButtons.Left:
                     m_l = true;
                     break;
-                case MouseButtons.Right:
-                    m_r = true;
-                    break;
+                //case MouseButtons.Right:
+                //    m_r = true;
+                //    break;
             }
         }
 
@@ -141,9 +142,9 @@ namespace TwinsaityEditor
                 case MouseButtons.Left:
                     m_l = false;
                     break;
-                case MouseButtons.Right:
-                    m_r = false;
-                    break;
+                //case MouseButtons.Right:
+                //    m_r = false;
+                //    break;
             }
         }
 
@@ -268,7 +269,11 @@ namespace TwinsaityEditor
 
             Vector3 fin_delta = new Vector3(rot_matrix * new Vector4(delta, 1f));
             GL.Translate(-pos + fin_delta);
+            GL.PushMatrix();
+            GL.Translate(pos.X*2, 0, 0);
+            GL.Scale(-1, 1, 1);
             DrawAxes(pos.X, pos.Y, pos.Z, 1);
+            GL.PopMatrix();
             var watch = System.Diagnostics.Stopwatch.StartNew();
             RenderObjects();
             watch.Stop();
@@ -362,7 +367,6 @@ namespace TwinsaityEditor
         {
             GL.DepthMask(false);
             GL.Disable(EnableCap.DepthTest);
-            GL.Disable(EnableCap.Lighting);
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
             GL.Ortho(0, Width, Height, 0, -1, 10);
@@ -371,7 +375,6 @@ namespace TwinsaityEditor
             RenderHUD();
             GL.DepthMask(true);
             GL.Enable(EnableCap.DepthTest);
-            GL.Enable(EnableCap.Lighting);
         }
 
         protected int LoadTextTexture(ref Bitmap text, int quality = 0, bool flip_y = false)
@@ -436,10 +439,30 @@ namespace TwinsaityEditor
             GL.BindTexture(TextureTarget.Texture2D, 0);
         }
 
-        protected void RenderString2D(string s, float x, float y, float text_size)
+        protected void RenderString2D(string s, float x, float y, float text_size, TextAnchor anchor = TextAnchor.TopLeft)
         {
             float text_size_fac = text_size / size;
             float start_x = x;
+            if (anchor == TextAnchor.TopMiddle || anchor == TextAnchor.TopRight || anchor == TextAnchor.BotMiddle || anchor == TextAnchor.BotRight)
+            {
+                foreach (char c in s)
+                {
+                    if (!charAdvanceX.ContainsKey(c))
+                        AddCharData(c);
+                    float gAdvanceX = charAdvanceX[c] * text_size_fac;
+                    float gBearingX = charBearingX[c] * text_size_fac;
+
+                    x += gBearingX + gAdvanceX;
+                }
+                if (anchor == TextAnchor.BotMiddle || anchor == TextAnchor.TopMiddle)
+                {
+                    x = start_x - (x - start_x)/2;
+                }
+                else
+                {
+                    x = start_x - (x - start_x);
+                }
+            }
             foreach (char c in s)
             {
                 if (!charAdvanceX.ContainsKey(c))
@@ -461,11 +484,27 @@ namespace TwinsaityEditor
                     GL.GetTexLevelParameter(TextureTarget.Texture2D, 0, GetTextureParameter.TextureHeight, out float c_h);
                     c_w *= text_size_fac;
                     c_h *= text_size_fac;
+                    float y_hi = 0, y_lo = 0;
+                    switch (anchor)
+                    {
+                        case TextAnchor.TopLeft:
+                        case TextAnchor.TopMiddle:
+                        case TextAnchor.TopRight:
+                            y_hi = y + glyphTop;
+                            y_lo = y_hi + c_h;
+                            break;
+                        case TextAnchor.BotLeft:
+                        case TextAnchor.BotMiddle:
+                        case TextAnchor.BotRight:
+                            y_lo = y + (charHeight[c] - charBearingY[c]) * text_size_fac;
+                            y_hi = y_lo - c_h;
+                            break;
+                    }
                     GL.Begin(PrimitiveType.Quads);
-                    GL.TexCoord2(0, 1); GL.Vertex2(x, y + glyphTop + c_h);
-                    GL.TexCoord2(1, 1); GL.Vertex2(x + c_w, y + glyphTop + c_h);
-                    GL.TexCoord2(1, 0); GL.Vertex2(x + c_w, y + glyphTop);
-                    GL.TexCoord2(0, 0); GL.Vertex2(x, y + glyphTop);
+                    GL.TexCoord2(0, 1); GL.Vertex2(x, y_lo);
+                    GL.TexCoord2(1, 1); GL.Vertex2(x + c_w, y_lo);
+                    GL.TexCoord2(1, 0); GL.Vertex2(x + c_w, y_hi);
+                    GL.TexCoord2(0, 0); GL.Vertex2(x, y_hi);
                     GL.End();
                 }
 
@@ -489,6 +528,7 @@ namespace TwinsaityEditor
             charAdvanceX.Add(c, (float)face.Glyph.Advance.X);
             charBearingX.Add(c, (float)face.Glyph.Metrics.HorizontalBearingX);
             charBearingY.Add(c, (float)face.Glyph.Metrics.HorizontalBearingY);
+            charHeight.Add(c, (float)face.Glyph.Metrics.Height);
         }
 
         protected void SetPosition(Vector3 pos)
