@@ -166,9 +166,18 @@ namespace TwinsaityEditor
 
         public void SelectItem(TwinsItem item)
         {
+            var prev_item = SelectedItem;
             SelectedItem = item;
             if (RMViewer != null)
-                RMViewer.UpdateSelected();
+            {
+                if (item == null && prev_item != null)
+                {
+                    if (prev_item is Instance)
+                        RMViewer.LoadInstances();
+                }
+                else
+                    RMViewer.UpdateSelected();
+            }
         }
 
         public string GetMaterialName(uint id)

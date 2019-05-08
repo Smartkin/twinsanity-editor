@@ -515,17 +515,7 @@ namespace TwinsaityEditor
 
         public void UpdateSelected()
         {
-            if (file.SelectedItem == null)
-            {
-                if (file.SelectedItem is Instance)
-                {
-                    LoadInstances();
-                }
-                else if (file.SelectedItem is Position)
-                {
-                }
-            }
-            else if (file.SelectedItem is Instance ins)
+            if (file.SelectedItem is Instance ins)
             {
                 SetPosition(new Vector3(-ins.Pos.X, ins.Pos.Y, ins.Pos.Z));
                 LoadInstances();

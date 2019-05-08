@@ -254,8 +254,6 @@ namespace TwinsaityEditor
             GL.MatrixMode(MatrixMode.Projection);
             var proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver3, (float)Width/Height, zNear, zFar);
             GL.LoadMatrix(ref proj);
-            //GL.LoadIdentity();
-            //GL.Frustum(-zNear, +zNear, -zNear, +zNear, zNear, zFar);
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
             GL.Scale(sca);
