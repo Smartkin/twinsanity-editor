@@ -23,11 +23,11 @@ namespace TwinsaityEditor
             TextPrev[0] = "ID: " + Data.ID;
             TextPrev[1] = "Offset: " + Data.Offset + " Size: " + Data.Size;
             TextPrev[2] = "Name: " + Data.Name;
-            TextPrev[3] = "Headers: " + Convert.ToString(Data.Class1, 16) + " " + Convert.ToString(Data.Class2, 16) + " " + Convert.ToString(Data.Class3, 16);
+            TextPrev[3] = "Headers: " + Convert.ToString(Data.Class1, 16).ToUpper() + " " + Convert.ToString(Data.Class2, 16).ToUpper() + " " + Convert.ToString(Data.Class3, 16).ToUpper();
 
             TextPrev[4] = "UnknownInt32Count: " + Data.UI32.Length;
             for (int i = 0; i < Data.UI32.Length; ++i)
-                TextPrev[5 + i] = Data.UI32[i].ToString();
+                TextPrev[5 + i] = Convert.ToString(Data.UI32[i], 16).ToUpper();
 
             TextPrev[5 + Data.UI32.Length] = "OGICount: " + Data.OGIs.Length;
             for (int i = 0; i < Data.OGIs.Length; ++i)
