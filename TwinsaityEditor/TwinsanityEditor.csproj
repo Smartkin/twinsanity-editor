@@ -188,6 +188,12 @@
     <Compile Include="Editors\InstanceEditor.Designer.cs">
       <DependentUpon>InstanceEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Editors\PathEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\PathEditor.Designer.cs">
+      <DependentUpon>PathEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Editors\PositionEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -252,6 +258,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\InstanceEditor.resx">
       <DependentUpon>InstanceEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\PathEditor.resx">
+      <DependentUpon>PathEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\PositionEditor.resx">
       <DependentUpon>PositionEditor.cs</DependentUpon>

@@ -137,7 +137,7 @@ namespace TwinsaityEditor
                                 GL.Translate(pth.Positions[k].X, pth.Positions[k].Y, pth.Positions[k].Z);
                                 DrawAxes(0, 0, 0, 0.5f);
                                 GL.Scale(0.5, 0.5, 0.5);
-                                if (file.SelectedItem != pth)
+                                if (file.SelectedItem != pth || file.SelectedItemArg != k)
                                     GL.Color3(colors[colors.Length - i * 2 - 2]);
                                 else
                                     GL.Color3(Color.White);
@@ -157,7 +157,7 @@ namespace TwinsaityEditor
                             GL.Begin(PrimitiveType.LineStrip);
                             for (int k = 0; k < pth.Positions.Count; ++k)
                             {
-                                if (file.SelectedItem != pth)
+                                if (file.SelectedItem != pth || file.SelectedItemArg != k)
                                     GL.Color3(colors[colors.Length - i * 2 - 2]);
                                 else
                                     GL.Color3(Color.White);
@@ -306,6 +306,7 @@ namespace TwinsaityEditor
 
             GL.PopMatrix();
             //Immediate mode drawing END
+            GL.LineWidth(1);
         }
 
         protected override bool IsInputKey(Keys keyData)

@@ -32,6 +32,7 @@ namespace TwinsaityEditor
     {
         ChunkLinks,
         Position,
+        Path,
         Instance
     };
 }

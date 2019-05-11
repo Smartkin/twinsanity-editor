@@ -14,10 +14,11 @@ namespace TwinsaityEditor
         public Dictionary<uint, string> MaterialNames { get; set; } = new Dictionary<uint, string>();
 
         public TwinsItem SelectedItem { get; set; } = null;
+        public int SelectedItemArg { get; set; } = -1;
 
         //Editors
         private Form editChunkLinks;
-        private Form[] editInstances = new Form[8], editPositions = new Form[8];
+        private Form[] editInstances = new Form[8], editPositions = new Form[8], editPaths = new Form[8];
 
         //Viewers
         private Form rmForm;
@@ -73,6 +74,7 @@ namespace TwinsaityEditor
             {
                 CloseInstanceEditor(i);
                 ClosePositionEditor(i);
+                ClosePathEditor(i);
             }
         }
 
@@ -82,6 +84,8 @@ namespace TwinsaityEditor
                 OpenEditor(ref editChunkLinks, Editors.ChunkLinks, c);
             else if (c is PositionController)
                 OpenEditor(ref editPositions[((PositionController)c).Data.Parent.Parent.ID], Editors.Position, (Controller)c.Node.Parent.Tag);
+            else if (c is PathController)
+                OpenEditor(ref editPaths[((PathController)c).Data.Parent.Parent.ID], Editors.Path, (Controller)c.Node.Parent.Tag);
             else if (c is InstanceController)
                 OpenEditor(ref editInstances[((InstanceController)c).Data.Parent.Parent.ID], Editors.Instance, (Controller)c.Node.Parent.Tag);
             else if (c is SectionController s)
@@ -90,6 +94,8 @@ namespace TwinsaityEditor
                     OpenEditor(ref editInstances[s.Data.Parent.ID], Editors.Instance, c);
                 else if (s.Data.Type == SectionType.Position)
                     OpenEditor(ref editPositions[s.Data.Parent.ID], Editors.Position, c);
+                else if (s.Data.Type == SectionType.Path)
+                    OpenEditor(ref editPaths[s.Data.Parent.ID], Editors.Path, c);
             }
         }
 
@@ -101,6 +107,7 @@ namespace TwinsaityEditor
                 {
                     case Editors.ChunkLinks: editor_var = new ChunkLinksEditor((ChunkLinksController)cont) { Tag = TopForm }; break;
                     case Editors.Position: editor_var = new PositionEditor(this, (SectionController)cont) { Tag = TopForm }; break;
+                    case Editors.Path: editor_var = new PathEditor(this, (SectionController)cont) { Tag = TopForm }; break;
                     case Editors.Instance: editor_var = new InstanceEditor(this, (SectionController)cont) { Tag = TopForm }; break;
                 }
                 editor_var.Show();
@@ -130,6 +137,12 @@ namespace TwinsaityEditor
         {
             if (editPositions[id] != null && !editPositions[id].IsDisposed)
                 editPositions[id].Close();
+        }
+
+        public void ClosePathEditor(int id)
+        {
+            if (editPaths[id] != null && !editPaths[id].IsDisposed)
+                editPaths[id].Close();
         }
 
         public void OpenRMViewer()
@@ -170,10 +183,11 @@ namespace TwinsaityEditor
                 rmForm.Close();
         }
 
-        public void SelectItem(TwinsItem item)
+        public void SelectItem(TwinsItem item, int arg = -1)
         {
             var prev_item = SelectedItem;
             SelectedItem = item;
+            SelectedItemArg = arg;
             if (RMViewer != null)
             {
                 if (item == null && prev_item != null)

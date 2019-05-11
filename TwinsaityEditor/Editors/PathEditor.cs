@@ -1,179 +1,273 @@
-using System.Windows.Forms;
-using System;
+﻿using System.Windows.Forms;
+using System.Collections.Generic;
+using Twinsanity;
 
 namespace TwinsaityEditor
 {
-    public partial class PathEditor
+    public partial class PathEditor : Form
     {
-        private TwinsanityEditorForm twinsanityEditorForm;
+        private SectionController controller;
+        private Path path;
 
-        public PathEditor(TwinsanityEditorForm TEF)
+        private FileController TFController { get; set; }
+        private TwinsFile File { get => TFController.Data; }
+
+        private bool ignore_value_change;
+        private int pos_i, par_i;
+
+        public PathEditor(FileController file, SectionController c)
         {
-            twinsanityEditorForm = TEF;
+            TFController = file;
+            controller = c;
             InitializeComponent();
+            Text = "Path Editor (Section " + c.Data.Parent.ID + ")";
+            PopulateList();
+            numericUpDown2.ValueChanged += numericUpDown1_ValueChanged;
+            numericUpDown3.ValueChanged += numericUpDown1_ValueChanged;
+            numericUpDown4.ValueChanged += numericUpDown1_ValueChanged;
+            FormClosed += PositionEditor_FormClosed;
         }
 
-        private int IISIndex;
-        private Twinsanity.Path Path;
-        public void UpdateTree(ref Twinsanity.Paths PATHs, uint Index)
+        private void PositionEditor_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Pathes.BeginUpdate();
-            for (int i = 0; i <= PATHs._Item.Length - 1; i++)
-                Pathes.Nodes.Add("ID: " + PATHs._Item[i].ID.ToString());
-            Pathes.EndUpdate();
-            IISIndex = (int)Index;
+            TFController.SelectItem(null);
         }
 
-        public void UpdatePath(int Index)
+        private void PopulateList()
         {
-            Path = (Twinsanity.Path)twinsanityEditorForm.LevelData.Get_Item(TwinsanityEditorForm.CalculateIndexes(twinsanityEditorForm.TreeView1.Nodes[0].Nodes[IISIndex].Nodes[4].Nodes[Index]));
-            Positinos.Items.Clear();
-            for (int i = 0; i <= Path.Pos.Length - 1; i++)
-                Positinos.Items.Add(i);
-            Somethings.Items.Clear();
-            for (int i = 0; i <= Path.SomeInts.Length - 1; i++)
-                Somethings.Items.Add(i);
-            if (Positinos.SelectedIndex == -1 & Path.Pos.Length > 0)
-                Positinos.SelectedIndex = 0;
-            if (Somethings.SelectedIndex == -1 & Path.SomeInts.Length > 0)
-                Somethings.SelectedIndex = 0;
-            if (Positinos.SelectedIndex > Path.Pos.Length - 1)
+            listBox1.Items.Clear();
+            foreach (Path i in controller.Data.Records)
             {
-                if (Path.Pos.Length > 0)
-                    Positinos.SelectedIndex = 0;
-                else
-                    Positinos.SelectedIndex = -1;
-            }
-            if (Somethings.SelectedIndex > Path.SomeInts.Length - 1)
-            {
-                if (Path.SomeInts.Length > 0)
-                    Somethings.SelectedIndex = 0;
-                else
-                    Somethings.SelectedIndex = -1;
-            }
-            this.Text = "ID: " + Path.ID.ToString();
-            UpdatePositions(Index);
-        }
-        public void UpdatePositions(int index)
-        {
-            if (Positinos.SelectedIndex >= 0)
-            {
-                XPos.Text = Path.Pos[index].X.ToString();
-                YPos.Text = Path.Pos[index].Y.ToString();
-                ZPos.Text = Path.Pos[index].Z.ToString();
-            }
-            else
-            {
-                XPos.Text = "";
-                YPos.Text = "";
-                ZPos.Text = "";
+                listBox1.Items.Add($"ID {i.ID}");
             }
         }
-        public void UpdateSomethings(int index)
+
+        private void listBox1_SelectedIndexChanged(object sender, System.EventArgs e)
         {
-            if (Somethings.SelectedIndex >= 0)
+            if (listBox1.SelectedIndex == -1) return;
+
+            this.SuspendDrawing();
+
+            path = (Path)controller.Data.Records[listBox1.SelectedIndex];
+            pos_i = par_i = 0;
+            TFController.SelectItem(path, pos_i);
+            splitContainer1.Panel2.Enabled = true;
+
+            ignore_value_change = true;
+            numericUpDown5.Value = path.ID;
+            ignore_value_change = false;
+            numericUpDown6.Maximum = path.Positions.Count;
+            numericUpDown9.Maximum = path.Params.Count;
+            UpdatePosition();
+            UpdateParam();
+
+            this.ResumeDrawing();
+        }
+
+        private void UpdatePosition()
+        {
+            ignore_value_change = true;
+            if (path.Positions.Count > 0)
             {
-                Int1Val.Text = Path.SomeInts[index].Int1.ToString();
-                Int2Val.Text = Path.SomeInts[index].Int2.ToString();
+                label5.Text = $"/ {path.Positions.Count}";
+                label5.Enabled = true;
+                numericUpDown1.Enabled = true;
+                numericUpDown2.Enabled = true;
+                numericUpDown3.Enabled = true;
+                numericUpDown4.Enabled = true;
+                numericUpDown6.Enabled = true;
+                button2.Enabled = true;
+                numericUpDown1.Value = (decimal)path.Positions[pos_i].X;
+                numericUpDown2.Value = (decimal)path.Positions[pos_i].Y;
+                numericUpDown3.Value = (decimal)path.Positions[pos_i].Z;
+                numericUpDown4.Value = (decimal)path.Positions[pos_i].W;
+                numericUpDown6.Value = pos_i + 1;
             }
             else
             {
-                Int1Val.Text = "";
-                Int2Val.Text = "";
+                label5.Enabled = false;
+                numericUpDown1.Enabled = false;
+                numericUpDown2.Enabled = false;
+                numericUpDown3.Enabled = false;
+                numericUpDown4.Enabled = false;
+                numericUpDown6.Enabled = false;
+                button2.Enabled = false;
             }
-        }
-        public void ApplyPosition(int index)
-        {
-            if (Positinos.SelectedIndex == -1)
-                return;
-            Path.Pos[index].X = float.Parse(XPos.Text);
-            Path.Pos[index].Y = float.Parse(YPos.Text);
-            Path.Pos[index].Z = float.Parse(ZPos.Text);
-        }
-        public void ApplySomethings(int index)
-        {
-            if (Positinos.SelectedIndex == -1)
-                return;
-            Path.SomeInts[index].Int1 = uint.Parse(Int1Val.Text);
-            Path.SomeInts[index].Int2 = uint.Parse(Int2Val.Text);
-        }
-        public void ApplyPath(int Index)
-        {
-            twinsanityEditorForm.LevelData.Put_Item(Path, TwinsanityEditorForm.CalculateIndexes(twinsanityEditorForm.TreeView1.Nodes[0].Nodes[IISIndex].Nodes[4].Nodes[Index]));
+            ignore_value_change = false;
         }
 
-        private void Pathes_AfterSelect(object sender, TreeViewEventArgs e)
+        private void UpdateParam()
         {
-            UpdatePath(Pathes.SelectedNode.Index);
-        }
-
-        private void Positinos_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            UpdatePositions(Positinos.SelectedIndex);
-        }
-
-        private void Somethings_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            UpdateSomethings(Somethings.SelectedIndex);
-        }
-
-        private void Button5_Click(object sender, EventArgs e)
-        {
-            UpdatePath(Pathes.SelectedNode.Index);
-        }
-
-        private void Button4_Click(object sender, EventArgs e)
-        {
-            ApplyPath(Pathes.SelectedNode.Index);
-        }
-
-        private void Save_Click(object sender, EventArgs e)
-        {
-            ApplyPosition(Positinos.SelectedIndex);
-        }
-
-        private void Button3_Click(object sender, EventArgs e)
-        {
-            ApplySomethings(Somethings.SelectedIndex);
-        }
-
-        private void DelPosition_Click(object sender, EventArgs e)
-        {
-            if (Positinos.SelectedIndex >= 0)
+            ignore_value_change = true;
+            if (path.Params.Count > 0)
             {
-                for (int i = Positinos.SelectedIndex + 1; i <= Path.Pos.Length - 1; i++)
-                    Path.Pos[i - 1] = Path.Pos[i];
-                Array.Resize(ref Path.Pos, Path.Pos.Length - 1);
-                Positinos.Items.RemoveAt(Positinos.SelectedIndex);
+                label8.Text = $"/ {path.Params.Count}";
+                label8.Enabled = true;
+                numericUpDown7.Enabled = true;
+                numericUpDown8.Enabled = true;
+                numericUpDown9.Enabled = true;
+                button3.Enabled = true;
+                numericUpDown7.Value = (decimal)path.Params[par_i].P1;
+                numericUpDown8.Value = (decimal)path.Params[par_i].P2;
+                numericUpDown9.Value = par_i + 1;
             }
-        }
-
-        private void Button2_Click(object sender, EventArgs e)
-        {
-            if (Somethings.SelectedIndex >= 0)
+            else
             {
-                for (int i = Somethings.SelectedIndex + 1; i <= Path.SomeInts.Length - 1; i++)
-                    Path.SomeInts[i - 1] = Path.SomeInts[i];
-                Array.Resize(ref Path.SomeInts, Path.SomeInts.Length - 1);
-                Somethings.Items.RemoveAt(Somethings.SelectedIndex);
+                label8.Enabled = false;
+                numericUpDown7.Enabled = false;
+                numericUpDown8.Enabled = false;
+                numericUpDown9.Enabled = false;
+                button3.Enabled = false;
+            }
+            ignore_value_change = false;
+        }
+
+        private void numericUpDown1_ValueChanged(object sender, System.EventArgs e)
+        {
+            if (ignore_value_change) return;
+            path.Positions[pos_i].X = (float)numericUpDown1.Value;
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[path.ID]].Tag).UpdateTextBox();
+        }
+
+        private void addToolStripMenuItem_Click(object sender, System.EventArgs e)
+        {
+            if (controller.Data.RecordIDs.Count >= ushort.MaxValue) return;
+            uint id;
+            for (id = 0; id < uint.MaxValue; ++id)
+            {
+                if (!controller.Data.RecordIDs.ContainsKey(id))
+                    break;
+            }
+            Path new_path = new Path { ID = id, Positions = new List<Pos>(), Params = new List<Path.PathParam>() };
+            controller.Data.AddItem(id, new_path);
+            ((MainForm)Tag).GenTreeNode(new_path, controller);
+            path = new_path;
+            listBox1.Items.Add($"ID {path.ID}");
+            controller.UpdateText();
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[path.ID]].Tag).UpdateText();
+        }
+
+        private void removeToolStripMenuItem_Click(object sender, System.EventArgs e)
+        {
+            var sel_i = listBox1.SelectedIndex;
+            if (sel_i == -1)
+                return;
+            Controller.DisposeNode(controller.Node.Nodes[controller.Data.RecordIDs[path.ID]]);
+            controller.Data.RemoveItem(path.ID);
+            listBox1.Items.RemoveAt(sel_i);
+            if (sel_i >= listBox1.Items.Count) sel_i = listBox1.Items.Count - 1;
+            listBox1.SelectedIndex = sel_i;
+            if (listBox1.Items.Count == 0)
+                splitContainer1.Panel2.Enabled = false;
+            controller.UpdateText();
+        }
+
+        private void numericUpDown5_ValueChanged(object sender, System.EventArgs e)
+        {
+            if (ignore_value_change) return;
+            if (controller.Data.RecordIDs.ContainsKey((uint)numericUpDown5.Value))
+            {
+                MessageBox.Show("The specified ID already exists.");
+                ignore_value_change = true;
+                numericUpDown5.Value = path.ID;
+                ignore_value_change = false;
+                return;
+            }
+            controller.Data.RecordIDs.Remove(path.ID);
+            path.ID = (uint)numericUpDown5.Value;
+            controller.Data.RecordIDs.Add(path.ID, listBox1.SelectedIndex);
+            listBox1.Items[listBox1.SelectedIndex] = "ID " + path.ID;
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[path.ID]].Tag).UpdateText();
+        }
+
+        private void numericUpDown2_ValueChanged(object sender, System.EventArgs e)
+        {
+            if (ignore_value_change) return;
+            path.Positions[pos_i].Y = (float)numericUpDown2.Value;
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[path.ID]].Tag).UpdateTextBox();
+        }
+
+        private void numericUpDown3_ValueChanged(object sender, System.EventArgs e)
+        {
+            if (ignore_value_change) return;
+            path.Positions[pos_i].Z = (float)numericUpDown3.Value;
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[path.ID]].Tag).UpdateTextBox();
+        }
+
+        private void numericUpDown4_ValueChanged(object sender, System.EventArgs e)
+        {
+            if (ignore_value_change) return;
+            path.Positions[pos_i].W = (float)numericUpDown4.Value;
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[path.ID]].Tag).UpdateTextBox();
+        }
+
+        private void numericUpDown7_ValueChanged(object sender, System.EventArgs e)
+        {
+            if (ignore_value_change) return;
+            path.Params[par_i].P1 = (float)numericUpDown7.Value;
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[path.ID]].Tag).UpdateTextBox();
+        }
+
+        private void numericUpDown8_ValueChanged(object sender, System.EventArgs e)
+        {
+            if (ignore_value_change) return;
+            path.Params[par_i].P2 = (float)numericUpDown8.Value;
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[path.ID]].Tag).UpdateTextBox();
+        }
+
+        private void numericUpDown6_ValueChanged(object sender, System.EventArgs e)
+        {
+            if (ignore_value_change) return;
+            pos_i = (int)numericUpDown6.Value - 1;
+            TFController.SelectItem(path, pos_i);
+            UpdatePosition();
+        }
+
+        private void numericUpDown9_ValueChanged(object sender, System.EventArgs e)
+        {
+            if (ignore_value_change) return;
+            par_i = (int)numericUpDown9.Value - 1;
+            UpdateParam();
+        }
+
+        private void button1_Click(object sender, System.EventArgs e)
+        {
+            path.Positions.Add(new Pos((float)numericUpDown1.Value, (float)numericUpDown2.Value, (float)numericUpDown3.Value, (float)numericUpDown4.Value));
+            label5.Text = $"/ {path.Positions.Count}";
+            numericUpDown6.Maximum = path.Positions.Count;
+            if (path.Positions.Count == 1)
+            {
+                pos_i = 0;
+                UpdatePosition();
             }
         }
 
-        private void AddPosition_Click(object sender, EventArgs e)
+        private void button4_Click(object sender, System.EventArgs e)
         {
-            Array.Resize(ref Path.Pos, Path.Pos.Length + 1);
-            Path.Pos[Path.Pos.Length - 1].X = float.Parse(XPos.Text);
-            Path.Pos[Path.Pos.Length - 1].Y = float.Parse(YPos.Text);
-            Path.Pos[Path.Pos.Length - 1].Z = float.Parse(ZPos.Text);
-            Positinos.Items.Add(Positinos.Items.Count);
+            path.Params.Add(new Path.PathParam() { P1 = (float)numericUpDown7.Value, P2 = (float)numericUpDown8.Value } );
+            label8.Text = $"/ {path.Params.Count}";
+            numericUpDown9.Maximum = path.Params.Count;
+            if (path.Params.Count == 1)
+            {
+                par_i = 0;
+                UpdateParam();
+            }
         }
 
-        private void Button1_Click(object sender, EventArgs e)
+        private void button3_Click(object sender, System.EventArgs e)
         {
-            Array.Resize(ref Path.SomeInts, Path.SomeInts.Length + 1);
-            Path.SomeInts[Path.SomeInts.Length - 1].Int1 = uint.Parse(Int1Val.Text);
-            Path.SomeInts[Path.SomeInts.Length - 1].Int2 = uint.Parse(Int2Val.Text);
-            Somethings.Items.Add(Somethings.Items.Count);
+            path.Params.RemoveAt(par_i);
+            label8.Text = $"/ {path.Params.Count}";
+            numericUpDown9.Maximum = path.Params.Count > 0 ? path.Params.Count : 1;
+            UpdateParam();
+        }
+
+        private void button2_Click(object sender, System.EventArgs e)
+        {
+            path.Positions.RemoveAt(pos_i);
+            label5.Text = $"/ {path.Positions.Count}";
+            numericUpDown6.Maximum = path.Positions.Count > 0 ? path.Positions.Count : 1;
+            UpdatePosition();
         }
     }
 }

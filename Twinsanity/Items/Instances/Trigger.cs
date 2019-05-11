@@ -46,10 +46,7 @@ namespace Twinsanity
             SomeFloat = reader.ReadSingle();
             for (int i = 0; i < 3; ++i)
             {
-                Coords[i].X = reader.ReadSingle();
-                Coords[i].Y = reader.ReadSingle();
-                Coords[i].Z = reader.ReadSingle();
-                Coords[i].W = reader.ReadSingle();
+                Coords[i] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
             }
             var n = reader.ReadInt32();
             n  = reader.ReadInt32();

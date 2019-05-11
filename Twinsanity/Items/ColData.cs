@@ -126,13 +126,7 @@ namespace Twinsanity
             }
             for (int i = 0; i < vertexCount; i++)
             {
-                Pos vtx = new Pos
-                {
-                    X = reader.ReadSingle(),
-                    Y = reader.ReadSingle(),
-                    Z = reader.ReadSingle(),
-                    W = reader.ReadSingle()
-                };
+                Pos vtx = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                 vertices.Add(vtx);
             }
         }

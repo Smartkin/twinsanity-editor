@@ -4,7 +4,7 @@ namespace Twinsanity
 {
     public class Position : TwinsItem
     {
-        private Pos pos = new Pos();
+        private Pos pos;
 
         public Pos Pos { get => pos; set => pos = value; }
 

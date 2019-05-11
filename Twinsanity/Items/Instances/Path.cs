@@ -49,7 +49,7 @@ namespace Twinsanity
         }
 
         #region STRUCTURES
-        public struct PathParam
+        public class PathParam
         {
             public float P1;
             public float P2;

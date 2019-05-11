@@ -1,6 +1,6 @@
 ﻿namespace Twinsanity
 {
-    public struct Pos
+    public class Pos
     {
         public Pos(float x, float y, float z, float w)
         {
