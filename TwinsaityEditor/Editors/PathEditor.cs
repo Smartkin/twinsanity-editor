@@ -25,10 +25,10 @@ namespace TwinsaityEditor
             numericUpDown2.ValueChanged += numericUpDown1_ValueChanged;
             numericUpDown3.ValueChanged += numericUpDown1_ValueChanged;
             numericUpDown4.ValueChanged += numericUpDown1_ValueChanged;
-            FormClosed += PositionEditor_FormClosed;
+            FormClosed += PathEditor_FormClosed;
         }
 
-        private void PositionEditor_FormClosed(object sender, FormClosedEventArgs e)
+        private void PathEditor_FormClosed(object sender, FormClosedEventArgs e)
         {
             TFController.SelectItem(null);
         }
