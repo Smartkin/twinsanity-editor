@@ -158,6 +158,12 @@ namespace TwinsaityEditor
                 RMViewer.LoadInstances();
         }
 
+        public void RMViewer_LoadPositions()
+        {
+            if (RMViewer != null)
+                RMViewer.LoadPositions();
+        }
+
         public void CloseRMViewer()
         {
             if (rmForm != null && !rmForm.IsDisposed)
@@ -174,6 +180,8 @@ namespace TwinsaityEditor
                 {
                     if (prev_item is Instance)
                         RMViewer.LoadInstances();
+                    else if (prev_item is Position)
+                        RMViewer.LoadPositions();
                 }
                 else
                     RMViewer.UpdateSelected();
