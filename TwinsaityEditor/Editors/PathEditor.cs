@@ -11,6 +11,7 @@ namespace TwinsaityEditor
 
         private FileController TFController { get; set; }
         private TwinsFile File { get => TFController.Data; }
+        private Controller CurPathCont { get => (Controller)controller.Node.Nodes[controller.Data.RecordIDs[path.ID]].Tag; }
 
         private bool ignore_value_change;
         private int pos_i, par_i;
@@ -53,8 +54,8 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             numericUpDown5.Value = path.ID;
             ignore_value_change = false;
-            numericUpDown6.Maximum = path.Positions.Count;
-            numericUpDown9.Maximum = path.Params.Count;
+            numericUpDown6.Maximum = path.Positions.Count > 0 ? path.Positions.Count : 1;
+            numericUpDown9.Maximum = path.Params.Count > 0 ? path.Params.Count : 1;
             UpdatePosition();
             UpdateParam();
 
@@ -123,7 +124,7 @@ namespace TwinsaityEditor
         {
             if (ignore_value_change) return;
             path.Positions[pos_i].X = (float)numericUpDown1.Value;
-            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[path.ID]].Tag).UpdateTextBox();
+            CurPathCont.UpdateTextBox();
         }
 
         private void addToolStripMenuItem_Click(object sender, System.EventArgs e)
@@ -141,7 +142,7 @@ namespace TwinsaityEditor
             path = new_path;
             listBox1.Items.Add($"ID {path.ID}");
             controller.UpdateText();
-            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[path.ID]].Tag).UpdateText();
+            CurPathCont.UpdateText();
         }
 
         private void removeToolStripMenuItem_Click(object sender, System.EventArgs e)
@@ -174,42 +175,42 @@ namespace TwinsaityEditor
             path.ID = (uint)numericUpDown5.Value;
             controller.Data.RecordIDs.Add(path.ID, listBox1.SelectedIndex);
             listBox1.Items[listBox1.SelectedIndex] = "ID " + path.ID;
-            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[path.ID]].Tag).UpdateText();
+            CurPathCont.UpdateText();
         }
 
         private void numericUpDown2_ValueChanged(object sender, System.EventArgs e)
         {
             if (ignore_value_change) return;
             path.Positions[pos_i].Y = (float)numericUpDown2.Value;
-            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[path.ID]].Tag).UpdateTextBox();
+            CurPathCont.UpdateTextBox();
         }
 
         private void numericUpDown3_ValueChanged(object sender, System.EventArgs e)
         {
             if (ignore_value_change) return;
             path.Positions[pos_i].Z = (float)numericUpDown3.Value;
-            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[path.ID]].Tag).UpdateTextBox();
+            CurPathCont.UpdateTextBox();
         }
 
         private void numericUpDown4_ValueChanged(object sender, System.EventArgs e)
         {
             if (ignore_value_change) return;
             path.Positions[pos_i].W = (float)numericUpDown4.Value;
-            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[path.ID]].Tag).UpdateTextBox();
+            CurPathCont.UpdateTextBox();
         }
 
         private void numericUpDown7_ValueChanged(object sender, System.EventArgs e)
         {
             if (ignore_value_change) return;
             path.Params[par_i].P1 = (float)numericUpDown7.Value;
-            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[path.ID]].Tag).UpdateTextBox();
+            CurPathCont.UpdateTextBox();
         }
 
         private void numericUpDown8_ValueChanged(object sender, System.EventArgs e)
         {
             if (ignore_value_change) return;
             path.Params[par_i].P2 = (float)numericUpDown8.Value;
-            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[path.ID]].Tag).UpdateTextBox();
+            CurPathCont.UpdateTextBox();
         }
 
         private void numericUpDown6_ValueChanged(object sender, System.EventArgs e)
@@ -237,6 +238,7 @@ namespace TwinsaityEditor
                 pos_i = 0;
                 UpdatePosition();
             }
+            CurPathCont.UpdateTextBox();
         }
 
         private void button4_Click(object sender, System.EventArgs e)
@@ -249,6 +251,7 @@ namespace TwinsaityEditor
                 par_i = 0;
                 UpdateParam();
             }
+            CurPathCont.UpdateTextBox();
         }
 
         private void button3_Click(object sender, System.EventArgs e)
@@ -257,6 +260,7 @@ namespace TwinsaityEditor
             label8.Text = $"/ {path.Params.Count}";
             numericUpDown9.Maximum = path.Params.Count > 0 ? path.Params.Count : 1;
             UpdateParam();
+            CurPathCont.UpdateTextBox();
         }
 
         private void button2_Click(object sender, System.EventArgs e)
@@ -265,6 +269,7 @@ namespace TwinsaityEditor
             label5.Text = $"/ {path.Positions.Count}";
             numericUpDown6.Maximum = path.Positions.Count > 0 ? path.Positions.Count : 1;
             UpdatePosition();
+            CurPathCont.UpdateTextBox();
         }
     }
 }
