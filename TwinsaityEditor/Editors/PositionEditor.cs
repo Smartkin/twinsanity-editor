@@ -23,6 +23,12 @@ namespace TwinsaityEditor
             numericUpDown2.ValueChanged += numericUpDown1_ValueChanged;
             numericUpDown3.ValueChanged += numericUpDown1_ValueChanged;
             numericUpDown4.ValueChanged += numericUpDown1_ValueChanged;
+            FormClosed += PositionEditor_FormClosed;
+        }
+
+        private void PositionEditor_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            TFController.SelectItem(null);
         }
 
         private void PopulateList()
