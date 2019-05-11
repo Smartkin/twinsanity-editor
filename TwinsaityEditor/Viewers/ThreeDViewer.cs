@@ -323,7 +323,7 @@ namespace TwinsaityEditor
                 //Bind newly-generated buffer to the array buffer
                 GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_id[i]);
                 //Allocate data for vertex buffer...
-                GL.BufferData(BufferTarget.ArrayBuffer, Marshal.SizeOf(typeof(Vertex)) * vtx[i].Length, vtx[i], BufferUsageHint.StaticDraw);
+                GL.BufferData(BufferTarget.ArrayBuffer, Vertex.SizeOf * vtx[i].Length, vtx[i], BufferUsageHint.StaticDraw);
                 //unbind buffer (safety)
                 GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             }
@@ -335,9 +335,9 @@ namespace TwinsaityEditor
             GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_id[id]);
             //Allocate data for vertex buffer...
             if (vtx[id].Length > vbo_sizes[id])
-                GL.BufferData(BufferTarget.ArrayBuffer, Marshal.SizeOf(typeof(Vertex)) * vtx[id].Length, vtx[id], BufferUsageHint.StaticDraw);
+                GL.BufferData(BufferTarget.ArrayBuffer, Vertex.SizeOf * vtx[id].Length, vtx[id], BufferUsageHint.StaticDraw);
             else
-                GL.BufferSubData(BufferTarget.ArrayBuffer, (IntPtr)0, Marshal.SizeOf(typeof(Vertex)) * vtx[id].Length, vtx[id]);
+                GL.BufferSubData(BufferTarget.ArrayBuffer, (IntPtr)0, Vertex.SizeOf * vtx[id].Length, vtx[id]);
             //unbind buffer (safety)
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
         }

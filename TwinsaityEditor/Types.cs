@@ -17,6 +17,11 @@ namespace TwinsaityEditor
             this.col = col.R | (uint)col.G << 8 | (uint)col.B << 16 | (uint)col.A << 24;
         }
 
+        public static int SizeOf { get; } = Marshal.SizeOf(typeof(Vertex));
+        public static System.IntPtr OffsetOfPos { get; } = Marshal.OffsetOf(typeof(Vertex), "pos");
+        public static System.IntPtr OffsetOfNor { get; } = Marshal.OffsetOf(typeof(Vertex), "nor");
+        public static System.IntPtr OffsetOfCol { get; } = Marshal.OffsetOf(typeof(Vertex), "col");
+
         public Vector3 Pos { get => pos; set => pos = value; }
         public Vector3 Nor { get => nor; set => nor = value; }
         public uint Col { get => col; set => col = value; }

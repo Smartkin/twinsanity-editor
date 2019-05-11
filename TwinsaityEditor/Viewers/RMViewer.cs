@@ -34,6 +34,7 @@ namespace TwinsaityEditor
             }
             pform.Text = "Loading instances...";
             LoadInstances();
+            LoadPositions();
             pform.Text = "Initializing...";
         }
 
@@ -59,6 +60,7 @@ namespace TwinsaityEditor
                 GL.VertexPointer(3, VertexPointerType.Float, Marshal.SizeOf(typeof(Vertex)), Marshal.OffsetOf(typeof(Vertex), "pos"));
                 GL.ColorPointer(4, ColorPointerType.UnsignedByte, Marshal.SizeOf(typeof(Vertex)), Marshal.OffsetOf(typeof(Vertex), "col"));
                 GL.NormalPointer(NormalPointerType.Float, Marshal.SizeOf(typeof(Vertex)), Marshal.OffsetOf(typeof(Vertex), "nor"));
+                GL.NormalPointer(NormalPointerType.Float, Vertex.SizeOf, Vertex.OffsetOfNor);
                 GL.DrawArrays(PrimitiveType.Triangles, 0, vtx[0].Length);
                 GL.PopMatrix();
                 GL.Disable(EnableCap.Lighting);
@@ -69,6 +71,8 @@ namespace TwinsaityEditor
                     GL.VertexPointer(3, VertexPointerType.Float, Marshal.SizeOf(typeof(Vertex)), Marshal.OffsetOf(typeof(Vertex), "pos"));
                     GL.ColorPointer(4, ColorPointerType.UnsignedByte, Marshal.SizeOf(typeof(Vertex)), Marshal.OffsetOf(typeof(Vertex), "col"));
                     GL.NormalPointer(NormalPointerType.Float, Marshal.SizeOf(typeof(Vertex)), Marshal.OffsetOf(typeof(Vertex), "nor"));
+                    GL.ColorPointer(4, ColorPointerType.UnsignedByte, Vertex.SizeOf, Vertex.OffsetOfCol);
+                    GL.NormalPointer(NormalPointerType.Float, Vertex.SizeOf, Vertex.OffsetOfNor);
                     GL.MultiDrawArrays(PrimitiveType.LineStrip, coln_vtx_offs, coln_vtx_counts, coln_vtx_offs.Length);
                 }
             }
