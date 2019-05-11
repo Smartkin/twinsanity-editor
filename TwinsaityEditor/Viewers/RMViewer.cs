@@ -203,8 +203,9 @@ namespace TwinsaityEditor
                             GL.PushMatrix();
                             GL.Translate(trg.Coords[1].X, trg.Coords[1].Y, trg.Coords[1].Z);
 
+                            var cur_color = file.SelectedItem == trg ? Color.White : colors[colors.Length - i - 1];
                             GL.Begin(PrimitiveType.Quads);
-                            GL.Color4(colors[colors.Length - i - 1].R, colors[colors.Length - i - 1].G, colors[colors.Length - i - 1].B, (byte)128);
+                            GL.Color4(cur_color.R, cur_color.G, cur_color.B, (byte)127);
 
                             GL.Vertex3(-trg.Coords[2].X, -trg.Coords[2].Y, -trg.Coords[2].Z);
                             GL.Vertex3(trg.Coords[2].X, -trg.Coords[2].Y, -trg.Coords[2].Z);
@@ -240,6 +241,7 @@ namespace TwinsaityEditor
 
                             GL.Disable(EnableCap.Lighting);
                             GL.Disable(EnableCap.DepthTest);
+                            GL.Color4(cur_color);
                             GL.LineWidth(2);
                             GL.Begin(PrimitiveType.Lines);
                             foreach (var id in trg.Instances)
