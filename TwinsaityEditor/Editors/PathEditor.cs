@@ -141,7 +141,7 @@ namespace TwinsaityEditor
             ((MainForm)Tag).GenTreeNode(new_path, controller);
             path = new_path;
             listBox1.Items.Add($"ID {path.ID}");
-            controller.UpdateText();
+            controller.UpdateTextBox();
             CurPathCont.UpdateText();
         }
 
@@ -157,7 +157,7 @@ namespace TwinsaityEditor
             listBox1.SelectedIndex = sel_i;
             if (listBox1.Items.Count == 0)
                 splitContainer1.Panel2.Enabled = false;
-            controller.UpdateText();
+            controller.UpdateTextBox();
         }
 
         private void numericUpDown5_ValueChanged(object sender, System.EventArgs e)
@@ -238,6 +238,7 @@ namespace TwinsaityEditor
                 pos_i = 0;
                 UpdatePosition();
             }
+            controller.UpdateTextBox();
             CurPathCont.UpdateTextBox();
         }
 
@@ -251,6 +252,7 @@ namespace TwinsaityEditor
                 par_i = 0;
                 UpdateParam();
             }
+            controller.UpdateTextBox();
             CurPathCont.UpdateTextBox();
         }
 
@@ -260,6 +262,7 @@ namespace TwinsaityEditor
             label8.Text = $"/ {path.Params.Count}";
             numericUpDown9.Maximum = path.Params.Count > 0 ? path.Params.Count : 1;
             UpdateParam();
+            controller.UpdateTextBox();
             CurPathCont.UpdateTextBox();
         }
 
@@ -269,6 +272,7 @@ namespace TwinsaityEditor
             label5.Text = $"/ {path.Positions.Count}";
             numericUpDown6.Maximum = path.Positions.Count > 0 ? path.Positions.Count : 1;
             UpdatePosition();
+            controller.UpdateTextBox();
             CurPathCont.UpdateTextBox();
         }
     }
