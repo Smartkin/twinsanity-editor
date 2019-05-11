@@ -242,9 +242,9 @@ namespace TwinsaityEditor
                             GL.Disable(EnableCap.DepthTest);
                             GL.LineWidth(2);
                             GL.Begin(PrimitiveType.Lines);
-                            for (int k = 0; k < trg.Instances.Length; ++k)
+                            foreach (var id in trg.Instances)
                             {
-                                Instance inst = file.GetInstance(trg.Parent.Parent.ID, trg.Instances[k]);
+                                Instance inst = file.GetInstance(trg.Parent.Parent.ID, id);
                                 GL.Vertex3(0, 0, 0);
                                 GL.Vertex3(inst.Pos.X - trg.Coords[1].X, inst.Pos.Y - trg.Coords[1].Y, inst.Pos.Z - trg.Coords[1].Z);
                             }
@@ -600,6 +600,10 @@ namespace TwinsaityEditor
             {
                 SetPosition(new Vector3(-pos.Pos.X, pos.Pos.Y, pos.Pos.Z));
                 LoadPositions();
+            }
+            else if (file.SelectedItem is Trigger trig)
+            {
+                SetPosition(new Vector3(-trig.Coords[1].X, trig.Coords[1].Y, trig.Coords[1].Z));
             }
         }
 

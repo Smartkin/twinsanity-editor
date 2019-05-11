@@ -23,7 +23,10 @@ namespace TwinsaityEditor
                 && item.Type != SectionType.Skybox)
             {
                 AddMenu("Re-order by ID (asc.)", Menu_ReOrderByID_Asc);
-                if (item.Type == SectionType.ObjectInstance || item.Type == SectionType.Position || item.Type == SectionType.Path)
+                if (item.Type == SectionType.ObjectInstance
+                    || item.Type == SectionType.Position
+                    || item.Type == SectionType.Path
+                    || item.Type == SectionType.Trigger)
                 {
                     AddMenu("Re-ID by order", Menu_ReIDByOrder);
                     AddMenu("Open editor", Menu_OpenEditor);

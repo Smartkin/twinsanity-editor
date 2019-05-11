@@ -1,4 +1,5 @@
 using System.IO;
+using System.Collections.Generic;
 
 namespace Twinsanity
 {
@@ -9,7 +10,7 @@ namespace Twinsanity
         public float SomeFloat { get; set; }
         public Pos[] Coords { get; set; } = new Pos[3];
         public uint SectionHead { get; set; }
-        public ushort[] Instances { get; set; }
+        public List<ushort> Instances { get; set; }
         public ushort SomeUInt161 { get; set; }
         public ushort SomeUInt162 { get; set; }
         public ushort SomeUInt163 { get; set; }
@@ -28,10 +29,10 @@ namespace Twinsanity
                 writer.Write(Coords[i].Z);
                 writer.Write(Coords[i].W);
             }
-            writer.Write(Instances.Length);
-            writer.Write(Instances.Length);
+            writer.Write(Instances.Count);
+            writer.Write(Instances.Count);
             writer.Write(SectionHead);
-            for (int i = 0; i < Instances.Length; ++i)
+            for (int i = 0; i < Instances.Count; ++i)
                 writer.Write(Instances[i]);
             writer.Write(SomeUInt161);
             writer.Write(SomeUInt162);
@@ -51,9 +52,9 @@ namespace Twinsanity
             var n = reader.ReadInt32();
             n  = reader.ReadInt32();
             SectionHead = reader.ReadUInt32();
-            Instances = new ushort[n];
+            Instances = new List<ushort>(n);
             for (int i = 0; i < n; ++i)
-                Instances[i] = reader.ReadUInt16();
+                Instances.Add(reader.ReadUInt16());
             SomeUInt161 = reader.ReadUInt16();
             SomeUInt162 = reader.ReadUInt16();
             SomeUInt163 = reader.ReadUInt16();
@@ -62,7 +63,7 @@ namespace Twinsanity
 
         protected override int GetSize()
         {
-            return 80 + Instances.Length * 2;
+            return 80 + Instances.Count * 2;
         }
     }
 }

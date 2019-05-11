@@ -33,6 +33,7 @@ namespace TwinsaityEditor
         ChunkLinks,
         Position,
         Path,
-        Instance
+        Instance,
+        Trigger
     };
 }

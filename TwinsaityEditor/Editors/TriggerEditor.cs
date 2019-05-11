@@ -1,136 +1,291 @@
-using System.Windows.Forms;
-using System;
+﻿using System.Windows.Forms;
+using System.Collections.Generic;
+using Twinsanity;
 
 namespace TwinsaityEditor
 {
-    public partial class TriggerEditor
+    public partial class TriggerEditor : Form
     {
-        private TwinsanityEditorForm twinsanityEditorForm;
+        private SectionController controller;
+        private Trigger trigger;
 
-        public TriggerEditor(TwinsanityEditorForm TEF)
+        private FileController TFController { get; set; }
+        private TwinsFile File { get => TFController.Data; }
+        private Controller CurCont { get => (Controller)controller.Node.Nodes[controller.Data.RecordIDs[trigger.ID]].Tag; }
+
+        private bool ignore_value_change;
+
+        public TriggerEditor(FileController file, SectionController c)
         {
-            twinsanityEditorForm = TEF;
+            TFController = file;
+            controller = c;
             InitializeComponent();
+            Text = $"Trigger Editor (Section {c.Data.Parent.ID})";
+            PopulateList();
+            FormClosed += TriggerEditor_FormClosed;
         }
 
+        private void TriggerEditor_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            TFController.SelectItem(null);
+        }
 
-        private int IISIndex;
-        public void UpdateTree(ref Twinsanity.Triggers TRIGs, int Index)
+        private void PopulateList()
         {
-            TriggerTree.BeginUpdate();
-            for (int i = 0; i <= TRIGs._Item.Length - 1; i++)
-                TriggerTree.Nodes.Add("ID: " + TRIGs._Item[i].ID.ToString());
-            TriggerTree.EndUpdate();
-            IISIndex = Index;
-        }
-        public void UpdateTrigger(int index)
-        {
-            Twinsanity.Trigger TRIG = (Twinsanity.Trigger)twinsanityEditorForm.LevelData.Get_Item(TwinsanityEditorForm.CalculateIndexes(twinsanityEditorForm.TreeView1.Nodes[0].Nodes[IISIndex].Nodes[7].Nodes[index]));
-            TriggerID.Text = TRIG.ID.ToString();
-            Flags.Text = TRIG.SomeFlag.ToString();
-            SomeNumber.Text = TRIG.SomeNumber.ToString();
-            Value1.Text = TRIG.SomeUInt161.ToString();
-            Value2.Text = TRIG.SomeUInt162.ToString();
-            Value3.Text = TRIG.SomeUInt163.ToString();
-            Value4.Text = TRIG.SomeUInt164.ToString();
-            NumberValue.Text = TRIG.SomeUInt32.ToString();
-            PosX.Text = TRIG.Coordinate[1].X.ToString();
-            PosY.Text = TRIG.Coordinate[1].Y.ToString();
-            PosZ.Text = TRIG.Coordinate[1].Z.ToString();
-            SizeW.Text = TRIG.Coordinate[2].X.ToString();
-            SizeH.Text = TRIG.Coordinate[2].Y.ToString();
-            SizeL.Text = TRIG.Coordinate[2].Z.ToString();
-            VecX.Text = TRIG.Coordinate[0].X.ToString();
-            VecY.Text = TRIG.Coordinate[0].Y.ToString();
-            VecZ.Text = TRIG.Coordinate[0].Z.ToString();
-            Instances.Items.Clear();
-            for (int i = 0; i <= TRIG.SectionSize - 1; i++)
-                Instances.Items.Add(TRIG.SomeUInt16[i]);
-            if (TRIG.SectionSize > 0)
-                Instances.SelectedIndex = 0;
-            if (Instances.SelectedIndex >= 0)
-                UpdateObject(TRIG.SomeUInt16[Instances.SelectedIndex]);
-            else
-                Label4.Text = "Instances (Object is undefined)";
-        }
-        public void ApplyTrigger(int index)
-        {
-            Twinsanity.Trigger TRIG = new Twinsanity.Trigger();
-            TRIG.ID = uint.Parse(TriggerID.Text);
-            TRIG.SomeFlag = uint.Parse(Flags.Text);
-            TRIG.SomeNumber = uint.Parse(SomeNumber.Text);
-            TRIG.SomeUInt161 = UInt16.Parse(Value1.Text);
-            TRIG.SomeUInt162 = UInt16.Parse(Value2.Text);
-            TRIG.SomeUInt163 = UInt16.Parse(Value3.Text);
-            TRIG.SomeUInt164 = UInt16.Parse(Value4.Text);
-            TRIG.SomeUInt32 = uint.Parse(NumberValue.Text);
-            TRIG.Coordinate[0].X = float.Parse(VecX.Text);
-            TRIG.Coordinate[0].Y = float.Parse(VecY.Text);
-            TRIG.Coordinate[0].Z = float.Parse(VecZ.Text);
-            TRIG.Coordinate[1].X = float.Parse(PosX.Text);
-            TRIG.Coordinate[1].Y = float.Parse(PosY.Text);
-            TRIG.Coordinate[1].Z = float.Parse(PosZ.Text);
-            TRIG.Coordinate[2].X = float.Parse(SizeW.Text);
-            TRIG.Coordinate[2].Y = float.Parse(SizeH.Text);
-            TRIG.Coordinate[2].Z = float.Parse(SizeL.Text);
-            TRIG.SectionSize = Instances.Items.Count;
-            Array.Resize(ref TRIG.SomeUInt16, TRIG.SectionSize);
-            for (int i = 0; i <= TRIG.SectionSize - 1; i++)
-                TRIG.SomeUInt16[i] = (ushort)Instances.Items[i];
-
-            twinsanityEditorForm.LevelData.Put_Item(TRIG, TwinsanityEditorForm.CalculateIndexes(twinsanityEditorForm.TreeView1.Nodes[0].Nodes[IISIndex].Nodes[7].Nodes[index]));
-        }
-        private void UpdateObject(int Index)
-        {
-            Twinsanity.Instance INST = (Twinsanity.Instance)twinsanityEditorForm.LevelData.Get_Item(TwinsanityEditorForm.CalculateIndexes(twinsanityEditorForm.TreeView1.Nodes[0].Nodes[IISIndex].Nodes[6].Nodes[Index]));
-            Twinsanity.GameObjects Objects = (Twinsanity.GameObjects)twinsanityEditorForm.LevelData.Item[1]._Item[0];
-            Twinsanity.GameObject GO = null;
-            for (int i = 0; i <= Objects._Item.Length - 1; i++)
+            listBox1.Items.Clear();
+            foreach (Trigger i in controller.Data.Records)
             {
-                if (Objects._Item[i].ID == INST.ObjectID)
-                {
-                    GO = (Twinsanity.GameObject)Objects._Item[i];
+                listBox1.Items.Add($"ID {i.ID}");
+            }
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, System.EventArgs e)
+        {
+            if (listBox1.SelectedIndex == -1) return;
+
+            this.SuspendDrawing();
+
+            trigger = (Trigger)controller.Data.Records[listBox1.SelectedIndex];
+            TFController.SelectItem(trigger);
+            splitContainer1.Panel2.Enabled = true;
+
+            ignore_value_change = true;
+
+            numericUpDown1.Value = trigger.SomeUInt32;
+            numericUpDown2.Value = trigger.SomeNumber;
+            numericUpDown3.Value = (decimal)trigger.SomeFloat;
+            numericUpDown4.Value = trigger.SectionHead;
+            numericUpDown6.Value = trigger.SomeUInt161;
+            numericUpDown7.Value = trigger.SomeUInt162;
+            numericUpDown8.Value = trigger.SomeUInt163;
+            numericUpDown9.Value = trigger.SomeUInt164;
+            numericUpDown10.Value = (decimal)trigger.Coords[1].X;
+            numericUpDown11.Value = (decimal)trigger.Coords[1].Y;
+            numericUpDown12.Value = (decimal)trigger.Coords[1].Z;
+            numericUpDown13.Value = (decimal)trigger.Coords[1].W;
+            numericUpDown14.Value = (decimal)trigger.Coords[2].X;
+            numericUpDown15.Value = (decimal)trigger.Coords[2].Y;
+            numericUpDown16.Value = (decimal)trigger.Coords[2].Z;
+            numericUpDown17.Value = (decimal)trigger.Coords[2].W;
+            numericUpDown18.Value = (decimal)trigger.Coords[0].X;
+            numericUpDown19.Value = (decimal)trigger.Coords[0].Y;
+            numericUpDown20.Value = (decimal)trigger.Coords[0].Z;
+            numericUpDown21.Value = (decimal)trigger.Coords[0].W;
+
+            var lines = new string[trigger.Instances.Count];
+            for (int i = 0; i < trigger.Instances.Count; ++i)
+            {
+                lines[i] = trigger.Instances[i].ToString();
+            }
+            textBox1.Lines = lines;
+
+            ignore_value_change = false;
+
+            this.ResumeDrawing();
+        }
+
+        private void addToolStripMenuItem_Click(object sender, System.EventArgs e)
+        {
+            if (controller.Data.RecordIDs.Count >= ushort.MaxValue) return;
+            uint id;
+            for (id = 0; id < uint.MaxValue; ++id)
+            {
+                if (!controller.Data.RecordIDs.ContainsKey(id))
                     break;
+            }
+            Trigger new_trigger = new Trigger { ID = id, Instances = new List<ushort>(), Coords = new Pos[] { new Pos(0, 0, 0, 1), new Pos(0, 0, 0, 1), new Pos(0, 0, 0, 1) } };
+            controller.Data.AddItem(id, new_trigger);
+            ((MainForm)Tag).GenTreeNode(new_trigger, controller);
+            trigger = new_trigger;
+            listBox1.Items.Add($"ID {trigger.ID}");
+            controller.UpdateTextBox();
+            CurCont.UpdateText();
+        }
+
+        private void removeToolStripMenuItem_Click(object sender, System.EventArgs e)
+        {
+            var sel_i = listBox1.SelectedIndex;
+            if (sel_i == -1)
+                return;
+            Controller.DisposeNode(controller.Node.Nodes[controller.Data.RecordIDs[trigger.ID]]);
+            controller.Data.RemoveItem(trigger.ID);
+            listBox1.Items.RemoveAt(sel_i);
+            if (sel_i >= listBox1.Items.Count) sel_i = listBox1.Items.Count - 1;
+            listBox1.SelectedIndex = sel_i;
+            if (listBox1.Items.Count == 0)
+                splitContainer1.Panel2.Enabled = false;
+            controller.UpdateTextBox();
+        }
+
+        private void numericUpDown5_ValueChanged(object sender, System.EventArgs e)
+        {
+            if (ignore_value_change) return;
+            if (controller.Data.RecordIDs.ContainsKey((uint)numericUpDown5.Value))
+            {
+                MessageBox.Show("The specified ID already exists.");
+                ignore_value_change = true;
+                numericUpDown5.Value = trigger.ID;
+                ignore_value_change = false;
+                return;
+            }
+            controller.Data.RecordIDs.Remove(trigger.ID);
+            trigger.ID = (uint)numericUpDown5.Value;
+            controller.Data.RecordIDs.Add(trigger.ID, listBox1.SelectedIndex);
+            listBox1.Items[listBox1.SelectedIndex] = "ID " + trigger.ID;
+            CurCont.UpdateText();
+        }
+
+        private void numericUpDown1_ValueChanged(object sender, System.EventArgs e)
+        {
+            if (ignore_value_change) return;
+            trigger.SomeUInt32 = (uint)numericUpDown1.Value;
+        }
+
+        private void numericUpDown2_ValueChanged(object sender, System.EventArgs e)
+        {
+            if (ignore_value_change) return;
+            trigger.SomeNumber = (uint)numericUpDown2.Value;
+        }
+
+        private void numericUpDown3_ValueChanged(object sender, System.EventArgs e)
+        {
+            if (ignore_value_change) return;
+            trigger.SomeFloat = (float)numericUpDown3.Value;
+            CurCont.UpdateTextBox();
+        }
+
+        private void numericUpDown4_ValueChanged(object sender, System.EventArgs e)
+        {
+            if (ignore_value_change) return;
+            trigger.SectionHead = (uint)numericUpDown4.Value;
+        }
+
+        private void numericUpDown6_ValueChanged(object sender, System.EventArgs e)
+        {
+            if (ignore_value_change) return;
+            trigger.SomeUInt161 = (ushort)numericUpDown6.Value;
+            CurCont.UpdateTextBox();
+        }
+
+        private void numericUpDown7_ValueChanged(object sender, System.EventArgs e)
+        {
+            if (ignore_value_change) return;
+            trigger.SomeUInt162 = (ushort)numericUpDown7.Value;
+            CurCont.UpdateTextBox();
+        }
+
+        private void numericUpDown8_ValueChanged(object sender, System.EventArgs e)
+        {
+            if (ignore_value_change) return;
+            trigger.SomeUInt163 = (ushort)numericUpDown8.Value;
+            CurCont.UpdateTextBox();
+        }
+
+        private void numericUpDown9_ValueChanged(object sender, System.EventArgs e)
+        {
+            if (ignore_value_change) return;
+            trigger.SomeUInt164 = (ushort)numericUpDown9.Value;
+            CurCont.UpdateTextBox();
+        }
+
+        private void textBox1_TextChanged(object sender, System.EventArgs e)
+        {
+            if (ignore_value_change) return;
+            trigger.Instances.Clear();
+            for (int i = 0; i < textBox1.Lines.Length; ++i)
+            {
+                if (ushort.TryParse(textBox1.Lines[i], out ushort v))
+                {
+                    if (TFController.GetInstance(controller.Data.Parent.ID, v) != null)
+                        trigger.Instances.Add(v);
                 }
             }
-            if (!(GO == null))
-                Label4.Text = "Instances (" + GO.Name + ")";
-            else
-                Label4.Text = "Instances (Object is undefined)";
+            controller.UpdateTextBox();
+            CurCont.UpdateTextBox();
         }
 
-        private void TriggerTree_AfterSelect(object sender, TreeViewEventArgs e)
+        private void numericUpDown10_ValueChanged(object sender, System.EventArgs e)
         {
-            UpdateTrigger(TriggerTree.SelectedNode.Index);
+            if (ignore_value_change) return;
+            trigger.Coords[1].X = (float)numericUpDown10.Value;
+            CurCont.UpdateTextBox();
         }
 
-        private void Revert_Click(object sender, EventArgs e)
+        private void numericUpDown11_ValueChanged(object sender, System.EventArgs e)
         {
-            UpdateTrigger(TriggerTree.SelectedNode.Index);
+            if (ignore_value_change) return;
+            trigger.Coords[1].Y = (float)numericUpDown11.Value;
+            CurCont.UpdateTextBox();
         }
 
-        private void Button1_Click(object sender, EventArgs e)
+        private void numericUpDown12_ValueChanged(object sender, System.EventArgs e)
         {
-            Instances.Items.Add(UInt16.Parse(InstanceVal.Text));
+            if (ignore_value_change) return;
+            trigger.Coords[1].Z = (float)numericUpDown12.Value;
+            CurCont.UpdateTextBox();
         }
 
-        private void Button2_Click(object sender, EventArgs e)
+        private void numericUpDown13_ValueChanged(object sender, System.EventArgs e)
         {
-            Instances.Items[Instances.SelectedIndex] = UInt16.Parse(InstanceVal.Text);
+            if (ignore_value_change) return;
+            trigger.Coords[1].W = (float)numericUpDown13.Value;
+            CurCont.UpdateTextBox();
         }
 
-        private void Button3_Click(object sender, EventArgs e)
+        private void numericUpDown14_ValueChanged(object sender, System.EventArgs e)
         {
-            Instances.Items.RemoveAt(Instances.SelectedIndex);
+            if (ignore_value_change) return;
+            trigger.Coords[2].X = (float)numericUpDown14.Value;
+            CurCont.UpdateTextBox();
         }
 
-        private void Apply_Click(object sender, EventArgs e)
+        private void numericUpDown15_ValueChanged(object sender, System.EventArgs e)
         {
-            ApplyTrigger(TriggerTree.SelectedNode.Index);
+            if (ignore_value_change) return;
+            trigger.Coords[2].Y = (float)numericUpDown15.Value;
+            CurCont.UpdateTextBox();
         }
 
-        private void Instances_SelectedIndexChanged(object sender, EventArgs e)
+        private void numericUpDown16_ValueChanged(object sender, System.EventArgs e)
         {
+            if (ignore_value_change) return;
+            trigger.Coords[2].Z = (float)numericUpDown16.Value;
+            CurCont.UpdateTextBox();
+        }
+
+        private void numericUpDown17_ValueChanged(object sender, System.EventArgs e)
+        {
+            if (ignore_value_change) return;
+            trigger.Coords[2].W = (float)numericUpDown17.Value;
+            CurCont.UpdateTextBox();
+        }
+
+        private void numericUpDown18_ValueChanged(object sender, System.EventArgs e)
+        {
+            if (ignore_value_change) return;
+            trigger.Coords[0].X = (float)numericUpDown18.Value;
+            CurCont.UpdateTextBox();
+        }
+
+        private void numericUpDown19_ValueChanged(object sender, System.EventArgs e)
+        {
+            if (ignore_value_change) return;
+            trigger.Coords[0].Y = (float)numericUpDown19.Value;
+            CurCont.UpdateTextBox();
+        }
+
+        private void numericUpDown20_ValueChanged(object sender, System.EventArgs e)
+        {
+            if (ignore_value_change) return;
+            trigger.Coords[0].Z = (float)numericUpDown20.Value;
+            CurCont.UpdateTextBox();
+        }
+
+        private void numericUpDown21_ValueChanged(object sender, System.EventArgs e)
+        {
+            if (ignore_value_change) return;
+            trigger.Coords[0].W = (float)numericUpDown21.Value;
+            CurCont.UpdateTextBox();
         }
     }
 }

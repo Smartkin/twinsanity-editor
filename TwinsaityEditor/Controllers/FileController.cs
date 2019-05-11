@@ -18,7 +18,7 @@ namespace TwinsaityEditor
 
         //Editors
         private Form editChunkLinks;
-        private Form[] editInstances = new Form[8], editPositions = new Form[8], editPaths = new Form[8];
+        private Form[] editInstances = new Form[8], editPositions = new Form[8], editPaths = new Form[8], editTriggers = new Form[8];
 
         //Viewers
         private Form rmForm;
@@ -75,6 +75,7 @@ namespace TwinsaityEditor
                 CloseInstanceEditor(i);
                 ClosePositionEditor(i);
                 ClosePathEditor(i);
+                CloseTriggerEditor(i);
             }
         }
 
@@ -88,6 +89,8 @@ namespace TwinsaityEditor
                 OpenEditor(ref editPaths[((PathController)c).Data.Parent.Parent.ID], Editors.Path, (Controller)c.Node.Parent.Tag);
             else if (c is InstanceController)
                 OpenEditor(ref editInstances[((InstanceController)c).Data.Parent.Parent.ID], Editors.Instance, (Controller)c.Node.Parent.Tag);
+            else if (c is TriggerController)
+                OpenEditor(ref editTriggers[((TriggerController)c).Data.Parent.Parent.ID], Editors.Trigger, (Controller)c.Node.Parent.Tag);
             else if (c is SectionController s)
             {
                 if (s.Data.Type == SectionType.ObjectInstance)
@@ -96,6 +99,8 @@ namespace TwinsaityEditor
                     OpenEditor(ref editPositions[s.Data.Parent.ID], Editors.Position, c);
                 else if (s.Data.Type == SectionType.Path)
                     OpenEditor(ref editPaths[s.Data.Parent.ID], Editors.Path, c);
+                else if (s.Data.Type == SectionType.Trigger)
+                    OpenEditor(ref editTriggers[s.Data.Parent.ID], Editors.Trigger, c);
             }
         }
 
@@ -109,6 +114,7 @@ namespace TwinsaityEditor
                     case Editors.Position: editor_var = new PositionEditor(this, (SectionController)cont) { Tag = TopForm }; break;
                     case Editors.Path: editor_var = new PathEditor(this, (SectionController)cont) { Tag = TopForm }; break;
                     case Editors.Instance: editor_var = new InstanceEditor(this, (SectionController)cont) { Tag = TopForm }; break;
+                    case Editors.Trigger: editor_var = new TriggerEditor(this, (SectionController)cont) { Tag = TopForm }; break;
                 }
                 editor_var.Show();
             }
@@ -143,6 +149,12 @@ namespace TwinsaityEditor
         {
             if (editPaths[id] != null && !editPaths[id].IsDisposed)
                 editPaths[id].Close();
+        }
+
+        public void CloseTriggerEditor(int id)
+        {
+            if (editTriggers[id] != null && !editTriggers[id].IsDisposed)
+                editTriggers[id].Close();
         }
 
         public void OpenRMViewer()
@@ -232,7 +244,8 @@ namespace TwinsaityEditor
                     if (i++ == id)
                         return j;
                 }
-                throw new System.ArgumentException("The requested section does not have an instance in the specified position.");
+                //throw new System.ArgumentException("The requested section does not have an instance in the specified position.");
+                return null;
             }
             else throw new System.ArgumentException("The requested section does not have an object instance section.");
         }
