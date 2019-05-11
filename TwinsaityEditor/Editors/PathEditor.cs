@@ -22,9 +22,6 @@ namespace TwinsaityEditor
             InitializeComponent();
             Text = "Path Editor (Section " + c.Data.Parent.ID + ")";
             PopulateList();
-            numericUpDown2.ValueChanged += numericUpDown1_ValueChanged;
-            numericUpDown3.ValueChanged += numericUpDown1_ValueChanged;
-            numericUpDown4.ValueChanged += numericUpDown1_ValueChanged;
             FormClosed += PathEditor_FormClosed;
         }
 
