@@ -3,10 +3,11 @@ using System.IO;
 
 namespace Twinsanity
 {
+    #region ENUMS & STRUCTS
     /// <summary>
     /// Enumerator that determines what type of section this TwinsSection is. Preferable to making new classes for each section since they basically all have the same format.
     /// 
-    /// Please append more section types at the END of this list.
+    /// Please append more section types at the END of this list, BEFORE "Last".
     /// </summary>
     public enum SectionType {
         Null,
@@ -44,8 +45,18 @@ namespace Twinsanity
         CollisionSurface,
         ObjectInstance, ObjectInstanceDemo,
         Trigger,
-        Camera
+        Camera,
+
+        Last
     }
+
+    internal struct TwinsSubInfo
+    {
+        public uint Off;
+        public int Size;
+        public uint ID;
+    }
+    #endregion
 
     public class TwinsSection : TwinsItem
     {
@@ -54,8 +65,8 @@ namespace Twinsanity
         private int size;
 
         public uint Magic { get; set; }
-        public List<TwinsItem> Records;
-        public Dictionary<uint, int> RecordIDs;
+        public List<TwinsItem> Records = new List<TwinsItem>();
+        public Dictionary<uint, int> RecordIDs = new Dictionary<uint, int>();
         public SectionType Type { get; set; }
         public int Level { get; set; }
         public int ContentSize { get => GetContentSize(); }

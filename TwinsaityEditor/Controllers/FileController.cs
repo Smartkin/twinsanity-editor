@@ -4,12 +4,12 @@ using System.Windows.Forms;
 
 namespace TwinsaityEditor
 {
-    public class FileController : Controller
+    public class FileController : SectionController
     {
-        public TwinsFile Data { get; set; }
+        public new TwinsFile Data { get; set; }
 
-        public string FileName { get; set; }
-        public string SafeFileName { get; set; }
+        public string FileName { get => Data.FileName; }
+        public string SafeFileName { get => Data.SafeFileName; }
         public Dictionary<uint, string> ObjectNames { get; set; } = new Dictionary<uint, string>();
         public Dictionary<uint, string> MaterialNames { get; set; } = new Dictionary<uint, string>();
 
@@ -24,9 +24,10 @@ namespace TwinsaityEditor
         private Form rmForm;
         public RMViewer RMViewer { get; private set; }
 
-        public FileController(MainForm topform, TwinsFile item) : base(topform)
+        public FileController(MainForm topform, TwinsFile item) : base(topform, item)
         {
             Data = item;
+            LoadFileInfo();
         }
 
         protected override string GetName()
@@ -41,11 +42,8 @@ namespace TwinsaityEditor
             TextPrev[1] = "ContentSize: " + Data.ContentSize + " Element Count: " + Data.Records.Count;
         }
 
-        public void LoadFile(string path, TwinsFile.FileType type)
+        private void LoadFileInfo()
         {
-            Data = new TwinsFile();
-            Data.LoadFile(path, type);
-            FileName = path;
             if (Data.RecordIDs.ContainsKey(10) && ((TwinsSection)Data.GetItem(10)).RecordIDs.ContainsKey(0))
             {
                 foreach (GameObject obj in ((TwinsSection)((TwinsSection)Data.GetItem(10)).GetItem(0)).Records)
@@ -67,7 +65,6 @@ namespace TwinsaityEditor
             ObjectNames.Clear();
             MaterialNames.Clear();
             Data = null;
-            FileName = SafeFileName = "";
             CloseRMViewer();
             CloseEditor(Editors.ChunkLinks);
             for (int i = 0; i <= 7; ++i)

@@ -20,7 +20,7 @@ namespace TwinsaityEditor
                 && item.Type != SectionType.MeshX && item.Type != SectionType.Model
                 && item.Type != SectionType.ArmatureModel && item.Type != SectionType.ActorModel
                 && item.Type != SectionType.StaticModel && item.Type != SectionType.SpecialModel
-                && item.Type != SectionType.Skybox)
+                && item.Type != SectionType.Skybox && !(item is TwinsFile))
             {
                 AddMenu("Re-order by ID (asc.)", Menu_ReOrderByID_Asc);
                 if (item.Type == SectionType.ObjectInstance
@@ -31,6 +31,15 @@ namespace TwinsaityEditor
                     AddMenu("Re-ID by order", Menu_ReIDByOrder);
                     AddMenu("Open editor", Menu_OpenEditor);
                 }
+                else if (item.Type == SectionType.Instance)
+                {
+                    AddMenu("Clear instance section", Menu_ClearInstanceSection);
+                    AddMenu("Fill instance section", Menu_FillInstanceSection);
+                }
+            }
+            else if (item is TwinsFile f && f.Type == TwinsFile.FileType.RM2)
+            {
+                AddMenu("Add remaining instance sections", Menu_FileFillInstanceSections);
             }
             else
             {
@@ -53,6 +62,84 @@ namespace TwinsaityEditor
             TextPrev[0] = "ID: " + Data.ID;
             TextPrev[1] = "Offset: " + Data.Offset + " Size: " + Data.Size;
             TextPrev[2] = "ContentSize: " + Data.ContentSize + " Element Count: " + Data.Records.Count;
+        }
+
+        public void AddItem(uint id, TwinsItem item)
+        {
+            Data.AddItem(id, item);
+            TopForm.GenTreeNode(item, this);
+            UpdateText();
+            ((Controller)Node.Nodes[Data.RecordIDs[item.ID]].Tag).UpdateText();
+        }
+
+        public void RemoveItem(TwinsItem item)
+        {
+            RemoveItem(item.ID);
+        }
+
+        public void RemoveItem(uint id)
+        {
+            DisposeNode(Node.Nodes[Data.RecordIDs[id]]);
+            Data.RemoveItem(id);
+            UpdateText();
+        }
+
+        private void Menu_ClearInstanceSection()
+        {
+            for (uint i = 0; i <= 8; ++i)
+            {
+                if (Data.RecordIDs.ContainsKey(i))
+                {
+                    RemoveItem(i);
+                }
+            }
+        }
+
+        private void Menu_FillInstanceSection()
+        {
+            for (uint i = 0; i <= 8; ++i)
+            {
+                SectionType type = SectionType.Null;
+                switch (i)
+                {
+                    case 0: type = SectionType.UnknownInstance; break;
+                    case 1: type = SectionType.AIPosition; break;
+                    case 2: type = SectionType.AIPath; break;
+                    case 3: type = SectionType.Position; break;
+                    case 4: type = SectionType.Path; break;
+                    case 5: type = SectionType.CollisionSurface; break;
+                    case 6: type = SectionType.ObjectInstance; break;
+                    case 7: type = SectionType.Trigger; break;
+                    case 8: type = SectionType.Camera; break;
+                }
+                if (!Data.RecordIDs.ContainsKey(i))
+                {
+                    TwinsSection sec = new TwinsSection
+                        Type = type,
+                        Parent = Data
+                    };
+                    AddItem(i, sec);
+                }
+            }
+        }
+
+        private void Menu_FileFillInstanceSections()
+        {
+            for (uint i = 0; i <= 7; ++i)
+            {
+                if (!Data.RecordIDs.ContainsKey(i))
+                {
+                    TwinsSection sec = new TwinsSection
+                    {
+                        ID = i,
+                        Level = Data.Level + 1,
+                        Offset = 0,
+                        Type = SectionType.Instance,
+                        Parent = Data
+                    };
+                    AddItem(i, sec);
+                }
+            }
         }
 
         private void Menu_ReOrderByID_Asc()

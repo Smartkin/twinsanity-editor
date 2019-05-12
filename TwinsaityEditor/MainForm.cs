@@ -119,42 +119,43 @@ namespace TwinsaityEditor
             {
                 if (CurCont != null)
                     CurCont.Dispose();
-                Tag = new FileController(this, new TwinsFile());
+                var file = new TwinsFile();
                 switch (ofd.FilterIndex)
                 {
                     case 1:
-                        CurCont.LoadFile(ofd.FileName, TwinsFile.FileType.RM2);
+                        file.LoadFile(ofd.FileName, TwinsFile.FileType.RM2);
                         rMViewerToolStripMenuItem.Enabled = true;
                         sMViewerToolStripMenuItem.Enabled = false;
                         break;
                     case 2:
-                        CurCont.LoadFile(ofd.FileName, TwinsFile.FileType.SM2);
+                        file.LoadFile(ofd.FileName, TwinsFile.FileType.SM2);
                         sMViewerToolStripMenuItem.Enabled = true;
                         rMViewerToolStripMenuItem.Enabled = false;
                         break;
                     case 3:
-                        CurCont.LoadFile(ofd.FileName, TwinsFile.FileType.RMX);
+                        file.LoadFile(ofd.FileName, TwinsFile.FileType.RMX);
                         rMViewerToolStripMenuItem.Enabled = true;
                         sMViewerToolStripMenuItem.Enabled = false;
                         break;
                     case 4:
-                        CurCont.LoadFile(ofd.FileName, TwinsFile.FileType.SMX);
+                        file.LoadFile(ofd.FileName, TwinsFile.FileType.SMX);
                         sMViewerToolStripMenuItem.Enabled = true;
                         rMViewerToolStripMenuItem.Enabled = false;
                         break;
                     case 5:
-                        CurCont.LoadFile(ofd.FileName, TwinsFile.FileType.DemoRM2);
+                        file.LoadFile(ofd.FileName, TwinsFile.FileType.DemoRM2);
                         rMViewerToolStripMenuItem.Enabled = true;
                         sMViewerToolStripMenuItem.Enabled = false;
                         break;
                     case 6:
-                        CurCont.LoadFile(ofd.FileName, TwinsFile.FileType.DemoSM2);
+                        file.LoadFile(ofd.FileName, TwinsFile.FileType.DemoSM2);
                         sMViewerToolStripMenuItem.Enabled = true;
                         rMViewerToolStripMenuItem.Enabled = false;
                         break;
                 }
-                CurCont.FileName = ofd.FileName;
-                CurCont.SafeFileName = ofd.SafeFileName;
+                file.FileName = ofd.FileName;
+                file.SafeFileName = ofd.SafeFileName;
+                Tag = new FileController(this, file);
                 GenTree();
                 Text = "Twinsaity Editor by Neo_Kesha [" + ofd.FileName + "] ";
             }
@@ -167,7 +168,7 @@ namespace TwinsaityEditor
             if (sfd.ShowDialog() == DialogResult.OK)
             {
                 CurFile.SaveFile(sfd.FileName);
-                CurCont.FileName = sfd.FileName;
+                CurCont.Data.FileName = sfd.FileName;
                 Text = "Twinsaity Editor by Neo_Kesha [" + sfd.FileName + "] ";
             }
         }
