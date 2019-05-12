@@ -104,11 +104,11 @@ namespace Twinsanity
                         link.LoadWall[j] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                     }
                 }
-                link.Unknown = new short[15];
+                //link.Unknown = new short[15];
                 link.LoadArea = new Pos[8];
                 link.AreaMatrix = new Pos[6];
                 link.UnknownMatrix = new Pos[6];
-                link.Bytes = new byte[60];
+                //link.Bytes = new byte[60];
                 if (link.Type == 1 || link.Type == 3) //type 1/3 continue here
                 {
                     for (int j = 0; j < 15; ++j)
