@@ -111,7 +111,7 @@ namespace TwinsaityEditor
                             if (file.SelectedItem != pos)
                             {
                                 GL.PointSize(5);
-                                GL.Color3(colors[colors.Length - i * 2 - 2]);
+                                GL.Color3(colors[colors.Length - i * 2 - 1]);
                             }
                             else
                             {
@@ -138,7 +138,7 @@ namespace TwinsaityEditor
                                 DrawAxes(0, 0, 0, 0.5f);
                                 GL.Scale(0.5, 0.5, 0.5);
                                 if (file.SelectedItem != pth || file.SelectedItemArg != k)
-                                    GL.Color3(colors[colors.Length - i * 2 - 2]);
+                                    GL.Color3(colors[colors.Length - i * 2 - 1]);
                                 else
                                     GL.Color3(Color.White);
                                 RenderString(pth.ID.ToString()+":"+k);
@@ -158,7 +158,7 @@ namespace TwinsaityEditor
                             for (int k = 0; k < pth.Positions.Count; ++k)
                             {
                                 if (file.SelectedItem != pth || file.SelectedItemArg != k)
-                                    GL.Color3(colors[colors.Length - i * 2 - 2]);
+                                    GL.Color3(colors[colors.Length - i * 2 - 1]);
                                 else
                                     GL.Color3(Color.White);
                                 GL.Vertex3(pth.Positions[k].X, pth.Positions[k].Y, pth.Positions[k].Z);
@@ -203,7 +203,7 @@ namespace TwinsaityEditor
                             GL.PushMatrix();
                             GL.Translate(trg.Coords[1].X, trg.Coords[1].Y, trg.Coords[1].Z);
 
-                            var cur_color = file.SelectedItem == trg ? Color.White : colors[colors.Length - i - 1];
+                            var cur_color = file.SelectedItem == trg ? Color.White : colors[colors.Length - i * 2- 1];
                             GL.Begin(PrimitiveType.Quads);
                             GL.Color4(cur_color.R, cur_color.G, cur_color.B, (byte)127);
 
@@ -295,7 +295,7 @@ namespace TwinsaityEditor
                             GL.Vertex3(-trg.Coords[2].X, trg.Coords[2].Y, trg.Coords[2].Z);
                             GL.End();
                             
-                            DrawAxes(0, 0, 0, Math.Min(trg.Coords[2].X, Math.Min(trg.Coords[2].Y, trg.Coords[2].Z)) / 2);
+                            DrawAxes(0, 0, 0, Math.Min(trg.Coords[2].X / 2, Math.Min(trg.Coords[2].Y, trg.Coords[2].Z)) / 2);
                             GL.Enable(EnableCap.DepthTest);
                             GL.Enable(EnableCap.Lighting);
 
@@ -552,7 +552,7 @@ namespace TwinsaityEditor
                         posi_vtx_offs[l++] = m;
                         vtx[3][m++] = new Vertex(new Vector3(0, 0, indicator_size * 0.75f * 0.5f) + pos_pos, new Vector3(), Color.Blue);
                         vtx[3][m++] = new Vertex(new Vector3(0, 0, -indicator_size * 0.375f * 0.5f) + pos_pos, new Vector3(), Color.Blue);
-                        Color cur_color = (file.SelectedItem == pos) ? Color.White : colors[colors.Length - i * 2 - 2];
+                        Color cur_color = (file.SelectedItem == pos) ? Color.White : colors[colors.Length - i * 2 - 1];
                         posi_vtx_offs[l++] = m;
                         for (int j = 0; j < circle_res; ++j)
                         {
