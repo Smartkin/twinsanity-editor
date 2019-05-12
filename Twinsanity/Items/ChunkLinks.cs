@@ -89,28 +89,19 @@ namespace Twinsanity
                 link.ObjectMatrix = new Pos[4];
                 for (int j = 0; j < 4; ++j)
                 {
-                    link.ObjectMatrix[j].X = reader.ReadSingle();
-                    link.ObjectMatrix[j].Y = reader.ReadSingle();
-                    link.ObjectMatrix[j].Z = reader.ReadSingle();
-                    link.ObjectMatrix[j].W = reader.ReadSingle();
+                    link.ObjectMatrix[j] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                 }
                 link.ChunkMatrix = new Pos[4];
                 for (int j = 0; j < 4; ++j)
                 {
-                    link.ChunkMatrix[j].X = reader.ReadSingle();
-                    link.ChunkMatrix[j].Y = reader.ReadSingle();
-                    link.ChunkMatrix[j].Z = reader.ReadSingle();
-                    link.ChunkMatrix[j].W = reader.ReadSingle();
+                    link.ChunkMatrix[j] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                 }
                 link.LoadWall = new Pos[4];
                 if ((link.Flags & 0x80000) != 0)
                 {
                     for (int j = 0; j < 4; ++j)
                     {
-                        link.LoadWall[j].X = reader.ReadSingle();
-                        link.LoadWall[j].Y = reader.ReadSingle();
-                        link.LoadWall[j].Z = reader.ReadSingle();
-                        link.LoadWall[j].W = reader.ReadSingle();
+                        link.LoadWall[j] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                     }
                 }
                 link.Unknown = new short[15];
@@ -126,24 +117,15 @@ namespace Twinsanity
                     }
                     for (int j = 0; j < 8; ++j)
                     {
-                        link.LoadArea[j].X = reader.ReadSingle();
-                        link.LoadArea[j].Y = reader.ReadSingle();
-                        link.LoadArea[j].Z = reader.ReadSingle();
-                        link.LoadArea[j].W = reader.ReadSingle();
+                        link.LoadArea[j] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                     }
                     for (int j = 0; j < 6; ++j)
                     {
-                        link.AreaMatrix[j].X = reader.ReadSingle();
-                        link.AreaMatrix[j].Y = reader.ReadSingle();
-                        link.AreaMatrix[j].Z = reader.ReadSingle();
-                        link.AreaMatrix[j].W = reader.ReadSingle();
+                        link.AreaMatrix[j] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                     }
                     for (int j = 0; j < 6; ++j)
                     {
-                        link.UnknownMatrix[j].X = reader.ReadSingle();
-                        link.UnknownMatrix[j].Y = reader.ReadSingle();
-                        link.UnknownMatrix[j].Z = reader.ReadSingle();
-                        link.UnknownMatrix[j].W = reader.ReadSingle();
+                        link.UnknownMatrix[j] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                     }
                     link.Bytes = reader.ReadBytes(60);
                 }
