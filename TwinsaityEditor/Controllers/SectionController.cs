@@ -115,6 +115,10 @@ namespace TwinsaityEditor
                 if (!Data.RecordIDs.ContainsKey(i))
                 {
                     TwinsSection sec = new TwinsSection
+                    {
+                        ID = i,
+                        Level = Data.Level + 1,
+                        Offset = 0,
                         Type = type,
                         Parent = Data
                     };
