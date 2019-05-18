@@ -28,6 +28,7 @@ namespace TwinsaityEditor
             trv.Nodes.Clear();
             TreeNode new_node = new TreeNode("Root Node");
             AddTriggerNode(new_node, 0);
+            new_node.ExpandAll();
             trv.Nodes.Add(new_node);
             trv.EndUpdate();
         }
