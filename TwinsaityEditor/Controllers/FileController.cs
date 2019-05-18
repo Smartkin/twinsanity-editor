@@ -18,11 +18,11 @@ namespace TwinsaityEditor
 
         //Editors
         private Form editChunkLinks;
-        private Form[] editInstances = new Form[8], editPositions = new Form[8], editPaths = new Form[8], editTriggers = new Form[8];
+        private readonly Form[] editInstances = new Form[8], editPositions = new Form[8], editPaths = new Form[8], editTriggers = new Form[8];
 
         //Viewers
         private Form rmForm;
-        public RMViewer RMViewer { get; private set; }
+        private RMViewer RMViewer { get; set; }
 
         public FileController(MainForm topform, TwinsFile item) : base(topform, item)
         {
@@ -69,10 +69,10 @@ namespace TwinsaityEditor
             CloseEditor(Editors.ChunkLinks);
             for (int i = 0; i <= 7; ++i)
             {
-                CloseInstanceEditor(i);
-                ClosePositionEditor(i);
-                ClosePathEditor(i);
-                CloseTriggerEditor(i);
+                CloseEditor(Editors.Instance, i);
+                CloseEditor(Editors.Position, i);
+                CloseEditor(Editors.Path, i);
+                CloseEditor(Editors.Trigger, i);
             }
         }
 
@@ -119,39 +119,19 @@ namespace TwinsaityEditor
                 editor_var.Select();
         }
 
-        public void CloseEditor(Editors editor)
+        public void CloseEditor(Editors editor, int arg = -1)
         {
             Form editorForm = null;
             switch (editor)
             {
                 case Editors.ChunkLinks: editorForm = editChunkLinks; break;
+                case Editors.Instance: editorForm = editInstances[arg]; break; //since arg is -1 by default, an exception will be thrown unless it is specified
+                case Editors.Position: editorForm = editPositions[arg]; break;
+                case Editors.Path: editorForm = editPaths[arg]; break;
+                case Editors.Trigger: editorForm = editTriggers[arg]; break;
             }
             if (editorForm != null && !editorForm.IsDisposed)
                 editorForm.Close();
-        }
-
-        public void CloseInstanceEditor(int id)
-        {
-            if (editInstances[id] != null && !editInstances[id].IsDisposed)
-                editInstances[id].Close();
-        }
-
-        public void ClosePositionEditor(int id)
-        {
-            if (editPositions[id] != null && !editPositions[id].IsDisposed)
-                editPositions[id].Close();
-        }
-
-        public void ClosePathEditor(int id)
-        {
-            if (editPaths[id] != null && !editPaths[id].IsDisposed)
-                editPaths[id].Close();
-        }
-
-        public void CloseTriggerEditor(int id)
-        {
-            if (editTriggers[id] != null && !editTriggers[id].IsDisposed)
-                editTriggers[id].Close();
         }
 
         public void OpenRMViewer()
@@ -186,10 +166,15 @@ namespace TwinsaityEditor
                 RMViewer.LoadPositions();
         }
 
+        public void CloseForm(ref Form form)
+        {
+            if (form != null && form.IsDisposed)
+                form.Close();
+        }
+
         public void CloseRMViewer()
         {
-            if (rmForm != null && !rmForm.IsDisposed)
-                rmForm.Close();
+            CloseForm(ref rmForm);
         }
 
         public void SelectItem(TwinsItem item, int arg = -1)

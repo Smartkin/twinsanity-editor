@@ -55,13 +55,23 @@ namespace TwinsaityEditor
                 }
                 else if (Data is Instance)
                 {
-                    MainFile.CloseInstanceEditor((int)Data.Parent.Parent.ID);
+                    MainFile.CloseEditor(Editors.Instance, (int)Data.Parent.Parent.ID);
                     ((Instance)Data).Load(reader, (int)reader.BaseStream.Length);
                 }
                 else if (Data is Position)
                 {
-                    MainFile.ClosePositionEditor((int)Data.Parent.Parent.ID);
+                    MainFile.CloseEditor(Editors.Position, (int)Data.Parent.Parent.ID);
                     ((Position)Data).Load(reader, (int)reader.BaseStream.Length);
+                }
+                else if (Data is Twinsanity.Path)
+                {
+                    MainFile.CloseEditor(Editors.Path, (int)Data.Parent.Parent.ID);
+                    ((Twinsanity.Path)Data).Load(reader, (int)reader.BaseStream.Length);
+                }
+                else if (Data is Trigger)
+                {
+                    MainFile.CloseEditor(Editors.Trigger, (int)Data.Parent.Parent.ID);
+                    ((Trigger)Data).Load(reader, (int)reader.BaseStream.Length);
                 }
                 else
                     Data.Load(reader, (int)reader.BaseStream.Length);
