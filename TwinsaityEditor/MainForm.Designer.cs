@@ -46,7 +46,6 @@
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
             this.refreshLibraryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
-            this.collisionTreeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.graphicsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.soundToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -159,7 +158,6 @@
             this.toolStripMenuItem4,
             this.refreshLibraryToolStripMenuItem,
             this.toolStripMenuItem5,
-            this.collisionTreeToolStripMenuItem,
             this.graphicsToolStripMenuItem,
             this.soundToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
@@ -197,13 +195,6 @@
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
             this.toolStripMenuItem5.Size = new System.Drawing.Size(177, 6);
             // 
-            // collisionTreeToolStripMenuItem
-            // 
-            this.collisionTreeToolStripMenuItem.Enabled = false;
-            this.collisionTreeToolStripMenuItem.Name = "collisionTreeToolStripMenuItem";
-            this.collisionTreeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.collisionTreeToolStripMenuItem.Text = "ColData Tree Viewer";
-            // 
             // graphicsToolStripMenuItem
             // 
             this.graphicsToolStripMenuItem.Enabled = false;
@@ -231,7 +222,7 @@
             // 
             this.rMViewerToolStripMenuItem.Enabled = false;
             this.rMViewerToolStripMenuItem.Name = "rMViewerToolStripMenuItem";
-            this.rMViewerToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
+            this.rMViewerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.rMViewerToolStripMenuItem.Text = "RM Viewer";
             this.rMViewerToolStripMenuItem.Click += new System.EventHandler(this.rMViewerToolStripMenuItem_Click);
             // 
@@ -239,7 +230,7 @@
             // 
             this.sMViewerToolStripMenuItem.Enabled = false;
             this.sMViewerToolStripMenuItem.Name = "sMViewerToolStripMenuItem";
-            this.sMViewerToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
+            this.sMViewerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.sMViewerToolStripMenuItem.Text = "SM Viewer";
             this.sMViewerToolStripMenuItem.Click += new System.EventHandler(this.sMViewerToolStripMenuItem_Click);
             // 
@@ -336,7 +327,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem4;
         private System.Windows.Forms.ToolStripMenuItem refreshLibraryToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem5;
-        private System.Windows.Forms.ToolStripMenuItem collisionTreeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem graphicsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem soundToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
