@@ -73,6 +73,11 @@ namespace TwinsaityEditor
                     MainFile.CloseEditor(Editors.Trigger, (int)Data.Parent.Parent.ID);
                     ((Trigger)Data).Load(reader, (int)reader.BaseStream.Length);
                 }
+                else if (Data is ColData)
+                {
+                    MainFile.CloseEditor(Editors.ColData);
+                    ((ColData)Data).Load(reader, (int)reader.BaseStream.Length);
+                }
                 else
                     Data.Load(reader, (int)reader.BaseStream.Length);
                 reader.Close();

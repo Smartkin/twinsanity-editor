@@ -239,6 +239,12 @@
     <Compile Include="Viewers\ThreeDViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Workers\ColDataEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Workers\ColDataEditor.Designer.cs">
+      <DependentUpon>ColDataEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Workers\CollisionImporter.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -283,6 +289,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Viewers\ThreeDViewer.resx">
       <DependentUpon>ThreeDViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Workers\ColDataEditor.resx">
+      <DependentUpon>ColDataEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Workers\CollisionImporter.resx">
       <DependentUpon>CollisionImporter.cs</DependentUpon>

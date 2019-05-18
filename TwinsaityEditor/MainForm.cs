@@ -103,7 +103,7 @@ namespace TwinsaityEditor
         {
             TreeView tree = (TreeView)sender;
             if (e.KeyCode == Keys.Enter && tree.SelectedNode.Tag is Controller c)
-                CurCont.CheckOpenEditor(c);
+                CurCont.OpenEditor(c);
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)

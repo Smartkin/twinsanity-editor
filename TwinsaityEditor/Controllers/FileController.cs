@@ -21,7 +21,7 @@ namespace TwinsaityEditor
         private readonly Form[] editInstances = new Form[8], editPositions = new Form[8], editPaths = new Form[8], editTriggers = new Form[8];
 
         //Viewers
-        private Form rmForm;
+        private Form rmForm, colForm;
         private RMViewer RMViewer { get; set; }
 
         public FileController(MainForm topform, TwinsFile item) : base(topform, item)
@@ -67,6 +67,7 @@ namespace TwinsaityEditor
             Data = null;
             CloseRMViewer();
             CloseEditor(Editors.ChunkLinks);
+            CloseEditor(Editors.ColData);
             for (int i = 0; i <= 7; ++i)
             {
                 CloseEditor(Editors.Instance, i);
@@ -76,10 +77,12 @@ namespace TwinsaityEditor
             }
         }
 
-        public void CheckOpenEditor(Controller c)
+        public void OpenEditor(Controller c)
         {
             if (c is ChunkLinksController)
                 OpenEditor(ref editChunkLinks, Editors.ChunkLinks, c);
+            else if (c is ColDataController)
+                OpenEditor(ref colForm, Editors.ColData, c);
             else if (c is PositionController)
                 OpenEditor(ref editPositions[((PositionController)c).Data.Parent.Parent.ID], Editors.Position, (Controller)c.Node.Parent.Tag);
             else if (c is PathController)
@@ -101,12 +104,18 @@ namespace TwinsaityEditor
             }
         }
 
-        public void OpenEditor(ref Form editor_var, Editors editor, Controller cont)
+        private void OpenEditor(ref Form editor_var, Editors editor, Controller cont)
         {
             if (editor_var == null || editor_var.IsDisposed)
             {
                 switch (editor)
                 {
+                    case Editors.ColData:
+                        {
+                            if (Data.RecordIDs.ContainsKey(9)) editor_var = new ColDataEditor((ColData)Data.GetItem(9)) { Tag = TopForm };
+                            else return;
+                        }
+                        break;
                     case Editors.ChunkLinks: editor_var = new ChunkLinksEditor((ChunkLinksController)cont) { Tag = TopForm }; break;
                     case Editors.Position: editor_var = new PositionEditor(this, (SectionController)cont) { Tag = TopForm }; break;
                     case Editors.Path: editor_var = new PathEditor(this, (SectionController)cont) { Tag = TopForm }; break;
@@ -124,14 +133,14 @@ namespace TwinsaityEditor
             Form editorForm = null;
             switch (editor)
             {
+                case Editors.ColData: editorForm = colForm; break;
                 case Editors.ChunkLinks: editorForm = editChunkLinks; break;
                 case Editors.Instance: editorForm = editInstances[arg]; break; //since arg is -1 by default, an exception will be thrown unless it is specified
                 case Editors.Position: editorForm = editPositions[arg]; break;
                 case Editors.Path: editorForm = editPaths[arg]; break;
                 case Editors.Trigger: editorForm = editTriggers[arg]; break;
             }
-            if (editorForm != null && !editorForm.IsDisposed)
-                editorForm.Close();
+            CloseForm(ref colForm);
         }
 
         public void OpenRMViewer()

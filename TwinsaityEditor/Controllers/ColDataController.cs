@@ -15,6 +15,7 @@ namespace TwinsaityEditor
         {
             Data = item;
             AddMenu("Open RMViewer", Menu_OpenRMViewer);
+            AddMenu("Open collision tree viewer", Menu_OpenColDataViewer);
             AddMenu("Export Collision Model", Menu_Export);
             AddMenu("Import Collision Model", Menu_Import);
         }
@@ -35,7 +36,7 @@ namespace TwinsaityEditor
             TextPrev[5] = "VertexCount: " + Data.Vertices.Count;
             /*
             for (int i = 0; i < Data.Triggers.Count; ++i)
-                TextPrev[6 + i] = "Trigger" + i + ": " + "(" + Data.Triggers[i].X1 + ", " + Data.Triggers[i].Y1 + ", " + Data.Triggers[i].Z1 + ")~(" + Data.Triggers[i].X2 + ", " + Data.Triggers[i].Y2 + ", " + Data.Triggers[i].Z2 + ") | Nodes: " + Data.Triggers[i].Flag1 + "~" + Data.Triggers[i].Flag2;
+                TextPrev[6 + i] = "Trigger" + i + ": " + Nodes " + Data.Triggers[i].Flag1 + "~" + Data.Triggers[i].Flag2;
             
             for (int i = 0; i < Data.Groups.Count; ++i)
                 TextPrev[6 + Data.Triggers.Count + i] = "Group" + i + ": " + "Offset: " + Data.Groups[i].Offset + " Count: " + Data.Groups[i].Size;
@@ -51,6 +52,11 @@ namespace TwinsaityEditor
         private void Menu_OpenRMViewer()
         {
             MainFile.OpenRMViewer();
+        }
+
+        private void Menu_OpenColDataViewer()
+        {
+            MainFile.OpenEditor(this);
         }
 
         private void Menu_Export()

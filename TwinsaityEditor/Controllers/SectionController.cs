@@ -150,11 +150,11 @@ namespace TwinsaityEditor
         {
             if (Data.Type == SectionType.ObjectInstance)
             {
-                MainFile.CloseInstanceEditor((int)Data.Parent.ID);
+                MainFile.CloseEditor(Editors.Instance, (int)Data.Parent.ID);
             }
             else if (Data.Type == SectionType.Position)
             {
-                MainFile.ClosePositionEditor((int)Data.Parent.ID);
+                MainFile.CloseEditor(Editors.Position, (int)Data.Parent.ID);
             }
             Node.TreeView.BeginUpdate();
             while (Node.Nodes.Count > 0)
@@ -192,11 +192,11 @@ namespace TwinsaityEditor
         {
             if (Data.Type == SectionType.ObjectInstance)
             {
-                MainFile.CloseInstanceEditor((int)Data.Parent.ID);
+                MainFile.CloseEditor(Editors.Instance, (int)Data.Parent.ID);
             }
             else if (Data.Type == SectionType.Position)
             {
-                MainFile.ClosePositionEditor((int)Data.Parent.ID);
+                MainFile.CloseEditor(Editors.Position, (int)Data.Parent.ID);
             }
             Node.TreeView.BeginUpdate();
             while (Node.Nodes.Count > 0)
@@ -213,7 +213,7 @@ namespace TwinsaityEditor
 
         private void Menu_OpenEditor()
         {
-            MainFile.CheckOpenEditor(this);
+            MainFile.OpenEditor(this);
         }
 
         private void Menu_ExportAllPLY()

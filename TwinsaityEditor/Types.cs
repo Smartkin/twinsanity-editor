@@ -30,6 +30,7 @@ namespace TwinsaityEditor
     public enum TextAnchor { TopLeft, TopMiddle, TopRight, BotLeft, BotMiddle, BotRight };
     public enum Editors
     {
+        ColData, //<-- not an actual editor!
         ChunkLinks,
         Position,
         Path,
