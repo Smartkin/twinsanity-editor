@@ -47,11 +47,6 @@
             this.refreshLibraryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
             this.collisionTreeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.collisionTreeViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.clearCollisionTreeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.importCollisionTreeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exportToobjToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.triggerTreeViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.graphicsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.soundToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -174,7 +169,7 @@
             // eLFPatcherToolStripMenuItem
             // 
             this.eLFPatcherToolStripMenuItem.Name = "eLFPatcherToolStripMenuItem";
-            this.eLFPatcherToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.eLFPatcherToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.eLFPatcherToolStripMenuItem.Text = "EXE Patcher";
             this.eLFPatcherToolStripMenuItem.Click += new System.EventHandler(this.eLFPatcherToolStripMenuItem_Click);
             // 
@@ -182,81 +177,45 @@
             // 
             this.e3ConverterToolStripMenuItem.Enabled = false;
             this.e3ConverterToolStripMenuItem.Name = "e3ConverterToolStripMenuItem";
-            this.e3ConverterToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.e3ConverterToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.e3ConverterToolStripMenuItem.Text = "E3 Converter";
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(149, 6);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(177, 6);
             // 
             // refreshLibraryToolStripMenuItem
             // 
             this.refreshLibraryToolStripMenuItem.Enabled = false;
             this.refreshLibraryToolStripMenuItem.Name = "refreshLibraryToolStripMenuItem";
-            this.refreshLibraryToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.refreshLibraryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.refreshLibraryToolStripMenuItem.Text = "Refresh Library";
             // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(149, 6);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(177, 6);
             // 
             // collisionTreeToolStripMenuItem
             // 
-            this.collisionTreeToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.collisionTreeViewerToolStripMenuItem,
-            this.clearCollisionTreeToolStripMenuItem,
-            this.importCollisionTreeToolStripMenuItem,
-            this.exportToobjToolStripMenuItem,
-            this.triggerTreeViewerToolStripMenuItem});
             this.collisionTreeToolStripMenuItem.Enabled = false;
             this.collisionTreeToolStripMenuItem.Name = "collisionTreeToolStripMenuItem";
-            this.collisionTreeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.collisionTreeToolStripMenuItem.Text = "Collision Tree";
-            // 
-            // collisionTreeViewerToolStripMenuItem
-            // 
-            this.collisionTreeViewerToolStripMenuItem.Name = "collisionTreeViewerToolStripMenuItem";
-            this.collisionTreeViewerToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.collisionTreeViewerToolStripMenuItem.Text = "Collision Tree Viewer";
-            // 
-            // clearCollisionTreeToolStripMenuItem
-            // 
-            this.clearCollisionTreeToolStripMenuItem.Name = "clearCollisionTreeToolStripMenuItem";
-            this.clearCollisionTreeToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.clearCollisionTreeToolStripMenuItem.Text = "Clear Collision Tree";
-            // 
-            // importCollisionTreeToolStripMenuItem
-            // 
-            this.importCollisionTreeToolStripMenuItem.Name = "importCollisionTreeToolStripMenuItem";
-            this.importCollisionTreeToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.importCollisionTreeToolStripMenuItem.Text = "Import Collision Tree";
-            // 
-            // exportToobjToolStripMenuItem
-            // 
-            this.exportToobjToolStripMenuItem.Name = "exportToobjToolStripMenuItem";
-            this.exportToobjToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.exportToobjToolStripMenuItem.Text = "Export to .obj";
-            // 
-            // triggerTreeViewerToolStripMenuItem
-            // 
-            this.triggerTreeViewerToolStripMenuItem.Name = "triggerTreeViewerToolStripMenuItem";
-            this.triggerTreeViewerToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
-            this.triggerTreeViewerToolStripMenuItem.Text = "Trigger Tree Viewer";
+            this.collisionTreeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.collisionTreeToolStripMenuItem.Text = "ColData Tree Viewer";
             // 
             // graphicsToolStripMenuItem
             // 
             this.graphicsToolStripMenuItem.Enabled = false;
             this.graphicsToolStripMenuItem.Name = "graphicsToolStripMenuItem";
-            this.graphicsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.graphicsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.graphicsToolStripMenuItem.Text = "Graphics";
             // 
             // soundToolStripMenuItem
             // 
             this.soundToolStripMenuItem.Enabled = false;
             this.soundToolStripMenuItem.Name = "soundToolStripMenuItem";
-            this.soundToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.soundToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.soundToolStripMenuItem.Text = "Sound";
             // 
             // viewersToolStripMenuItem
@@ -272,7 +231,7 @@
             // 
             this.rMViewerToolStripMenuItem.Enabled = false;
             this.rMViewerToolStripMenuItem.Name = "rMViewerToolStripMenuItem";
-            this.rMViewerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.rMViewerToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.rMViewerToolStripMenuItem.Text = "RM Viewer";
             this.rMViewerToolStripMenuItem.Click += new System.EventHandler(this.rMViewerToolStripMenuItem_Click);
             // 
@@ -280,7 +239,7 @@
             // 
             this.sMViewerToolStripMenuItem.Enabled = false;
             this.sMViewerToolStripMenuItem.Name = "sMViewerToolStripMenuItem";
-            this.sMViewerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.sMViewerToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.sMViewerToolStripMenuItem.Text = "SM Viewer";
             this.sMViewerToolStripMenuItem.Click += new System.EventHandler(this.sMViewerToolStripMenuItem_Click);
             // 
@@ -378,11 +337,6 @@
         private System.Windows.Forms.ToolStripMenuItem refreshLibraryToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem5;
         private System.Windows.Forms.ToolStripMenuItem collisionTreeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem collisionTreeViewerToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem clearCollisionTreeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem importCollisionTreeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem exportToobjToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem triggerTreeViewerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem graphicsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem soundToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
