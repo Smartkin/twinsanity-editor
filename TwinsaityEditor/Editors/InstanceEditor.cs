@@ -195,8 +195,7 @@ namespace TwinsaityEditor
         private void comboBox1_TextChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            ushort oid;
-            if (ushort.TryParse(comboBox1.Text.Split(new char[] { ' ' }, 2)[0], out oid))
+            if (ushort.TryParse(comboBox1.Text.Split(new char[] { ' ' }, 2)[0], out ushort oid))
             {
                 ins.ObjectID = oid;
                 listBox1.Items[listBox1.SelectedIndex] = GenTextForList(ins);
@@ -207,8 +206,7 @@ namespace TwinsaityEditor
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            uint o;
-            if (uint.TryParse(textBox1.Text, System.Globalization.NumberStyles.HexNumber, null, out o))
+            if (uint.TryParse(textBox1.Text, System.Globalization.NumberStyles.HexNumber, null, out uint o))
             {
                 ins.UnkI32 = o;
             }
@@ -218,40 +216,32 @@ namespace TwinsaityEditor
         private void numericUpDown2_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            Pos pos = ins.Pos;
-            pos.X = (float)numericUpDown2.Value;
-            ins.Pos = pos;
-            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
+            ins.Pos.X = (float)numericUpDown2.Value;
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateTextBox();
             TFController.RMViewer_LoadInstances();
         }
 
         private void numericUpDown3_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            Pos pos = ins.Pos;
-            pos.Y = (float)numericUpDown3.Value;
-            ins.Pos = pos;
-            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
+            ins.Pos.Y = (float)numericUpDown3.Value;
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateTextBox();
             TFController.RMViewer_LoadInstances();
         }
 
         private void numericUpDown4_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            Pos pos = ins.Pos;
-            pos.Z = (float)numericUpDown4.Value;
-            ins.Pos = pos;
-            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
+            ins.Pos.Z = (float)numericUpDown4.Value;
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateTextBox();
             TFController.RMViewer_LoadInstances();
         }
 
         private void numericUpDown5_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            Pos pos = ins.Pos;
-            pos.W = (float)numericUpDown5.Value;
-            ins.Pos = pos;
-            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
+            ins.Pos.W = (float)numericUpDown5.Value;
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateTextBox();
         }
 
         private void trackBar1_Scroll(object sender, EventArgs e)
@@ -336,8 +326,7 @@ namespace TwinsaityEditor
             ins.S1.Clear();
             for (int i = 0; i < textBox2.Lines.Length; ++i)
             {
-                ushort v;
-                if (ushort.TryParse(textBox2.Lines[i], out v))
+                if (ushort.TryParse(textBox2.Lines[i], out ushort v))
                     ins.S1.Add(v);
             }
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
@@ -349,8 +338,7 @@ namespace TwinsaityEditor
             ins.S2.Clear();
             for (int i = 0; i < textBox3.Lines.Length; ++i)
             {
-                ushort v;
-                if (ushort.TryParse(textBox3.Lines[i], out v))
+                if (ushort.TryParse(textBox3.Lines[i], out ushort v))
                     ins.S2.Add(v);
             }
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
@@ -362,8 +350,7 @@ namespace TwinsaityEditor
             ins.S3.Clear();
             for (int i = 0; i < textBox4.Lines.Length; ++i)
             {
-                ushort v;
-                if (ushort.TryParse(textBox4.Lines[i], out v))
+                if (ushort.TryParse(textBox4.Lines[i], out ushort v))
                     ins.S3.Add(v);
             }
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
@@ -375,8 +362,7 @@ namespace TwinsaityEditor
             ins.UnkI321.Clear();
             for (int i = 0; i < textBox7.Lines.Length; ++i)
             {
-                uint v;
-                if (uint.TryParse(textBox7.Lines[i], out v))
+                if (uint.TryParse(textBox7.Lines[i], out uint v))
                     ins.UnkI321.Add(v);
             }
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
@@ -388,8 +374,7 @@ namespace TwinsaityEditor
             ins.UnkI322.Clear();
             for (int i = 0; i < textBox6.Lines.Length; ++i)
             {
-                float v;
-                if (float.TryParse(textBox6.Lines[i], out v))
+                if (float.TryParse(textBox6.Lines[i], out float v))
                     ins.UnkI322.Add(v);
             }
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
@@ -401,8 +386,7 @@ namespace TwinsaityEditor
             ins.UnkI323.Clear();
             for (int i = 0; i < textBox5.Lines.Length; ++i)
             {
-                uint v;
-                if (uint.TryParse(textBox5.Lines[i], out v))
+                if (uint.TryParse(textBox5.Lines[i], out uint v))
                     ins.UnkI323.Add(v);
             }
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();

@@ -20,9 +20,6 @@ namespace TwinsaityEditor
             InitializeComponent();
             Text = "Position Editor (Section " + c.Data.Parent.ID + ")";
             PopulateList();
-            numericUpDown2.ValueChanged += numericUpDown1_ValueChanged;
-            numericUpDown3.ValueChanged += numericUpDown1_ValueChanged;
-            numericUpDown4.ValueChanged += numericUpDown1_ValueChanged;
             FormClosed += PositionEditor_FormClosed;
         }
 
@@ -60,13 +57,6 @@ namespace TwinsaityEditor
             ignore_value_change = false;
 
             this.ResumeDrawing();
-        }
-
-        private void numericUpDown1_ValueChanged(object sender, System.EventArgs e)
-        {
-            if (ignore_value_change) return;
-            pos.Pos = new Pos((float)numericUpDown1.Value, (float)numericUpDown2.Value, (float)numericUpDown3.Value, (float)numericUpDown4.Value);
-            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[pos.ID]].Tag).UpdateText();
         }
 
         private void addToolStripMenuItem_Click(object sender, System.EventArgs e)
@@ -118,6 +108,34 @@ namespace TwinsaityEditor
             controller.Data.RecordIDs.Add(pos.ID, listBox1.SelectedIndex);
             listBox1.Items[listBox1.SelectedIndex] = "ID " + pos.ID;
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[pos.ID]].Tag).UpdateText();
+        }
+
+        private void numericUpDown1_ValueChanged(object sender, System.EventArgs e)
+        {
+            if (ignore_value_change) return;
+            pos.Pos.X = (float)numericUpDown1.Value;
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[pos.ID]].Tag).UpdateTextBox();
+        }
+
+        private void numericUpDown2_ValueChanged(object sender, System.EventArgs e)
+        {
+            if (ignore_value_change) return;
+            pos.Pos.Y = (float)numericUpDown2.Value;
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[pos.ID]].Tag).UpdateTextBox();
+        }
+
+        private void numericUpDown3_ValueChanged(object sender, System.EventArgs e)
+        {
+            if (ignore_value_change) return;
+            pos.Pos.Z = (float)numericUpDown3.Value;
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[pos.ID]].Tag).UpdateTextBox();
+        }
+
+        private void numericUpDown4_ValueChanged(object sender, System.EventArgs e)
+        {
+            if (ignore_value_change) return;
+            pos.Pos.W = (float)numericUpDown4.Value;
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[pos.ID]].Tag).UpdateTextBox();
         }
     }
 }

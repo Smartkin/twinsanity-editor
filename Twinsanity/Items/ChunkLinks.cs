@@ -129,6 +129,21 @@ namespace Twinsanity
                     }
                     link.Bytes = reader.ReadBytes(60);
                 }
+                else
+                {
+                    for (int j = 0; j < 8; ++j)
+                    {
+                        link.LoadArea[j] = new Pos(0, 0, 0, 0);
+                    }
+                    for (int j = 0; j < 6; ++j)
+                    {
+                        link.AreaMatrix[j] = new Pos(0, 0, 0, 0);
+                    }
+                    for (int j = 0; j < 6; ++j)
+                    {
+                        link.UnknownMatrix[j] = new Pos(0, 0, 0, 0);
+                    }
+                }
                 Links.Add(link);
             }
         }
