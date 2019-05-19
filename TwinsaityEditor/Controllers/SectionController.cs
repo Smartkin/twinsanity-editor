@@ -58,10 +58,12 @@ namespace TwinsaityEditor
 
         protected override void GenText()
         {
-            TextPrev = new string[3];
+            TextPrev = new string[Data.ExtraData == null ? 3 : 4];
             TextPrev[0] = "ID: " + Data.ID;
             TextPrev[1] = "Offset: " + Data.Offset + " Size: " + Data.Size;
             TextPrev[2] = "ContentSize: " + Data.ContentSize + " Element Count: " + Data.Records.Count;
+            if (Data.ExtraData != null)
+                TextPrev[3] = "ExtraDataSize: " + Data.ExtraData.Length;
         }
 
         public void AddItem(uint id, TwinsItem item)

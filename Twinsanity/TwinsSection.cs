@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Twinsanity
@@ -30,12 +31,13 @@ namespace Twinsanity
         Animation,
         OGI,
         CodeModel,
-        //SE_Eng,
-        //SE_Fre,
-        //SE_Ger,
-        //SE_Spa,
-        //SE_Ita,
-        //SE_Jpn,
+        SE,
+        SE_Eng,
+        SE_Fre,
+        SE_Ger,
+        SE_Spa,
+        SE_Ita,
+        SE_Jpn,
 
         UnknownInstance,
         AIPosition,
@@ -50,7 +52,7 @@ namespace Twinsanity
         Last
     }
 
-    internal struct TwinsSubInfo
+    public struct TwinsSubInfo
     {
         public uint Off;
         public int Size;
@@ -60,9 +62,9 @@ namespace Twinsanity
 
     public class TwinsSection : TwinsItem
     {
-        private readonly uint magic = 0x00010001;
-        private readonly uint magicV2 = 0x00010003;
-        private int size;
+        protected readonly uint magic = 0x00010001;
+        protected readonly uint magicV2 = 0x00010003;
+        protected int size;
 
         public uint Magic { get; set; }
         public List<TwinsItem> Records = new List<TwinsItem>();
@@ -70,6 +72,8 @@ namespace Twinsanity
         public SectionType Type { get; set; }
         public int Level { get; set; }
         public int ContentSize { get => GetContentSize(); }
+
+        public byte[] ExtraData { get; set; }
 
         /// <summary>
         /// Loads the section from a file.
@@ -85,14 +89,18 @@ namespace Twinsanity
                 return;
             var count = reader.ReadInt32();
             var sec_size = reader.ReadUInt32();
+            long extra_begin = reader.BaseStream.Position, extra_end = extra_begin + size - 12;
             for (int i = 0; i < count; i++)
             {
-                TwinsSubInfo sub = new TwinsSubInfo();
-                sub.Off = reader.ReadUInt32();
-                sub.Size = reader.ReadInt32();
-                sub.ID = reader.ReadUInt32();
+                TwinsSubInfo sub = new TwinsSubInfo
+                {
+                    Off = reader.ReadUInt32(),
+                    Size = reader.ReadInt32(),
+                    ID = reader.ReadUInt32()
+                };
                 var sk = reader.BaseStream.Position;
                 reader.BaseStream.Position = sk - (i + 2) * 0xC + sub.Off;
+                extra_begin = Math.Max(reader.BaseStream.Position + sub.Size, extra_begin);
                 //var m = reader.ReadUInt32(); //get magic number [obsolete?]
                 //reader.BaseStream.Position -= 4;
                 switch (Type)
@@ -132,7 +140,7 @@ namespace Twinsanity
                                 LoadSection(reader, sub, SectionType.SpecialModel);
                                 break;
                             case 8:
-                                LoadSection(reader, sub, SectionType.Skybox);
+                                LoadSection(reader, sub, SectionType.Skydome);
                                 break;
                             default:
                                 LoadItem<TwinsItem>(reader, sub);
@@ -200,24 +208,27 @@ namespace Twinsanity
                             case 4:
                                 LoadSection(reader, sub, SectionType.CodeModel);
                                 break;
-                            //case 7:
-                            //    LoadSection(reader, sub, SectionType.SE_Eng);
-                            //    break;
-                            //case 8:
-                            //    LoadSection(reader, sub, SectionType.SE_Fre);
-                            //    break;
-                            //case 9:
-                            //    LoadSection(reader, sub, SectionType.SE_Ger);
-                            //    break;
-                            //case 10:
-                            //    LoadSection(reader, sub, SectionType.SE_Spa);
-                            //    break;
-                            //case 11:
-                            //    LoadSection(reader, sub, SectionType.SE_Ita);
-                            //    break;
-                            //case 12:
-                            //    LoadSection(reader, sub, SectionType.SE_Jpn);
-                            //    break;
+                            case 6:
+                                LoadSection(reader, sub, SectionType.SE);
+                                break;
+                            case 7:
+                                LoadSection(reader, sub, SectionType.SE_Eng);
+                                break;
+                            case 8:
+                                LoadSection(reader, sub, SectionType.SE_Fre);
+                                break;
+                            case 9:
+                                LoadSection(reader, sub, SectionType.SE_Ger);
+                                break;
+                            case 10:
+                                LoadSection(reader, sub, SectionType.SE_Spa);
+                                break;
+                            case 11:
+                                LoadSection(reader, sub, SectionType.SE_Ita);
+                                break;
+                            case 12:
+                                LoadSection(reader, sub, SectionType.SE_Jpn);
+                                break;
                             default:
                                 LoadItem<TwinsItem>(reader, sub);
                                 break;
@@ -272,9 +283,10 @@ namespace Twinsanity
                 }
                 reader.BaseStream.Position = sk;
             }
+            ExtraData = reader.ReadBytes((int)(extra_end - extra_begin));
         }
 
-        private void LoadItem<T>(BinaryReader reader, TwinsSubInfo sub) where T : TwinsItem, new()
+        protected void LoadItem<T>(BinaryReader reader, TwinsSubInfo sub) where T : TwinsItem, new()
         {
             T rec = new T
             {
@@ -329,7 +341,7 @@ namespace Twinsanity
             if (size < 0xC)
                 return size;
             else
-                return (Records.Count + 1) * 12 + ContentSize;
+                return (Records.Count + 1) * 12 + ContentSize + ExtraData.Length;
         }
 
         private int GetContentSize()
