@@ -20,7 +20,7 @@ namespace TwinsaityEditor
                 && item.Type != SectionType.MeshX && item.Type != SectionType.Model
                 && item.Type != SectionType.ArmatureModel && item.Type != SectionType.ActorModel
                 && item.Type != SectionType.StaticModel && item.Type != SectionType.SpecialModel
-                && item.Type != SectionType.Skybox && !(item is TwinsFile))
+                && item.Type != SectionType.Skydome && !(item is TwinsFile))
             {
                 AddMenu("Re-order by ID (asc.)", Menu_ReOrderByID_Asc);
                 if (item.Type == SectionType.ObjectInstance
