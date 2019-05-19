@@ -23,7 +23,7 @@ namespace Twinsanity
         ActorModel,
         StaticModel,
         SpecialModel,
-        Skybox,
+        Skydome,
 
         Object, ObjectDemo,
         Script,
