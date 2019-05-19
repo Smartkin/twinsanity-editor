@@ -8,16 +8,16 @@ namespace Twinsanity
     /// </summary>
     public class ADPCM
     {
-        const float k = ((22050.0f / 1881.0f) + (44100.0f / 3763.0f) + (48000.0f / 4096.0f)) / 3.0f;
+        const double k = ((22050.0f / 1881.0f) + (44100.0f / 3763.0f) + (48000.0f / 4096.0f)) / 3.0f;
         const int BUFFER_SIZE = 128 * 28;
-        private float[][] F = new float[5][];
-        private float _s_1 = 0, _s_2 = 0;
-        private float mS_1 = 0, mS_2 = 0;
+        private double[][] F = new double[5][];
+        private double _s_1 = 0, _s_2 = 0;
+        private double mS_1 = 0, mS_2 = 0;
 
         internal void InitF()
         {
             for (int i = 0; i < 5; i++)
-                F[i] = new float[2];
+                F[i] = new double[2];
             F[0][0] = 0.0f;
             F[0][1] = 0.0f;
             F[1][0] = 60.0f / 64.0f;
@@ -33,7 +33,7 @@ namespace Twinsanity
         internal void InitF2()
         {
             for (int i = 0; i < 5; i++)
-                F[i] = new float[2];
+                F[i] = new double[2];
             F[0][0] = 0.0f;
             F[0][1] = 0.0f;
             F[1][0] = -60.0f / 64.0f;
@@ -191,14 +191,14 @@ namespace Twinsanity
             System.IO.BinaryWriter Writer = new System.IO.BinaryWriter(Wav);
             Wav.Position = 0;
             bool Flag = true;
-            float s_1 = 0f, s_2 = 0f;
+            double s_1 = 0f, s_2 = 0f;
             while (Flag)
             {
                 byte predict_nr;
                 byte shift_factor;
                 byte flags;
                 int D, S;
-                float[] Samples = new float[28];
+                double[] Samples = new double[28];
                 predict_nr = Reader.ReadByte();
                 shift_factor = (byte)(predict_nr & 15);
                 predict_nr >>= 4;
@@ -263,7 +263,7 @@ namespace Twinsanity
                     wave[i] = WavReader.ReadInt16();
                 for (int i = 0; i <= work_size / 28 - 1; i++)
                 {
-                    float[] d_samples = new float[28];
+                    double[] d_samples = new double[28];
                     int[] four_bit = new int[28];
                     byte predict_nr = 0;
                     byte shift_factor = 0;
@@ -392,14 +392,14 @@ namespace Twinsanity
             Writer.Write(SubChunk2Size);
             // DATA
             bool Flag = true;
-            float s_1 = 0f, s_2 = 0f;
+            double s_1 = 0f, s_2 = 0f;
             while (Flag)
             {
                 byte predict_nr;
                 byte shift_factor;
                 byte flags;
                 int D, S;
-                float[] Samples = new float[28];
+                double[] Samples = new double[28];
                 predict_nr = Reader.ReadByte();
                 shift_factor = (byte)(predict_nr & 15);
                 predict_nr >>= 4;
@@ -567,7 +567,7 @@ namespace Twinsanity
                     wave[i] = WavReader.ReadInt16();
                 for (int i = 0; i <= work_size / 28 - 1; i++)
                 {
-                    float[] d_samples = new float[28];
+                    double[] d_samples = new double[28];
                     int[] four_bit = new int[28];
                     byte predict_nr = 0;
                     byte shift_factor = 0;
@@ -597,19 +597,19 @@ namespace Twinsanity
             ADPCM.Position = 0;
         }
 
-        internal void find_predict(short[] wave, short index, ref byte predict_nr, ref byte shift_factor, ref float[] d_samples)
+        internal void find_predict(short[] wave, short index, ref byte predict_nr, ref byte shift_factor, ref double[] d_samples)
         {
-            float[][] buffer = new float[28][];
-            float min = (float)Math.Pow(10, 10);
-            float[] max = new float[5];
-            float ds;
+            double[][] buffer = new double[28][];
+            double min = (double)Math.Pow(10, 10);
+            double[] max = new double[5];
+            double ds;
             int min2;
             int shift_mask;
         /* 
         *   Static _s_1, _s_2 As Single
         *   Impossible to convert due to this feature non-existing in C#, gotta add them as normal class members
         */
-            float s_0 = 0, s_1 = 0, s_2 = 0;
+            double s_0 = 0, s_1 = 0, s_2 = 0;
             for (int i = 0; i <= 27; i++)
                 Array.Resize(ref buffer[i], 5);
             for (int i = 0; i <= 4; i++)
@@ -661,11 +661,11 @@ namespace Twinsanity
             }
         }
 
-        internal void pack(float[] d_samples, ref int[] four_bit, byte predict_nr, byte shift_factor)
+        internal void pack(double[] d_samples, ref int[] four_bit, byte predict_nr, byte shift_factor)
         {
-            float ds;
+            double ds;
             int di;
-            float s_0;
+            double s_0;
     /*
      * Same thing
      * Static s_1 As Single
