@@ -81,6 +81,8 @@ namespace TwinsaityEditor
                 c = new ObjectController(this, (GameObject)a);
             else if (a is Script)
                 c = new ScriptController(this, (Script)a);
+            else if (a is SoundEffect)
+                c = new SEController(this, (SoundEffect)a);
             else if (a is Position)
                 c = new PositionController(this, (Position)a);
             else if (a is Path)

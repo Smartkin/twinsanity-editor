@@ -62,9 +62,11 @@
     <Import Include="System.Diagnostics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RIFF.cs" />
     <Compile Include="ADPCM.cs" />
     <Compile Include="BDArchive.cs" />
     <Compile Include="Items\ChunkLinks.cs" />
+    <Compile Include="Items\Code\SoundEffect.cs" />
     <Compile Include="Items\Graphics\Material.cs" />
     <Compile Include="Items\Graphics\Texture.cs" />
     <Compile Include="Items\Instances\Camera.cs" />
@@ -86,6 +88,7 @@
     </Compile>
     <Compile Include="TwinsSection.cs" />
     <Compile Include="TwinsFile.cs" />
+    <Compile Include="BitConv.cs" />
     <Compile Include="Types.cs" />
     <Compile Include="Items\Code\GameObject.cs" />
     <Compile Include="Items\Graphics\Model.cs" />

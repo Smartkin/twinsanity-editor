@@ -36,6 +36,10 @@ namespace TwinsaityEditor
                     AddMenu("Clear instance section", Menu_ClearInstanceSection);
                     AddMenu("Fill instance section", Menu_FillInstanceSection);
                 }
+                else if (item.Type >= SectionType.SE && item.Type <= SectionType.SE_Jpn)
+                {
+                    AddMenu("Extract extra data", Menu_ExtractExtraData);
+                }
             }
             else if (item is TwinsFile f && f.Type == TwinsFile.FileType.RM2)
             {
@@ -84,6 +88,19 @@ namespace TwinsaityEditor
             DisposeNode(Node.Nodes[Data.RecordIDs[id]]);
             Data.RemoveItem(id);
             UpdateText();
+        }
+
+        private void Menu_ExtractExtraData()
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.FileName = GetName().Replace(":", string.Empty);
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                FileStream file = new FileStream(sfd.FileName, FileMode.Create, FileAccess.Write);
+                BinaryWriter writer = new BinaryWriter(file);
+                writer.Write(Data.ExtraData);
+                writer.Close();
+            }
         }
 
         private void Menu_ClearInstanceSection()

@@ -89,7 +89,8 @@ namespace Twinsanity
                 return;
             var count = reader.ReadInt32();
             var sec_size = reader.ReadUInt32();
-            long extra_begin = reader.BaseStream.Position, extra_end = extra_begin + size - 12;
+            var start_sk = reader.BaseStream.Position - 12;
+            long extra_begin = 0;
             for (int i = 0; i < count; i++)
             {
                 TwinsSubInfo sub = new TwinsSubInfo
@@ -100,7 +101,7 @@ namespace Twinsanity
                 };
                 var sk = reader.BaseStream.Position;
                 reader.BaseStream.Position = sk - (i + 2) * 0xC + sub.Off;
-                extra_begin = Math.Max(reader.BaseStream.Position + sub.Size, extra_begin);
+                extra_begin = Math.Max(sub.Off + sub.Size, extra_begin);
                 //var m = reader.ReadUInt32(); //get magic number [obsolete?]
                 //reader.BaseStream.Position -= 4;
                 switch (Type)
@@ -262,6 +263,15 @@ namespace Twinsanity
                     case SectionType.Script:
                         LoadItem<Script>(reader, sub);
                         break;
+                    case SectionType.SE:
+                    case SectionType.SE_Eng:
+                    case SectionType.SE_Fre:
+                    case SectionType.SE_Ger:
+                    case SectionType.SE_Ita:
+                    case SectionType.SE_Spa:
+                    case SectionType.SE_Jpn:
+                        LoadItem<SoundEffect>(reader, sub);
+                        break;
                     case SectionType.Position:
                         LoadItem<Position>(reader, sub);
                         break;
@@ -283,7 +293,8 @@ namespace Twinsanity
                 }
                 reader.BaseStream.Position = sk;
             }
-            ExtraData = reader.ReadBytes((int)(extra_end - extra_begin));
+            reader.BaseStream.Position = start_sk + extra_begin;
+            ExtraData = reader.ReadBytes((int)(size - extra_begin));
         }
 
         protected void LoadItem<T>(BinaryReader reader, TwinsSubInfo sub) where T : TwinsItem, new()

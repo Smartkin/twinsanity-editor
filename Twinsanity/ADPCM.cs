@@ -80,13 +80,12 @@ namespace Twinsanity
         {
             if ((size % 16) != 0)
                 throw new ArgumentException("Sample size is not a multiple of 16.");
-            size /= 16;
             double s0 = 0, s1 = 0;
             List<byte> pcm_data = new List<byte>();
-            for (int i = 0; i < size; ++i)
+            for (int i = 0; i < size; i+=16)
             {
                 byte[] line = new byte[16];
-                Array.Copy(data, i * 16, line, 0, 16);
+                Array.Copy(data, i, line, 0, 16);
                 if (((SampleLineFlags)line[1] & SampleLineFlags.LoopEnd) != 0)
                 {
                     break;
