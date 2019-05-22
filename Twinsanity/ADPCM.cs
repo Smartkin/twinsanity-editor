@@ -1,692 +1,288 @@
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace Twinsanity
 {
+    // Based on code by bITmASTER and nextvolume
+    // https://github.com/simias/psxsdk/blob/master/tools/vag2wav.c
+    // https://github.com/simias/psxsdk/blob/master/tools/wav2vag.c
+
+    [Flags]
+    public enum SampleLineFlags : byte
+    {
+        None = 0,
+        LoopEnd = 1,
+        Unknown = 2,
+        LoopStart = 4
+    }
+
     /// <summary>
     /// Represents Adaptive Differential Pulse-Code Modulation
     /// </summary>
-    public class ADPCM
+    public static class ADPCM
     {
-        const double k = ((22050.0f / 1881.0f) + (44100.0f / 3763.0f) + (48000.0f / 4096.0f)) / 3.0f;
-        const int BUFFER_SIZE = 128 * 28;
-        private double[][] F = new double[5][];
-        private double _s_1 = 0, _s_2 = 0;
-        private double mS_1 = 0, mS_2 = 0;
+        private static readonly double k = ((22050.0f / 1881.0f) + (44100.0f / 3763.0f) + (48000.0f / 4096.0f)) / 3.0f;
+        private static readonly int BUFFER_SIZE = 128 * 28;
+        private static readonly double[][] f = new double[][]{
+            new double [2]{ 0.0, 0.0 },
+            new double [2]{   60.0 / 64.0,  0.0 },
+            new double [2]{  115.0 / 64.0, -52.0 / 64.0 },
+            new double [2]{   98.0 / 64.0, -55.0 / 64.0 },
+            new double [2]{ 122.0 / 64.0, -60.0 / 64.0 } };
+        private static double _s_1 = 0.0, _s_2 = 0.0;
 
-        internal void InitF()
+        //Convert a single ADPCM sample (4-bit value) into a PCM sample
+        public static short SampleToPCM(int sample, int factor, int predict, ref double s0, ref double s1)
         {
-            for (int i = 0; i < 5; i++)
-                F[i] = new double[2];
-            F[0][0] = 0.0f;
-            F[0][1] = 0.0f;
-            F[1][0] = 60.0f / 64.0f;
-            F[1][1] = 0.0f;
-            F[2][0] = 115.0f / 64.0f;
-            F[2][1] = -52.0f / 64.0f;
-            F[3][0] = 98.0f / 64.0f;
-            F[3][1] = -55.0f / 64.0f;
-            F[4][0] = 122.0f / 64.0f;
-            F[4][1] = -60.0f / 64.0f;
+            sample <<= 12;
+            sample = (short)sample; //sign extend
+            sample >>= factor;
+            double value = sample;
+            value += s0 * f[predict][0];
+            value += s1 * f[predict][1];
+            s1 = s0;
+            s0 = value;
+            return (short)Math.Round(value);
         }
 
-        internal void InitF2()
+        //Convert a single sample-line (28 samples, 16 bytes) from memory into an array of PCM samples
+        public static byte[] LineToPCM(byte[] input, ref double s0, ref double s1)
         {
-            for (int i = 0; i < 5; i++)
-                F[i] = new double[2];
-            F[0][0] = 0.0f;
-            F[0][1] = 0.0f;
-            F[1][0] = -60.0f / 64.0f;
-            F[1][1] = 0.0f;
-            F[2][0] = -115.0f / 64.0f;
-            F[2][1] = 52.0f / 64.0f;
-            F[3][0] = -98.0f / 64.0f;
-            F[3][1] = 55.0f / 64.0f;
-            F[4][0] = -122.0f / 64.0f;
-            F[4][1] = 60.0f / 64.0f;
-        }
-
-        /// <summary>
-        /// Demultiplexing given ADPCM file into the right and left audios
-        /// </summary>
-        /// <param name="ADPCM">Original ADPCM represented as a stream in RAM</param>
-        /// <param name="ADPCM_R">Right ADPCM that will be returned</param>
-        /// <param name="ADPCM_L">Left ADPCM that will be returned</param>
-        /// <param name="Interleave">Determines how mixed up together left and right will be in the result</param>
-        public void ADPCM_Demux(System.IO.MemoryStream ADPCM, ref System.IO.MemoryStream ADPCM_R, ref System.IO.MemoryStream ADPCM_L, uint Interleave)
-        {
-            System.IO.BinaryReader ADPCMReader = new System.IO.BinaryReader(ADPCM);
-            System.IO.BinaryWriter ADPCM_RWriter = new System.IO.BinaryWriter(ADPCM_R);
-            System.IO.BinaryWriter ADPCM_LWriter = new System.IO.BinaryWriter(ADPCM_L);
-            ADPCM.Position = 0;
-            ADPCM_L.Position = 0;
-            ADPCM_R.Position = 0;
-            while (ADPCM.Position < ADPCM.Length)
+            if (input.Length != 16)
+                throw new ArgumentException("input");
+            byte[] o = new byte[28 * 2];
+            int factor = input[0] & 0xF;
+            int predict = (input[0] >> 4) & 0xF;
+            for (int i = 0; i < 14; i++)
             {
-                long BlockSize = (ADPCM.Length - ADPCM.Position < Interleave) ? ADPCM.Length - ADPCM.Position : Interleave;
-                //Be sure that the block we are reading is an actual block
-                Debug.Assert(BlockSize > 0);
-                
-                ADPCM_LWriter.Write(ADPCMReader.ReadBytes((int)BlockSize));
-                byte b = 0;
-                for (int i = 1; i <= Interleave - BlockSize; i++)
-                    ADPCM_LWriter.Write(b);
-
-                BlockSize = (ADPCM.Length - ADPCM.Position < Interleave) ? ADPCM.Length - ADPCM.Position : Interleave;
-                //Be sure that the block we are reading is an actual block
-                Debug.Assert(BlockSize > 0);
-
-                ADPCM_RWriter.Write(ADPCMReader.ReadBytes((int)BlockSize));
-                for (int i = 1; i <= Interleave - BlockSize; i++)
-                    ADPCM_RWriter.Write(b);
+                int adl = input[i+2] & 0xF;
+                int adh = (input[i+2] & 0xF0) >> 4;
+                short l = SampleToPCM(adl, factor, predict, ref s0, ref s1);
+                short h = SampleToPCM(adh, factor, predict, ref s0, ref s1);
+                BitConv.ToInt16(o, i * 4 + 0, l);
+                BitConv.ToInt16(o, i * 4 + 2, h);
             }
-            ADPCM.Position = 0;
-            ADPCM_L.Position = 0;
-            ADPCM_R.Position = 0;
+            return o;
         }
 
-        /// <summary>
-        /// Multiplexing left and right ADPCM into single ADPCM file
-        /// </summary>
-        /// <param name="ADPCM">ADPCM file to get as a result</param>
-        /// <param name="ADPCM_R">Right ADPCM represented as a stream in RAM</param>
-        /// <param name="ADPCM_L">Left ADPCM represented as a stream in RAM</param>
-        /// <param name="Interleave">Determines how mixed up the left and right of original ADPCM are</param>
-        public void ADPCM_Mux(ref System.IO.MemoryStream ADPCM, System.IO.MemoryStream ADPCM_R, System.IO.MemoryStream ADPCM_L, uint Interleave)
+        public static byte[] ToPCMMono(byte[] data, int size)
         {
-            System.IO.BinaryWriter ADPCMWriter = new System.IO.BinaryWriter(ADPCM);
-            System.IO.BinaryReader ADPCM_RReader = new System.IO.BinaryReader(ADPCM_R);
-            System.IO.BinaryReader ADPCM_LReader = new System.IO.BinaryReader(ADPCM_L);
-            ADPCM.Position = 0;
-            ADPCM_L.Position = 0;
-            ADPCM_R.Position = 0;
-            while ((ADPCM_L.Position < ADPCM_L.Length) | (ADPCM_L.Position < ADPCM_L.Length))
+            if ((size % 16) != 0)
+                throw new ArgumentException("Size for stereo sample is not a multiple of 16.");
+            size /= 16;
+            double s0 = 0, s1 = 0;
+            List<byte> pcm_data = new List<byte>();
+            for (int i = 0; i < size; ++i)
             {
-                long BlockSize = (ADPCM.Length - ADPCM.Position < Interleave) ? ADPCM.Length - ADPCM.Position : Interleave;
-                //Be sure that the block we are reading is an actual block
-                Debug.Assert(BlockSize > 0);
-
-                ADPCMWriter.Write(ADPCM_LReader.ReadBytes((int)BlockSize));
-                byte b = 0;
-                for (int i = 1; i <= Interleave - BlockSize; i++)
-                    ADPCMWriter.Write(b);
-
-                BlockSize = (ADPCM_R.Length - ADPCM_R.Position < Interleave) ? ADPCM_R.Length - ADPCM_R.Position : Interleave;
-                //Be sure that the block we are reading is an actual block
-                Debug.Assert(BlockSize > 0);
-
-                ADPCMWriter.Write(ADPCM_RReader.ReadBytes((int)BlockSize));
-                for (int i = 1; i <= Interleave - BlockSize; i++)
-                    ADPCMWriter.Write(b);
-            }
-            ADPCM.Position = 0;
-            ADPCM_L.Position = 0;
-            ADPCM_R.Position = 0;
-        }
-
-        /// <summary>
-        /// Demultiplexing given PCM into left and right PCMs
-        /// </summary>
-        /// <param name="PCM">PCM file represented as a stream in RAM</param>
-        /// <param name="PCM_R">Right PCM to get as a result</param>
-        /// <param name="PCM_L">Left PCM to get as a result</param>
-        public void PCM_Demux(System.IO.MemoryStream PCM, ref System.IO.MemoryStream PCM_R, ref System.IO.MemoryStream PCM_L)
-        {
-            System.IO.BinaryReader PCMReader = new System.IO.BinaryReader(PCM);
-            System.IO.BinaryWriter PCM_RWriter = new System.IO.BinaryWriter(PCM_R);
-            System.IO.BinaryWriter PCM_LWriter = new System.IO.BinaryWriter(PCM_L);
-            PCM.Position = 0;
-            PCM_L.Position = 0;
-            PCM_R.Position = 0;
-            while (PCM.Position < PCM.Length)
-            {
-                PCM_LWriter.Write(PCMReader.ReadInt16());
-                PCM_RWriter.Write(PCMReader.ReadInt16());
-            }
-            PCM.Position = 0;
-            PCM_L.Position = 0;
-            PCM_R.Position = 0;
-        }
-
-        /// <summary>
-        /// Multiplexing given left and right PCMs into a single one
-        /// </summary>
-        /// <param name="PCM">PCM to receive as a result</param>
-        /// <param name="PCM_R">Right PCM represented as a stream in RAM</param>
-        /// <param name="PCM_L">Left PCM represented as a stream in RAM</param>
-        public void PCM_Mux(ref System.IO.MemoryStream PCM, System.IO.MemoryStream PCM_R, System.IO.MemoryStream PCM_L)
-        {
-            System.IO.BinaryWriter PCMWriter = new System.IO.BinaryWriter(PCM);
-            System.IO.BinaryReader PCM_RReader = new System.IO.BinaryReader(PCM_R);
-            System.IO.BinaryReader PCM_LReader = new System.IO.BinaryReader(PCM_L);
-            short Null = 0;
-            PCM.Position = 0;
-            PCM_L.Position = 0;
-            PCM_R.Position = 0;
-            while ((PCM_R.Position < PCM_R.Length) || (PCM_L.Position < PCM_L.Length))
-            {
-                if (PCM_L.Position < PCM_L.Length)
-                    PCMWriter.Write(PCM_LReader.ReadInt16());
-                else
-                    PCMWriter.Write(Null);
-                if (PCM_R.Position < PCM_R.Length)
-                    PCMWriter.Write(PCM_RReader.ReadInt16());
-                else
-                    PCMWriter.Write(Null);
-            }
-            PCM.Position = 0;
-            PCM_L.Position = 0;
-            PCM_R.Position = 0;
-        }
-
-        /// <summary>
-        /// Convert ADPCM to PCM
-        /// </summary>
-        /// <param name="ADPCM">ADPCM file to convert represented as a stream in RAM</param>
-        /// <param name="Wav">WAV file to get as a result represented as a stream in RAM</param>
-        public void ADPCM2PCM(System.IO.MemoryStream ADPCM, ref System.IO.MemoryStream Wav)
-        {
-            InitF();
-            System.IO.BinaryReader Reader = new System.IO.BinaryReader(ADPCM);
-            System.IO.BinaryWriter Writer = new System.IO.BinaryWriter(Wav);
-            Wav.Position = 0;
-            bool Flag = true;
-            double s_1 = 0f, s_2 = 0f;
-            while (Flag)
-            {
-                byte predict_nr;
-                byte shift_factor;
-                byte flags;
-                int D, S;
-                double[] Samples = new double[28];
-                predict_nr = Reader.ReadByte();
-                shift_factor = (byte)(predict_nr & 15);
-                predict_nr >>= 4;
-                flags = Reader.ReadByte();
-                if (flags == 7 || ADPCM.Length - ADPCM.Position < 16)
-                    Flag = false;
-                else
+                byte[] line = new byte[16];
+                Array.Copy(data, i * 16, line, 0, 16);
+                if (((SampleLineFlags)line[1] & SampleLineFlags.LoopEnd) != 0)
                 {
-                    for (int i = 0; i <= 27; i += 2)
-                    {
-                        D = Reader.ReadByte();
-                        S = (D & 15) << 12;
-                        if ((S & 32768) != 0)
-                            S = S - 65536;
-                        int tmp = S >> shift_factor;
-                        Samples[i] = S >> shift_factor;
-                        S = (D & 240) << 8;
-                        if ((S & 32768) != 0)
-                            S = S - 65536;
-                        Samples[i + 1] = S >> shift_factor;
-                    }
-                    for (int i = 0; i <= 27; i++)
-                    {
-                        Samples[i] = Samples[i] + s_1 * F[predict_nr][0] + s_2 * F[predict_nr][1];
-                        s_2 = s_1;
-                        s_1 = Samples[i];
-                        short tmp;
-                        if (Math.Round((Samples[i] + 0.5)) > short.MaxValue)
-                            tmp = short.MaxValue;
-                        else if (Math.Round((Samples[i] + 0.5)) < short.MinValue)
-                            tmp = short.MinValue;
-                        else
-                            tmp = (short)Math.Round((Samples[i] + 0.5));
-                        Writer.Write(tmp);
-                    }
+                    break;
+                }
+                pcm_data.AddRange(LineToPCM(line, ref s0, ref s1));
+            }
+            return pcm_data.ToArray();
+        }
+
+        public static byte[] ToPCMStereo(byte[] data, int size, int interleave)
+        {
+            if ((size % 32) != 0)
+                throw new ArgumentException("Size for stereo sample is not a multiple of 32.");
+            if ((interleave % 16) != 0)
+                throw new ArgumentException("Stereo interleave is not a multiple of 16.");
+            if (interleave <= 0)
+                throw new ArgumentOutOfRangeException("interleave");
+            size /= 16;
+            interleave /= 16;
+            double s0_l = 0, s1_l = 0;
+            double s0_r = 0, s1_r = 0;
+            List<byte> pcm_data = new List<byte>();
+            for (int i = -interleave; i < size; ++i)
+            {
+                if ((i % interleave) == 0)
+                    i += interleave;
+                byte[] line_l = new byte[16];
+                byte[] line_r = new byte[16];
+                Array.Copy(data, i * 16, line_l, 0, 16);
+                Array.Copy(data, (i + interleave) * 16, line_r, 0, 16);
+                if ((((SampleLineFlags)line_l[1] | (SampleLineFlags)line_r[1]) & SampleLineFlags.LoopEnd) != 0)
+                {
+                    break;
+                }
+                var l = LineToPCM(line_l, ref s0_l, ref s1_l);
+                var r = LineToPCM(line_r, ref s0_r, ref s1_r);
+                for (int j = 0; j < 28; ++j)
+                {
+                    pcm_data.Add(l[0 + i * 2]);
+                    pcm_data.Add(l[1 + i * 2]);
+                    pcm_data.Add(r[0 + i * 2]);
+                    pcm_data.Add(r[1 + i * 2]);
                 }
             }
-            Wav.Position = 0;
+            return pcm_data.ToArray();
+        }
+
+        public static byte[] FromPCMMono(byte[] data, int sample_size)
+        {
+            int off = 0, predict = 0, factor = 0;
+            int i;
+            short[] wave = new short[BUFFER_SIZE];
+            double[] d_samples = new double[28];
+            short[] v_samples = new short[28];
+            List<byte> vag = new List<byte>();
+            _s_1 = _s_2 = 0.0;
+            while (sample_size > 0)
+            {
+                var size = (sample_size >= BUFFER_SIZE) ? BUFFER_SIZE : sample_size;
+                for (i = 0; i < size; ++i, off += 2)
+                    wave[i] = BitConverter.ToInt16(data, off);
+                i = size / 28;
+                if ((size % 28) != 0)
+                {
+                    for (int j = size % 28; j < 28; ++j)
+                        wave[28 * i + j] = 0;
+                    ++i;
+                }
+                for (int j = 0; j < i; ++j)
+                {
+                    FindPredict(wave, j * 28, d_samples, ref predict, ref factor);
+                    PackSamples(d_samples, v_samples, predict, factor);
+                    vag.Add((byte)((predict << 4) | factor));
+                    vag.Add(0);
+                    for (int k = 0; k < 28; k += 2)
+                    {
+                        vag.Add((byte)(((v_samples[k + 1] >> 8) & 0xF0) | ((v_samples[k] >> 12) & 0xF)));
+                    }
+                    sample_size -= 28;
+                }
+            }
+            vag.Add((byte)((predict << 4) | factor));
+            vag.Add(7);
+            for (i = 0; i < 14; ++i)
+                vag.Add(0);
+            return vag.ToArray();
         }
 
         /// <summary>
-        /// Convert PCM to ADPCM
+        /// Return VAG data from a 16-bit PCM stream.
         /// </summary>
-        /// <param name="ADPCM">ADPCM to get as a result</param>
-        /// <param name="PCM">PCM file to convert represented as a stream in RAM</param>
-        public void PCM2ADPCM(ref System.IO.MemoryStream ADPCM, System.IO.MemoryStream PCM)
+        /// <param name="data">PCM data to convert from.</param>
+        /// <param name="sample_size">Number of samples in the stream. 1 sample = 2 values (4 bytes)</param>
+        /// <param name="interleave">Left/right interleave, in bytes.</param>
+        /// <returns></returns>
+        public static byte[] FromPCMStereo(byte[] data, int sample_size, int interleave)
         {
-            InitF2();
-            System.IO.BinaryWriter ADPCMWriter = new System.IO.BinaryWriter(ADPCM);
-            System.IO.BinaryReader WavReader = new System.IO.BinaryReader(PCM);
-            int samples = (int)PCM.Length / 2;
-            byte flags = 0;
-            while (samples > 0 && PCM.Position < PCM.Length)
+            if ((interleave % 16) != 0)
+                throw new ArgumentException("Interleave must be a multiple of 16.");
+            byte[] silence = new byte[interleave];
+            for (int i = 0; i < interleave*2; ++i)
+                silence[i] = 0;
+            byte[] data_l = new byte[sample_size*2];
+            byte[] data_r = new byte[sample_size*2];
+            List<byte> vag = new List<byte>();
+            for (int i = 0; i < sample_size; ++i)
             {
-                int work_size;
-                short[] wave = new short[3584];
-                if (samples >= BUFFER_SIZE)
-                    work_size = BUFFER_SIZE;
-                else
-                    work_size = samples;
-                for (int i = 0; i <= work_size - 1; i++)
-                    wave[i] = WavReader.ReadInt16();
-                for (int i = 0; i <= work_size / 28 - 1; i++)
-                {
-                    double[] d_samples = new double[28];
-                    int[] four_bit = new int[28];
-                    byte predict_nr = 0;
-                    byte shift_factor = 0;
-                    find_predict(wave, (short)(i * 28), ref predict_nr, ref shift_factor, ref d_samples);
-                    pack(d_samples, ref four_bit, predict_nr, shift_factor);
-                    byte D = (byte)((predict_nr << 4) | shift_factor);
-                    ADPCMWriter.Write(D);
-                    ADPCMWriter.Write(flags);
-                    for (int j = 0; j <= 27; j += 2)
-                    {
-                        byte ebit = (byte)(((four_bit[j + 1] >> 8) & 240) | ((four_bit[j] >> 12) & 15));
-                        ADPCMWriter.Write(ebit);
-                    }
-                    samples -= 28;
-                    if (samples < 28)
-                        flags = 1;
-                }
+                data_l[i+0] = data[i * 4 + 0];
+                data_l[i+1] = data[i * 4 + 1];
+                data_r[i+0] = data[i * 4 + 2];
+                data_r[i+1] = data[i * 4 + 3];
             }
-            byte _D = 0;
-            ADPCMWriter.Write(_D);
-            _D = 7;
-            ADPCMWriter.Write(_D);
-            _D = 119;
-            for (int i = 0; i <= 13; i++)
-                ADPCMWriter.Write(_D);
-            PCM.Position = 0;
-            ADPCM.Position = 0;
+            data_l = FromPCMMono(data_l, sample_size);
+            data_r = FromPCMMono(data_r, sample_size);
+            for (int i = 0; i < data_l.Length; i += interleave)
+            {
+                vag.AddRange(silence);
+            }
+            var vag_data = vag.ToArray();
+            var ch_size = data_l.Length;
+            int off = 0;
+            while (ch_size > 0)
+            {
+                var size = (ch_size >= interleave) ? interleave : ch_size;
+                Array.Copy(data_l, off, vag_data, off*2, size);
+                Array.Copy(data_r, off + interleave, vag_data, off * 2 + interleave, size);
+                off += interleave;
+                ch_size -= interleave;
+            }
+            return vag_data;
         }
 
-        /// <summary>
-        /// Converts Twinsanity's sound to WAV sound format
-        /// </summary>
-        /// <param name="ADPCM">ADPCM file represented as a stream in RAM</param>
-        /// <param name="Wav">WAV file to save the sound into represented as a stream in RAM</param>
-        /// <param name="Frequency">Frequence of the sound</param>
-        /// <param name="Chan">Channel number of the sound, default is 1</param>
-        public void Twin2WAV(System.IO.MemoryStream ADPCM, ref System.IO.MemoryStream Wav, uint Frequency, short Chan = 1)
+        private static void FindPredict(short[] samples, int sample_off, double[] d_samples, ref int predict, ref int factor)
         {
-            char[] Header = new[] { 'R', 'I', 'F', 'F' };
-            int FileSize = 0; // FinalSize - 8 position 4
-            char[] WAVHeader = new[] { 'W', 'A', 'V', 'E' };
-            char[] fmtHeader = new[] { 'f', 'm', 't', ' ' };
-            int SubChunk1Size = 16;
-            short Format = 1;
-            short Chanells = Chan;
-            int SampleRate;
-            switch (Frequency)
-            {
-                case 682:
-                    {
-                        SampleRate = 8000;
-                        break;
-                    }
-
-                case 1024:
-                    {
-                        SampleRate = 11025;
-                        break;
-                    }
-
-                case 1365:
-                    {
-                        SampleRate = 16000;
-                        break;
-                    }
-
-                case 1706:
-                    {
-                        SampleRate = 20000;
-                        break;
-                    }
-
-                case 1536:
-                    {
-                        SampleRate = 18000;
-                        break;
-                    }
-
-                case 1881:
-                    {
-                        SampleRate = 22050;
-                        break;
-                    }
-
-                case 3763:
-                    {
-                        SampleRate = 44100;
-                        break;
-                    }
-
-                case 4096:
-                    {
-                        SampleRate = 48000;
-                        break;
-                    }
-
-                default:
-                    {
-                        SampleRate = (int)Math.Round(Frequency * k);
-                        break;
-                    }
-            }
-            int BitRate = SampleRate * Chanells * 2;
-            short Align = (short)(Chanells * 2);
-            short BPS = 16;
-            char[] SubChunk2Id = new[] { 'd', 'a', 't', 'a' };
-            int SubChunk2Size = 0; // FinalSize - 44 position 40
-            ADPCM.Position = 0;
-            Wav.Position = 0;
-            System.IO.BinaryWriter Writer = new System.IO.BinaryWriter(Wav);
-            System.IO.BinaryReader Reader = new System.IO.BinaryReader(ADPCM);
-            // WAVE Header
-            InitF();
-            Writer.Write(Header);
-            Writer.Write(FileSize);
-            Writer.Write(WAVHeader);
-            Writer.Write(fmtHeader);
-            Writer.Write(SubChunk1Size);
-            Writer.Write(Format);
-            Writer.Write(Chanells);
-            Writer.Write(SampleRate);
-            Writer.Write(BitRate);
-            Writer.Write(Align);
-            Writer.Write(BPS);
-            Writer.Write(SubChunk2Id);
-            Writer.Write(SubChunk2Size);
-            // DATA
-            bool Flag = true;
-            double s_1 = 0f, s_2 = 0f;
-            while (Flag)
-            {
-                byte predict_nr;
-                byte shift_factor;
-                byte flags;
-                int D, S;
-                double[] Samples = new double[28];
-                predict_nr = Reader.ReadByte();
-                shift_factor = (byte)(predict_nr & 15);
-                predict_nr >>= 4;
-                flags = Reader.ReadByte();
-                if (flags == 7 || ADPCM.Length - ADPCM.Position < 16)
-                    Flag = false;
-                else
-                {
-                    for (int i = 0; i <= 27; i += 2)
-                    {
-                        D = Reader.ReadByte();
-                        S = (D & 15) << 12;
-                        if ((S & 32768) != 0)
-                            S = S - 65536;
-                        int tmp = S >> shift_factor;
-                        Samples[i] = S >> shift_factor;
-                        S = (D & 240) << 8;
-                        if ((S & 32768) != 0)
-                            S = S - 65536;
-                        Samples[i + 1] = S >> shift_factor;
-                    }
-                    for (int i = 0; i <= 27; i++)
-                    {
-                        Samples[i] = Samples[i] + s_1 * F[predict_nr][0] + s_2 * F[predict_nr][1];
-                        s_2 = s_1;
-                        s_1 = Samples[i];
-                        short tmp;
-                        if (Math.Round((Samples[i] + 0.5)) > short.MaxValue)
-                            tmp = short.MaxValue;
-                        else if (Math.Round((Samples[i] + 0.5)) < short.MinValue)
-                            tmp = short.MinValue;
-                        else
-                            tmp = (short)Math.Round((Samples[i] + 0.5));
-                        Writer.Write(tmp);
-                    }
-                }
-            }
-            // Post Processing
-            Wav.Position = 4;
-            uint Len = (uint)Wav.Length - 8;
-            Writer.Write(Len);
-            Wav.Position = 40;
-            Len = (uint)Wav.Length - 44;
-            Writer.Write(Len);
-            ADPCM.Position = 0;
-            Wav.Position = 0;
-        }
-
-        /// <summary>
-        /// Converts WAV sound to Twinsanity's sound format
-        /// </summary>
-        /// <param name="Wav">WAV file represented as a stream in RAM</param>
-        /// <param name="ADPCM">ADPCM file represented as a stream in RAM</param>
-        public void WAV2Twin(System.IO.MemoryStream Wav, ref System.IO.MemoryStream ADPCM)
-        {
-            InitF2();
-            char[] Header;
-            int FileSize;
-            char[] WAVHeader;
-            char[] fmtHeader;
-            int SubChunk1Size;
-            short Format;
-            short Chanells;
-            uint SampleRate;
-            uint BitRate;
-            ushort Align;
-            ushort BPS;
-            char[] SubChunk2Id;
-            int SubChunk2Size;
-            System.IO.BinaryReader WavReader = new System.IO.BinaryReader(Wav);
-            System.IO.BinaryWriter ADPCMWriter = new System.IO.BinaryWriter(ADPCM);
-            Wav.Position = 0;
-            ADPCM.Position = 0;
-            Header = WavReader.ReadChars(4);
-            FileSize = WavReader.ReadInt32();
-            WAVHeader = WavReader.ReadChars(4);
-            fmtHeader = WavReader.ReadChars(4);
-            SubChunk1Size = WavReader.ReadInt32();
-            Format = WavReader.ReadInt16();
-            Chanells = WavReader.ReadInt16();
-            SampleRate = WavReader.ReadUInt32();
-            BitRate = WavReader.ReadUInt32();
-            Align = WavReader.ReadUInt16();
-            BPS = WavReader.ReadUInt16();
-            SubChunk2Id = WavReader.ReadChars(4);
-            SubChunk2Size = WavReader.ReadInt32();
-            int samples = SubChunk2Size / 2;
-            int size = samples / 28;
-            if (samples % 28 > 0)
-                size += 1;
-            int ADPCM_Size = size * 16 + 16;
-            ushort Frequency;
-            switch (SampleRate)
-            {
-                case 8000:
-                    {
-                        Frequency = 682;
-                        break;
-                    }
-
-                case 11025:
-                    {
-                        Frequency = 1024;
-                        break;
-                    }
-
-                case 16000:
-                    {
-                        Frequency = 1365;
-                        break;
-                    }
-
-                case 20000:
-                    {
-                        Frequency = 1706;
-                        break;
-                    }
-
-                case 18000:
-                    {
-                        Frequency = 1536;
-                        break;
-                    }
-
-                case 22050:
-                    {
-                        Frequency = 1881;
-                        break;
-                    }
-
-                case 44100:
-                    {
-                        Frequency = 3763;
-                        break;
-                    }
-
-                case 48000:
-                    {
-                        Frequency = 4096;
-                        break;
-                    }
-
-                default:
-                    {
-                        Frequency = (ushort)Math.Round(SampleRate / (double)k);
-                        break;
-                    }
-            }
-
-            Random random = new Random();
-            int I32 = (int)Math.Round(random.NextDouble() * 1500 + 2000);
-            ADPCMWriter.Write(I32);
-            ADPCMWriter.Write(Frequency);
-            ADPCMWriter.Write(ADPCM_Size);
-            byte flags = 0;
-            while (samples > 0 && Wav.Position < Wav.Length)
-            {
-                int work_size;
-                short[] wave = new short[3584];
-                if (samples >= BUFFER_SIZE)
-                    work_size = BUFFER_SIZE;
-                else
-                    work_size = samples;
-                for (int i = 0; i <= work_size - 1; i++)
-                    wave[i] = WavReader.ReadInt16();
-                for (int i = 0; i <= work_size / 28 - 1; i++)
-                {
-                    double[] d_samples = new double[28];
-                    int[] four_bit = new int[28];
-                    byte predict_nr = 0;
-                    byte shift_factor = 0;
-                    find_predict(wave, (short)(i * 28), ref predict_nr, ref shift_factor, ref d_samples);
-                    pack(d_samples, ref four_bit, predict_nr, shift_factor);
-                    byte D = (byte)((predict_nr << 4) | shift_factor);
-                    ADPCMWriter.Write(D);
-                    ADPCMWriter.Write(flags);
-                    for (int j = 0; j <= 27; j += 2)
-                    {
-                        byte ebit = (byte)(((four_bit[j + 1] >> 8) & 240) | ((four_bit[j] >> 12) & 15));
-                        ADPCMWriter.Write(ebit);
-                    }
-                    samples -= 28;
-                    if (samples < 28)
-                        flags = 1;
-                }
-            }
-            byte _D = 0;
-            ADPCMWriter.Write(_D);
-            _D = 7;
-            ADPCMWriter.Write(_D);
-            _D = 119;
-            for (int i = 0; i <= 13; i++)
-                ADPCMWriter.Write(_D);
-            Wav.Position = 0;
-            ADPCM.Position = 0;
-        }
-
-        internal void find_predict(short[] wave, short index, ref byte predict_nr, ref byte shift_factor, ref double[] d_samples)
-        {
-            double[][] buffer = new double[28][];
-            double min = (double)Math.Pow(10, 10);
             double[] max = new double[5];
-            double ds;
-            int min2;
-            int shift_mask;
-        /* 
-        *   Static _s_1, _s_2 As Single
-        *   Impossible to convert due to this feature non-existing in C#, gotta add them as normal class members
-        */
-            double s_0 = 0, s_1 = 0, s_2 = 0;
-            for (int i = 0; i <= 27; i++)
-                Array.Resize(ref buffer[i], 5);
-            for (int i = 0; i <= 4; i++)
+            double[][] buffer = new double[28][];
+            for (int i = 0; i < 28; ++i)
+                buffer[28] = new double[5];
+            double s_0, s_1 = 0.0, s_2 = 0.0, min = 1e10;
+            for (int i = 0; i < 5; ++i)
             {
-                max[i] = 0;
+                max[i] = 0.0;
                 s_1 = _s_1;
                 s_2 = _s_2;
-                for (int j = 0; j <= 27; j++)
+                for (int j = 0; j < 28; ++j)
                 {
-                    s_0 = wave[index + j];
-                    if (s_0 > 30719)
-                        s_0 = 30719;
-                    else if (s_0 < -30720)
-                        s_0 = -30720;
-                    ds = s_0 + s_1 * F[i][0] + s_2 * F[i][1];
+                    s_0 = samples[j + sample_off];
+                    if (s_0 > 30719.0)
+                        s_0 = 30719.0;
+                    else if (s_0 < -30719.0)
+                        s_0 = -30719.0;
+                    double ds = s_0 + s_1 * f[i][0] + s_2 * f[i][1];
                     buffer[j][i] = ds;
                     if (Math.Abs(ds) > max[i])
+                    {
                         max[i] = Math.Abs(ds);
+                    }
                     s_2 = s_1;
                     s_1 = s_0;
                 }
                 if (max[i] < min)
                 {
                     min = max[i];
-                    predict_nr = (byte)i;
+                    predict = i;
                 }
                 if (min <= 7)
                 {
-                    predict_nr = 0;
+                    predict = 0;
                     break;
                 }
             }
             _s_1 = s_1;
             _s_2 = s_2;
-            for (int i = 0; i <= 27; i++)
-                d_samples[i] = buffer[i][predict_nr];
-            if (min > 32767)
-                min = 32767;
-            min2 = (int)Math.Round(min);
-            shift_mask = 16384;
-            shift_factor = 0;
-            while (shift_factor < 12)
+            for (int i = 0; i < 28; ++i)
             {
-                var bit_condition = shift_mask & (min2 + (shift_mask >> 3));
-                if (bit_condition != 0)
+                d_samples[i] = buffer[i][predict];
+            }
+            int min2 = (int)min, mask = 0x4000;
+            factor = 0;
+            while (factor < 12)
+            {
+                if ((mask & (min2 + (mask>>3))) != 0)
+                {
                     break;
-                shift_factor += 1;
-                shift_mask = shift_mask >> 1;
+                }
+                factor++;
+                mask >>= 1;
             }
         }
 
-        internal void pack(double[] d_samples, ref int[] four_bit, byte predict_nr, byte shift_factor)
+        private static void PackSamples(double[] d_samples, short[] v_samples, int predict, int factor)
         {
-            double ds;
-            int di;
-            double s_0;
-    /*
-     * Same thing
-     * Static s_1 As Single
-    */
-    /*
-     * Same stuff here
-     * Static s_2 As Single
-    */
-            for (int i = 0; i <= 27; i++)
+            double s_1 = 0.0, s_2 = 0.0;
+
+            for (int i = 0; i < 28; ++i)
             {
-                s_0 = d_samples[i] + mS_1 * F[predict_nr][0] + mS_2 * F[predict_nr][1];
-                ds = s_0 * (1 << shift_factor);
-                di = (int)(((uint)Math.Round(ds) + 2048) & 4294963200);
+                double s_0 = d_samples[i] + s_1 * f[predict][0] + s_2 * f[predict][1];
+                double ds = s_0 * (1 << factor);
+                int di = (int)(((int)ds + 0x800) & 0xfffff000);
                 if (di > short.MaxValue)
                     di = short.MaxValue;
                 else if (di < short.MinValue)
                     di = short.MinValue;
-                four_bit[i] = di;
-                di = di >> shift_factor;
-                mS_2 = mS_1;
-                mS_1 = di - s_0;
+                v_samples[i] = (short)di;
+                di >>= factor;
+                s_2 = s_1;
+                s_1 = di - s_0;
             }
         }
     }
