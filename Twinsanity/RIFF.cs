@@ -6,7 +6,7 @@ namespace Twinsanity
     {
         public static byte[] SaveRiff(byte[] pcm, short channels, int samplerate)
         {
-            byte[] data = new byte[pcm.Length + 46];
+            byte[] data = new byte[pcm.Length + 44];
             BinaryWriter writer = new BinaryWriter(new MemoryStream(data));
             writer.Write("RIFF".ToCharArray());
             writer.Write(36 + data.Length);
