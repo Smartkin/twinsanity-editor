@@ -79,7 +79,7 @@ namespace Twinsanity
         public static byte[] ToPCMMono(byte[] data, int size)
         {
             if ((size % 16) != 0)
-                throw new ArgumentException("Size for stereo sample is not a multiple of 16.");
+                throw new ArgumentException("Sample size is not a multiple of 16.");
             size /= 16;
             double s0 = 0, s1 = 0;
             List<byte> pcm_data = new List<byte>();
@@ -99,7 +99,7 @@ namespace Twinsanity
         public static byte[] ToPCMStereo(byte[] data, int size, int interleave)
         {
             if ((size % 32) != 0)
-                throw new ArgumentException("Size for stereo sample is not a multiple of 32.");
+                throw new ArgumentException("Stereo sample size is not a multiple of 32.");
             if ((interleave % 16) != 0)
                 throw new ArgumentException("Stereo interleave is not a multiple of 16.");
             if (interleave <= 0)
