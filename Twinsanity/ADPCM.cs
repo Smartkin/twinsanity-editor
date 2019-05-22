@@ -28,7 +28,18 @@ namespace Twinsanity
             new double [2]{   60.0 / 64.0,  0.0 },
             new double [2]{  115.0 / 64.0, -52.0 / 64.0 },
             new double [2]{   98.0 / 64.0, -55.0 / 64.0 },
-            new double [2]{ 122.0 / 64.0, -60.0 / 64.0 } };
+            new double [2]{ 122.0 / 64.0, -60.0 / 64.0 },
+            new double [2]{ 0.0, 0.0 },
+            new double [2]{ 0.0, 0.0 },
+            new double [2]{ 0.0, 0.0 },
+            new double [2]{ 0.0, 0.0 },
+            new double [2]{ 0.0, 0.0 },
+            new double [2]{ 0.0, 0.0 },
+            new double [2]{ 0.0, 0.0 },
+            new double [2]{ 0.0, 0.0 },
+            new double [2]{ 0.0, 0.0 },
+            new double [2]{ 0.0, 0.0 },
+            new double [2]{ 0.0, 0.0 } };
         private static double _s_1 = 0.0, _s_2 = 0.0;
 
         //Convert a single ADPCM sample (4-bit value) into a PCM sample
