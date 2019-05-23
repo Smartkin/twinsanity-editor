@@ -9,7 +9,7 @@ namespace Twinsanity
             byte[] data = new byte[pcm.Length + 44];
             BinaryWriter writer = new BinaryWriter(new MemoryStream(data));
             writer.Write("RIFF".ToCharArray());
-            writer.Write(36 + data.Length);
+            writer.Write(36 + pcm.Length);
             writer.Write("WAVE".ToCharArray());
             writer.Write("fmt ".ToCharArray());
             writer.Write(16);
@@ -20,7 +20,7 @@ namespace Twinsanity
             writer.Write((short)(channels * 2));
             writer.Write((ushort)16);
             writer.Write("data".ToCharArray());
-            writer.Write(data.Length);
+            writer.Write(pcm.Length);
             writer.Write(pcm);
             writer.Close();
             return data;
