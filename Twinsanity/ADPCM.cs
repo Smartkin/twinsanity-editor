@@ -86,11 +86,11 @@ namespace Twinsanity
             {
                 byte[] line = new byte[16];
                 Array.Copy(data, i, line, 0, 16);
-                if (((SampleLineFlags)line[1] & SampleLineFlags.LoopEnd) != 0)
-                {
+                if (line[1] == 7)
                     break;
-                }
                 pcm_data.AddRange(LineToPCM(line, ref s0, ref s1));
+                if (((SampleLineFlags)line[1] & SampleLineFlags.LoopEnd) != 0)
+                    break;
             }
             return pcm_data.ToArray();
         }
