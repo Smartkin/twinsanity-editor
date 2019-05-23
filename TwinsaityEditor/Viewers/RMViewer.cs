@@ -514,7 +514,7 @@ namespace TwinsaityEditor
                 if (record_exists[i])
                 {
                     if (((TwinsSection)file.Data.GetItem(i)).RecordIDs.ContainsKey(3))
-                        posi_count += ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(6)).Records.Count;
+                        posi_count += ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(3)).Records.Count;
                     else record_exists[i] = false;
                 }
             }
