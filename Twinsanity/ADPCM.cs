@@ -21,7 +21,6 @@ namespace Twinsanity
     /// </summary>
     public static class ADPCM
     {
-        private static readonly double k = ((22050.0f / 1881.0f) + (44100.0f / 3763.0f) + (48000.0f / 4096.0f)) / 3.0f;
         private static readonly int BUFFER_SIZE = 128 * 28;
         private static readonly double[][] f = new double[][]{
             new double [2]{ 0.0, 0.0 },
