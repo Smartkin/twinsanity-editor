@@ -85,7 +85,7 @@ namespace TwinsaityEditor
 
         public void RemoveItem(uint id)
         {
-            DisposeNode(Node.Nodes[Data.RecordIDs[id]]);
+            Node.Nodes[Data.RecordIDs[id]].Remove();
             Data.RemoveItem(id);
             UpdateText();
         }
@@ -176,8 +176,7 @@ namespace TwinsaityEditor
                 MainFile.CloseEditor(Editors.Position, (int)Data.Parent.ID);
             }
             Node.TreeView.BeginUpdate();
-            while (Node.Nodes.Count > 0)
-                DisposeNode(Node.Nodes[0]);
+            Node.Nodes.Clear();
             SortedDictionary<uint, int> sdic = new SortedDictionary<uint, int>(Data.RecordIDs);
             List<TwinsItem> slist = new List<TwinsItem>();
             foreach (var i in sdic)
@@ -192,8 +191,7 @@ namespace TwinsaityEditor
         private void Menu_ReOrderByID_Desc()
         {
             Node.TreeView.BeginUpdate();
-            while (Node.Nodes.Count > 0)
-                DisposeNode(Node.Nodes[0]);
+            Node.Nodes.Clear();
             SortedDictionary<uint, int> sdic = new SortedDictionary<uint, int>(new Utils.DescendingComparer<uint>());
             foreach (var i in Data.RecordIDs)
                 sdic.Add(i.Key, i.Value);
@@ -218,8 +216,7 @@ namespace TwinsaityEditor
                 MainFile.CloseEditor(Editors.Position, (int)Data.Parent.ID);
             }
             Node.TreeView.BeginUpdate();
-            while (Node.Nodes.Count > 0)
-                DisposeNode(Node.Nodes[0]);
+            Node.Nodes.Clear();
             Data.RecordIDs.Clear();
             for (int i = 0; i < Data.Records.Count; ++i)
             {

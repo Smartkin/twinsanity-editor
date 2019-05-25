@@ -150,7 +150,7 @@ namespace TwinsaityEditor
             var sel_i = listBox1.SelectedIndex;
             if (sel_i == -1)
                 return;
-            Controller.DisposeNode(controller.Node.Nodes[controller.Data.RecordIDs[path.ID]]);
+            controller.Node.Nodes[controller.Data.RecordIDs[path.ID]].Remove();
             controller.Data.RemoveItem(path.ID);
             listBox1.Items.RemoveAt(sel_i);
             if (sel_i >= listBox1.Items.Count) sel_i = listBox1.Items.Count - 1;

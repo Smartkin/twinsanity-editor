@@ -20,15 +20,13 @@ namespace TwinsaityEditor
         public MainForm()
         {
             InitializeComponent();
+            treeView1.AfterSelect += treeView1_AfterSelect;
+            treeView1.KeyDown += treeView1_KeyDown;
         }
 
         private void GenTree()
         {
             treeView1.BeginUpdate();
-            treeView1.AfterSelect += treeView1_AfterSelect;
-            treeView1.KeyDown += treeView1_KeyDown;
-            if (treeView1.TopNode != null && treeView1.TopNode.Tag is Controller c)
-                Controller.DisposeNode(treeView1.TopNode);
             if (ColDataController.importer != null)
                 ColDataController.importer.Close();
             treeView1.Nodes.Clear();
@@ -104,7 +102,7 @@ namespace TwinsaityEditor
         private void treeView1_KeyDown(object sender, KeyEventArgs e)
         {
             TreeView tree = (TreeView)sender;
-            if (e.KeyCode == Keys.Enter && tree.SelectedNode.Tag is Controller c)
+            if (e.KeyCode == Keys.Enter && tree.SelectedNode != null && tree.SelectedNode.Tag is Controller c)
                 CurCont.OpenEditor(c);
         }
 
@@ -119,8 +117,6 @@ namespace TwinsaityEditor
             ofd.Filter = "RM2 files|*.rm2|SM2 files|*.sm2|RMX files|*.rmx|SMX files|*.smx|Demo RM2 files|*.rm2|Demo SM2 files|*.sm2";
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                if (CurCont != null)
-                    CurCont.Dispose();
                 var file = new TwinsFile();
                 switch (ofd.FilterIndex)
                 {
@@ -159,7 +155,7 @@ namespace TwinsaityEditor
                 file.SafeFileName = ofd.SafeFileName;
                 Tag = new FileController(this, file);
                 GenTree();
-                Text = "Twinsaity Editor by Neo_Kesha [" + ofd.FileName + "] ";
+                Text = $"Twinsaity Editor by Neo_Kesha [{ofd.FileName}] ";
             }
         }
 

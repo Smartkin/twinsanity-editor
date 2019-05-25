@@ -5,7 +5,7 @@ namespace TwinsaityEditor
 {
     public delegate void ControllerAddMenuDelegate();
 
-    public abstract class Controller : IDisposable
+    public abstract class Controller
     {
         protected MainForm TopForm { get; private set; }
         public bool Selected { get; set; }
@@ -33,20 +33,6 @@ namespace TwinsaityEditor
             ContextMenu.MenuItems.Add(text, handler);
         }
 
-        /// <summary>
-        /// Dispose of a node.
-        /// </summary>
-        /// <param name="node">Node to be disposed of.</param>
-        public static void DisposeNode(TreeNode node)
-        {
-            if (node == null)
-                throw new ArgumentNullException("node");
-            ((Controller)node.Tag).Dispose();
-            while (node.Nodes.Count > 0)
-                DisposeNode(node.Nodes[0]);
-            node.Remove();
-        }
-
         protected abstract string GetName();
         protected abstract void GenText();
 
@@ -71,7 +57,5 @@ namespace TwinsaityEditor
             if (Selected)
                 TopForm.ControllerNodeSelect(this);
         }
-
-        public virtual void Dispose() { }
     }
 }

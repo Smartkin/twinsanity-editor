@@ -240,11 +240,5 @@ namespace TwinsaityEditor
             }
             else throw new System.ArgumentException("The requested section does not have an object instance section.");
         }
-
-        public override void Dispose()
-        {
-            CloseFile();
-            base.Dispose();
-        }
     }
 }
