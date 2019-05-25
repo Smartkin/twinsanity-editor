@@ -34,7 +34,7 @@ namespace TwinsaityEditor
             TextPrev = new string[3];
             TextPrev[0] = $"ID: {Data.ID}";
             TextPrev[1] = $"Offset: {Data.Offset} Size: {Data.Size}";
-            TextPrev[2] = $"Frequency: {Data.Frequency} ({Data.Freq})";
+            TextPrev[2] = $"Frequency: {Data.FreqFac} ({Data.Freq}Hz) Unknown: {Data.UnkFlag}";
         }
 
         public void LoadSoundData()
