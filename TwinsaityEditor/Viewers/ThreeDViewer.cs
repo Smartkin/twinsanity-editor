@@ -30,7 +30,7 @@ namespace TwinsaityEditor
         private Dictionary<char, float> charBearingY = new Dictionary<char, float>();
         private Dictionary<char, float> charHeight = new Dictionary<char, float>();
         protected static float size = 24f, zNear = 0.5f, zFar = 1500f;
-        protected static readonly float indicator_size = 0.5f;
+        protected static float indicator_size = 0.5f;
         protected int[] vbo_id;
         protected int vbo_count;
         private int[] vbo_sizes;

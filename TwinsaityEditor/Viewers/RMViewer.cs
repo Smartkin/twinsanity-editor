@@ -102,6 +102,64 @@ namespace TwinsaityEditor
             {
                 if (file.Data.RecordIDs.ContainsKey(i))
                 {
+                    if (((TwinsSection)file.Data.GetItem(i)).RecordIDs.ContainsKey(1)) //aipositions
+                    {
+                        foreach (AIPosition pos in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(1)).Records)
+                        {
+                            GL.PushMatrix();
+                            GL.Translate(pos.Pos.X, pos.Pos.Y, pos.Pos.Z);
+                            if (file.SelectedItem != pos)
+                            {
+                                GL.PointSize(5);
+                                GL.Color3(colors[colors.Length - i * 2 - 2]);
+                            }
+                            else
+                            {
+                                GL.PointSize(10);
+                                GL.Color3(Color.White);
+                            }
+                            GL.Begin(PrimitiveType.Points);
+                            GL.Vertex3(0, 0, 0);
+                            GL.End();
+                            GL.Scale(0.5, 0.5, 0.5);
+                            GL.Scale(pos.Pos.W, pos.Pos.W, pos.Pos.W);
+                            RenderString(pos.ID.ToString());
+                            GL.PopMatrix();
+                        }
+                    }
+
+                    if (((TwinsSection)file.Data.GetItem(i)).RecordIDs.ContainsKey(2)) //aipaths
+                    {
+                        foreach (AIPath pth in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(2)).Records)
+                        {
+                            AIPosition pth_begin = file.GetAIPos(i, pth.Arg[0]);
+                            AIPosition pth_end = file.GetAIPos(i, pth.Arg[1]);
+
+                            if (file.SelectedItem != pth)
+                            {
+                                GL.PointSize(5);
+                                GL.LineWidth(1);
+                                GL.Color3(colors[colors.Length - i * 2 - 2]);
+                            }
+                            else
+                            {
+                                GL.PointSize(10);
+                                GL.LineWidth(2);
+                                GL.Color3(Color.White);
+                            }
+                            GL.PushMatrix();
+                            GL.Translate((pth_begin.Pos.X + pth_end.Pos.X) / 2, (pth_begin.Pos.Y + pth_end.Pos.Y) / 2, (pth_begin.Pos.Z + pth_end.Pos.Z) / 2);
+                            DrawAxes(0, 0, 0, 0.5f);
+                            GL.Scale(0.5, 0.5, 0.5);
+                            RenderString(pth.ID.ToString());
+                            GL.PopMatrix();
+                            GL.Begin(PrimitiveType.Lines);
+                            GL.Vertex3(pth_begin.Pos.X, pth_begin.Pos.Y, pth_begin.Pos.Z);
+                            GL.Vertex3(pth_end.Pos.X, pth_end.Pos.Y, pth_end.Pos.Z);
+                            GL.End();
+                        }
+                    }
+
                     if (((TwinsSection)file.Data.GetItem(i)).RecordIDs.ContainsKey(3)) //positions
                     {
                         foreach (Position pos in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(3)).Records)
@@ -513,9 +571,17 @@ namespace TwinsaityEditor
                 record_exists[i] = file.Data.RecordIDs.ContainsKey(i);
                 if (record_exists[i])
                 {
+                    record_exists[i] = false;
                     if (((TwinsSection)file.Data.GetItem(i)).RecordIDs.ContainsKey(3))
+                    {
                         posi_count += ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(3)).Records.Count;
-                    else record_exists[i] = false;
+                        record_exists[i] = true;
+                    }
+                    if (((TwinsSection)file.Data.GetItem(i)).RecordIDs.ContainsKey(1))
+                    {
+                        posi_count += ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(1)).Records.Count;
+                        record_exists[i] = true;
+                    }
                 }
             }
             if (vtx[3] == null || vtx.Length != (circle_res * 3 + 6) * posi_count)
@@ -537,6 +603,53 @@ namespace TwinsaityEditor
             for (uint i = 0; i <= 7; ++i)
             {
                 if (!record_exists[i]) continue;
+                if (((TwinsSection)file.Data.GetItem(i)).RecordIDs.ContainsKey(1))
+                {
+                    foreach (AIPosition pos in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(1)).Records)
+                    {
+                        indicator_size *= pos.Pos.W;
+                        Vector3 pos_pos = pos.Pos.ToVec3();
+                        pos_pos.X = -pos_pos.X;
+                        posi_vtx_offs[l++] = m;
+                        vtx[3][m++] = new Vertex(new Vector3(-indicator_size * 0.75f * 0.5f, 0, 0) + pos_pos, new Vector3(), Color.Red);
+                        vtx[3][m++] = new Vertex(new Vector3(+indicator_size * 0.375f * 0.5f, 0, 0) + pos_pos, new Vector3(), Color.Red);
+                        posi_vtx_offs[l++] = m;
+                        vtx[3][m++] = new Vertex(new Vector3(0, indicator_size * 0.75f * 0.5f, 0) + pos_pos, new Vector3(), Color.Green);
+                        vtx[3][m++] = new Vertex(new Vector3(0, -indicator_size * 0.375f * 0.5f, 0) + pos_pos, new Vector3(), Color.Green);
+                        posi_vtx_offs[l++] = m;
+                        vtx[3][m++] = new Vertex(new Vector3(0, 0, indicator_size * 0.75f * 0.5f) + pos_pos, new Vector3(), Color.Blue);
+                        vtx[3][m++] = new Vertex(new Vector3(0, 0, -indicator_size * 0.375f * 0.5f) + pos_pos, new Vector3(), Color.Blue);
+                        Color cur_color = (file.SelectedItem == pos) ? Color.White : colors[colors.Length - i * 2 - 2];
+                        posi_vtx_offs[l++] = m;
+                        for (int j = 0; j < circle_res; ++j)
+                        {
+                            Vector3 vec = new Vector3(0, 0, indicator_size);
+                            vec *= Matrix3.Identity * Matrix3.CreateRotationX(MathHelper.TwoPi / circle_res * j);
+                            vtx[3][m++] = new Vertex(pos_pos + vec, new Vector3(), cur_color);
+                        }
+                        posi_vtx_offs[l++] = m;
+                        for (int j = 0; j < circle_res; ++j)
+                        {
+                            Vector3 vec = new Vector3(0, 0, indicator_size);
+                            vec *= Matrix3.Identity * Matrix3.CreateRotationY(MathHelper.TwoPi / circle_res * j);
+                            vtx[3][m++] = new Vertex(pos_pos + vec, new Vector3(), cur_color);
+                        }
+                        posi_vtx_offs[l++] = m;
+                        for (int j = 0; j < circle_res; ++j)
+                        {
+                            Vector3 vec = new Vector3(0, indicator_size, 0);
+                            vec *= Matrix3.Identity * Matrix3.CreateRotationZ(MathHelper.TwoPi / circle_res * j);
+                            vtx[3][m++] = new Vertex(pos_pos + vec, new Vector3(), cur_color);
+                        }
+                        indicator_size /= pos.Pos.W;
+                        min_x = Math.Min(min_x, pos_pos.X);
+                        min_y = Math.Min(min_y, pos_pos.Y);
+                        min_z = Math.Min(min_z, pos_pos.Z);
+                        max_x = Math.Max(max_x, pos_pos.X);
+                        max_y = Math.Max(max_y, pos_pos.Y);
+                        max_z = Math.Max(max_z, pos_pos.Z);
+                    }
+                }
                 if (((TwinsSection)file.Data.GetItem(i)).RecordIDs.ContainsKey(3))
                 {
                     foreach (Position pos in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(3)).Records)
@@ -580,7 +693,6 @@ namespace TwinsaityEditor
                         max_x = Math.Max(max_x, pos_pos.X);
                         max_y = Math.Max(max_y, pos_pos.Y);
                         max_z = Math.Max(max_z, pos_pos.Z);
-
                     }
                 }
             }

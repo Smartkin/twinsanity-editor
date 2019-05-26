@@ -227,16 +227,38 @@ namespace TwinsaityEditor
 
         public Instance GetInstance(uint sector, uint id)
         {
-            if (Data.RecordIDs.ContainsKey(sector) && ((TwinsSection)Data.GetItem(sector)).RecordIDs.ContainsKey(6))// && ((TwinsSection)((TwinsSection)Data.GetItem(sector)).GetItem(6)).SecInfo.Records.ContainsKey(id))
+            if (Data.RecordIDs.ContainsKey(sector) && ((TwinsSection)Data.GetItem(sector)).RecordIDs.ContainsKey(6))
             {
-                int i = 0;
-                foreach (Instance j in ((TwinsSection)((TwinsSection)Data.GetItem(sector)).GetItem(6)).Records)
-                {
-                    if (i++ == id)
-                        return j;
-                }
+                //int i = 0;
+                //foreach (Instance j in ((TwinsSection)((TwinsSection)Data.GetItem(sector)).GetItem(6)).Records)
+                //{
+                //    if (i++ == id)
+                //        return j;
+                //}
                 //throw new System.ArgumentException("The requested section does not have an instance in the specified position.");
-                return null;
+                if (id < ((TwinsSection)((TwinsSection)Data.GetItem(sector)).GetItem(6)).Records.Count)
+                    return (Instance)((TwinsSection)((TwinsSection)Data.GetItem(sector)).GetItem(6)).Records[(int)id];
+                else
+                    return null;
+            }
+            else throw new System.ArgumentException("The requested section does not have an object instance section.");
+        }
+
+        public AIPosition GetAIPos(uint sector, uint id)
+        {
+            if (Data.RecordIDs.ContainsKey(sector) && ((TwinsSection)Data.GetItem(sector)).RecordIDs.ContainsKey(1))
+            {
+                //int i = 0;
+                //foreach (Instance j in ((TwinsSection)((TwinsSection)Data.GetItem(sector)).GetItem(6)).Records)
+                //{
+                //    if (i++ == id)
+                //        return j;
+                //}
+                //throw new System.ArgumentException("The requested section does not have an instance in the specified position.");
+                if (id < ((TwinsSection)((TwinsSection)Data.GetItem(sector)).GetItem(1)).Records.Count)
+                    return (AIPosition)((TwinsSection)((TwinsSection)Data.GetItem(sector)).GetItem(1)).Records[(int)id];
+                else
+                    return null;
             }
             else throw new System.ArgumentException("The requested section does not have an object instance section.");
         }
