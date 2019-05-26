@@ -18,7 +18,7 @@ namespace TwinsaityEditor
             TFController = file;
             controller = c;
             InitializeComponent();
-            Text = "Position Editor (Section " + c.Data.Parent.ID + ")";
+            Text = "Position Editor (Section {c.Data.Parent.ID})";
             PopulateList();
             FormClosed += PositionEditor_FormClosed;
         }
@@ -33,7 +33,7 @@ namespace TwinsaityEditor
             listBox1.Items.Clear();
             foreach (Position i in controller.Data.Records)
             {
-                listBox1.Items.Add("ID " + i.ID);
+                listBox1.Items.Add($"ID {i.ID}");
             }
         }
 
@@ -72,7 +72,7 @@ namespace TwinsaityEditor
             controller.Data.AddItem(id, new_pos);
             ((MainForm)Tag).GenTreeNode(new_pos, controller);
             pos = new_pos;
-            listBox1.Items.Add("ID " + pos.ID);
+            listBox1.Items.Add($"ID {pos.ID}");
             controller.UpdateText();
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[pos.ID]].Tag).UpdateText();
         }
@@ -106,7 +106,7 @@ namespace TwinsaityEditor
             controller.Data.RecordIDs.Remove(pos.ID);
             pos.ID = (uint)numericUpDown5.Value;
             controller.Data.RecordIDs.Add(pos.ID, listBox1.SelectedIndex);
-            listBox1.Items[listBox1.SelectedIndex] = "ID " + pos.ID;
+            listBox1.Items[listBox1.SelectedIndex] = $"ID {pos.ID}";
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[pos.ID]].Tag).UpdateText();
         }
 

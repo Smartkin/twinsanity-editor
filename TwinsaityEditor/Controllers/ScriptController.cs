@@ -13,14 +13,14 @@ namespace TwinsaityEditor
 
         protected override string GetName()
         {
-            return (Data.Name ?? "Script") + " [ID " + Data.ID + "]";
+            return $"{Data.Name ?? "Script"} [ID {Data.ID}]";
         }
 
         protected override void GenText()
         {
             TextPrev = new string[2];
-            TextPrev[0] = "ID: " + Data.ID + (Data.Name != null ? " Name: " + Data.Name : string.Empty);
-            TextPrev[1] = "Offset: " + Data.Offset + " Size: " + Data.Size;
+            TextPrev[0] = $"ID: {Data.ID} {(Data.Name != null ? $" Name: {Data.Name}" : string.Empty)}";
+            TextPrev[1] = $"Offset: {Data.Offset} Size: {Data.Size}";
         }
     }
 }

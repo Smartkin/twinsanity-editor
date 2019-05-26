@@ -21,7 +21,7 @@ namespace TwinsaityEditor
             TFController = file;
             controller = c;
             InitializeComponent();
-            Text = "Instance Editor (Section " + c.Data.Parent.ID + ")";
+            Text = "Instance Editor (Section {c.Data.Parent.ID})";
             PopulateList();
             comboBox1.TextChanged += comboBox1_TextChanged;
             tabControl1.SelectedIndexChanged += tabControl1_SelectedIndexChanged;
@@ -44,7 +44,7 @@ namespace TwinsaityEditor
             var s_dic = new SortedDictionary<uint, int>(((TwinsSection)((TwinsSection)File.GetItem(10)).GetItem(0)).RecordIDs);
             foreach (var i in s_dic)
             {
-                comboBox1.Items.Add(i.Key + " (" + TFController.GetObjectName(i.Key) + ")");
+                comboBox1.Items.Add($"{i.Key} ({TFController.GetObjectName(i.Key)})");
             }
         }
 
@@ -88,7 +88,7 @@ namespace TwinsaityEditor
         private void UpdateTab1()
         {
             string obj_name = TFController.GetObjectName(ins.ObjectID);
-            comboBox1.Text = ins.ObjectID.ToString() + ((obj_name == string.Empty) ? string.Empty : (" (" + obj_name + ")"));
+            comboBox1.Text = ins.ObjectID.ToString() + ((obj_name == string.Empty) ? string.Empty : (" ({obj_name})"));
             numericUpDown1.Value = ins.ID;
             numericUpDown12.Value = listBox1.SelectedIndex;
             numericUpDown2.Value = (decimal)ins.Pos.X;
@@ -170,7 +170,7 @@ namespace TwinsaityEditor
         private string GenTextForList(Instance instance)
         {
             string obj_name = TFController.GetObjectName(instance.ObjectID);
-            return "ID " + instance.ID + ((obj_name == string.Empty) ? string.Empty : (" (" + obj_name + ")"));
+            return $"ID {instance.ID} {(obj_name == string.Empty ? string.Empty : $" ({obj_name})")}";
         }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)

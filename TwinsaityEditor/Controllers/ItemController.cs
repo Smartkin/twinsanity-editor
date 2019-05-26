@@ -19,14 +19,14 @@ namespace TwinsaityEditor
 
         protected override string GetName()
         {
-            return "Item [ID " + Data.ID + "]";
+            return $"Item [ID {Data.ID}]";
         }
 
         protected override void GenText()
         {
             TextPrev = new string[2];
-            TextPrev[0] = "ID: " + Data.ID;
-            TextPrev[1] = "Offset: " + Data.Offset + " Size: " + Data.Size;
+            TextPrev[0] = $"ID: {Data.ID}";
+            TextPrev[1] = $"Offset: {Data.Offset} Size: {Data.Size}";
         }
 
         private void Menu_ExtractItem()

@@ -22,30 +22,30 @@ namespace TwinsaityEditor
 
         protected override string GetName()
         {
-            return "Collision Data [ID " + Data.ID + "]";
+            return $"Collision Data [ID {Data.ID}]";
         }
 
         protected override void GenText()
         {
             TextPrev = new string[6];// + Data.Triggers.Count + Data.Groups.Count + Data.Tris.Count + Data.Vertices.Count];
-            TextPrev[0] = "ID: " + Data.ID;
-            TextPrev[1] = "Offset: " + Data.Offset + " Size: " + Data.Size;
-            TextPrev[2] = "TriggerCount: " + Data.Triggers.Count;
-            TextPrev[3] = "GroupCount: " + Data.Groups.Count;
-            TextPrev[4] = "PolyCount: " + Data.Tris.Count;
-            TextPrev[5] = "VertexCount: " + Data.Vertices.Count;
+            TextPrev[0] = $"ID: {Data.ID}";
+            TextPrev[1] = $"Offset: {Data.Offset} Size: {Data.Size}";
+            TextPrev[2] = $"TriggerCount: {Data.Triggers.Count}";
+            TextPrev[3] = $"GroupCount: {Data.Groups.Count}";
+            TextPrev[4] = $"PolyCount: {Data.Tris.Count}";
+            TextPrev[5] = $"VertexCount: {Data.Vertices.Count}";
             /*
             for (int i = 0; i < Data.Triggers.Count; ++i)
-                TextPrev[6 + i] = "Trigger" + i + ": " + Nodes " + Data.Triggers[i].Flag1 + "~" + Data.Triggers[i].Flag2;
+                TextPrev[6 + i] = "Trigger{i}: {Nodes {Data.Triggers[i].Flag1}~{Data.Triggers[i].Flag2;
             
             for (int i = 0; i < Data.Groups.Count; ++i)
-                TextPrev[6 + Data.Triggers.Count + i] = "Group" + i + ": " + "Offset: " + Data.Groups[i].Offset + " Count: " + Data.Groups[i].Size;
+                TextPrev[6 + Data.Triggers.Count + i] = "Group{i}: {"Offset: {Data.Groups[i].Offset} Count: {Data.Groups[i].Size;
 
             for (int i = 0; i < Data.Tris.Count; ++i)
-                TextPrev[6 + Data.Triggers.Count + Data.Groups.Count + i] = "Polygon" + i + ": " + Data.Tris[i].Vert1 + "|" + Data.Tris[i].Vert2 + "|" + Data.Tris[i].Vert3 + "|" + Data.Tris[i].Surface;
+                TextPrev[6 + Data.Triggers.Count + Data.Groups.Count + i] = "Polygon{i}: {Data.Tris[i].Vert1}|{Data.Tris[i].Vert2}|{Data.Tris[i].Vert3}|{Data.Tris[i].Surface;
 
             for (int i = 0; i < Data.Vertices.Count; ++i)
-                TextPrev[6 + Data.Triggers.Count + Data.Groups.Count + Data.Tris.Count + i] = "Vertex" + i + ": (" + Data.Vertices[i].X + ", " + Data.Vertices[i].Y + ", " + Data.Vertices[i].Z + ", " + Data.Vertices[i].W + ")";
+                TextPrev[6 + Data.Triggers.Count + Data.Groups.Count + Data.Tris.Count + i] = "Vertex{i}: ({Data.Vertices[i].X}, {Data.Vertices[i].Y}, {Data.Vertices[i].Z}, {Data.Vertices[i].W})";
                 */
         }
 

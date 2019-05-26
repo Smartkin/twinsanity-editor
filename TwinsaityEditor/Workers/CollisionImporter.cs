@@ -304,9 +304,9 @@ namespace TwinsaityEditor
 
         private void UpdateMainLabel()
         {
-            label4.Text = $"Trigger Count: {groupCount * 2}" + Environment.NewLine +
-                $"Group Count: {groupCount}" + Environment.NewLine +
-                $"Triangle Count: {triCount}" + Environment.NewLine +
+            label4.Text = $"Trigger Count: {groupCount * 2}{Environment.NewLine}" +
+                $"Group Count: {groupCount}{Environment.NewLine}" +
+                $"Triangle Count: {triCount}{Environment.NewLine}" +
                 $"Vertex Count: {vertexCount}";
         }
 

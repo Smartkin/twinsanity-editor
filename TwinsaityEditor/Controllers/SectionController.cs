@@ -57,17 +57,17 @@ namespace TwinsaityEditor
 
         protected override string GetName()
         {
-            return Data.Type + " Section [ID " + Data.ID + "]";
+            return $"{Data.Type} Section [ID {Data.ID}]";
         }
 
         protected override void GenText()
         {
             TextPrev = new string[Data.ExtraData == null ? 3 : 4];
-            TextPrev[0] = "ID: " + Data.ID;
-            TextPrev[1] = "Offset: " + Data.Offset + " Size: " + Data.Size;
-            TextPrev[2] = "ContentSize: " + Data.ContentSize + " Element Count: " + Data.Records.Count;
+            TextPrev[0] = $"ID: {Data.ID}";
+            TextPrev[1] = $"Offset: {Data.Offset} Size: {Data.Size}";
+            TextPrev[2] = $"ContentSize: {Data.ContentSize} Element Count: {Data.Records.Count}";
             if (Data.ExtraData != null)
-                TextPrev[3] = "ExtraDataSize: " + Data.ExtraData.Length;
+                TextPrev[3] = $"ExtraDataSize: {Data.ExtraData.Length}";
         }
 
         public void AddItem(uint id, TwinsItem item)
@@ -241,7 +241,7 @@ namespace TwinsaityEditor
             {
                 foreach (TreeNode n in Node.Nodes)
                 {
-                    string fname = fdbSave.FileName + @"\" + n.Text + ".ply";
+                    string fname = fdbSave.FileName + @"\{n.Text}.ply";
                     if (n.Tag is MeshController)
                     {
                         MeshController c = (MeshController)n.Tag;

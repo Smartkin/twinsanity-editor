@@ -131,7 +131,7 @@ namespace TwinsaityEditor
             controller.Data.RecordIDs.Remove(trigger.ID);
             trigger.ID = (uint)numericUpDown5.Value;
             controller.Data.RecordIDs.Add(trigger.ID, listBox1.SelectedIndex);
-            listBox1.Items[listBox1.SelectedIndex] = "ID " + trigger.ID;
+            listBox1.Items[listBox1.SelectedIndex] = $"ID {trigger.ID}";
             CurCont.UpdateText();
         }
 

@@ -16,18 +16,18 @@ namespace TwinsaityEditor
 
         protected override string GetName()
         {
-            return "Model [ID " + Data.ID + "]";
+            return $"Model [ID {Data.ID}]";
         }
 
         protected override void GenText()
         {
             TextPrev = new string[4 + Data.MaterialIDs.Length];
-            TextPrev[0] = "ID: " + Data.ID;
-            TextPrev[1] = "Offset: " + Data.Offset + " Size: " + Data.Size;
-            TextPrev[2] = "Header: " + Data.Header + " MaterialCount: " + Data.MaterialIDs.Length;
+            TextPrev[0] = $"ID: {Data.ID}";
+            TextPrev[1] = $"Offset: {Data.Offset} Size: {Data.Size}";
+            TextPrev[2] = $"Header: {Data.Header} MaterialCount: {Data.MaterialIDs.Length}";
             for (int i = 0; i < Data.MaterialIDs.Length; ++i)
                 TextPrev[3 + i] = MainFile.GetMaterialName(Data.MaterialIDs[i]);
-            TextPrev[3 + Data.MaterialIDs.Length] = "Mesh: " + Data.MeshID;
+            TextPrev[3 + Data.MaterialIDs.Length] = $"Mesh: {Data.MeshID}";
         }
 
         private void Menu_ExportPLY()

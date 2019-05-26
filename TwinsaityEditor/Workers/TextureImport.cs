@@ -132,7 +132,7 @@ namespace TwinsaityEditor.Workers
                             tex.Import(rawData, width, height, bf, mip);
 
                             //Save the image
-                            FileStream file = new FileStream(fdbSave.FileName + "\\" + item.Text.Remove(item.Text.Length - 4, 4), FileMode.Create, FileAccess.Write);
+                            FileStream file = new FileStream(fdbSave.FileName}\\{item.Text.Remove(item.Text.Length - 4, 4), FileMode.Create, FileAccess.Write);
                             BinaryWriter writer = new BinaryWriter(file);
                             writer.Write(tex.ByteStream.ToArray());
 
@@ -145,7 +145,7 @@ namespace TwinsaityEditor.Workers
                         //tex.Import(rawData, width, height, bf, mip);
                         
                         //Save the image
-                        FileStream file = new FileStream(fdbSave.FileName + "\\" + item.Text.Remove(item.Text.Length - 4, 4), FileMode.Create, FileAccess.Write);
+                        FileStream file = new FileStream($"{fdbSave.FileName}\\{item.Text.Remove(item.Text.Length - 4, 4)}", FileMode.Create, FileAccess.Write);
                         BinaryWriter writer = new BinaryWriter(file);
                         //writer.Write(tex.Data);
 
@@ -164,7 +164,7 @@ namespace TwinsaityEditor.Workers
                         bitmap.Dispose();
                     }
 
-                    MessageBox.Show("Import finished! Imported " + listImages.Items.Count.ToString() + " images.", "Import finished", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Import finished! Imported {listImages.Items.Count.ToString()} images.", "Import finished", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 pbImport.Hide();
             }

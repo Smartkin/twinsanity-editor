@@ -13,15 +13,15 @@ namespace TwinsaityEditor
 
         protected override string GetName()
         {
-            return "Position [ID " + Data.ID + "]";
+            return $"Position [ID {Data.ID}]";
         }
 
         protected override void GenText()
         {
             TextPrev = new string[3];
-            TextPrev[0] = "ID: " + Data.ID;
-            TextPrev[1] = "Offset: " + Data.Offset + " Size: " + Data.Size;
-            TextPrev[2] = "Position (" + Data.Pos.X + ", " + Data.Pos.Y + ", " + Data.Pos.Z + ", " + Data.Pos.W + ")";
+            TextPrev[0] = $"ID: {Data.ID}";
+            TextPrev[1] = $"Offset: {Data.Offset} Size: {Data.Size}";
+            TextPrev[2] = $"Position ({Data.Pos.X}, {Data.Pos.Y}, {Data.Pos.Z}, {Data.Pos.W})";
         }
     }
 }

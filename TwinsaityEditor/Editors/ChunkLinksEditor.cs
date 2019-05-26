@@ -111,7 +111,7 @@ namespace TwinsaityEditor
                 GetLoadWallPos();
             }
 
-            if (groupBox9.Enabled = groupBox8.Enabled = groupBox7.Enabled = (link.Type == 1 || link.Type == 3))
+            if (groupBox9.Enabled = groupBox8.Enabled = groupBox7.Enabled = link.Type == 1 || link.Type == 3)
             {
                 GetLoadAreaPos();
                 GetAreaMatrix1Pos();
@@ -185,7 +185,7 @@ namespace TwinsaityEditor
         {
             if (pos_i <= 0)
                 return;
-            label21.Text = pos_i-- + " / 4";
+            label21.Text = $"{pos_i--} / 4";
             GetLoadWallPos();
         }
 
@@ -193,7 +193,7 @@ namespace TwinsaityEditor
         {
             if (pos_i >= 3)
                 return;
-            label21.Text = (++pos_i+1) + " / 4";
+            label21.Text = $"{++pos_i+1} / 4";
             GetLoadWallPos();
         }
 
@@ -209,7 +209,7 @@ namespace TwinsaityEditor
         {
             if (areap_i <= 0)
                 return;
-            label22.Text = areap_i-- + " / 8";
+            label22.Text = $"{areap_i--} / 8";
             GetLoadAreaPos();
         }
 
@@ -217,7 +217,7 @@ namespace TwinsaityEditor
         {
             if (u1_i <= 0)
                 return;
-            label27.Text = u1_i-- + " / 6";
+            label27.Text = $"{u1_i--} / 6";
             GetAreaMatrix1Pos();
         }
 
@@ -225,7 +225,7 @@ namespace TwinsaityEditor
         {
             if (u1_i >= 5)
                 return;
-            label27.Text = (++u1_i + 1) + " / 6";
+            label27.Text = $"{++u1_i + 1} / 6";
             GetAreaMatrix1Pos();
         }
 
@@ -233,7 +233,7 @@ namespace TwinsaityEditor
         {
             if (u2_i <= 0)
                 return;
-            label32.Text = u2_i-- + " / 6";
+            label32.Text = $"{u2_i--} / 6";
             GetAreaMatrix2Pos();
         }
 
@@ -241,7 +241,7 @@ namespace TwinsaityEditor
         {
             if (u2_i >= 5)
                 return;
-            label32.Text = (++u2_i + 1) + " / 6";
+            label32.Text = $"{++u2_i + 1} / 6";
             GetAreaMatrix2Pos();
         }
 
@@ -254,7 +254,7 @@ namespace TwinsaityEditor
         {
             if (areap_i >= 7)
                 return;
-            label22.Text = (++areap_i + 1) + " / 8";
+            label22.Text = $"{++areap_i + 1} / 8";
             GetLoadAreaPos();
         }
 
@@ -314,7 +314,7 @@ namespace TwinsaityEditor
             if (ignore_value_change) return;
             link.Type = comboBox1.SelectedIndex;
             controller.Data.Links[listBox1.SelectedIndex] = link;
-            if (groupBox9.Enabled = groupBox8.Enabled = groupBox7.Enabled = (link.Type == 1 || link.Type == 3))
+            if (groupBox9.Enabled = groupBox8.Enabled = groupBox7.Enabled = link.Type == 1 || link.Type == 3)
             {
                 GetLoadAreaPos();
                 GetAreaMatrix1Pos();

@@ -13,7 +13,7 @@ namespace TwinsaityEditor.FontWrapper
 
         public FontFormat(string name, string ext)
         {
-            if (!ext.StartsWith(".")) ext = "." + ext;
+            if (!ext.StartsWith(".")) ext = $".{ext}";
             Name = name; FileExtension = ext;
         }
     }
@@ -22,7 +22,7 @@ namespace TwinsaityEditor.FontWrapper
     {
         public void Add(string name, string ext)
         {
-            if (!ext.StartsWith(".")) ext = "." + ext;
+            if (!ext.StartsWith(".")) ext = $".{ext}";
             this.Add(ext, new FontFormat(name, ext));
         }
 

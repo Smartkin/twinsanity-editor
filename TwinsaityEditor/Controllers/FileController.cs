@@ -38,8 +38,8 @@ namespace TwinsaityEditor
         protected override void GenText()
         {
             TextPrev = new string[2];
-            TextPrev[0] = "Size: " + Data.Size;
-            TextPrev[1] = "ContentSize: " + Data.ContentSize + " Element Count: " + Data.Records.Count;
+            TextPrev[0] = $"Size: {Data.Size}";
+            TextPrev[1] = $"ContentSize: {Data.ContentSize} Element Count: {Data.Records.Count}";
         }
 
         private void LoadFileInfo()

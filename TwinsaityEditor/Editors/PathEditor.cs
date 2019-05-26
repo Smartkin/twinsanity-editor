@@ -21,7 +21,7 @@ namespace TwinsaityEditor
             TFController = file;
             controller = c;
             InitializeComponent();
-            Text = "Path Editor (Section " + c.Data.Parent.ID + ")";
+            Text = "Path Editor (Section {c.Data.Parent.ID})";
             PopulateList();
             FormClosed += PathEditor_FormClosed;
         }
@@ -174,7 +174,7 @@ namespace TwinsaityEditor
             controller.Data.RecordIDs.Remove(path.ID);
             path.ID = (uint)numericUpDown5.Value;
             controller.Data.RecordIDs.Add(path.ID, listBox1.SelectedIndex);
-            listBox1.Items[listBox1.SelectedIndex] = "ID " + path.ID;
+            listBox1.Items[listBox1.SelectedIndex] = $"ID {path.ID}";
             CurPathCont.UpdateText();
         }
 
