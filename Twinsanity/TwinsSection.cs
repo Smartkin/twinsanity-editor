@@ -272,6 +272,12 @@ namespace Twinsanity
                     case SectionType.SE_Jpn:
                         LoadItem<SoundEffect>(reader, sub);
                         break;
+                    case SectionType.AIPosition:
+                        LoadItem<AIPosition>(reader, sub);
+                        break;
+                    case SectionType.AIPath:
+                        LoadItem<AIPath>(reader, sub);
+                        break;
                     case SectionType.Position:
                         LoadItem<Position>(reader, sub);
                         break;

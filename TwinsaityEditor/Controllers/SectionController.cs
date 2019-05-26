@@ -24,6 +24,8 @@ namespace TwinsaityEditor
             {
                 AddMenu("Re-order by ID (asc.)", Menu_ReOrderByID_Asc);
                 if (item.Type == SectionType.ObjectInstance
+                    || item.Type == SectionType.AIPosition
+                    || item.Type == SectionType.AIPath
                     || item.Type == SectionType.Position
                     || item.Type == SectionType.Path
                     || item.Type == SectionType.Trigger)
@@ -242,15 +244,13 @@ namespace TwinsaityEditor
                 foreach (TreeNode n in Node.Nodes)
                 {
                     string fname = fdbSave.FileName + @"\{n.Text}.ply";
-                    if (n.Tag is MeshController)
+                    if (n.Tag is MeshController c)
                     {
-                        MeshController c = (MeshController)n.Tag;
                         File.WriteAllBytes(fname, c.Data.ToPLY());
                     }
-                    else if (n.Tag is ModelController)
+                    else if (n.Tag is ModelController d)
                     {
-                        ModelController c = (ModelController)n.Tag;
-                        File.WriteAllBytes(fname, ((Mesh)((TwinsSection)Data.Parent.GetItem(2)).GetItem(c.Data.MeshID)).ToPLY());
+                        File.WriteAllBytes(fname, ((Mesh)((TwinsSection)Data.Parent.GetItem(2)).GetItem(d.Data.MeshID)).ToPLY());
                     }
                 }
             }

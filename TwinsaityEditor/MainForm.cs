@@ -81,6 +81,10 @@ namespace TwinsaityEditor
                 c = new ScriptController(this, (Script)a);
             else if (a is SoundEffect)
                 c = new SEController(this, (SoundEffect)a);
+            else if (a is AIPosition)
+                c = new AIPositionController(this, (AIPosition)a);
+            else if (a is AIPath)
+                c = new AIPathController(this, (AIPath)a);
             else if (a is Position)
                 c = new PositionController(this, (Position)a);
             else if (a is Path)

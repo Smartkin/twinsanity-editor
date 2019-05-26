@@ -62,6 +62,8 @@
     <Import Include="System.Diagnostics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Items\Instances\AIPath.cs" />
+    <Compile Include="Items\Instances\AIPosition.cs" />
     <Compile Include="RIFF.cs" />
     <Compile Include="ADPCM.cs" />
     <Compile Include="BDArchive.cs" />

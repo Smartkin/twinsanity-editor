@@ -160,11 +160,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Controllers\AIPathController.cs" />
     <Compile Include="Controllers\Controller.cs" />
     <Compile Include="Controllers\ColDataController.cs" />
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\ChunkLinksController.cs" />
     <Compile Include="Controllers\PathController.cs" />
+    <Compile Include="Controllers\AIPositionController.cs" />
     <Compile Include="Controllers\PositionController.cs" />
     <Compile Include="Controllers\SEController.cs" />
     <Compile Include="Controllers\TriggerController.cs" />
