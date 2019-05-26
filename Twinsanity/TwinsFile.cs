@@ -9,8 +9,6 @@ namespace Twinsanity
     /// </summary>
     public class TwinsFile : TwinsSection
     {
-        private readonly uint magic = 0x00010001;
-
         public string FileName { get; set; }
         public string SafeFileName { get; set; }
 
