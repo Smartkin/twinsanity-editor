@@ -30,6 +30,11 @@ namespace TwinsaityEditor
             return new Vector3(p.X, p.Y, p.Z);
         }
 
+        public static Vector4 ToVec4(this Pos p)
+        {
+            return new Vector4(p.X, p.Y, p.Z, p.W);
+        }
+
         public static Vector4 NormalizeW(this Vector4 v)
         {
             v.X *= v.W;
