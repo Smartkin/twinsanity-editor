@@ -242,6 +242,7 @@
     <Compile Include="Viewers\ThreeDViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Viewers\VertexBufferData.cs" />
     <Compile Include="Workers\ColDataEditor.cs">
       <SubType>Form</SubType>
     </Compile>

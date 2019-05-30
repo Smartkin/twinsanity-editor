@@ -13,9 +13,6 @@ namespace TwinsaityEditor
 
         private bool show_col_nodes, show_triggers;
         private FileController file;
-        private int[] inst_vtx_counts, inst_vtx_offs;
-        private int[] coln_vtx_counts, coln_vtx_offs;
-        private int[] posi_vtx_counts, posi_vtx_offs;
 
         public RMViewer(FileController file, ref Form pform)
         {
@@ -23,8 +20,7 @@ namespace TwinsaityEditor
             show_col_nodes = show_triggers = false;
             this.file = file;
             Tag = pform;
-            vbo_count = 4;
-            vtx = new Vertex[vbo_count][];
+            InitVBO(5);
             if (file.Data.RecordIDs.ContainsKey(9))
             {
                 pform.Text = "Loading collision tree...";
@@ -36,6 +32,8 @@ namespace TwinsaityEditor
             LoadInstances();
             pform.Text = "Loading positions...";
             LoadPositions();
+            pform.Text = "Loading AI positions...";
+            LoadAIPositions();
             pform.Text = "Initializing...";
         }
 
@@ -53,38 +51,21 @@ namespace TwinsaityEditor
             if (file.Data.RecordIDs.ContainsKey(9))
             {
                 GL.Enable(EnableCap.Lighting);
-                GL.PushMatrix();
-                GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_id[0]);
-                GL.VertexPointer(3, VertexPointerType.Float, Vertex.SizeOf, Vertex.OffsetOfPos);
-                GL.ColorPointer(4, ColorPointerType.UnsignedByte, Vertex.SizeOf, Vertex.OffsetOfCol);
-                GL.NormalPointer(NormalPointerType.Float, Vertex.SizeOf, Vertex.OffsetOfNor);
-                GL.DrawArrays(PrimitiveType.Triangles, 0, vtx[0].Length);
-                GL.PopMatrix();
+                vtx[0].DrawAll(PrimitiveType.Triangles, BufferPointerFlags.Normal);
                 GL.Disable(EnableCap.Lighting);
 
                 if (show_col_nodes)
                 {
-                    GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_id[2]);
-                    GL.VertexPointer(3, VertexPointerType.Float, Vertex.SizeOf, Vertex.OffsetOfPos);
-                    GL.ColorPointer(4, ColorPointerType.UnsignedByte, Vertex.SizeOf, Vertex.OffsetOfCol);
-                    GL.NormalPointer(NormalPointerType.Float, Vertex.SizeOf, Vertex.OffsetOfNor);
-                    GL.MultiDrawArrays(PrimitiveType.LineStrip, coln_vtx_offs, coln_vtx_counts, coln_vtx_offs.Length);
+                    vtx[2].DrawMulti(PrimitiveType.LineStrip, BufferPointerFlags.None);
                 }
             }
-            
-            //instances
-            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_id[1]);
-            GL.VertexPointer(3, VertexPointerType.Float, Vertex.SizeOf, Vertex.OffsetOfPos);
-            GL.ColorPointer(4, ColorPointerType.UnsignedByte, Vertex.SizeOf, Vertex.OffsetOfCol);
-            GL.NormalPointer(NormalPointerType.Float, Vertex.SizeOf, Vertex.OffsetOfNor);
-            GL.MultiDrawArrays(PrimitiveType.LineStrip, inst_vtx_offs, inst_vtx_counts, inst_vtx_offs.Length);
 
-            //positions
-            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_id[3]);
-            GL.VertexPointer(3, VertexPointerType.Float, Vertex.SizeOf, Vertex.OffsetOfPos);
-            GL.ColorPointer(4, ColorPointerType.UnsignedByte, Vertex.SizeOf, Vertex.OffsetOfCol);
-            GL.NormalPointer(NormalPointerType.Float, Vertex.SizeOf, Vertex.OffsetOfNor);
-            GL.MultiDrawArrays(PrimitiveType.LineLoop, posi_vtx_offs, posi_vtx_counts, posi_vtx_offs.Length);
+            //instances
+            vtx[1].DrawMulti(PrimitiveType.LineStrip, BufferPointerFlags.None);
+
+            //positions + ai positions
+            vtx[3].DrawMulti(PrimitiveType.LineLoop, BufferPointerFlags.None);
+            vtx[4].DrawMulti(PrimitiveType.LineLoop, BufferPointerFlags.None);
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
 
@@ -371,7 +352,7 @@ namespace TwinsaityEditor
         public void LoadColTree()
         {
             ColData data = (ColData)file.Data.GetItem(9);
-            vtx[0] = new Vertex[data.Tris.Count * 3];
+            vtx[0].Vtx = new Vertex[data.Tris.Count * 3];
             for (int i = 0; i < data.Tris.Count; ++i)
             {
                 Vector3 v1 = data.Vertices[data.Tris[i].Vert1].ToVec3();
@@ -381,14 +362,11 @@ namespace TwinsaityEditor
                 v2.X = -v2.X;
                 v3.X = -v3.X;
                 Vector3 nor = VectorFuncs.CalcNormal(v1, v2, v3);
-                vtx[0][i * 3 + 0] = new Vertex(v1, nor, colors[data.Tris[i].Surface % colors.Length]);
-                vtx[0][i * 3 + 1] = new Vertex(v2, nor, colors[data.Tris[i].Surface % colors.Length]);
-                vtx[0][i * 3 + 2] = new Vertex(v3, nor, colors[data.Tris[i].Surface % colors.Length]);
+                vtx[0].Vtx[i * 3 + 0] = new Vertex(v1, nor, colors[data.Tris[i].Surface % colors.Length]);
+                vtx[0].Vtx[i * 3 + 1] = new Vertex(v2, nor, colors[data.Tris[i].Surface % colors.Length]);
+                vtx[0].Vtx[i * 3 + 2] = new Vertex(v3, nor, colors[data.Tris[i].Surface % colors.Length]);
             }
-            if (vbo_id != null)
-            {
-                UpdateVBO(0);
-            }
+            UpdateVBO(0);
         }
 
         public void LoadInstances()
@@ -406,20 +384,20 @@ namespace TwinsaityEditor
                     else record_exists[i] = false;
                 }
             }
-            if (vtx[1] == null || vtx.Length != 22 * inst_count)
+            if (vtx[1].Vtx == null || vtx[1].Vtx.Length != 22 * inst_count)
             {
-                inst_vtx_counts = new int[7 * inst_count];
-                inst_vtx_offs = new int[7 * inst_count];
-                vtx[1] = new Vertex[22 * inst_count];
+                vtx[1].VtxCounts = new int[7 * inst_count];
+                vtx[1].VtxOffs = new int[7 * inst_count];
+                vtx[1].Vtx = new Vertex[22 * inst_count];
                 for (int i = 0; i < inst_count; ++i)
                 {
-                    inst_vtx_counts[i * 7 + 0] = 2;
-                    inst_vtx_counts[i * 7 + 1] = 2;
-                    inst_vtx_counts[i * 7 + 2] = 2;
-                    inst_vtx_counts[i * 7 + 3] = 8;
-                    inst_vtx_counts[i * 7 + 4] = 4;
-                    inst_vtx_counts[i * 7 + 5] = 2;
-                    inst_vtx_counts[i * 7 + 6] = 2;
+                    vtx[1].VtxCounts[i * 7 + 0] = 2;
+                    vtx[1].VtxCounts[i * 7 + 1] = 2;
+                    vtx[1].VtxCounts[i * 7 + 2] = 2;
+                    vtx[1].VtxCounts[i * 7 + 3] = 8;
+                    vtx[1].VtxCounts[i * 7 + 4] = 4;
+                    vtx[1].VtxCounts[i * 7 + 5] = 2;
+                    vtx[1].VtxCounts[i * 7 + 6] = 2;
                 }
             }
             int l = 0, m = 0;
@@ -436,36 +414,36 @@ namespace TwinsaityEditor
                         rot_ins *= Matrix3.CreateRotationZ(-ins.RotZ / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
                         Vector3 pos_ins = ins.Pos.ToVec3();
                         pos_ins.X = -pos_ins.X;
-                        inst_vtx_offs[l++] = m;
-                        vtx[1][m++] = new Vertex(new Vector3(-indicator_size * 0.75f, 0, 0) + pos_ins, Color.Red);
-                        vtx[1][m++] = new Vertex(new Vector3(+indicator_size * 0.375f, 0, 0) + pos_ins, Color.Red);
-                        inst_vtx_offs[l++] = m;
-                        vtx[1][m++] = new Vertex(new Vector3(0, indicator_size * 0.75f, 0) + pos_ins, Color.Green);
-                        vtx[1][m++] = new Vertex(new Vector3(0, -indicator_size * 0.375f, 0) + pos_ins, Color.Green);
-                        inst_vtx_offs[l++] = m;
-                        vtx[1][m++] = new Vertex(new Vector3(0, 0, indicator_size * 0.75f) + pos_ins, Color.Blue);
-                        vtx[1][m++] = new Vertex(new Vector3(0, 0, -indicator_size * 0.375f) + pos_ins, Color.Blue);
-                        inst_vtx_offs[l++] = m;
+                        vtx[1].VtxOffs[l++] = m;
+                        vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size * 0.75f, 0, 0) + pos_ins, Color.Red);
+                        vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size * 0.375f, 0, 0) + pos_ins, Color.Red);
+                        vtx[1].VtxOffs[l++] = m;
+                        vtx[1].Vtx[m++] = new Vertex(new Vector3(0, indicator_size * 0.75f, 0) + pos_ins, Color.Green);
+                        vtx[1].Vtx[m++] = new Vertex(new Vector3(0, -indicator_size * 0.375f, 0) + pos_ins, Color.Green);
+                        vtx[1].VtxOffs[l++] = m;
+                        vtx[1].Vtx[m++] = new Vertex(new Vector3(0, 0, indicator_size * 0.75f) + pos_ins, Color.Blue);
+                        vtx[1].Vtx[m++] = new Vertex(new Vector3(0, 0, -indicator_size * 0.375f) + pos_ins, Color.Blue);
+                        vtx[1].VtxOffs[l++] = m;
                         Color cur_color = (file.SelectedItem == ins) ? Color.White : colors[colors.Length - i * 2 - 1];
-                        vtx[1][m++] = new Vertex(new Vector3(-indicator_size, -indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
-                        vtx[1][m++] = new Vertex(new Vector3(+indicator_size, -indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
-                        vtx[1][m++] = new Vertex(new Vector3(+indicator_size, +indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
-                        vtx[1][m++] = new Vertex(new Vector3(-indicator_size, +indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
-                        vtx[1][m++] = new Vertex(new Vector3(-indicator_size, -indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
-                        vtx[1][m++] = new Vertex(new Vector3(-indicator_size, -indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
-                        vtx[1][m++] = new Vertex(new Vector3(+indicator_size, -indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
-                        vtx[1][m++] = new Vertex(new Vector3(+indicator_size, -indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
-                        inst_vtx_offs[l++] = m;
-                        vtx[1][m++] = new Vertex(new Vector3(-indicator_size, -indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
-                        vtx[1][m++] = new Vertex(new Vector3(-indicator_size, +indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
-                        vtx[1][m++] = new Vertex(new Vector3(+indicator_size, +indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
-                        vtx[1][m++] = new Vertex(new Vector3(+indicator_size, -indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
-                        inst_vtx_offs[l++] = m;
-                        vtx[1][m++] = new Vertex(new Vector3(-indicator_size, +indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
-                        vtx[1][m++] = new Vertex(new Vector3(-indicator_size, +indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
-                        inst_vtx_offs[l++] = m;
-                        vtx[1][m++] = new Vertex(new Vector3(+indicator_size, +indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
-                        vtx[1][m++] = new Vertex(new Vector3(+indicator_size, +indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
+                        vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, -indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
+                        vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, -indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
+                        vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, +indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
+                        vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, +indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
+                        vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, -indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
+                        vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, -indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
+                        vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, -indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
+                        vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, -indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
+                        vtx[1].VtxOffs[l++] = m;
+                        vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, -indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
+                        vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, +indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
+                        vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, +indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
+                        vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, -indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
+                        vtx[1].VtxOffs[l++] = m;
+                        vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, +indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
+                        vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, +indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
+                        vtx[1].VtxOffs[l++] = m;
+                        vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, +indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
+                        vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, +indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
                         min_x = Math.Min(min_x, pos_ins.X);
                         min_y = Math.Min(min_y, pos_ins.Y);
                         min_z = Math.Min(min_z, pos_ins.Z);
@@ -476,50 +454,47 @@ namespace TwinsaityEditor
                 }
             }
             zFar = Math.Max(zFar, Math.Max(max_x - min_x, Math.Max(max_y - min_y, max_z - min_z)));
-            if (vbo_id != null)
-            {
-                UpdateVBO(1);
-            }
+            UpdateVBO(1);
         }
 
         public void LoadColNodes()
         {
             float min_x = float.MaxValue, min_y = float.MaxValue, min_z = float.MaxValue, max_x = float.MinValue, max_y = float.MinValue, max_z = float.MinValue;
             ColData data = (ColData)file.Data.GetItem(9);
-            vtx[2] = new Vertex[data.Triggers.Count * 16];
-            coln_vtx_counts = new int[4 * data.Triggers.Count];
-            coln_vtx_offs = new int[4 * data.Triggers.Count];
+            vtx[2].Vtx = new Vertex[data.Triggers.Count * 16];
+            vtx[2].VtxCounts = new int[4 * data.Triggers.Count];
+            vtx[2].VtxOffs = new int[4 * data.Triggers.Count];
             for (int i = 0; i < data.Triggers.Count; ++i)
             {
-                coln_vtx_counts[i * 4 + 0] = 8;
-                coln_vtx_counts[i * 4 + 1] = 4;
-                coln_vtx_counts[i * 4 + 2] = 2;
-                coln_vtx_counts[i * 4 + 3] = 2;
+                vtx[2].VtxCounts[i * 4 + 0] = 8;
+                vtx[2].VtxCounts[i * 4 + 1] = 4;
+                vtx[2].VtxCounts[i * 4 + 2] = 2;
+                vtx[2].VtxCounts[i * 4 + 3] = 2;
             }
             int l = 0, m = 0;
             foreach (var i in data.Triggers)
             {
                 Color cur_color = (i.Flag1 == i.Flag2 && i.Flag1 < 0) ? Color.Cyan : Color.Red;
-                coln_vtx_offs[l++] = m;
-                vtx[2][m++] = new Vertex(new Vector3(-i.X1, i.Y1, i.Z1), cur_color);
-                vtx[2][m++] = new Vertex(new Vector3(-i.X2, i.Y1, i.Z1), cur_color);
-                vtx[2][m++] = new Vertex(new Vector3(-i.X2, i.Y2, i.Z1), cur_color);
-                vtx[2][m++] = new Vertex(new Vector3(-i.X1, i.Y2, i.Z1), cur_color);
-                vtx[2][m++] = new Vertex(new Vector3(-i.X1, i.Y1, i.Z1), cur_color);
-                vtx[2][m++] = new Vertex(new Vector3(-i.X1, i.Y1, i.Z2), cur_color);
-                vtx[2][m++] = new Vertex(new Vector3(-i.X2, i.Y1, i.Z2), cur_color);
-                vtx[2][m++] = new Vertex(new Vector3(-i.X2, i.Y1, i.Z1), cur_color);
-                coln_vtx_offs[l++] = m;
-                vtx[2][m++] = new Vertex(new Vector3(-i.X1, i.Y1, i.Z2), cur_color);
-                vtx[2][m++] = new Vertex(new Vector3(-i.X1, i.Y2, i.Z2), cur_color);
-                vtx[2][m++] = new Vertex(new Vector3(-i.X2, i.Y2, i.Z2), cur_color);
-                vtx[2][m++] = new Vertex(new Vector3(-i.X2, i.Y1, i.Z2), cur_color);
-                coln_vtx_offs[l++] = m;
-                vtx[2][m++] = new Vertex(new Vector3(-i.X1, i.Y2, i.Z2), cur_color);
-                vtx[2][m++] = new Vertex(new Vector3(-i.X1, i.Y2, i.Z1), cur_color);
-                coln_vtx_offs[l++] = m;
-                vtx[2][m++] = new Vertex(new Vector3(-i.X2, i.Y2, i.Z2), cur_color);
-                vtx[2][m++] = new Vertex(new Vector3(-i.X2, i.Y2, i.Z1), cur_color);
+                vtx[2].VtxOffs[l++] = m;
+                vtx[2].Vtx[m++] = new Vertex(new Vector3(-i.X1, i.Y1, i.Z1), cur_color);
+                vtx[2].Vtx[m++] = new Vertex(new Vector3(-i.X2, i.Y1, i.Z1), cur_color);
+                vtx[2].Vtx[m++] = new Vertex(new Vector3(-i.X2, i.Y2, i.Z1), cur_color);
+                vtx[2].Vtx[m++] = new Vertex(new Vector3(-i.X1, i.Y2, i.Z1), cur_color);
+                vtx[2].Vtx[m++] = new Vertex(new Vector3(-i.X1, i.Y1, i.Z1), cur_color);
+                vtx[2].Vtx[m++] = new Vertex(new Vector3(-i.X1, i.Y1, i.Z2), cur_color);
+                vtx[2].Vtx[m++] = new Vertex(new Vector3(-i.X2, i.Y1, i.Z2), cur_color);
+                vtx[2].Vtx[m++] = new Vertex(new Vector3(-i.X2, i.Y1, i.Z1), cur_color);
+                vtx[2].VtxOffs[l++] = m;
+                vtx[2].Vtx[m++] = new Vertex(new Vector3(-i.X1, i.Y1, i.Z2), cur_color);
+                vtx[2].Vtx[m++] = new Vertex(new Vector3(-i.X1, i.Y2, i.Z2), cur_color);
+                vtx[2].Vtx[m++] = new Vertex(new Vector3(-i.X2, i.Y2, i.Z2), cur_color);
+                vtx[2].Vtx[m++] = new Vertex(new Vector3(-i.X2, i.Y1, i.Z2), cur_color);
+                vtx[2].VtxOffs[l++] = m;
+                vtx[2].Vtx[m++] = new Vertex(new Vector3(-i.X1, i.Y2, i.Z2), cur_color);
+                vtx[2].Vtx[m++] = new Vertex(new Vector3(-i.X1, i.Y2, i.Z1), cur_color);
+                vtx[2].VtxOffs[l++] = m;
+                vtx[2].Vtx[m++] = new Vertex(new Vector3(-i.X2, i.Y2, i.Z2), cur_color);
+                vtx[2].Vtx[m++] = new Vertex(new Vector3(-i.X2, i.Y2, i.Z1), cur_color);
                 min_x = Math.Min(min_x, i.X1);
                 min_y = Math.Min(min_y, i.Y1);
                 min_z = Math.Min(min_z, i.Z1);
@@ -528,10 +503,7 @@ namespace TwinsaityEditor
                 max_z = Math.Max(max_z, i.Z2);
             }
             zFar = Math.Max(zFar, Math.Max(max_x - min_x, Math.Max(max_y - min_y, max_z - min_z)));
-            if (vbo_id != null)
-            {
-                UpdateVBO(2);
-            }
+            UpdateVBO(2);
         }
 
         public void LoadPositions()
@@ -544,32 +516,116 @@ namespace TwinsaityEditor
                 record_exists[i] = file.Data.RecordIDs.ContainsKey(i);
                 if (record_exists[i])
                 {
-                    record_exists[i] = false;
                     if (((TwinsSection)file.Data.GetItem(i)).RecordIDs.ContainsKey(3))
                     {
                         posi_count += ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(3)).Records.Count;
                         record_exists[i] = true;
                     }
+                    else
+                        record_exists[i] = false;
+                }
+            }
+            if (vtx[3] == null || vtx.Length != (circle_res * 3 + 6) * posi_count)
+            {
+                vtx[3].VtxCounts = new int[6 * posi_count];
+                vtx[3].VtxOffs = new int[6 * posi_count];
+                vtx[3].Vtx = new Vertex[(circle_res * 3 + 6) * posi_count];
+                for (int i = 0; i < posi_count; ++i)
+                {
+                    vtx[3].VtxCounts[i * 6 + 0] = 2;
+                    vtx[3].VtxCounts[i * 6 + 1] = 2;
+                    vtx[3].VtxCounts[i * 6 + 2] = 2;
+                    vtx[3].VtxCounts[i * 6 + 3] = circle_res;
+                    vtx[3].VtxCounts[i * 6 + 4] = circle_res;
+                    vtx[3].VtxCounts[i * 6 + 5] = circle_res;
+                }
+            }
+            int l = 0, m = 0;
+            for (uint i = 0; i <= 7; ++i)
+            {
+                if (!record_exists[i]) continue;
+                if (((TwinsSection)file.Data.GetItem(i)).RecordIDs.ContainsKey(3))
+                {
+                    foreach (Position pos in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(3)).Records)
+                    {
+                        Vector3 pos_pos = pos.Pos.ToVec3();
+                        pos_pos.X = -pos_pos.X;
+                        vtx[3].VtxOffs[l++] = m;
+                        vtx[3].Vtx[m++] = new Vertex(new Vector3(-indicator_size * 0.75f * 0.5f, 0, 0) + pos_pos, Color.Red);
+                        vtx[3].Vtx[m++] = new Vertex(new Vector3(+indicator_size * 0.375f * 0.5f, 0, 0) + pos_pos, Color.Red);
+                        vtx[3].VtxOffs[l++] = m;
+                        vtx[3].Vtx[m++] = new Vertex(new Vector3(0, indicator_size * 0.75f * 0.5f, 0) + pos_pos, Color.Green);
+                        vtx[3].Vtx[m++] = new Vertex(new Vector3(0, -indicator_size * 0.375f * 0.5f, 0) + pos_pos, Color.Green);
+                        vtx[3].VtxOffs[l++] = m;
+                        vtx[3].Vtx[m++] = new Vertex(new Vector3(0, 0, indicator_size * 0.75f * 0.5f) + pos_pos, Color.Blue);
+                        vtx[3].Vtx[m++] = new Vertex(new Vector3(0, 0, -indicator_size * 0.375f * 0.5f) + pos_pos, Color.Blue);
+                        Color cur_color = (file.SelectedItem == pos) ? Color.White : colors[colors.Length - i * 2 - 1];
+                        vtx[3].VtxOffs[l++] = m;
+                        for (int j = 0; j < circle_res; ++j)
+                        {
+                            Vector3 vec = new Vector3(0, 0, indicator_size);
+                            vec *= Matrix3.Identity * Matrix3.CreateRotationX(MathHelper.TwoPi / circle_res * j);
+                            vtx[3].Vtx[m++] = new Vertex(pos_pos + vec, cur_color);
+                        }
+                        vtx[3].VtxOffs[l++] = m;
+                        for (int j = 0; j < circle_res; ++j)
+                        {
+                            Vector3 vec = new Vector3(0, 0, indicator_size);
+                            vec *= Matrix3.Identity * Matrix3.CreateRotationY(MathHelper.TwoPi / circle_res * j);
+                            vtx[3].Vtx[m++] = new Vertex(pos_pos + vec, cur_color);
+                        }
+                        vtx[3].VtxOffs[l++] = m;
+                        for (int j = 0; j < circle_res; ++j)
+                        {
+                            Vector3 vec = new Vector3(0, indicator_size, 0);
+                            vec *= Matrix3.Identity * Matrix3.CreateRotationZ(MathHelper.TwoPi / circle_res * j);
+                            vtx[3].Vtx[m++] = new Vertex(pos_pos + vec, cur_color);
+                        }
+                        min_x = Math.Min(min_x, pos_pos.X);
+                        min_y = Math.Min(min_y, pos_pos.Y);
+                        min_z = Math.Min(min_z, pos_pos.Z);
+                        max_x = Math.Max(max_x, pos_pos.X);
+                        max_y = Math.Max(max_y, pos_pos.Y);
+                        max_z = Math.Max(max_z, pos_pos.Z);
+                    }
+                }
+            }
+            zFar = Math.Max(zFar, Math.Max(max_x - min_x, Math.Max(max_y - min_y, max_z - min_z)));
+            UpdateVBO(3);
+        }
+
+        public void LoadAIPositions()
+        {
+            float min_x = float.MaxValue, min_y = float.MaxValue, min_z = float.MaxValue, max_x = float.MinValue, max_y = float.MinValue, max_z = float.MinValue;
+            bool[] record_exists = new bool[8];
+            int posi_count = 0;
+            for (uint i = 0; i <= 7; ++i)
+            {
+                record_exists[i] = file.Data.RecordIDs.ContainsKey(i);
+                if (record_exists[i])
+                {
                     if (((TwinsSection)file.Data.GetItem(i)).RecordIDs.ContainsKey(1))
                     {
                         posi_count += ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(1)).Records.Count;
                         record_exists[i] = true;
                     }
+                    else
+                        record_exists[i] = false;
                 }
             }
-            if (vtx[3] == null || vtx.Length != (circle_res * 3 + 6) * posi_count)
+            if (vtx[4] == null || vtx.Length != (circle_res * 3 + 6) * posi_count)
             {
-                posi_vtx_counts = new int[6 * posi_count];
-                posi_vtx_offs = new int[6 * posi_count];
-                vtx[3] = new Vertex[(circle_res * 3 + 6) * posi_count];
+                vtx[4].VtxCounts = new int[6 * posi_count];
+                vtx[4].VtxOffs = new int[6 * posi_count];
+                vtx[4].Vtx = new Vertex[(circle_res * 3 + 6) * posi_count];
                 for (int i = 0; i < posi_count; ++i)
                 {
-                    posi_vtx_counts[i * 6 + 0] = 2;
-                    posi_vtx_counts[i * 6 + 1] = 2;
-                    posi_vtx_counts[i * 6 + 2] = 2;
-                    posi_vtx_counts[i * 6 + 3] = circle_res;
-                    posi_vtx_counts[i * 6 + 4] = circle_res;
-                    posi_vtx_counts[i * 6 + 5] = circle_res;
+                    vtx[4].VtxCounts[i * 6 + 0] = 2;
+                    vtx[4].VtxCounts[i * 6 + 1] = 2;
+                    vtx[4].VtxCounts[i * 6 + 2] = 2;
+                    vtx[4].VtxCounts[i * 6 + 3] = circle_res;
+                    vtx[4].VtxCounts[i * 6 + 4] = circle_res;
+                    vtx[4].VtxCounts[i * 6 + 5] = circle_res;
                 }
             }
             int l = 0, m = 0;
@@ -583,36 +639,36 @@ namespace TwinsaityEditor
                         indicator_size *= pos.Pos.W;
                         Vector3 pos_pos = pos.Pos.ToVec3();
                         pos_pos.X = -pos_pos.X;
-                        posi_vtx_offs[l++] = m;
-                        vtx[3][m++] = new Vertex(new Vector3(-indicator_size * 0.75f * 0.5f, 0, 0) + pos_pos, Color.Red);
-                        vtx[3][m++] = new Vertex(new Vector3(+indicator_size * 0.375f * 0.5f, 0, 0) + pos_pos, Color.Red);
-                        posi_vtx_offs[l++] = m;
-                        vtx[3][m++] = new Vertex(new Vector3(0, indicator_size * 0.75f * 0.5f, 0) + pos_pos, Color.Green);
-                        vtx[3][m++] = new Vertex(new Vector3(0, -indicator_size * 0.375f * 0.5f, 0) + pos_pos, Color.Green);
-                        posi_vtx_offs[l++] = m;
-                        vtx[3][m++] = new Vertex(new Vector3(0, 0, indicator_size * 0.75f * 0.5f) + pos_pos, Color.Blue);
-                        vtx[3][m++] = new Vertex(new Vector3(0, 0, -indicator_size * 0.375f * 0.5f) + pos_pos, Color.Blue);
+                        vtx[4].VtxOffs[l++] = m;
+                        vtx[4].Vtx[m++] = new Vertex(new Vector3(-indicator_size * 0.75f * 0.5f, 0, 0) + pos_pos, Color.Red);
+                        vtx[4].Vtx[m++] = new Vertex(new Vector3(+indicator_size * 0.375f * 0.5f, 0, 0) + pos_pos, Color.Red);
+                        vtx[4].VtxOffs[l++] = m;
+                        vtx[4].Vtx[m++] = new Vertex(new Vector3(0, indicator_size * 0.75f * 0.5f, 0) + pos_pos, Color.Green);
+                        vtx[4].Vtx[m++] = new Vertex(new Vector3(0, -indicator_size * 0.375f * 0.5f, 0) + pos_pos, Color.Green);
+                        vtx[4].VtxOffs[l++] = m;
+                        vtx[4].Vtx[m++] = new Vertex(new Vector3(0, 0, indicator_size * 0.75f * 0.5f) + pos_pos, Color.Blue);
+                        vtx[4].Vtx[m++] = new Vertex(new Vector3(0, 0, -indicator_size * 0.375f * 0.5f) + pos_pos, Color.Blue);
                         Color cur_color = (file.SelectedItem == pos) ? Color.White : colors[colors.Length - i * 2 - 2];
-                        posi_vtx_offs[l++] = m;
+                        vtx[4].VtxOffs[l++] = m;
                         for (int j = 0; j < circle_res; ++j)
                         {
                             Vector3 vec = new Vector3(0, 0, indicator_size);
                             vec *= Matrix3.Identity * Matrix3.CreateRotationX(MathHelper.TwoPi / circle_res * j);
-                            vtx[3][m++] = new Vertex(pos_pos + vec, cur_color);
+                            vtx[4].Vtx[m++] = new Vertex(pos_pos + vec, cur_color);
                         }
-                        posi_vtx_offs[l++] = m;
+                        vtx[4].VtxOffs[l++] = m;
                         for (int j = 0; j < circle_res; ++j)
                         {
                             Vector3 vec = new Vector3(0, 0, indicator_size);
                             vec *= Matrix3.Identity * Matrix3.CreateRotationY(MathHelper.TwoPi / circle_res * j);
-                            vtx[3][m++] = new Vertex(pos_pos + vec, cur_color);
+                            vtx[4].Vtx[m++] = new Vertex(pos_pos + vec, cur_color);
                         }
-                        posi_vtx_offs[l++] = m;
+                        vtx[4].VtxOffs[l++] = m;
                         for (int j = 0; j < circle_res; ++j)
                         {
                             Vector3 vec = new Vector3(0, indicator_size, 0);
                             vec *= Matrix3.Identity * Matrix3.CreateRotationZ(MathHelper.TwoPi / circle_res * j);
-                            vtx[3][m++] = new Vertex(pos_pos + vec, cur_color);
+                            vtx[4].Vtx[m++] = new Vertex(pos_pos + vec, cur_color);
                         }
                         indicator_size /= pos.Pos.W;
                         min_x = Math.Min(min_x, pos_pos.X);
@@ -623,57 +679,9 @@ namespace TwinsaityEditor
                         max_z = Math.Max(max_z, pos_pos.Z);
                     }
                 }
-                if (((TwinsSection)file.Data.GetItem(i)).RecordIDs.ContainsKey(3))
-                {
-                    foreach (Position pos in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(3)).Records)
-                    {
-                        Vector3 pos_pos = pos.Pos.ToVec3();
-                        pos_pos.X = -pos_pos.X;
-                        posi_vtx_offs[l++] = m;
-                        vtx[3][m++] = new Vertex(new Vector3(-indicator_size * 0.75f * 0.5f, 0, 0) + pos_pos, Color.Red);
-                        vtx[3][m++] = new Vertex(new Vector3(+indicator_size * 0.375f * 0.5f, 0, 0) + pos_pos, Color.Red);
-                        posi_vtx_offs[l++] = m;
-                        vtx[3][m++] = new Vertex(new Vector3(0, indicator_size * 0.75f * 0.5f, 0) + pos_pos, Color.Green);
-                        vtx[3][m++] = new Vertex(new Vector3(0, -indicator_size * 0.375f * 0.5f, 0) + pos_pos, Color.Green);
-                        posi_vtx_offs[l++] = m;
-                        vtx[3][m++] = new Vertex(new Vector3(0, 0, indicator_size * 0.75f * 0.5f) + pos_pos, Color.Blue);
-                        vtx[3][m++] = new Vertex(new Vector3(0, 0, -indicator_size * 0.375f * 0.5f) + pos_pos, Color.Blue);
-                        Color cur_color = (file.SelectedItem == pos) ? Color.White : colors[colors.Length - i * 2 - 1];
-                        posi_vtx_offs[l++] = m;
-                        for (int j = 0; j < circle_res; ++j)
-                        {
-                            Vector3 vec = new Vector3(0, 0, indicator_size);
-                            vec *= Matrix3.Identity * Matrix3.CreateRotationX(MathHelper.TwoPi / circle_res * j);
-                            vtx[3][m++] = new Vertex(pos_pos + vec, cur_color);
-                        }
-                        posi_vtx_offs[l++] = m;
-                        for (int j = 0; j < circle_res; ++j)
-                        {
-                            Vector3 vec = new Vector3(0, 0, indicator_size);
-                            vec *= Matrix3.Identity * Matrix3.CreateRotationY(MathHelper.TwoPi / circle_res * j);
-                            vtx[3][m++] = new Vertex(pos_pos + vec, cur_color);
-                        }
-                        posi_vtx_offs[l++] = m;
-                        for (int j = 0; j < circle_res; ++j)
-                        {
-                            Vector3 vec = new Vector3(0, indicator_size, 0);
-                            vec *= Matrix3.Identity * Matrix3.CreateRotationZ(MathHelper.TwoPi / circle_res * j);
-                            vtx[3][m++] = new Vertex(pos_pos + vec, cur_color);
-                        }
-                        min_x = Math.Min(min_x, pos_pos.X);
-                        min_y = Math.Min(min_y, pos_pos.Y);
-                        min_z = Math.Min(min_z, pos_pos.Z);
-                        max_x = Math.Max(max_x, pos_pos.X);
-                        max_y = Math.Max(max_y, pos_pos.Y);
-                        max_z = Math.Max(max_z, pos_pos.Z);
-                    }
-                }
             }
             zFar = Math.Max(zFar, Math.Max(max_x - min_x, Math.Max(max_y - min_y, max_z - min_z)));
-            if (vbo_id != null)
-            {
-                UpdateVBO(3);
-            }
+            UpdateVBO(4);
         }
 
         public void UpdateSelected()

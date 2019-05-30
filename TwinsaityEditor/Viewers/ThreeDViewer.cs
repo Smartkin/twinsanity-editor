@@ -14,7 +14,8 @@ namespace TwinsaityEditor
         //add to preferences later
         protected static Color[] colors = new[] { Color.Gray, Color.SlateGray, Color.DodgerBlue, Color.OrangeRed, Color.Red, Color.Pink, Color.LimeGreen, Color.DarkSlateBlue, Color.SaddleBrown, Color.LightSteelBlue, Color.SandyBrown, Color.Peru, Color.RoyalBlue, Color.DimGray, Color.Coral, Color.AliceBlue, Color.LightGray, Color.Cyan, Color.MediumTurquoise, Color.DarkSlateGray, Color.DarkSalmon, Color.DarkRed, Color.DarkCyan, Color.MediumVioletRed, Color.MediumOrchid, Color.DarkGray, Color.Yellow, Color.Goldenrod };
 
-        protected Vertex[][] vtx;
+        protected VertexBufferData[] vtx;
+
         protected Dictionary<char, Vertex[]> charVtx = new Dictionary<char, Vertex[]>();
         private Dictionary<char, int> charVtxOffs = new Dictionary<char, int>();
         //private Dictionary<char, int>[] charVtxSizes;
@@ -36,9 +37,6 @@ namespace TwinsaityEditor
         private Dictionary<char, float> charHeight = new Dictionary<char, float>();
         protected float size = 24f, zNear = 0.5f, zFar = 1500f;
         protected float indicator_size = 0.5f;
-        protected int[] vbo_id;
-        protected int vbo_count;
-        private int[] vbo_sizes;
 
         protected long timeRenderObj = 0, timeRenderObj_min = long.MaxValue, timeRenderObj_max = 0;
         protected long timeRenderHud = 0, timeRenderHud_min = long.MaxValue, timeRenderHud_max = 0;
@@ -301,8 +299,6 @@ namespace TwinsaityEditor
             GL.Enable(EnableCap.Texture2D);
             GL.EnableClientState(ArrayCap.VertexArray);
             GL.EnableClientState(ArrayCap.ColorArray);
-            GL.EnableClientState(ArrayCap.NormalArray);
-            GL.EnableClientState(ArrayCap.TextureCoordArray);
             GL.DepthFunc(DepthFunction.Lequal);
             GL.AlphaFunc(AlphaFunction.Greater, 0);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
@@ -314,40 +310,29 @@ namespace TwinsaityEditor
             GL.LightModel(LightModelParameter.LightModelTwoSide, 1);
             GL.Enable(EnableCap.Light0);
             GL.Enable(EnableCap.Normalize);
-            InitVBO();
+            GL.GenBuffers(1, out charVtxBuf);
             base.OnLoad(e);
         }
 
-        private void InitVBO()
+        protected void InitVBO(int count)
         {
-            vbo_id = new int[vbo_count];
-            vbo_sizes = new int[vbo_count];
-            //Generate a buffer
-            GL.GenBuffers(vbo_count, vbo_id);
-            for (int i = 0; i < vbo_count; ++i)
+            MakeCurrent();
+            vtx = new VertexBufferData[count];
+            for (int i = 0; i < count; ++i)
             {
-                //Ignore this buffer if the vertex buffer is null
-                if (vtx[i] == null) continue;
-                //Store size in order to be compared with later
-                vbo_sizes[i] = vtx[i].Length;
-                //Bind newly-generated buffer to the array buffer
-                GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_id[i]);
-                //Allocate data for vertex buffer...
-                GL.BufferData(BufferTarget.ArrayBuffer, Vertex.SizeOf * vtx[i].Length, vtx[i], BufferUsageHint.StaticDraw);
+                vtx[i] = new VertexBufferData();
             }
-            //unbind buffer (safety)
-            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
-            GL.GenBuffers(1, out charVtxBuf);
         }
 
         protected void UpdateVBO(int id)
         {
-            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_id[id]);
-            if (vtx[id].Length > vbo_sizes[id])
-                GL.BufferData(BufferTarget.ArrayBuffer, Vertex.SizeOf * vtx[id].Length, vtx[id], BufferUsageHint.StaticDraw);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, vtx[id].ID);
+            if (vtx[id].Vtx.Length > vtx[id].LastSize)
+                GL.BufferData(BufferTarget.ArrayBuffer, Vertex.SizeOf * vtx[id].Vtx.Length, vtx[id].Vtx, BufferUsageHint.StaticDraw);
             else
-                GL.BufferSubData(BufferTarget.ArrayBuffer, (IntPtr)0, Vertex.SizeOf * vtx[id].Length, vtx[id]);
+                GL.BufferSubData(BufferTarget.ArrayBuffer, (IntPtr)0, Vertex.SizeOf * vtx[id].Vtx.Length, vtx[id].Vtx);
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            vtx[id].LastSize = vtx[id].Vtx.Length;
         }
 
         protected void DrawAxes(float x, float y, float z, float size)
@@ -372,6 +357,7 @@ namespace TwinsaityEditor
         private void RenderChars()
         {
             GL.BindBuffer(BufferTarget.ArrayBuffer, charVtxBuf);
+            GL.EnableClientState(ArrayCap.TextureCoordArray);
             foreach (var k in charVtx.Keys)
             {
                 if (charVtxOffs[k] == 0) continue;
@@ -392,6 +378,7 @@ namespace TwinsaityEditor
                 charVtxOffs[k] = 0;
             }
             GL.BindTexture(TextureTarget.Texture2D, 0);
+            GL.DisableClientState(ArrayCap.TextureCoordArray);
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
         }
 
