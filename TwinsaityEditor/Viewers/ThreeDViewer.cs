@@ -30,11 +30,11 @@ namespace TwinsaityEditor
         private int m_x, m_y;
         private EventHandler _inputHandle;
         private FontWrapper.FontService _fntService;
-        private Dictionary<char, int> textureCharMap = new Dictionary<char, int>();
-        private Dictionary<char, float> charAdvanceX = new Dictionary<char, float>();
-        private Dictionary<char, float> charBearingX = new Dictionary<char, float>();
-        private Dictionary<char, float> charBearingY = new Dictionary<char, float>();
-        private Dictionary<char, float> charHeight = new Dictionary<char, float>();
+        private static Dictionary<char, int> textureCharMap = new Dictionary<char, int>();
+        private static Dictionary<char, float> charAdvanceX = new Dictionary<char, float>();
+        private static Dictionary<char, float> charBearingX = new Dictionary<char, float>();
+        private static Dictionary<char, float> charBearingY = new Dictionary<char, float>();
+        private static Dictionary<char, float> charHeight = new Dictionary<char, float>();
         protected float size = 24f, zNear = 0.5f, zFar = 1500f;
         protected float indicator_size = 0.5f;
 
