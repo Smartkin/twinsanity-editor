@@ -62,9 +62,6 @@ namespace TwinsaityEditor
 
         public void CloseFile()
         {
-            ObjectNames.Clear();
-            MaterialNames.Clear();
-            Data = null;
             CloseRMViewer();
             CloseEditor(Editors.ChunkLinks);
             CloseEditor(Editors.ColData);
@@ -140,7 +137,7 @@ namespace TwinsaityEditor
                 case Editors.Path: editorForm = editPaths[arg]; break;
                 case Editors.Trigger: editorForm = editTriggers[arg]; break;
             }
-            CloseForm(ref colForm);
+            CloseForm(ref editorForm);
         }
 
         public void OpenRMViewer()
@@ -177,8 +174,11 @@ namespace TwinsaityEditor
 
         public void CloseForm(ref Form form)
         {
-            if (form != null && form.IsDisposed)
+            if (form != null && !form.IsDisposed)
+            {
                 form.Close();
+                form = null;
+            }
         }
 
         public void CloseRMViewer()

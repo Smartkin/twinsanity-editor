@@ -157,6 +157,8 @@ namespace TwinsaityEditor
                 }
                 file.FileName = ofd.FileName;
                 file.SafeFileName = ofd.SafeFileName;
+                if (Tag != null)
+                    CurCont.CloseFile();
                 Tag = new FileController(this, file);
                 GenTree();
                 Text = $"Twinsaity Editor by Neo_Kesha [{ofd.FileName}] ";
