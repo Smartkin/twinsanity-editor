@@ -90,7 +90,7 @@ namespace Twinsanity
             var count = reader.ReadInt32();
             var sec_size = reader.ReadUInt32();
             var start_sk = reader.BaseStream.Position - 12;
-            long extra_begin = 0;
+            long extra_begin = 12;
             for (int i = 0; i < count; i++)
             {
                 TwinsSubInfo sub = new TwinsSubInfo
