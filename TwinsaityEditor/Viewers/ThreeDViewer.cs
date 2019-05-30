@@ -378,6 +378,7 @@ namespace TwinsaityEditor
                 if (charVtxBufLen < charVtx[k].Length)
                 {
                     GL.BufferData(BufferTarget.ArrayBuffer, Vertex.SizeOf * charVtx[k].Length, charVtx[k], BufferUsageHint.DynamicDraw);
+                    charVtxBufLen = charVtx[k].Length;
                 }
                 else
                 {
@@ -386,7 +387,6 @@ namespace TwinsaityEditor
                 GL.BindTexture(TextureTarget.Texture2D, textureCharMap[k]);
                 GL.VertexPointer(3, VertexPointerType.Float, Vertex.SizeOf, Vertex.OffsetOfPos);
                 GL.ColorPointer(4, ColorPointerType.UnsignedByte, Vertex.SizeOf, Vertex.OffsetOfCol);
-                GL.NormalPointer(NormalPointerType.Float, Vertex.SizeOf, Vertex.OffsetOfNor);
                 GL.TexCoordPointer(2, TexCoordPointerType.Float, Vertex.SizeOf, Vertex.OffsetOfTex);
                 GL.DrawArrays(PrimitiveType.Quads, 0, charVtxOffs[k]);
                 charVtxOffs[k] = 0;
