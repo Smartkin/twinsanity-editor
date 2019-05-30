@@ -21,7 +21,7 @@ namespace TwinsaityEditor
             TFController = file;
             controller = c;
             InitializeComponent();
-            Text = "Path Editor (Section {c.Data.Parent.ID})";
+            Text = $"Path Editor (Section {c.Data.Parent.ID})";
             PopulateList();
             FormClosed += PathEditor_FormClosed;
         }
