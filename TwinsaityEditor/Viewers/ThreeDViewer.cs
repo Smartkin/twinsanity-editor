@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace TwinsaityEditor
@@ -16,6 +15,12 @@ namespace TwinsaityEditor
         protected static Color[] colors = new[] { Color.Gray, Color.SlateGray, Color.DodgerBlue, Color.OrangeRed, Color.Red, Color.Pink, Color.LimeGreen, Color.DarkSlateBlue, Color.SaddleBrown, Color.LightSteelBlue, Color.SandyBrown, Color.Peru, Color.RoyalBlue, Color.DimGray, Color.Coral, Color.AliceBlue, Color.LightGray, Color.Cyan, Color.MediumTurquoise, Color.DarkSlateGray, Color.DarkSalmon, Color.DarkRed, Color.DarkCyan, Color.MediumVioletRed, Color.MediumOrchid, Color.DarkGray, Color.Yellow, Color.Goldenrod };
 
         protected Vertex[][] vtx;
+        protected Dictionary<char, Vertex[]> charVtx = new Dictionary<char, Vertex[]>();
+        private Dictionary<char, int> charVtxOffs = new Dictionary<char, int>();
+        //private Dictionary<char, int>[] charVtxSizes;
+        private int charVtxMax = 0, charVtxBuf, charVtxBufLen = 0;
+
+        protected Matrix3 identity_mat = Matrix3.Identity;
 
         private Vector3 pos, rot, sca;
         private float range;
@@ -29,8 +34,8 @@ namespace TwinsaityEditor
         private Dictionary<char, float> charBearingX = new Dictionary<char, float>();
         private Dictionary<char, float> charBearingY = new Dictionary<char, float>();
         private Dictionary<char, float> charHeight = new Dictionary<char, float>();
-        protected static float size = 24f, zNear = 0.5f, zFar = 1500f;
-        protected static float indicator_size = 0.5f;
+        protected float size = 24f, zNear = 0.5f, zFar = 1500f;
+        protected float indicator_size = 0.5f;
         protected int[] vbo_id;
         protected int vbo_count;
         private int[] vbo_sizes;
@@ -274,12 +279,13 @@ namespace TwinsaityEditor
             GL.PopMatrix();
             var watch = System.Diagnostics.Stopwatch.StartNew();
             RenderObjects();
+            RenderChars();
             watch.Stop();
             timeRenderObj = watch.ElapsedMilliseconds;
             timeRenderObj_max = Math.Max(timeRenderObj_max, timeRenderObj);
             timeRenderObj_min = Math.Min(timeRenderObj_min, timeRenderObj);
             watch = System.Diagnostics.Stopwatch.StartNew();
-            DrawText();
+            DrawHUD();
             watch.Stop();
             timeRenderHud = watch.ElapsedMilliseconds;
             timeRenderHud_max = Math.Max(timeRenderHud_max, timeRenderHud);
@@ -293,6 +299,10 @@ namespace TwinsaityEditor
             GL.Enable(EnableCap.AlphaTest);
             GL.Enable(EnableCap.Blend);
             GL.Enable(EnableCap.Texture2D);
+            GL.EnableClientState(ArrayCap.VertexArray);
+            GL.EnableClientState(ArrayCap.ColorArray);
+            GL.EnableClientState(ArrayCap.NormalArray);
+            GL.EnableClientState(ArrayCap.TextureCoordArray);
             GL.DepthFunc(DepthFunction.Lequal);
             GL.AlphaFunc(AlphaFunction.Greater, 0);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
@@ -324,21 +334,19 @@ namespace TwinsaityEditor
                 GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_id[i]);
                 //Allocate data for vertex buffer...
                 GL.BufferData(BufferTarget.ArrayBuffer, Vertex.SizeOf * vtx[i].Length, vtx[i], BufferUsageHint.StaticDraw);
-                //unbind buffer (safety)
-                GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
             }
+            //unbind buffer (safety)
+            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            GL.GenBuffers(1, out charVtxBuf);
         }
 
         protected void UpdateVBO(int id)
         {
-            //Bind newly-generated buffer to the array buffer
             GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_id[id]);
-            //Allocate data for vertex buffer...
             if (vtx[id].Length > vbo_sizes[id])
                 GL.BufferData(BufferTarget.ArrayBuffer, Vertex.SizeOf * vtx[id].Length, vtx[id], BufferUsageHint.StaticDraw);
             else
                 GL.BufferSubData(BufferTarget.ArrayBuffer, (IntPtr)0, Vertex.SizeOf * vtx[id].Length, vtx[id]);
-            //unbind buffer (safety)
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
         }
 
@@ -361,7 +369,33 @@ namespace TwinsaityEditor
             GL.PopMatrix();
         }
 
-        protected virtual void DrawText()
+        private void RenderChars()
+        {
+            GL.BindBuffer(BufferTarget.ArrayBuffer, charVtxBuf);
+            foreach (var k in charVtx.Keys)
+            {
+                if (charVtxOffs[k] == 0) continue;
+                if (charVtxBufLen < charVtx[k].Length)
+                {
+                    GL.BufferData(BufferTarget.ArrayBuffer, Vertex.SizeOf * charVtx[k].Length, charVtx[k], BufferUsageHint.DynamicDraw);
+                }
+                else
+                {
+                    GL.BufferSubData(BufferTarget.ArrayBuffer, (IntPtr)0, Vertex.SizeOf * charVtxOffs[k], charVtx[k]);
+                }
+                GL.BindTexture(TextureTarget.Texture2D, textureCharMap[k]);
+                GL.VertexPointer(3, VertexPointerType.Float, Vertex.SizeOf, Vertex.OffsetOfPos);
+                GL.ColorPointer(4, ColorPointerType.UnsignedByte, Vertex.SizeOf, Vertex.OffsetOfCol);
+                GL.NormalPointer(NormalPointerType.Float, Vertex.SizeOf, Vertex.OffsetOfNor);
+                GL.TexCoordPointer(2, TexCoordPointerType.Float, Vertex.SizeOf, Vertex.OffsetOfTex);
+                GL.DrawArrays(PrimitiveType.Quads, 0, charVtxOffs[k]);
+                charVtxOffs[k] = 0;
+            }
+            GL.BindTexture(TextureTarget.Texture2D, 0);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+        }
+
+        private void DrawHUD()
         {
             GL.DepthMask(false);
             GL.Disable(EnableCap.DepthTest);
@@ -411,7 +445,7 @@ namespace TwinsaityEditor
             return texture;
         }
 
-        protected void RenderString(string s)
+        protected void RenderString3DImmediate(string s)
         {
             float spacing = 2 / 3f;
             float x = (s.Length + 1) * (-spacing / 2f);
@@ -433,6 +467,43 @@ namespace TwinsaityEditor
                 GL.TexCoord2(1, 0); GL.Vertex2(x+w, h);
                 GL.TexCoord2(0, 0); GL.Vertex2(x-w, h);
                 GL.End();
+            }
+            GL.BindTexture(TextureTarget.Texture2D, 0);
+        }
+
+        protected void RenderString3DToArray(string s, Color col, float x_off, float y_off, float z_off, ref Matrix3 rot_mat, float size_fac = 1F)
+        {
+            float spacing = 2 / 3f;
+            float x = (s.Length + 1) * (-spacing / 2f);
+            Vector3 off = new Vector3(x_off, y_off, z_off);
+            foreach (char c in s)
+            {
+                x += spacing;
+                if (c == ' ')
+                    continue;
+                if (!textureCharMap.ContainsKey(c))
+                    GenCharTex(c);
+                GL.BindTexture(TextureTarget.Texture2D, textureCharMap[c]);
+                GL.GetTexLevelParameter(TextureTarget.Texture2D, 0, GetTextureParameter.TextureWidth, out float w);
+                GL.GetTexLevelParameter(TextureTarget.Texture2D, 0, GetTextureParameter.TextureHeight, out float h);
+                w /= size * 2;
+                h /= size;
+                if (!charVtx.ContainsKey(c))
+                {
+                    charVtx.Add(c, new Vertex[256]);
+                    charVtxOffs.Add(c, 0);
+                }
+                else if (charVtxOffs[c] + 4 >= charVtx[c].Length)
+                {
+                    var arr = charVtx[c];
+                    Array.Resize(ref arr, arr.Length * 2);
+                    charVtx[c] = arr;
+                    charVtxMax = Math.Max(charVtxMax, arr.Length);
+                }
+                charVtx[c][charVtxOffs[c]++] = new Vertex(new Vector3(x - w, 0, 0) * size_fac * rot_mat + off, new Vector2(0, 1), col);
+                charVtx[c][charVtxOffs[c]++] = new Vertex(new Vector3(x + w, 0, 0) * size_fac * rot_mat + off, new Vector2(1, 1), col);
+                charVtx[c][charVtxOffs[c]++] = new Vertex(new Vector3(x + w, h, 0) * size_fac * rot_mat + off, new Vector2(1, 0), col);
+                charVtx[c][charVtxOffs[c]++] = new Vertex(new Vector3(x - w, h, 0) * size_fac * rot_mat + off, new Vector2(0, 0), col);
             }
             GL.BindTexture(TextureTarget.Texture2D, 0);
         }
