@@ -213,6 +213,7 @@ namespace TwinsaityEditor
                         foreach (Trigger trg in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(7)).Records)
                         {
                             GL.PushMatrix();
+                            GL.Scale(-1, 1, 1);
                             GL.Translate(trg.Coords[1].X, trg.Coords[1].Y, trg.Coords[1].Z);
 
                             var cur_color = file.SelectedItem == trg ? Color.White : colors[colors.Length - i * 2- 1];
