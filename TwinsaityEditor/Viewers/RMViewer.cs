@@ -637,41 +637,40 @@ namespace TwinsaityEditor
                 {
                     foreach (AIPosition pos in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(1)).Records)
                     {
-                        indicator_size *= pos.Pos.W;
+                        var ind_size = indicator_size * pos.Pos.W;
                         Vector3 pos_pos = pos.Pos.ToVec3();
                         pos_pos.X = -pos_pos.X;
                         vtx[4].VtxOffs[l++] = m;
-                        vtx[4].Vtx[m++] = new Vertex(new Vector3(-indicator_size * 0.75f * 0.5f, 0, 0) + pos_pos, Color.Red);
-                        vtx[4].Vtx[m++] = new Vertex(new Vector3(+indicator_size * 0.375f * 0.5f, 0, 0) + pos_pos, Color.Red);
+                        vtx[4].Vtx[m++] = new Vertex(new Vector3(-ind_size * 0.75f * 0.5f, 0, 0) + pos_pos, Color.Red);
+                        vtx[4].Vtx[m++] = new Vertex(new Vector3(+ind_size * 0.375f * 0.5f, 0, 0) + pos_pos, Color.Red);
                         vtx[4].VtxOffs[l++] = m;
-                        vtx[4].Vtx[m++] = new Vertex(new Vector3(0, indicator_size * 0.75f * 0.5f, 0) + pos_pos, Color.Green);
-                        vtx[4].Vtx[m++] = new Vertex(new Vector3(0, -indicator_size * 0.375f * 0.5f, 0) + pos_pos, Color.Green);
+                        vtx[4].Vtx[m++] = new Vertex(new Vector3(0, ind_size * 0.75f * 0.5f, 0) + pos_pos, Color.Green);
+                        vtx[4].Vtx[m++] = new Vertex(new Vector3(0, -ind_size * 0.375f * 0.5f, 0) + pos_pos, Color.Green);
                         vtx[4].VtxOffs[l++] = m;
-                        vtx[4].Vtx[m++] = new Vertex(new Vector3(0, 0, indicator_size * 0.75f * 0.5f) + pos_pos, Color.Blue);
-                        vtx[4].Vtx[m++] = new Vertex(new Vector3(0, 0, -indicator_size * 0.375f * 0.5f) + pos_pos, Color.Blue);
+                        vtx[4].Vtx[m++] = new Vertex(new Vector3(0, 0, ind_size * 0.75f * 0.5f) + pos_pos, Color.Blue);
+                        vtx[4].Vtx[m++] = new Vertex(new Vector3(0, 0, -ind_size * 0.375f * 0.5f) + pos_pos, Color.Blue);
                         Color cur_color = (file.SelectedItem == pos) ? Color.White : colors[colors.Length - i * 2 - 2];
                         vtx[4].VtxOffs[l++] = m;
                         for (int j = 0; j < circle_res; ++j)
                         {
-                            Vector3 vec = new Vector3(0, 0, indicator_size);
+                            Vector3 vec = new Vector3(0, 0, ind_size);
                             vec *= Matrix3.Identity * Matrix3.CreateRotationX(MathHelper.TwoPi / circle_res * j);
                             vtx[4].Vtx[m++] = new Vertex(pos_pos + vec, cur_color);
                         }
                         vtx[4].VtxOffs[l++] = m;
                         for (int j = 0; j < circle_res; ++j)
                         {
-                            Vector3 vec = new Vector3(0, 0, indicator_size);
+                            Vector3 vec = new Vector3(0, 0, ind_size);
                             vec *= Matrix3.Identity * Matrix3.CreateRotationY(MathHelper.TwoPi / circle_res * j);
                             vtx[4].Vtx[m++] = new Vertex(pos_pos + vec, cur_color);
                         }
                         vtx[4].VtxOffs[l++] = m;
                         for (int j = 0; j < circle_res; ++j)
                         {
-                            Vector3 vec = new Vector3(0, indicator_size, 0);
+                            Vector3 vec = new Vector3(0, ind_size, 0);
                             vec *= Matrix3.Identity * Matrix3.CreateRotationZ(MathHelper.TwoPi / circle_res * j);
                             vtx[4].Vtx[m++] = new Vertex(pos_pos + vec, cur_color);
                         }
-                        indicator_size /= pos.Pos.W;
                         min_x = Math.Min(min_x, pos_pos.X);
                         min_y = Math.Min(min_y, pos_pos.Y);
                         min_z = Math.Min(min_z, pos_pos.Z);
