@@ -9,15 +9,15 @@ namespace TwinsaityEditor
         private SectionController controller;
         private Trigger trigger;
 
-        private FileController TFController { get; set; }
-        private TwinsFile File { get => TFController.Data; }
+        private FileController File { get; set; }
+        private TwinsFile FileData { get => File.Data; }
         private Controller CurCont { get => (Controller)controller.Node.Nodes[controller.Data.RecordIDs[trigger.ID]].Tag; }
 
         private bool ignore_value_change;
 
-        public TriggerEditor(FileController file, SectionController c)
+        public TriggerEditor(SectionController c)
         {
-            TFController = file;
+            File = c.MainFile;
             controller = c;
             InitializeComponent();
             Text = $"Trigger Editor (Section {c.Data.Parent.ID})";
@@ -27,7 +27,7 @@ namespace TwinsaityEditor
 
         private void TriggerEditor_FormClosed(object sender, FormClosedEventArgs e)
         {
-            TFController.SelectItem(null);
+            File.SelectItem(null);
         }
 
         private void PopulateList()
@@ -46,7 +46,7 @@ namespace TwinsaityEditor
             this.SuspendDrawing();
 
             trigger = (Trigger)controller.Data.Records[listBox1.SelectedIndex];
-            TFController.SelectItem(trigger);
+            File.SelectItem(trigger);
             splitContainer1.Panel2.Enabled = true;
 
             ignore_value_change = true;
@@ -196,7 +196,7 @@ namespace TwinsaityEditor
             {
                 if (ushort.TryParse(textBox1.Lines[i], out ushort v))
                 {
-                    if (TFController.GetInstance(controller.Data.Parent.ID, v) != null)
+                    if (File.GetInstance(controller.Data.Parent.ID, v) != null)
                         trigger.Instances.Add(v);
                 }
             }

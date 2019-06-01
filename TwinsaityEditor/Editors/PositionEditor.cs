@@ -8,14 +8,14 @@ namespace TwinsaityEditor
         private SectionController controller;
         private Position pos;
 
-        private FileController TFController { get; set; }
-        private TwinsFile File { get => TFController.Data; }
+        private FileController File { get; set; }
+        private TwinsFile FileData { get => File.Data; }
 
         private bool ignore_value_change;
 
-        public PositionEditor(FileController file, SectionController c)
+        public PositionEditor(SectionController c)
         {
-            TFController = file;
+            File = c.MainFile;
             controller = c;
             InitializeComponent();
             Text = "Position Editor (Section {c.Data.Parent.ID})";
@@ -25,7 +25,7 @@ namespace TwinsaityEditor
 
         private void PositionEditor_FormClosed(object sender, FormClosedEventArgs e)
         {
-            TFController.SelectItem(null);
+            File.SelectItem(null);
         }
 
         private void PopulateList()
@@ -45,7 +45,7 @@ namespace TwinsaityEditor
             this.SuspendDrawing();
 
             pos = (Position)controller.Data.Records[listBox1.SelectedIndex];
-            TFController.SelectItem(pos);
+            File.SelectItem(pos);
             splitContainer1.Panel2.Enabled = true;
 
             numericUpDown1.Value = (decimal)pos.Pos.X;

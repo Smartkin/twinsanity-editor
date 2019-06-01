@@ -9,16 +9,16 @@ namespace TwinsaityEditor
         private SectionController controller;
         private Path path;
 
-        private FileController TFController { get; set; }
-        private TwinsFile File { get => TFController.Data; }
+        private FileController File { get; set; }
+        private TwinsFile FileData { get => File.Data; }
         private Controller CurPathCont { get => (Controller)controller.Node.Nodes[controller.Data.RecordIDs[path.ID]].Tag; }
 
         private bool ignore_value_change;
         private int pos_i, par_i;
 
-        public PathEditor(FileController file, SectionController c)
+        public PathEditor(SectionController c)
         {
-            TFController = file;
+            File = c.MainFile;
             controller = c;
             InitializeComponent();
             Text = $"Path Editor (Section {c.Data.Parent.ID})";
@@ -28,7 +28,7 @@ namespace TwinsaityEditor
 
         private void PathEditor_FormClosed(object sender, FormClosedEventArgs e)
         {
-            TFController.SelectItem(null);
+            File.SelectItem(null);
         }
 
         private void PopulateList()
@@ -48,7 +48,7 @@ namespace TwinsaityEditor
 
             path = (Path)controller.Data.Records[listBox1.SelectedIndex];
             pos_i = par_i = 0;
-            TFController.SelectItem(path, pos_i);
+            File.SelectItem(path, pos_i);
             splitContainer1.Panel2.Enabled = true;
 
             ignore_value_change = true;
@@ -217,7 +217,7 @@ namespace TwinsaityEditor
         {
             if (ignore_value_change) return;
             pos_i = (int)numericUpDown6.Value - 1;
-            TFController.SelectItem(path, pos_i);
+            File.SelectItem(path, pos_i);
             UpdatePosition();
         }
 
