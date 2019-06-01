@@ -12,16 +12,15 @@ namespace TwinsaityEditor
     public abstract class ThreeDViewer : GLControl
     {
         //add to preferences later
-        protected static Color[] colors = new[] { Color.Gray, Color.SlateGray, Color.DodgerBlue, Color.OrangeRed, Color.Red, Color.Pink, Color.LimeGreen, Color.DarkSlateBlue, Color.SaddleBrown, Color.LightSteelBlue, Color.SandyBrown, Color.Peru, Color.RoyalBlue, Color.DimGray, Color.Coral, Color.AliceBlue, Color.LightGray, Color.Cyan, Color.MediumTurquoise, Color.DarkSlateGray, Color.DarkSalmon, Color.DarkRed, Color.DarkCyan, Color.MediumVioletRed, Color.MediumOrchid, Color.DarkGray, Color.Yellow, Color.Goldenrod };
+        protected static readonly Color[] colors = new[] { Color.Gray, Color.SlateGray, Color.DodgerBlue, Color.OrangeRed, Color.Red, Color.Pink, Color.LimeGreen, Color.DarkSlateBlue, Color.SaddleBrown, Color.LightSteelBlue, Color.SandyBrown, Color.Peru, Color.RoyalBlue, Color.DimGray, Color.Coral, Color.AliceBlue, Color.LightGray, Color.Cyan, Color.MediumTurquoise, Color.DarkSlateGray, Color.DarkSalmon, Color.DarkRed, Color.DarkCyan, Color.MediumVioletRed, Color.MediumOrchid, Color.DarkGray, Color.Yellow, Color.Goldenrod };
+        protected static readonly float indicator_size = 0.5f;
+        protected static Matrix3 identity_mat = Matrix3.Identity;
 
         protected VertexBufferData[] vtx;
 
         protected Dictionary<char, Vertex[]> charVtx = new Dictionary<char, Vertex[]>();
         private Dictionary<char, int> charVtxOffs = new Dictionary<char, int>();
-        //private Dictionary<char, int>[] charVtxSizes;
         private int charVtxMax = 0, charVtxBuf, charVtxBufLen = 0;
-
-        protected Matrix3 identity_mat = Matrix3.Identity;
 
         private Vector3 pos, rot, sca;
         private float range;
@@ -36,7 +35,6 @@ namespace TwinsaityEditor
         private Dictionary<char, float> charBearingY = new Dictionary<char, float>();
         private Dictionary<char, float> charHeight = new Dictionary<char, float>();
         protected float size = 24f, zNear = 0.5f, zFar = 1500f;
-        protected float indicator_size = 0.5f;
 
         protected long timeRenderObj = 0, timeRenderObj_min = long.MaxValue, timeRenderObj_max = 0;
         protected long timeRenderHud = 0, timeRenderHud_min = long.MaxValue, timeRenderHud_max = 0;
