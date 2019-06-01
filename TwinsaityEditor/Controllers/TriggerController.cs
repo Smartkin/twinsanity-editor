@@ -9,6 +9,7 @@ namespace TwinsaityEditor
         public TriggerController(MainForm topform, Trigger item) : base (topform, item)
         {
             Data = item;
+            AddMenu("Open editor", Menu_OpenEditor);
         }
 
         protected override string GetName()
@@ -34,6 +35,11 @@ namespace TwinsaityEditor
             }
 
             TextPrev[7 + Data.Instances.Count] = $"Arguments: {Data.SomeUInt161} {Data.SomeUInt162} {Data.SomeUInt163} {Data.SomeUInt164}";
+        }
+
+        private void Menu_OpenEditor()
+        {
+            MainFile.OpenEditor((SectionController)Node.Parent.Tag);
         }
     }
 }

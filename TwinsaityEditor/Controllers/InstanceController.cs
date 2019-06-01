@@ -9,6 +9,7 @@ namespace TwinsaityEditor
         public InstanceController(MainForm topform, Instance item) : base (topform, item)
         {
             Data = item;
+            AddMenu("Open editor", Menu_OpenEditor);
         }
 
         protected override string GetName()
@@ -54,6 +55,11 @@ namespace TwinsaityEditor
             //TextPrev[11 + Data.S1.Count + Data.S2.Count + Data.S3.Count + Data.UnkI321.Count + Data.UnkI322.Count] = $"Integers: {Data.UnkI323.Count}";
             //for (int i = 0; i < Data.UnkI323.Count; ++i)
             //    TextPrev[12 + Data.S1.Count + Data.S2.Count + Data.S3.Count + Data.UnkI321.Count + Data.UnkI322.Count + i] = Data.UnkI323[i].ToString();
+        }
+
+        private void Menu_OpenEditor()
+        {
+            MainFile.OpenEditor((SectionController)Node.Parent.Tag);
         }
     }
 }

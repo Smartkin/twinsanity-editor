@@ -9,6 +9,7 @@ namespace TwinsaityEditor
         public PathController(MainForm topform, Path item) : base (topform, item)
         {
             Data = item;
+            AddMenu("Open editor", Menu_OpenEditor);
         }
 
         protected override string GetName()
@@ -31,6 +32,11 @@ namespace TwinsaityEditor
             {
                 TextPrev[4 + Data.Positions.Count + i] = $"Param{i}: {Data.Params[i].P2}, {Data.Params[i].P2}";
             }
+        }
+
+        private void Menu_OpenEditor()
+        {
+            MainFile.OpenEditor((SectionController)Node.Parent.Tag);
         }
     }
 }
