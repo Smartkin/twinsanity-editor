@@ -8,7 +8,7 @@ namespace TwinsaityEditor
     {
         private Form smForm, exeForm;
 
-        private TreeNode previousNode;
+        private TreeNode nodeLastSelected;
 
         //private List<FileController> FilesOpened { get; }
         public FileController FilesController { get => (FileController)Tag; }
@@ -26,6 +26,7 @@ namespace TwinsaityEditor
 
         private void GenTree()
         {
+            nodeLastSelected = null;
             treeView1.BeginUpdate();
             if (ColDataController.importer != null)
                 ColDataController.importer.Close();
@@ -43,11 +44,11 @@ namespace TwinsaityEditor
 
         private void treeView1_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            if (previousNode != null && previousNode.Tag is Controller c1)
+            if (nodeLastSelected != null && nodeLastSelected.Tag is Controller c1)
                 c1.Selected = false;
             if (e.Node.Tag is Controller c2)
                 ControllerNodeSelect(c2);
-            previousNode = e.Node;
+            nodeLastSelected = e.Node;
         }
 
         public void ControllerNodeSelect(Controller c)
@@ -121,6 +122,9 @@ namespace TwinsaityEditor
             ofd.Filter = "RM2 files|*.rm2|SM2 files|*.sm2|RMX files|*.rmx|SMX files|*.smx|Demo RM2 files|*.rm2|Demo SM2 files|*.sm2";
             if (ofd.ShowDialog() == DialogResult.OK)
             {
+                if (CurCont != null)
+                    CurCont.CloseFile();
+                Tag = null;
                 var file = new TwinsFile();
                 switch (ofd.FilterIndex)
                 {
@@ -157,12 +161,11 @@ namespace TwinsaityEditor
                 }
                 file.FileName = ofd.FileName;
                 file.SafeFileName = ofd.SafeFileName;
-                if (Tag != null)
-                    CurCont.CloseFile();
                 Tag = new FileController(this, file);
                 GenTree();
                 Text = $"Twinsaity Editor by Neo_Kesha [{ofd.FileName}] ";
             }
+            ofd.Dispose();
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
