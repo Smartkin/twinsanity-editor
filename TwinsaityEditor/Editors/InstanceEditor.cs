@@ -11,14 +11,14 @@ namespace TwinsaityEditor
         private SectionController controller;
         private Instance ins;
         
-        private FileController TFController { get; set; }
-        private TwinsFile File { get => TFController.Data; }
+        private FileController File { get; set; }
+        private TwinsFile FileData { get => File.Data; }
 
         private bool ignore_value_change;
 
-        public InstanceEditor(FileController file, SectionController c)
+        public InstanceEditor(SectionController c)
         {
-            TFController = file;
+            File = c.MainFile;
             controller = c;
             InitializeComponent();
             Text = $"Instance Editor (Section {c.Data.Parent.ID})";
@@ -30,7 +30,7 @@ namespace TwinsaityEditor
 
         private void InstanceEditor_FormClosed(object sender, FormClosedEventArgs e)
         {
-            TFController.SelectItem(null);
+            File.SelectItem(null);
         }
 
         private void PopulateList()
@@ -41,24 +41,24 @@ namespace TwinsaityEditor
                 listBox1.Items.Add(GenTextForList(i));
             }
             comboBox1.Items.Clear();
-            var s_dic = new SortedDictionary<uint, int>(((TwinsSection)((TwinsSection)File.GetItem(10)).GetItem(0)).RecordIDs);
+            var s_dic = new SortedDictionary<uint, int>(((TwinsSection)((TwinsSection)FileData.GetItem(10)).GetItem(0)).RecordIDs);
             foreach (var i in s_dic)
             {
-                comboBox1.Items.Add($"{i.Key} ({TFController.GetObjectName(i.Key)})");
+                comboBox1.Items.Add($"{i.Key} ({File.GetObjectName(i.Key)})");
             }
         }
 
         private void listBox1_SelectedIndexChanged(object sender, System.EventArgs e)
         {
             if (listBox1.SelectedIndex == -1) return;
-            ignore_value_change = true;
 
             this.SuspendDrawing();
 
-            TFController.SelectItem((Instance)controller.Data.Records[listBox1.SelectedIndex]);
-            ins = (Instance)TFController.SelectedItem;
+            File.SelectItem((Instance)controller.Data.Records[listBox1.SelectedIndex]);
+            ins = (Instance)File.SelectedItem;
             tabControl1.Enabled = true;
             tabControl1.Tag = 0x00;
+            ignore_value_change = true;
             if (tabControl1.SelectedIndex == 0)
             {
                 UpdateTab1();
@@ -87,7 +87,7 @@ namespace TwinsaityEditor
 
         private void UpdateTab1()
         {
-            string obj_name = TFController.GetObjectName(ins.ObjectID);
+            string obj_name = File.GetObjectName(ins.ObjectID);
             comboBox1.Text = ins.ObjectID.ToString() + ((obj_name == string.Empty) ? string.Empty : $" ({obj_name})");
             numericUpDown1.Value = ins.ID;
             numericUpDown12.Value = listBox1.SelectedIndex;
@@ -95,9 +95,12 @@ namespace TwinsaityEditor
             numericUpDown3.Value = (decimal)ins.Pos.Y;
             numericUpDown4.Value = (decimal)ins.Pos.Z;
             numericUpDown5.Value = (decimal)ins.Pos.W;
-            GetXRot(false, false, false); GetYRot(false, false, false); GetZRot(false, false, false);
             textBox1.Text = Convert.ToString(ins.UnkI32, 16);
             tabControl1.Tag = (int)tabControl1.Tag | 0x01;
+            numericUpDown13.Value = ins.COMRotX;
+            numericUpDown14.Value = ins.COMRotY;
+            numericUpDown15.Value = ins.COMRotZ;
+            GetXRot(true, true); GetYRot(true, true); GetZRot(true, true);
         }
 
         private void UpdateTab2()
@@ -134,42 +137,42 @@ namespace TwinsaityEditor
             tabControl1.Tag = (int)tabControl1.Tag | 0x02;
         }
 
-        private void GetXRot(bool ignore_slider, bool ignore_rot1, bool ignore_rot2)
+        private void GetXRot(bool slider, bool num)
         {
-            if (!ignore_slider)
+            ignore_value_change = true;
+            if (slider)
                 trackBar1.Value = ins.RotX;
-            if (!ignore_rot1)
+            if (num)
                 numericUpDown6.Value = ins.RotX;
-            if (!ignore_rot2)
-                numericUpDown13.Value = ins.COMRotX;
             label6.Text = string.Format(angleFormat, ins.RotX / (float)(ushort.MaxValue + 1) * 360f);
+            ignore_value_change = false;
         }
 
-        private void GetYRot(bool ignore_slider, bool ignore_rot1, bool ignore_rot2)
+        private void GetYRot(bool slider, bool num)
         {
-            if (!ignore_slider)
+            ignore_value_change = true;
+            if (slider)
                 trackBar2.Value = ins.RotY;
-            if (!ignore_rot1)
+            if (num)
                 numericUpDown7.Value = ins.RotY;
-            if (!ignore_rot2)
-                numericUpDown14.Value = ins.COMRotY;
             label7.Text = string.Format(angleFormat, ins.RotY / (float)(ushort.MaxValue + 1) * 360f);
+            ignore_value_change = false;
         }
 
-        private void GetZRot(bool ignore_slider, bool ignore_rot1, bool ignore_rot2)
+        private void GetZRot(bool slider, bool num)
         {
-            if (!ignore_slider)
+            ignore_value_change = true;
+            if (slider)
                 trackBar3.Value = ins.RotZ;
-            if (!ignore_rot1)
+            if (num)
                 numericUpDown8.Value = ins.RotZ;
-            if (!ignore_rot2)
-                numericUpDown15.Value = ins.COMRotZ;
             label9.Text = string.Format(angleFormat, ins.RotZ / (float)(ushort.MaxValue + 1) * 360f);
+            ignore_value_change = false;
         }
 
         private string GenTextForList(Instance instance)
         {
-            string obj_name = TFController.GetObjectName(instance.ObjectID);
+            string obj_name = File.GetObjectName(instance.ObjectID);
             return $"ID {instance.ID} {(obj_name == string.Empty ? string.Empty : $" ({obj_name})")}";
         }
 
@@ -189,7 +192,7 @@ namespace TwinsaityEditor
             controller.Data.RecordIDs.Add(ins.ID, listBox1.SelectedIndex);
             listBox1.Items[listBox1.SelectedIndex] = GenTextForList(ins);
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
-            TFController.RMViewer_LoadInstances();
+            File.RMViewer_LoadInstances();
         }
 
         private void comboBox1_TextChanged(object sender, EventArgs e)
@@ -218,7 +221,7 @@ namespace TwinsaityEditor
             if (ignore_value_change) return;
             ins.Pos.X = (float)numericUpDown2.Value;
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateTextBox();
-            TFController.RMViewer_LoadInstances();
+            File.RMViewer_LoadInstances();
         }
 
         private void numericUpDown3_ValueChanged(object sender, EventArgs e)
@@ -226,7 +229,7 @@ namespace TwinsaityEditor
             if (ignore_value_change) return;
             ins.Pos.Y = (float)numericUpDown3.Value;
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateTextBox();
-            TFController.RMViewer_LoadInstances();
+            File.RMViewer_LoadInstances();
         }
 
         private void numericUpDown4_ValueChanged(object sender, EventArgs e)
@@ -234,7 +237,7 @@ namespace TwinsaityEditor
             if (ignore_value_change) return;
             ins.Pos.Z = (float)numericUpDown4.Value;
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateTextBox();
-            TFController.RMViewer_LoadInstances();
+            File.RMViewer_LoadInstances();
         }
 
         private void numericUpDown5_ValueChanged(object sender, EventArgs e)
@@ -247,38 +250,40 @@ namespace TwinsaityEditor
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
             ins.RotX = (ushort)trackBar1.Value;
-            GetXRot(true, false, false);
+            GetXRot(false, true);
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateTextBox();
+            File.RMViewer_LoadInstances();
         }
 
         private void trackBar2_Scroll(object sender, EventArgs e)
         {
             ins.RotY = (ushort)trackBar2.Value;
-            GetYRot(true, false, false);
+            GetYRot(false, true);
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateTextBox();
+            File.RMViewer_LoadInstances();
         }
 
         private void trackBar3_Scroll(object sender, EventArgs e)
         {
             ins.RotZ = (ushort)trackBar3.Value;
-            GetZRot(true, false, false);
+            GetZRot(false, true);
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateTextBox();
+            File.RMViewer_LoadInstances();
         }
 
         private void numericUpDown6_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
             ins.RotX = (ushort)numericUpDown6.Value;
-            GetXRot(false, true, false);
+            GetXRot(true, false);
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
-            TFController.RMViewer_LoadInstances();
+            File.RMViewer_LoadInstances();
         }
 
         private void numericUpDown13_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
             ins.COMRotX = (ushort)numericUpDown13.Value;
-            GetXRot(false, false, true);
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
         }
 
@@ -286,16 +291,15 @@ namespace TwinsaityEditor
         {
             if (ignore_value_change) return;
             ins.RotY = (ushort)numericUpDown7.Value;
-            GetYRot(false, true, false);
+            GetYRot(true, false);
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
-            TFController.RMViewer_LoadInstances();
+            File.RMViewer_LoadInstances();
         }
 
         private void numericUpDown14_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
             ins.COMRotY = (ushort)numericUpDown14.Value;
-            GetYRot(false, false, true);
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
         }
 
@@ -429,16 +433,15 @@ namespace TwinsaityEditor
         {
             if (ignore_value_change) return;
             ins.RotZ = (ushort)numericUpDown8.Value;
-            GetZRot(false, true, false);
+            GetZRot(true, false);
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
-            TFController.RMViewer_LoadInstances();
+            File.RMViewer_LoadInstances();
         }
 
         private void numericUpDown15_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
             ins.COMRotZ = (ushort)numericUpDown15.Value;
-            GetZRot(false, false, true);
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
         }
     }
