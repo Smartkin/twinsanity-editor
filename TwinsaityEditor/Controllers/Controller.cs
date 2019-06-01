@@ -11,11 +11,12 @@ namespace TwinsaityEditor
         public bool Selected { get; set; }
         public string[] TextPrev { get; set; }
         public TreeNode Node { get; set; }
-        public ContextMenu ContextMenu { get; set; } = new ContextMenu();
+        public ContextMenu ContextMenu { get; set; }
         
         public Controller(MainForm topform)
         {
             TopForm = topform;
+            ContextMenu = new ContextMenu();
             Node = new TreeNode { Tag = this, ContextMenu = ContextMenu };
         }
 
@@ -26,10 +27,10 @@ namespace TwinsaityEditor
 
         protected void AddMenu(string text, ControllerAddMenuDelegate func)
         {
-            EventHandler handler = delegate (object sender, EventArgs e)
+            void handler(object sender, EventArgs e)
             {
                 func();
-            };
+            }
             ContextMenu.MenuItems.Add(text, handler);
         }
 
