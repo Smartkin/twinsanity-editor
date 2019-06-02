@@ -19,7 +19,7 @@ namespace TwinsaityEditor
         protected override void GenText()
         {
             TextPrev = new string[3];
-            TextPrev[0] = $"ID: {Data.ID}";
+            TextPrev[0] = string.Format("ID: {0:X8}", Data.ID);
             TextPrev[1] = $"Offset: {Data.Offset} Size: {Data.Size}";
             TextPrev[2] = $"Image Size: {Data.Width}x{Data.Height}";
         }
