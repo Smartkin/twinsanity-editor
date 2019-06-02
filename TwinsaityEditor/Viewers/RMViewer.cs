@@ -1,6 +1,7 @@
 ﻿using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using Twinsanity;
@@ -54,7 +55,7 @@ namespace TwinsaityEditor
             if (file.Data.RecordIDs.ContainsKey(9))
             {
                 GL.Enable(EnableCap.Lighting);
-                vtx[0].DrawAll(PrimitiveType.Triangles, BufferPointerFlags.Normal);
+                vtx[0].DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Normal);
                 GL.Disable(EnableCap.Lighting);
 
                 if (show_col_nodes)
@@ -355,20 +356,68 @@ namespace TwinsaityEditor
         public void LoadColTree()
         {
             ColData data = (ColData)file.Data.GetItem(9);
-            vtx[0].Vtx = new Vertex[data.Tris.Count * 3];
+            //vtx[0].Vtx = new Vertex[data.Vertices.Count];
+            List<Vertex> vertices = new List<Vertex>(data.Vertices.Count);
+            vtx[0].VtxInd = new uint[data.Tris.Count * 3];
+            for (int i = 0; i < data.Vertices.Count; ++i)
+            {
+                var v = data.Vertices[i].ToVec3();
+                v.X = -v.X;
+                vertices.Add(new Vertex(v));
+            }
             for (int i = 0; i < data.Tris.Count; ++i)
             {
-                Vector3 v1 = data.Vertices[data.Tris[i].Vert1].ToVec3();
-                Vector3 v2 = data.Vertices[data.Tris[i].Vert2].ToVec3();
-                Vector3 v3 = data.Vertices[data.Tris[i].Vert3].ToVec3();
-                v1.X = -v1.X;
-                v2.X = -v2.X;
-                v3.X = -v3.X;
-                Vector3 nor = VectorFuncs.CalcNormal(v1, v2, v3);
-                vtx[0].Vtx[i * 3 + 0] = new Vertex(v1, nor, colors[data.Tris[i].Surface % colors.Length]);
-                vtx[0].Vtx[i * 3 + 1] = new Vertex(v2, nor, colors[data.Tris[i].Surface % colors.Length]);
-                vtx[0].Vtx[i * 3 + 2] = new Vertex(v3, nor, colors[data.Tris[i].Surface % colors.Length]);
+                uint col = Vertex.ColorToABGR(colors[data.Tris[i].Surface % colors.Length]);
+                int v1 = data.Tris[i].Vert1;
+                if (vertices[v1].Col != 0 && vertices[v1].Col != col)
+                {
+                    vertices.Add(vertices[v1]);
+                    v1 = vertices.Count-1;
+                }
+                int v2 = data.Tris[i].Vert2;
+                if (vertices[v2].Col != 0 && vertices[v2].Col != col)
+                {
+                    vertices.Add(vertices[v2]);
+                    v2 = vertices.Count-1;
+                }
+                int v3 = data.Tris[i].Vert3;
+                if (vertices[v3].Col != 0 && vertices[v3].Col != col)
+                {
+                    vertices.Add(vertices[v3]);
+                    v3 = vertices.Count-1;
+                }
+                vtx[0].VtxInd[i * 3 + 0] = (uint)v1;
+                vtx[0].VtxInd[i * 3 + 1] = (uint)v2;
+                vtx[0].VtxInd[i * 3 + 2] = (uint)v3;
+                Vector3 normal = VectorFuncs.CalcNormal(vertices[v1].Pos, vertices[v2].Pos, vertices[v3].Pos);
+                var v = vertices[v1];
+                v.Nor += normal;
+                v.Col = col;
+                vertices[v1] = v;
+                v = vertices[v2];
+                v.Nor += normal;
+                v.Col = col;
+                vertices[v2] = v;
+                v = vertices[v3];
+                v.Nor += normal;
+                v.Col = col;
+                vertices[v3] = v;
             }
+            vtx[0].Vtx = vertices.ToArray();
+            //vtx[0].Vtx = new Vertex[data.Tris.Count * 3];
+            //for (int i = 0; i < data.Tris.Count; ++i)
+            //{
+            //    Vector3 v1 = data.Vertices[data.Tris[i].Vert1].ToVec3();
+            //    Vector3 v2 = data.Vertices[data.Tris[i].Vert2].ToVec3();
+            //    Vector3 v3 = data.Vertices[data.Tris[i].Vert3].ToVec3();
+            //    v1.X = -v1.X;
+            //    v2.X = -v2.X;
+            //    v3.X = -v3.X;
+            //    Vector3 nor = VectorFuncs.CalcNormal(v1, v2, v3);
+            //    vtx[0].Vtx[i * 3 + 0] = new Vertex(v1, nor, colors[data.Tris[i].Surface % colors.Length]);
+            //    vtx[0].Vtx[i * 3 + 1] = new Vertex(v2, nor, colors[data.Tris[i].Surface % colors.Length]);
+            //    vtx[0].Vtx[i * 3 + 2] = new Vertex(v3, nor, colors[data.Tris[i].Surface % colors.Length]);
+            //}
             UpdateVBO(0);
         }
 
