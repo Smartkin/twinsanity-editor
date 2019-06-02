@@ -44,7 +44,7 @@ namespace TwinsaityEditor
         protected override void RenderHUD()
         {
             base.RenderHUD();
-            RenderString2D("Press C to toggle collision nodes\nPress X to toggle wireframe collision tree", 0, Height, 12, TextAnchor.BotLeft);
+            RenderString2D("Press C to toggle collision nodes\nPress X to toggle collision tree wireframe", 0, Height, 12, TextAnchor.BotLeft);
         }
 
         protected override void RenderObjects()
