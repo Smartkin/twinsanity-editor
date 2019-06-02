@@ -13,7 +13,7 @@ namespace TwinsaityEditor
 
         protected override string GetName()
         {
-            return $"Texture [ID {Data.ID}]";
+            return string.Format("Texture [ID {0:X8}]", Data.ID);
         }
 
         protected override void GenText()
