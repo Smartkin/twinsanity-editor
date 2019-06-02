@@ -360,6 +360,7 @@ namespace TwinsaityEditor
         private void RenderChars()
         {
             GL.BindBuffer(BufferTarget.ArrayBuffer, charVtxBuf);
+            GL.EnableClientState(ArrayCap.ColorArray);
             GL.EnableClientState(ArrayCap.TextureCoordArray);
             foreach (var k in charVtx.Keys)
             {
@@ -382,6 +383,7 @@ namespace TwinsaityEditor
             }
             GL.BindTexture(TextureTarget.Texture2D, 0);
             GL.DisableClientState(ArrayCap.TextureCoordArray);
+            GL.DisableClientState(ArrayCap.ColorArray);
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
         }
 
@@ -513,7 +515,7 @@ namespace TwinsaityEditor
 
                     x += gBearingX + gAdvanceX;
                 }
-                else if (c == '\n')
+                if ((anchor == TextAnchor.BotLeft || anchor == TextAnchor.BotMiddle || anchor == TextAnchor.BotRight) && c == '\n')
                 {
                     y -= text_size;
                 }
