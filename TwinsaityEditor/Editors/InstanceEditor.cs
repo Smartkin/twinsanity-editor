@@ -177,25 +177,6 @@ namespace TwinsaityEditor
             return $"ID {instance.ID} {(obj_name == string.Empty ? string.Empty : $" ({obj_name})")}";
         }
 
-        //private void numericUpDown1_ValueChanged(object sender, EventArgs e)
-        //{
-        //    if (ignore_value_change) return;
-        //    if (controller.Data.RecordIDs.ContainsKey((uint)numericUpDown1.Value))
-        //    {
-        //        MessageBox.Show("The specified ID already exists.");
-        //        ignore_value_change = true;
-        //        numericUpDown1.Value = ins.ID;
-        //        ignore_value_change = false;
-        //        return;
-        //    }
-        //    controller.Data.RecordIDs.Remove(ins.ID);
-        //    ins.ID = (uint)numericUpDown1.Value;
-        //    controller.Data.RecordIDs.Add(ins.ID, listBox1.SelectedIndex);
-        //    listBox1.Items[listBox1.SelectedIndex] = GenTextForList(ins);
-        //    ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
-        //    File.RMViewer_LoadInstances();
-        //}
-
         private void comboBox1_TextChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
