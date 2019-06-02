@@ -10,8 +10,8 @@ namespace TwinsaityEditor
 
         public string FileName { get => Data.FileName; }
         public string SafeFileName { get => Data.SafeFileName; }
-        public Dictionary<uint, string> ObjectNames { get; set; } = new Dictionary<uint, string>();
-        public Dictionary<uint, string> MaterialNames { get; set; } = new Dictionary<uint, string>();
+        public Dictionary<uint, string> ObjectNames { get; set; }
+        public Dictionary<uint, string> MaterialNames { get; set; }
 
         public TwinsItem SelectedItem { get; set; } = null;
         public int SelectedItemArg { get; set; } = -1;
@@ -23,10 +23,14 @@ namespace TwinsaityEditor
         //Viewers
         private Form rmForm, colForm;
         private RMViewer RMViewer { get; set; }
+        private Dictionary<uint, Form> MeshViewers { get; set; }
 
         public FileController(MainForm topform, TwinsFile item) : base(topform, item)
         {
             Data = item;
+            ObjectNames = new Dictionary<uint, string>();
+            MaterialNames = new Dictionary<uint, string>();
+            MeshViewers = new Dictionary<uint, Form>();
             LoadFileInfo();
         }
 
@@ -63,6 +67,7 @@ namespace TwinsaityEditor
         public void CloseFile()
         {
             CloseRMViewer();
+            CloseAllMeshViewers();
             CloseEditor(Editors.ChunkLinks);
             CloseEditor(Editors.ColData);
             for (int i = 0; i <= 7; ++i)
@@ -138,6 +143,43 @@ namespace TwinsaityEditor
                 case Editors.Trigger: editorForm = editTriggers[arg]; break;
             }
             CloseForm(ref editorForm);
+        }
+
+        public void OpenMeshViewer(MeshController c)
+        {
+            var id = c.Data.ID;
+            if (!MeshViewers.ContainsKey(id))
+            {
+                var f = new Form { Size = new System.Drawing.Size(480, 480), Text = "Initializing viewer..." };
+                f.FormClosed += delegate
+                {
+                    MeshViewers.Remove(id);
+                };
+                f.Show();
+                MeshViewer v = new MeshViewer(c, ref f) { Dock = DockStyle.Fill };
+                f.Controls.Add(v);
+                f.Text = "MeshViewer";
+                MeshViewers.Add(id, f);
+            }
+            else
+                MeshViewers[id].Select();
+        }
+
+        public void CloseMeshViewer(uint mesh_id)
+        {
+            var f = MeshViewers[mesh_id];
+            CloseForm(ref f);
+            MeshViewers.Remove(mesh_id);
+        }
+
+        public void CloseAllMeshViewers()
+        {
+            var a = new uint[MeshViewers.Count];
+            MeshViewers.Keys.CopyTo(a, 0);
+            foreach (var p in a)
+            {
+                CloseMeshViewer(p);
+            }
         }
 
         public void OpenRMViewer()
