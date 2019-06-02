@@ -117,24 +117,6 @@ namespace TwinsaityEditor
             controller.UpdateTextBox();
         }
 
-        private void numericUpDown5_ValueChanged(object sender, System.EventArgs e)
-        {
-            if (ignore_value_change) return;
-            if (controller.Data.RecordIDs.ContainsKey((uint)numericUpDown5.Value))
-            {
-                MessageBox.Show("The specified ID already exists.");
-                ignore_value_change = true;
-                numericUpDown5.Value = trigger.ID;
-                ignore_value_change = false;
-                return;
-            }
-            controller.Data.RecordIDs.Remove(trigger.ID);
-            trigger.ID = (uint)numericUpDown5.Value;
-            controller.Data.RecordIDs.Add(trigger.ID, listBox1.SelectedIndex);
-            listBox1.Items[listBox1.SelectedIndex] = $"ID {trigger.ID}";
-            CurCont.UpdateText();
-        }
-
         private void numericUpDown1_ValueChanged(object sender, System.EventArgs e)
         {
             if (ignore_value_change) return;

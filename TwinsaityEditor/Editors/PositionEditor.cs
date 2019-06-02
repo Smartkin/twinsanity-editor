@@ -18,7 +18,7 @@ namespace TwinsaityEditor
             File = c.MainFile;
             controller = c;
             InitializeComponent();
-            Text = "Position Editor (Section {c.Data.Parent.ID})";
+            Text = $"Position Editor (Section {c.Data.Parent.ID})";
             PopulateList();
             FormClosed += PositionEditor_FormClosed;
         }
@@ -82,32 +82,25 @@ namespace TwinsaityEditor
             var sel_i = listBox1.SelectedIndex;
             if (sel_i == -1)
                 return;
-            controller.Node.Nodes[controller.Data.RecordIDs[pos.ID]].Remove();
-            controller.Data.RemoveItem(pos.ID);
+            controller.RemoveItem(pos.ID);
+            listBox1.BeginUpdate();
             listBox1.Items.RemoveAt(sel_i);
+            for (int i = 0; i < controller.Data.Records.Count; ++i)
+            {
+                Position new_pos = (Position)controller.Data.Records[i];
+                if (new_pos.ID != i)
+                {
+                    controller.ChangeID(new_pos.ID, (uint)i);
+                    listBox1.Items[i] = $"ID {i}";
+                    ((Controller)controller.Node.Nodes[i].Tag).UpdateText();
+                }
+            }
             if (sel_i >= listBox1.Items.Count) sel_i = listBox1.Items.Count - 1;
             listBox1.SelectedIndex = sel_i;
+            listBox1.EndUpdate();
             if (listBox1.Items.Count == 0)
                 splitContainer1.Panel2.Enabled = false;
             controller.UpdateText();
-        }
-
-        private void numericUpDown5_ValueChanged(object sender, System.EventArgs e)
-        {
-            if (ignore_value_change) return;
-            if (controller.Data.RecordIDs.ContainsKey((uint)numericUpDown5.Value))
-            {
-                MessageBox.Show("The specified ID already exists.");
-                ignore_value_change = true;
-                numericUpDown5.Value = pos.ID;
-                ignore_value_change = false;
-                return;
-            }
-            controller.Data.RecordIDs.Remove(pos.ID);
-            pos.ID = (uint)numericUpDown5.Value;
-            controller.Data.RecordIDs.Add(pos.ID, listBox1.SelectedIndex);
-            listBox1.Items[listBox1.SelectedIndex] = $"ID {pos.ID}";
-            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[pos.ID]].Tag).UpdateText();
         }
 
         private void numericUpDown1_ValueChanged(object sender, System.EventArgs e)

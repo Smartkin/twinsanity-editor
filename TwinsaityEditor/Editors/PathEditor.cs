@@ -150,32 +150,25 @@ namespace TwinsaityEditor
             var sel_i = listBox1.SelectedIndex;
             if (sel_i == -1)
                 return;
-            controller.Node.Nodes[controller.Data.RecordIDs[path.ID]].Remove();
-            controller.Data.RemoveItem(path.ID);
+            controller.RemoveItem(path.ID);
+            listBox1.BeginUpdate();
             listBox1.Items.RemoveAt(sel_i);
+            for (int i = 0; i < controller.Data.Records.Count; ++i)
+            {
+                Path new_pth = (Path)controller.Data.Records[i];
+                if (new_pth.ID != i)
+                {
+                    controller.ChangeID(new_pth.ID, (uint)i);
+                    listBox1.Items[i] = $"ID {i}";
+                    ((Controller)controller.Node.Nodes[i].Tag).UpdateText();
+                }
+            }
             if (sel_i >= listBox1.Items.Count) sel_i = listBox1.Items.Count - 1;
             listBox1.SelectedIndex = sel_i;
+            listBox1.EndUpdate();
             if (listBox1.Items.Count == 0)
                 splitContainer1.Panel2.Enabled = false;
             controller.UpdateTextBox();
-        }
-
-        private void numericUpDown5_ValueChanged(object sender, System.EventArgs e)
-        {
-            if (ignore_value_change) return;
-            if (controller.Data.RecordIDs.ContainsKey((uint)numericUpDown5.Value))
-            {
-                MessageBox.Show("The specified ID already exists.");
-                ignore_value_change = true;
-                numericUpDown5.Value = path.ID;
-                ignore_value_change = false;
-                return;
-            }
-            controller.Data.RecordIDs.Remove(path.ID);
-            path.ID = (uint)numericUpDown5.Value;
-            controller.Data.RecordIDs.Add(path.ID, listBox1.SelectedIndex);
-            listBox1.Items[listBox1.SelectedIndex] = $"ID {path.ID}";
-            CurPathCont.UpdateText();
         }
 
         private void numericUpDown2_ValueChanged(object sender, System.EventArgs e)

@@ -128,6 +128,7 @@
             // 
             // numericUpDown5
             // 
+            this.numericUpDown5.Enabled = false;
             this.numericUpDown5.Location = new System.Drawing.Point(6, 19);
             this.numericUpDown5.Maximum = new decimal(new int[] {
             65535,
@@ -137,7 +138,6 @@
             this.numericUpDown5.Name = "numericUpDown5";
             this.numericUpDown5.Size = new System.Drawing.Size(51, 20);
             this.numericUpDown5.TabIndex = 0;
-            this.numericUpDown5.ValueChanged += new System.EventHandler(this.numericUpDown5_ValueChanged);
             // 
             // groupBox1
             // 
