@@ -23,10 +23,13 @@ namespace TwinsaityEditor
             InitVBO(5);
             if (file.Data.RecordIDs.ContainsKey(9))
             {
-                pform.Text = "Loading collision tree...";
-                LoadColTree();
-                pform.Text = "Loading collision nodes...";
-                LoadColNodes();
+                if (file.Data.GetItem(9).Size >= 12)
+                {
+                    pform.Text = "Loading collision tree...";
+                    LoadColTree();
+                    pform.Text = "Loading collision nodes...";
+                    LoadColNodes();
+                }
             }
             pform.Text = "Loading instances...";
             LoadInstances();
