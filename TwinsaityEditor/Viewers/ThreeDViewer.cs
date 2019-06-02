@@ -172,8 +172,8 @@ namespace TwinsaityEditor
             range -= e.Delta / 120 * 30;
             if (range > 500f)
                 range = 500f;
-            else if (range < 50)
-                range = 50;
+            else if (range < 25f)
+                range = 25f;
         }
 
         protected override bool IsInputKey(Keys keyData)
