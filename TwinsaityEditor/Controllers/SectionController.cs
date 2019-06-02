@@ -92,6 +92,16 @@ namespace TwinsaityEditor
             UpdateText();
         }
 
+        public void ChangeID(uint old_id, uint new_id)
+        {
+            if (Data.RecordIDs.ContainsKey(new_id))
+                throw new System.ArgumentException("New ID already exists.");
+            var index = Data.RecordIDs[old_id];
+            Data.GetItem(old_id).ID = new_id;
+            Data.RecordIDs.Remove(old_id);
+            Data.RecordIDs.Add(new_id, index);
+        }
+
         private void Menu_ExtractExtraData()
         {
             SaveFileDialog sfd = new SaveFileDialog();

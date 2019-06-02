@@ -114,10 +114,10 @@ namespace TwinsaityEditor
                         }
                         break;
                     case Editors.ChunkLinks: editor_var = new ChunkLinksEditor((ChunkLinksController)cont) { Tag = TopForm }; break;
-                    case Editors.Position: editor_var = new PositionEditor(this, (SectionController)cont) { Tag = TopForm }; break;
-                    case Editors.Path: editor_var = new PathEditor(this, (SectionController)cont) { Tag = TopForm }; break;
+                    case Editors.Position: editor_var = new PositionEditor((SectionController)cont) { Tag = TopForm }; break;
+                    case Editors.Path: editor_var = new PathEditor((SectionController)cont) { Tag = TopForm }; break;
                     case Editors.Instance: editor_var = new InstanceEditor((SectionController)cont) { Tag = TopForm }; break;
-                    case Editors.Trigger: editor_var = new TriggerEditor(this, (SectionController)cont) { Tag = TopForm }; break;
+                    case Editors.Trigger: editor_var = new TriggerEditor((SectionController)cont) { Tag = TopForm }; break;
                 }
                 editor_var.Show();
             }

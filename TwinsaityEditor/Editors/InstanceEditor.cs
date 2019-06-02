@@ -35,11 +35,13 @@ namespace TwinsaityEditor
 
         private void PopulateList()
         {
+            listBox1.BeginUpdate();
             listBox1.Items.Clear();
             foreach (Instance i in controller.Data.Records)
             {
                 listBox1.Items.Add(GenTextForList(i));
             }
+            listBox1.EndUpdate();
             comboBox1.Items.Clear();
             var s_dic = new SortedDictionary<uint, int>(((TwinsSection)((TwinsSection)FileData.GetItem(10)).GetItem(0)).RecordIDs);
             foreach (var i in s_dic)
@@ -89,8 +91,7 @@ namespace TwinsaityEditor
         {
             string obj_name = File.GetObjectName(ins.ObjectID);
             comboBox1.Text = ins.ObjectID.ToString() + ((obj_name == string.Empty) ? string.Empty : $" ({obj_name})");
-            numericUpDown1.Value = ins.ID;
-            numericUpDown12.Value = listBox1.SelectedIndex;
+            numericUpDown12.Value = ins.ID;
             numericUpDown2.Value = (decimal)ins.Pos.X;
             numericUpDown3.Value = (decimal)ins.Pos.Y;
             numericUpDown4.Value = (decimal)ins.Pos.Z;
@@ -109,17 +110,17 @@ namespace TwinsaityEditor
             numericUpDown10.Value = ins.SomeNum2;
             numericUpDown11.Value = ins.SomeNum3;
 
-            string[] lines = new string[ins.S1.Count];
-            for (int i = 0; i < ins.S1.Count; ++i)
-                lines[i] = ins.S1[i].ToString();
+            string[] lines = new string[ins.InstanceIDs.Count];
+            for (int i = 0; i < ins.InstanceIDs.Count; ++i)
+                lines[i] = ins.InstanceIDs[i].ToString();
             textBox2.Lines = lines;
-            lines = new string[ins.S2.Count];
-            for (int i = 0; i < ins.S2.Count; ++i)
-                lines[i] = ins.S2[i].ToString();
+            lines = new string[ins.PositionIDs.Count];
+            for (int i = 0; i < ins.PositionIDs.Count; ++i)
+                lines[i] = ins.PositionIDs[i].ToString();
             textBox3.Lines = lines;
-            lines = new string[ins.S3.Count];
-            for (int i = 0; i < ins.S3.Count; ++i)
-                lines[i] = ins.S3[i].ToString();
+            lines = new string[ins.PathIDs.Count];
+            for (int i = 0; i < ins.PathIDs.Count; ++i)
+                lines[i] = ins.PathIDs[i].ToString();
             textBox4.Lines = lines;
 
             lines = new string[ins.UnkI321.Count];
@@ -176,24 +177,24 @@ namespace TwinsaityEditor
             return $"ID {instance.ID} {(obj_name == string.Empty ? string.Empty : $" ({obj_name})")}";
         }
 
-        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
-        {
-            if (ignore_value_change) return;
-            if (controller.Data.RecordIDs.ContainsKey((uint)numericUpDown1.Value))
-            {
-                MessageBox.Show("The specified ID already exists.");
-                ignore_value_change = true;
-                numericUpDown1.Value = ins.ID;
-                ignore_value_change = false;
-                return;
-            }
-            controller.Data.RecordIDs.Remove(ins.ID);
-            ins.ID = (uint)numericUpDown1.Value;
-            controller.Data.RecordIDs.Add(ins.ID, listBox1.SelectedIndex);
-            listBox1.Items[listBox1.SelectedIndex] = GenTextForList(ins);
-            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
-            File.RMViewer_LoadInstances();
-        }
+        //private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        //{
+        //    if (ignore_value_change) return;
+        //    if (controller.Data.RecordIDs.ContainsKey((uint)numericUpDown1.Value))
+        //    {
+        //        MessageBox.Show("The specified ID already exists.");
+        //        ignore_value_change = true;
+        //        numericUpDown1.Value = ins.ID;
+        //        ignore_value_change = false;
+        //        return;
+        //    }
+        //    controller.Data.RecordIDs.Remove(ins.ID);
+        //    ins.ID = (uint)numericUpDown1.Value;
+        //    controller.Data.RecordIDs.Add(ins.ID, listBox1.SelectedIndex);
+        //    listBox1.Items[listBox1.SelectedIndex] = GenTextForList(ins);
+        //    ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
+        //    File.RMViewer_LoadInstances();
+        //}
 
         private void comboBox1_TextChanged(object sender, EventArgs e)
         {
@@ -327,11 +328,11 @@ namespace TwinsaityEditor
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            ins.S1.Clear();
+            ins.InstanceIDs.Clear();
             for (int i = 0; i < textBox2.Lines.Length; ++i)
             {
                 if (ushort.TryParse(textBox2.Lines[i], out ushort v))
-                    ins.S1.Add(v);
+                    ins.InstanceIDs.Add(v);
             }
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
         }
@@ -339,11 +340,11 @@ namespace TwinsaityEditor
         private void textBox3_TextChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            ins.S2.Clear();
+            ins.PositionIDs.Clear();
             for (int i = 0; i < textBox3.Lines.Length; ++i)
             {
                 if (ushort.TryParse(textBox3.Lines[i], out ushort v))
-                    ins.S2.Add(v);
+                    ins.PositionIDs.Add(v);
             }
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
         }
@@ -351,11 +352,11 @@ namespace TwinsaityEditor
         private void textBox4_TextChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            ins.S3.Clear();
+            ins.PathIDs.Clear();
             for (int i = 0; i < textBox4.Lines.Length; ++i)
             {
                 if (ushort.TryParse(textBox4.Lines[i], out ushort v))
-                    ins.S3.Add(v);
+                    ins.PathIDs.Add(v);
             }
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
         }
@@ -419,14 +420,71 @@ namespace TwinsaityEditor
             var sel_i = listBox1.SelectedIndex;
             if (sel_i == -1)
                 return;
-            controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Remove();
-            controller.Data.RemoveItem(ins.ID);
+            controller.RemoveItem(ins.ID);
+            listBox1.BeginUpdate();
             listBox1.Items.RemoveAt(sel_i);
+            for (int i = 0; i < controller.Data.Records.Count; ++i)
+            {
+                bool update_text = false;
+                Instance new_ins = (Instance)controller.Data.Records[i];
+                if (new_ins.ID != i)
+                {
+                    controller.ChangeID(new_ins.ID, (uint)i);
+                    listBox1.Items[i] = GenTextForList(new_ins);
+                    ((Controller)controller.Node.Nodes[i].Tag).UpdateName();
+                    update_text = true;
+                }
+                for (int j = 0; j < new_ins.InstanceIDs.Count; ++j)
+                {
+                    if (new_ins.InstanceIDs[j] > sel_i)
+                    {
+                        update_text = true;
+                        --new_ins.InstanceIDs[j];
+                    }
+                    else if (new_ins.InstanceIDs[j] == sel_i)
+                    {
+                        update_text = true;
+                        new_ins.InstanceIDs.RemoveAt(j);
+                        --j;
+                    }
+                }
+                if (update_text)
+                    ((Controller)controller.Node.Nodes[i].Tag).UpdateTextBox();
+                update_text = false;
+            }
+
+            var trig_sec_c = (SectionController)controller.Node.Parent.Nodes[7].Tag;
+
+            foreach (TreeNode node in trig_sec_c.Node.Nodes)
+            {
+                bool update_text = false;
+                Trigger tr = ((TriggerController)node.Tag).Data;
+                for (int j = 0; j < tr.Instances.Count; ++j)
+                {
+                    if (tr.Instances[j] > sel_i)
+                    {
+                        update_text = true;
+                        tr.Instances[j] -= 1;
+                    }
+                    else if (tr.Instances[j] == sel_i)
+                    {
+                        update_text = true;
+                        tr.Instances.RemoveAt(j);
+                        --j;
+                    }
+                    else
+                        continue;
+                }
+                if (update_text)
+                    ((Controller)node.Tag).UpdateTextBox();
+            }
+            trig_sec_c.UpdateTextBox();
             if (sel_i >= listBox1.Items.Count) sel_i = listBox1.Items.Count - 1;
             listBox1.SelectedIndex = sel_i;
+            listBox1.EndUpdate();
             if (listBox1.Items.Count == 0)
                 tabControl1.Enabled = false;
-            controller.UpdateText();
+            controller.UpdateTextBox();
         }
 
         private void numericUpDown8_ValueChanged(object sender, EventArgs e)

@@ -5,21 +5,20 @@ namespace Twinsanity
 {
     public class Instance : TwinsItem
     {
-        private Pos pos;
         private List<ushort> s1 = new List<ushort>(), s2 = new List<ushort>(), s3 = new List<ushort>();
         private List<uint> u1 = new List<uint>(), u3 = new List<uint>();
         private List<float> u2 = new List<float>();
 
-        public Pos Pos { get => pos; set => pos = value; }
+        public Pos Pos { get; set; }
         public ushort RotX { get; set; }
         public ushort RotY { get; set; }
         public ushort RotZ { get; set; }
         public ushort COMRotX { get; set; }
         public ushort COMRotY { get; set; }
         public ushort COMRotZ { get; set; }
-        public List<ushort> S1 { get => s1; set => s1 = value; }
-        public List<ushort> S2 { get => s2; set => s2 = value; }
-        public List<ushort> S3 { get => s3; set => s3 = value; }
+        public List<ushort> InstanceIDs { get => s1; set => s1 = value; }
+        public List<ushort> PositionIDs { get => s2; set => s2 = value; }
+        public List<ushort> PathIDs { get => s3; set => s3 = value; }
         public int SomeNum1 { get; set; }
         public int SomeNum2 { get; set; }
         public int SomeNum3 { get; set; }
@@ -43,21 +42,21 @@ namespace Twinsanity
             writer.Write(COMRotY);
             writer.Write(RotZ);
             writer.Write(COMRotZ);
-            writer.Write(S1.Count);
-            writer.Write(S1.Count);
+            writer.Write(InstanceIDs.Count);
+            writer.Write(InstanceIDs.Count);
             writer.Write(SomeNum1);
-            for (int i = 0; i < S1.Count; ++i)
-                writer.Write(S1[i]);
-            writer.Write(S2.Count);
-            writer.Write(S2.Count);
+            for (int i = 0; i < InstanceIDs.Count; ++i)
+                writer.Write(InstanceIDs[i]);
+            writer.Write(PositionIDs.Count);
+            writer.Write(PositionIDs.Count);
             writer.Write(SomeNum2);
-            for (int i = 0; i < S2.Count; ++i)
-                writer.Write(S2[i]);
-            writer.Write(S3.Count);
-            writer.Write(S3.Count);
+            for (int i = 0; i < PositionIDs.Count; ++i)
+                writer.Write(PositionIDs[i]);
+            writer.Write(PathIDs.Count);
+            writer.Write(PathIDs.Count);
             writer.Write(SomeNum3);
-            for (int i = 0; i < S3.Count; ++i)
-                writer.Write(S3[i]);
+            for (int i = 0; i < PathIDs.Count; ++i)
+                writer.Write(PathIDs[i]);
             writer.Write(ObjectID);
             writer.Write(AfterOID);
             PHeader = (uint)((byte)UnkI321.Count
@@ -78,7 +77,7 @@ namespace Twinsanity
 
         public override void Load(BinaryReader reader, int size)
         {
-            pos = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+            Pos = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
             RotX = reader.ReadUInt16();
             COMRotX = reader.ReadUInt16();
             RotY = reader.ReadUInt16();
@@ -89,21 +88,21 @@ namespace Twinsanity
             var n = reader.ReadInt32();
             n = reader.ReadInt32();
             SomeNum1 = reader.ReadInt32();
-            S1.Clear();
+            InstanceIDs.Clear();
             for (int i = 0; i < n; ++i)
-                S1.Add(reader.ReadUInt16());
+                InstanceIDs.Add(reader.ReadUInt16());
             n = reader.ReadInt32();
             n = reader.ReadInt32();
             SomeNum2 = reader.ReadInt32();
-            S2.Clear();
+            PositionIDs.Clear();
             for (int i = 0; i < n; ++i)
-                S2.Add(reader.ReadUInt16());
+                PositionIDs.Add(reader.ReadUInt16());
             n = reader.ReadInt32();
             n = reader.ReadInt32();
             SomeNum3 = reader.ReadInt32();
-            S3.Clear();
+            PathIDs.Clear();
             for (int i = 0; i < n; ++i)
-                S3.Add(reader.ReadUInt16());
+                PathIDs.Add(reader.ReadUInt16());
             ObjectID = reader.ReadUInt16();
             AfterOID = reader.ReadUInt32();
             PHeader = reader.ReadUInt32();
@@ -124,7 +123,7 @@ namespace Twinsanity
 
         protected override int GetSize()
         {
-            return 90 + (S1.Count + S2.Count + S3.Count) * 2 + (UnkI321.Count + UnkI322.Count + UnkI323.Count) * 4;
+            return 90 + (InstanceIDs.Count + PositionIDs.Count + PathIDs.Count) * 2 + (UnkI321.Count + UnkI322.Count + UnkI323.Count) * 4;
         }
     }
 }
