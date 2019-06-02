@@ -43,9 +43,8 @@ namespace TwinsaityEditor
 
         protected override void RenderHUD()
         {
-            GL.Color3(Color.White);
-            RenderString2D($"RenderObjects: {timeRenderObj}ms (max: {timeRenderObj_max}ms, min: {timeRenderObj_min}ms)", 0, 0, 8);
-            RenderString2D($"RenderHUD: {timeRenderHud}ms (max: {timeRenderHud_max}ms, min: {timeRenderHud_min}ms)", Width, Height, 8, TextAnchor.BotRight);
+            base.RenderHUD();
+            RenderString2D("Press C to toggle collision nodes\nPress X to toggle wireframe collision tree", 0, Height, 8, TextAnchor.BotLeft);
         }
 
         protected override void RenderObjects()

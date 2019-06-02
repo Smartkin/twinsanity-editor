@@ -110,7 +110,13 @@ namespace TwinsaityEditor
         }
 
         protected abstract void RenderObjects();
-        protected abstract void RenderHUD();
+        //protected abstract void RenderHUD();
+        protected virtual void RenderHUD()
+        {
+            GL.Color3(Color.White);
+            RenderString2D($"RenderObjects: {timeRenderObj}ms (max: {timeRenderObj_max}ms, min: {timeRenderObj_min}ms)", 0, 0, 8);
+            RenderString2D($"RenderHUD: {timeRenderHud}ms (max: {timeRenderHud_max}ms, min: {timeRenderHud_min}ms)", Width, Height, 8, TextAnchor.BotRight);
+        }
 
         private void ResetCamera()
         {
@@ -498,9 +504,9 @@ namespace TwinsaityEditor
         {
             float text_size_fac = text_size / size;
             float start_x = x;
-            if (anchor == TextAnchor.TopMiddle || anchor == TextAnchor.TopRight || anchor == TextAnchor.BotMiddle || anchor == TextAnchor.BotRight)
+            foreach (char c in s)
             {
-                foreach (char c in s)
+                if (anchor == TextAnchor.TopMiddle || anchor == TextAnchor.TopRight || anchor == TextAnchor.BotMiddle || anchor == TextAnchor.BotRight)
                 {
                     if (!charAdvanceX.ContainsKey(c))
                         AddCharData(c);
@@ -509,6 +515,13 @@ namespace TwinsaityEditor
 
                     x += gBearingX + gAdvanceX;
                 }
+                else if (c == '\n')
+                {
+                    y -= text_size;
+                }
+            }
+            if (anchor == TextAnchor.TopMiddle || anchor == TextAnchor.TopRight || anchor == TextAnchor.BotMiddle || anchor == TextAnchor.BotRight)
+            {
                 if (anchor == TextAnchor.BotMiddle || anchor == TextAnchor.TopMiddle)
                 {
                     x = start_x - (x - start_x)/2;
@@ -518,8 +531,16 @@ namespace TwinsaityEditor
                     x = start_x - (x - start_x);
                 }
             }
+            start_x = x;
             foreach (char c in s)
             {
+                if (c == '\n')
+                {
+                    x = start_x;
+                    y += text_size;
+                    continue;
+                }
+
                 if (!charAdvanceX.ContainsKey(c))
                     AddCharData(c);
 
