@@ -20,51 +20,20 @@ namespace TwinsaityEditor
 
         public void DrawAll(PrimitiveType primitive_type, BufferPointerFlags flags)
         {
-            GL.BindBuffer(BufferTarget.ArrayBuffer, ID);
-            GL.VertexPointer(3, VertexPointerType.Float, Vertex.SizeOf, Vertex.OffsetOfPos);
-            GL.ColorPointer(4, ColorPointerType.UnsignedByte, Vertex.SizeOf, Vertex.OffsetOfCol);
-            if ((flags & BufferPointerFlags.Normal) != 0)
-            {
-                GL.EnableClientState(ArrayCap.NormalArray);
-                GL.NormalPointer(NormalPointerType.Float, Vertex.SizeOf, Vertex.OffsetOfNor);
-            }
-            if ((flags & BufferPointerFlags.TexCoord) != 0)
-            {
-                GL.EnableClientState(ArrayCap.TextureCoordArray);
-                GL.TexCoordPointer(2, TexCoordPointerType.Float, Vertex.SizeOf, Vertex.OffsetOfTex);
-            }
-            GL.DrawArrays(primitive_type, 0, Vtx.Length);
-            if ((flags & BufferPointerFlags.Normal) != 0)
-                GL.DisableClientState(ArrayCap.NormalArray);
-            if ((flags & BufferPointerFlags.TexCoord) != 0)
-                GL.DisableClientState(ArrayCap.TextureCoordArray);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            draw_func(0, primitive_type, flags);
         }
 
         public void DrawAllElements(PrimitiveType primitive_type, BufferPointerFlags flags)
         {
-            GL.BindBuffer(BufferTarget.ArrayBuffer, ID);
-            GL.VertexPointer(3, VertexPointerType.Float, Vertex.SizeOf, Vertex.OffsetOfPos);
-            GL.ColorPointer(4, ColorPointerType.UnsignedByte, Vertex.SizeOf, Vertex.OffsetOfCol);
-            if ((flags & BufferPointerFlags.Normal) != 0)
-            {
-                GL.EnableClientState(ArrayCap.NormalArray);
-                GL.NormalPointer(NormalPointerType.Float, Vertex.SizeOf, Vertex.OffsetOfNor);
-            }
-            if ((flags & BufferPointerFlags.TexCoord) != 0)
-            {
-                GL.EnableClientState(ArrayCap.TextureCoordArray);
-                GL.TexCoordPointer(2, TexCoordPointerType.Float, Vertex.SizeOf, Vertex.OffsetOfTex);
-            }
-            GL.DrawElements(primitive_type, VtxInd.Length, DrawElementsType.UnsignedInt, VtxInd);
-            if ((flags & BufferPointerFlags.Normal) != 0)
-                GL.DisableClientState(ArrayCap.NormalArray);
-            if ((flags & BufferPointerFlags.TexCoord) != 0)
-                GL.DisableClientState(ArrayCap.TextureCoordArray);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            draw_func(1, primitive_type, flags);
         }
 
         public void DrawMulti(PrimitiveType primitive_type, BufferPointerFlags flags)
+        {
+            draw_func(2, primitive_type, flags);
+        }
+
+        private void draw_func(int func, PrimitiveType prim, BufferPointerFlags flags)
         {
             GL.BindBuffer(BufferTarget.ArrayBuffer, ID);
             GL.VertexPointer(3, VertexPointerType.Float, Vertex.SizeOf, Vertex.OffsetOfPos);
@@ -79,7 +48,18 @@ namespace TwinsaityEditor
                 GL.EnableClientState(ArrayCap.TextureCoordArray);
                 GL.TexCoordPointer(2, TexCoordPointerType.Float, Vertex.SizeOf, Vertex.OffsetOfTex);
             }
-            GL.MultiDrawArrays(primitive_type, VtxOffs, VtxCounts, VtxCounts.Length);
+            switch (func)
+            {
+                case 0:
+                    GL.DrawArrays(prim, 0, Vtx.Length);
+                    break;
+                case 1:
+                    GL.DrawElements(prim, VtxInd.Length, DrawElementsType.UnsignedInt, VtxInd);
+                    break;
+                case 2:
+                    GL.MultiDrawArrays(prim, VtxOffs, VtxCounts, VtxCounts.Length);
+                    break;
+            }
             if ((flags & BufferPointerFlags.Normal) != 0)
                 GL.DisableClientState(ArrayCap.NormalArray);
             if ((flags & BufferPointerFlags.TexCoord) != 0)
