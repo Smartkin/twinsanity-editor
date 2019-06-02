@@ -324,7 +324,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ico.ico" />
-    <None Include="Fonts\arial.ttf" />
+    <None Include="Fonts\arial.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
