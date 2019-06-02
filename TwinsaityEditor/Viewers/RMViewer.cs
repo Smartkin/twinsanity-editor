@@ -326,7 +326,6 @@ namespace TwinsaityEditor
 
         protected override bool IsInputKey(Keys keyData)
         {
-            base.IsInputKey(keyData);
             switch (keyData)
             {
                 case Keys.C:
