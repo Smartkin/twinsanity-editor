@@ -11,10 +11,18 @@ namespace TwinsaityEditor
         private Vector2 tex;
         private uint col;
 
+        public Vertex(Vector3 pos)
+        {
+            this.pos = pos;
+            col = 0;
+            nor = new Vector3();
+            tex = new Vector2();
+        }
+
         public Vertex(Vector3 pos, Color col)
         {
             this.pos = pos;
-            this.col = col.R | (uint)col.G << 8 | (uint)col.B << 16 | (uint)col.A << 24;
+            this.col = ColorToABGR(col);
             nor = new Vector3();
             tex = new Vector2();
         }
@@ -23,7 +31,7 @@ namespace TwinsaityEditor
         {
             this.pos = pos;
             this.nor = nor;
-            this.col = col.R | (uint)col.G << 8 | (uint)col.B << 16 | (uint)col.A << 24;
+            this.col = ColorToABGR(col);
             tex = new Vector2();
         }
 
@@ -31,7 +39,7 @@ namespace TwinsaityEditor
         {
             this.pos = pos;
             this.tex = tex;
-            this.col = col.R | (uint)col.G << 8 | (uint)col.B << 16 | (uint)col.A << 24;
+            this.col = ColorToABGR(col);
             nor = new Vector3();
         }
 
@@ -40,7 +48,12 @@ namespace TwinsaityEditor
             this.pos = pos;
             this.nor = nor;
             this.tex = tex;
-            this.col = col.R | (uint)col.G << 8 | (uint)col.B << 16 | (uint)col.A << 24;
+            this.col = ColorToABGR(col);
+        }
+
+        public static uint ColorToABGR(Color col)
+        {
+            return col.R | (uint)col.G << 8 | (uint)col.B << 16 | (uint)col.A << 24;
         }
 
         public static int SizeOf { get; } = Marshal.SizeOf(typeof(Vertex));
