@@ -66,7 +66,7 @@ namespace TwinsaityEditor
             }
             if (Data.ContainsItem(11) && ((TwinsSection)Data.GetItem(11)).ContainsItem(2))
             {
-                
+                MeshSection = (SectionController)((SectionController)GetItem(11)).GetItem(2);
             }
         }
 
