@@ -107,11 +107,22 @@ namespace TwinsaityEditor
             var sel_i = listBox1.SelectedIndex;
             if (sel_i == -1)
                 return;
-            controller.Node.Nodes[controller.Data.RecordIDs[trigger.ID]].Remove();
-            controller.Data.RemoveItem(trigger.ID);
+            controller.RemoveItem(trigger.ID);
+            listBox1.BeginUpdate();
             listBox1.Items.RemoveAt(sel_i);
+            for (int i = 0; i < controller.Data.Records.Count; ++i)
+            {
+                Trigger new_trg = (Trigger)controller.Data.Records[i];
+                if (new_trg.ID != i)
+                {
+                    controller.ChangeID(new_trg.ID, (uint)i);
+                    listBox1.Items[i] = $"ID {i}";
+                    ((Controller)controller.Node.Nodes[i].Tag).UpdateText();
+                }
+            }
             if (sel_i >= listBox1.Items.Count) sel_i = listBox1.Items.Count - 1;
             listBox1.SelectedIndex = sel_i;
+            listBox1.EndUpdate();
             if (listBox1.Items.Count == 0)
                 splitContainer1.Panel2.Enabled = false;
             controller.UpdateTextBox();
