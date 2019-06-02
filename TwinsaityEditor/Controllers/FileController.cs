@@ -11,7 +11,7 @@ namespace TwinsaityEditor
         public string FileName { get => Data.FileName; }
         public string SafeFileName { get => Data.SafeFileName; }
 
-        public SectionController MeshSection { get; private set; }
+        public SectionController MeshSection { get => GetMeshSection(); }
         public Dictionary<uint, string> ObjectNames { get; set; }
         public Dictionary<uint, string> MaterialNames { get; set; }
 
@@ -64,10 +64,15 @@ namespace TwinsaityEditor
                     MaterialNames.Add(mat.ID, mat.Name);
                 }
             }
+        }
+
+        private SectionController GetMeshSection()
+        {
             if (Data.ContainsItem(11) && ((TwinsSection)Data.GetItem(11)).ContainsItem(2))
             {
-                MeshSection = (SectionController)((SectionController)GetItem(11)).GetItem(2);
+                return (SectionController)((SectionController)GetItem(11)).GetItem(2);
             }
+            else return null;
         }
 
         public void CloseFile()
