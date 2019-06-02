@@ -10,6 +10,8 @@ namespace TwinsaityEditor
 
         public string FileName { get => Data.FileName; }
         public string SafeFileName { get => Data.SafeFileName; }
+
+        public SectionController MeshSection { get; private set; }
         public Dictionary<uint, string> ObjectNames { get; set; }
         public Dictionary<uint, string> MaterialNames { get; set; }
 
@@ -48,19 +50,23 @@ namespace TwinsaityEditor
 
         private void LoadFileInfo()
         {
-            if (Data.RecordIDs.ContainsKey(10) && ((TwinsSection)Data.GetItem(10)).RecordIDs.ContainsKey(0))
+            if (Data.ContainsItem(10) && ((TwinsSection)Data.GetItem(10)).ContainsItem(0))
             {
                 foreach (GameObject obj in ((TwinsSection)((TwinsSection)Data.GetItem(10)).GetItem(0)).Records)
                 {
                     ObjectNames.Add(obj.ID, obj.Name);
                 }
             }
-            if (Data.RecordIDs.ContainsKey(11) && ((TwinsSection)Data.GetItem(11)).RecordIDs.ContainsKey(1))
+            if (Data.ContainsItem(11) && ((TwinsSection)Data.GetItem(11)).ContainsItem(1))
             {
                 foreach (Material mat in ((TwinsSection)((TwinsSection)Data.GetItem(11)).GetItem(1)).Records)
                 {
                     MaterialNames.Add(mat.ID, mat.Name);
                 }
+            }
+            if (Data.ContainsItem(11) && ((TwinsSection)Data.GetItem(11)).ContainsItem(2))
+            {
+                
             }
         }
 
@@ -114,7 +120,7 @@ namespace TwinsaityEditor
                 {
                     case Editors.ColData:
                         {
-                            if (Data.RecordIDs.ContainsKey(9)) editor_var = new ColDataEditor((ColData)Data.GetItem(9)) { Tag = TopForm };
+                            if (Data.ContainsItem(9)) editor_var = new ColDataEditor((ColData)Data.GetItem(9)) { Tag = TopForm };
                             else return;
                         }
                         break;
@@ -269,7 +275,7 @@ namespace TwinsaityEditor
 
         public Instance GetInstance(uint sector, uint id)
         {
-            if (Data.RecordIDs.ContainsKey(sector) && ((TwinsSection)Data.GetItem(sector)).RecordIDs.ContainsKey(6))
+            if (Data.ContainsItem(sector) && ((TwinsSection)Data.GetItem(sector)).ContainsItem(6))
             {
                 //int i = 0;
                 //foreach (Instance j in ((TwinsSection)((TwinsSection)Data.GetItem(sector)).GetItem(6)).Records)
@@ -288,7 +294,7 @@ namespace TwinsaityEditor
 
         public AIPosition GetAIPos(uint sector, uint id)
         {
-            if (Data.RecordIDs.ContainsKey(sector) && ((TwinsSection)Data.GetItem(sector)).RecordIDs.ContainsKey(1))
+            if (Data.ContainsItem(sector) && ((TwinsSection)Data.GetItem(sector)).ContainsItem(1))
             {
                 //int i = 0;
                 //foreach (Instance j in ((TwinsSection)((TwinsSection)Data.GetItem(sector)).GetItem(6)).Records)

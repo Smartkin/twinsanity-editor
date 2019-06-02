@@ -133,7 +133,7 @@ namespace TwinsaityEditor
             uint id;
             for (id = 0; id < uint.MaxValue; ++id)
             {
-                if (!controller.Data.RecordIDs.ContainsKey(id))
+                if (!controller.Data.ContainsItem(id))
                     break;
             }
             Path new_path = new Path { ID = id, Positions = new List<Pos>(), Params = new List<Path.PathParam>() };

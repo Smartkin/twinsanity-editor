@@ -22,7 +22,7 @@ namespace TwinsaityEditor
             this.file = file;
             Tag = pform;
             InitVBO(5);
-            if (file.Data.RecordIDs.ContainsKey(9))
+            if (file.Data.ContainsItem(9))
             {
                 if (file.Data.GetItem(9).Size >= 12)
                 {
@@ -51,7 +51,7 @@ namespace TwinsaityEditor
         {
             //put all object rendering code here
             //draw collision
-            if (file.Data.RecordIDs.ContainsKey(9))
+            if (file.Data.ContainsItem(9))
             {
                 GL.Enable(EnableCap.Lighting);
                 vtx[0].DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Normal);
@@ -84,10 +84,10 @@ namespace TwinsaityEditor
             
             for (uint i = 0; i <= 7; ++i)
             {
-                if (file.Data.RecordIDs.ContainsKey(i))
+                if (file.Data.ContainsItem(i))
                 {
                     Color cur_color;
-                    if (((TwinsSection)file.Data.GetItem(i)).RecordIDs.ContainsKey(1)) //aipositions
+                    if (((TwinsSection)file.Data.GetItem(i)).ContainsItem(1)) //aipositions
                     {
                         foreach (AIPosition pos in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(1)).Records)
                         {
@@ -109,7 +109,7 @@ namespace TwinsaityEditor
                         }
                     }
 
-                    if (((TwinsSection)file.Data.GetItem(i)).RecordIDs.ContainsKey(2)) //aipaths
+                    if (((TwinsSection)file.Data.GetItem(i)).ContainsItem(2)) //aipaths
                     {
                         foreach (AIPath pth in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(2)).Records)
                         {
@@ -137,7 +137,7 @@ namespace TwinsaityEditor
                         }
                     }
 
-                    if (((TwinsSection)file.Data.GetItem(i)).RecordIDs.ContainsKey(3)) //positions
+                    if (((TwinsSection)file.Data.GetItem(i)).ContainsItem(3)) //positions
                     {
                         foreach (Position pos in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(3)).Records)
                         {
@@ -159,7 +159,7 @@ namespace TwinsaityEditor
                         }
                     }
 
-                    if (((TwinsSection)file.Data.GetItem(i)).RecordIDs.ContainsKey(4)) //paths
+                    if (((TwinsSection)file.Data.GetItem(i)).ContainsItem(4)) //paths
                     {
                         foreach (Path pth in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(4)).Records)
                         {
@@ -195,7 +195,7 @@ namespace TwinsaityEditor
                         }
                     }
 
-                    if (((TwinsSection)file.Data.GetItem(i)).RecordIDs.ContainsKey(6)) //instances
+                    if (((TwinsSection)file.Data.GetItem(i)).ContainsItem(6)) //instances
                     {
                         foreach (Instance ins in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(6)).Records)
                         {
@@ -217,9 +217,9 @@ namespace TwinsaityEditor
             //Draw triggers (transparent surfaces)
             for (uint i = 0; i <= 7; ++i)
             {
-                if (file.Data.RecordIDs.ContainsKey(i))
+                if (file.Data.ContainsItem(i))
                 {
-                    if (((TwinsSection)file.Data.GetItem(i)).RecordIDs.ContainsKey(7) && show_triggers)
+                    if (((TwinsSection)file.Data.GetItem(i)).ContainsItem(7) && show_triggers)
                     {
                         foreach (Trigger trg in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(7)).Records)
                         {
@@ -439,10 +439,10 @@ namespace TwinsaityEditor
             int inst_count = 0;
             for (uint i = 0; i <= 7; ++i)
             {
-                record_exists[i] = file.Data.RecordIDs.ContainsKey(i);
+                record_exists[i] = file.Data.ContainsItem(i);
                 if (record_exists[i])
                 {
-                    if (((TwinsSection)file.Data.GetItem(i)).RecordIDs.ContainsKey(6))
+                    if (((TwinsSection)file.Data.GetItem(i)).ContainsItem(6))
                         inst_count += ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(6)).Records.Count;
                     else record_exists[i] = false;
                 }
@@ -467,7 +467,7 @@ namespace TwinsaityEditor
             for (uint i = 0; i <= 7; ++i)
             {
                 if (!record_exists[i]) continue;
-                if (((TwinsSection)file.Data.GetItem(i)).RecordIDs.ContainsKey(6))
+                if (((TwinsSection)file.Data.GetItem(i)).ContainsItem(6))
                 {
                     foreach (Instance ins in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(6)).Records)
                     {
@@ -576,10 +576,10 @@ namespace TwinsaityEditor
             int posi_count = 0;
             for (uint i = 0; i <= 7; ++i)
             {
-                record_exists[i] = file.Data.RecordIDs.ContainsKey(i);
+                record_exists[i] = file.Data.ContainsItem(i);
                 if (record_exists[i])
                 {
-                    if (((TwinsSection)file.Data.GetItem(i)).RecordIDs.ContainsKey(3))
+                    if (((TwinsSection)file.Data.GetItem(i)).ContainsItem(3))
                     {
                         posi_count += ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(3)).Records.Count;
                         record_exists[i] = true;
@@ -607,7 +607,7 @@ namespace TwinsaityEditor
             for (uint i = 0; i <= 7; ++i)
             {
                 if (!record_exists[i]) continue;
-                if (((TwinsSection)file.Data.GetItem(i)).RecordIDs.ContainsKey(3))
+                if (((TwinsSection)file.Data.GetItem(i)).ContainsItem(3))
                 {
                     foreach (Position pos in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(3)).Records)
                     {
@@ -664,10 +664,10 @@ namespace TwinsaityEditor
             int posi_count = 0;
             for (uint i = 0; i <= 7; ++i)
             {
-                record_exists[i] = file.Data.RecordIDs.ContainsKey(i);
+                record_exists[i] = file.Data.ContainsItem(i);
                 if (record_exists[i])
                 {
-                    if (((TwinsSection)file.Data.GetItem(i)).RecordIDs.ContainsKey(1))
+                    if (((TwinsSection)file.Data.GetItem(i)).ContainsItem(1))
                     {
                         posi_count += ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(1)).Records.Count;
                         record_exists[i] = true;
@@ -695,7 +695,7 @@ namespace TwinsaityEditor
             for (uint i = 0; i <= 7; ++i)
             {
                 if (!record_exists[i]) continue;
-                if (((TwinsSection)file.Data.GetItem(i)).RecordIDs.ContainsKey(1))
+                if (((TwinsSection)file.Data.GetItem(i)).ContainsItem(1))
                 {
                     foreach (AIPosition pos in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(1)).Records)
                     {

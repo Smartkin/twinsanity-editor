@@ -94,12 +94,17 @@ namespace TwinsaityEditor
 
         public void ChangeID(uint old_id, uint new_id)
         {
-            if (Data.RecordIDs.ContainsKey(new_id))
+            if (Data.ContainsItem(new_id))
                 throw new System.ArgumentException("New ID already exists.");
             var index = Data.RecordIDs[old_id];
             Data.GetItem(old_id).ID = new_id;
             Data.RecordIDs.Remove(old_id);
             Data.RecordIDs.Add(new_id, index);
+        }
+
+        public Controller GetItem(uint id)
+        {
+            return (Controller)Node.Nodes[Data.RecordIDs[id]].Tag;
         }
 
         private void Menu_ExtractExtraData()
@@ -119,7 +124,7 @@ namespace TwinsaityEditor
         {
             for (uint i = 0; i <= 8; ++i)
             {
-                if (Data.RecordIDs.ContainsKey(i))
+                if (Data.ContainsItem(i))
                 {
                     RemoveItem(i);
                 }
@@ -143,7 +148,7 @@ namespace TwinsaityEditor
                     case 7: type = SectionType.Trigger; break;
                     case 8: type = SectionType.Camera; break;
                 }
-                if (!Data.RecordIDs.ContainsKey(i))
+                if (!Data.ContainsItem(i))
                 {
                     TwinsSection sec = new TwinsSection
                     {
@@ -162,7 +167,7 @@ namespace TwinsaityEditor
         {
             for (uint i = 0; i <= 7; ++i)
             {
-                if (!Data.RecordIDs.ContainsKey(i))
+                if (!Data.ContainsItem(i))
                 {
                     TwinsSection sec = new TwinsSection
                     {

@@ -65,7 +65,7 @@ namespace TwinsaityEditor
             uint id;
             for (id = 0; id < uint.MaxValue; ++id)
             {
-                if (!controller.Data.RecordIDs.ContainsKey(id))
+                if (!controller.Data.ContainsItem(id))
                     break;
             }
             Position new_pos = new Position { ID = id };

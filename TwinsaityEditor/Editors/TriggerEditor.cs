@@ -90,7 +90,7 @@ namespace TwinsaityEditor
             uint id;
             for (id = 0; id < uint.MaxValue; ++id)
             {
-                if (!controller.Data.RecordIDs.ContainsKey(id))
+                if (!controller.Data.ContainsItem(id))
                     break;
             }
             Trigger new_trigger = new Trigger { ID = id, Instances = new List<ushort>(), Coords = new Pos[] { new Pos(0, 0, 0, 1), new Pos(0, 0, 0, 1), new Pos(0, 0, 0, 1) } };

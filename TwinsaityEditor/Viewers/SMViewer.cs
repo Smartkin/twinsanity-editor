@@ -45,7 +45,7 @@ namespace TwinsaityEditor
             else
                 GL.CallList(displaylist);
 
-            if (file.RecordIDs.ContainsKey(5))
+            if (file.ContainsItem(5))
             {
                 ChunkLinks links = (ChunkLinks)file.GetItem(5);
                 GL.Disable(EnableCap.Lighting);

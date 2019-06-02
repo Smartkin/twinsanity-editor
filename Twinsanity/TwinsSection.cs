@@ -395,5 +395,10 @@ namespace Twinsanity
                     RecordIDs.Add(i.Key, i.Value);
             }
         }
+
+        public bool ContainsItem(uint id)
+        {
+            return RecordIDs.ContainsKey(id);
+        }
     }
 }

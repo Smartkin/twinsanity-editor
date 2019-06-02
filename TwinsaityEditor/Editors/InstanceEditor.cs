@@ -384,7 +384,7 @@ namespace TwinsaityEditor
             uint id;
             for (id = 0; id < uint.MaxValue; ++id)
             {
-                if (!controller.Data.RecordIDs.ContainsKey(id))
+                if (!controller.Data.ContainsItem(id))
                     break;
             }
             Instance new_ins = new Instance { ID = id, AfterOID = 0xFFFFFFFF, Pos = new Pos(0, 0, 0, 1) };
