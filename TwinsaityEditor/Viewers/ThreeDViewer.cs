@@ -114,8 +114,7 @@ namespace TwinsaityEditor
         protected virtual void RenderHUD()
         {
             GL.Color3(Color.White);
-            RenderString2D($"RenderObjects: {timeRenderObj}ms (max: {timeRenderObj_max}ms, min: {timeRenderObj_min}ms)", 0, 0, 8);
-            RenderString2D($"RenderHUD: {timeRenderHud}ms (max: {timeRenderHud_max}ms, min: {timeRenderHud_min}ms)", Width, Height, 8, TextAnchor.BotRight);
+            RenderString2D($"RenderObjects: {timeRenderObj}ms (max: {timeRenderObj_max}ms, min: {timeRenderObj_min}ms)\nRenderHUD: {timeRenderHud}ms (max: {timeRenderHud_max}ms, min: {timeRenderHud_min}ms)", 0, 0, 10);
         }
 
         private void ResetCamera()
@@ -303,11 +302,10 @@ namespace TwinsaityEditor
             GL.Enable(EnableCap.Blend);
             GL.Enable(EnableCap.Texture2D);
             GL.EnableClientState(ArrayCap.VertexArray);
-            GL.EnableClientState(ArrayCap.ColorArray);
             GL.DepthFunc(DepthFunction.Lequal);
             GL.AlphaFunc(AlphaFunction.Greater, 0);
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-            GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
+            GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Fastest);
             GL.ClearColor(Color.MidnightBlue); //TODO: Add clear color to Preferences later
             GL.Enable(EnableCap.ColorMaterial);
             //GL.ShadeModel(ShadingModel.Flat); //TODO: Add to preferences

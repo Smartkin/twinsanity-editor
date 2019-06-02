@@ -12,13 +12,13 @@ namespace TwinsaityEditor
     {
         private static readonly int circle_res = 16;
 
-        private bool show_col_nodes, show_triggers;
+        private bool show_col_nodes, show_triggers, wire_col;
         private FileController file;
 
         public RMViewer(FileController file, ref Form pform)
         {
             //initialize variables here
-            show_col_nodes = show_triggers = false;
+            show_col_nodes = show_triggers = wire_col = false;
             this.file = file;
             Tag = pform;
             InitVBO(5);
@@ -44,7 +44,7 @@ namespace TwinsaityEditor
         protected override void RenderHUD()
         {
             base.RenderHUD();
-            RenderString2D("Press C to toggle collision nodes\nPress X to toggle wireframe collision tree", 0, Height, 8, TextAnchor.BotLeft);
+            RenderString2D("Press C to toggle collision nodes\nPress X to toggle wireframe collision tree", 0, Height, 12, TextAnchor.BotLeft);
         }
 
         protected override void RenderObjects()
@@ -57,18 +57,26 @@ namespace TwinsaityEditor
                 vtx[0].DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Normal);
                 GL.Disable(EnableCap.Lighting);
 
+                if (wire_col)
+                {
+                    GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
+                    GL.Color3(Color.Black);
+                    vtx[0].DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.NormalNoCol);
+                    GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+                }
+
                 if (show_col_nodes)
                 {
-                    vtx[2].DrawMulti(PrimitiveType.LineStrip, BufferPointerFlags.None);
+                    vtx[2].DrawMulti(PrimitiveType.LineStrip, BufferPointerFlags.Default);
                 }
             }
 
             //instances
-            vtx[1].DrawMulti(PrimitiveType.LineStrip, BufferPointerFlags.None);
+            vtx[1].DrawMulti(PrimitiveType.LineStrip, BufferPointerFlags.Default);
 
             //positions + ai positions
-            vtx[3].DrawMulti(PrimitiveType.LineLoop, BufferPointerFlags.None);
-            vtx[4].DrawMulti(PrimitiveType.LineLoop, BufferPointerFlags.None);
+            vtx[3].DrawMulti(PrimitiveType.LineLoop, BufferPointerFlags.Default);
+            vtx[4].DrawMulti(PrimitiveType.LineLoop, BufferPointerFlags.Default);
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
 
@@ -333,6 +341,7 @@ namespace TwinsaityEditor
             {
                 case Keys.C:
                 case Keys.T:
+                case Keys.X:
                     return true;
             }
             return base.IsInputKey(keyData);
@@ -348,6 +357,9 @@ namespace TwinsaityEditor
                     break;
                 case Keys.T:
                     show_triggers = !show_triggers;
+                    break;
+                case Keys.X:
+                    wire_col = !wire_col;
                     break;
             }
         }

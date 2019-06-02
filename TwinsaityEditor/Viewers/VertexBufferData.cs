@@ -37,7 +37,6 @@ namespace TwinsaityEditor
         {
             GL.BindBuffer(BufferTarget.ArrayBuffer, ID);
             GL.VertexPointer(3, VertexPointerType.Float, Vertex.SizeOf, Vertex.OffsetOfPos);
-            GL.ColorPointer(4, ColorPointerType.UnsignedByte, Vertex.SizeOf, Vertex.OffsetOfCol);
             if ((flags & BufferPointerFlags.Normal) != 0)
             {
                 GL.EnableClientState(ArrayCap.NormalArray);
@@ -47,6 +46,11 @@ namespace TwinsaityEditor
             {
                 GL.EnableClientState(ArrayCap.TextureCoordArray);
                 GL.TexCoordPointer(2, TexCoordPointerType.Float, Vertex.SizeOf, Vertex.OffsetOfTex);
+            }
+            if ((flags & BufferPointerFlags.Color) != 0)
+            {
+                GL.EnableClientState(ArrayCap.ColorArray);
+                GL.ColorPointer(4, ColorPointerType.UnsignedByte, Vertex.SizeOf, Vertex.OffsetOfCol);
             }
             switch (func)
             {
@@ -64,6 +68,8 @@ namespace TwinsaityEditor
                 GL.DisableClientState(ArrayCap.NormalArray);
             if ((flags & BufferPointerFlags.TexCoord) != 0)
                 GL.DisableClientState(ArrayCap.TextureCoordArray);
+            if ((flags & BufferPointerFlags.Color) != 0)
+                GL.DisableClientState(ArrayCap.ColorArray);
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
         }
     }
@@ -72,7 +78,11 @@ namespace TwinsaityEditor
     public enum BufferPointerFlags
     {
         None = 0,
-        Normal = 1,
-        TexCoord = 2,
+        NormalNoCol = 1,
+        TexCoordNoCol = 2,
+        Color = 4,
+        Normal,
+        TexCoord,
+        Default = Color
     }
 }
