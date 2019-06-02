@@ -27,7 +27,7 @@ namespace TwinsaityEditor
             TextPrev[2] = $"Header: {Data.Header} MaterialCount: {Data.MaterialIDs.Length}";
             for (int i = 0; i < Data.MaterialIDs.Length; ++i)
                 TextPrev[3 + i] = MainFile.GetMaterialName(Data.MaterialIDs[i]);
-            TextPrev[3 + Data.MaterialIDs.Length] = $"Mesh: {Data.MeshID}";
+            TextPrev[3 + Data.MaterialIDs.Length] = string.Format("Mesh: {0:X8}", Data.MeshID);
         }
 
         private void Menu_ExportPLY()
