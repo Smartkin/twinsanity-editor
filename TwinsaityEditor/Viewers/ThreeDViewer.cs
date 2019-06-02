@@ -174,6 +174,7 @@ namespace TwinsaityEditor
                 range = 500f;
             else if (range < 25f)
                 range = 25f;
+            zNear = range / 100F;
         }
 
         protected override bool IsInputKey(Keys keyData)
