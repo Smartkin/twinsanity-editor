@@ -104,12 +104,6 @@ namespace TwinsaityEditor
                             indx.Add((uint)v1);
                             indx.Add((uint)v2);
                             indx.Add((uint)v3);
-                            min_x = Math.Min(min_x, vtx_stack[v3].Pos.X);
-                            min_y = Math.Min(min_y, vtx_stack[v3].Pos.Y);
-                            min_z = Math.Min(min_z, vtx_stack[v3].Pos.Z);
-                            max_x = Math.Max(max_x, vtx_stack[v3].Pos.X);
-                            max_y = Math.Max(max_y, vtx_stack[v3].Pos.Y);
-                            max_z = Math.Max(max_z, vtx_stack[v3].Pos.Z);
                         }
                         off += g.VertexCount;
                     }
