@@ -92,6 +92,29 @@ namespace TwinsaityEditor
                     }
                 }
             }
+            //sort out duplicates
+            for (int i = 0; i < vtx_stack.Count; ++i)
+            {
+                Vector3 pos = vtx_stack[i].Pos;
+                uint col = vtx_stack[i].Col;
+                for (int j = i+1; j < vtx_stack.Count; ++j)
+                {
+                    if (vtx_stack[j].Col == col && vtx_stack[j].Pos == pos)
+                    {
+                        for (int k = 0; k < indx.Count; ++k)
+                        {
+                            if (indx[k] == j)
+                                indx[k] = (uint)i;
+                            else if (indx[k] > j)
+                                indx[k]--;
+                        }
+                        var v = vtx_stack[i];
+                        v.Nor += vtx_stack[j].Nor;
+                        vtx_stack[i] = v;
+                        vtx_stack.RemoveAt(j);
+                    }
+                }
+            }
             vtx[0].Vtx = vtx_stack.ToArray();
             vtx[0].VtxInd = indx.ToArray();
             zFar = Math.Max(zFar, Math.Max(max_x - min_x, Math.Max(max_y - min_y, max_z - min_z)));
