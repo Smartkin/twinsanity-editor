@@ -12,12 +12,15 @@ namespace TwinsaityEditor
         private MeshController mesh;
         private FileController file;
 
+        private bool lighting;
+
         public MeshViewer(MeshController mesh, ref Form pform)
         {
             //initialize variables here
             this.mesh = mesh;
             zFar = 100F;
             file = mesh.MainFile;
+            lighting = true;
             Tag = pform;
             InitVBO(1);
             pform.Text = "Loading mesh...";
@@ -27,17 +30,44 @@ namespace TwinsaityEditor
 
         protected override void RenderHUD()
         {
-            GL.Color3(Color.White);
-            RenderString2D($"RenderObjects: {timeRenderObj}ms (max: {timeRenderObj_max}ms, min: {timeRenderObj_min}ms)", 0, 0, 8);
-            RenderString2D($"RenderHUD: {timeRenderHud}ms (max: {timeRenderHud_max}ms, min: {timeRenderHud_min}ms)", Width, Height, 8, TextAnchor.BotRight);
+            base.RenderHUD();
+            RenderString2D("Press L to toggle lighting", 0, Height, 12, TextAnchor.BotLeft);
         }
 
         protected override void RenderObjects()
         {
             //put all object rendering code here
-            GL.Enable(EnableCap.Lighting);
-            vtx[0].DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Normal);
-            GL.Disable(EnableCap.Lighting);
+            if (lighting)
+            {
+                GL.Enable(EnableCap.Lighting);
+                vtx[0].DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Normal);
+                GL.Disable(EnableCap.Lighting);
+            }
+            else
+            {
+                vtx[0].DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Default);
+            }
+        }
+
+        protected override bool IsInputKey(Keys keyData)
+        {
+            switch (keyData)
+            {
+                case Keys.L:
+                    return true;
+            }
+            return base.IsInputKey(keyData);
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+            switch (e.KeyCode)
+            {
+                case Keys.L:
+                    lighting = !lighting;
+                    break;
+            }
         }
 
         public void LoadMesh()
@@ -54,12 +84,6 @@ namespace TwinsaityEditor
                     {
                         vtx_stack.Add(new Vertex(new Vector3(-g.Vertex[0].X, g.Vertex[0].Y, g.Vertex[0].Z), Color.FromArgb(g.VData[0].R, g.VData[0].G, g.VData[0].B)));
                         vtx_stack.Add(new Vertex(new Vector3(-g.Vertex[1].X, g.Vertex[1].Y, g.Vertex[1].Z), Color.FromArgb(g.VData[1].R, g.VData[1].G, g.VData[1].B)));
-                        min_x = Math.Min(min_x, Math.Min(vtx_stack[0].Pos.X, vtx_stack[1].Pos.X));
-                        min_y = Math.Min(min_y, Math.Min(vtx_stack[0].Pos.Y, vtx_stack[1].Pos.Y));
-                        min_z = Math.Min(min_z, Math.Min(vtx_stack[0].Pos.Z, vtx_stack[1].Pos.Z));
-                        max_x = Math.Max(max_x, Math.Max(vtx_stack[0].Pos.X, vtx_stack[1].Pos.X));
-                        max_y = Math.Max(max_y, Math.Max(vtx_stack[0].Pos.Y, vtx_stack[1].Pos.Y));
-                        max_z = Math.Max(max_z, Math.Max(vtx_stack[0].Pos.Z, vtx_stack[1].Pos.Z));
                         for (int i = 2; i < g.VertexCount; ++i)
                         {
                             vtx_stack.Add(new Vertex(new Vector3(-g.Vertex[i].X, g.Vertex[i].Y, g.Vertex[i].Z), Color.FromArgb(g.VData[i].R, g.VData[i].G, g.VData[i].B)));
@@ -113,6 +137,12 @@ namespace TwinsaityEditor
                         vtx_stack.RemoveAt(j);
                     }
                 }
+                min_x = Math.Min(min_x, vtx_stack[i].Pos.X);
+                min_y = Math.Min(min_y, vtx_stack[i].Pos.Y);
+                min_z = Math.Min(min_z, vtx_stack[i].Pos.Z);
+                max_x = Math.Max(max_x, vtx_stack[i].Pos.X);
+                max_y = Math.Max(max_y, vtx_stack[i].Pos.Y);
+                max_z = Math.Max(max_z, vtx_stack[i].Pos.Z);
             }
             vtx[0].Vtx = vtx_stack.ToArray();
             vtx[0].VtxInd = indx.ToArray();
