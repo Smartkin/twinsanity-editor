@@ -34,7 +34,7 @@ namespace TwinsaityEditor
         private Dictionary<char, float> charBearingX = new Dictionary<char, float>();
         private Dictionary<char, float> charBearingY = new Dictionary<char, float>();
         private Dictionary<char, float> charHeight = new Dictionary<char, float>();
-        protected float size = 24f, zNear = 0.5f, zFar = 1500f;
+        protected float size = 24f, zNear, zFar = 1500f;
 
         protected long timeRenderObj = 0, timeRenderObj_min = long.MaxValue, timeRenderObj_max = 0;
         protected long timeRenderHud = 0, timeRenderHud_min = long.MaxValue, timeRenderHud_max = 0;
@@ -50,6 +50,7 @@ namespace TwinsaityEditor
             rot = new Vector3(0, 0, 0);
             sca = new Vector3(1.0f, 1.0f, 1.0f);
             range = 100;
+            zNear = range / 100;
 
             _inputHandle = (sender, e) =>
             {
@@ -177,8 +178,8 @@ namespace TwinsaityEditor
             range -= e.Delta / 120 * 30;
             if (range > 500f)
                 range = 500f;
-            else if (range < 25f)
-                range = 25f;
+            else if (range < 20f)
+                range = 20f;
             zNear = range / 100F;
         }
 

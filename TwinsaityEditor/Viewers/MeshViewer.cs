@@ -16,8 +16,7 @@ namespace TwinsaityEditor
         {
             //initialize variables here
             this.mesh = mesh;
-            zNear = 0.25F;
-            zFar = 150F;
+            zFar = 100F;
             file = mesh.MainFile;
             Tag = pform;
             InitVBO(1);
