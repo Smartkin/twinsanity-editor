@@ -12,6 +12,7 @@ namespace TwinsaityEditor
         {
             Data = item;
             AddMenu("Export mesh to PLY", Menu_ExportPLY);
+            AddMenu("Open model viewer", Menu_OpenViewer);
         }
 
         protected override string GetName()
@@ -38,6 +39,11 @@ namespace TwinsaityEditor
             {
                 File.WriteAllBytes(sfd.FileName, ((Mesh)((TwinsSection)Data.Parent.Parent.GetItem(2)).GetItem(Data.MeshID)).ToPLY());
             }
+        }
+
+        private void Menu_OpenViewer()
+        {
+            MainFile.OpenModelViewer(this);
         }
     }
 }

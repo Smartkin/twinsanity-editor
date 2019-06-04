@@ -26,6 +26,7 @@ namespace TwinsaityEditor
         private Form rmForm, colForm;
         private RMViewer RMViewer { get; set; }
         private Dictionary<uint, Form> MeshViewers { get; set; }
+        private Dictionary<uint, Form> ModelViewers { get; set; }
 
         public FileController(MainForm topform, TwinsFile item) : base(topform, item)
         {
@@ -33,6 +34,7 @@ namespace TwinsaityEditor
             ObjectNames = new Dictionary<uint, string>();
             MaterialNames = new Dictionary<uint, string>();
             MeshViewers = new Dictionary<uint, Form>();
+            ModelViewers = new Dictionary<uint, Form>();
             LoadFileInfo();
         }
 
@@ -50,16 +52,17 @@ namespace TwinsaityEditor
 
         private void LoadFileInfo()
         {
-            if (Data.ContainsItem(10) && ((TwinsSection)Data.GetItem(10)).ContainsItem(0))
+            if (Data.Type == TwinsFile.FileType.RM2 && Data.ContainsItem(10) && ((TwinsSection)Data.GetItem(10)).ContainsItem(0))
             {
                 foreach (GameObject obj in ((TwinsSection)((TwinsSection)Data.GetItem(10)).GetItem(0)).Records)
                 {
                     ObjectNames.Add(obj.ID, obj.Name);
                 }
             }
-            if (Data.ContainsItem(11) && ((TwinsSection)Data.GetItem(11)).ContainsItem(1))
+            var gfx_id = Data.Type == TwinsFile.FileType.RM2 ? (uint)11 : 6;
+            if (Data.ContainsItem(gfx_id) && ((TwinsSection)Data.GetItem(gfx_id)).ContainsItem(1))
             {
-                foreach (Material mat in ((TwinsSection)((TwinsSection)Data.GetItem(11)).GetItem(1)).Records)
+                foreach (Material mat in ((TwinsSection)((TwinsSection)Data.GetItem(gfx_id)).GetItem(1)).Records)
                 {
                     MaterialNames.Add(mat.ID, mat.Name);
                 }
@@ -68,9 +71,10 @@ namespace TwinsaityEditor
 
         private SectionController GetMeshSection()
         {
-            if (Data.ContainsItem(11) && ((TwinsSection)Data.GetItem(11)).ContainsItem(2))
+            var gfx_id = Data.Type == TwinsFile.FileType.RM2 ? (uint)11 : 6;
+            if (Data.ContainsItem(gfx_id) && ((TwinsSection)Data.GetItem(gfx_id)).ContainsItem(2))
             {
-                return (SectionController)((SectionController)GetItem(11)).GetItem(2);
+                return (SectionController)((SectionController)GetItem(gfx_id)).GetItem(2);
             }
             else return null;
         }
@@ -79,6 +83,7 @@ namespace TwinsaityEditor
         {
             CloseRMViewer();
             CloseAllMeshViewers();
+            CloseAllModelViewers();
             CloseEditor(Editors.ChunkLinks);
             CloseEditor(Editors.ColData);
             for (int i = 0; i <= 7; ++i)
@@ -190,6 +195,43 @@ namespace TwinsaityEditor
             foreach (var p in a)
             {
                 CloseMeshViewer(p);
+            }
+        }
+
+        public void OpenModelViewer(ModelController c)
+        {
+            var id = c.Data.ID;
+            if (!ModelViewers.ContainsKey(id))
+            {
+                var f = new Form { Size = new System.Drawing.Size(480, 480), Text = "Initializing viewer..." };
+                f.FormClosed += delegate
+                {
+                    ModelViewers.Remove(id);
+                };
+                f.Show();
+                ModelViewer v = new ModelViewer(c, ref f) { Dock = DockStyle.Fill };
+                f.Controls.Add(v);
+                f.Text = "ModelViewer";
+                ModelViewers.Add(id, f);
+            }
+            else
+                ModelViewers[id].Select();
+        }
+
+        public void CloseModelViewer(uint id)
+        {
+            var f = ModelViewers[id];
+            CloseForm(ref f);
+            ModelViewers.Remove(id);
+        }
+
+        public void CloseAllModelViewers()
+        {
+            var a = new uint[ModelViewers.Count];
+            ModelViewers.Keys.CopyTo(a, 0);
+            foreach (var p in a)
+            {
+                CloseModelViewer(p);
             }
         }
 

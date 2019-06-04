@@ -243,6 +243,9 @@
     <Compile Include="Utils\DictUtils.cs" />
     <Compile Include="Utils\MatrixWrapper.cs" />
     <Compile Include="Utils\VectorFuncs.cs" />
+    <Compile Include="Viewers\ModelViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Viewers\MeshViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
