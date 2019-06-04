@@ -616,6 +616,10 @@ namespace TwinsaityEditor
         protected override void Dispose(bool disposing)
         {
             refresh.Dispose();
+            for (int i = 0; i < vtx.Length; ++i)
+            {
+                GL.DeleteBuffer(vtx[i].ID);
+            }
             base.Dispose(disposing);
         }
     }
