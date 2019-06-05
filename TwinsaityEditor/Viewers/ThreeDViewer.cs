@@ -18,9 +18,9 @@ namespace TwinsaityEditor
 
         protected VertexBufferData[] vtx;
 
-        protected Dictionary<char, Vertex[]> charVtx = new Dictionary<char, Vertex[]>();
-        private Dictionary<char, int> charVtxOffs = new Dictionary<char, int>();
-        private int charVtxMax = 0, charVtxBuf, charVtxBufLen = 0;
+        protected Dictionary<char, Vertex[]> charVtx;
+        private Dictionary<char, int> charVtxOffs;
+        private int charVtxMax, charVtxBuf, charVtxBufLen;
 
         private Vector3 pos, rot, sca;
         private float range;
@@ -29,12 +29,12 @@ namespace TwinsaityEditor
         private int m_x, m_y;
         private EventHandler _inputHandle;
         private FontWrapper.FontService _fntService;
-        private Dictionary<char, int> textureCharMap = new Dictionary<char, int>();
-        private Dictionary<char, float> charAdvanceX = new Dictionary<char, float>();
-        private Dictionary<char, float> charBearingX = new Dictionary<char, float>();
-        private Dictionary<char, float> charBearingY = new Dictionary<char, float>();
-        private Dictionary<char, float> charHeight = new Dictionary<char, float>();
-        protected float size = 24f, zNear, zFar = 1000f;
+        private Dictionary<char, int> textureCharMap;
+        private Dictionary<char, float> charAdvanceX;
+        private Dictionary<char, float> charBearingX;
+        private Dictionary<char, float> charBearingY;
+        private Dictionary<char, float> charHeight;
+        protected float size, zNear, zFar;
 
         protected long timeRenderObj = 0, timeRenderObj_min = long.MaxValue, timeRenderObj_max = 0;
         protected long timeRenderHud = 0, timeRenderHud_min = long.MaxValue, timeRenderHud_max = 0;
@@ -45,12 +45,22 @@ namespace TwinsaityEditor
             List<FileInfo> fonts = (List<FileInfo>)_fntService.GetFontFiles(new DirectoryInfo("Fonts/"), false);
             _fntService.SetFont(fonts[0].FullName);
             _fntService.SetSize(size);
+            charVtx = new Dictionary<char, Vertex[]>();
+            charVtxOffs = new Dictionary<char, int>();
+            textureCharMap = new Dictionary<char, int>();
+            charAdvanceX = new Dictionary<char, float>();
+            charBearingX = new Dictionary<char, float>();
+            charBearingY = new Dictionary<char, float>();
+            charHeight = new Dictionary<char, float>();
+            charVtxMax = charVtxBufLen = 0;
 
             pos = new Vector3(0, 0, 0);
             rot = new Vector3(0, 0, 0);
             sca = new Vector3(1.0f, 1.0f, 1.0f);
             range = 100;
+            size = 24F;
             zNear = range / 100;
+            zFar = 250F;
 
             _inputHandle = (sender, e) =>
             {
@@ -619,6 +629,11 @@ namespace TwinsaityEditor
             for (int i = 0; i < vtx.Length; ++i)
             {
                 GL.DeleteBuffer(vtx[i].ID);
+            }
+            GL.DeleteBuffer(charVtxBuf);
+            foreach (var t in textureCharMap.Values)
+            {
+                GL.DeleteTexture(t);
             }
             base.Dispose(disposing);
         }
