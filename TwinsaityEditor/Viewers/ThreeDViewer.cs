@@ -34,7 +34,7 @@ namespace TwinsaityEditor
         private Dictionary<char, float> charBearingX = new Dictionary<char, float>();
         private Dictionary<char, float> charBearingY = new Dictionary<char, float>();
         private Dictionary<char, float> charHeight = new Dictionary<char, float>();
-        protected float size = 24f, zNear, zFar = 1500f;
+        protected float size = 24f, zNear, zFar = 1000f;
 
         protected long timeRenderObj = 0, timeRenderObj_min = long.MaxValue, timeRenderObj_max = 0;
         protected long timeRenderHud = 0, timeRenderHud_min = long.MaxValue, timeRenderHud_max = 0;
@@ -260,7 +260,7 @@ namespace TwinsaityEditor
             GL.Viewport(Location, Size);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.MatrixMode(MatrixMode.Projection);
-            var proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver3, (float)Width/Height, zNear, zFar);
+            var proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver3, (float)Width/Height, zNear, zFar*1.2F);
             GL.LoadMatrix(ref proj);
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
