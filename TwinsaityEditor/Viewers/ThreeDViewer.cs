@@ -20,10 +20,10 @@ namespace TwinsaityEditor
 
         protected Dictionary<char, Vertex[]> charVtx;
         private Dictionary<char, int> charVtxOffs;
-        private int charVtxMax, charVtxBuf, charVtxBufLen;
+        private int charVtxBuf, charVtxBufLen;
 
-        private Vector3 pos, rot, sca;
-        private float range;
+        private Vector3 pos, rot;
+        private float sca, range;
         private Timer refresh;
         private bool k_w, k_a, k_s, k_d, k_e, k_q, m_l;
         private int m_x, m_y;
@@ -41,24 +41,24 @@ namespace TwinsaityEditor
 
         public ThreeDViewer()
         {
+            size = 24F;
             _fntService = new FontWrapper.FontService();
             List<FileInfo> fonts = (List<FileInfo>)_fntService.GetFontFiles(new DirectoryInfo("Fonts/"), false);
             _fntService.SetFont(fonts[0].FullName);
             _fntService.SetSize(size);
             charVtx = new Dictionary<char, Vertex[]>();
             charVtxOffs = new Dictionary<char, int>();
+            charVtxBufLen = 0;
             textureCharMap = new Dictionary<char, int>();
             charAdvanceX = new Dictionary<char, float>();
             charBearingX = new Dictionary<char, float>();
             charBearingY = new Dictionary<char, float>();
             charHeight = new Dictionary<char, float>();
-            charVtxMax = charVtxBufLen = 0;
 
             pos = new Vector3(0, 0, 0);
             rot = new Vector3(0, 0, 0);
-            sca = new Vector3(1.0f, 1.0f, 1.0f);
+            sca = 1F;
             range = 100;
-            size = 24F;
             zNear = range / 100;
             zFar = 250F;
 
@@ -274,7 +274,7 @@ namespace TwinsaityEditor
             GL.LoadMatrix(ref proj);
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
-            GL.Scale(sca);
+            GL.Scale(sca, sca, sca);
             GL.Rotate(MathHelper.RadiansToDegrees(rot.Y), 1, 0, 0);
             GL.Rotate(MathHelper.RadiansToDegrees(rot.X), 0, 1, 0);
             GL.Rotate(MathHelper.RadiansToDegrees(rot.Z), 0, 0, 1);
@@ -501,7 +501,6 @@ namespace TwinsaityEditor
                     var arr = charVtx[c];
                     Array.Resize(ref arr, arr.Length * 2);
                     charVtx[c] = arr;
-                    charVtxMax = Math.Max(charVtxMax, arr.Length);
                 }
                 charVtx[c][charVtxOffs[c]++] = new Vertex(new Vector3(x - w, 0, 0) * size_fac * rot_mat + off, new Vector2(0, 1), col);
                 charVtx[c][charVtxOffs[c]++] = new Vertex(new Vector3(x + w, 0, 0) * size_fac * rot_mat + off, new Vector2(1, 1), col);
