@@ -28,7 +28,7 @@ namespace TwinsaityEditor
         private bool k_w, k_a, k_s, k_d, k_e, k_q, m_l;
         private int m_x, m_y;
         private EventHandler _inputHandle;
-        private FontWrapper.FontService _fntService;
+        private static FontWrapper.FontService _fntService = new FontWrapper.FontService();
         private Dictionary<char, int> textureCharMap;
         private Dictionary<char, float> charAdvanceX;
         private Dictionary<char, float> charBearingX;
@@ -42,10 +42,9 @@ namespace TwinsaityEditor
         public ThreeDViewer()
         {
             size = 24F;
-            _fntService = new FontWrapper.FontService();
             List<FileInfo> fonts = (List<FileInfo>)_fntService.GetFontFiles(new DirectoryInfo("Fonts/"), false);
             _fntService.SetFont(fonts[0].FullName);
-            _fntService.SetSize(size);
+            _fntService.Size = size;
             charVtx = new Dictionary<char, Vertex[]>();
             charVtxOffs = new Dictionary<char, int>();
             charVtxBufLen = 0;
