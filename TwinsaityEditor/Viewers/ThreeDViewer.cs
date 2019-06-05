@@ -260,7 +260,7 @@ namespace TwinsaityEditor
             GL.Viewport(Location, Size);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.MatrixMode(MatrixMode.Projection);
-            var proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver3, (float)Width/Height, zNear, zFar*1.2F);
+            var proj = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver3, (float)Width/Height, zNear, zFar*1.5F);
             GL.LoadMatrix(ref proj);
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
