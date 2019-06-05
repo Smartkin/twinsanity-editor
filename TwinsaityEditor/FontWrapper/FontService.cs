@@ -51,6 +51,8 @@ namespace TwinsaityEditor.FontWrapper
 
         internal void SetSize(float size)
         {
+            if (size <= 0)
+                throw new ArgumentException("Font size must be non-null positive.");
             _size = size;
             FontFace?.SetCharSize(0, size, 0, 96);
         }
