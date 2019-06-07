@@ -433,8 +433,8 @@ namespace Twinsanity
                                     }
                                 }
                         }
-                        else
-                            System.Windows.Forms.MessageBox.Show("ID:" + ID + " Width: " + Width + " Height: " + Height, "Kesha, we have a problem!", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
+                        //else
+                        //    System.Windows.Forms.MessageBox.Show("ID:" + ID + " Width: " + Width + " Height: " + Height, "Kesha, we have a problem!", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
                         UnSwizzle(ref pixels, (ushort)Width, (ushort)Height);
                         UnSwizzle(ref mippixels, (ushort)(Width / 2), (ushort)Height);
                         Flip(ref pixels, (ushort)Width, (ushort)Height);
@@ -446,8 +446,8 @@ namespace Twinsanity
 
                 case 2:
                     {
-                        Array.Resize(ref pixels, (int)(Width * Height));
-                        Array.Resize(ref mippixels, (int)(Width / 2 * Height));
+                        Array.Resize(ref pixels, Width * Height);
+                        Array.Resize(ref mippixels, Width / 2 * Height);
                         Array.Resize(ref palette, 512);
                         if ((Width == 128) && (Height == 32))
                         {
@@ -545,8 +545,8 @@ namespace Twinsanity
                                 reader.BaseStream.Position += 192;
                             }
                         }
-                        else
-                            System.Windows.Forms.MessageBox.Show("ID:" + ID + " Width: " + Width + " Height: " + Height, "Kesha, we have a problem! Abort now!", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
+                        //else
+                        //    System.Windows.Forms.MessageBox.Show("ID:" + ID + " Width: " + Width + " Height: " + Height, "Kesha, we have a problem! Abort now!", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
                         UnSwizzle(ref pixels, (ushort)Width, (ushort)Height);
                         Flip(ref pixels, (ushort)Width, (ushort)Height);
                         SwapPalette(ref palette);
