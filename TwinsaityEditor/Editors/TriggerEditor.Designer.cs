@@ -195,16 +195,16 @@
             this.groupBox7.Size = new System.Drawing.Size(109, 136);
             this.groupBox7.TabIndex = 12;
             this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "Other";
+            this.groupBox7.Text = "Rotation";
             // 
             // label17
             // 
             this.label17.AutoSize = true;
             this.label17.Location = new System.Drawing.Point(6, 99);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(18, 13);
+            this.label17.Size = new System.Drawing.Size(20, 13);
             this.label17.TabIndex = 9;
-            this.label17.Text = "W";
+            this.label17.Text = "An";
             // 
             // label18
             // 

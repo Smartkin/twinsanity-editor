@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using System.Collections.Generic;
 using Twinsanity;
 
@@ -55,6 +56,7 @@ namespace TwinsaityEditor
             numericUpDown2.Value = trigger.SomeNumber;
             numericUpDown3.Value = (decimal)trigger.SomeFloat;
             numericUpDown4.Value = trigger.SectionHead;
+            numericUpDown5.Value = trigger.ID;
             numericUpDown6.Value = trigger.SomeUInt161;
             numericUpDown7.Value = trigger.SomeUInt162;
             numericUpDown8.Value = trigger.SomeUInt163;
@@ -67,10 +69,22 @@ namespace TwinsaityEditor
             numericUpDown15.Value = (decimal)trigger.Coords[2].Y;
             numericUpDown16.Value = (decimal)trigger.Coords[2].Z;
             numericUpDown17.Value = (decimal)trigger.Coords[2].W;
-            numericUpDown18.Value = (decimal)trigger.Coords[0].X;
-            numericUpDown19.Value = (decimal)trigger.Coords[0].Y;
-            numericUpDown20.Value = (decimal)trigger.Coords[0].Z;
-            numericUpDown21.Value = (decimal)trigger.Coords[0].W;
+            double angle = Math.Acos(trigger.Coords[0].W);
+            double angle_modify = Math.Sin(angle);
+            if (angle_modify == 0)
+            {
+                numericUpDown18.Value = 0;
+                numericUpDown19.Value = 0;
+                numericUpDown20.Value = 0;
+                numericUpDown21.Value = 0;
+            }
+            else
+            {
+                numericUpDown18.Value = (decimal)(trigger.Coords[0].X / angle_modify);
+                numericUpDown19.Value = (decimal)(trigger.Coords[0].Y / angle_modify);
+                numericUpDown20.Value = (decimal)(trigger.Coords[0].Z / angle_modify);
+                numericUpDown21.Value = (decimal)angle * 2;
+            }
 
             var lines = new string[trigger.Instances.Count];
             for (int i = 0; i < trigger.Instances.Count; ++i)
@@ -256,28 +270,31 @@ namespace TwinsaityEditor
         private void numericUpDown18_ValueChanged(object sender, System.EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.Coords[0].X = (float)numericUpDown18.Value;
+            trigger.Coords[0].X = (float)((float)numericUpDown18.Value * Math.Sin((float)numericUpDown21.Value * 2));
             CurCont.UpdateTextBox();
         }
 
         private void numericUpDown19_ValueChanged(object sender, System.EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.Coords[0].Y = (float)numericUpDown19.Value;
+            trigger.Coords[0].Y = (float)((float)numericUpDown19.Value * Math.Sin((float)numericUpDown21.Value * 2));
             CurCont.UpdateTextBox();
         }
 
         private void numericUpDown20_ValueChanged(object sender, System.EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.Coords[0].Z = (float)numericUpDown20.Value;
+            trigger.Coords[0].Z = (float)((float)numericUpDown20.Value * Math.Sin((float)numericUpDown21.Value * 2));
             CurCont.UpdateTextBox();
         }
 
         private void numericUpDown21_ValueChanged(object sender, System.EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.Coords[0].W = (float)numericUpDown21.Value;
+            trigger.Coords[0].W = (float)Math.Cos((float)numericUpDown21.Value / 2);
+            trigger.Coords[0].X = (float)((float)numericUpDown18.Value * Math.Sin((float)numericUpDown21.Value * 2));
+            trigger.Coords[0].Y = (float)((float)numericUpDown19.Value * Math.Sin((float)numericUpDown21.Value * 2));
+            trigger.Coords[0].Z = (float)((float)numericUpDown20.Value * Math.Sin((float)numericUpDown21.Value * 2));
             CurCont.UpdateTextBox();
         }
     }
