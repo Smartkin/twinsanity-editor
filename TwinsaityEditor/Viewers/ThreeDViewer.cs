@@ -185,8 +185,8 @@ namespace TwinsaityEditor
         {
             base.OnMouseWheel(e);
             range -= e.Delta / 120 * 30;
-            if (range > 500f)
-                range = 500f;
+            if (range > 750f)
+                range = 750f;
             else if (range < 20f)
                 range = 20f;
             zNear = range / 100F;
@@ -449,36 +449,55 @@ namespace TwinsaityEditor
 
         protected void RenderString3D(string s, Color col, float x_off, float y_off, float z_off, ref Matrix3 rot_mat, float size_fac = 1F)
         {
-            float spacing = 2 / 3f;
-            float x = (s.Length + 1) * (-spacing / 2f);
+            size_fac /= size;
+            float x = 0, y = 0;
+            foreach (char c in s)
+            {
+                if (!charAdvanceX.ContainsKey(c))
+                    AddCharData(c);
+                x += charAdvanceX[c];
+
+                if (c == '\n')
+                    y -= size;
+            }
+            x /= -2;
             Vector3 off = new Vector3(x_off, y_off, z_off);
             foreach (char c in s)
             {
-                x += spacing;
-                if (c == ' ')
+                if (c == '\n')
+                {
+                    x = 0;
+                    y += size;
                     continue;
-                if (!textureCharMap.ContainsKey(c))
-                    GenCharTex(c);
-                GL.BindTexture(TextureTarget.Texture2D, textureCharMap[c]);
-                GL.GetTexLevelParameter(TextureTarget.Texture2D, 0, GetTextureParameter.TextureWidth, out float w);
-                GL.GetTexLevelParameter(TextureTarget.Texture2D, 0, GetTextureParameter.TextureHeight, out float h);
-                w /= size * 2;
-                h /= size;
-                if (!charVtx.ContainsKey(c))
-                {
-                    charVtx.Add(c, new Vertex[256]);
-                    charVtxOffs.Add(c, 0);
                 }
-                else if (charVtxOffs[c] + 4 >= charVtx[c].Length)
+                if (c != ' ')
                 {
-                    var arr = charVtx[c];
-                    Array.Resize(ref arr, arr.Length * 2);
-                    charVtx[c] = arr;
+                    if (!textureCharMap.ContainsKey(c))
+                        GenCharTex(c);
+                    GL.BindTexture(TextureTarget.Texture2D, textureCharMap[c]);
+                    GL.GetTexLevelParameter(TextureTarget.Texture2D, 0, GetTextureParameter.TextureWidth, out float w);
+                    GL.GetTexLevelParameter(TextureTarget.Texture2D, 0, GetTextureParameter.TextureHeight, out float h);
+                    float y_lo = y - (charHeight[c] - charBearingY[c]);
+                    float y_hi = y_lo + h;
+                    if (!charVtx.ContainsKey(c))
+                    {
+                        charVtx.Add(c, new Vertex[256]);
+                        charVtxOffs.Add(c, 0);
+                    }
+                    else if (charVtxOffs[c] + 4 >= charVtx[c].Length)
+                    {
+                        var arr = charVtx[c];
+                        Array.Resize(ref arr, arr.Length * 2);
+                        charVtx[c] = arr;
+                    }
+                    float gBearingX = charBearingX[c];
+                    charVtx[c][charVtxOffs[c]++] = new Vertex(new Vector3(x + gBearingX, y_lo, 0) * size_fac * rot_mat + off, new Vector2(0, 1), col);
+                    charVtx[c][charVtxOffs[c]++] = new Vertex(new Vector3(x + gBearingX + w, y_lo, 0) * size_fac * rot_mat + off, new Vector2(1, 1), col);
+                    charVtx[c][charVtxOffs[c]++] = new Vertex(new Vector3(x + gBearingX + w, y_hi, 0) * size_fac * rot_mat + off, new Vector2(1, 0), col);
+                    charVtx[c][charVtxOffs[c]++] = new Vertex(new Vector3(x + gBearingX, y_hi, 0) * size_fac * rot_mat + off, new Vector2(0, 0), col);
                 }
-                charVtx[c][charVtxOffs[c]++] = new Vertex(new Vector3(x - w, 0, 0) * size_fac * rot_mat + off, new Vector2(0, 1), col);
-                charVtx[c][charVtxOffs[c]++] = new Vertex(new Vector3(x + w, 0, 0) * size_fac * rot_mat + off, new Vector2(1, 1), col);
-                charVtx[c][charVtxOffs[c]++] = new Vertex(new Vector3(x + w, h, 0) * size_fac * rot_mat + off, new Vector2(1, 0), col);
-                charVtx[c][charVtxOffs[c]++] = new Vertex(new Vector3(x - w, h, 0) * size_fac * rot_mat + off, new Vector2(0, 0), col);
+
+                x += charAdvanceX[c];
             }
             GL.BindTexture(TextureTarget.Texture2D, 0);
         }
@@ -489,30 +508,19 @@ namespace TwinsaityEditor
             float start_x = x;
             foreach (char c in s)
             {
+                if (!charAdvanceX.ContainsKey(c))
+                    AddCharData(c);
                 if (anchor == TextAnchor.TopMiddle || anchor == TextAnchor.TopRight || anchor == TextAnchor.BotMiddle || anchor == TextAnchor.BotRight)
-                {
-                    if (!charAdvanceX.ContainsKey(c))
-                        AddCharData(c);
-                    float gAdvanceX = charAdvanceX[c] * text_size_fac;
-                    float gBearingX = charBearingX[c] * text_size_fac;
-
-                    x += gBearingX + gAdvanceX;
-                }
+                    x += 0 + charAdvanceX[c] * text_size_fac;
                 if ((anchor == TextAnchor.BotLeft || anchor == TextAnchor.BotMiddle || anchor == TextAnchor.BotRight) && c == '\n')
-                {
                     y -= text_size;
-                }
             }
             if (anchor == TextAnchor.TopMiddle || anchor == TextAnchor.TopRight || anchor == TextAnchor.BotMiddle || anchor == TextAnchor.BotRight)
             {
                 if (anchor == TextAnchor.BotMiddle || anchor == TextAnchor.TopMiddle)
-                {
-                    x = start_x - (x - start_x)/2;
-                }
+                    x = start_x - (x - start_x) / 2;
                 else
-                {
                     x = start_x - (x - start_x);
-                }
             }
             start_x = x;
             foreach (char c in s)
@@ -523,17 +531,6 @@ namespace TwinsaityEditor
                     y += text_size;
                     continue;
                 }
-
-                if (!charAdvanceX.ContainsKey(c))
-                    AddCharData(c);
-
-                float gAdvanceX = charAdvanceX[c] * text_size_fac;
-                float gBearingX = charBearingX[c] * text_size_fac;
-
-                x += gBearingX;
-
-                float glyphTop = (size - charBearingY[c]) * text_size_fac;
-
                 if (c != ' ')
                 {
                     if (!textureCharMap.ContainsKey(c))
@@ -549,7 +546,7 @@ namespace TwinsaityEditor
                         case TextAnchor.TopLeft:
                         case TextAnchor.TopMiddle:
                         case TextAnchor.TopRight:
-                            y_hi = y + glyphTop;
+                            y_hi = y + (size - charBearingY[c]) * text_size_fac;
                             y_lo = y_hi + c_h;
                             break;
                         case TextAnchor.BotLeft:
@@ -566,8 +563,7 @@ namespace TwinsaityEditor
                     GL.TexCoord2(0, 0); GL.Vertex2(x, y_hi);
                     GL.End();
                 }
-
-                x += gAdvanceX;
+                x += charAdvanceX[c] * text_size_fac;
             }
             GL.BindTexture(TextureTarget.Texture2D, 0);
         }
