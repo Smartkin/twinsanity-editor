@@ -85,6 +85,7 @@ namespace TwinsaityEditor
         public void CloseFile()
         {
             CloseRMViewer();
+            CloseSkydomeViewer();
             CloseAllMeshViewers();
             CloseAllModelViewers();
             CloseEditor(Editors.ChunkLinks);
@@ -250,6 +251,7 @@ namespace TwinsaityEditor
 
         public void CloseSkydomeViewer()
         {
+            if (skyViewer == null) return;
             var f = skyViewer.ParentForm;
             CloseForm(ref f);
         }
@@ -305,6 +307,7 @@ namespace TwinsaityEditor
 
         public void CloseRMViewer()
         {
+            if (rmViewer == null) return;
             var f = rmViewer.ParentForm;
             CloseForm(ref f);
         }
