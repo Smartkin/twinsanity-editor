@@ -453,12 +453,14 @@ namespace TwinsaityEditor
             float x = 0, y = 0;
             foreach (char c in s)
             {
+                if (c == '\n')
+                {
+                    y -= size;
+                    continue;
+                }
                 if (!charAdvanceX.ContainsKey(c))
                     AddCharData(c);
                 x += charAdvanceX[c];
-
-                if (c == '\n')
-                    y -= size;
             }
             x /= -2;
             Vector3 off = new Vector3(x_off, y_off, z_off);
@@ -508,12 +510,15 @@ namespace TwinsaityEditor
             float start_x = x;
             foreach (char c in s)
             {
+                if ((anchor == TextAnchor.BotLeft || anchor == TextAnchor.BotMiddle || anchor == TextAnchor.BotRight) && c == '\n')
+                {
+                    y -= text_size;
+                    continue;
+                }
                 if (!charAdvanceX.ContainsKey(c))
                     AddCharData(c);
                 if (anchor == TextAnchor.TopMiddle || anchor == TextAnchor.TopRight || anchor == TextAnchor.BotMiddle || anchor == TextAnchor.BotRight)
                     x += 0 + charAdvanceX[c] * text_size_fac;
-                if ((anchor == TextAnchor.BotLeft || anchor == TextAnchor.BotMiddle || anchor == TextAnchor.BotRight) && c == '\n')
-                    y -= text_size;
             }
             if (anchor == TextAnchor.TopMiddle || anchor == TextAnchor.TopRight || anchor == TextAnchor.BotMiddle || anchor == TextAnchor.BotRight)
             {
