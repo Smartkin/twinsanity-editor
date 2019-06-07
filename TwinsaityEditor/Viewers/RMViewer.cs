@@ -228,6 +228,7 @@ namespace TwinsaityEditor
                             GL.Translate(trg.Coords[1].X, trg.Coords[1].Y, trg.Coords[1].Z);
 
                             var cur_color = file.SelectedItem == trg ? Color.White : colors[colors.Length - i * 2- 1];
+                            GL.DepthMask(false);
                             GL.Begin(PrimitiveType.Quads);
                             GL.Color4(cur_color.R, cur_color.G, cur_color.B, (byte)127);
 
@@ -262,9 +263,9 @@ namespace TwinsaityEditor
                             GL.Vertex3(-trg.Coords[2].X, trg.Coords[2].Y, trg.Coords[2].Z);
 
                             GL.End();
+                            GL.DepthMask(true);
 
                             GL.Disable(EnableCap.Lighting);
-                            GL.Disable(EnableCap.DepthTest);
                             GL.Color4(cur_color);
                             GL.LineWidth(2);
                             GL.Begin(PrimitiveType.Lines);
@@ -320,7 +321,6 @@ namespace TwinsaityEditor
                             GL.End();
                             
                             DrawAxes(0, 0, 0, Math.Min(trg.Coords[2].X / 2, Math.Min(trg.Coords[2].Y, trg.Coords[2].Z)) / 2);
-                            GL.Enable(EnableCap.DepthTest);
                             GL.Enable(EnableCap.Lighting);
 
                             GL.PopMatrix();
