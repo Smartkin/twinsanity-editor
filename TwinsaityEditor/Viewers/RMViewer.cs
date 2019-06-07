@@ -335,6 +335,7 @@ namespace TwinsaityEditor
                     GL.PushMatrix();
                     GL.DepthMask(false);
                     GL.Scale(-1, 1, 1);
+                    GL.LineWidth(2);
                     if (l.HasWall())
                     {
                         GL.Color4(Color.FromArgb(63, cur_color));
