@@ -228,7 +228,7 @@ namespace TwinsaityEditor
                             GL.DepthMask(false);
                             GL.Enable(EnableCap.Lighting);
                             GL.Begin(PrimitiveType.Quads);
-                            GL.Color4(cur_color.R, cur_color.G, cur_color.B, (byte)127);
+                            GL.Color4(cur_color.R, cur_color.G, cur_color.B, (byte)95);
 
                             GL.Vertex3(-trg.Coords[2].X, -trg.Coords[2].Y, -trg.Coords[2].Z);
                             GL.Vertex3(trg.Coords[2].X, -trg.Coords[2].Y, -trg.Coords[2].Z);
@@ -331,26 +331,27 @@ namespace TwinsaityEditor
             {
                 foreach (var l in links.Links)
                 {
+                    Color cur_color = colors[links.Links.IndexOf(l) % colors.Length];
                     GL.PushMatrix();
                     GL.DepthMask(false);
                     GL.Scale(-1, 1, 1);
                     if (l.HasWall())
                     {
-                        GL.Color4(Color.FromArgb(95, Color.DarkGray));
+                        GL.Color4(Color.FromArgb(63, cur_color));
                         GL.Begin(PrimitiveType.Quads);
                         GL.Vertex4(l.LoadWall[0].ToArray());
                         GL.Vertex4(l.LoadWall[1].ToArray());
                         GL.Vertex4(l.LoadWall[2].ToArray());
                         GL.Vertex4(l.LoadWall[3].ToArray());
                         GL.End();
-                        GL.Color4(Color.DarkGray);
+                        GL.Color4(cur_color);
                         GL.Begin(PrimitiveType.LineLoop);
                         GL.Vertex4(l.LoadWall[0].ToArray());
                         GL.Vertex4(l.LoadWall[1].ToArray());
                         GL.Vertex4(l.LoadWall[2].ToArray());
                         GL.Vertex4(l.LoadWall[3].ToArray());
                         GL.End();
-                        RenderString3D(new string(l.Path), Color.DarkGray,
+                        RenderString3D(new string(l.Path), cur_color,
                             -(l.LoadWall[0].X + l.LoadWall[1].X + l.LoadWall[2].X + l.LoadWall[3].X) / 4,
                             (l.LoadWall[0].Y + l.LoadWall[1].Y + l.LoadWall[2].Y + l.LoadWall[3].Y) / 4,
                             (l.LoadWall[0].Z + l.LoadWall[1].Z + l.LoadWall[2].Z + l.LoadWall[3].Z) / 4,
@@ -358,7 +359,8 @@ namespace TwinsaityEditor
                     }
                     if (l.Type == 1 || l.Type == 3)
                     {
-                        GL.Color4(Color.FromArgb(95, Color.DarkGray));
+                        GL.Enable(EnableCap.Lighting);
+                        GL.Color4(Color.FromArgb(63, cur_color));
                         GL.Begin(PrimitiveType.QuadStrip);
                         GL.Vertex4(l.LoadArea[0].ToArray());
                         GL.Vertex4(l.LoadArea[1].ToArray());
@@ -381,6 +383,8 @@ namespace TwinsaityEditor
                         GL.Vertex4(l.LoadArea[4].ToArray());
                         GL.Vertex4(l.LoadArea[6].ToArray());
                         GL.End();
+                        GL.Disable(EnableCap.Lighting);
+                        GL.Color4(cur_color);
                         GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
                         GL.Begin(PrimitiveType.QuadStrip);
                         GL.Vertex4(l.LoadArea[0].ToArray());
@@ -409,7 +413,6 @@ namespace TwinsaityEditor
                         {
                             GL.Disable(EnableCap.DepthTest);
                             GL.LineWidth(2);
-                            GL.Color4(Color.DarkGray);
                             GL.Begin(PrimitiveType.Lines);
                             GL.Vertex3((l.LoadArea[0].X + l.LoadArea[1].X + l.LoadArea[2].X + l.LoadArea[3].X + l.LoadArea[4].X + l.LoadArea[5].X + l.LoadArea[6].X + l.LoadArea[7].X) / 8,
                                 (l.LoadArea[0].Y + l.LoadArea[1].Y + l.LoadArea[2].Y + l.LoadArea[3].Y + l.LoadArea[4].Y + l.LoadArea[5].Y + l.LoadArea[6].Y + l.LoadArea[7].Y) / 8,
