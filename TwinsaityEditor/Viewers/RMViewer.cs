@@ -352,6 +352,12 @@ namespace TwinsaityEditor
                         GL.Vertex4(l.LoadWall[2].ToArray());
                         GL.Vertex4(l.LoadWall[3].ToArray());
                         GL.End();
+                        GL.Begin(PrimitiveType.Lines);
+                        GL.Vertex4(l.LoadWall[0].ToArray());
+                        GL.Vertex4(l.LoadWall[2].ToArray());
+                        GL.Vertex4(l.LoadWall[1].ToArray());
+                        GL.Vertex4(l.LoadWall[3].ToArray());
+                        GL.End();
                         Matrix3 rot_mat = Matrix3.Identity;
                         rot_mat *= Matrix3.CreateRotationX(-rot.Y);
                         rot_mat *= Matrix3.CreateRotationY(-rot.X);
