@@ -216,23 +216,15 @@ namespace TwinsaityEditor
                             RenderString3D(ins.ID.ToString(), cur_color, -ins.Pos.X, ins.Pos.Y, ins.Pos.Z, ref rot_ins);
                         }
                     }
-                }
-            }
 
-            //Draw triggers (transparent surfaces)
-            for (uint i = 0; i <= 7; ++i)
-            {
-                if (file.Data.ContainsItem(i))
-                {
                     if (((TwinsSection)file.Data.GetItem(i)).ContainsItem(7) && show_triggers)
                     {
                         foreach (Trigger trg in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(7)).Records)
                         {
                             GL.PushMatrix();
-                            GL.Scale(-1, 1, 1);
-                            GL.Translate(trg.Coords[1].X, trg.Coords[1].Y, trg.Coords[1].Z);
+                            GL.Translate(-trg.Coords[1].X, trg.Coords[1].Y, trg.Coords[1].Z);
 
-                            var cur_color = file.SelectedItem == trg ? Color.White : colors[colors.Length - i * 2- 1];
+                            cur_color = file.SelectedItem == trg ? Color.White : colors[colors.Length - i * 2 - 1];
                             GL.DepthMask(false);
                             GL.Enable(EnableCap.Lighting);
                             GL.Begin(PrimitiveType.Quads);
@@ -279,7 +271,7 @@ namespace TwinsaityEditor
                             {
                                 Instance inst = file.GetInstance(trg.Parent.Parent.ID, id);
                                 GL.Vertex3(0, 0, 0);
-                                GL.Vertex3(inst.Pos.X - trg.Coords[1].X, inst.Pos.Y - trg.Coords[1].Y, inst.Pos.Z - trg.Coords[1].Z);
+                                GL.Vertex3(-inst.Pos.X + trg.Coords[1].X, inst.Pos.Y - trg.Coords[1].Y, inst.Pos.Z - trg.Coords[1].Z);
                             }
                             GL.End();
                             GL.LineWidth(1);
@@ -325,8 +317,8 @@ namespace TwinsaityEditor
                             GL.Vertex3(trg.Coords[2].X, trg.Coords[2].Y, trg.Coords[2].Z);
                             GL.Vertex3(-trg.Coords[2].X, trg.Coords[2].Y, trg.Coords[2].Z);
                             GL.End();
-                            
-                            DrawAxes(0, 0, 0, Math.Min(trg.Coords[2].X / 2, Math.Min(trg.Coords[2].Y, trg.Coords[2].Z)) / 2);
+
+                            DrawAxes(0, 0, 0, Math.Min(trg.Coords[2].X, Math.Min(trg.Coords[2].Y, trg.Coords[2].Z)) / 2);
 
                             GL.PopMatrix();
                         }
