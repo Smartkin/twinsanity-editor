@@ -447,33 +447,7 @@ namespace TwinsaityEditor
             return texture;
         }
 
-        protected void RenderString3DImmediate(string s)
-        {
-            float spacing = 2 / 3f;
-            float x = (s.Length + 1) * (-spacing / 2f);
-            foreach (char c in s)
-            {
-                x += spacing;
-                if (c == ' ')
-                    continue;
-                if (!textureCharMap.ContainsKey(c))
-                    GenCharTex(c);
-                GL.BindTexture(TextureTarget.Texture2D, textureCharMap[c]);
-                GL.GetTexLevelParameter(TextureTarget.Texture2D, 0, GetTextureParameter.TextureWidth, out float w);
-                GL.GetTexLevelParameter(TextureTarget.Texture2D, 0, GetTextureParameter.TextureHeight, out float h);
-                w /= size*2;
-                h /= size;
-                GL.Begin(PrimitiveType.Quads);
-                GL.TexCoord2(0, 1); GL.Vertex2(x-w, 0);
-                GL.TexCoord2(1, 1); GL.Vertex2(x+w, 0);
-                GL.TexCoord2(1, 0); GL.Vertex2(x+w, h);
-                GL.TexCoord2(0, 0); GL.Vertex2(x-w, h);
-                GL.End();
-            }
-            GL.BindTexture(TextureTarget.Texture2D, 0);
-        }
-
-        protected void RenderString3DToArray(string s, Color col, float x_off, float y_off, float z_off, ref Matrix3 rot_mat, float size_fac = 1F)
+        protected void RenderString3D(string s, Color col, float x_off, float y_off, float z_off, ref Matrix3 rot_mat, float size_fac = 1F)
         {
             float spacing = 2 / 3f;
             float x = (s.Length + 1) * (-spacing / 2f);

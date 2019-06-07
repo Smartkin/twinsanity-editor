@@ -177,6 +177,11 @@ namespace Twinsanity
             public Pos[] AreaMatrix; // 6
             public Pos[] UnknownMatrix; // 6
             public byte[] Bytes; // 60
+
+            public bool HasWall()
+            {
+                return (Flags & 0x80000) != 0;
+            }
         }
         #endregion
     }

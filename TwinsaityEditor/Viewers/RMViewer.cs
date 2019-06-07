@@ -12,16 +12,22 @@ namespace TwinsaityEditor
     {
         private static readonly int circle_res = 16;
 
-        private bool show_col_nodes, show_triggers, wire_col;
+        private bool show_col_nodes, show_triggers, wire_col, sm2_links;
         private FileController file;
+        private ChunkLinks links;
 
         public RMViewer(FileController file, ref Form pform)
         {
             //initialize variables here
             show_col_nodes = show_triggers = wire_col = false;
+            sm2_links = true;
             this.file = file;
             Tag = pform;
             InitVBO(5);
+            if (file.DataAux != null && file.DataAux.ContainsItem(5))
+            {
+                links = (ChunkLinks)file.DataAux.GetItem(5);
+            }
             if (file.Data.ContainsItem(9))
             {
                 if (file.Data.GetItem(9).Size >= 12)
@@ -105,7 +111,7 @@ namespace TwinsaityEditor
                             GL.Begin(PrimitiveType.Points);
                             GL.Vertex3(-pos.Pos.X, pos.Pos.Y, pos.Pos.Z);
                             GL.End();
-                            RenderString3DToArray(pos.ID.ToString(), cur_color, -pos.Pos.X, pos.Pos.Y, pos.Pos.Z, ref identity_mat, pos.Pos.W / 3);
+                            RenderString3D(pos.ID.ToString(), cur_color, -pos.Pos.X, pos.Pos.Y, pos.Pos.Z, ref identity_mat, pos.Pos.W / 3);
                         }
                     }
 
@@ -128,7 +134,7 @@ namespace TwinsaityEditor
                                 GL.LineWidth(2);
                                 cur_color = Color.White;
                             }
-                            RenderString3DToArray(pth.ID.ToString(), cur_color, -(pth_begin.Pos.X + pth_end.Pos.X) / 2, (pth_begin.Pos.Y + pth_end.Pos.Y) / 2, (pth_begin.Pos.Z + pth_end.Pos.Z) / 2, ref identity_mat, 0.5F);
+                            RenderString3D(pth.ID.ToString(), cur_color, -(pth_begin.Pos.X + pth_end.Pos.X) / 2, (pth_begin.Pos.Y + pth_end.Pos.Y) / 2, (pth_begin.Pos.Z + pth_end.Pos.Z) / 2, ref identity_mat, 0.5F);
                             GL.Color3(cur_color);
                             GL.Begin(PrimitiveType.Lines);
                             GL.Vertex3(-pth_begin.Pos.X, pth_begin.Pos.Y, pth_begin.Pos.Z);
@@ -155,7 +161,7 @@ namespace TwinsaityEditor
                             GL.Begin(PrimitiveType.Points);
                             GL.Vertex3(-pos.Pos.X, pos.Pos.Y, pos.Pos.Z);
                             GL.End();
-                            RenderString3DToArray(pos.ID.ToString(), cur_color, -pos.Pos.X, pos.Pos.Y, pos.Pos.Z, ref identity_mat, 0.5F);
+                            RenderString3D(pos.ID.ToString(), cur_color, -pos.Pos.X, pos.Pos.Y, pos.Pos.Z, ref identity_mat, 0.5F);
                         }
                     }
 
@@ -170,7 +176,7 @@ namespace TwinsaityEditor
                                     cur_color = colors[colors.Length - i * 2 - 1];
                                 else
                                     cur_color = Color.White;
-                                RenderString3DToArray($"{pth.ID.ToString()}:{k}", cur_color, -pth.Positions[k].X, pth.Positions[k].Y, pth.Positions[k].Z, ref identity_mat, 0.5F);
+                                RenderString3D($"{pth.ID.ToString()}:{k}", cur_color, -pth.Positions[k].X, pth.Positions[k].Y, pth.Positions[k].Z, ref identity_mat, 0.5F);
                             }
                             if (file.SelectedItem != pth)
                             {
@@ -207,13 +213,12 @@ namespace TwinsaityEditor
                                 cur_color = Color.White;
                             else
                                 cur_color = colors[colors.Length - i * 2 - 1];
-                            RenderString3DToArray(ins.ID.ToString(), cur_color, -ins.Pos.X, ins.Pos.Y, ins.Pos.Z, ref rot_ins);
+                            RenderString3D(ins.ID.ToString(), cur_color, -ins.Pos.X, ins.Pos.Y, ins.Pos.Z, ref rot_ins);
                         }
                     }
                 }
             }
 
-            GL.Enable(EnableCap.Lighting);
             //Draw triggers (transparent surfaces)
             for (uint i = 0; i <= 7; ++i)
             {
@@ -229,6 +234,7 @@ namespace TwinsaityEditor
 
                             var cur_color = file.SelectedItem == trg ? Color.White : colors[colors.Length - i * 2- 1];
                             GL.DepthMask(false);
+                            GL.Enable(EnableCap.Lighting);
                             GL.Begin(PrimitiveType.Quads);
                             GL.Color4(cur_color.R, cur_color.G, cur_color.B, (byte)127);
 
@@ -264,8 +270,8 @@ namespace TwinsaityEditor
 
                             GL.End();
                             GL.DepthMask(true);
-
                             GL.Disable(EnableCap.Lighting);
+
                             GL.Color4(cur_color);
                             GL.LineWidth(2);
                             GL.Begin(PrimitiveType.Lines);
@@ -321,14 +327,112 @@ namespace TwinsaityEditor
                             GL.End();
                             
                             DrawAxes(0, 0, 0, Math.Min(trg.Coords[2].X / 2, Math.Min(trg.Coords[2].Y, trg.Coords[2].Z)) / 2);
-                            GL.Enable(EnableCap.Lighting);
 
                             GL.PopMatrix();
                         }
                     }
                 }
             }
-            GL.Disable(EnableCap.Lighting);
+
+            //Draw chunk links if available
+            if (sm2_links && links != null)
+            {
+                foreach (var l in links.Links)
+                {
+                    GL.PushMatrix();
+                    GL.DepthMask(false);
+                    GL.Scale(-1, 1, 1);
+                    if (l.HasWall())
+                    {
+                        GL.Color4(Color.FromArgb(95, Color.DarkGray));
+                        GL.Begin(PrimitiveType.Quads);
+                        GL.Vertex4(l.LoadWall[0].ToArray());
+                        GL.Vertex4(l.LoadWall[1].ToArray());
+                        GL.Vertex4(l.LoadWall[2].ToArray());
+                        GL.Vertex4(l.LoadWall[3].ToArray());
+                        GL.End();
+                        GL.Color4(Color.DarkGray);
+                        GL.Begin(PrimitiveType.LineLoop);
+                        GL.Vertex4(l.LoadWall[0].ToArray());
+                        GL.Vertex4(l.LoadWall[1].ToArray());
+                        GL.Vertex4(l.LoadWall[2].ToArray());
+                        GL.Vertex4(l.LoadWall[3].ToArray());
+                        GL.End();
+                        RenderString3D(new string(l.Path), Color.DarkGray,
+                            -(l.LoadWall[0].X + l.LoadWall[1].X + l.LoadWall[2].X + l.LoadWall[3].X) / 4,
+                            (l.LoadWall[0].Y + l.LoadWall[1].Y + l.LoadWall[2].Y + l.LoadWall[3].Y) / 4,
+                            (l.LoadWall[0].Z + l.LoadWall[1].Z + l.LoadWall[2].Z + l.LoadWall[3].Z) / 4,
+                            ref identity_mat);
+                    }
+                    if (l.Type == 1 || l.Type == 3)
+                    {
+                        GL.Color4(Color.FromArgb(95, Color.DarkGray));
+                        GL.Begin(PrimitiveType.QuadStrip);
+                        GL.Vertex4(l.LoadArea[0].ToArray());
+                        GL.Vertex4(l.LoadArea[1].ToArray());
+                        GL.Vertex4(l.LoadArea[2].ToArray());
+                        GL.Vertex4(l.LoadArea[3].ToArray());
+                        GL.Vertex4(l.LoadArea[4].ToArray());
+                        GL.Vertex4(l.LoadArea[5].ToArray());
+                        GL.Vertex4(l.LoadArea[6].ToArray());
+                        GL.Vertex4(l.LoadArea[7].ToArray());
+                        GL.Vertex4(l.LoadArea[0].ToArray());
+                        GL.Vertex4(l.LoadArea[1].ToArray());
+                        GL.End();
+                        GL.Begin(PrimitiveType.Quads);
+                        GL.Vertex4(l.LoadArea[1].ToArray());
+                        GL.Vertex4(l.LoadArea[3].ToArray());
+                        GL.Vertex4(l.LoadArea[5].ToArray());
+                        GL.Vertex4(l.LoadArea[7].ToArray());
+                        GL.Vertex4(l.LoadArea[0].ToArray());
+                        GL.Vertex4(l.LoadArea[2].ToArray());
+                        GL.Vertex4(l.LoadArea[4].ToArray());
+                        GL.Vertex4(l.LoadArea[6].ToArray());
+                        GL.End();
+                        GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
+                        GL.Begin(PrimitiveType.QuadStrip);
+                        GL.Vertex4(l.LoadArea[0].ToArray());
+                        GL.Vertex4(l.LoadArea[1].ToArray());
+                        GL.Vertex4(l.LoadArea[2].ToArray());
+                        GL.Vertex4(l.LoadArea[3].ToArray());
+                        GL.Vertex4(l.LoadArea[4].ToArray());
+                        GL.Vertex4(l.LoadArea[5].ToArray());
+                        GL.Vertex4(l.LoadArea[6].ToArray());
+                        GL.Vertex4(l.LoadArea[7].ToArray());
+                        GL.Vertex4(l.LoadArea[0].ToArray());
+                        GL.Vertex4(l.LoadArea[1].ToArray());
+                        GL.End();
+                        GL.Begin(PrimitiveType.Quads);
+                        GL.Vertex4(l.LoadArea[1].ToArray());
+                        GL.Vertex4(l.LoadArea[3].ToArray());
+                        GL.Vertex4(l.LoadArea[5].ToArray());
+                        GL.Vertex4(l.LoadArea[7].ToArray());
+                        GL.Vertex4(l.LoadArea[0].ToArray());
+                        GL.Vertex4(l.LoadArea[2].ToArray());
+                        GL.Vertex4(l.LoadArea[4].ToArray());
+                        GL.Vertex4(l.LoadArea[6].ToArray());
+                        GL.End();
+                        GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+                        if (l.HasWall())
+                        {
+                            GL.Disable(EnableCap.DepthTest);
+                            GL.LineWidth(2);
+                            GL.Color4(Color.DarkGray);
+                            GL.Begin(PrimitiveType.Lines);
+                            GL.Vertex3((l.LoadArea[0].X + l.LoadArea[1].X + l.LoadArea[2].X + l.LoadArea[3].X + l.LoadArea[4].X + l.LoadArea[5].X + l.LoadArea[6].X + l.LoadArea[7].X) / 8,
+                                (l.LoadArea[0].Y + l.LoadArea[1].Y + l.LoadArea[2].Y + l.LoadArea[3].Y + l.LoadArea[4].Y + l.LoadArea[5].Y + l.LoadArea[6].Y + l.LoadArea[7].Y) / 8,
+                                (l.LoadArea[0].Z + l.LoadArea[1].Z + l.LoadArea[2].Z + l.LoadArea[3].Z + l.LoadArea[4].Z + l.LoadArea[5].Z + l.LoadArea[6].Z + l.LoadArea[7].Z) / 8);
+                            GL.Vertex3((l.LoadWall[0].X + l.LoadWall[1].X + l.LoadWall[2].X + l.LoadWall[3].X) / 4,
+                                (l.LoadWall[0].Y + l.LoadWall[1].Y + l.LoadWall[2].Y + l.LoadWall[3].Y) / 4,
+                                (l.LoadWall[0].Z + l.LoadWall[1].Z + l.LoadWall[2].Z + l.LoadWall[3].Z) / 4);
+                            GL.End();
+                            GL.Enable(EnableCap.DepthTest);
+                        }
+                    }
+                    GL.DepthMask(true);
+                    GL.PopMatrix();
+                }
+            }
 
             GL.PopMatrix();
 
@@ -340,6 +444,7 @@ namespace TwinsaityEditor
             switch (keyData)
             {
                 case Keys.C:
+                case Keys.L:
                 case Keys.T:
                 case Keys.X:
                     return true;
@@ -354,6 +459,9 @@ namespace TwinsaityEditor
             {
                 case Keys.C:
                     show_col_nodes = !show_col_nodes;
+                    break;
+                case Keys.L:
+                    sm2_links = !sm2_links;
                     break;
                 case Keys.T:
                     show_triggers = !show_triggers;

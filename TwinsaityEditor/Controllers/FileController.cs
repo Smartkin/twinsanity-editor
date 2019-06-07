@@ -7,6 +7,7 @@ namespace TwinsaityEditor
     public class FileController : SectionController
     {
         public new TwinsFile Data { get; set; }
+        public TwinsFile DataAux { get; set; }
 
         public string FileName { get => Data.FileName; }
         public string SafeFileName { get => Data.SafeFileName; }
@@ -32,6 +33,7 @@ namespace TwinsaityEditor
         public FileController(MainForm topform, TwinsFile item) : base(topform, item)
         {
             Data = item;
+            DataAux = null;
             ObjectNames = new Dictionary<uint, string>();
             MaterialNames = new Dictionary<uint, string>();
             MeshViewers = new Dictionary<uint, Form>();
@@ -94,6 +96,7 @@ namespace TwinsaityEditor
                 CloseEditor(Editors.Path, i);
                 CloseEditor(Editors.Trigger, i);
             }
+            Data = DataAux = null;
         }
 
         public void OpenEditor(Controller c)

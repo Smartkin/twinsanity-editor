@@ -29,7 +29,8 @@ namespace Twinsanity
             BinaryReader reader = new BinaryReader(file);
             Type = type;
             if ((Magic = reader.ReadUInt32()) != magic)
-                throw new ArgumentException("TwinsFile::LoadRM2File: Magic number is wrong.");
+                throw new ArgumentException("LoadFile: Magic number is wrong.");
+            FileName = path;
             var count = reader.ReadInt32();
             var sec_size = reader.ReadUInt32();
             uint s_off = 0, s_id = 0;

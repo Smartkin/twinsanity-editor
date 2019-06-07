@@ -127,11 +127,14 @@ namespace TwinsaityEditor
                 if (CurCont != null)
                     CurCont.CloseFile();
                 Tag = null;
-                var file = new TwinsFile();
+                TwinsFile file = new TwinsFile();
+                TwinsFile aux_file = null;
                 switch (ofd.FilterIndex)
                 {
                     case 1:
                         file.LoadFile(ofd.FileName, TwinsFile.FileType.RM2);
+                        aux_file = new TwinsFile();
+                        aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".sm2", TwinsFile.FileType.SM2);
                         rMViewerToolStripMenuItem.Enabled = true;
                         sMViewerToolStripMenuItem.Enabled = false;
                         break;
@@ -161,11 +164,11 @@ namespace TwinsaityEditor
                         rMViewerToolStripMenuItem.Enabled = false;
                         break;
                 }
-                file.FileName = ofd.FileName;
                 file.SafeFileName = ofd.SafeFileName;
                 Tag = new FileController(this, file);
+                ((FileController)Tag).DataAux = aux_file;
                 GenTree();
-                Text = $"Twinsaity Editor by Neo_Kesha [{ofd.FileName}] ";
+                Text = $"Twinsaity Editor [{ofd.FileName}]";
             }
             ofd.Dispose();
         }
