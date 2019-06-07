@@ -217,12 +217,16 @@ namespace TwinsaityEditor
                         }
                     }
 
-                    if (((TwinsSection)file.Data.GetItem(i)).ContainsItem(7) && show_triggers)
+                    if (show_triggers && ((TwinsSection)file.Data.GetItem(i)).ContainsItem(7))
                     {
                         foreach (Trigger trg in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(7)).Records)
                         {
                             GL.PushMatrix();
                             GL.Translate(-trg.Coords[1].X, trg.Coords[1].Y, trg.Coords[1].Z);
+                            Quaternion quat = new Quaternion(trg.Coords[0].X, -trg.Coords[0].Y, -trg.Coords[0].Z, trg.Coords[0].W);
+                            Matrix4 new_mat = Matrix4.CreateFromQuaternion(quat);
+                            GL.MultMatrix(ref new_mat);
+
 
                             cur_color = file.SelectedItem == trg ? Color.White : colors[colors.Length - i * 2 - 1];
                             GL.DepthMask(false);
@@ -265,15 +269,6 @@ namespace TwinsaityEditor
                             GL.Disable(EnableCap.Lighting);
 
                             GL.Color4(cur_color);
-                            GL.LineWidth(2);
-                            GL.Begin(PrimitiveType.Lines);
-                            foreach (var id in trg.Instances)
-                            {
-                                Instance inst = file.GetInstance(trg.Parent.Parent.ID, id);
-                                GL.Vertex3(0, 0, 0);
-                                GL.Vertex3(-inst.Pos.X + trg.Coords[1].X, inst.Pos.Y - trg.Coords[1].Y, inst.Pos.Z - trg.Coords[1].Z);
-                            }
-                            GL.End();
                             GL.LineWidth(1);
 
                             GL.Begin(PrimitiveType.LineLoop);
@@ -317,10 +312,19 @@ namespace TwinsaityEditor
                             GL.Vertex3(trg.Coords[2].X, trg.Coords[2].Y, trg.Coords[2].Z);
                             GL.Vertex3(-trg.Coords[2].X, trg.Coords[2].Y, trg.Coords[2].Z);
                             GL.End();
-
-                            DrawAxes(0, 0, 0, Math.Min(trg.Coords[2].X, Math.Min(trg.Coords[2].Y, trg.Coords[2].Z)) / 2);
-
+                            
                             GL.PopMatrix();
+                            GL.LineWidth(2);
+                            GL.Begin(PrimitiveType.Lines);
+                            foreach (var id in trg.Instances)
+                            {
+                                Instance inst = file.GetInstance(trg.Parent.Parent.ID, id);
+                                GL.Vertex3(-trg.Coords[1].X, trg.Coords[1].Y, trg.Coords[1].Z);
+                                GL.Vertex3(-inst.Pos.X, inst.Pos.Y, inst.Pos.Z);
+                            }
+                            GL.End();
+                            GL.LineWidth(1);
+                            DrawAxes(0, 0, 0, Math.Min(trg.Coords[2].X, Math.Min(trg.Coords[2].Y, trg.Coords[2].Z)) / 2);
                         }
                     }
                 }
