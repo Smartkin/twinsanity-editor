@@ -14,13 +14,15 @@ namespace TwinsaityEditor
 
         public Vertex[] Vertices { get; set; }
         public uint[] Indices { get; set; }
+        public bool IsLoaded { get; private set; }
 
         public MeshController(MainForm topform, Mesh item) : base (topform, item)
         {
             Data = item;
             AddMenu("Export to PLY", Menu_ExportPLY);
             AddMenu("Open mesh viewer", Menu_OpenViewer);
-            LoadMeshData();
+            IsLoaded = false;
+            //LoadMeshData(); TODO preferences
         }
 
         protected override string GetName()
@@ -49,8 +51,9 @@ namespace TwinsaityEditor
             Array.Copy(ex_lines.ToArray(), 0, TextPrev, 3, ex_lines.Count);
         }
 
-        private void LoadMeshData()
+        public void LoadMeshData()
         {
+            if (IsLoaded) return;
             List<Vertex> vtx = new List<Vertex>();
             List<uint> idx = new List<uint>();
             int off = 0;
@@ -112,6 +115,7 @@ namespace TwinsaityEditor
             }
             Vertices = vtx.ToArray();
             Indices = idx.ToArray();
+            IsLoaded = true;
         }
 
         private void Menu_ExportPLY()

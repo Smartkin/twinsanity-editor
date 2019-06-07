@@ -76,6 +76,7 @@ namespace TwinsaityEditor
 
         public void LoadMesh()
         {
+            mesh.LoadMeshData();
             float min_x = float.MaxValue, min_y = float.MaxValue, min_z = float.MaxValue, max_x = float.MinValue, max_y = float.MinValue, max_z = float.MinValue;
             foreach (var v in mesh.Vertices)
             {

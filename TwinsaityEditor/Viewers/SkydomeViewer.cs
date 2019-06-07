@@ -88,6 +88,7 @@ namespace TwinsaityEditor
                 if (special_sec.Data.ContainsItem(sky.Data.ModelIDs[i]))
                     continue;
                 MeshController mesh = (MeshController)mesh_sec.GetItem(((ModelController)model_sec.GetItem(sky.Data.ModelIDs[i])).Data.MeshID);
+                mesh.LoadMeshData();
                 foreach (var v in mesh.Vertices)
                 {
                     min_x = Math.Min(min_x, v.Pos.X);
