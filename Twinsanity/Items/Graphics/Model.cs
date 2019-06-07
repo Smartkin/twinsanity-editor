@@ -4,11 +4,6 @@ namespace Twinsanity
 {
     public class Model : TwinsItem
     {
-        //public uint Header;
-        //public int MaterialNumber;
-        //public uint[] Material;
-        //public uint model;
-
         public uint Header { get; set; }
         public uint[] MaterialIDs { get; set; }
         public uint MeshID { get; set; }
