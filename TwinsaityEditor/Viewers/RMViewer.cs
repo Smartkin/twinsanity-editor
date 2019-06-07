@@ -351,11 +351,15 @@ namespace TwinsaityEditor
                         GL.Vertex4(l.LoadWall[2].ToArray());
                         GL.Vertex4(l.LoadWall[3].ToArray());
                         GL.End();
+                        Matrix3 rot_mat = Matrix3.Identity;
+                        rot_mat *= Matrix3.CreateRotationX(-rot.Y);
+                        rot_mat *= Matrix3.CreateRotationY(-rot.X);
+                        rot_mat *= Matrix3.CreateRotationZ(rot.Z);
                         RenderString3D(new string(l.Path), cur_color,
                             -(l.LoadWall[0].X + l.LoadWall[1].X + l.LoadWall[2].X + l.LoadWall[3].X) / 4,
                             (l.LoadWall[0].Y + l.LoadWall[1].Y + l.LoadWall[2].Y + l.LoadWall[3].Y) / 4,
                             (l.LoadWall[0].Z + l.LoadWall[1].Z + l.LoadWall[2].Z + l.LoadWall[3].Z) / 4,
-                            ref identity_mat);
+                            ref rot_mat);
                     }
                     if (l.Type == 1 || l.Type == 3)
                     {
@@ -409,20 +413,6 @@ namespace TwinsaityEditor
                         GL.Vertex4(l.LoadArea[6].ToArray());
                         GL.End();
                         GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-                        if (l.HasWall())
-                        {
-                            GL.Disable(EnableCap.DepthTest);
-                            GL.LineWidth(2);
-                            GL.Begin(PrimitiveType.Lines);
-                            GL.Vertex3((l.LoadArea[0].X + l.LoadArea[1].X + l.LoadArea[2].X + l.LoadArea[3].X + l.LoadArea[4].X + l.LoadArea[5].X + l.LoadArea[6].X + l.LoadArea[7].X) / 8,
-                                (l.LoadArea[0].Y + l.LoadArea[1].Y + l.LoadArea[2].Y + l.LoadArea[3].Y + l.LoadArea[4].Y + l.LoadArea[5].Y + l.LoadArea[6].Y + l.LoadArea[7].Y) / 8,
-                                (l.LoadArea[0].Z + l.LoadArea[1].Z + l.LoadArea[2].Z + l.LoadArea[3].Z + l.LoadArea[4].Z + l.LoadArea[5].Z + l.LoadArea[6].Z + l.LoadArea[7].Z) / 8);
-                            GL.Vertex3((l.LoadWall[0].X + l.LoadWall[1].X + l.LoadWall[2].X + l.LoadWall[3].X) / 4,
-                                (l.LoadWall[0].Y + l.LoadWall[1].Y + l.LoadWall[2].Y + l.LoadWall[3].Y) / 4,
-                                (l.LoadWall[0].Z + l.LoadWall[1].Z + l.LoadWall[2].Z + l.LoadWall[3].Z) / 4);
-                            GL.End();
-                            GL.Enable(EnableCap.DepthTest);
-                        }
                     }
                     GL.DepthMask(true);
                     GL.PopMatrix();

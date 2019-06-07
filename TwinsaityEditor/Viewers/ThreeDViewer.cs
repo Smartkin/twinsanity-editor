@@ -22,7 +22,8 @@ namespace TwinsaityEditor
         private Dictionary<char, int> charVtxOffs;
         private int charVtxBuf, charVtxBufLen;
 
-        private Vector3 pos, rot;
+        protected Vector3 pos, rot;
+        private Matrix3 cam_rot_mat;
         private float sca, range;
         private Timer refresh;
         private bool k_w, k_a, k_s, k_d, k_e, k_q, m_l;
@@ -84,11 +85,11 @@ namespace TwinsaityEditor
                     if (k_q)
                         v--;
                     Vector3 delta = new Vector3(h, v, d) * speed;
-                    Matrix4 rot_matrix = Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), rot.X);
-                    rot_matrix *= Matrix4.CreateFromAxisAngle(new Vector3(1, 0, 0), rot.Y);
-                    rot_matrix *= Matrix4.CreateFromAxisAngle(new Vector3(0, 0, 1), rot.Z);
+                    cam_rot_mat = Matrix3.CreateFromAxisAngle(new Vector3(0, 1, 0), rot.X);
+                    cam_rot_mat *= Matrix3.CreateFromAxisAngle(new Vector3(1, 0, 0), rot.Y);
+                    cam_rot_mat *= Matrix3.CreateFromAxisAngle(new Vector3(0, 0, 1), rot.Z);
 
-                    Vector3 fin_delta = new Vector3(rot_matrix * new Vector4(delta, 1.0f));
+                    Vector3 fin_delta = cam_rot_mat * delta;
 
                     pos -= fin_delta;
 
@@ -169,8 +170,8 @@ namespace TwinsaityEditor
             base.OnMouseMove(e);
             if (m_l)
             {
-                rot.X += (e.X - m_x) / 180.0f * MathHelper.Pi / (Size.Width / 480f);
-                rot.Y += (e.Y - m_y) / 180.0f * MathHelper.Pi / (Size.Height / 480f);
+                rot.X += (e.X - m_x) / 180.0f * MathHelper.Pi;
+                rot.Y += (e.Y - m_y) / 180.0f * MathHelper.Pi;
                 rot.X += rot.X > MathHelper.Pi ? -MathHelper.TwoPi : rot.X < -MathHelper.Pi ? MathHelper.TwoPi : 0;
                 if (rot.Y > MathHelper.PiOver2)
                     rot.Y = MathHelper.PiOver2;
