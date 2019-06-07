@@ -354,6 +354,8 @@ namespace Twinsanity
             {
                 i.Save(writer);
             }
+
+            writer.Write(ExtraData);
         }
 
         protected override int GetSize()
