@@ -9,15 +9,15 @@ namespace TwinsaityEditor
         private MeshController mesh;
         private FileController file;
 
-        private bool lighting;
+        private bool lighting, wire;
 
         public MeshViewer(MeshController mesh, ref Form pform)
         {
             //initialize variables here
             this.mesh = mesh;
-            zFar = 100F;
+            zFar = 50F;
             file = mesh.MainFile;
-            lighting = true;
+            lighting = wire = true;
             Tag = pform;
             InitVBO(1);
             pform.Text = "Loading mesh...";
@@ -28,22 +28,25 @@ namespace TwinsaityEditor
         protected override void RenderHUD()
         {
             base.RenderHUD();
-            RenderString2D("Press L to toggle lighting", 0, Height, 12, TextAnchor.BotLeft);
+            RenderString2D("Press L to toggle lighting\nPress X to toggle wireframe", 0, Height, 12, TextAnchor.BotLeft);
         }
 
         protected override void RenderObjects()
         {
             //put all object rendering code here
+            if (wire)
+            {
+                GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
+                GL.Color3(System.Drawing.Color.Black);
+                vtx[0].DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.None);
+                GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+            }
+            var flags = lighting ? BufferPointerFlags.Normal : BufferPointerFlags.Default;
             if (lighting)
-            {
                 GL.Enable(EnableCap.Lighting);
-                vtx[0].DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Normal);
+            vtx[0].DrawAllElements(PrimitiveType.Triangles, flags);
+            if (lighting)
                 GL.Disable(EnableCap.Lighting);
-            }
-            else
-            {
-                vtx[0].DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Default);
-            }
         }
 
         protected override bool IsInputKey(Keys keyData)
@@ -51,6 +54,7 @@ namespace TwinsaityEditor
             switch (keyData)
             {
                 case Keys.L:
+                case Keys.X:
                     return true;
             }
             return base.IsInputKey(keyData);
@@ -63,6 +67,9 @@ namespace TwinsaityEditor
             {
                 case Keys.L:
                     lighting = !lighting;
+                    break;
+                case Keys.X:
+                    wire = !wire;
                     break;
             }
         }
