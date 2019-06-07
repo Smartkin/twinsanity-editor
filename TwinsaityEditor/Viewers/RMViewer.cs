@@ -331,7 +331,7 @@ namespace TwinsaityEditor
             {
                 foreach (var l in links.Links)
                 {
-                    Color cur_color = colors[links.Links.IndexOf(l) % colors.Length];
+                    Color cur_color = colors[(links.Links.IndexOf(l) + 2) % colors.Length];
                     GL.PushMatrix();
                     GL.DepthMask(false);
                     GL.Scale(-1, 1, 1);
@@ -470,7 +470,6 @@ namespace TwinsaityEditor
         public void LoadColTree()
         {
             ColData data = (ColData)file.Data.GetItem(9);
-            //vtx[0].Vtx = new Vertex[data.Vertices.Count];
             List<Vertex> vertices = new List<Vertex>(data.Vertices.Count);
             vtx[0].VtxInd = new uint[data.Tris.Count * 3];
             for (int i = 0; i < data.Vertices.Count; ++i)
@@ -518,20 +517,6 @@ namespace TwinsaityEditor
                 vertices[v3] = v;
             }
             vtx[0].Vtx = vertices.ToArray();
-            //vtx[0].Vtx = new Vertex[data.Tris.Count * 3];
-            //for (int i = 0; i < data.Tris.Count; ++i)
-            //{
-            //    Vector3 v1 = data.Vertices[data.Tris[i].Vert1].ToVec3();
-            //    Vector3 v2 = data.Vertices[data.Tris[i].Vert2].ToVec3();
-            //    Vector3 v3 = data.Vertices[data.Tris[i].Vert3].ToVec3();
-            //    v1.X = -v1.X;
-            //    v2.X = -v2.X;
-            //    v3.X = -v3.X;
-            //    Vector3 nor = VectorFuncs.CalcNormal(v1, v2, v3);
-            //    vtx[0].Vtx[i * 3 + 0] = new Vertex(v1, nor, colors[data.Tris[i].Surface % colors.Length]);
-            //    vtx[0].Vtx[i * 3 + 1] = new Vertex(v2, nor, colors[data.Tris[i].Surface % colors.Length]);
-            //    vtx[0].Vtx[i * 3 + 2] = new Vertex(v3, nor, colors[data.Tris[i].Surface % colors.Length]);
-            //}
             UpdateVBO(0);
         }
 
