@@ -23,9 +23,9 @@ namespace TwinsaityEditor
         private readonly Form[] editInstances = new Form[8], editPositions = new Form[8], editPaths = new Form[8], editTriggers = new Form[8];
 
         //Viewers
-        private Form rmForm, colForm;
+        private Form colForm;
         private SkydomeViewer skyViewer;
-        private RMViewer RMViewer { get; set; }
+        private RMViewer rmViewer;
         private Dictionary<uint, Form> MeshViewers { get; set; }
         private Dictionary<uint, Form> ModelViewers { get; set; }
 
@@ -263,34 +263,32 @@ namespace TwinsaityEditor
 
         public void OpenRMViewer()
         {
-            if (rmForm == null)
+            if (rmViewer == null)
             {
-                rmForm = new Form { Size = new System.Drawing.Size(480, 480), Text = "Initializing viewer..." };
-                rmForm.FormClosed += delegate
+                Form f = new Form { Size = new System.Drawing.Size(480, 480), Text = "Initializing viewer..." };
+                f.FormClosed += delegate
                 {
-                    rmForm = null;
-                    RMViewer = null;
+                    rmViewer = null;
                 };
-                rmForm.Show();
-                RMViewer rmViewer = new RMViewer(this, ref rmForm) { Dock = DockStyle.Fill };
-                rmForm.Controls.Add(rmViewer);
-                rmForm.Text = "RMViewer";
-                RMViewer = rmViewer;
+                f.Show();
+                rmViewer = new RMViewer(this, ref f) { Dock = DockStyle.Fill };
+                f.Controls.Add(rmViewer);
+                f.Text = "RMViewer";
             }
             else
-                rmForm.Select();
+                rmViewer.ParentForm.Select();
         }
 
         public void RMViewer_LoadInstances()
         {
-            if (RMViewer != null)
-                RMViewer.LoadInstances();
+            if (rmViewer != null)
+                rmViewer.LoadInstances();
         }
 
         public void RMViewer_LoadPositions()
         {
-            if (RMViewer != null)
-                RMViewer.LoadPositions();
+            if (rmViewer != null)
+                rmViewer.LoadPositions();
         }
 
         public void CloseForm(ref Form form)
@@ -304,7 +302,8 @@ namespace TwinsaityEditor
 
         public void CloseRMViewer()
         {
-            CloseForm(ref rmForm);
+            var f = rmViewer.ParentForm;
+            CloseForm(ref f);
         }
 
         public void SelectItem(TwinsItem item, int arg = -1)
@@ -312,17 +311,17 @@ namespace TwinsaityEditor
             var prev_item = SelectedItem;
             SelectedItem = item;
             SelectedItemArg = arg;
-            if (RMViewer != null)
+            if (rmViewer != null)
             {
                 if (item == null && prev_item != null)
                 {
                     if (prev_item is Instance)
-                        RMViewer.LoadInstances();
+                        rmViewer.LoadInstances();
                     else if (prev_item is Position)
-                        RMViewer.LoadPositions();
+                        rmViewer.LoadPositions();
                 }
                 else
-                    RMViewer.UpdateSelected();
+                    rmViewer.UpdateSelected();
             }
         }
 

@@ -17,7 +17,8 @@ namespace TwinsaityEditor
             this.mesh = mesh;
             zFar = 50F;
             file = mesh.MainFile;
-            lighting = wire = true;
+            lighting = true;
+            wire = false;
             Tag = pform;
             InitVBO(1);
             pform.Text = "Loading mesh...";
