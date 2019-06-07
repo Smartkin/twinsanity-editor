@@ -34,6 +34,12 @@ namespace TwinsaityEditor
         protected override void RenderObjects()
         {
             //put all object rendering code here
+            var flags = lighting ? BufferPointerFlags.Normal : BufferPointerFlags.Default;
+            if (lighting)
+                GL.Enable(EnableCap.Lighting);
+            vtx[0].DrawAllElements(PrimitiveType.Triangles, flags);
+            if (lighting)
+                GL.Disable(EnableCap.Lighting);
             if (wire)
             {
                 GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
@@ -41,12 +47,6 @@ namespace TwinsaityEditor
                 vtx[0].DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.None);
                 GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
             }
-            var flags = lighting ? BufferPointerFlags.Normal : BufferPointerFlags.Default;
-            if (lighting)
-                GL.Enable(EnableCap.Lighting);
-            vtx[0].DrawAllElements(PrimitiveType.Triangles, flags);
-            if (lighting)
-                GL.Disable(EnableCap.Lighting);
         }
 
         protected override bool IsInputKey(Keys keyData)
