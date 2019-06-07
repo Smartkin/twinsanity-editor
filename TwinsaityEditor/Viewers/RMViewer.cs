@@ -324,7 +324,7 @@ namespace TwinsaityEditor
                             }
                             GL.End();
                             GL.LineWidth(1);
-                            DrawAxes(0, 0, 0, Math.Min(trg.Coords[2].X, Math.Min(trg.Coords[2].Y, trg.Coords[2].Z)) / 2);
+                            DrawAxes(-trg.Coords[1].X, trg.Coords[1].Y, trg.Coords[1].Z, Math.Min(trg.Coords[2].X, Math.Min(trg.Coords[2].Y, trg.Coords[2].Z)) / 2);
                         }
                     }
                 }
