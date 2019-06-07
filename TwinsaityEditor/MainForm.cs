@@ -76,6 +76,8 @@ namespace TwinsaityEditor
                 c = new MeshController(this, (Mesh)a);
             else if (a is Model)
                 c = new ModelController(this, (Model)a);
+            else if (a is Skydome)
+                c = new SkydomeController(this, (Skydome)a);
             else if (a is GameObject)
                 c = new ObjectController(this, (GameObject)a);
             else if (a is Script)

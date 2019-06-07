@@ -175,6 +175,7 @@
     <Compile Include="Controllers\ColDataController.cs" />
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\ChunkLinksController.cs" />
+    <Compile Include="Controllers\SkydomeController.cs" />
     <Compile Include="Controllers\PathController.cs" />
     <Compile Include="Controllers\AIPositionController.cs" />
     <Compile Include="Controllers\PositionController.cs" />
@@ -243,6 +244,9 @@
     <Compile Include="Utils\DictUtils.cs" />
     <Compile Include="Utils\MatrixWrapper.cs" />
     <Compile Include="Utils\VectorFuncs.cs" />
+    <Compile Include="Viewers\SkydomeViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Viewers\ModelViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>

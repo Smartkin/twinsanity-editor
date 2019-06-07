@@ -24,6 +24,7 @@ namespace TwinsaityEditor
 
         //Viewers
         private Form rmForm, colForm;
+        private SkydomeViewer skyViewer;
         private RMViewer RMViewer { get; set; }
         private Dictionary<uint, Form> MeshViewers { get; set; }
         private Dictionary<uint, Form> ModelViewers { get; set; }
@@ -223,6 +224,31 @@ namespace TwinsaityEditor
             var f = ModelViewers[id];
             CloseForm(ref f);
             ModelViewers.Remove(id);
+        }
+
+        public void OpenSkydomeViewer(SkydomeController c)
+        {
+            var id = c.Data.ID;
+            if (skyViewer == null || skyViewer.Sky.Data.ID != c.Data.ID)
+            {
+                Form f = new Form { Size = new System.Drawing.Size(480, 480), Text = "Initializing viewer..." };
+                f.FormClosed += delegate
+                {
+                    skyViewer = null;
+                };
+                f.Show();
+                skyViewer = new SkydomeViewer(c, ref f) { Dock = DockStyle.Fill };
+                f.Controls.Add(skyViewer);
+                f.Text = "SkydomeViewer";
+            }
+            else
+                skyViewer.ParentForm.Select();
+        }
+
+        public void CloseSkydomeViewer()
+        {
+            var f = skyViewer.ParentForm;
+            CloseForm(ref f);
         }
 
         public void CloseAllModelViewers()

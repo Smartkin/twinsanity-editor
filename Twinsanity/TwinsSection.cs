@@ -254,6 +254,9 @@ namespace Twinsanity
                     case SectionType.StaticModel:
                         LoadItem<Model>(reader, sub);
                         break;
+                    case SectionType.Skydome:
+                        LoadItem<Skydome>(reader, sub);
+                        break;
                     case SectionType.Object:
                         LoadItem<GameObject>(reader, sub);
                         break;
