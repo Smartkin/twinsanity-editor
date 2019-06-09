@@ -296,6 +296,9 @@ namespace Twinsanity
                     case SectionType.Trigger:
                         LoadItem<Trigger>(reader, sub);
                         break;
+                    case SectionType.Camera:
+                        LoadItem<Camera>(reader, sub);
+                        break;
                     default:
                         LoadItem<TwinsItem>(reader, sub);
                         break;

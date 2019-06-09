@@ -12,14 +12,14 @@ namespace TwinsaityEditor
     {
         private static readonly int circle_res = 16;
 
-        private bool show_col_nodes, show_triggers, wire_col, sm2_links;
+        private bool show_col_nodes, show_triggers, show_cams, wire_col, sm2_links;
         private FileController file;
         private ChunkLinks links;
 
         public RMViewer(FileController file, ref Form pform)
         {
             //initialize variables here
-            show_col_nodes = show_triggers = wire_col = false;
+            show_col_nodes = show_triggers = wire_col = show_cams = false;
             sm2_links = true;
             this.file = file;
             Tag = pform;
@@ -299,6 +299,78 @@ namespace TwinsaityEditor
                             RenderString3D(trg.ID.ToString(), cur_color, -trg.Coords[1].X, trg.Coords[1].Y, trg.Coords[1].Z, ref rot_mat);
                         }
                     }
+
+                    if (show_cams && ((TwinsSection)file.Data.GetItem(i)).ContainsItem(8))
+                    {
+                        foreach (Camera cam in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(8)).Records)
+                        {
+                            GL.PushMatrix();
+                            GL.Translate(-cam.TriggerPos.X, cam.TriggerPos.Y, cam.TriggerPos.Z);
+                            Quaternion quat = new Quaternion(cam.TriggerRot.X, -cam.TriggerRot.Y, -cam.TriggerRot.Z, cam.TriggerRot.W);
+                            Matrix4 new_mat = Matrix4.CreateFromQuaternion(quat);
+                            GL.MultMatrix(ref new_mat);
+
+                            cur_color = file.SelectedItem == cam ? Color.White : colors[colors.Length - i * 2 - 2];
+                            GL.DepthMask(false);
+                            GL.Enable(EnableCap.Lighting);
+                            GL.Color4(cur_color.R, cur_color.G, cur_color.B, (byte)95);
+                            GL.Begin(PrimitiveType.QuadStrip);
+                            GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                            GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                            GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                            GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                            GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
+                            GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
+                            GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
+                            GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
+                            GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                            GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                            GL.End();
+                            GL.Begin(PrimitiveType.Quads);
+
+                            GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                            GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
+                            GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
+                            GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
+
+                            GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                            GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
+                            GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
+                            GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
+
+                            GL.End();
+                            GL.DepthMask(true);
+                            GL.Disable(EnableCap.Lighting);
+
+                            GL.Color4(cur_color);
+                            GL.LineWidth(1);
+
+                            GL.Begin(PrimitiveType.LineStrip);
+                            GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                            GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                            GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
+                            GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
+                            GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                            GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                            GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                            GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
+                            GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
+                            GL.End();
+                            GL.Begin(PrimitiveType.Lines);
+                            GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
+                            GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
+                            GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                            GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                            GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
+                            GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
+                            GL.End();
+
+                            GL.PopMatrix();
+                            DrawAxes(-cam.TriggerPos.X, cam.TriggerPos.Y, cam.TriggerPos.Z, Math.Min(cam.TriggerSize.X, Math.Min(cam.TriggerSize.Y, cam.TriggerSize.Z)) / 2);
+                            Matrix3 rot_mat = Matrix3.CreateFromQuaternion(quat);
+                            RenderString3D(cam.ID.ToString(), cur_color, -cam.TriggerPos.X, cam.TriggerPos.Y, cam.TriggerPos.Z, ref rot_mat);
+                        }
+                    }
                 }
             }
 
@@ -415,6 +487,7 @@ namespace TwinsaityEditor
                 case Keys.L:
                 case Keys.T:
                 case Keys.X:
+                case Keys.Y:
                     return true;
             }
             return base.IsInputKey(keyData);
@@ -436,6 +509,9 @@ namespace TwinsaityEditor
                     break;
                 case Keys.X:
                     wire_col = !wire_col;
+                    break;
+                case Keys.Y:
+                    show_cams = !show_cams;
                     break;
             }
         }

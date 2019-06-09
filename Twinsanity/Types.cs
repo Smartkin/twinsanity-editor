@@ -20,4 +20,18 @@
         public float Z { get; set; }
         public float W { get; set; }
     }
+
+    public class CamRot
+    {
+        public CamRot(ushort pitch, ushort yaw, ushort roll)
+        {
+            Pitch = pitch;
+            Yaw = yaw;
+            Roll = roll;
+        }
+
+        public ushort Pitch { get; set; }
+        public ushort Yaw { get; set; }
+        public ushort Roll { get; set; }
+    }
 }
