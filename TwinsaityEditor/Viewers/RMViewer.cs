@@ -235,12 +235,12 @@ namespace TwinsaityEditor
                             GL.Begin(PrimitiveType.QuadStrip);
                             GL.Vertex3(-trg.Coords[2].X, -trg.Coords[2].Y, -trg.Coords[2].Z);
                             GL.Vertex3(trg.Coords[2].X, -trg.Coords[2].Y, -trg.Coords[2].Z);
-                            GL.Vertex3(trg.Coords[2].X, trg.Coords[2].Y, -trg.Coords[2].Z);
                             GL.Vertex3(-trg.Coords[2].X, trg.Coords[2].Y, -trg.Coords[2].Z);
-                            GL.Vertex3(trg.Coords[2].X, trg.Coords[2].Y, trg.Coords[2].Z);
+                            GL.Vertex3(trg.Coords[2].X, trg.Coords[2].Y, -trg.Coords[2].Z);
                             GL.Vertex3(-trg.Coords[2].X, trg.Coords[2].Y, trg.Coords[2].Z);
-                            GL.Vertex3(trg.Coords[2].X, -trg.Coords[2].Y, trg.Coords[2].Z);
+                            GL.Vertex3(trg.Coords[2].X, trg.Coords[2].Y, trg.Coords[2].Z);
                             GL.Vertex3(-trg.Coords[2].X, -trg.Coords[2].Y, trg.Coords[2].Z);
+                            GL.Vertex3(trg.Coords[2].X, -trg.Coords[2].Y, trg.Coords[2].Z);
                             GL.Vertex3(-trg.Coords[2].X, -trg.Coords[2].Y, -trg.Coords[2].Z);
                             GL.Vertex3(trg.Coords[2].X, -trg.Coords[2].Y, -trg.Coords[2].Z);
                             GL.End();
@@ -355,6 +355,7 @@ namespace TwinsaityEditor
                             GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
                             GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
                             GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
+                            GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
                             GL.End();
                             GL.Begin(PrimitiveType.Lines);
                             GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
