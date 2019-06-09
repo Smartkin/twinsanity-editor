@@ -295,6 +295,8 @@ namespace TwinsaityEditor
                             GL.End();
                             GL.LineWidth(1);
                             DrawAxes(-trg.Coords[1].X, trg.Coords[1].Y, trg.Coords[1].Z, Math.Min(trg.Coords[2].X, Math.Min(trg.Coords[2].Y, trg.Coords[2].Z)) / 2);
+                            Matrix3 rot_mat = Matrix3.CreateFromQuaternion(quat);
+                            RenderString3D(trg.ID.ToString(), cur_color, -trg.Coords[1].X, trg.Coords[1].Y, trg.Coords[1].Z, ref rot_mat);
                         }
                     }
                 }
