@@ -124,8 +124,7 @@ namespace TwinsaityEditor
         //protected abstract void RenderHUD();
         protected virtual void RenderHUD()
         {
-            GL.Color3(Color.White);
-            RenderString2D($"RenderObjects: {timeRenderObj}ms (max: {timeRenderObj_max}ms, min: {timeRenderObj_min}ms)\nRenderHUD: {timeRenderHud}ms (max: {timeRenderHud_max}ms, min: {timeRenderHud_min}ms)", 0, 0, 10);
+            RenderString2D($"RenderObjects: {timeRenderObj}ms (max: {timeRenderObj_max}ms, min: {timeRenderObj_min}ms)\nRenderHUD: {timeRenderHud}ms (max: {timeRenderHud_max}ms, min: {timeRenderHud_min}ms)", 0, 0, 10, Color.White);
         }
 
         private void ResetCamera()
@@ -400,6 +399,7 @@ namespace TwinsaityEditor
 
         private void DrawHUD()
         {
+            RenderHUD();
             GL.DepthMask(false);
             GL.Disable(EnableCap.DepthTest);
             GL.MatrixMode(MatrixMode.Projection);
@@ -407,7 +407,7 @@ namespace TwinsaityEditor
             GL.Ortho(0, Width, Height, 0, -1, 10);
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
-            RenderHUD();
+            RenderChars();
             GL.DepthMask(true);
             GL.Enable(EnableCap.DepthTest);
         }
@@ -505,7 +505,7 @@ namespace TwinsaityEditor
             GL.BindTexture(TextureTarget.Texture2D, 0);
         }
 
-        protected void RenderString2D(string s, float x, float y, float text_size, TextAnchor anchor = TextAnchor.TopLeft)
+        protected void RenderString2D(string s, float x, float y, float text_size, Color col, TextAnchor anchor = TextAnchor.TopLeft)
         {
             float text_size_fac = text_size / size;
             float start_x = x;
@@ -542,10 +542,10 @@ namespace TwinsaityEditor
                     if (!textureCharMap.ContainsKey(c))
                         GenCharTex(c);
                     GL.BindTexture(TextureTarget.Texture2D, textureCharMap[c]);
-                    GL.GetTexLevelParameter(TextureTarget.Texture2D, 0, GetTextureParameter.TextureWidth, out float c_w);
-                    GL.GetTexLevelParameter(TextureTarget.Texture2D, 0, GetTextureParameter.TextureHeight, out float c_h);
-                    c_w *= text_size_fac;
-                    c_h *= text_size_fac;
+                    GL.GetTexLevelParameter(TextureTarget.Texture2D, 0, GetTextureParameter.TextureWidth, out float w);
+                    GL.GetTexLevelParameter(TextureTarget.Texture2D, 0, GetTextureParameter.TextureHeight, out float h);
+                    w *= text_size_fac;
+                    h *= text_size_fac;
                     float y_hi = 0, y_lo = 0;
                     switch (anchor)
                     {
@@ -553,21 +553,31 @@ namespace TwinsaityEditor
                         case TextAnchor.TopMiddle:
                         case TextAnchor.TopRight:
                             y_hi = y + (size - charBearingY[c]) * text_size_fac;
-                            y_lo = y_hi + c_h;
+                            y_lo = y_hi + h;
                             break;
                         case TextAnchor.BotLeft:
                         case TextAnchor.BotMiddle:
                         case TextAnchor.BotRight:
                             y_lo = y + (charHeight[c] - charBearingY[c]) * text_size_fac;
-                            y_hi = y_lo - c_h;
+                            y_hi = y_lo - h;
                             break;
                     }
-                    GL.Begin(PrimitiveType.Quads);
-                    GL.TexCoord2(0, 1); GL.Vertex2(x, y_lo);
-                    GL.TexCoord2(1, 1); GL.Vertex2(x + c_w, y_lo);
-                    GL.TexCoord2(1, 0); GL.Vertex2(x + c_w, y_hi);
-                    GL.TexCoord2(0, 0); GL.Vertex2(x, y_hi);
-                    GL.End();
+                    if (!charVtx.ContainsKey(c))
+                    {
+                        charVtx.Add(c, new Vertex[256]);
+                        charVtxOffs.Add(c, 0);
+                    }
+                    else if (charVtxOffs[c] + 4 >= charVtx[c].Length)
+                    {
+                        var arr = charVtx[c];
+                        Array.Resize(ref arr, arr.Length * 2);
+                        charVtx[c] = arr;
+                    }
+                    float gBearingX = charBearingX[c];
+                    charVtx[c][charVtxOffs[c]++] = new Vertex(new Vector3(x + gBearingX, y_lo, 0), new Vector2(0, 1), col);
+                    charVtx[c][charVtxOffs[c]++] = new Vertex(new Vector3(x + gBearingX + w, y_lo, 0), new Vector2(1, 1), col);
+                    charVtx[c][charVtxOffs[c]++] = new Vertex(new Vector3(x + gBearingX + w, y_hi, 0), new Vector2(1, 0), col);
+                    charVtx[c][charVtxOffs[c]++] = new Vertex(new Vector3(x + gBearingX, y_hi, 0), new Vector2(0, 0), col);
                 }
                 x += charAdvanceX[c] * text_size_fac;
             }

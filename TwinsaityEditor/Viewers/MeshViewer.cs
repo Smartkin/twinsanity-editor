@@ -29,7 +29,7 @@ namespace TwinsaityEditor
         protected override void RenderHUD()
         {
             base.RenderHUD();
-            RenderString2D("Press L to toggle lighting\nPress X to toggle wireframe", 0, Height, 12, TextAnchor.BotLeft);
+            RenderString2D("Press L to toggle lighting\nPress X to toggle wireframe", 0, Height, 12, System.Drawing.Color.White, TextAnchor.BotLeft);
         }
 
         protected override void RenderObjects()
