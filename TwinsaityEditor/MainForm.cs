@@ -196,25 +196,6 @@ namespace TwinsaityEditor
             CurCont.OpenRMViewer();
         }
 
-        public void OpenSMViewer()
-        {
-            if (smForm == null)
-            {
-                smForm = new Form { Size = new System.Drawing.Size(480, 480), Text = "Initiating renderer..." };
-                smForm.FormClosed += delegate
-                {
-                    smForm = null;
-                };
-                smForm.Show();
-                TwinsFile file = CurFile;
-                SMViewer viewer = new SMViewer(ref file) { Dock = DockStyle.Fill, Tag = this };
-                smForm.Controls.Add(viewer);
-                smForm.Text = "SMViewer";
-            }
-            else
-                smForm.Select();
-        }
-
         private void eLFPatcherToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenEXETool();
@@ -222,7 +203,7 @@ namespace TwinsaityEditor
 
         private void sMViewerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenSMViewer();
+            CurCont.OpenSMViewer();
         }
 
         public void OpenEXETool()

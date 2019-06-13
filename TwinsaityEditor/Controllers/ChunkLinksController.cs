@@ -10,6 +10,7 @@ namespace TwinsaityEditor
         public ChunkLinksController(MainForm topform, ChunkLinks item) : base (topform, item)
         {
             Data = item;
+            AddMenu("Open editor", Menu_OpenEditor);
         }
 
         protected override string GetName()
@@ -30,6 +31,11 @@ namespace TwinsaityEditor
                 TextPrev[5 + i * 4] = $"Directory: {new string(Data.Links[i].Path)}";
                 TextPrev[6 + i * 4] = $"Flags: {Convert.ToString(Data.Links[i].Flags, 16).ToUpper()}";
             }
+        }
+
+        private void Menu_OpenEditor()
+        {
+            MainFile.OpenEditor(this);
         }
     }
 }

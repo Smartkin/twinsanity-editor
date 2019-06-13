@@ -27,6 +27,7 @@ namespace TwinsaityEditor
         private Form colForm;
         private SkydomeViewer skyViewer;
         private RMViewer rmViewer;
+        private SMViewer smViewer;
         private Dictionary<uint, Form> MeshViewers { get; set; }
         private Dictionary<uint, Form> ModelViewers { get; set; }
 
@@ -85,6 +86,7 @@ namespace TwinsaityEditor
         public void CloseFile()
         {
             CloseRMViewer();
+            CloseSMViewer();
             CloseSkydomeViewer();
             CloseAllMeshViewers();
             CloseAllModelViewers();
@@ -284,6 +286,24 @@ namespace TwinsaityEditor
                 rmViewer.ParentForm.Select();
         }
 
+        public void OpenSMViewer()
+        {
+            if (smViewer == null)
+            {
+                Form f = new Form { Size = new System.Drawing.Size(480, 480), Text = "Initializing viewer..." };
+                f.FormClosed += delegate
+                {
+                    smViewer = null;
+                };
+                f.Show();
+                smViewer = new SMViewer(this, ref f) { Dock = DockStyle.Fill };
+                f.Controls.Add(smViewer);
+                f.Text = "SMViewer";
+            }
+            else
+                smViewer.ParentForm.Select();
+        }
+
         public void RMViewer_LoadInstances()
         {
             if (rmViewer != null)
@@ -309,6 +329,13 @@ namespace TwinsaityEditor
         {
             if (rmViewer == null) return;
             var f = rmViewer.ParentForm;
+            CloseForm(ref f);
+        }
+
+        public void CloseSMViewer()
+        {
+            if (smViewer == null) return;
+            var f = smViewer.ParentForm;
             CloseForm(ref f);
         }
 
