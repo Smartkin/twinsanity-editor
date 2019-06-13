@@ -610,9 +610,12 @@ namespace TwinsaityEditor
         protected override void Dispose(bool disposing)
         {
             refresh.Dispose();
-            for (int i = 0; i < vtx.Length; ++i)
+            if (vtx != null)
             {
-                GL.DeleteBuffer(vtx[i].ID);
+                for (int i = 0; i < vtx.Length; ++i)
+                {
+                    GL.DeleteBuffer(vtx[i].ID);
+                }
             }
             GL.DeleteBuffer(charVtxBuf);
             foreach (var t in textureCharMap.Values)
