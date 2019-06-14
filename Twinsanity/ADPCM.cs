@@ -102,23 +102,22 @@ namespace Twinsanity
                 throw new ArgumentException("Stereo interleave is not a multiple of 16.");
             if (interleave <= 0)
                 throw new ArgumentOutOfRangeException("interleave");
-            size /= 16;
+            size /= 32;
             interleave /= 16;
             double s0_l = 0, s1_l = 0;
             double s0_r = 0, s1_r = 0;
             List<byte> pcm_data = new List<byte>();
-            for (int i = -interleave; i < size; ++i)
+            int interleave_adv = 0;
+            for (int i = 0; i < size; ++i)
             {
                 if ((i % interleave) == 0)
-                    i += interleave;
+                    ++interleave_adv;
                 byte[] line_l = new byte[16];
                 byte[] line_r = new byte[16];
-                Array.Copy(data, i * 16, line_l, 0, 16);
-                Array.Copy(data, (i + interleave) * 16, line_r, 0, 16);
-                if ((((SampleLineFlags)line_l[1] | (SampleLineFlags)line_r[1]) & SampleLineFlags.LoopEnd) != 0)
-                {
+                Array.Copy(data, (i + interleave * (interleave_adv-1)) * 16, line_l, 0, 16);
+                Array.Copy(data, (i + interleave * interleave_adv) * 16, line_r, 0, 16);
+                if (line_l[1] == 7 || line_r[1] == 7)
                     break;
-                }
                 var l = LineToPCM(line_l, ref s0_l, ref s1_l);
                 var r = LineToPCM(line_r, ref s0_r, ref s1_r);
                 for (int j = 0; j < 28; ++j)
@@ -128,6 +127,8 @@ namespace Twinsanity
                     pcm_data.Add(r[0 + j * 2]);
                     pcm_data.Add(r[1 + j * 2]);
                 }
+                if (line_l[1] == 1 || line_r[1] == 1)
+                    break;
             }
             return pcm_data.ToArray();
         }
