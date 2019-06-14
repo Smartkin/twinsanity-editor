@@ -42,7 +42,7 @@ namespace Twinsanity
         private static double _s_1 = 0.0, _s_2 = 0.0;
 
         //Convert a single ADPCM sample (4-bit value) into a PCM sample
-        public static short SampleToPCM(int sample, int factor, int predict, ref double s0, ref double s1)
+        private static short SampleToPCM(int sample, int factor, int predict, ref double s0, ref double s1)
         {
             sample <<= 12;
             sample = (short)sample; //sign extend
@@ -56,7 +56,7 @@ namespace Twinsanity
         }
 
         //Convert a single sample-line (28 samples, 16 bytes) from memory into an array of PCM samples
-        public static byte[] LineToPCM(byte[] input, ref double s0, ref double s1)
+        private static byte[] LineToPCM(byte[] input, ref double s0, ref double s1)
         {
             if (input.Length != 16)
                 throw new ArgumentException("input");
@@ -123,10 +123,10 @@ namespace Twinsanity
                 var r = LineToPCM(line_r, ref s0_r, ref s1_r);
                 for (int j = 0; j < 28; ++j)
                 {
-                    pcm_data.Add(l[0 + i * 2]);
-                    pcm_data.Add(l[1 + i * 2]);
-                    pcm_data.Add(r[0 + i * 2]);
-                    pcm_data.Add(r[1 + i * 2]);
+                    pcm_data.Add(l[0 + j * 2]);
+                    pcm_data.Add(l[1 + j * 2]);
+                    pcm_data.Add(r[0 + j * 2]);
+                    pcm_data.Add(r[1 + j * 2]);
                 }
             }
             return pcm_data.ToArray();
