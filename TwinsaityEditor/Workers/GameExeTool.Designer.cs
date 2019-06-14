@@ -1,4 +1,4 @@
-﻿namespace TwinsaityEditor.Workers
+﻿namespace TwinsaityEditor
 {
     partial class EXEPatcher
     {

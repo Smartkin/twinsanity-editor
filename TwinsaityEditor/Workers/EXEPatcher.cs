@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using System.IO;
 
-namespace TwinsaityEditor.Workers
+namespace TwinsaityEditor
 {
     public partial class EXEPatcher : Form
     {
@@ -22,7 +22,6 @@ namespace TwinsaityEditor.Workers
 
         public EXEPatcher()
         {
-            InitializeComponent();
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "NTSC-U executable|SLUS_209.09|PAL executable|SLES_525.68";
             if (ofd.ShowDialog() == DialogResult.OK)
@@ -39,6 +38,7 @@ namespace TwinsaityEditor.Workers
                         ver = GameVersion.PAL;
                         break;
                 }
+                InitializeComponent();
                 Show();
             }
             else

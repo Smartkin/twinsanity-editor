@@ -25,11 +25,10 @@ namespace Twinsanity
                 return;
             Records = new List<TwinsItem>();
             RecordIDs = new Dictionary<uint, int>();
-            FileStream file = new FileStream(path, FileMode.Open, FileAccess.Read);
-            BinaryReader reader = new BinaryReader(file);
+            BinaryReader reader = new BinaryReader(new FileStream(path, FileMode.Open, FileAccess.Read));
             Type = type;
             if ((Magic = reader.ReadUInt32()) != magic)
-                throw new ArgumentException("LoadFile: Magic number is wrong.");
+                throw new Exception("LoadFile: Magic number is wrong.");
             FileName = path;
             var count = reader.ReadInt32();
             var sec_size = reader.ReadUInt32();
