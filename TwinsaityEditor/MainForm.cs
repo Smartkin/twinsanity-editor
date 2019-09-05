@@ -6,7 +6,7 @@ namespace TwinsaityEditor
 {
     public partial class MainForm : Form
     {
-        private Form smForm, exeForm;
+        private Form mhForm, exeForm;
 
         private TreeNode nodeLastSelected;
 
@@ -206,11 +206,16 @@ namespace TwinsaityEditor
             CurCont.OpenSMViewer();
         }
 
+        private void mHMBToolToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenMHTool();
+        }
+
         public void OpenEXETool()
         {
             if (exeForm == null)
             {
-                exeForm = new Workers.EXEPatcher();
+                exeForm = new EXEPatcher();
                 exeForm.FormClosed += delegate
                 {
                     exeForm = null;
@@ -218,6 +223,20 @@ namespace TwinsaityEditor
             }
             else
                 exeForm.Select();
+        }
+
+        public void OpenMHTool()
+        {
+            if (mhForm == null)
+            {
+                mhForm = new MHViewer();
+                mhForm.FormClosed += delegate
+                {
+                    mhForm = null;
+                };
+            }
+            else
+                mhForm.Select();
         }
     }
 }

@@ -133,13 +133,14 @@ namespace Twinsanity
             return pcm_data.ToArray();
         }
 
-        public static byte[] FromPCMMono(byte[] data, int sample_size)
+        public static byte[] FromPCMMono(byte[] data)
         {
             int off = 0, predict = 0, factor = 0;
             int i;
             short[] wave = new short[BUFFER_SIZE];
             double[] d_samples = new double[28];
             short[] v_samples = new short[28];
+            int sample_size = data.Length / 2;
             List<byte> vag = new List<byte>();
             _s_1 = _s_2 = 0.0;
             while (sample_size > 0)
@@ -178,16 +179,16 @@ namespace Twinsanity
         /// Return VAG data from a 16-bit PCM stream.
         /// </summary>
         /// <param name="data">PCM data to convert from.</param>
-        /// <param name="sample_size">Number of samples in the stream. 1 sample = 2 values (4 bytes)</param>
         /// <param name="interleave">Left/right interleave, in bytes.</param>
         /// <returns></returns>
-        public static byte[] FromPCMStereo(byte[] data, int sample_size, int interleave)
+        public static byte[] FromPCMStereo(byte[] data, int interleave)
         {
             if ((interleave % 16) != 0)
                 throw new ArgumentException("Interleave must be a multiple of 16.");
             byte[] silence = new byte[interleave];
             for (int i = 0; i < interleave*2; ++i)
                 silence[i] = 0;
+            int sample_size = data.Length / 4;
             byte[] data_l = new byte[sample_size*2];
             byte[] data_r = new byte[sample_size*2];
             List<byte> vag = new List<byte>();
@@ -198,8 +199,8 @@ namespace Twinsanity
                 data_r[i+0] = data[i * 4 + 2];
                 data_r[i+1] = data[i * 4 + 3];
             }
-            data_l = FromPCMMono(data_l, sample_size);
-            data_r = FromPCMMono(data_r, sample_size);
+            data_l = FromPCMMono(data_l);
+            data_r = FromPCMMono(data_r);
             for (int i = 0; i < data_l.Length; i += interleave)
             {
                 vag.AddRange(silence);

@@ -42,12 +42,6 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.eLFPatcherToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.e3ConverterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
-            this.refreshLibraryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
-            this.graphicsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.soundToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rMViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sMViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -56,6 +50,7 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.mHMBToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -154,12 +149,7 @@
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.eLFPatcherToolStripMenuItem,
-            this.e3ConverterToolStripMenuItem,
-            this.toolStripMenuItem4,
-            this.refreshLibraryToolStripMenuItem,
-            this.toolStripMenuItem5,
-            this.graphicsToolStripMenuItem,
-            this.soundToolStripMenuItem});
+            this.mHMBToolToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -170,44 +160,6 @@
             this.eLFPatcherToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.eLFPatcherToolStripMenuItem.Text = "EXE Patcher";
             this.eLFPatcherToolStripMenuItem.Click += new System.EventHandler(this.eLFPatcherToolStripMenuItem_Click);
-            // 
-            // e3ConverterToolStripMenuItem
-            // 
-            this.e3ConverterToolStripMenuItem.Enabled = false;
-            this.e3ConverterToolStripMenuItem.Name = "e3ConverterToolStripMenuItem";
-            this.e3ConverterToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.e3ConverterToolStripMenuItem.Text = "E3 Converter";
-            // 
-            // toolStripMenuItem4
-            // 
-            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(177, 6);
-            // 
-            // refreshLibraryToolStripMenuItem
-            // 
-            this.refreshLibraryToolStripMenuItem.Enabled = false;
-            this.refreshLibraryToolStripMenuItem.Name = "refreshLibraryToolStripMenuItem";
-            this.refreshLibraryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.refreshLibraryToolStripMenuItem.Text = "Refresh Library";
-            // 
-            // toolStripMenuItem5
-            // 
-            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(177, 6);
-            // 
-            // graphicsToolStripMenuItem
-            // 
-            this.graphicsToolStripMenuItem.Enabled = false;
-            this.graphicsToolStripMenuItem.Name = "graphicsToolStripMenuItem";
-            this.graphicsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.graphicsToolStripMenuItem.Text = "Graphics";
-            // 
-            // soundToolStripMenuItem
-            // 
-            this.soundToolStripMenuItem.Enabled = false;
-            this.soundToolStripMenuItem.Name = "soundToolStripMenuItem";
-            this.soundToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.soundToolStripMenuItem.Text = "Sound";
             // 
             // viewersToolStripMenuItem
             // 
@@ -222,7 +174,7 @@
             // 
             this.rMViewerToolStripMenuItem.Enabled = false;
             this.rMViewerToolStripMenuItem.Name = "rMViewerToolStripMenuItem";
-            this.rMViewerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.rMViewerToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.rMViewerToolStripMenuItem.Text = "RM Viewer";
             this.rMViewerToolStripMenuItem.Click += new System.EventHandler(this.rMViewerToolStripMenuItem_Click);
             // 
@@ -230,7 +182,7 @@
             // 
             this.sMViewerToolStripMenuItem.Enabled = false;
             this.sMViewerToolStripMenuItem.Name = "sMViewerToolStripMenuItem";
-            this.sMViewerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.sMViewerToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.sMViewerToolStripMenuItem.Text = "SM Viewer";
             this.sMViewerToolStripMenuItem.Click += new System.EventHandler(this.sMViewerToolStripMenuItem_Click);
             // 
@@ -285,6 +237,13 @@
             this.textBox1.Size = new System.Drawing.Size(437, 345);
             this.textBox1.TabIndex = 0;
             // 
+            // mHMBToolToolStripMenuItem
+            // 
+            this.mHMBToolToolStripMenuItem.Name = "mHMBToolToolStripMenuItem";
+            this.mHMBToolToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.mHMBToolToolStripMenuItem.Text = "MH/MB Tool";
+            this.mHMBToolToolStripMenuItem.Click += new System.EventHandler(this.mHMBToolToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -323,12 +282,6 @@
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem eLFPatcherToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem e3ConverterToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem4;
-        private System.Windows.Forms.ToolStripMenuItem refreshLibraryToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem5;
-        private System.Windows.Forms.ToolStripMenuItem graphicsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem soundToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.TreeView treeView1;
@@ -337,5 +290,6 @@
         private System.Windows.Forms.ToolStripMenuItem viewersToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem rMViewerToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sMViewerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mHMBToolToolStripMenuItem;
     }
 }

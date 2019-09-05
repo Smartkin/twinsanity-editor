@@ -278,6 +278,12 @@
     <Compile Include="Workers\EXEPatcher.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Workers\MHViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Workers\MHViewer.Designer.cs">
+      <DependentUpon>MHViewer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Workers\GameExeTool.Designer.cs">
       <DependentUpon>EXEPatcher.cs</DependentUpon>
     </Compile>
@@ -322,6 +328,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Workers\GameExeTool.resx">
       <DependentUpon>EXEPatcher.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Workers\MHViewer.resx">
+      <DependentUpon>MHViewer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Workers\TextureImport.resx">
       <DependentUpon>TextureImport.cs</DependentUpon>
