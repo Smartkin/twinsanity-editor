@@ -43,7 +43,7 @@ namespace TwinsaityEditor
             }
             listBox1.EndUpdate();
             comboBox1.Items.Clear();
-            var s_dic = new SortedDictionary<uint, int>(((TwinsSection)((TwinsSection)FileData.GetItem(10)).GetItem(0)).RecordIDs);
+            var s_dic = new SortedDictionary<uint, int>(FileData.GetItem<TwinsSection>(10).GetItem<TwinsSection>(0).RecordIDs);
             foreach (var i in s_dic)
             {
                 comboBox1.Items.Add($"{i.Key} ({File.GetObjectName(i.Key)})");

@@ -56,17 +56,17 @@ namespace TwinsaityEditor
 
         private void LoadFileInfo()
         {
-            if (Data.Type == TwinsFile.FileType.RM2 && Data.ContainsItem(10) && ((TwinsSection)Data.GetItem(10)).ContainsItem(0))
+            if (Data.Type == TwinsFile.FileType.RM2 && Data.ContainsItem(10) && Data.GetItem<TwinsSection>(10).ContainsItem(0))
             {
-                foreach (GameObject obj in ((TwinsSection)((TwinsSection)Data.GetItem(10)).GetItem(0)).Records)
+                foreach (GameObject obj in Data.GetItem<TwinsSection>(10).GetItem<TwinsSection>(0).Records)
                 {
                     ObjectNames.Add(obj.ID, obj.Name);
                 }
             }
             var gfx_id = Data.Type == TwinsFile.FileType.RM2 ? (uint)11 : 6;
-            if (Data.ContainsItem(gfx_id) && ((TwinsSection)Data.GetItem(gfx_id)).ContainsItem(1))
+            if (Data.ContainsItem(gfx_id) && Data.GetItem<TwinsSection>(gfx_id).ContainsItem(1))
             {
-                foreach (Material mat in ((TwinsSection)((TwinsSection)Data.GetItem(gfx_id)).GetItem(1)).Records)
+                foreach (Material mat in Data.GetItem<TwinsSection>(gfx_id).GetItem<TwinsSection>(1).Records)
                 {
                     MaterialNames.Add(mat.ID, mat.Name);
                 }
@@ -76,9 +76,9 @@ namespace TwinsaityEditor
         private SectionController GetMeshSection()
         {
             var gfx_id = Data.Type == TwinsFile.FileType.RM2 ? (uint)11 : 6;
-            if (Data.ContainsItem(gfx_id) && ((TwinsSection)Data.GetItem(gfx_id)).ContainsItem(2))
+            if (Data.ContainsItem(gfx_id) && Data.GetItem<TwinsSection>(gfx_id).ContainsItem(2))
             {
-                return (SectionController)((SectionController)GetItem(gfx_id)).GetItem(2);
+                return GetItem<SectionController>(gfx_id).GetItem<SectionController>(2);
             }
             else return null;
         }
@@ -137,7 +137,7 @@ namespace TwinsaityEditor
                 {
                     case Editors.ColData:
                         {
-                            if (Data.ContainsItem(9)) editor_var = new ColDataEditor((ColData)Data.GetItem(9)) { Tag = TopForm };
+                            if (Data.ContainsItem(9)) editor_var = new ColDataEditor(Data.GetItem<ColData>(9)) { Tag = TopForm };
                             else return;
                         }
                         break;
@@ -374,13 +374,13 @@ namespace TwinsaityEditor
 
         public string GetScriptName(uint id)
         {
-            try { return ((Script)((TwinsSection)((TwinsSection)Data.GetItem(10)).GetItem(1)).GetItem(id)).Name; } //lol
+            try { return Data.GetItem<TwinsSection>(10).GetItem<TwinsSection>(1).GetItem<Script>(id).Name; }
             catch { return string.Empty; }
         }
 
         public Instance GetInstance(uint sector, uint id)
         {
-            if (Data.ContainsItem(sector) && ((TwinsSection)Data.GetItem(sector)).ContainsItem(6))
+            if (Data.ContainsItem(sector) && Data.GetItem<TwinsSection>(sector).ContainsItem(6))
             {
                 //int i = 0;
                 //foreach (Instance j in ((TwinsSection)((TwinsSection)Data.GetItem(sector)).GetItem(6)).Records)
@@ -389,8 +389,8 @@ namespace TwinsaityEditor
                 //        return j;
                 //}
                 //throw new System.ArgumentException("The requested section does not have an instance in the specified position.");
-                if (id < ((TwinsSection)((TwinsSection)Data.GetItem(sector)).GetItem(6)).Records.Count)
-                    return (Instance)((TwinsSection)((TwinsSection)Data.GetItem(sector)).GetItem(6)).Records[(int)id];
+                if (id < Data.GetItem<TwinsSection>(sector).GetItem<TwinsSection>(6).Records.Count)
+                    return (Instance)Data.GetItem<TwinsSection>(sector).GetItem<TwinsSection>(6).Records[(int)id];
                 else
                     return null;
             }
@@ -399,7 +399,7 @@ namespace TwinsaityEditor
 
         public AIPosition GetAIPos(uint sector, uint id)
         {
-            if (Data.ContainsItem(sector) && ((TwinsSection)Data.GetItem(sector)).ContainsItem(1))
+            if (Data.ContainsItem(sector) && Data.GetItem<TwinsSection>(sector).ContainsItem(1))
             {
                 //int i = 0;
                 //foreach (Instance j in ((TwinsSection)((TwinsSection)Data.GetItem(sector)).GetItem(6)).Records)
@@ -408,8 +408,8 @@ namespace TwinsaityEditor
                 //        return j;
                 //}
                 //throw new System.ArgumentException("The requested section does not have an instance in the specified position.");
-                if (id < ((TwinsSection)((TwinsSection)Data.GetItem(sector)).GetItem(1)).Records.Count)
-                    return (AIPosition)((TwinsSection)((TwinsSection)Data.GetItem(sector)).GetItem(1)).Records[(int)id];
+                if (id < Data.GetItem<TwinsSection>(sector).GetItem<TwinsSection>(1).Records.Count)
+                    return (AIPosition)Data.GetItem<TwinsSection>(sector).GetItem<TwinsSection>(1).Records[(int)id];
                 else
                     return null;
             }

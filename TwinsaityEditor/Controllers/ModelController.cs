@@ -37,7 +37,7 @@ namespace TwinsaityEditor
             SaveFileDialog sfd = new SaveFileDialog { Filter = "PLY files (*.ply)|*.ply", FileName = GetName() };
             if (sfd.ShowDialog() == DialogResult.OK)
             {
-                File.WriteAllBytes(sfd.FileName, ((Mesh)((TwinsSection)Data.Parent.Parent.GetItem(2)).GetItem(Data.MeshID)).ToPLY());
+                File.WriteAllBytes(sfd.FileName, Data.Parent.Parent.GetItem<TwinsSection>(2).GetItem<Mesh>(Data.MeshID).ToPLY());
             }
         }
 

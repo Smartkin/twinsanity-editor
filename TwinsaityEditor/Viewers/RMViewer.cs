@@ -26,11 +26,11 @@ namespace TwinsaityEditor
             InitVBO(5);
             if (file.DataAux != null && file.DataAux.ContainsItem(5))
             {
-                links = (ChunkLinks)file.DataAux.GetItem(5);
+                links = file.DataAux.GetItem<ChunkLinks>(5);
             }
             if (file.Data.ContainsItem(9))
             {
-                if (file.Data.GetItem(9).Size >= 12)
+                if (file.Data.GetItem<ColData>(9).Size >= 12)
                 {
                     pform.Text = "Loading collision tree...";
                     LoadColTree();
@@ -93,9 +93,9 @@ namespace TwinsaityEditor
                 if (file.Data.ContainsItem(i))
                 {
                     Color cur_color;
-                    if (((TwinsSection)file.Data.GetItem(i)).ContainsItem(1)) //aipositions
+                    if (file.Data.GetItem<TwinsSection>(i).ContainsItem(1)) //aipositions
                     {
-                        foreach (AIPosition pos in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(1)).Records)
+                        foreach (AIPosition pos in file.Data.GetItem<TwinsSection>(i).GetItem<TwinsSection>(1).Records)
                         {
                             if (file.SelectedItem != pos)
                             {
@@ -115,9 +115,9 @@ namespace TwinsaityEditor
                         }
                     }
 
-                    if (((TwinsSection)file.Data.GetItem(i)).ContainsItem(2)) //aipaths
+                    if (file.Data.GetItem<TwinsSection>(i).ContainsItem(2)) //aipaths
                     {
-                        foreach (AIPath pth in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(2)).Records)
+                        foreach (AIPath pth in file.Data.GetItem<TwinsSection>(i).GetItem<TwinsSection>(2).Records)
                         {
                             AIPosition pth_begin = file.GetAIPos(i, pth.Arg[0]);
                             AIPosition pth_end = file.GetAIPos(i, pth.Arg[1]);
@@ -143,9 +143,9 @@ namespace TwinsaityEditor
                         }
                     }
 
-                    if (((TwinsSection)file.Data.GetItem(i)).ContainsItem(3)) //positions
+                    if (file.Data.GetItem<TwinsSection>(i).ContainsItem(3)) //positions
                     {
-                        foreach (Position pos in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(3)).Records)
+                        foreach (Position pos in file.Data.GetItem<TwinsSection>(i).GetItem<TwinsSection>(3).Records)
                         {
                             if (file.SelectedItem != pos)
                             {
@@ -165,9 +165,9 @@ namespace TwinsaityEditor
                         }
                     }
 
-                    if (((TwinsSection)file.Data.GetItem(i)).ContainsItem(4)) //paths
+                    if (file.Data.GetItem<TwinsSection>(i).ContainsItem(4)) //paths
                     {
-                        foreach (Path pth in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(4)).Records)
+                        foreach (Path pth in file.Data.GetItem<TwinsSection>(i).GetItem<TwinsSection>(4).Records)
                         {
                             for (int k = 0; k < pth.Positions.Count; ++k)
                             {
@@ -201,9 +201,9 @@ namespace TwinsaityEditor
                         }
                     }
 
-                    if (((TwinsSection)file.Data.GetItem(i)).ContainsItem(6)) //instances
+                    if (file.Data.GetItem<TwinsSection>(i).ContainsItem(6)) //instances
                     {
-                        foreach (Instance ins in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(6)).Records)
+                        foreach (Instance ins in file.Data.GetItem<TwinsSection>(i).GetItem<TwinsSection>(6).Records)
                         {
                             Matrix3 rot_ins = Matrix3.Identity;
                             rot_ins *= Matrix3.CreateRotationX(ins.RotX / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
@@ -217,9 +217,9 @@ namespace TwinsaityEditor
                         }
                     }
 
-                    if (show_triggers && ((TwinsSection)file.Data.GetItem(i)).ContainsItem(7))
+                    if (show_triggers && file.Data.GetItem<TwinsSection>(i).ContainsItem(7))
                     {
-                        foreach (Trigger trg in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(7)).Records)
+                        foreach (Trigger trg in file.Data.GetItem<TwinsSection>(i).GetItem<TwinsSection>(7).Records)
                         {
                             GL.PushMatrix();
                             GL.Translate(-trg.Coords[1].X, trg.Coords[1].Y, trg.Coords[1].Z);
@@ -301,9 +301,9 @@ namespace TwinsaityEditor
                         }
                     }
 
-                    if (show_cams && ((TwinsSection)file.Data.GetItem(i)).ContainsItem(8))
+                    if (show_cams && file.Data.GetItem<TwinsSection>(i).ContainsItem(8))
                     {
-                        foreach (Camera cam in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(8)).Records)
+                        foreach (Camera cam in file.Data.GetItem<TwinsSection>(i).GetItem<TwinsSection>(8).Records)
                         {
                             GL.PushMatrix();
                             GL.Translate(-cam.TriggerPos.X, cam.TriggerPos.Y, cam.TriggerPos.Z);
@@ -574,7 +574,7 @@ namespace TwinsaityEditor
 
         public void LoadColTree()
         {
-            ColData data = (ColData)file.Data.GetItem(9);
+            ColData data = file.Data.GetItem<ColData>(9);
             List<Vertex> vertices = new List<Vertex>(data.Vertices.Count);
             vtx[0].VtxInd = new uint[data.Tris.Count * 3];
             for (int i = 0; i < data.Vertices.Count; ++i)
@@ -635,8 +635,8 @@ namespace TwinsaityEditor
                 record_exists[i] = file.Data.ContainsItem(i);
                 if (record_exists[i])
                 {
-                    if (((TwinsSection)file.Data.GetItem(i)).ContainsItem(6))
-                        inst_count += ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(6)).Records.Count;
+                    if (file.Data.GetItem<TwinsSection>(i).ContainsItem(6))
+                        inst_count += file.Data.GetItem<TwinsSection>(i).GetItem<TwinsSection>(6).Records.Count;
                     else record_exists[i] = false;
                 }
             }
@@ -660,9 +660,9 @@ namespace TwinsaityEditor
             for (uint i = 0; i <= 7; ++i)
             {
                 if (!record_exists[i]) continue;
-                if (((TwinsSection)file.Data.GetItem(i)).ContainsItem(6))
+                if (file.Data.GetItem<TwinsSection>(i).ContainsItem(6))
                 {
-                    foreach (Instance ins in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(6)).Records)
+                    foreach (Instance ins in file.Data.GetItem<TwinsSection>(i).GetItem<TwinsSection>(6).Records)
                     {
                         Matrix3 rot_ins = Matrix3.Identity;
                         rot_ins *= Matrix3.CreateRotationX(ins.RotX / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
@@ -716,7 +716,7 @@ namespace TwinsaityEditor
         public void LoadColNodes()
         {
             float min_x = float.MaxValue, min_y = float.MaxValue, min_z = float.MaxValue, max_x = float.MinValue, max_y = float.MinValue, max_z = float.MinValue;
-            ColData data = (ColData)file.Data.GetItem(9);
+            ColData data = file.Data.GetItem<ColData>(9);
             vtx[2].Vtx = new Vertex[data.Triggers.Count * 16];
             vtx[2].VtxCounts = new int[4 * data.Triggers.Count];
             vtx[2].VtxOffs = new int[4 * data.Triggers.Count];
@@ -772,9 +772,9 @@ namespace TwinsaityEditor
                 record_exists[i] = file.Data.ContainsItem(i);
                 if (record_exists[i])
                 {
-                    if (((TwinsSection)file.Data.GetItem(i)).ContainsItem(3))
+                    if (file.Data.GetItem<TwinsSection>(i).ContainsItem(3))
                     {
-                        posi_count += ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(3)).Records.Count;
+                        posi_count += file.Data.GetItem<TwinsSection>(i).GetItem<TwinsSection>(3).Records.Count;
                         record_exists[i] = true;
                     }
                     else
@@ -800,9 +800,9 @@ namespace TwinsaityEditor
             for (uint i = 0; i <= 7; ++i)
             {
                 if (!record_exists[i]) continue;
-                if (((TwinsSection)file.Data.GetItem(i)).ContainsItem(3))
+                if (file.Data.GetItem<TwinsSection>(i).ContainsItem(3))
                 {
-                    foreach (Position pos in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(3)).Records)
+                    foreach (Position pos in file.Data.GetItem<TwinsSection>(i).GetItem<TwinsSection>(3).Records)
                     {
                         Vector3 pos_pos = pos.Pos.ToVec3();
                         pos_pos.X = -pos_pos.X;
@@ -860,9 +860,9 @@ namespace TwinsaityEditor
                 record_exists[i] = file.Data.ContainsItem(i);
                 if (record_exists[i])
                 {
-                    if (((TwinsSection)file.Data.GetItem(i)).ContainsItem(1))
+                    if (file.Data.GetItem<TwinsSection>(i).ContainsItem(1))
                     {
-                        posi_count += ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(1)).Records.Count;
+                        posi_count += file.Data.GetItem<TwinsSection>(i).GetItem<TwinsSection>(1).Records.Count;
                         record_exists[i] = true;
                     }
                     else
@@ -888,9 +888,9 @@ namespace TwinsaityEditor
             for (uint i = 0; i <= 7; ++i)
             {
                 if (!record_exists[i]) continue;
-                if (((TwinsSection)file.Data.GetItem(i)).ContainsItem(1))
+                if (file.Data.GetItem<TwinsSection>(i).ContainsItem(1))
                 {
-                    foreach (AIPosition pos in ((TwinsSection)((TwinsSection)file.Data.GetItem(i)).GetItem(1)).Records)
+                    foreach (AIPosition pos in file.Data.GetItem<TwinsSection>(i).GetItem<TwinsSection>(1).Records)
                     {
                         var ind_size = indicator_size * pos.Pos.W;
                         Vector3 pos_pos = pos.Pos.ToVec3();

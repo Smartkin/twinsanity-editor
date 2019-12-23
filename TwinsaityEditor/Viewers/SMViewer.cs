@@ -17,7 +17,7 @@ namespace TwinsaityEditor
             this.file = file;
             if (file.Data.ContainsItem(5))
             {
-                links = (ChunkLinks)file.Data.GetItem(5);
+                links = file.Data.GetItem<ChunkLinks>(5);
             }
             zFar = 2000F;
         }

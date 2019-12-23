@@ -97,14 +97,19 @@ namespace TwinsaityEditor
             if (Data.ContainsItem(new_id))
                 throw new System.ArgumentException("New ID already exists.");
             var index = Data.RecordIDs[old_id];
-            Data.GetItem(old_id).ID = new_id;
+            Data.GetItem<TwinsItem>(old_id).ID = new_id;
             Data.RecordIDs.Remove(old_id);
             Data.RecordIDs.Add(new_id, index);
         }
 
-        public Controller GetItem(uint id)
+        private Controller GetItem(uint id)
         {
             return (Controller)Node.Nodes[Data.RecordIDs[id]].Tag;
+        }
+
+        public T GetItem<T>(uint id) where T : Controller
+        {
+            return Node.Nodes[Data.RecordIDs[id]].Tag as T;
         }
 
         private void Menu_ExtractExtraData()
@@ -265,7 +270,7 @@ namespace TwinsaityEditor
                     }
                     else if (n.Tag is ModelController d)
                     {
-                        File.WriteAllBytes(fname, ((Mesh)((TwinsSection)Data.Parent.GetItem(2)).GetItem(d.Data.MeshID)).ToPLY());
+                        File.WriteAllBytes(fname, Data.Parent.GetItem<TwinsSection>(2).GetItem<Mesh>(d.Data.MeshID).ToPLY());
                     }
                 }
             }

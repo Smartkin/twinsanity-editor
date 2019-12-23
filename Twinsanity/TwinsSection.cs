@@ -377,9 +377,9 @@ namespace Twinsanity
             return c_size;
         }
 
-        public TwinsItem GetItem(uint id)
+        public T GetItem<T>(uint id) where T : TwinsItem
         {
-            return Records[RecordIDs[id]];
+            return Records[RecordIDs[id]] as T;
         }
 
         public void AddItem(uint id, TwinsItem item)

@@ -80,14 +80,14 @@ namespace TwinsaityEditor
         private void LoadModels()
         {
             float min_x = float.MaxValue, min_y = float.MaxValue, min_z = float.MaxValue, max_x = float.MinValue, max_y = float.MinValue, max_z = float.MinValue;
-            SectionController mesh_sec = (SectionController)((SectionController)file.GetItem(6)).GetItem(2);
-            SectionController model_sec = (SectionController)((SectionController)file.GetItem(6)).GetItem(6);
-            SectionController special_sec = (SectionController)((SectionController)file.GetItem(6)).GetItem(7);
+            SectionController mesh_sec = file.GetItem<SectionController>(6).GetItem<SectionController>(2);
+            SectionController model_sec = file.GetItem<SectionController>(6).GetItem<SectionController>(6);
+            SectionController special_sec = file.GetItem<SectionController>(6).GetItem<SectionController>(7);
             for (int i = 0; i < sky.Data.ModelIDs.Length; ++i)
             {
                 if (special_sec.Data.ContainsItem(sky.Data.ModelIDs[i]))
                     continue;
-                MeshController mesh = (MeshController)mesh_sec.GetItem(((ModelController)model_sec.GetItem(sky.Data.ModelIDs[i])).Data.MeshID);
+                MeshController mesh = mesh_sec.GetItem<MeshController>(model_sec.GetItem<ModelController>(sky.Data.ModelIDs[i]).Data.MeshID);
                 mesh.LoadMeshData();
                 foreach (var v in mesh.Vertices)
                 {
