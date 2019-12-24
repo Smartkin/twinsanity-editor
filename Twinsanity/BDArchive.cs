@@ -43,7 +43,8 @@ namespace Twinsanity
             using (BinaryReader hr = new BinaryReader(new FileStream(bhname, FileMode.Open)))
             using (BinaryReader dr = new BinaryReader(new FileStream(bdname, FileMode.Open)))
             {
-                for (int i = 0, s = hr.ReadInt32(); i < s; ++i)
+                int magic = hr.ReadInt32();
+                while (hr.BaseStream.Position < hr.BaseStream.Length)
                 {
                     int namelen = hr.ReadInt32();
                     string name = Encoding.ASCII.GetString(hr.ReadBytes(namelen));
@@ -112,7 +113,7 @@ namespace Twinsanity
                     LockFile(System.IO.Path.Combine(filename, file.Name), file, filemap);
                 }
 
-                hw.Write(filemap.Count);
+                hw.Write(0x501);
                 foreach (var kvp in filemap)
                 {
                     if (kvp.Key.BaseStream.Length > uint.MaxValue)
