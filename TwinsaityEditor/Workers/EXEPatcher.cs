@@ -6,36 +6,55 @@ namespace TwinsaityEditor
 {
     public partial class EXEPatcher : Form
     {
-        private enum GameVersion { NTSC_U, PAL, NTSC_J, NTSC_U_2, PAL_2 };
-
-        private GameVersion ver;
         private string fileName;
 
-        private const int PAL_levelOff = 0x1F6708;
-        private const int PAL_levelSize = 0x37;
-        private const int PAL_archiveOff = 0x1ED410;
-        private const int PAL_archiveSize = 0x7;
-        private const int NTSCU_levelOff = 0x1F5E28;
-        private const int NTSCU_levelSize = 0x37;
-        private const int NTSCU_archiveOff = 0x1ECB10;
-        private const int NTSCU_archiveSize = 0x7;
+        internal struct ExecutablePatchInfo
+        {
+            internal int LevelOff;
+            internal int LevelSize;
+            internal int ArchiveOff;
+            internal int ArchiveSize;
+        }
+
+        private enum ExecutableIndex
+        {
+            Invalid = -1, // force enum start, do not use
+            PAL,
+            NTSCU,
+            NTSCU2,
+            NTSCJ
+        }
+
+        private readonly ExecutablePatchInfo[] executables = new ExecutablePatchInfo[]
+        {
+            new ExecutablePatchInfo() { LevelOff = 0x1F6708, LevelSize = 0x17, ArchiveOff = 0x1ED410, ArchiveSize = 0x7 },
+            new ExecutablePatchInfo() { LevelOff = 0x1F5E28, LevelSize = 0x17, ArchiveOff = 0x1ECB10, ArchiveSize = 0x7 },
+            new ExecutablePatchInfo() { LevelOff = 0x1F63A8, LevelSize = 0x17, ArchiveOff = 0x1ED090, ArchiveSize = 0x7 },
+            new ExecutablePatchInfo() { LevelOff = 0x1F6648, LevelSize = 0x17, ArchiveOff = 0x1ED310, ArchiveSize = 0x7 }
+        };
+
+        private ExecutablePatchInfo executable;
 
         public EXEPatcher()
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "NTSC-U executable|SLUS_209.09|PAL executable|SLES_525.68";
+            ofd.Filter = "NTSC-U executable|SLUS_209.09|NTSC-U 2.0 executable|SLUS_209.09|PAL executable|SLES_525.68|NTSC-J executable|SLPM_658.01";
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 fileName = ofd.FileName;
                 switch (ofd.FilterIndex)
                 {
                     case 1:
-                        LoadEXE(NTSCU_levelOff, NTSCU_levelSize, NTSCU_archiveOff, NTSCU_archiveSize);
-                        ver = GameVersion.NTSC_U;
+                        LoadEXE(executables[(int)ExecutableIndex.NTSCU]);
                         break;
                     case 2:
-                        LoadEXE(PAL_levelOff, PAL_levelSize, PAL_archiveOff, PAL_archiveSize);
-                        ver = GameVersion.PAL;
+                        LoadEXE(executables[(int)ExecutableIndex.NTSCU2]);
+                        break;
+                    case 3:
+                        LoadEXE(executables[(int)ExecutableIndex.PAL]);
+                        break;
+                    case 4:
+                        LoadEXE(executables[(int)ExecutableIndex.NTSCJ]);
                         break;
                 }
                 InitializeComponent();
@@ -55,12 +74,13 @@ namespace TwinsaityEditor
             textBox2.Enabled = checkBox2.Checked;
         }
 
-        private void LoadEXE(int l_off, int l_size, int a_off, int a_size)
+        private void LoadEXE(ExecutablePatchInfo executable)
         {
+            this.executable = executable;
             BinaryReader reader = new BinaryReader(new FileStream(fileName, FileMode.Open, FileAccess.Read));
-            textBox1.MaxLength = a_size;
-            textBox2.MaxLength = l_size;
-            reader.BaseStream.Position = a_off;
+            textBox1.MaxLength = executable.ArchiveSize;
+            textBox2.MaxLength = executable.LevelSize;
+            reader.BaseStream.Position = executable.ArchiveOff;
             char ch = '\0';
             do
             {
@@ -68,7 +88,7 @@ namespace TwinsaityEditor
                 textBox1.Text += ch;
             }
             while (ch != '\0');
-            reader.BaseStream.Position = l_off;
+            reader.BaseStream.Position = executable.LevelOff;
             do
             {
                 ch = reader.ReadChar();
@@ -78,29 +98,29 @@ namespace TwinsaityEditor
             reader.Close();
         }
 
-        private void PatchEXE(int l_off, int l_size, int a_off, int a_size)
+        private void PatchEXE(ExecutablePatchInfo executable)
         {
             label1.Visible = true;
             label1.Text = "Patching...";
             BinaryWriter writer = new BinaryWriter(new FileStream(fileName, FileMode.Open, FileAccess.Write));
             if (checkBox1.Checked)
             {
-                writer.BaseStream.Position = a_off;
-                while (writer.BaseStream.Position < a_off + a_size)
+                writer.BaseStream.Position = executable.ArchiveOff;
+                while (writer.BaseStream.Position < executable.ArchiveOff + executable.ArchiveSize)
                     writer.Write((byte)0);
-                writer.BaseStream.Position = a_off;
-                for (int i = 0; i < a_size && writer.BaseStream.Position < a_off + a_size && i < textBox1.Text.Length; ++i)
+                writer.BaseStream.Position = executable.ArchiveOff;
+                for (int i = 0; i < executable.ArchiveSize && writer.BaseStream.Position < executable.ArchiveOff + executable.ArchiveSize && i < textBox1.Text.Length; ++i)
                 {
                     writer.Write(textBox1.Text[i]);
                 }
             }
             if (checkBox2.Checked)
             {
-                writer.BaseStream.Position = l_off;
-                while (writer.BaseStream.Position < l_off + l_size)
+                writer.BaseStream.Position = executable.LevelOff;
+                while (writer.BaseStream.Position < executable.LevelOff + executable.LevelSize)
                     writer.Write((byte)0);
-                writer.BaseStream.Position = l_off;
-                for (int i = 0; i < l_size && writer.BaseStream.Position < l_off + l_size && i < textBox2.Text.Length; ++i)
+                writer.BaseStream.Position = executable.LevelOff;
+                for (int i = 0; i < executable.LevelSize && writer.BaseStream.Position < executable.LevelOff + executable.LevelSize && i < textBox2.Text.Length; ++i)
                 {
                     writer.Write(textBox2.Text[i]);
                 }
@@ -111,10 +131,7 @@ namespace TwinsaityEditor
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (ver == GameVersion.NTSC_U)
-                PatchEXE(NTSCU_levelOff, NTSCU_levelSize, NTSCU_archiveOff, NTSCU_archiveSize);
-            else if (ver == GameVersion.PAL)
-                PatchEXE(PAL_levelOff, PAL_levelSize, PAL_archiveOff, PAL_archiveSize);
+            PatchEXE(executable);
         }
     }
 }
