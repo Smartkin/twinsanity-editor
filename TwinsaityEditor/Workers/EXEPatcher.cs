@@ -37,6 +37,7 @@ namespace TwinsaityEditor
 
         public EXEPatcher()
         {
+            InitializeComponent();
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "NTSC-U executable|SLUS_209.09|NTSC-U 2.0 executable|SLUS_209.09|PAL executable|SLES_525.68|NTSC-J executable|SLPM_658.01";
             if (ofd.ShowDialog() == DialogResult.OK)
