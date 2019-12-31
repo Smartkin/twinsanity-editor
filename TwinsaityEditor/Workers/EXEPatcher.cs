@@ -58,7 +58,6 @@ namespace TwinsaityEditor
                         LoadEXE(executables[(int)ExecutableIndex.NTSCJ]);
                         break;
                 }
-                InitializeComponent();
                 Show();
             }
             else
