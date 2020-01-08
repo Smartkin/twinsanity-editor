@@ -5,11 +5,8 @@ namespace Twinsanity
 {
     public class Path : TwinsItem
     {
-        private List<Pos> positions = new List<Pos>();
-        private List<PathParam> pathParams = new List<PathParam>();
-
-        public List<Pos> Positions { get => positions; set => positions = value; }
-        public List<PathParam> Params { get => pathParams; set => pathParams = value; }
+        public List<Pos> Positions { get; set; } = new List<Pos>();
+        public List<PathParam> Params { get; set; } = new List<PathParam>();
 
         public override void Save(BinaryWriter writer)
         {
@@ -34,12 +31,12 @@ namespace Twinsanity
             int count = reader.ReadInt32();
             for (int i = 0; i < count; ++i)
             {
-                positions.Add(new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle()));
+                Positions.Add(new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle()));
             }
             count = reader.ReadInt32();
             for (int i = 0; i < count; ++i)
             {
-                pathParams.Add(new PathParam { P1 = reader.ReadSingle(), P2 = reader.ReadSingle() });
+                Params.Add(new PathParam { P1 = reader.ReadSingle(), P2 = reader.ReadSingle() });
             }
         }
 

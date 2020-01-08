@@ -16,7 +16,6 @@ namespace Twinsanity
         public ushort SomeUInt163 { get; set; }
         public ushort SomeUInt164 { get; set; }
 
-
         public override void Save(BinaryWriter writer)
         {
             writer.Write(SomeUInt32);

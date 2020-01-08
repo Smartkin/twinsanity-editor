@@ -48,35 +48,35 @@ namespace TwinsaityEditor
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 BinaryReader reader = new BinaryReader(new FileStream(ofd.FileName, FileMode.Open, FileAccess.Read));
-                if (Data is ChunkLinks)
+                if (Data is ChunkLinks links)
                 {
                     MainFile.CloseEditor(Editors.ChunkLinks);
-                    ((ChunkLinks)Data).Load(reader, (int)reader.BaseStream.Length);
+                    links.Load(reader, (int)reader.BaseStream.Length);
                 }
-                else if (Data is Instance)
+                else if (Data is Instance instance)
                 {
                     MainFile.CloseEditor(Editors.Instance, (int)Data.Parent.Parent.ID);
-                    ((Instance)Data).Load(reader, (int)reader.BaseStream.Length);
+                    instance.Load(reader, (int)reader.BaseStream.Length);
                 }
-                else if (Data is Position)
+                else if (Data is Position position)
                 {
                     MainFile.CloseEditor(Editors.Position, (int)Data.Parent.Parent.ID);
-                    ((Position)Data).Load(reader, (int)reader.BaseStream.Length);
+                    position.Load(reader, (int)reader.BaseStream.Length);
                 }
-                else if (Data is Twinsanity.Path)
+                else if (Data is Twinsanity.Path path)
                 {
                     MainFile.CloseEditor(Editors.Path, (int)Data.Parent.Parent.ID);
-                    ((Twinsanity.Path)Data).Load(reader, (int)reader.BaseStream.Length);
+                    path.Load(reader, (int)reader.BaseStream.Length);
                 }
-                else if (Data is Trigger)
+                else if (Data is Trigger trigger)
                 {
                     MainFile.CloseEditor(Editors.Trigger, (int)Data.Parent.Parent.ID);
-                    ((Trigger)Data).Load(reader, (int)reader.BaseStream.Length);
+                    trigger.Load(reader, (int)reader.BaseStream.Length);
                 }
-                else if (Data is ColData)
+                else if (Data is ColData col)
                 {
                     MainFile.CloseEditor(Editors.ColData);
-                    ((ColData)Data).Load(reader, (int)reader.BaseStream.Length);
+                    col.Load(reader, (int)reader.BaseStream.Length);
                 }
                 else
                     Data.Load(reader, (int)reader.BaseStream.Length);

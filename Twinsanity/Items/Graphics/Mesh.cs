@@ -5,9 +5,7 @@ namespace Twinsanity
 {
     public class Mesh : TwinsItem
     {
-        private List<SubModel> submodels = new List<SubModel>();
-
-        public List<SubModel> SubModels { get => submodels; set => submodels = value; }
+        public List<SubModel> SubModels { get; set; } = new List<SubModel>();
 
         public override void Load(BinaryReader reader, int size)
         {

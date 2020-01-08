@@ -5,10 +5,7 @@ namespace Twinsanity
 {
     public class ChunkLinks : TwinsItem
     {
-        private List<ChunkLink> links = new List<ChunkLink>();
-
-        public List<ChunkLink> Links { get => links; set => links = value; }
-
+        public List<ChunkLink> Links { get; set; } = new List<ChunkLink>();
 
         /////////PARENTS FUNCTION//////////
         public override void Save(BinaryWriter writer)

@@ -5,10 +5,6 @@ namespace Twinsanity
 {
     public class Instance : TwinsItem
     {
-        private List<ushort> s1 = new List<ushort>(), s2 = new List<ushort>(), s3 = new List<ushort>();
-        private List<uint> u1 = new List<uint>(), u3 = new List<uint>();
-        private List<float> u2 = new List<float>();
-
         public Pos Pos { get; set; }
         public ushort RotX { get; set; }
         public ushort RotY { get; set; }
@@ -16,9 +12,9 @@ namespace Twinsanity
         public ushort COMRotX { get; set; }
         public ushort COMRotY { get; set; }
         public ushort COMRotZ { get; set; }
-        public List<ushort> InstanceIDs { get => s1; set => s1 = value; }
-        public List<ushort> PositionIDs { get => s2; set => s2 = value; }
-        public List<ushort> PathIDs { get => s3; set => s3 = value; }
+        public List<ushort> InstanceIDs { get; set; } = new List<ushort>();
+        public List<ushort> PositionIDs { get; set; } = new List<ushort>();
+        public List<ushort> PathIDs { get; set; } = new List<ushort>();
         public int SomeNum1 { get; set; }
         public int SomeNum2 { get; set; }
         public int SomeNum3 { get; set; }
@@ -26,9 +22,9 @@ namespace Twinsanity
         public uint AfterOID { get; set; }
         public uint PHeader { get; set; }
         public uint UnkI32 { get; set; }
-        public List<uint> UnkI321 { get => u1; set => u1 = value; }
-        public List<float> UnkI322 { get => u2; set => u2 = value; }
-        public List<uint> UnkI323 { get => u3; set => u3 = value; }
+        public List<uint> UnkI321 { get; set; } = new List<uint>();
+        public List<float> UnkI322 { get; set; } = new List<float>();
+        public List<uint> UnkI323 { get; set; } = new List<uint>();
 
         public override void Save(BinaryWriter writer)
         {

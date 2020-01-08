@@ -6,24 +6,20 @@ namespace Twinsanity
     public sealed class ColData : TwinsItem
     {
         private uint someNumber;
-        private List<Trigger> triggers;
-        private List<GroupInfo> groups;
-        private List<ColTri> tris;
-        private List<Pos> vertices;
         private readonly uint mask = 0x3FFFF;
         private bool isEmpty;
 
         public ColData()
         {
-            triggers = new List<Trigger>();
-            groups = new List<GroupInfo>();
-            tris = new List<ColTri>();
-            vertices = new List<Pos>();
+            Triggers = new List<Trigger>();
+            Groups = new List<GroupInfo>();
+            Tris = new List<ColTri>();
+            Vertices = new List<Pos>();
         }
 
         protected override int GetSize()
         {
-            return isEmpty ? 0 : (20 + triggers.Count * 32 + groups.Count * 8 + tris.Count * 8 + vertices.Count * 16);
+            return isEmpty ? 0 : (20 + Triggers.Count * 32 + Groups.Count * 8 + Tris.Count * 8 + Vertices.Count * 16);
         }
 
         /// <summary>
@@ -35,40 +31,40 @@ namespace Twinsanity
             if (someNumber > 0)
             {
                 writer.Write(someNumber);
-                writer.Write(triggers.Count);
-                writer.Write(groups.Count);
-                writer.Write(tris.Count);
-                writer.Write(vertices.Count);
-                for (int i = 0; i < triggers.Count; i++)
+                writer.Write(Triggers.Count);
+                writer.Write(Groups.Count);
+                writer.Write(Tris.Count);
+                writer.Write(Vertices.Count);
+                for (int i = 0; i < Triggers.Count; i++)
                 {
-                    writer.Write(triggers[i].X1);
-                    writer.Write(triggers[i].Y1);
-                    writer.Write(triggers[i].Z1);
-                    writer.Write(triggers[i].Flag1);
-                    writer.Write(triggers[i].X2);
-                    writer.Write(triggers[i].Y2);
-                    writer.Write(triggers[i].Z2);
-                    writer.Write(triggers[i].Flag2);
+                    writer.Write(Triggers[i].X1);
+                    writer.Write(Triggers[i].Y1);
+                    writer.Write(Triggers[i].Z1);
+                    writer.Write(Triggers[i].Flag1);
+                    writer.Write(Triggers[i].X2);
+                    writer.Write(Triggers[i].Y2);
+                    writer.Write(Triggers[i].Z2);
+                    writer.Write(Triggers[i].Flag2);
                 }
-                for (int i = 0; i < groups.Count; i++)
+                for (int i = 0; i < Groups.Count; i++)
                 {
-                    writer.Write(groups[i].Size);
-                    writer.Write(groups[i].Offset);
+                    writer.Write(Groups[i].Size);
+                    writer.Write(Groups[i].Offset);
                 }
-                for (int i = 0; i < tris.Count; i++)
+                for (int i = 0; i < Tris.Count; i++)
                 {
-                    ulong tmp = (ulong)tris[i].Vert1 & mask;
-                    tmp |= (ulong)(tris[i].Vert2 & mask) << 18;
-                    tmp |= (ulong)(tris[i].Vert3 & mask) << 36;
-                    tmp |= (ulong)(tris[i].Surface & 0x3FF) << 54;
+                    ulong tmp = (ulong)Tris[i].Vert1 & mask;
+                    tmp |= (ulong)(Tris[i].Vert2 & mask) << 18;
+                    tmp |= (ulong)(Tris[i].Vert3 & mask) << 36;
+                    tmp |= (ulong)(Tris[i].Surface & 0x3FF) << 54;
                     writer.Write(tmp);
                 }
-                for (int i = 0; i < vertices.Count; i++)
+                for (int i = 0; i < Vertices.Count; i++)
                 {
-                    writer.Write(vertices[i].X);
-                    writer.Write(vertices[i].Y);
-                    writer.Write(vertices[i].Z);
-                    writer.Write(vertices[i].W);
+                    writer.Write(Vertices[i].X);
+                    writer.Write(Vertices[i].Y);
+                    writer.Write(Vertices[i].Z);
+                    writer.Write(Vertices[i].W);
                 }
             }
         }
@@ -86,10 +82,10 @@ namespace Twinsanity
             uint groupCount = reader.ReadUInt32();
             uint triCount = reader.ReadUInt32();
             uint vertexCount = reader.ReadUInt32();
-            triggers.Clear();
-            groups.Clear();
-            tris.Clear();
-            vertices.Clear();
+            Triggers.Clear();
+            Groups.Clear();
+            Tris.Clear();
+            Vertices.Clear();
             for (int i = 0; i < triggerCount; i++)
             {
                 Trigger trg = new Trigger
@@ -103,7 +99,7 @@ namespace Twinsanity
                     Z2 = reader.ReadSingle(),
                     Flag2 = reader.ReadInt32()
                 };
-                triggers.Add(trg);
+                Triggers.Add(trg);
             }
             for (int i = 0; i < groupCount; i++)
             {
@@ -112,7 +108,7 @@ namespace Twinsanity
                     Size = reader.ReadUInt32(),
                     Offset = reader.ReadUInt32()
                 };
-                groups.Add(grp);
+                Groups.Add(grp);
             }
             for (int i = 0; i < triCount; i++)
             {
@@ -122,12 +118,12 @@ namespace Twinsanity
                 tri.Vert2 = (int)((legacy >> 18 * 1) & mask);
                 tri.Vert3 = (int)((legacy >> 18 * 2) & mask);
                 tri.Surface = (int)(legacy >> (18 * 3));
-                tris.Add(tri);
+                Tris.Add(tri);
             }
             for (int i = 0; i < vertexCount; i++)
             {
                 Pos vtx = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                vertices.Add(vtx);
+                Vertices.Add(vtx);
             }
         }
 
@@ -157,25 +153,9 @@ namespace Twinsanity
         }
         #endregion
 
-        public List<Trigger> Triggers
-        {
-            get { return triggers; }
-            set { triggers = value; }
-        }
-        public List<GroupInfo> Groups
-        {
-            get { return groups; }
-            set { groups = value; }
-        }
-        public List<ColTri> Tris
-        {
-            get { return tris; }
-            set { tris = value; }
-        }
-        public List<Pos> Vertices
-        {
-            get { return vertices; }
-            set { vertices = value; }
-        }
+        public List<Trigger> Triggers { get; set; }
+        public List<GroupInfo> Groups { get; set; }
+        public List<ColTri> Tris { get; set; }
+        public List<Pos> Vertices { get; set; }
     }
 }
