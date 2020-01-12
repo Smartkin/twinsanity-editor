@@ -28,7 +28,7 @@ namespace Twinsanity
         private ushort[] cObjects = new ushort[0];
         private ushort[] cOGIs = new ushort[0];
         private ushort[] cAnims = new ushort[0];
-        private ushort[] cCM = new ushort[0];
+        public ushort[] cCM = new ushort[0];
         private ushort[] cScripts = new ushort[0];
         private ushort[] cUnk = new ushort[0];
         private ushort[] cSounds = new ushort[0];

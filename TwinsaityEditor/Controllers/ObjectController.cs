@@ -19,15 +19,15 @@ namespace TwinsaityEditor
 
         protected override void GenText()
         {
-            TextPrev = new string[10 + Data.UI32.Length + Data.OGIs.Length + Data.Anims.Length + Data.Scripts.Length + Data.Objects.Length + Data.Sounds.Length];
+            TextPrev = new string[11 + Data.UI32.Length + Data.OGIs.Length + Data.Anims.Length + Data.Scripts.Length + Data.Objects.Length + Data.Sounds.Length + Data.cCM.Length];
             TextPrev[0] = $"ID: {Data.ID}";
             TextPrev[1] = $"Offset: {Data.Offset} Size: {Data.Size}";
             TextPrev[2] = $"Name: {Data.Name}";
-            TextPrev[3] = $"Headers: {Convert.ToString(Data.Class1, 16).ToUpper()} {Convert.ToString(Data.Class2, 16).ToUpper()} {Convert.ToString(Data.Class3, 16).ToUpper()}";
+            TextPrev[3] = $"Headers: {Data.Class1.ToString("X")} {Data.Class2.ToString("X")} {Data.Class3.ToString("X")}";
 
             TextPrev[4] = $"UnknownInt32Count: {Data.UI32.Length}";
             for (int i = 0; i < Data.UI32.Length; ++i)
-                TextPrev[5 + i] = Convert.ToString(Data.UI32[i], 16).ToUpper();
+                TextPrev[5 + i] = Data.UI32[i].ToString("X");
 
             TextPrev[5 + Data.UI32.Length] = $"OGICount: {Data.OGIs.Length}";
             for (int i = 0; i < Data.OGIs.Length; ++i)
@@ -48,6 +48,10 @@ namespace TwinsaityEditor
             TextPrev[9 + Data.UI32.Length + Data.OGIs.Length + Data.Anims.Length + Data.Scripts.Length + Data.Objects.Length] = $"SoundCount: {Data.Sounds.Length}";
             for (int i = 0; i < Data.Sounds.Length; ++i)
                 TextPrev[10 + Data.UI32.Length + Data.OGIs.Length + Data.Anims.Length + Data.Scripts.Length + Data.Objects.Length + i] = Data.Sounds[i].ToString();
+
+            TextPrev[10 + Data.UI32.Length + Data.OGIs.Length + Data.Anims.Length + Data.Scripts.Length + Data.Objects.Length + Data.Sounds.Length] = $"CMCount: {Data.cCM.Length}";
+            for (int i = 0; i < Data.cCM.Length; ++i)
+                TextPrev[11 + Data.UI32.Length + Data.OGIs.Length + Data.Anims.Length + Data.Scripts.Length + Data.Objects.Length + Data.Sounds.Length + i] = Data.cCM[i].ToString();
         }
     }
 }
