@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using Twinsanity;
 
 namespace TwinsaityEditor
@@ -19,39 +19,65 @@ namespace TwinsaityEditor
 
         protected override void GenText()
         {
-            TextPrev = new string[11 + Data.UI32.Length + Data.OGIs.Length + Data.Anims.Length + Data.Scripts.Length + Data.Objects.Length + Data.Sounds.Length + Data.cCM.Length];
-            TextPrev[0] = $"ID: {Data.ID}";
-            TextPrev[1] = $"Offset: {Data.Offset} Size: {Data.Size}";
-            TextPrev[2] = $"Name: {Data.Name}";
-            TextPrev[3] = $"Headers: {Data.Class1.ToString("X")} {Data.Class2.ToString("X")} {Data.Class3.ToString("X")}";
+            List<string> text = new List<string>();
+            text.Add($"ID: {Data.ID}");
+            text.Add($"Offset: {Data.Offset} Size: {Data.Size}");
+            text.Add($"Name: {Data.Name}");
+            text.Add($"Headers: {Data.Class1.ToString("X")} {Data.Class2.ToString("X")} {Data.Class3.ToString("X")}");
 
-            TextPrev[4] = $"UnknownInt32Count: {Data.UI32.Length}";
-            for (int i = 0; i < Data.UI32.Length; ++i)
-                TextPrev[5 + i] = Data.UI32[i].ToString("X");
+            //text.Add($"UnknownInt32Count: {Data.UI32.Length}");
+            //for (int i = 0; i < Data.UI32.Length; ++i)
+            //    text.Add(Data.UI32[i].ToString("X"));
 
-            TextPrev[5 + Data.UI32.Length] = $"OGICount: {Data.OGIs.Length}";
-            for (int i = 0; i < Data.OGIs.Length; ++i)
-                TextPrev[6 + Data.UI32.Length + i] = Data.OGIs[i].ToString();
+            //text.Add($"OGICount: {Data.OGIs.Length}");
+            //for (int i = 0; i < Data.OGIs.Length; ++i)
+            //    text.Add(Data.OGIs[i].ToString());
 
-            TextPrev[6 + Data.UI32.Length + Data.OGIs.Length] = $"AnimCount: {Data.Anims.Length}";
-            for (int i = 0; i < Data.Anims.Length; ++i)
-                TextPrev[7 + Data.UI32.Length + Data.OGIs.Length + i] = Data.Anims[i].ToString();
+            //text.Add($"AnimCount: {Data.Anims.Length}");
+            //for (int i = 0; i < Data.Anims.Length; ++i)
+            //    text.Add(Data.Anims[i].ToString());
 
-            TextPrev[7 + Data.UI32.Length + Data.OGIs.Length + Data.Anims.Length] = $"ScriptCount: {Data.Scripts.Length}";
-            for (int i = 0; i < Data.Scripts.Length; ++i)
-                TextPrev[8 + Data.UI32.Length + Data.OGIs.Length + Data.Anims.Length + i] = Data.Scripts[i].ToString();
+            //text.Add($"ScriptCount: {Data.Scripts.Length}");
+            //for (int i = 0; i < Data.Scripts.Length; ++i)
+            //    text.Add(Data.Scripts[i].ToString());
 
-            TextPrev[8 + Data.UI32.Length + Data.OGIs.Length + Data.Anims.Length + Data.Scripts.Length] = $"ObjectCount: {Data.Objects.Length}";
-            for (int i = 0; i < Data.Objects.Length; ++i)
-                TextPrev[9 + Data.UI32.Length + Data.OGIs.Length + Data.Anims.Length + Data.Scripts.Length + i] = Data.Objects[i].ToString();
+            //text.Add($"ObjectCount: {Data.Objects.Length}");
+            //for (int i = 0; i < Data.Objects.Length; ++i)
+            //    text.Add(Data.Objects[i].ToString());
 
-            TextPrev[9 + Data.UI32.Length + Data.OGIs.Length + Data.Anims.Length + Data.Scripts.Length + Data.Objects.Length] = $"SoundCount: {Data.Sounds.Length}";
-            for (int i = 0; i < Data.Sounds.Length; ++i)
-                TextPrev[10 + Data.UI32.Length + Data.OGIs.Length + Data.Anims.Length + Data.Scripts.Length + Data.Objects.Length + i] = Data.Sounds[i].ToString();
+            //text.Add($"SoundCount: {Data.Sounds.Length}");
+            //for (int i = 0; i < Data.Sounds.Length; ++i)
+            //    text.Add(Data.Sounds[i].ToString());
 
-            TextPrev[10 + Data.UI32.Length + Data.OGIs.Length + Data.Anims.Length + Data.Scripts.Length + Data.Objects.Length + Data.Sounds.Length] = $"CMCount: {Data.cCM.Length}";
+            text.Add($"ObjectCount: {Data.cObjects.Length}");
+            for (int i = 0; i < Data.cObjects.Length; ++i)
+                text.Add(Data.cObjects[i].ToString());
+
+            text.Add($"OGICount: {Data.cOGIs.Length}");
+            for (int i = 0; i < Data.cOGIs.Length; ++i)
+                text.Add(Data.cOGIs[i].ToString());
+
+            text.Add($"AnimCount: {Data.cAnims.Length}");
+            for (int i = 0; i < Data.cAnims.Length; ++i)
+                text.Add(Data.cAnims[i].ToString());
+
+            text.Add($"CMCount: {Data.cCM.Length}");
             for (int i = 0; i < Data.cCM.Length; ++i)
-                TextPrev[11 + Data.UI32.Length + Data.OGIs.Length + Data.Anims.Length + Data.Scripts.Length + Data.Objects.Length + Data.Sounds.Length + i] = Data.cCM[i].ToString();
+                text.Add(Data.cCM[i].ToString());
+
+            text.Add($"ScriptCount: {Data.cScripts.Length}");
+            for (int i = 0; i < Data.cScripts.Length; ++i)
+                text.Add(Data.cScripts[i].ToString());
+
+            text.Add($"UnkCount: {Data.cUnk.Length}");
+            for (int i = 0; i < Data.cUnk.Length; ++i)
+                text.Add(Data.cUnk[i].ToString());
+
+            text.Add($"SoundCount: {Data.cSounds.Length}");
+            for (int i = 0; i < Data.cSounds.Length; ++i)
+                text.Add(Data.cSounds[i].ToString());
+
+            TextPrev = text.ToArray();
         }
     }
 }
