@@ -79,7 +79,6 @@
     <Compile Include="Items\Instances\Trigger.cs" />
     <Compile Include="Items\TwinsItem.cs" />
     <Compile Include="Items\ColData.cs" />
-    <Compile Include="MetaData.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -181,7 +181,7 @@ namespace TwinsaityEditor
             {
                 CurFile.SaveFile(sfd.FileName);
                 CurCont.Data.FileName = sfd.FileName;
-                Text = $"Twinsaity Editor by Neo_Kesha [{sfd.FileName}] ";
+                Text = $"Twinsaity Editor [{sfd.FileName}] ";
             }
         }
 
