@@ -225,6 +225,11 @@ namespace TwinsaityEditor
                 exeForm.Select();
         }
 
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("TwinsaityEditor + Twinsanity API v0.2\nDeveloped by Neo_Kesha (original author), Smartkin, ManDude, Marko\nSource code available at: https://github.com/smartkin/twinsanity-editor", "About", MessageBoxButtons.OK);
+        }
+
         public void OpenMHTool()
         {
             if (mhForm == null)
