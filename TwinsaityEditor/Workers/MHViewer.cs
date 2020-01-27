@@ -38,7 +38,10 @@ namespace TwinsaityEditor
                 PopulateList();
                 splitContainer1.SplitterDistance = (int)(Width * 0.35F);
                 player = new SoundPlayer();
-                FormClosed += MHViewer_FormClosed;
+                FormClosed += delegate (object sender, FormClosedEventArgs e)
+                {
+                    player.Stop();
+                };
                 seekTimer = new Timer
                 {
                     Interval = 1000 / 50,
@@ -69,11 +72,6 @@ namespace TwinsaityEditor
             }
             else
                 Close();
-        }
-
-        private void MHViewer_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            player.Stop();
         }
 
         private void PopulateList()
@@ -192,6 +190,7 @@ namespace TwinsaityEditor
         {
             player.Stop();
             player.Stream = null;
+            trackBar1.Value = 0;
             trackBar1.Enabled = seekTimer.Enabled = false;
         }
 
