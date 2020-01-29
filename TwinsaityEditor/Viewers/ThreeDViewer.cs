@@ -12,7 +12,37 @@ namespace TwinsaityEditor
     public abstract class ThreeDViewer : GLControl
     {
         //add to preferences later
-        protected static readonly Color[] colors = new[] { Color.Gray, Color.SlateGray, Color.DodgerBlue, Color.OrangeRed, Color.Red, Color.Pink, Color.LimeGreen, Color.DarkSlateBlue, Color.SaddleBrown, Color.LightSteelBlue, Color.SandyBrown, Color.Peru, Color.RoyalBlue, Color.DimGray, Color.Coral, Color.AliceBlue, Color.LightGray, Color.Cyan, Color.MediumTurquoise, Color.DarkSlateGray, Color.DarkSalmon, Color.DarkRed, Color.DarkCyan, Color.MediumVioletRed, Color.MediumOrchid, Color.DarkGray, Color.Yellow, Color.Goldenrod };
+        protected static readonly Color[] colors = new[]
+        {
+            Color.Gray,
+            Color.SlateGray,
+            Color.DodgerBlue,
+            Color.OrangeRed,
+            Color.Red,
+            Color.Pink,
+            Color.LimeGreen,
+            Color.DarkSlateBlue,
+            Color.SaddleBrown,
+            Color.LightSteelBlue,
+            Color.SandyBrown,
+            Color.Peru,
+            Color.RoyalBlue,
+            Color.DimGray,
+            Color.Coral,
+            Color.AliceBlue,
+            Color.LightGray,
+            Color.Cyan,
+            Color.MediumTurquoise,
+            Color.DarkSlateGray,
+            Color.DarkSalmon,
+            Color.DarkRed,
+            Color.DarkCyan,
+            Color.MediumVioletRed,
+            Color.MediumOrchid,
+            Color.DarkGray,
+            Color.Yellow,
+            Color.Goldenrod
+        };
         protected static readonly float indicator_size = 0.5f;
         protected static Matrix3 identity_mat = Matrix3.Identity;
 
