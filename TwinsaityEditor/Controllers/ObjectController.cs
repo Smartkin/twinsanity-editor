@@ -23,7 +23,42 @@ namespace TwinsaityEditor
             text.Add($"ID: {Data.ID}");
             text.Add($"Offset: {Data.Offset} Size: {Data.Size}");
             text.Add($"Name: {Data.Name}");
-            text.Add($"Headers: {Data.Class1.ToString("X")} {Data.Class2.ToString("X")} {Data.Class3.ToString("X")}");
+            //text.Add($"Headers: {Data.Class1.ToString("X")} {Data.Class2.ToString("X")} {Data.Class3.ToString("X")}");
+            text.Add($"Unknown bitfield: 0x{Data.UnkBitfield.ToString("X")}");
+            for (int i = 0; i < Data.ScriptSlots.Length; ++i)
+            {
+                var slotName = "Reserved";
+                var slotAmt = Data.ScriptSlots[i];
+                switch(i)
+                {
+                    case 0:
+                        {
+                            slotName = "Pairs";
+                        }
+                        break;
+                    case 1:
+                        {
+                            slotName = "Scripts";
+                        }
+                        break;
+                    case 2:
+                        {
+                            slotName = "Objects";
+                        }
+                        break;
+                    case 3:
+                        {
+                            slotName = "UInt32";
+                        }
+                        break;
+                    case 4:
+                        {
+                            slotName = "Sounds";
+                        }
+                        break;
+                }
+                text.Add($"{slotName} script slots: {slotAmt}");
+            }
 
             //text.Add($"UnknownInt32Count: {Data.UI32.Length}");
             //for (int i = 0; i < Data.UI32.Length; ++i)

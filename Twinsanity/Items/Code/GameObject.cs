@@ -10,6 +10,8 @@ namespace Twinsanity
         public uint Class1 { get; set; } // ??;??;??;??
         public uint Class2 { get; set; } // Pairs;Scripts;GameObjects;SomeShit
         public uint Class3 { get; set; } // Sounds;00;00;00
+        public uint UnkBitfield { get; set; }
+        public byte[] ScriptSlots { get; set; } = new byte[8]; // Pairs;Scripts;GameObjects;UInt32s;Sounds;00;00;00 (last 3 are potentially a side effect of needing object name's length to be word aligned)
         public uint[] UI32 { get; set; }
         public ushort[] OGIs { get; set; } = new ushort[0];
         public ushort[] Anims { get; set; } = new ushort[0];
@@ -147,37 +149,49 @@ namespace Twinsanity
         {
             var sk = reader.BaseStream.Position;
 
-            Class1 = reader.ReadUInt32();
-            Class2 = reader.ReadUInt32();
-            Class3 = reader.ReadUInt32();
+            UnkBitfield = reader.ReadUInt32();
+            for (int i = 0; i < 8; ++i)
+            {
+                ScriptSlots[i] = reader.ReadByte();
+            }
+
+            //Class1 = reader.ReadUInt32();
+            //Class2 = reader.ReadUInt32();
+            //Class3 = reader.ReadUInt32();
             var len = reader.ReadInt32();
             Name = new string(reader.ReadChars(len));
 
+            // Read UInt32 script slots
             var cnt = reader.ReadInt32();
             UI32 = new uint[cnt];
             for (int i = 0; i < cnt; ++i)
                 UI32[i] = reader.ReadUInt32();
 
+            // Read OGI script slots
             cnt = reader.ReadInt32();
             OGIs = new ushort[cnt];
             for (int i = 0; i < cnt; ++i)
                 OGIs[i] = reader.ReadUInt16();
 
+            // Read Animation script slots
             cnt = reader.ReadInt32();
             Anims = new ushort[cnt];
             for (int i = 0; i < cnt; ++i)
                 Anims[i] = reader.ReadUInt16();
 
+            // Read Script script slots
             cnt = reader.ReadInt32();
             Scripts = new ushort[cnt];
             for (int i = 0; i < cnt; ++i)
                 Scripts[i] = reader.ReadUInt16();
 
+            // Read Object script slots
             cnt = reader.ReadInt32();
             Objects = new ushort[cnt];
             for (int i = 0; i < cnt; ++i)
                 Objects[i] = reader.ReadUInt16();
 
+            // Read Sound script slots
             cnt = reader.ReadInt32();
             Sounds = new ushort[cnt];
             for (int i = 0; i < cnt; ++i)
@@ -213,6 +227,7 @@ namespace Twinsanity
                 pUi322 = new float[] { };
                 pUi323 = new uint[] { };
             }
+            // Read IDs needed for instance creation
             if (flag > 0)
             {
                 if ((flag & 0x00000001) != 0)
