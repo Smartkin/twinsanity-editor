@@ -32,7 +32,7 @@ namespace TwinsaityEditor
                 {
                     case 0:
                         {
-                            slotName = "Pairs";
+                            slotName = "Pairs(OGI/Animation)";
                         }
                         break;
                     case 1:

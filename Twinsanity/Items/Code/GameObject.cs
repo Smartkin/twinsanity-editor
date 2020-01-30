@@ -6,10 +6,6 @@ namespace Twinsanity
     public class GameObject : TwinsItem
     {
         private int size;
-        
-        public uint Class1 { get; set; } // ??;??;??;??
-        public uint Class2 { get; set; } // Pairs;Scripts;GameObjects;SomeShit
-        public uint Class3 { get; set; } // Sounds;00;00;00
         public uint UnkBitfield { get; set; }
         public byte[] ScriptSlots { get; set; } = new byte[8]; // Pairs;Scripts;GameObjects;UInt32s;Sounds;00;00;00 (last 3 are potentially a side effect of needing object name's length to be word aligned)
         public uint[] UI32 { get; set; }
@@ -44,14 +40,11 @@ namespace Twinsanity
         {
             var sk = writer.BaseStream.Position;
 
-            writer.Write(Class1);
-            Class2 = (uint)((byte)Math.Max(OGIs.Length, Anims.Length)
-                | ((byte)Scripts.Length << 8)
-                | ((byte)Objects.Length << 16)
-                | ((byte)UI32.Length << 24));
-            writer.Write(Class2);
-            Class3 = (uint)Sounds.Length;
-            writer.Write(Class3);
+            writer.Write(UnkBitfield);
+            for (int i = 0; i < 8; ++i)
+            {
+                writer.Write(ScriptSlots[i]);
+            }
             writer.Write(Name.Length);
             writer.Write(Name.ToCharArray(), 0, Name.Length);
             writer.Write(UI32.Length);
