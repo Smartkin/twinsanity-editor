@@ -5,11 +5,11 @@ namespace Twinsanity
 {
     public class Script : TwinsItem
     {
-        private struct HeaderScript
+        public class HeaderScriptStruct
         {
             public struct UnkIntPairs
             {
-                public uint unkInt1;
+                public int mainScriptIndex;
                 public uint unkInt2;
             }
             public uint unkIntPairs;
@@ -21,7 +21,7 @@ namespace Twinsanity
         private ushort id;
         private byte mask;
         private byte flag;
-        private HeaderScript headerScript;
+        public HeaderScriptStruct HeaderScript { get; set; }
         private byte[] script;
 
         public override void Save(BinaryWriter writer)
@@ -36,11 +36,11 @@ namespace Twinsanity
             }
             else
             {
-                writer.Write(headerScript.unkIntPairs);
-                for (int i = 0; i < headerScript.unkIntPairs; i++)
+                writer.Write(HeaderScript.unkIntPairs);
+                for (int i = 0; i < HeaderScript.unkIntPairs; i++)
                 {
-                    writer.Write(headerScript.pairs[i].unkInt1);
-                    writer.Write(headerScript.pairs[i].unkInt2);
+                    writer.Write(HeaderScript.pairs[i].mainScriptIndex);
+                    writer.Write(HeaderScript.pairs[i].unkInt2);
                 }
             }
             writer.Write(script);
@@ -60,12 +60,13 @@ namespace Twinsanity
             else
             {
                 Name = "Header script";
-                headerScript.unkIntPairs = reader.ReadUInt32();
-                headerScript.pairs = new HeaderScript.UnkIntPairs[headerScript.unkIntPairs];
-                for (int i = 0; i < headerScript.unkIntPairs; i++)
+                HeaderScript = new HeaderScriptStruct();
+                HeaderScript.unkIntPairs = reader.ReadUInt32();
+                HeaderScript.pairs = new HeaderScriptStruct.UnkIntPairs[HeaderScript.unkIntPairs];
+                for (int i = 0; i < HeaderScript.unkIntPairs; i++)
                 {
-                    headerScript.pairs[i].unkInt1 = reader.ReadUInt32();
-                    headerScript.pairs[i].unkInt2 = reader.ReadUInt32();
+                    HeaderScript.pairs[i].mainScriptIndex = reader.ReadInt32();
+                    HeaderScript.pairs[i].unkInt2 = reader.ReadUInt32();
                 }
             }
             script = reader.ReadBytes(size - (int)(reader.BaseStream.Position - sk));
@@ -75,7 +76,7 @@ namespace Twinsanity
         {
             if (flag != 0)
             {
-                return 4 + 4 + headerScript.pairs.Length * 8;
+                return 4 + 4 + HeaderScript.pairs.Length * 8;
             }
             return 4 + script.Length +  4 + Name.Length;
         }

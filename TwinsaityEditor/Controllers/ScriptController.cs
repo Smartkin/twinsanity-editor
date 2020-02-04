@@ -1,4 +1,5 @@
-﻿using Twinsanity;
+﻿using System.Collections.Generic;
+using Twinsanity;
 
 namespace TwinsaityEditor
 {
@@ -18,9 +19,18 @@ namespace TwinsaityEditor
 
         protected override void GenText()
         {
-            TextPrev = new string[2];
-            TextPrev[0] = $"ID: {Data.ID} {(Data.Name != null ? $" Name: {Data.Name}" : string.Empty)}";
-            TextPrev[1] = $"Offset: {Data.Offset} Size: {Data.Size}";
+            List<string> text = new List<string>();
+            text.Add($"ID: {Data.ID} {(Data.Name != null ? $" Name: {Data.Name}" : string.Empty)}");
+            text.Add($"Offset: {Data.Offset} Size: {Data.Size}");
+            if (Data?.HeaderScript != null)
+            {
+                text.Add($"Pairs(LinkedScriptIndex/UnkInt): {Data.HeaderScript.unkIntPairs}");
+                for (int i = 0; i < Data.HeaderScript.unkIntPairs; i++)
+                {
+                    text.Add($"Pair: {Data.HeaderScript.pairs[i].mainScriptIndex - 1} / {Data.HeaderScript.pairs[i].unkInt2}");
+                }
+            }
+            TextPrev = text.ToArray();
         }
     }
 }
