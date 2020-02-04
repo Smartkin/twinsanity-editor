@@ -388,6 +388,15 @@ namespace Twinsanity
             Records.Add(item);
         }
 
+        public bool TryAddItem(uint id, TwinsItem item)
+        {
+            if (RecordIDs.ContainsKey(id))
+                return false;
+            RecordIDs.Add(id, Records.Count);
+            Records.Add(item);
+            return true;
+        }
+
         public void RemoveItem(uint id)
         {
             var index = RecordIDs[id];
