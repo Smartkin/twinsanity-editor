@@ -67,6 +67,8 @@ namespace Twinsanity
                                         else if (s_id == 10)
                                             if (type == FileType.DemoRM2)
                                                 sec.Type = SectionType.CodeDemo;
+                                            else if (type == FileType.RMX)
+                                                sec.Type = SectionType.CodeX;
                                             else
                                                 sec.Type = SectionType.Code;
                                         else if (s_id == 11)
