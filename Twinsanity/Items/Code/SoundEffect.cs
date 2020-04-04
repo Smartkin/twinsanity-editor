@@ -76,7 +76,10 @@ namespace Twinsanity
                     return 48000;
                 default:
                     //return (ushort)Math.Round(freq * 0x100 * k);
-                    throw new ArgumentException($"Unhandled sfx frequency. Value was: {freq}", "freq");
+                    //Temporary workaround for XBOX chunks to work until someone figures this out
+                    Console.WriteLine("Unhandled sfx frequency. Value was: " + freq);
+                    return 48000;
+                    //throw new ArgumentException($"Unhandled sfx frequency. Value was: {freq}", "freq");
             }
         }
     }

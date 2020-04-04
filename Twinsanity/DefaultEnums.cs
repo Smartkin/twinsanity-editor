@@ -3668,6 +3668,8 @@ namespace Twinsanity
             COM_DUMMY_FRONTEND_CHARACTER_DEFAULT = 6975,
             HEAD_COM_CORTEX_CONSTRAIN_TO_AREA = 6976,
             COM_CORTEX_CONSTRAIN_TO_AREA = 6977,
+            HEAD_COM_TNT_CRATE_TRIGGER_NEXT = 6990,
+            COM_TNT_CRATE_TRIGGER_NEXT = 6991,
         };
 
         public enum ObjectID

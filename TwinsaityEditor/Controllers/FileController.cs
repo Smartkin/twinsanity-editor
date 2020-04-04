@@ -63,7 +63,11 @@ namespace TwinsaityEditor
                     ObjectNames.Add(obj.ID, obj.Name);
                 }
             }
-            var gfx_id = Data.Type == TwinsFile.FileType.RM2 ? (uint)11 : 6;
+            uint gfx_id = 11;
+            if (Data.Type == TwinsFile.FileType.SM2 || Data.Type == TwinsFile.FileType.SMX || Data.Type == TwinsFile.FileType.DemoSM2)
+            {
+                gfx_id = 6;
+            }
             if (Data.ContainsItem(gfx_id) && Data.GetItem<TwinsSection>(gfx_id).ContainsItem(1))
             {
                 foreach (Material mat in Data.GetItem<TwinsSection>(gfx_id).GetItem<TwinsSection>(1).Records)
@@ -75,7 +79,11 @@ namespace TwinsaityEditor
 
         private SectionController GetMeshSection()
         {
-            var gfx_id = Data.Type == TwinsFile.FileType.RM2 ? (uint)11 : 6;
+            uint gfx_id = 11;
+            if (Data.Type == TwinsFile.FileType.SM2 || Data.Type == TwinsFile.FileType.SMX || Data.Type == TwinsFile.FileType.DemoSM2)
+            {
+                gfx_id = 6;
+            }
             if (Data.ContainsItem(gfx_id) && Data.GetItem<TwinsSection>(gfx_id).ContainsItem(2))
             {
                 return GetItem<SectionController>(gfx_id).GetItem<SectionController>(2);
