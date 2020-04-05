@@ -82,6 +82,7 @@
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.numericUpDown9 = new System.Windows.Forms.NumericUpDown();
             this.textBox2 = new System.Windows.Forms.TextBox();
+            this.button_PosFromCam = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -136,8 +137,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
-            this.splitContainer1.Size = new System.Drawing.Size(770, 357);
-            this.splitContainer1.SplitterDistance = 256;
+            this.splitContainer1.Size = new System.Drawing.Size(733, 356);
+            this.splitContainer1.SplitterDistance = 219;
             this.splitContainer1.TabIndex = 0;
             // 
             // listBox1
@@ -146,7 +147,7 @@
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Location = new System.Drawing.Point(0, 24);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(256, 333);
+            this.listBox1.Size = new System.Drawing.Size(219, 332);
             this.listBox1.TabIndex = 1;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
@@ -157,7 +158,7 @@
             this.removeToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(256, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(219, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -184,11 +185,12 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(510, 357);
+            this.tabControl1.Size = new System.Drawing.Size(510, 356);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.button_PosFromCam);
             this.tabPage1.Controls.Add(this.groupBox12);
             this.tabPage1.Controls.Add(this.groupBox5);
             this.tabPage1.Controls.Add(this.groupBox4);
@@ -197,7 +199,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(502, 331);
+            this.tabPage1.Size = new System.Drawing.Size(502, 330);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Main Properties";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -822,11 +824,22 @@
             this.textBox2.TabIndex = 0;
             this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
+            // button_PosFromCam
+            // 
+            this.button_PosFromCam.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_PosFromCam.Location = new System.Drawing.Point(438, 70);
+            this.button_PosFromCam.Name = "button_PosFromCam";
+            this.button_PosFromCam.Size = new System.Drawing.Size(52, 58);
+            this.button_PosFromCam.TabIndex = 11;
+            this.button_PosFromCam.Text = "Copy Viewer Pos";
+            this.button_PosFromCam.UseVisualStyleBackColor = true;
+            this.button_PosFromCam.Click += new System.EventHandler(this.button_PosFromCam_Click);
+            // 
             // InstanceEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(770, 357);
+            this.ClientSize = new System.Drawing.Size(733, 356);
             this.Controls.Add(this.splitContainer1);
             this.Name = "InstanceEditor";
             this.Text = "InstanceEditor";
@@ -939,5 +952,6 @@
         private System.Windows.Forms.NumericUpDown numericUpDown15;
         private System.Windows.Forms.NumericUpDown numericUpDown14;
         private System.Windows.Forms.NumericUpDown numericUpDown13;
+        private System.Windows.Forms.Button button_PosFromCam;
     }
 }

@@ -68,7 +68,7 @@ namespace TwinsaityEditor
                 if (!controller.Data.ContainsItem(id))
                     break;
             }
-            Position new_pos = new Position { ID = id };
+            Position new_pos = new Position { ID = id, Pos = new Pos(0, 0, 0, 1) };
             controller.Data.AddItem(id, new_pos);
             ((MainForm)Tag).GenTreeNode(new_pos, controller);
             pos = new_pos;
@@ -129,6 +129,20 @@ namespace TwinsaityEditor
             if (ignore_value_change) return;
             pos.Pos.W = (float)numericUpDown4.Value;
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[pos.ID]].Tag).UpdateTextBox();
+        }
+
+        private void button_CopyViewerPos_Click(object sender, System.EventArgs e)
+        {
+            Pos currentPos = File.RMViewer_GetPos(pos.Pos);
+            pos.Pos.X = currentPos.X;
+            pos.Pos.Y = currentPos.Y;
+            pos.Pos.Z = currentPos.Z;
+            numericUpDown1.Value = (decimal)pos.Pos.X;
+            numericUpDown2.Value = (decimal)pos.Pos.Y;
+            numericUpDown3.Value = (decimal)pos.Pos.Z;
+            numericUpDown4.Value = (decimal)pos.Pos.W;
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[pos.ID]].Tag).UpdateTextBox();
+            File.RMViewer_LoadPositions();
         }
     }
 }

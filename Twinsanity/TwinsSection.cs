@@ -29,7 +29,7 @@ namespace Twinsanity
         Object, ObjectDemo,
         Script,
         Animation,
-        OGI,
+        OGI, GraphicsInfo,
         CodeModel,
         SE, Xbox_SE,
         SE_Eng, Xbox_SE_Eng,
@@ -331,6 +331,10 @@ namespace Twinsanity
                         break;
                     case SectionType.Camera:
                         LoadItem<Camera>(reader, sub);
+                        break;
+                    case SectionType.OGI:
+                        LoadItem<TwinsItem>(reader, sub);
+                        //LoadItem<GraphicsInfo>(reader, sub);
                         break;
                     default:
                         LoadItem<TwinsItem>(reader, sub);

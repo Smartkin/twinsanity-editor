@@ -324,6 +324,19 @@ namespace TwinsaityEditor
                 rmViewer.LoadPositions();
         }
 
+        public Pos RMViewer_GetPos(Pos pos_in)
+        {
+            Pos pos = new Pos(pos_in.X, pos_in.Y, pos_in.Z, 1);
+            if (rmViewer != null)
+            {
+                OpenTK.Vector3 vec = rmViewer.GetViewerPos();
+                pos.X = vec.X;
+                pos.Y = vec.Y;
+                pos.Z = vec.Z;
+            }
+            return pos;
+        }
+
         public void CloseForm(ref Form form)
         {
             if (form != null && !form.IsDisposed)

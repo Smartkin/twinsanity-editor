@@ -44,6 +44,7 @@
             this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
+            this.button_CopyViewerPos = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -72,6 +73,7 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.button_CopyViewerPos);
             this.splitContainer1.Panel2.Controls.Add(this.groupBox2);
             this.splitContainer1.Panel2.Controls.Add(this.groupBox1);
             this.splitContainer1.Panel2.Enabled = false;
@@ -290,6 +292,16 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "X";
             // 
+            // button_CopyViewerPos
+            // 
+            this.button_CopyViewerPos.Location = new System.Drawing.Point(72, 12);
+            this.button_CopyViewerPos.Name = "button_CopyViewerPos";
+            this.button_CopyViewerPos.Size = new System.Drawing.Size(83, 49);
+            this.button_CopyViewerPos.TabIndex = 9;
+            this.button_CopyViewerPos.Text = "Copy Viewer Position";
+            this.button_CopyViewerPos.UseVisualStyleBackColor = true;
+            this.button_CopyViewerPos.Click += new System.EventHandler(this.button_CopyViewerPos_Click);
+            // 
             // PositionEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -337,5 +349,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.NumericUpDown numericUpDown5;
+        private System.Windows.Forms.Button button_CopyViewerPos;
     }
 }

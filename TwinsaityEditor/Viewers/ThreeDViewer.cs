@@ -56,7 +56,7 @@ namespace TwinsaityEditor
         private Matrix3 cam_rot_mat;
         private float sca, range;
         private Timer refresh;
-        private bool k_w, k_a, k_s, k_d, k_e, k_q, m_l;
+        private bool k_w, k_a, k_s, k_d, k_e, k_q, m_l, k_shift, k_ctrl;
         private int m_x, m_y;
         private EventHandler _inputHandle;
         private static FontWrapper.FontService _fntService = new FontWrapper.FontService();
@@ -101,6 +101,10 @@ namespace TwinsaityEditor
                 else
                 {
                     float speed = range / 250;
+                    if (k_shift)
+                        speed *= 5f;
+                    else if (k_ctrl)
+                        speed *= 0.2f;
                     int v = 0, h = 0, d = 0;
                     if (k_w)
                         d++;
@@ -261,6 +265,12 @@ namespace TwinsaityEditor
                 case Keys.E:
                     k_e = true;
                     break;
+                case Keys.ShiftKey:
+                    k_shift = true;
+                    break;
+                case Keys.ControlKey:
+                    k_ctrl = true;
+                    break;
                 case Keys.R:
                     ResetCamera();
                     break;
@@ -289,6 +299,12 @@ namespace TwinsaityEditor
                     break;
                 case Keys.E:
                     k_e = false;
+                    break;
+                case Keys.ShiftKey:
+                    k_shift = false;
+                    break;
+                case Keys.ControlKey:
+                    k_ctrl = false;
                     break;
             }
         }

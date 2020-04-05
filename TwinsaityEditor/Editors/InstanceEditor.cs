@@ -387,7 +387,9 @@ namespace TwinsaityEditor
                 if (!controller.Data.ContainsItem(id))
                     break;
             }
-            Instance new_ins = new Instance { ID = id, AfterOID = 0xFFFFFFFF, Pos = new Pos(0, 0, 0, 1) };
+            Instance new_ins = new Instance { ID = id, AfterOID = 0xFFFFFFFF, Pos = new Pos(0, 0, 0, 1), SomeNum1 = 10, SomeNum2 = 10, SomeNum3 = 10, UnkI32 = 0x1CE,
+                UnkI322 = new List<float>() { 1 },
+                UnkI323 = new List<uint>() { 0, 0 } };
             controller.Data.AddItem(id, new_ins);
             ((MainForm)Tag).GenTreeNode(new_ins, controller);
             ins = new_ins;
@@ -482,6 +484,20 @@ namespace TwinsaityEditor
             if (ignore_value_change) return;
             ins.COMRotZ = (ushort)numericUpDown15.Value;
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
+        }
+
+        private void button_PosFromCam_Click(object sender, EventArgs e)
+        {
+            Pos currentPos = File.RMViewer_GetPos(ins.Pos);
+            ins.Pos.X = currentPos.X;
+            ins.Pos.Y = currentPos.Y;
+            ins.Pos.Z = currentPos.Z;
+            numericUpDown2.Value = (decimal)ins.Pos.X;
+            numericUpDown3.Value = (decimal)ins.Pos.Y;
+            numericUpDown4.Value = (decimal)ins.Pos.Z;
+            numericUpDown5.Value = (decimal)ins.Pos.W;
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateTextBox();
+            File.RMViewer_LoadInstances();
         }
     }
 }

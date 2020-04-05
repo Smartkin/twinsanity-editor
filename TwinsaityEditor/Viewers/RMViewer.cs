@@ -50,7 +50,13 @@ namespace TwinsaityEditor
         protected override void RenderHUD()
         {
             base.RenderHUD();
-            RenderString2D("X: " + (-pos.X) + "\nY: " + pos.Y + "\nZ: " + pos.Z + "\nPress C to toggle collision nodes\nPress X to toggle collision tree wireframe\nPress T to toggle object triggers\nPress Y to toggle camera triggers", 0, Height, 10, Color.White, TextAnchor.BotLeft);
+            RenderString2D("Press C to toggle collision nodes\nPress X to toggle collision tree wireframe\nPress T to toggle object triggers\nPress Y to toggle camera triggers", 0, Height, 10, Color.White, TextAnchor.BotLeft);
+            RenderString2D("X: " + (-pos.X) + "\n\nY: " + pos.Y + "\n\nZ: " + pos.Z, 0, Height - 44, 12, Color.White, TextAnchor.BotLeft);
+        }
+
+        public Vector3 GetViewerPos()
+        {
+            return new Vector3(-pos.X,pos.Y,pos.Z);
         }
 
         protected override void RenderObjects()
