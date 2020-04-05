@@ -35,6 +35,7 @@
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.button_PosFromCam = new System.Windows.Forms.Button();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
             this.numericUpDown12 = new System.Windows.Forms.NumericUpDown();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
@@ -82,7 +83,7 @@
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.numericUpDown9 = new System.Windows.Forms.NumericUpDown();
             this.textBox2 = new System.Windows.Forms.TextBox();
-            this.button_PosFromCam = new System.Windows.Forms.Button();
+            this.duplicateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -155,7 +156,8 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addToolStripMenuItem,
-            this.removeToolStripMenuItem});
+            this.removeToolStripMenuItem,
+            this.duplicateToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(219, 24);
@@ -203,6 +205,17 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Main Properties";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // button_PosFromCam
+            // 
+            this.button_PosFromCam.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.button_PosFromCam.Location = new System.Drawing.Point(438, 70);
+            this.button_PosFromCam.Name = "button_PosFromCam";
+            this.button_PosFromCam.Size = new System.Drawing.Size(52, 58);
+            this.button_PosFromCam.TabIndex = 11;
+            this.button_PosFromCam.Text = "Copy Viewer Pos";
+            this.button_PosFromCam.UseVisualStyleBackColor = true;
+            this.button_PosFromCam.Click += new System.EventHandler(this.button_PosFromCam_Click);
             // 
             // groupBox12
             // 
@@ -629,7 +642,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(502, 331);
+            this.tabPage2.Size = new System.Drawing.Size(502, 330);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Extra Properties";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -824,16 +837,12 @@
             this.textBox2.TabIndex = 0;
             this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
-            // button_PosFromCam
+            // duplicateToolStripMenuItem
             // 
-            this.button_PosFromCam.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_PosFromCam.Location = new System.Drawing.Point(438, 70);
-            this.button_PosFromCam.Name = "button_PosFromCam";
-            this.button_PosFromCam.Size = new System.Drawing.Size(52, 58);
-            this.button_PosFromCam.TabIndex = 11;
-            this.button_PosFromCam.Text = "Copy Viewer Pos";
-            this.button_PosFromCam.UseVisualStyleBackColor = true;
-            this.button_PosFromCam.Click += new System.EventHandler(this.button_PosFromCam_Click);
+            this.duplicateToolStripMenuItem.Name = "duplicateToolStripMenuItem";
+            this.duplicateToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
+            this.duplicateToolStripMenuItem.Text = "Duplicate";
+            this.duplicateToolStripMenuItem.Click += new System.EventHandler(this.duplicateToolStripMenuItem_Click);
             // 
             // InstanceEditor
             // 
@@ -953,5 +962,6 @@
         private System.Windows.Forms.NumericUpDown numericUpDown14;
         private System.Windows.Forms.NumericUpDown numericUpDown13;
         private System.Windows.Forms.Button button_PosFromCam;
+        private System.Windows.Forms.ToolStripMenuItem duplicateToolStripMenuItem;
     }
 }

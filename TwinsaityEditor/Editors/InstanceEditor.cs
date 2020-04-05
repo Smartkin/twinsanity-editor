@@ -499,5 +499,51 @@ namespace TwinsaityEditor
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateTextBox();
             File.RMViewer_LoadInstances();
         }
+
+        private void duplicateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var sel_i = listBox1.SelectedIndex;
+            if (sel_i == -1)
+                return;
+
+            Instance last_inst = ins;
+
+            if (controller.Data.RecordIDs.Count >= ushort.MaxValue) return;
+            uint id;
+            for (id = 0; id < uint.MaxValue; ++id)
+            {
+                if (!controller.Data.ContainsItem(id))
+                    break;
+            }
+            Instance new_ins = new Instance
+            {
+                ID = id,
+                AfterOID = 0xFFFFFFFF,
+                Pos = new Pos(last_inst.Pos.X,last_inst.Pos.Y + 1f,last_inst.Pos.Z, 1),
+                RotX = last_inst.RotX,
+                RotY = last_inst.RotY,
+                RotZ = last_inst.RotZ,
+                COMRotX = last_inst.COMRotX,
+                COMRotY = last_inst.COMRotY,
+                COMRotZ = last_inst.COMRotZ,
+                SomeNum1 = last_inst.SomeNum1,
+                SomeNum2 = last_inst.SomeNum2,
+                SomeNum3 = last_inst.SomeNum3,
+                UnkI32 = last_inst.UnkI32,
+                UnkI321 = last_inst.UnkI321,
+                UnkI322 = last_inst.UnkI322,
+                UnkI323 = last_inst.UnkI323,
+                ObjectID = last_inst.ObjectID,
+                InstanceIDs = last_inst.InstanceIDs,
+                PathIDs = last_inst.PathIDs,
+                PositionIDs = last_inst.PositionIDs,
+            };
+            controller.Data.AddItem(id, new_ins);
+            ((MainForm)Tag).GenTreeNode(new_ins, controller);
+            ins = new_ins;
+            listBox1.Items.Add(GenTextForList(ins));
+            controller.UpdateText();
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
+        }
     }
 }

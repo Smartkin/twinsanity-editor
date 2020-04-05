@@ -333,8 +333,10 @@ namespace Twinsanity
                         LoadItem<Camera>(reader, sub);
                         break;
                     case SectionType.OGI:
-                        LoadItem<TwinsItem>(reader, sub);
-                        //LoadItem<GraphicsInfo>(reader, sub);
+                        LoadItem<GraphicsInfo>(reader, sub);
+                        break;
+                    case SectionType.ArmatureModel:
+                        LoadItem<ArmatureModel>(reader, sub);
                         break;
                     default:
                         LoadItem<TwinsItem>(reader, sub);

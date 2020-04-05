@@ -100,6 +100,10 @@ namespace TwinsaityEditor
                 c = new ColDataController(this, (ColData)a);
             else if (a is ChunkLinks)
                 c = new ChunkLinksController(this, (ChunkLinks)a);
+            else if (a is GraphicsInfo)
+                c = new GraphicsInfoController(this, (GraphicsInfo)a);
+            else if (a is ArmatureModel)
+                c = new ArmatureModelController(this, (ArmatureModel)a);
             else
                 c = new ItemController(this, a);
             c.UpdateText();

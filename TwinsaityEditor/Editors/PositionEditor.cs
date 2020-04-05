@@ -144,5 +144,29 @@ namespace TwinsaityEditor
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[pos.ID]].Tag).UpdateTextBox();
             File.RMViewer_LoadPositions();
         }
+
+        private void duplicateToolStripMenuItem_Click(object sender, System.EventArgs e)
+        {
+            var sel_i = listBox1.SelectedIndex;
+            if (sel_i == -1)
+                return;
+
+            Position old_pos = pos;
+
+            if (controller.Data.RecordIDs.Count >= ushort.MaxValue) return;
+            uint id;
+            for (id = 0; id < uint.MaxValue; ++id)
+            {
+                if (!controller.Data.ContainsItem(id))
+                    break;
+            }
+            Position new_pos = new Position { ID = id, Pos = new Pos(old_pos.Pos.X, old_pos.Pos.Y + 1f, old_pos.Pos.Z, 1) };
+            controller.Data.AddItem(id, new_pos);
+            ((MainForm)Tag).GenTreeNode(new_pos, controller);
+            pos = new_pos;
+            listBox1.Items.Add($"ID {pos.ID}");
+            controller.UpdateText();
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[pos.ID]].Tag).UpdateText();
+        }
     }
 }
