@@ -2,18 +2,18 @@
 
 namespace TwinsaityEditor
 {
-    public class ArmatureModelController : ItemController
+    public class ArmatureModelXController : ItemController
     {
-        public new ArmatureModel Data { get; set; }
+        public new ArmatureModelX Data { get; set; }
 
-        public ArmatureModelController(MainForm topform, ArmatureModel item) : base(topform, item)
+        public ArmatureModelXController(MainForm topform, ArmatureModelX item) : base(topform, item)
         {
             Data = item;
         }
 
         protected override string GetName()
         {
-            return $"Armature Model [ID {Data.ID}]";
+            return $"Armature Model X [ID {Data.ID}]";
         }
 
         protected override void GenText()

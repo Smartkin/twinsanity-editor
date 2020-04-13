@@ -104,6 +104,8 @@ namespace TwinsaityEditor
                 c = new GraphicsInfoController(this, (GraphicsInfo)a);
             else if (a is ArmatureModel)
                 c = new ArmatureModelController(this, (ArmatureModel)a);
+            else if (a is ArmatureModelX)
+                c = new ArmatureModelXController(this, (ArmatureModelX)a);
             else
                 c = new ItemController(this, a);
             c.UpdateText();

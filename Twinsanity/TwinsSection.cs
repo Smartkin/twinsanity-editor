@@ -20,7 +20,7 @@ namespace Twinsanity
         Material,
         Mesh, MeshX,
         Model,
-        ArmatureModel,
+        ArmatureModel, ArmatureModelX,
         ActorModel,
         StaticModel,
         SpecialModel,
@@ -129,7 +129,10 @@ namespace Twinsanity
                                 LoadSection(reader, sub, SectionType.Model);
                                 break;
                             case 4:
-                                LoadSection(reader, sub, SectionType.ArmatureModel);
+                                if (Type == SectionType.Graphics)
+                                    LoadSection(reader, sub, SectionType.ArmatureModel);
+                                else
+                                    LoadSection(reader, sub, SectionType.ArmatureModelX);
                                 break;
                             case 5:
                                 LoadSection(reader, sub, SectionType.ActorModel);
@@ -337,6 +340,9 @@ namespace Twinsanity
                         break;
                     case SectionType.ArmatureModel:
                         LoadItem<ArmatureModel>(reader, sub);
+                        break;
+                    case SectionType.ArmatureModelX:
+                        LoadItem<ArmatureModelX>(reader, sub);
                         break;
                     default:
                         LoadItem<TwinsItem>(reader, sub);

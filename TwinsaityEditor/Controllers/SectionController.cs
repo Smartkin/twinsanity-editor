@@ -18,7 +18,7 @@ namespace TwinsaityEditor
             if (item.Type != SectionType.Texture && item.Type != SectionType.TextureX
                 && item.Type != SectionType.Material && item.Type != SectionType.Mesh
                 && item.Type != SectionType.MeshX && item.Type != SectionType.Model
-                && item.Type != SectionType.ArmatureModel && item.Type != SectionType.ActorModel
+                && item.Type != SectionType.ArmatureModel && item.Type != SectionType.ActorModel && item.Type != SectionType.ArmatureModelX
                 && item.Type != SectionType.StaticModel && item.Type != SectionType.SpecialModel
                 && item.Type != SectionType.Skydome && !(item is TwinsFile))
             {

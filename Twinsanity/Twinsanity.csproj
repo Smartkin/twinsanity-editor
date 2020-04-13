@@ -66,6 +66,7 @@
     <Compile Include="DefaultEnums.cs" />
     <Compile Include="Items\Code\GraphicsInfo.cs" />
     <Compile Include="Items\Graphics\ArmatureModel.cs" />
+    <Compile Include="Items\Graphics\ArmatureModelX.cs" />
     <Compile Include="Items\Graphics\Skydome.cs" />
     <Compile Include="Items\Instances\AIPath.cs" />
     <Compile Include="Items\Instances\AIPosition.cs" />

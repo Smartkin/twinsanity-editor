@@ -2,7 +2,7 @@
 
 namespace Twinsanity
 {
-    public class ArmatureModel : TwinsItem
+    public class ArmatureModelX : TwinsItem
     {
 
         public long ItemSize { get; set; }
@@ -26,12 +26,16 @@ namespace Twinsanity
             MaterialIDs = new uint[SubModels];
             Vertexes = new uint[SubModels];
             BlockSize = new uint[SubModels];
-            for (int i = 0; i < SubModels; i++)
+            for (uint i = 0; i < SubModels; i++)
             {
                 MaterialIDs[i] = reader.ReadUInt32();
                 BlockSize[i] = reader.ReadUInt32();
                 Vertexes[i] = reader.ReadUInt32();
-                reader.BaseStream.Position = reader.BaseStream.Position + BlockSize[i];
+                while (reader.ReadUInt32() < 65535)
+                {
+                    // some array of small numbers
+                }
+                reader.BaseStream.Position = reader.BaseStream.Position + BlockSize[i] - 4;
             }
 
             ItemSize = size;
