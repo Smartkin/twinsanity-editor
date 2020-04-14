@@ -1,4 +1,5 @@
 ﻿using Twinsanity;
+using System;
 
 namespace TwinsaityEditor
 {
@@ -14,8 +15,11 @@ namespace TwinsaityEditor
 
         protected override string GetName()
         {
-            if (MainFile.GetObjectName(Data.ObjectID) != string.Empty)
-                return $"{MainFile.GetObjectName(Data.ObjectID)} Instance [ID {Data.ID}]";
+            string obj_name = MainFile.GetObjectName(Data.ObjectID);
+            obj_name = Utils.TextUtils.TruncateObjectName(obj_name, Data.ObjectID, "*", "");
+
+            if (obj_name != string.Empty)
+                return $"{obj_name} Instance [ID {Data.ID}]";
             else
                 return $"Instance [ID {Data.ID}]";
         }
@@ -23,10 +27,12 @@ namespace TwinsaityEditor
         protected override void GenText()
         {
             string obj_name = MainFile.GetObjectName(Data.ObjectID);
+            obj_name = Utils.TextUtils.TruncateObjectName(obj_name, Data.ObjectID, "", " (Not in Objects)");
+
             TextPrev = new string[5];//12 + Data.InstanceIDs.Count + Data.PositionIDs.Count + Data.PathIDs.Count + Data.UnkI321.Count + Data.UnkI322.Count + Data.UnkI323.Count];
             TextPrev[0] = $"ID: {Data.ID}";
             TextPrev[1] = $"Offset: {Data.Offset} Size: {Data.Size}";
-            TextPrev[2] = $"Object ID {Data.ObjectID} ({(obj_name != string.Empty ? obj_name : string.Empty)}";
+            TextPrev[2] = $"Object ID {Data.ObjectID} - {(obj_name != string.Empty ? obj_name : string.Empty)}";
             TextPrev[3] = $"Position ({Data.Pos.X}, {Data.Pos.Y}, {Data.Pos.Z}, {Data.Pos.W})";
             TextPrev[4] = $"Rotation ({Data.RotX} | {Data.RotY} | {Data.RotZ})";
 

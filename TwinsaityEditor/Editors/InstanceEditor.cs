@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Controls;
 using System.Windows.Forms;
 using Twinsanity;
 
@@ -46,7 +47,9 @@ namespace TwinsaityEditor
             var s_dic = new SortedDictionary<uint, int>(FileData.GetItem<TwinsSection>(10).GetItem<TwinsSection>(0).RecordIDs);
             foreach (var i in s_dic)
             {
-                comboBox1.Items.Add($"{i.Key} ({File.GetObjectName(i.Key)})");
+                string obj_name = File.GetObjectName(i.Key);
+                obj_name = Utils.TextUtils.TruncateObjectName(obj_name, (ushort)i.Key, "*", "");
+                comboBox1.Items.Add($"{i.Key} - {obj_name}");
             }
         }
 
@@ -90,7 +93,8 @@ namespace TwinsaityEditor
         private void UpdateTab1()
         {
             string obj_name = File.GetObjectName(ins.ObjectID);
-            comboBox1.Text = ins.ObjectID.ToString() + ((obj_name == string.Empty) ? string.Empty : $" ({obj_name})");
+            obj_name = Utils.TextUtils.TruncateObjectName(obj_name, ins.ObjectID, "*", "");
+            comboBox1.Text = ins.ObjectID.ToString() + ((obj_name == string.Empty) ? string.Empty : $" - {obj_name}");
             numericUpDown12.Value = ins.ID;
             numericUpDown2.Value = (decimal)ins.Pos.X;
             numericUpDown3.Value = (decimal)ins.Pos.Y;
@@ -174,7 +178,8 @@ namespace TwinsaityEditor
         private string GenTextForList(Instance instance)
         {
             string obj_name = File.GetObjectName(instance.ObjectID);
-            return $"ID {instance.ID} {(obj_name == string.Empty ? string.Empty : $" ({obj_name})")}";
+            obj_name = Utils.TextUtils.TruncateObjectName(obj_name, instance.ObjectID, "*", "");
+            return $"ID {instance.ID} {(obj_name == string.Empty ? string.Empty : $" - {obj_name}")}";
         }
 
         private void comboBox1_TextChanged(object sender, EventArgs e)

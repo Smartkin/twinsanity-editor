@@ -233,7 +233,7 @@ namespace TwinsaityEditor
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("TwinsaityEditor + Twinsanity API v0.2\nDeveloped by Neo_Kesha (original author), Smartkin, ManDude, Marko\nSource code available at: https://github.com/smartkin/twinsanity-editor", "About", MessageBoxButtons.OK);
+            MessageBox.Show("TwinsaityEditor + Twinsanity API v0.2\nDeveloped by Neo_Kesha (original author), Smartkin, ManDude, Marko, BetaM\nSource code available at: https://github.com/smartkin/twinsanity-editor", "About", MessageBoxButtons.OK);
         }
 
         public void OpenMHTool()
@@ -249,5 +249,17 @@ namespace TwinsaityEditor
             else
                 mhForm.Select();
         }
+
+        public void Pref_TruncateNames_Click(object sender, EventArgs e)
+        {
+            Utils.TextUtils.Pref_TruncateObjectNames = !Utils.TextUtils.Pref_TruncateObjectNames;
+            Pref_TruncateNames_toolStripMenuItem.Checked = Utils.TextUtils.Pref_TruncateObjectNames;
+        }
+        public void Pref_EnableAllNames_Click(object sender, EventArgs e)
+        {
+            Utils.TextUtils.Pref_EnableAnyObjectNames = !Utils.TextUtils.Pref_EnableAnyObjectNames;
+            Pref_EnableAllNames_toolStripMenuItem.Checked = Utils.TextUtils.Pref_EnableAnyObjectNames;
+        }
+
     }
 }

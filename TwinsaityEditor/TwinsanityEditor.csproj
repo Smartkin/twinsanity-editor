@@ -246,6 +246,7 @@
     <Compile Include="Utils\ControlExt.cs" />
     <Compile Include="Utils\DictUtils.cs" />
     <Compile Include="Utils\MatrixWrapper.cs" />
+    <Compile Include="Utils\MiscUtils.cs" />
     <Compile Include="Utils\VectorFuncs.cs" />
     <Compile Include="Viewers\SkydomeViewer.cs">
       <SubType>UserControl</SubType>

@@ -500,7 +500,7 @@ namespace Twinsanity
             BoilerUnused = 136,
         }
 
-        public enum ScriptID
+        public enum ScriptID : ushort
         {
             HEAD_COM_CRASH_IDLE = 0,
             COM_CRASH_IDLE = 1,
@@ -3672,7 +3672,7 @@ namespace Twinsanity
             COM_TNT_CRATE_TRIGGER_NEXT = 6991,
         };
 
-        public enum ObjectID
+        public enum ObjectID : ushort
         {
             CRASH = 0,
             REDWUMPA = 1,

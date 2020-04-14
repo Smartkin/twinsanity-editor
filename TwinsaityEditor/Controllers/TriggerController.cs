@@ -1,4 +1,5 @@
 ﻿using Twinsanity;
+using System;
 
 namespace TwinsaityEditor
 {
@@ -31,7 +32,9 @@ namespace TwinsaityEditor
             for (int i = 0; i < Data.Instances.Count; ++i)
             {
                 string obj_name = MainFile.GetObjectName(MainFile.GetInstance(Data.Parent.Parent.ID, Data.Instances[i]).ObjectID);
-                TextPrev[7 + i] = $"Instance {Data.Instances[i]} {(obj_name != string.Empty ? $" ({obj_name})" : string.Empty)}";
+                obj_name = Utils.TextUtils.TruncateObjectName(obj_name, MainFile.GetInstance(Data.Parent.Parent.ID, Data.Instances[i]).ObjectID, "", " (Not in Objects)");
+
+                TextPrev[7 + i] = $"Instance {Data.Instances[i]} {(obj_name != string.Empty ? $" - {obj_name}" : string.Empty)}";
             }
 
             TextPrev[7 + Data.Instances.Count] = $"Arguments: {Data.SomeUInt161} {Data.SomeUInt162} {Data.SomeUInt163} {Data.SomeUInt164}";
