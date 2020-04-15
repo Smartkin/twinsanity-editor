@@ -74,6 +74,8 @@ namespace Twinsanity
                                         else if (s_id == 11)
                                             if (type == FileType.RMX)
                                                 sec.Type = SectionType.GraphicsX;
+                                            else if (type == FileType.DemoRM2)
+                                                sec.Type = SectionType.GraphicsD;
                                             else
                                                 sec.Type = SectionType.Graphics;
                                         var sk = reader.BaseStream.Position;
@@ -118,10 +120,15 @@ namespace Twinsanity
                             {
                                 case 6:
                                     {
+                                        SectionType targetType = SectionType.Graphics;
+                                        if (type == FileType.SMX)
+                                            targetType = SectionType.GraphicsX;
+                                        if (type == FileType.DemoSM2)
+                                            targetType = SectionType.GraphicsDS;
                                         TwinsSection sec = new TwinsSection
                                         {
                                             ID = s_id,
-                                            Type = type == FileType.SMX ? SectionType.GraphicsX : SectionType.Graphics,
+                                            Type = targetType,
                                             Level = 1
                                         };
                                         var sk = reader.BaseStream.Position;

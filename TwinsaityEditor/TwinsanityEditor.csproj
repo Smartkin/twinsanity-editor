@@ -178,6 +178,7 @@
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\ChunkLinksController.cs" />
     <Compile Include="Controllers\GraphicsInfoController.cs" />
+    <Compile Include="Controllers\MaterialDController.cs" />
     <Compile Include="Controllers\SkydomeController.cs" />
     <Compile Include="Controllers\PathController.cs" />
     <Compile Include="Controllers\AIPositionController.cs" />

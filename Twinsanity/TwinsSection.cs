@@ -12,13 +12,13 @@ namespace Twinsanity
     /// </summary>
     public enum SectionType {
         Null,
-        Graphics, GraphicsX,
+        Graphics, GraphicsX, GraphicsD, GraphicsDS,
         Code, CodeDemo, CodeX,
         Instance, InstanceDemo,
 
         Texture, TextureX,
-        Material,
-        Mesh, MeshX,
+        Material, MaterialD,
+        Mesh, MeshX, MeshDS,
         Model,
         ArmatureModel, ArmatureModelX,
         ActorModel,
@@ -47,7 +47,7 @@ namespace Twinsanity
         CollisionSurface,
         ObjectInstance, ObjectInstanceDemo,
         Trigger,
-        Camera,
+        Camera, CameraDemo,
 
         Last
     }
@@ -108,31 +108,38 @@ namespace Twinsanity
                 {
                     case SectionType.Graphics:
                     case SectionType.GraphicsX:
+                    case SectionType.GraphicsD:
+                    case SectionType.GraphicsDS:
                         switch (sub.ID)
                         {
                             case 0:
-                                if (Type == SectionType.Graphics)
-                                    LoadSection(reader, sub, SectionType.Texture);
-                                else
+                                if (Type == SectionType.GraphicsX)
                                     LoadSection(reader, sub, SectionType.TextureX);
+                                else
+                                    LoadSection(reader, sub, SectionType.Texture);
                                 break;
                             case 1:
-                                LoadSection(reader, sub, SectionType.Material);
+                                if (Type == SectionType.GraphicsD || Type == SectionType.GraphicsDS)
+                                    LoadSection(reader, sub, SectionType.MaterialD);
+                                else
+                                    LoadSection(reader, sub, SectionType.Material);
                                 break;
                             case 2:
-                                if (Type == SectionType.Graphics)
-                                    LoadSection(reader, sub, SectionType.Mesh);
-                                else
+                                if (Type == SectionType.GraphicsX)
                                     LoadSection(reader, sub, SectionType.MeshX);
+                                else if (Type == SectionType.GraphicsDS)
+                                    LoadSection(reader, sub, SectionType.MeshDS);
+                                else
+                                    LoadSection(reader, sub, SectionType.Mesh);
                                 break;
                             case 3:
                                 LoadSection(reader, sub, SectionType.Model);
                                 break;
                             case 4:
-                                if (Type == SectionType.Graphics)
-                                    LoadSection(reader, sub, SectionType.ArmatureModel);
-                                else
+                                if (Type == SectionType.GraphicsX)
                                     LoadSection(reader, sub, SectionType.ArmatureModelX);
+                                else
+                                    LoadSection(reader, sub, SectionType.ArmatureModel);
                                 break;
                             case 5:
                                 LoadSection(reader, sub, SectionType.ActorModel);
@@ -183,7 +190,10 @@ namespace Twinsanity
                                 LoadSection(reader, sub, SectionType.Trigger);
                                 break;
                             case 8:
-                                LoadSection(reader, sub, SectionType.Camera);
+                                if (Type == SectionType.InstanceDemo)
+                                    LoadSection(reader, sub, SectionType.CameraDemo);
+                                else
+                                    LoadSection(reader, sub, SectionType.Camera);
                                 break;
                             default:
                                 LoadItem<TwinsItem>(reader, sub);
@@ -276,10 +286,16 @@ namespace Twinsanity
                     case SectionType.Material:
                         LoadItem<Material>(reader, sub);
                         break;
+                    case SectionType.MaterialD: //PS2 DEMO Materials
+                        LoadItem<MaterialDemo>(reader, sub);
+                        break;
                     case SectionType.Mesh:
                         LoadItem<Mesh>(reader, sub);
                         break;
                     case SectionType.MeshX: //XBOX meshes
+                        LoadItem<TwinsItem>(reader, sub);
+                        break;
+                    case SectionType.MeshDS: //PS2 DEMO SM2 meshes
                         LoadItem<TwinsItem>(reader, sub);
                         break;
                     case SectionType.Model:
@@ -335,13 +351,16 @@ namespace Twinsanity
                     case SectionType.Camera:
                         LoadItem<Camera>(reader, sub);
                         break;
+                    case SectionType.CameraDemo:
+                        LoadItem<TwinsItem>(reader, sub);
+                        break;
                     case SectionType.OGI:
                         LoadItem<GraphicsInfo>(reader, sub);
                         break;
                     case SectionType.ArmatureModel:
                         LoadItem<ArmatureModel>(reader, sub);
                         break;
-                    case SectionType.ArmatureModelX:
+                    case SectionType.ArmatureModelX: //XBOX Armature Models
                         LoadItem<ArmatureModelX>(reader, sub);
                         break;
                     default:

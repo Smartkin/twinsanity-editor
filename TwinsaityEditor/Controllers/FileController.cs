@@ -70,10 +70,21 @@ namespace TwinsaityEditor
             }
             if (Data.ContainsItem(gfx_id) && Data.GetItem<TwinsSection>(gfx_id).ContainsItem(1))
             {
-                foreach (Material mat in Data.GetItem<TwinsSection>(gfx_id).GetItem<TwinsSection>(1).Records)
+                if (Data.Type == TwinsFile.FileType.DemoRM2 || Data.Type == TwinsFile.FileType.DemoSM2)
                 {
-                    MaterialNames.Add(mat.ID, mat.Name);
+                    foreach (MaterialDemo mat in Data.GetItem<TwinsSection>(gfx_id).GetItem<TwinsSection>(1).Records)
+                    {
+                        MaterialNames.Add(mat.ID, mat.Name);
+                    }
                 }
+                else
+                {
+                    foreach (Material mat in Data.GetItem<TwinsSection>(gfx_id).GetItem<TwinsSection>(1).Records)
+                    {
+                        MaterialNames.Add(mat.ID, mat.Name);
+                    }
+                }
+                
             }
         }
 

@@ -209,17 +209,20 @@ namespace TwinsaityEditor
 
                     if (file.Data.GetItem<TwinsSection>(i).ContainsItem(6)) //instances
                     {
-                        foreach (Instance ins in file.Data.GetItem<TwinsSection>(i).GetItem<TwinsSection>(6).Records)
+                        if (file.Data.Type != TwinsFile.FileType.DemoRM2)
                         {
-                            Matrix3 rot_ins = Matrix3.Identity;
-                            rot_ins *= Matrix3.CreateRotationX(ins.RotX / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
-                            rot_ins *= Matrix3.CreateRotationY(-ins.RotY / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
-                            rot_ins *= Matrix3.CreateRotationZ(-ins.RotZ / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
-                            if (file.SelectedItem == ins)
-                                cur_color = Color.White;
-                            else
-                                cur_color = colors[colors.Length - i * 2 - 1];
-                            RenderString3D(ins.ID.ToString(), cur_color, -ins.Pos.X, ins.Pos.Y, ins.Pos.Z, ref rot_ins);
+                            foreach (Instance ins in file.Data.GetItem<TwinsSection>(i).GetItem<TwinsSection>(6).Records)
+                            {
+                                Matrix3 rot_ins = Matrix3.Identity;
+                                rot_ins *= Matrix3.CreateRotationX(ins.RotX / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
+                                rot_ins *= Matrix3.CreateRotationY(-ins.RotY / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
+                                rot_ins *= Matrix3.CreateRotationZ(-ins.RotZ / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
+                                if (file.SelectedItem == ins)
+                                    cur_color = Color.White;
+                                else
+                                    cur_color = colors[colors.Length - i * 2 - 1];
+                                RenderString3D(ins.ID.ToString(), cur_color, -ins.Pos.X, ins.Pos.Y, ins.Pos.Z, ref rot_ins);
+                            }
                         }
                     }
 
@@ -309,74 +312,77 @@ namespace TwinsaityEditor
 
                     if (show_cams && file.Data.GetItem<TwinsSection>(i).ContainsItem(8))
                     {
-                        foreach (Camera cam in file.Data.GetItem<TwinsSection>(i).GetItem<TwinsSection>(8).Records)
+                        if (file.Data.Type != TwinsFile.FileType.DemoRM2)
                         {
-                            GL.PushMatrix();
-                            GL.Translate(-cam.TriggerPos.X, cam.TriggerPos.Y, cam.TriggerPos.Z);
-                            Quaternion quat = new Quaternion(cam.TriggerRot.X, -cam.TriggerRot.Y, -cam.TriggerRot.Z, cam.TriggerRot.W);
-                            Matrix4 new_mat = Matrix4.CreateFromQuaternion(quat);
-                            GL.MultMatrix(ref new_mat);
+                            foreach (Camera cam in file.Data.GetItem<TwinsSection>(i).GetItem<TwinsSection>(8).Records)
+                            {
+                                GL.PushMatrix();
+                                GL.Translate(-cam.TriggerPos.X, cam.TriggerPos.Y, cam.TriggerPos.Z);
+                                Quaternion quat = new Quaternion(cam.TriggerRot.X, -cam.TriggerRot.Y, -cam.TriggerRot.Z, cam.TriggerRot.W);
+                                Matrix4 new_mat = Matrix4.CreateFromQuaternion(quat);
+                                GL.MultMatrix(ref new_mat);
 
-                            cur_color = file.SelectedItem == cam ? Color.White : colors[colors.Length - i * 2 - 2];
-                            GL.DepthMask(false);
-                            GL.Enable(EnableCap.Lighting);
-                            GL.Color4(cur_color.R, cur_color.G, cur_color.B, (byte)95);
-                            GL.Begin(PrimitiveType.QuadStrip);
-                            GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
-                            GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
-                            GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
-                            GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
-                            GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
-                            GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
-                            GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
-                            GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
-                            GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
-                            GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
-                            GL.End();
-                            GL.Begin(PrimitiveType.Quads);
+                                cur_color = file.SelectedItem == cam ? Color.White : colors[colors.Length - i * 2 - 2];
+                                GL.DepthMask(false);
+                                GL.Enable(EnableCap.Lighting);
+                                GL.Color4(cur_color.R, cur_color.G, cur_color.B, (byte)95);
+                                GL.Begin(PrimitiveType.QuadStrip);
+                                GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                                GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                                GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                                GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                                GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
+                                GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
+                                GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
+                                GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
+                                GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                                GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                                GL.End();
+                                GL.Begin(PrimitiveType.Quads);
 
-                            GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
-                            GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
-                            GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
-                            GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                                GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                                GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
+                                GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
+                                GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
 
-                            GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
-                            GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
-                            GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
-                            GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                                GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                                GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
+                                GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
+                                GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
 
-                            GL.End();
-                            GL.DepthMask(true);
-                            GL.Disable(EnableCap.Lighting);
+                                GL.End();
+                                GL.DepthMask(true);
+                                GL.Disable(EnableCap.Lighting);
 
-                            GL.Color4(cur_color);
-                            GL.LineWidth(1);
+                                GL.Color4(cur_color);
+                                GL.LineWidth(1);
 
-                            GL.Begin(PrimitiveType.LineStrip);
-                            GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
-                            GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
-                            GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
-                            GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
-                            GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
-                            GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
-                            GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
-                            GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
-                            GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
-                            GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
-                            GL.End();
-                            GL.Begin(PrimitiveType.Lines);
-                            GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
-                            GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
-                            GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
-                            GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
-                            GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
-                            GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
-                            GL.End();
+                                GL.Begin(PrimitiveType.LineStrip);
+                                GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                                GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                                GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
+                                GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
+                                GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                                GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                                GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                                GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
+                                GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
+                                GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                                GL.End();
+                                GL.Begin(PrimitiveType.Lines);
+                                GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
+                                GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
+                                GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                                GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                                GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
+                                GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
+                                GL.End();
 
-                            GL.PopMatrix();
-                            DrawAxes(-cam.TriggerPos.X, cam.TriggerPos.Y, cam.TriggerPos.Z, Math.Min(cam.TriggerSize.X, Math.Min(cam.TriggerSize.Y, cam.TriggerSize.Z)) / 2);
-                            Matrix3 rot_mat = Matrix3.CreateFromQuaternion(quat);
-                            RenderString3D(cam.ID.ToString(), cur_color, -cam.TriggerPos.X, cam.TriggerPos.Y, cam.TriggerPos.Z, ref rot_mat);
+                                GL.PopMatrix();
+                                DrawAxes(-cam.TriggerPos.X, cam.TriggerPos.Y, cam.TriggerPos.Z, Math.Min(cam.TriggerSize.X, Math.Min(cam.TriggerSize.Y, cam.TriggerSize.Z)) / 2);
+                                Matrix3 rot_mat = Matrix3.CreateFromQuaternion(quat);
+                                RenderString3D(cam.ID.ToString(), cur_color, -cam.TriggerPos.X, cam.TriggerPos.Y, cam.TriggerPos.Z, ref rot_mat);
+                            }
                         }
                     }
                 }
@@ -668,50 +674,53 @@ namespace TwinsaityEditor
                 if (!record_exists[i]) continue;
                 if (file.Data.GetItem<TwinsSection>(i).ContainsItem(6))
                 {
-                    foreach (Instance ins in file.Data.GetItem<TwinsSection>(i).GetItem<TwinsSection>(6).Records)
+                    if (file.Data.Type != TwinsFile.FileType.DemoRM2)
                     {
-                        Matrix3 rot_ins = Matrix3.Identity;
-                        rot_ins *= Matrix3.CreateRotationX(ins.RotX / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
-                        rot_ins *= Matrix3.CreateRotationY(-ins.RotY / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
-                        rot_ins *= Matrix3.CreateRotationZ(-ins.RotZ / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
-                        Vector3 pos_ins = ins.Pos.ToVec3();
-                        pos_ins.X = -pos_ins.X;
-                        vtx[1].VtxOffs[l++] = m;
-                        vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size * 0.75f, 0, 0) + pos_ins, Color.Red);
-                        vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size * 0.375f, 0, 0) + pos_ins, Color.Red);
-                        vtx[1].VtxOffs[l++] = m;
-                        vtx[1].Vtx[m++] = new Vertex(new Vector3(0, indicator_size * 0.75f, 0) + pos_ins, Color.Green);
-                        vtx[1].Vtx[m++] = new Vertex(new Vector3(0, -indicator_size * 0.375f, 0) + pos_ins, Color.Green);
-                        vtx[1].VtxOffs[l++] = m;
-                        vtx[1].Vtx[m++] = new Vertex(new Vector3(0, 0, indicator_size * 0.75f) + pos_ins, Color.Blue);
-                        vtx[1].Vtx[m++] = new Vertex(new Vector3(0, 0, -indicator_size * 0.375f) + pos_ins, Color.Blue);
-                        vtx[1].VtxOffs[l++] = m;
-                        Color cur_color = (file.SelectedItem == ins) ? Color.White : colors[colors.Length - i * 2 - 1];
-                        vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, -indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
-                        vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, -indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
-                        vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, +indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
-                        vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, +indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
-                        vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, -indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
-                        vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, -indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
-                        vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, -indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
-                        vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, -indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
-                        vtx[1].VtxOffs[l++] = m;
-                        vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, -indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
-                        vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, +indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
-                        vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, +indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
-                        vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, -indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
-                        vtx[1].VtxOffs[l++] = m;
-                        vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, +indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
-                        vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, +indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
-                        vtx[1].VtxOffs[l++] = m;
-                        vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, +indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
-                        vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, +indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
-                        min_x = Math.Min(min_x, pos_ins.X);
-                        min_y = Math.Min(min_y, pos_ins.Y);
-                        min_z = Math.Min(min_z, pos_ins.Z);
-                        max_x = Math.Max(max_x, pos_ins.X);
-                        max_y = Math.Max(max_y, pos_ins.Y);
-                        max_z = Math.Max(max_z, pos_ins.Z);
+                        foreach (Instance ins in file.Data.GetItem<TwinsSection>(i).GetItem<TwinsSection>(6).Records)
+                        {
+                            Matrix3 rot_ins = Matrix3.Identity;
+                            rot_ins *= Matrix3.CreateRotationX(ins.RotX / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
+                            rot_ins *= Matrix3.CreateRotationY(-ins.RotY / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
+                            rot_ins *= Matrix3.CreateRotationZ(-ins.RotZ / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
+                            Vector3 pos_ins = ins.Pos.ToVec3();
+                            pos_ins.X = -pos_ins.X;
+                            vtx[1].VtxOffs[l++] = m;
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size * 0.75f, 0, 0) + pos_ins, Color.Red);
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size * 0.375f, 0, 0) + pos_ins, Color.Red);
+                            vtx[1].VtxOffs[l++] = m;
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(0, indicator_size * 0.75f, 0) + pos_ins, Color.Green);
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(0, -indicator_size * 0.375f, 0) + pos_ins, Color.Green);
+                            vtx[1].VtxOffs[l++] = m;
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(0, 0, indicator_size * 0.75f) + pos_ins, Color.Blue);
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(0, 0, -indicator_size * 0.375f) + pos_ins, Color.Blue);
+                            vtx[1].VtxOffs[l++] = m;
+                            Color cur_color = (file.SelectedItem == ins) ? Color.White : colors[colors.Length - i * 2 - 1];
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, -indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, -indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, +indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, +indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, -indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, -indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, -indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, -indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
+                            vtx[1].VtxOffs[l++] = m;
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, -indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, +indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, +indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, -indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
+                            vtx[1].VtxOffs[l++] = m;
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, +indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, +indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
+                            vtx[1].VtxOffs[l++] = m;
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, +indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, +indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
+                            min_x = Math.Min(min_x, pos_ins.X);
+                            min_y = Math.Min(min_y, pos_ins.Y);
+                            min_z = Math.Min(min_z, pos_ins.Z);
+                            max_x = Math.Max(max_x, pos_ins.X);
+                            max_y = Math.Max(max_y, pos_ins.Y);
+                            max_z = Math.Max(max_z, pos_ins.Z);
+                        }
                     }
                 }
             }

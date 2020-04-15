@@ -106,6 +106,8 @@ namespace TwinsaityEditor
                 c = new ArmatureModelController(this, (ArmatureModel)a);
             else if (a is ArmatureModelX)
                 c = new ArmatureModelXController(this, (ArmatureModelX)a);
+            else if (a is MaterialDemo)
+                c = new MaterialDController(this, (MaterialDemo)a);
             else
                 c = new ItemController(this, a);
             c.UpdateText();
@@ -151,6 +153,8 @@ namespace TwinsaityEditor
                         break;
                     case 3:
                         file.LoadFile(ofd.FileName, TwinsFile.FileType.RMX);
+                        aux_file = new TwinsFile();
+                        aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".smx", TwinsFile.FileType.SMX);
                         rMViewerToolStripMenuItem.Enabled = true;
                         sMViewerToolStripMenuItem.Enabled = false;
                         break;
@@ -161,6 +165,8 @@ namespace TwinsaityEditor
                         break;
                     case 5:
                         file.LoadFile(ofd.FileName, TwinsFile.FileType.DemoRM2);
+                        aux_file = new TwinsFile();
+                        aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".sm2", TwinsFile.FileType.DemoSM2);
                         rMViewerToolStripMenuItem.Enabled = true;
                         sMViewerToolStripMenuItem.Enabled = false;
                         break;
