@@ -26,7 +26,8 @@ namespace TwinsaityEditor
             Tag = pform;
             if (file.Data.Type == TwinsFile.FileType.RM2)
             {
-                InitVBO(6 + file.GetInstanceCount());
+                int ObjectModelPool = 600; // model limit
+                InitVBO(ObjectModelPool);
             }
             else
             {
@@ -95,7 +96,7 @@ namespace TwinsaityEditor
             if (file.Data.Type == TwinsFile.FileType.RM2 && obj_models)
             {
                 GL.Enable(EnableCap.Lighting);
-                for (int i = 5; i < 4 + file.GetInstanceCount(); i++)
+                for (int i = 5; i < vtx.Length; i++)
                 {
                     if (vtx[i] != null)
                     {
@@ -751,15 +752,19 @@ namespace TwinsaityEditor
                                 MeshController modelCont = null;
                                 bool HasMesh = false;
                                 ushort TargetGI = 65535;
+                                List<uint> ModelList = new List<uint>();
+                                List<Vector3> LocalPosList = new List<Vector3>();
+                                List<Matrix3> LocalRotList = new List<Matrix3>();
                                 uint TargetModel = 65535;
-                                uint ObjectID = 65535;
+                                Vector3 LocalPos = new Vector3();
+                                Matrix3 LocalRot = Matrix3.Identity;
+
                                 foreach (GameObject gameObject in file.Data.GetItem<TwinsSection>(10).GetItem<TwinsSection>(0).Records)
                                 {
                                     if (gameObject.ID == ins.ObjectID)
                                     {
                                         if (gameObject.OGIs.Length > 0 && gameObject.OGIs[0] != 65535)
                                         {
-                                            ObjectID = gameObject.ID;
                                             TargetGI = gameObject.OGIs[0];
                                         }
                                     }
@@ -770,50 +775,72 @@ namespace TwinsaityEditor
                                     {
                                         if (GI.ID == TargetGI)
                                         {
-                                            if (GI.ModelIDs.Length > 0 && GI.ModelIDs[0].ModelID != 65535)
+                                            if (GI.ModelIDs.Length > 0)
                                             {
-                                                TargetModel = GI.ModelIDs[0].ModelID;
+                                                for (int gi_model = 0; gi_model < GI.ModelIDs.Length; gi_model++)
+                                                {
+                                                    if (GI.ModelIDs[0].ModelID != 65535)
+                                                    {
+                                                        ModelList.Add(GI.ModelIDs[gi_model].ModelID);
+                                                        LocalPosList.Add(new Vector3(-GI.Type1[GI.ModelIDs[gi_model].ID].LocalPosition.X, GI.Type1[GI.ModelIDs[gi_model].ID].LocalPosition.Y, GI.Type1[GI.ModelIDs[gi_model].ID].LocalPosition.Z));
+                                                    }
+                                                }
+                                                //LocalPos = new Vector3(-GI.Type1[GI.ModelIDs[0].ID].LocalPosition.X, GI.Type1[GI.ModelIDs[0].ID].LocalPosition.Y, GI.Type1[GI.ModelIDs[0].ID].LocalPosition.Z);
+                                                //LocalRot *= Matrix3.CreateRotationX(GI.Type1[GI.ModelIDs[0].ID].LocalRotation[0] / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
+                                                //LocalRot *= Matrix3.CreateRotationY(-GI.Type1[GI.ModelIDs[0].ID].LocalRotation[1] / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
+                                                //LocalRot *= Matrix3.CreateRotationZ(-GI.Type1[GI.ModelIDs[0].ID].LocalRotation[2] / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
                                             }
                                         }
                                     }
                                 }
-                                if (TargetModel != 65535)
+
+                                if (ModelList.Count > 0)
                                 {
-                                    SectionController mesh_sec = file.GetItem<SectionController>(11).GetItem<SectionController>(2);
-                                    SectionController model_sec = file.GetItem<SectionController>(11).GetItem<SectionController>(3);
-                                    foreach (Model model in file.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
+                                    for (int modelID = 0; modelID < ModelList.Count; modelID++)
                                     {
-                                        if (model.ID == TargetModel)
+                                        HasMesh = false;
+                                        TargetModel = ModelList[modelID];
+                                        LocalPos = LocalPosList[modelID];
+                                        if (TargetModel != 65535)
                                         {
-                                            modelCont = mesh_sec.GetItem<MeshController>(model_sec.GetItem<ModelController>(TargetModel).Data.MeshID);
-                                            HasMesh = true;
+                                            SectionController mesh_sec = file.GetItem<SectionController>(11).GetItem<SectionController>(2);
+                                            SectionController model_sec = file.GetItem<SectionController>(11).GetItem<SectionController>(3);
+                                            foreach (Model model in file.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
+                                            {
+                                                if (model.ID == TargetModel)
+                                                {
+                                                    modelCont = mesh_sec.GetItem<MeshController>(model_sec.GetItem<ModelController>(TargetModel).Data.MeshID);
+                                                    HasMesh = true;
+                                                }
+                                            }
                                         }
+
+                                        if (HasMesh)
+                                        {
+                                            modelCont.LoadMeshData();
+                                            Vertex[] vbuffer = new Vertex[modelCont.Vertices.Length];
+
+                                            for (int v = 0; v < modelCont.Vertices.Length; v++)
+                                            {
+                                                vbuffer[v] = modelCont.Vertices[v];
+                                                modelCont.Vertices[v].Pos = new Vector3(modelCont.Vertices[v].Pos.X, modelCont.Vertices[v].Pos.Y, modelCont.Vertices[v].Pos.Z) * rot_ins * LocalRot + pos_ins + LocalPos;
+                                            }
+                                            vtx[5 + cur_instance] = new VertexBufferData();
+                                            vtx[5 + cur_instance].Vtx = modelCont.Vertices;
+                                            vtx[5 + cur_instance].VtxInd = modelCont.Indices;
+                                            modelCont.Vertices = vbuffer;
+                                            UpdateVBO(5 + cur_instance);
+                                            //Console.WriteLine("Drawing object " + (5 + cur_instance) + " ID: " + ins.ID + " oID: " + ObjectID + " x: " + (-ins.Pos.X) + " y: " + (ins.Pos.Y) + " z: " + (ins.Pos.Z));
+                                        }
+                                        else
+                                        {
+                                            vtx[5 + cur_instance] = null;
+                                        }
+                                        cur_instance++;
                                     }
                                 }
-
-                                if (HasMesh)
-                                {
-                                    modelCont.LoadMeshData();
-                                    Vertex[] vbuffer = new Vertex[modelCont.Vertices.Length];
-
-                                    for (int v = 0; v < modelCont.Vertices.Length; v++)
-                                    {
-                                        vbuffer[v] = modelCont.Vertices[v];
-                                        modelCont.Vertices[v].Pos = new Vector3(modelCont.Vertices[v].Pos.X, modelCont.Vertices[v].Pos.Y, modelCont.Vertices[v].Pos.Z) * rot_ins + pos_ins;
-                                    }
-                                    vtx[5 + cur_instance].Vtx = modelCont.Vertices;
-                                    vtx[5 + cur_instance].VtxInd = modelCont.Indices;
-                                    modelCont.Vertices = vbuffer;
-                                    UpdateVBO(5 + cur_instance);
-                                    //Console.WriteLine("Drawing object " + (5 + cur_instance) + " ID: " + ins.ID + " oID: " + ObjectID + " x: " + (-ins.Pos.X) + " y: " + (ins.Pos.Y) + " z: " + (ins.Pos.Z));
-                                }
-                                else
-                                {
-                                    vtx[5 + cur_instance] = null;
-                                }
+                                
                             }
-
-                            cur_instance++;
                         }
                     }
                 }

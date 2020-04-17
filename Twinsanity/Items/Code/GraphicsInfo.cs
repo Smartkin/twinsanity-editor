@@ -80,15 +80,16 @@ namespace Twinsanity
                     Pos Type1_LocalPos;
                     Pos[] Type1_Matrix = new Pos[4];
                     uint[] Type1_Numbers = new uint[5];
+                    uint[] Type1_LocalRot = new uint[4];
                     for (int a = 0; a < Type1_Numbers.Length; a++)
                     {
                         Type1_Numbers[a] = reader.ReadUInt32();
                     }
                     Type1_LocalPos = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    for (int a = 0; a < Type1_Matrix.Length; a++)
-                    {
-                        Type1_Matrix[a] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    }
+                    Type1_Matrix[0] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                    Type1_Matrix[1] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                    Type1_Matrix[2] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                    Type1_Matrix[3] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                     GI_Type1 temp_Type1 = new GI_Type1() { Matrix = Type1_Matrix, LocalPosition = Type1_LocalPos, Numbers = Type1_Numbers };
                     Type1[i] = temp_Type1;
                 }

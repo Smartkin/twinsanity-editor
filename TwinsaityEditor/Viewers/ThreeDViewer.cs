@@ -380,6 +380,10 @@ namespace TwinsaityEditor
             for (int i = 0; i < count; ++i)
             {
                 vtx[i] = new VertexBufferData();
+                if (i > 4)
+                {
+                    vtx[i] = null;
+                }
             }
         }
 

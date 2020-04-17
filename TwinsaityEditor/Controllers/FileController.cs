@@ -421,6 +421,47 @@ namespace TwinsaityEditor
             return inst;
         }
 
+        public int GetModelCount()
+        {
+            int inst = 0;
+            for (uint i = 0; i <= 7; ++i)
+            {
+                if (!Data.ContainsItem(i)) continue;
+                if (Data.GetItem<TwinsSection>(i).ContainsItem(6))
+                {
+                    foreach (Instance ins in Data.GetItem<TwinsSection>(i).GetItem<TwinsSection>(6).Records)
+                    {
+                        ushort TargetGI = 65535;
+
+                        foreach (GameObject gameObject in Data.GetItem<TwinsSection>(10).GetItem<TwinsSection>(0).Records)
+                        {
+                            if (gameObject.ID == ins.ObjectID)
+                            {
+                                if (gameObject.OGIs.Length > 0 && gameObject.OGIs[0] != 65535)
+                                {
+                                    TargetGI = gameObject.OGIs[0];
+                                }
+                            }
+                        }
+                        if (TargetGI != 65535)
+                        {
+                            foreach (GraphicsInfo GI in Data.GetItem<TwinsSection>(10).GetItem<TwinsSection>(3).Records)
+                            {
+                                if (GI.ID == TargetGI)
+                                {
+                                    if (GI.ModelIDs.Length > 0)
+                                    {
+                                        inst += GI.ModelIDs.Length;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return inst;
+        }
+
         public string GetScriptName(uint id)
         {
             try { return Data.GetItem<TwinsSection>(10).GetItem<TwinsSection>(1).GetItem<Script>(id).Name; }
