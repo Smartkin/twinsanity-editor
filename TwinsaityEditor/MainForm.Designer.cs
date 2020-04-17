@@ -48,11 +48,11 @@
             this.sMViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Pref_TruncateNames_toolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.Pref_EnableAllNames_toolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.textBox1 = new System.Windows.Forms.TextBox();
-            this.Pref_EnableAllNames_toolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -211,8 +211,17 @@
             this.Pref_TruncateNames_toolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.Pref_TruncateNames_toolStripMenuItem.Name = "Pref_TruncateNames_toolStripMenuItem";
             this.Pref_TruncateNames_toolStripMenuItem.Size = new System.Drawing.Size(213, 22);
-            this.Pref_TruncateNames_toolStripMenuItem.Text = "Truncate Instance Names";
+            this.Pref_TruncateNames_toolStripMenuItem.Text = "Truncate Object Names";
             this.Pref_TruncateNames_toolStripMenuItem.Click += new System.EventHandler(this.Pref_TruncateNames_Click);
+            // 
+            // Pref_EnableAllNames_toolStripMenuItem
+            // 
+            this.Pref_EnableAllNames_toolStripMenuItem.Checked = true;
+            this.Pref_EnableAllNames_toolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.Pref_EnableAllNames_toolStripMenuItem.Name = "Pref_EnableAllNames_toolStripMenuItem";
+            this.Pref_EnableAllNames_toolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.Pref_EnableAllNames_toolStripMenuItem.Text = "Enable All Instance Names";
+            this.Pref_EnableAllNames_toolStripMenuItem.Click += new System.EventHandler(this.Pref_EnableAllNames_Click);
             // 
             // aboutToolStripMenuItem
             // 
@@ -257,15 +266,6 @@
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBox1.Size = new System.Drawing.Size(437, 345);
             this.textBox1.TabIndex = 0;
-            // 
-            // Pref_EnableAllNames_toolStripMenuItem
-            // 
-            this.Pref_EnableAllNames_toolStripMenuItem.Checked = true;
-            this.Pref_EnableAllNames_toolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.Pref_EnableAllNames_toolStripMenuItem.Name = "Pref_EnableAllNames_toolStripMenuItem";
-            this.Pref_EnableAllNames_toolStripMenuItem.Size = new System.Drawing.Size(213, 22);
-            this.Pref_EnableAllNames_toolStripMenuItem.Text = "Enable All Instance Names";
-            this.Pref_EnableAllNames_toolStripMenuItem.Click += new System.EventHandler(this.Pref_EnableAllNames_Click);
             // 
             // MainForm
             // 

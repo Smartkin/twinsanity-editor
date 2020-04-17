@@ -3670,6 +3670,7 @@ namespace Twinsanity
             COM_CORTEX_CONSTRAIN_TO_AREA = 6977,
             HEAD_COM_TNT_CRATE_TRIGGER_NEXT = 6990,
             COM_TNT_CRATE_TRIGGER_NEXT = 6991,
+            None = 65535,
         };
 
         public enum ObjectID : ushort

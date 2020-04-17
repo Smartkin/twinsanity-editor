@@ -660,7 +660,10 @@ namespace TwinsaityEditor
             {
                 for (int i = 0; i < vtx.Length; ++i)
                 {
-                    GL.DeleteBuffer(vtx[i].ID);
+                    if (vtx[i] != null)
+                    {
+                        GL.DeleteBuffer(vtx[i].ID);
+                    }
                 }
             }
             GL.DeleteBuffer(charVtxBuf);

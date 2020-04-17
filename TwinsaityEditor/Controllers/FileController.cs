@@ -404,6 +404,23 @@ namespace TwinsaityEditor
             else return string.Empty;
         }
 
+        public int GetInstanceCount()
+        {
+            int inst = 0;
+            for (uint i = 0; i <= 7; ++i)
+            {
+                if (!Data.ContainsItem(i)) continue;
+                if (Data.GetItem<TwinsSection>(i).ContainsItem(6))
+                {
+                    foreach (Instance ins in Data.GetItem<TwinsSection>(i).GetItem<TwinsSection>(6).Records)
+                    {
+                        inst++;
+                    }
+                }
+            }
+            return inst;
+        }
+
         public string GetScriptName(uint id)
         {
             try { return Data.GetItem<TwinsSection>(10).GetItem<TwinsSection>(1).GetItem<Script>(id).Name; }

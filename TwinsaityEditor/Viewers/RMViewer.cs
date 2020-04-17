@@ -12,7 +12,7 @@ namespace TwinsaityEditor
     {
         private static readonly int circle_res = 16;
 
-        private bool show_col_nodes, show_triggers, show_cams, wire_col, sm2_links;
+        private bool show_col_nodes, show_triggers, show_cams, wire_col, sm2_links, obj_models;
         private FileController file;
         private ChunkLinks links;
 
@@ -21,9 +21,17 @@ namespace TwinsaityEditor
             //initialize variables here
             show_col_nodes = show_triggers = wire_col = show_cams = false;
             sm2_links = true;
+            obj_models = true;
             this.file = file;
             Tag = pform;
-            InitVBO(5);
+            if (file.Data.Type == TwinsFile.FileType.RM2)
+            {
+                InitVBO(6 + file.GetInstanceCount());
+            }
+            else
+            {
+                InitVBO(6);
+            }
             if (file.DataAux != null && file.DataAux.ContainsItem(5))
             {
                 links = file.DataAux.GetItem<ChunkLinks>(5);
@@ -50,8 +58,8 @@ namespace TwinsaityEditor
         protected override void RenderHUD()
         {
             base.RenderHUD();
-            RenderString2D("Press C to toggle collision nodes\nPress X to toggle collision tree wireframe\nPress T to toggle object triggers\nPress Y to toggle camera triggers", 0, Height, 10, Color.White, TextAnchor.BotLeft);
-            RenderString2D("X: " + (-pos.X) + "\n\nY: " + pos.Y + "\n\nZ: " + pos.Z, 0, Height - 44, 12, Color.White, TextAnchor.BotLeft);
+            RenderString2D("Press C to toggle collision nodes\nPress X to toggle collision tree wireframe\nPress T to toggle object triggers\nPress Y to toggle camera triggers\nPress V to toggle object models", 0, Height, 10, Color.White, TextAnchor.BotLeft);
+            RenderString2D("X: " + (-pos.X) + "\n\nY: " + pos.Y + "\n\nZ: " + pos.Z, 0, Height - 54, 12, Color.White, TextAnchor.BotLeft);
         }
 
         public Vector3 GetViewerPos()
@@ -81,6 +89,20 @@ namespace TwinsaityEditor
                 {
                     vtx[2].DrawMulti(PrimitiveType.LineStrip, BufferPointerFlags.Default);
                 }
+            }
+
+            //object visuals
+            if (file.Data.Type == TwinsFile.FileType.RM2 && obj_models)
+            {
+                GL.Enable(EnableCap.Lighting);
+                for (int i = 5; i < 4 + file.GetInstanceCount(); i++)
+                {
+                    if (vtx[i] != null)
+                    {
+                        vtx[i].DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Normal);
+                    }
+                }
+                GL.Disable(EnableCap.Lighting);
             }
 
             //instances
@@ -578,6 +600,9 @@ namespace TwinsaityEditor
                 case Keys.X:
                     wire_col = !wire_col;
                     break;
+                case Keys.V:
+                    obj_models = !obj_models;
+                    break;
                 case Keys.Y:
                     show_cams = !show_cams;
                     break;
@@ -668,7 +693,7 @@ namespace TwinsaityEditor
                     vtx[1].VtxCounts[i * 7 + 6] = 2;
                 }
             }
-            int l = 0, m = 0;
+            int l = 0, m = 0, cur_instance = 0;
             for (uint i = 0; i <= 7; ++i)
             {
                 if (!record_exists[i]) continue;
@@ -720,6 +745,75 @@ namespace TwinsaityEditor
                             max_x = Math.Max(max_x, pos_ins.X);
                             max_y = Math.Max(max_y, pos_ins.Y);
                             max_z = Math.Max(max_z, pos_ins.Z);
+
+                            if (file.Data.Type == TwinsFile.FileType.RM2)
+                            {
+                                MeshController modelCont = null;
+                                bool HasMesh = false;
+                                ushort TargetGI = 65535;
+                                uint TargetModel = 65535;
+                                uint ObjectID = 65535;
+                                foreach (GameObject gameObject in file.Data.GetItem<TwinsSection>(10).GetItem<TwinsSection>(0).Records)
+                                {
+                                    if (gameObject.ID == ins.ObjectID)
+                                    {
+                                        if (gameObject.OGIs.Length > 0 && gameObject.OGIs[0] != 65535)
+                                        {
+                                            ObjectID = gameObject.ID;
+                                            TargetGI = gameObject.OGIs[0];
+                                        }
+                                    }
+                                }
+                                if (TargetGI != 65535)
+                                {
+                                    foreach (GraphicsInfo GI in file.Data.GetItem<TwinsSection>(10).GetItem<TwinsSection>(3).Records)
+                                    {
+                                        if (GI.ID == TargetGI)
+                                        {
+                                            if (GI.ModelIDs.Length > 0 && GI.ModelIDs[0].ModelID != 65535)
+                                            {
+                                                TargetModel = GI.ModelIDs[0].ModelID;
+                                            }
+                                        }
+                                    }
+                                }
+                                if (TargetModel != 65535)
+                                {
+                                    SectionController mesh_sec = file.GetItem<SectionController>(11).GetItem<SectionController>(2);
+                                    SectionController model_sec = file.GetItem<SectionController>(11).GetItem<SectionController>(3);
+                                    foreach (Model model in file.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
+                                    {
+                                        if (model.ID == TargetModel)
+                                        {
+                                            modelCont = mesh_sec.GetItem<MeshController>(model_sec.GetItem<ModelController>(TargetModel).Data.MeshID);
+                                            HasMesh = true;
+                                        }
+                                    }
+                                }
+
+                                if (HasMesh)
+                                {
+                                    modelCont.LoadMeshData();
+                                    Vertex[] vbuffer = new Vertex[modelCont.Vertices.Length];
+
+                                    for (int v = 0; v < modelCont.Vertices.Length; v++)
+                                    {
+                                        vbuffer[v] = modelCont.Vertices[v];
+                                        modelCont.Vertices[v].Pos = new Vector3(modelCont.Vertices[v].Pos.X, modelCont.Vertices[v].Pos.Y, modelCont.Vertices[v].Pos.Z) * rot_ins + pos_ins;
+                                    }
+                                    vtx[5 + cur_instance].Vtx = modelCont.Vertices;
+                                    vtx[5 + cur_instance].VtxInd = modelCont.Indices;
+                                    modelCont.Vertices = vbuffer;
+                                    UpdateVBO(5 + cur_instance);
+                                    //Console.WriteLine("Drawing object " + (5 + cur_instance) + " ID: " + ins.ID + " oID: " + ObjectID + " x: " + (-ins.Pos.X) + " y: " + (ins.Pos.Y) + " z: " + (ins.Pos.Z));
+                                }
+                                else
+                                {
+                                    vtx[5 + cur_instance] = null;
+                                }
+                            }
+
+                            cur_instance++;
                         }
                     }
                 }

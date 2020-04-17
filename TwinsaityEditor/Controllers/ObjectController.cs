@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Twinsanity;
 
 namespace TwinsaityEditor
@@ -14,7 +15,9 @@ namespace TwinsaityEditor
 
         protected override string GetName()
         {
-            return $"{Data.Name} [ID {Data.ID}]";
+            string obj_name = Data.Name;
+            obj_name = Utils.TextUtils.TruncateObjectName(obj_name, (ushort)Data.ID, "*", "");
+            return $"{obj_name} [ID {Data.ID}]";
         }
 
         protected override void GenText()
@@ -59,29 +62,52 @@ namespace TwinsaityEditor
                 text.Add($"{slotName} script slots: {slotAmt}");
             }
 
-            //text.Add($"UnknownInt32Count: {Data.UI32.Length}");
-            //for (int i = 0; i < Data.UI32.Length; ++i)
-            //    text.Add(Data.UI32[i].ToString("X"));
+            text.Add($"");
+            text.Add($"Reference Data");
+            text.Add($"");
 
-            //text.Add($"OGICount: {Data.OGIs.Length}");
-            //for (int i = 0; i < Data.OGIs.Length; ++i)
-            //    text.Add(Data.OGIs[i].ToString());
+            text.Add($"UnknownInt32Count: {Data.UI32.Length}");
+            for (int i = 0; i < Data.UI32.Length; ++i)
+                text.Add(Data.UI32[i].ToString("X"));
 
-            //text.Add($"AnimCount: {Data.Anims.Length}");
-            //for (int i = 0; i < Data.Anims.Length; ++i)
-            //    text.Add(Data.Anims[i].ToString());
+            text.Add($"OGICount: {Data.OGIs.Length}");
+            for (int i = 0; i < Data.OGIs.Length; ++i)
+                text.Add(Data.OGIs[i].ToString());
 
-            //text.Add($"ScriptCount: {Data.Scripts.Length}");
-            //for (int i = 0; i < Data.Scripts.Length; ++i)
-            //    text.Add(Data.Scripts[i].ToString());
+            text.Add($"AnimCount: {Data.Anims.Length}");
+            for (int i = 0; i < Data.Anims.Length; ++i)
+                text.Add(Data.Anims[i].ToString());
 
-            //text.Add($"ObjectCount: {Data.Objects.Length}");
-            //for (int i = 0; i < Data.Objects.Length; ++i)
-            //    text.Add(Data.Objects[i].ToString());
+            text.Add($"ScriptCount: {Data.Scripts.Length}");
+            for (int i = 0; i < Data.Scripts.Length; ++i)
+            {
+                string script_line = "#" + i.ToString() + ": ";
+                if (Enum.IsDefined(typeof(DefaultEnums.GameObjectScriptOrder), i))
+                {
+                    script_line += "(" + (DefaultEnums.GameObjectScriptOrder)i + ") ";
+                }
+                if (Enum.IsDefined(typeof(DefaultEnums.ScriptID), Data.Scripts[i]))
+                {
+                    script_line += (DefaultEnums.ScriptID)Data.Scripts[i];
+                }
+                else
+                {
+                    script_line += Data.Scripts[i].ToString();
+                }
+                text.Add(script_line);
+            }
 
-            //text.Add($"SoundCount: {Data.Sounds.Length}");
-            //for (int i = 0; i < Data.Sounds.Length; ++i)
-            //    text.Add(Data.Sounds[i].ToString());
+            text.Add($"ObjectCount: {Data.Objects.Length}");
+            for (int i = 0; i < Data.Objects.Length; ++i)
+                text.Add(Data.Objects[i].ToString());
+
+            text.Add($"SoundCount: {Data.Sounds.Length}");
+            for (int i = 0; i < Data.Sounds.Length; ++i)
+                text.Add(Data.Sounds[i].ToString());
+
+            text.Add($"");
+            text.Add($"Preload Data");
+            text.Add($"");
 
             text.Add($"ObjectCount: {Data.cObjects.Length}");
             for (int i = 0; i < Data.cObjects.Length; ++i)
@@ -101,7 +127,18 @@ namespace TwinsaityEditor
 
             text.Add($"ScriptCount: {Data.cScripts.Length}");
             for (int i = 0; i < Data.cScripts.Length; ++i)
-                text.Add(Data.cScripts[i].ToString());
+            {
+                string script_line = "#" + i.ToString() + ": ";
+                if (Enum.IsDefined(typeof(DefaultEnums.ScriptID), Data.cScripts[i]))
+                {
+                    script_line += (DefaultEnums.ScriptID)Data.cScripts[i];
+                }
+                else
+                {
+                    script_line += Data.cScripts[i].ToString();
+                }
+                text.Add(script_line);
+            }
 
             text.Add($"UnkCount: {Data.cUnk.Length}");
             for (int i = 0; i < Data.cUnk.Length; ++i)

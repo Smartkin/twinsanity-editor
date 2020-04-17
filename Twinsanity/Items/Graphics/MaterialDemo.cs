@@ -16,7 +16,7 @@ namespace Twinsanity
         public int[] ValuesI { get; set; } = new int[4];
         public byte[] Remain { get; set; }
 
-        // Just a copy of Material atm, size is too big by 2 bytes
+        // Same as Material, only UnkArray1 is smaller by 2 bytes
 
         public override void Save(BinaryWriter writer)
         {
