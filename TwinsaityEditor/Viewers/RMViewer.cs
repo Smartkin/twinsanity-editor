@@ -766,7 +766,21 @@ namespace TwinsaityEditor
                                     {
                                         if (gameObject.OGIs.Length > 0 && gameObject.OGIs[0] != 65535)
                                         {
-                                            TargetGI = gameObject.OGIs[0];
+                                            if (ins.UnkI323[0] != 0)
+                                            {
+                                                if (gameObject.OGIs.Length > ins.UnkI323[0] && gameObject.OGIs[ins.UnkI323[0]] != 65535)
+                                                {
+                                                    TargetGI = gameObject.OGIs[ins.UnkI323[0]];
+                                                }
+                                                else
+                                                {
+                                                    TargetGI = gameObject.OGIs[0];
+                                                }
+                                            }
+                                            else
+                                            {
+                                                TargetGI = gameObject.OGIs[0];
+                                            }
                                         }
                                     }
                                 }
@@ -799,16 +813,26 @@ namespace TwinsaityEditor
                                             {
                                                 for (int gi_model = 0; gi_model < GI.ModelIDs.Length; gi_model++)
                                                 {
-                                                    if (GI.ModelIDs[0].ModelID != 65535)
+                                                    if (GI.ModelIDs[gi_model].ModelID != 65535)
                                                     {
                                                         ModelList.Add(GI.ModelIDs[gi_model].ModelID);
                                                         LocalPosList.Add(new Vector3(-GI.Type1[GI.ModelIDs[gi_model].ID].LocalPosition.X, GI.Type1[GI.ModelIDs[gi_model].ID].LocalPosition.Y, GI.Type1[GI.ModelIDs[gi_model].ID].LocalPosition.Z));
+                                                        Matrix3 tempRot = Matrix3.Identity;
+                                                        
+                                                        // Not always accurate... (someone pls fix)
+                                                        tempRot.M11 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[0].X;
+                                                        tempRot.M12 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[0].Y;
+                                                        tempRot.M13 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[0].Z;
+                                                        tempRot.M21 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[1].X;
+                                                        tempRot.M22 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[1].Y;
+                                                        tempRot.M23 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[1].Z;
+                                                        tempRot.M31 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[2].X;
+                                                        tempRot.M32 = -GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[2].Y;
+                                                        tempRot.M33 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[2].Z;
+                                                        
+                                                        LocalRotList.Add(tempRot);
                                                     }
                                                 }
-                                                //LocalPos = new Vector3(-GI.Type1[GI.ModelIDs[0].ID].LocalPosition.X, GI.Type1[GI.ModelIDs[0].ID].LocalPosition.Y, GI.Type1[GI.ModelIDs[0].ID].LocalPosition.Z);
-                                                //LocalRot *= Matrix3.CreateRotationX(GI.Type1[GI.ModelIDs[0].ID].LocalRotation[0] / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
-                                                //LocalRot *= Matrix3.CreateRotationY(-GI.Type1[GI.ModelIDs[0].ID].LocalRotation[1] / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
-                                                //LocalRot *= Matrix3.CreateRotationZ(-GI.Type1[GI.ModelIDs[0].ID].LocalRotation[2] / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
                                             }
                                         }
                                     }
@@ -820,10 +844,10 @@ namespace TwinsaityEditor
                                             HasMesh = false;
                                             TargetModel = ModelList[modelID];
                                             LocalPos = LocalPosList[modelID];
+                                            LocalRot = LocalRotList[modelID];
                                             if (TargetModel != 65535)
                                             {
                                                 SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(2);
-                                                //SectionController model_sec = file.GetItem<SectionController>(11).GetItem<SectionController>(3);
                                                 foreach (Model model in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
                                                 {
                                                     if (model.ID == TargetModel)
@@ -843,7 +867,11 @@ namespace TwinsaityEditor
                                                 for (int v = 0; v < modelCont.Vertices.Length; v++)
                                                 {
                                                     vbuffer[v] = modelCont.Vertices[v];
-                                                    modelCont.Vertices[v].Pos = new Vector3(modelCont.Vertices[v].Pos.X, modelCont.Vertices[v].Pos.Y, modelCont.Vertices[v].Pos.Z) * rot_ins * LocalRot + pos_ins + LocalPos;
+                                                    modelCont.Vertices[v].Pos = new Vector3(modelCont.Vertices[v].Pos.X, modelCont.Vertices[v].Pos.Y, modelCont.Vertices[v].Pos.Z);
+                                                    modelCont.Vertices[v].Pos *= LocalRot;
+                                                    modelCont.Vertices[v].Pos += LocalPos;
+                                                    modelCont.Vertices[v].Pos *= rot_ins;
+                                                    modelCont.Vertices[v].Pos += pos_ins;
                                                 }
                                                 vtx[5 + cur_instance] = new VertexBufferData();
                                                 vtx[5 + cur_instance].Vtx = modelCont.Vertices;

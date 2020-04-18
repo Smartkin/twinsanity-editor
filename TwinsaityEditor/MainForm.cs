@@ -131,8 +131,8 @@ namespace TwinsaityEditor
         private void openRM2ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            //ofd.Filter = "RM2 files|*.rm2|SM2 files|*.sm2|RMX files|*.rmx|SMX files|*.smx|Demo RM2 files|*.rm2|Demo SM2 files|*.sm2";
-            ofd.Filter = "PS2 files (.rm2; .sm2)|*.rm2;*.sm2|XBOX files (.rmx; .smx)|*.rmx;*.smx|Demo files (.rm2; .sm2)|*.rm2; *.sm2";
+            ofd.Filter = "RM2 files|*.rm2|SM2 files|*.sm2|RMX files|*.rmx|SMX files|*.smx|Demo RM2 files|*.rm2|Demo SM2 files|*.sm2";
+            //ofd.Filter = "PS2 files (.rm2; .sm2)|*.rm2;*.sm2|XBOX files (.rmx; .smx)|*.rmx;*.smx|Demo files (.rm2; .sm2)|*.rm2; *.sm2";
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 if (CurCont != null)
@@ -145,6 +145,7 @@ namespace TwinsaityEditor
                 switch (ofd.FilterIndex)
                 {
                     case 1:
+                    case 2:
                         if (IsScenery)
                             file.LoadFile(ofd.FileName, TwinsFile.FileType.SM2);
                         else
@@ -159,7 +160,8 @@ namespace TwinsaityEditor
                             }
                         }
                         break;
-                    case 2:
+                    case 3:
+                    case 4:
                         if (IsScenery)
                             file.LoadFile(ofd.FileName, TwinsFile.FileType.SMX);
                         else
@@ -169,7 +171,8 @@ namespace TwinsaityEditor
                             aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".smx", TwinsFile.FileType.SMX);
                         }
                         break;
-                    case 3:
+                    case 5:
+                    case 6:
                         if (IsScenery)
                             file.LoadFile(ofd.FileName, TwinsFile.FileType.DemoSM2);
                         else
