@@ -57,7 +57,7 @@ namespace TwinsaityEditor
             textBox1.Lines = c.TextPrev;
         }
 
-        public void GenTreeNode(TwinsItem a, Controller controller)
+        public void GenTreeNode(TwinsItem a, Controller controller, bool cached = false)
         {
             Controller c;
             if (a is TwinsSection)
@@ -65,7 +65,7 @@ namespace TwinsaityEditor
                 c = new SectionController(this, (TwinsSection)a);
                 foreach (var i in ((TwinsSection)a).Records)
                 {
-                    GenTreeNode(i, c);
+                    GenTreeNode(i, c, cached);
                 }
             }
             else if (a is Texture)
@@ -110,7 +110,9 @@ namespace TwinsaityEditor
                 c = new MaterialDController(this, (MaterialDemo)a);
             else
                 c = new ItemController(this, a);
-            c.UpdateText();
+
+            if (!cached)
+                c.UpdateText();
             controller.AddNode(c);
         }
 
@@ -129,7 +131,8 @@ namespace TwinsaityEditor
         private void openRM2ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "RM2 files|*.rm2|SM2 files|*.sm2|RMX files|*.rmx|SMX files|*.smx|Demo RM2 files|*.rm2|Demo SM2 files|*.sm2";
+            //ofd.Filter = "RM2 files|*.rm2|SM2 files|*.sm2|RMX files|*.rmx|SMX files|*.smx|Demo RM2 files|*.rm2|Demo SM2 files|*.sm2";
+            ofd.Filter = "PS2 files (.rm2; .sm2)|*.rm2;*.sm2|XBOX files (.rmx; .smx)|*.rmx;*.smx|Demo files (.rm2; .sm2)|*.rm2; *.sm2";
             if (ofd.ShowDialog() == DialogResult.OK)
             {
                 if (CurCont != null)
@@ -137,48 +140,68 @@ namespace TwinsaityEditor
                 Tag = null;
                 TwinsFile file = new TwinsFile();
                 TwinsFile aux_file = null;
+                TwinsFile default_file = null;
+                bool IsScenery = ofd.FileName.Contains(".sm");
                 switch (ofd.FilterIndex)
                 {
                     case 1:
-                        file.LoadFile(ofd.FileName, TwinsFile.FileType.RM2);
-                        aux_file = new TwinsFile();
-                        aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".sm2", TwinsFile.FileType.SM2);
-                        rMViewerToolStripMenuItem.Enabled = true;
-                        sMViewerToolStripMenuItem.Enabled = false;
+                        if (IsScenery)
+                            file.LoadFile(ofd.FileName, TwinsFile.FileType.SM2);
+                        else
+                        {
+                            file.LoadFile(ofd.FileName, TwinsFile.FileType.RM2);
+                            aux_file = new TwinsFile();
+                            aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".sm2", TwinsFile.FileType.SM2);
+                            if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + "/Default.rm2"))
+                            {
+                                default_file = new TwinsFile();
+                                default_file.LoadFile(AppDomain.CurrentDomain.BaseDirectory + "/Default.rm2", TwinsFile.FileType.RM2);
+                            }
+                        }
                         break;
                     case 2:
-                        file.LoadFile(ofd.FileName, TwinsFile.FileType.SM2);
-                        sMViewerToolStripMenuItem.Enabled = true;
-                        rMViewerToolStripMenuItem.Enabled = false;
+                        if (IsScenery)
+                            file.LoadFile(ofd.FileName, TwinsFile.FileType.SMX);
+                        else
+                        {
+                            file.LoadFile(ofd.FileName, TwinsFile.FileType.RMX);
+                            aux_file = new TwinsFile();
+                            aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".smx", TwinsFile.FileType.SMX);
+                        }
                         break;
                     case 3:
-                        file.LoadFile(ofd.FileName, TwinsFile.FileType.RMX);
-                        aux_file = new TwinsFile();
-                        aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".smx", TwinsFile.FileType.SMX);
-                        rMViewerToolStripMenuItem.Enabled = true;
-                        sMViewerToolStripMenuItem.Enabled = false;
+                        if (IsScenery)
+                            file.LoadFile(ofd.FileName, TwinsFile.FileType.DemoSM2);
+                        else
+                        {
+                            file.LoadFile(ofd.FileName, TwinsFile.FileType.DemoRM2);
+                            aux_file = new TwinsFile();
+                            aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".sm2", TwinsFile.FileType.DemoSM2);
+                        }
                         break;
-                    case 4:
-                        file.LoadFile(ofd.FileName, TwinsFile.FileType.SMX);
-                        sMViewerToolStripMenuItem.Enabled = true;
-                        rMViewerToolStripMenuItem.Enabled = false;
-                        break;
-                    case 5:
-                        file.LoadFile(ofd.FileName, TwinsFile.FileType.DemoRM2);
-                        aux_file = new TwinsFile();
-                        aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".sm2", TwinsFile.FileType.DemoSM2);
-                        rMViewerToolStripMenuItem.Enabled = true;
-                        sMViewerToolStripMenuItem.Enabled = false;
-                        break;
-                    case 6:
-                        file.LoadFile(ofd.FileName, TwinsFile.FileType.DemoSM2);
-                        sMViewerToolStripMenuItem.Enabled = true;
-                        rMViewerToolStripMenuItem.Enabled = false;
-                        break;
+                }
+                if (IsScenery)
+                {
+                    sMViewerToolStripMenuItem.Enabled = true;
+                    rMViewerToolStripMenuItem.Enabled = false;
+                }
+                else
+                {
+                    rMViewerToolStripMenuItem.Enabled = true;
+                    sMViewerToolStripMenuItem.Enabled = false;
                 }
                 file.SafeFileName = ofd.SafeFileName;
                 Tag = new FileController(this, file);
                 ((FileController)Tag).DataAux = aux_file;
+                ((FileController)Tag).DataDefault = default_file;
+                if (default_file != null)
+                {
+                    ((FileController)Tag).DefaultCont = new FileController(this, default_file);
+                    foreach (var i in ((FileController)Tag).DataDefault.Records)
+                    {
+                        GenTreeNode(i, ((FileController)Tag).DefaultCont, true);
+                    }
+                }
                 GenTree();
                 Text = $"Twinsaity Editor [{ofd.FileName}]";
             }

@@ -8,6 +8,8 @@ namespace TwinsaityEditor
     {
         public new TwinsFile Data { get; set; }
         public TwinsFile DataAux { get; set; }
+        public TwinsFile DataDefault { get; set; }
+        public FileController DefaultCont { get; set; }
 
         public string FileName { get => Data.FileName; }
         public string SafeFileName { get => Data.SafeFileName; }
@@ -35,6 +37,7 @@ namespace TwinsaityEditor
         {
             Data = item;
             DataAux = null;
+            DataDefault = null;
             ObjectNames = new Dictionary<uint, string>();
             MaterialNames = new Dictionary<uint, string>();
             MeshViewers = new Dictionary<uint, Form>();
@@ -118,7 +121,7 @@ namespace TwinsaityEditor
                 CloseEditor(Editors.Path, i);
                 CloseEditor(Editors.Trigger, i);
             }
-            Data = DataAux = null;
+            Data = DataAux = DataDefault = null;
         }
 
         public void OpenEditor(Controller c)
@@ -402,64 +405,6 @@ namespace TwinsaityEditor
             if (ObjectNames.ContainsKey(id))
                 return ObjectNames[id];
             else return string.Empty;
-        }
-
-        public int GetInstanceCount()
-        {
-            int inst = 0;
-            for (uint i = 0; i <= 7; ++i)
-            {
-                if (!Data.ContainsItem(i)) continue;
-                if (Data.GetItem<TwinsSection>(i).ContainsItem(6))
-                {
-                    foreach (Instance ins in Data.GetItem<TwinsSection>(i).GetItem<TwinsSection>(6).Records)
-                    {
-                        inst++;
-                    }
-                }
-            }
-            return inst;
-        }
-
-        public int GetModelCount()
-        {
-            int inst = 0;
-            for (uint i = 0; i <= 7; ++i)
-            {
-                if (!Data.ContainsItem(i)) continue;
-                if (Data.GetItem<TwinsSection>(i).ContainsItem(6))
-                {
-                    foreach (Instance ins in Data.GetItem<TwinsSection>(i).GetItem<TwinsSection>(6).Records)
-                    {
-                        ushort TargetGI = 65535;
-
-                        foreach (GameObject gameObject in Data.GetItem<TwinsSection>(10).GetItem<TwinsSection>(0).Records)
-                        {
-                            if (gameObject.ID == ins.ObjectID)
-                            {
-                                if (gameObject.OGIs.Length > 0 && gameObject.OGIs[0] != 65535)
-                                {
-                                    TargetGI = gameObject.OGIs[0];
-                                }
-                            }
-                        }
-                        if (TargetGI != 65535)
-                        {
-                            foreach (GraphicsInfo GI in Data.GetItem<TwinsSection>(10).GetItem<TwinsSection>(3).Records)
-                            {
-                                if (GI.ID == TargetGI)
-                                {
-                                    if (GI.ModelIDs.Length > 0)
-                                    {
-                                        inst += GI.ModelIDs.Length;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return inst;
         }
 
         public string GetScriptName(uint id)
