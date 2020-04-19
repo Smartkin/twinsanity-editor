@@ -363,11 +363,13 @@ namespace TwinsaityEditor
             GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
             GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Fastest);
             GL.ClearColor(Color.MidnightBlue); //TODO: Add clear color to Preferences later
-            GL.Enable(EnableCap.ColorMaterial);
-            //GL.ShadeModel(ShadingModel.Flat); //TODO: Add to preferences
+            // Lighting settings. Lighting must be enabled for them to take effect, logically
             GL.Light(LightName.Light0, LightParameter.Position, new float[] { 0, 0, 0, 1 });
+            GL.Light(LightName.Light0, LightParameter.Ambient, new float[] { 0.05f, 0.05f, 0.05f, 1 }); // set some minimum light parameters so less shading doesn't make things too dark
+            GL.Light(LightName.Light0, LightParameter.ConstantAttenuation, 0.2f); // reduce direct light intensity
             GL.LightModel(LightModelParameter.LightModelTwoSide, 1);
             GL.Enable(EnableCap.Light0);
+            GL.Enable(EnableCap.ColorMaterial);
             GL.Enable(EnableCap.Normalize);
             GL.GenBuffers(1, out charVtxBuf);
             base.OnLoad(e);
