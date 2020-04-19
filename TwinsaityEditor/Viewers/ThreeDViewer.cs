@@ -119,9 +119,9 @@ namespace TwinsaityEditor
                     if (k_q)
                         v--;
                     Vector3 delta = new Vector3(h, v, d) * speed;
-                    cam_rot_mat = Matrix3.CreateFromAxisAngle(new Vector3(0, 1, 0), rot.X);
-                    cam_rot_mat *= Matrix3.CreateFromAxisAngle(new Vector3(1, 0, 0), rot.Y);
-                    cam_rot_mat *= Matrix3.CreateFromAxisAngle(new Vector3(0, 0, 1), rot.Z);
+                    cam_rot_mat = Matrix3.CreateFromAxisAngle(new Vector3(0, 1, 0), rot.X / 180 * MathHelper.Pi);
+                    cam_rot_mat *= Matrix3.CreateFromAxisAngle(new Vector3(1, 0, 0), rot.Y / 180 * MathHelper.Pi);
+                    cam_rot_mat *= Matrix3.CreateFromAxisAngle(new Vector3(0, 0, 1), rot.Z / 180 * MathHelper.Pi);
 
                     Vector3 fin_delta = cam_rot_mat * delta;
 
@@ -203,13 +203,13 @@ namespace TwinsaityEditor
             base.OnMouseMove(e);
             if (m_l)
             {
-                rot.X += (e.X - m_x) / 180.0f * MathHelper.Pi;
-                rot.Y += (e.Y - m_y) / 180.0f * MathHelper.Pi;
-                rot.X += rot.X > MathHelper.Pi ? -MathHelper.TwoPi : rot.X < -MathHelper.Pi ? MathHelper.TwoPi : 0;
-                if (rot.Y > MathHelper.PiOver2)
-                    rot.Y = MathHelper.PiOver2;
-                if (rot.Y < -MathHelper.PiOver2)
-                    rot.Y = -MathHelper.PiOver2;
+                rot.X += (e.X - m_x);
+                rot.Y += (e.Y - m_y);
+                rot.X += rot.X > 180 ? -360 : rot.X < -180 ? 360 : 0;
+                if (rot.Y > 90)
+                    rot.Y = 90;
+                if (rot.Y < -90)
+                    rot.Y = -90;
             }
             m_x = e.X;
             m_y = e.Y;
@@ -320,13 +320,13 @@ namespace TwinsaityEditor
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadIdentity();
             GL.Scale(sca, sca, sca);
-            GL.Rotate(MathHelper.RadiansToDegrees(rot.Y), 1, 0, 0);
-            GL.Rotate(MathHelper.RadiansToDegrees(rot.X), 0, 1, 0);
-            GL.Rotate(MathHelper.RadiansToDegrees(rot.Z), 0, 0, 1);
+            GL.Rotate(rot.Y,1,0,0);
+            GL.Rotate(rot.X,0,1,0);
+            GL.Rotate(rot.Z,0,0,1);
             Vector3 delta = new Vector3(0, 0, -1) * range / 25f;
-            Matrix4 rot_matrix = Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), rot.X);
-            rot_matrix *= Matrix4.CreateFromAxisAngle(new Vector3(1, 0, 0), rot.Y);
-            rot_matrix *= Matrix4.CreateFromAxisAngle(new Vector3(0, 0, 1), rot.Z);
+            Matrix4 rot_matrix = Matrix4.CreateFromAxisAngle(new Vector3(0, 1, 0), MathHelper.DegreesToRadians(rot.X));
+            rot_matrix *= Matrix4.CreateFromAxisAngle(new Vector3(1, 0, 0), MathHelper.DegreesToRadians(rot.Y));
+            rot_matrix *= Matrix4.CreateFromAxisAngle(new Vector3(0, 0, 1), MathHelper.DegreesToRadians(rot.Z));
 
             Vector3 fin_delta = new Vector3(rot_matrix * new Vector4(delta, 1f));
             GL.Translate(-pos + fin_delta);
@@ -365,8 +365,8 @@ namespace TwinsaityEditor
             GL.ClearColor(Color.MidnightBlue); //TODO: Add clear color to Preferences later
             // Lighting settings. Lighting must be enabled for them to take effect, logically
             GL.Light(LightName.Light0, LightParameter.Position, new float[] { 0, 0, 0, 1 });
-            GL.Light(LightName.Light0, LightParameter.Ambient, new float[] { 0.05f, 0.05f, 0.05f, 1 }); // set some minimum light parameters so less shading doesn't make things too dark
-            GL.Light(LightName.Light0, LightParameter.ConstantAttenuation, 0.2f); // reduce direct light intensity
+            GL.Light(LightName.Light0, LightParameter.Ambient, new float[] { 0.25f, 0.25f, 0.25f, 1 }); // set some minimum light parameters so less shading doesn't make things too dark
+            GL.Light(LightName.Light0, LightParameter.ConstantAttenuation, 1.5f); // reduce direct light intensity
             GL.LightModel(LightModelParameter.LightModelTwoSide, 1);
             GL.Enable(EnableCap.Light0);
             GL.Enable(EnableCap.ColorMaterial);

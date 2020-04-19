@@ -444,9 +444,9 @@ namespace TwinsaityEditor
                         GL.Vertex4(l.LoadWall[3].ToArray());
                         GL.End();
                         Matrix3 rot_mat = Matrix3.Identity;
-                        rot_mat *= Matrix3.CreateRotationX(-rot.Y);
-                        rot_mat *= Matrix3.CreateRotationY(-rot.X);
-                        rot_mat *= Matrix3.CreateRotationZ(rot.Z);
+                        rot_mat *= Matrix3.CreateRotationX(-rot.Y / 180 * MathHelper.Pi);
+                        rot_mat *= Matrix3.CreateRotationY(-rot.X / 180 * MathHelper.Pi);
+                        rot_mat *= Matrix3.CreateRotationZ(rot.Z / 180 * MathHelper.Pi);
                         RenderString3D(new string(l.Path), cur_color,
                             -(l.LoadWall[0].X + l.LoadWall[1].X + l.LoadWall[2].X + l.LoadWall[3].X) / 4,
                             (l.LoadWall[0].Y + l.LoadWall[1].Y + l.LoadWall[2].Y + l.LoadWall[3].Y) / 4,
