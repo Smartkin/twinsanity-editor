@@ -37,9 +37,8 @@ namespace Twinsanity
             writer.Write(ValuesF[1]);
             writer.Write(ValuesF[2]);
             writer.Write(ValuesF[3]);
-            writer.Write(Tex);
-            writer.Write(Last);
             writer.Write(Remain);
+            //todo: write texture ID
         }
 
         public override void Load(BinaryReader reader, int size)
@@ -63,14 +62,17 @@ namespace Twinsanity
             ValuesF[1] = reader.ReadSingle();
             ValuesF[2] = reader.ReadSingle();
             ValuesF[3] = reader.ReadSingle();
+            Remain = reader.ReadBytes(size - (int)(reader.BaseStream.Position - sk));
+
+            reader.BaseStream.Position = sk + size - 8;
             Tex = reader.ReadUInt32();
             Last = reader.ReadUInt32();
-            Remain = reader.ReadBytes(size - (int)(reader.BaseStream.Position - sk));
+            reader.BaseStream.Position = sk + size;
         }
 
         protected override int GetSize()
         {
-            return 113 + Name.Length + Remain.Length;
+            return 105 + Name.Length + Remain.Length;
         }
     }
 }

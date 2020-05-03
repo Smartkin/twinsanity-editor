@@ -47,8 +47,6 @@ namespace TwinsaityEditor
                 {
                     TextPrev[cur_pos] = $"#{ i } Numbers: { Data.Type1[i].Numbers[0] }; { Data.Type1[i].Numbers[1] }; { Data.Type1[i].Numbers[2] }; { Data.Type1[i].Numbers[3] }; { Data.Type1[i].Numbers[4] }";
                     cur_pos++;
-                    TextPrev[cur_pos] = $"#{ i } Local Position: { Data.Type1[i].LocalPosition.X }; { Data.Type1[i].LocalPosition.Y }; { Data.Type1[i].LocalPosition.Z }; { Data.Type1[i].LocalPosition.W }";
-                    cur_pos++;
                     TextPrev[cur_pos] = $"#{ i } Vector 1: { Data.Type1[i].Matrix[0].X }; { Data.Type1[i].Matrix[0].Y }; { Data.Type1[i].Matrix[0].Z }; { Data.Type1[i].Matrix[0].W }";
                     cur_pos++;
                     TextPrev[cur_pos] = $"#{ i } Vector 2: { Data.Type1[i].Matrix[1].X }; { Data.Type1[i].Matrix[1].Y }; { Data.Type1[i].Matrix[1].Z }; { Data.Type1[i].Matrix[1].W }";
@@ -56,6 +54,8 @@ namespace TwinsaityEditor
                     TextPrev[cur_pos] = $"#{ i } Vector 3: { Data.Type1[i].Matrix[2].X }; { Data.Type1[i].Matrix[2].Y }; { Data.Type1[i].Matrix[2].Z }; { Data.Type1[i].Matrix[2].W }";
                     cur_pos++;
                     TextPrev[cur_pos] = $"#{ i } Vector 4: { Data.Type1[i].Matrix[3].X }; { Data.Type1[i].Matrix[3].Y }; { Data.Type1[i].Matrix[3].Z }; { Data.Type1[i].Matrix[3].W }";
+                    cur_pos++;
+                    TextPrev[cur_pos] = $"#{ i } Vector 5: { Data.Type1[i].Matrix[4].X }; { Data.Type1[i].Matrix[4].Y }; { Data.Type1[i].Matrix[4].Z }; { Data.Type1[i].Matrix[4].W }";
                     cur_pos++;
                     TextPrev[cur_pos] = $"#{ i } T3 Matrix 1: { Data.Type3[i].Matrix[0].X }; { Data.Type3[i].Matrix[0].Y }; { Data.Type3[i].Matrix[0].Z }; { Data.Type3[i].Matrix[0].W }";
                     cur_pos++;

@@ -753,12 +753,16 @@ namespace TwinsaityEditor
                                 bool HasMesh = false;
                                 ushort TargetGI = 65535;
                                 List<uint> ModelList = new List<uint>();
-                                List<Vector3> LocalPosList = new List<Vector3>();
-                                List<Matrix3> LocalRotList = new List<Matrix3>();
+                                List<Matrix4> LocalRotList = new List<Matrix4>();
                                 uint TargetModel = 65535;
-                                Vector3 LocalPos = new Vector3();
-                                Matrix3 LocalRot = Matrix3.Identity;
+                                Matrix4 LocalRot = Matrix4.Identity;
                                 FileController targetFile = file;
+                                Vector4 pos_ins_4 = ins.Pos.ToVec4();
+                                pos_ins_4.X = -pos_ins_4.X;
+                                Matrix4 rot_ins_4 = Matrix4.Identity;
+                                rot_ins_4 *= Matrix4.CreateRotationX(ins.RotX / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
+                                rot_ins_4 *= Matrix4.CreateRotationY(-ins.RotY / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
+                                rot_ins_4 *= Matrix4.CreateRotationZ(-ins.RotZ / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
 
                                 foreach (GameObject gameObject in targetFile.Data.GetItem<TwinsSection>(10).GetItem<TwinsSection>(0).Records)
                                 {
@@ -802,7 +806,7 @@ namespace TwinsaityEditor
                                         }
                                     }
                                 }
-                                
+
                                 if (TargetGI != 65535)
                                 {
                                     foreach (GraphicsInfo GI in targetFile.Data.GetItem<TwinsSection>(10).GetItem<TwinsSection>(3).Records)
@@ -816,20 +820,34 @@ namespace TwinsaityEditor
                                                     if (GI.ModelIDs[gi_model].ModelID != 65535)
                                                     {
                                                         ModelList.Add(GI.ModelIDs[gi_model].ModelID);
-                                                        LocalPosList.Add(new Vector3(-GI.Type1[GI.ModelIDs[gi_model].ID].LocalPosition.X, GI.Type1[GI.ModelIDs[gi_model].ID].LocalPosition.Y, GI.Type1[GI.ModelIDs[gi_model].ID].LocalPosition.Z));
-                                                        Matrix3 tempRot = Matrix3.Identity;
-                                                        
-                                                        // Not always accurate... (someone pls fix)
-                                                        tempRot.M11 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[0].X;
-                                                        tempRot.M12 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[0].Y;
-                                                        tempRot.M13 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[0].Z;
-                                                        tempRot.M21 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[1].X;
+                                                        Matrix4 tempRot = Matrix4.Identity;
+
+                                                        // Rotation
+                                                        tempRot.M11 = -GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[0].X;
+                                                        tempRot.M12 = -GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[1].X;
+                                                        tempRot.M13 = -GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[2].X;
+
+                                                        tempRot.M21 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[0].Y;
                                                         tempRot.M22 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[1].Y;
-                                                        tempRot.M23 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[1].Z;
-                                                        tempRot.M31 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[2].X;
-                                                        tempRot.M32 = -GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[2].Y;
+                                                        tempRot.M23 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[2].Y;
+
+                                                        tempRot.M31 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[0].Z;
+                                                        tempRot.M32 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[1].Z;
                                                         tempRot.M33 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[2].Z;
-                                                        
+
+                                                        tempRot.M14 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[0].W;
+                                                        tempRot.M24 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[1].W;
+                                                        tempRot.M34 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[2].W;
+
+                                                        // Position
+                                                        tempRot.M41 = GI.Type1[GI.ModelIDs[gi_model].ID].Matrix[1].X;
+                                                        tempRot.M42 = GI.Type1[GI.ModelIDs[gi_model].ID].Matrix[1].Y;
+                                                        tempRot.M43 = GI.Type1[GI.ModelIDs[gi_model].ID].Matrix[1].Z;
+                                                        tempRot.M44 = GI.Type1[GI.ModelIDs[gi_model].ID].Matrix[1].W;
+
+                                                        // Adjusted for OpenTK
+                                                        tempRot *= Matrix4.CreateScale(-1, 1, 1);
+
                                                         LocalRotList.Add(tempRot);
                                                     }
                                                 }
@@ -843,7 +861,6 @@ namespace TwinsaityEditor
                                         {
                                             HasMesh = false;
                                             TargetModel = ModelList[modelID];
-                                            LocalPos = LocalPosList[modelID];
                                             LocalRot = LocalRotList[modelID];
                                             if (TargetModel != 65535)
                                             {
@@ -867,18 +884,20 @@ namespace TwinsaityEditor
                                                 for (int v = 0; v < modelCont.Vertices.Length; v++)
                                                 {
                                                     vbuffer[v] = modelCont.Vertices[v];
-                                                    modelCont.Vertices[v].Pos = new Vector3(modelCont.Vertices[v].Pos.X, modelCont.Vertices[v].Pos.Y, modelCont.Vertices[v].Pos.Z);
-                                                    modelCont.Vertices[v].Pos *= LocalRot;
-                                                    modelCont.Vertices[v].Pos += LocalPos;
-                                                    modelCont.Vertices[v].Pos *= rot_ins;
-                                                    modelCont.Vertices[v].Pos += pos_ins;
+
+                                                    Vector4 targetPos = new Vector4(modelCont.Vertices[v].Pos.X, modelCont.Vertices[v].Pos.Y, modelCont.Vertices[v].Pos.Z, 1);
+
+                                                    targetPos *= LocalRot;
+                                                    targetPos *= rot_ins_4;
+                                                    targetPos += pos_ins_4;
+                                                    modelCont.Vertices[v].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+
                                                 }
                                                 vtx[5 + cur_instance] = new VertexBufferData();
                                                 vtx[5 + cur_instance].Vtx = modelCont.Vertices;
                                                 vtx[5 + cur_instance].VtxInd = modelCont.Indices;
                                                 modelCont.Vertices = vbuffer;
                                                 UpdateVBO(5 + cur_instance);
-                                                //Console.WriteLine("Drawing object " + (5 + cur_instance) + " ID: " + ins.ID + " oID: " + ObjectID + " x: " + (-ins.Pos.X) + " y: " + (ins.Pos.Y) + " z: " + (ins.Pos.Z));
                                             }
                                             else
                                             {
@@ -888,7 +907,6 @@ namespace TwinsaityEditor
                                         }
                                     }
                                 }
-                                
                             }
                         }
                     }
