@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.treeView1 = new System.Windows.Forms.TreeView();
+            this.archiveContentsTree = new System.Windows.Forms.TreeView();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openBHBDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -41,13 +41,13 @@
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // treeView1
+            // archiveContentsTree
             // 
-            this.treeView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.treeView1.Location = new System.Drawing.Point(0, 24);
-            this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(464, 422);
-            this.treeView1.TabIndex = 0;
+            this.archiveContentsTree.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.archiveContentsTree.Location = new System.Drawing.Point(0, 24);
+            this.archiveContentsTree.Name = "archiveContentsTree";
+            this.archiveContentsTree.Size = new System.Drawing.Size(464, 422);
+            this.archiveContentsTree.TabIndex = 0;
             // 
             // menuStrip1
             // 
@@ -121,7 +121,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(464, 446);
-            this.Controls.Add(this.treeView1);
+            this.Controls.Add(this.archiveContentsTree);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "BDExplorer";
@@ -136,7 +136,7 @@
 
         #endregion
 
-        private System.Windows.Forms.TreeView treeView1;
+        private System.Windows.Forms.TreeView archiveContentsTree;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openBHBDToolStripMenuItem;
