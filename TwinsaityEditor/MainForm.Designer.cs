@@ -53,6 +53,9 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.bHBDToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.extractAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bDExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -151,7 +154,8 @@
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.eLFPatcherToolStripMenuItem,
-            this.mHMBToolToolStripMenuItem});
+            this.mHMBToolToolStripMenuItem,
+            this.bHBDToolToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -159,14 +163,14 @@
             // eLFPatcherToolStripMenuItem
             // 
             this.eLFPatcherToolStripMenuItem.Name = "eLFPatcherToolStripMenuItem";
-            this.eLFPatcherToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.eLFPatcherToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.eLFPatcherToolStripMenuItem.Text = "EXE Patcher";
             this.eLFPatcherToolStripMenuItem.Click += new System.EventHandler(this.eLFPatcherToolStripMenuItem_Click);
             // 
             // mHMBToolToolStripMenuItem
             // 
             this.mHMBToolToolStripMenuItem.Name = "mHMBToolToolStripMenuItem";
-            this.mHMBToolToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.mHMBToolToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.mHMBToolToolStripMenuItem.Text = "MH/MB Tool";
             this.mHMBToolToolStripMenuItem.Click += new System.EventHandler(this.mHMBToolToolStripMenuItem_Click);
             // 
@@ -267,6 +271,27 @@
             this.textBox1.Size = new System.Drawing.Size(437, 345);
             this.textBox1.TabIndex = 0;
             // 
+            // bHBDToolToolStripMenuItem
+            // 
+            this.bHBDToolToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.extractAllToolStripMenuItem,
+            this.bDExplorerToolStripMenuItem});
+            this.bHBDToolToolStripMenuItem.Name = "bHBDToolToolStripMenuItem";
+            this.bHBDToolToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.bHBDToolToolStripMenuItem.Text = "BH/BD Tool";
+            // 
+            // extractAllToolStripMenuItem
+            // 
+            this.extractAllToolStripMenuItem.Name = "extractAllToolStripMenuItem";
+            this.extractAllToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.extractAllToolStripMenuItem.Text = "Extract All";
+            // 
+            // bDExplorerToolStripMenuItem
+            // 
+            this.bDExplorerToolStripMenuItem.Name = "bDExplorerToolStripMenuItem";
+            this.bDExplorerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.bDExplorerToolStripMenuItem.Text = "BD Explorer";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -316,5 +341,8 @@
         private System.Windows.Forms.ToolStripMenuItem mHMBToolToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem Pref_TruncateNames_toolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem Pref_EnableAllNames_toolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem bHBDToolToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem extractAllToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem bDExplorerToolStripMenuItem;
     }
 }
