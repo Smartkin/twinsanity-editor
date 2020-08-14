@@ -6,7 +6,7 @@ namespace TwinsaityEditor
 {
     public partial class MainForm : Form
     {
-        private Form mhForm, exeForm;
+        private Form mhForm, exeForm, bdForm;
 
         private TreeNode nodeLastSelected;
 
@@ -287,6 +287,29 @@ namespace TwinsaityEditor
             Utils.TextUtils.Pref_TruncateObjectNames = !Utils.TextUtils.Pref_TruncateObjectNames;
             Pref_TruncateNames_toolStripMenuItem.Checked = Utils.TextUtils.Pref_TruncateObjectNames;
         }
+
+        private void bHBDToolToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenBDTool();
+        }
+
+        public void OpenBDTool()
+        {
+            if (exeForm == null)
+            {
+                bdForm = new BDExplorer();
+                bdForm.FormClosed += delegate
+                {
+                    bdForm = null;
+                };
+            }
+            else
+            {
+                bdForm.Select();
+            }
+                
+        }
+
         public void Pref_EnableAllNames_Click(object sender, EventArgs e)
         {
             Utils.TextUtils.Pref_EnableAnyObjectNames = !Utils.TextUtils.Pref_EnableAnyObjectNames;
