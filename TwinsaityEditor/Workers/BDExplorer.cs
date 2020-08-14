@@ -36,7 +36,7 @@ namespace TwinsaityEditor
                 using (OpenFileDialog ofd = new OpenFileDialog())
                 {
                     ofd.Filter = "Bandicoot Header|*.BH";
-                    if (ofd.ShowDialog() == DialogResult.OK)
+                    if (DialogResult.OK == ofd.ShowDialog())
                     {
                         path = Path.GetDirectoryName(ofd.FileName);
                         name = Path.GetFileNameWithoutExtension(ofd.FileName);
@@ -46,7 +46,7 @@ namespace TwinsaityEditor
             }
             catch (Exception ex)
             {
-                MessageBox.Show(String.Format("Unexpected exception happened\nMessage: {0}", ex.Message), "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ShowError(ex.Message);
             }
 
         }
@@ -91,8 +91,8 @@ namespace TwinsaityEditor
                 }
                 else
                 {
-                    node = node.Nodes.Add(nodeName,nodeName);
-                    if (i == hierarchy.Length -1)
+                    node = node.Nodes.Add(nodeName, nodeName);
+                    if (i == hierarchy.Length - 1)
                     {
                         node.Tag = record;
                     }
@@ -126,6 +126,92 @@ namespace TwinsaityEditor
             public String Path { get; private set; }
             public Int32 Offset { get; private set; }
             public Int32 Length { get; private set; }
+        }
+
+        private void extractAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (FolderBrowserDialog ofd = new FolderBrowserDialog())
+                {
+                    if (null != data)
+                    {
+                        using (FileStream fileStream = new FileStream(String.Format("{0}\\{1}.BD", path, name), FileMode.Open, FileAccess.Read))
+                        using (BinaryReader reader = new BinaryReader(fileStream))
+                        {
+                            if (DialogResult.OK == ofd.ShowDialog())
+                            {
+                                ExtractRecursively(reader, archiveContentsTree.TopNode, ofd.SelectedPath);
+                            }
+                        }
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex.Message);
+            }
+            statusBar.Text = "Ready";
+        }
+        private void extractSelectedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (FolderBrowserDialog ofd = new FolderBrowserDialog())
+                {
+                    if (null != data && null != archiveContentsTree.SelectedNode)
+                    {
+                        using (FileStream fileStream = new FileStream(String.Format("{0}\\{1}.BD", path, name), FileMode.Open, FileAccess.Read))
+                        using (BinaryReader reader = new BinaryReader(fileStream))
+                        {
+                            if (DialogResult.OK == ofd.ShowDialog())
+                            {
+                                ExtractRecursively(reader, archiveContentsTree.SelectedNode, ofd.SelectedPath);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex.Message);
+            }
+            statusBar.Text = "Ready";
+        }
+        private void ExtractRecursively(BinaryReader source, TreeNode node, String extractionPath)
+        {
+            BH_Record record = (BH_Record)node.Tag;
+            if (null != record)
+            {
+                ExtractRecord(source, record, extractionPath);
+            }
+            else
+            {
+                foreach (TreeNode childNode in node.Nodes)
+                {
+                    ExtractRecursively(source, childNode, extractionPath);
+                }
+            }
+        }
+
+        private void ExtractRecord(BinaryReader source, BH_Record record, String extractionPath)
+        {
+            String fullPath = Path.Combine(extractionPath, record.Path);
+            Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+            using (FileStream fileStream = new FileStream(fullPath, FileMode.Create, FileAccess.Write))
+            using (BinaryWriter writer = new BinaryWriter(fileStream))
+            {
+                statusBar.Text = String.Format("Extracting: {0}", record.Path);
+                Application.DoEvents();
+                source.BaseStream.Position = record.Offset;
+                writer.Write(source.ReadBytes(record.Length));
+            }
+        }
+
+        private void ShowError(String msg)
+        {
+            MessageBox.Show(String.Format("Unexpected exception happened\nMessage: {0}", msg), "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }
