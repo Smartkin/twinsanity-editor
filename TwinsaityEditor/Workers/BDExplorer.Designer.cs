@@ -30,7 +30,6 @@
         {
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openBHBDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveBHBDToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,7 +52,6 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem1,
             this.fileToolStripMenuItem,
             this.actionsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -61,11 +59,6 @@
             this.menuStrip1.Size = new System.Drawing.Size(464, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(12, 20);
             // 
             // fileToolStripMenuItem
             // 
@@ -83,6 +76,7 @@
             this.openBHBDToolStripMenuItem.Name = "openBHBDToolStripMenuItem";
             this.openBHBDToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openBHBDToolStripMenuItem.Text = "Open BH/BD";
+            this.openBHBDToolStripMenuItem.Click += new System.EventHandler(this.openBHBDToolStripMenuItem_Click);
             // 
             // saveBHBDToolStripMenuItem
             // 
@@ -113,13 +107,13 @@
             // extractAllToolStripMenuItem
             // 
             this.extractAllToolStripMenuItem.Name = "extractAllToolStripMenuItem";
-            this.extractAllToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.extractAllToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.extractAllToolStripMenuItem.Text = "Extract All";
             // 
             // extractSelectedToolStripMenuItem
             // 
             this.extractSelectedToolStripMenuItem.Name = "extractSelectedToolStripMenuItem";
-            this.extractSelectedToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.extractSelectedToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.extractSelectedToolStripMenuItem.Text = "Extract Selected";
             // 
             // BDExplorer
@@ -144,7 +138,6 @@
 
         private System.Windows.Forms.TreeView treeView1;
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openBHBDToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveBHBDToolStripMenuItem;
