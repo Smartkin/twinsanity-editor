@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Windows.Forms;
 
 namespace Twinsanity
 {
@@ -18,6 +19,20 @@ namespace Twinsanity
                     pairs[i].mainScriptIndex = reader.ReadInt32();
                     pairs[i].unkInt2 = reader.ReadUInt32();
                 }
+            }
+
+            public void Write(BinaryWriter writer)
+            {
+                writer.Write(unkIntPairs);
+                for (int i = 0; i < unkIntPairs; i++)
+                {
+                    writer.Write(pairs[i].mainScriptIndex);
+                    writer.Write(pairs[i].unkInt2);
+                }
+            }
+            public Int32 GetLength()
+            {
+                return (Int32)(4 + unkIntPairs * 8);
             }
             public struct UnkIntPairs
             {
@@ -38,7 +53,7 @@ namespace Twinsanity
                 unkInt2 = reader.ReadInt32();
                 linkedScript1 = new LinkedScript(reader);
                 LinkedScript ptr = linkedScript1;
-                while (ptr != null)
+                while (null != ptr)
                 {
                     if ((ptr.bitfield & 0x1F) != 0)
                     {
@@ -46,6 +61,39 @@ namespace Twinsanity
                     }
                     ptr = ptr.nextLinked;
                 }
+            }
+            public void Write(BinaryWriter writer)
+            {
+                writer.Write(name.Length);
+                writer.Write(name.ToCharArray());
+                writer.Write(LinkedScriptsCount);
+                writer.Write(unkInt2);
+                linkedScript1.Write(writer);
+                LinkedScript ptr = linkedScript1;
+                while (ptr != null)
+                {
+                    if (null != ptr.type2)
+                    {
+                        ptr.type2.Write(writer);
+                    }
+                    ptr = ptr.nextLinked;
+                }
+            }
+            public Int32 GetLength()
+            {
+                Int32 headerSize = 4 + name.Length + 4 + 4;
+                Int32 linkedSize = linkedScript1.GetLength();
+                Int32 type2Size = 0;
+                LinkedScript ptr = linkedScript1;
+                while (ptr != null)
+                {
+                    if (null != ptr.type2)
+                    {
+                        type2Size += ptr.type2.GetLength();
+                    }
+                    ptr = ptr.nextLinked;
+                }
+                return headerSize + linkedSize + type2Size;
             }
             public String name { get; set; }
             public Int32 LinkedScriptsCount { get; set; }
@@ -63,6 +111,18 @@ namespace Twinsanity
                     unkInt1 = reader.ReadInt32();
                     Int32 byteArrayLen = unkByte1 + unkByte2 * 4;
                     byteArray = reader.ReadBytes(unkByte1 + unkByte2 * 4);
+                }
+                public void Write(BinaryWriter writer)
+                {
+                    writer.Write(unkByte1);
+                    writer.Write(unkByte2);
+                    writer.Write(unkUShort1);
+                    writer.Write(unkInt1);
+                    writer.Write(byteArray);
+                }
+                public Int32 GetLength()
+                {
+                    return 8 + byteArray.Length;
                 }
                 public byte unkByte1 { get; set; }
                 public byte unkByte2 { get; set; }
@@ -92,6 +152,33 @@ namespace Twinsanity
                         nextType2 = new SupportType2(reader);
                     }
                 }
+                public void Write(BinaryWriter writer)
+                {
+                    writer.Write(bitfield);
+                    if ((bitfield & 0x400) != 0)
+                    {
+                        writer.Write(linkedScriptListIndex);
+                    }
+                    if ((bitfield & 0x200) != 0)
+                    {
+                        type3.Write(writer);
+                    }
+                    if ((bitfield & 0xFF) != 0)
+                    {
+                        type4.Write(writer);
+                    }
+                    if ((bitfield & 0x800) != 0)
+                    {
+                        nextType2.Write(writer);
+                    }
+                }
+                public Int32 GetLength()
+                {
+                    return 4 + (((bitfield & 0x400) != 0) ? 4 : 0)
+                        + (((bitfield & 0x200) != 0) ? type3.GetLength() : 0)
+                        + (((bitfield & 0xFF) != 0) ? type4.GetLength() : 0) 
+                        + (((bitfield & 0x800) != 0) ? nextType2.GetLength() : 0);
+                }
                 public Int32 bitfield { get; set; }
                 public Int32 linkedScriptListIndex { get; set; }
                 public SupportType3 type3 { get; set; }
@@ -107,6 +194,17 @@ namespace Twinsanity
                     X = reader.ReadSingle();
                     Y = reader.ReadSingle();
                     Z = reader.ReadSingle();
+                }
+                public void Write(BinaryWriter writer)
+                {
+                    writer.Write(unkInt1);
+                    writer.Write(X);
+                    writer.Write(Y);
+                    writer.Write(Z);
+                }
+                public Int32 GetLength()
+                {
+                    return 16;
                 }
                 public Int32 unkInt1 { get; set; }
                 public Int32 vTableAddress { get; set; }
@@ -135,6 +233,19 @@ namespace Twinsanity
                         unkUInt &= 0xFEFFFFFF;
                     }
 
+                }
+                public void Write(BinaryWriter writer)
+                {
+                    writer.Write(internalIndex);
+                    writer.Write(byteArray);
+                    if ((internalIndex & 0x1000000) != 0)
+                    {
+                        nextType4.Write(writer);
+                    }
+                }
+                public Int32 GetLength()
+                {
+                    return 4 + byteArray.Length + (((internalIndex & 0x1000000) != 0)?nextType4.GetLength():0);
                 }
                 public UInt32 unkUInt { get; set; }
                 public Int32 vTableAddress { get; set; }
@@ -203,6 +314,23 @@ namespace Twinsanity
                         nextLinked = new LinkedScript(reader);
                     }
                 }
+                public void Write(BinaryWriter writer)
+                {
+                    writer.Write(bitfield);
+                    writer.Write(scriptIndexOrSlot);
+                    if ((bitfield & 0x4000) != 0)
+                    {
+                        type1.Write(writer);
+                    }
+                    if ((bitfield & 0x8000) != 0)
+                    {
+                        nextLinked.Write(writer);
+                    }
+                }
+                public Int32 GetLength()
+                {
+                    return 4 + (((bitfield & 0x4000) != 0) ? type1.GetLength() : 0) + (((bitfield & 0x8000) != 0) ? nextLinked.GetLength() : 0);
+                }
                 public Int16 bitfield { get; set; }
                 public Int16 scriptIndexOrSlot { get; set; }
                 public SupportType1 type1 { get; set; }
@@ -227,21 +355,14 @@ namespace Twinsanity
             writer.Write(flag);
             if (flag == 0)
             {
-                writer.Write(Name.Length);
-                writer.Write(Name.ToCharArray(), 0, Name.Length);
+                MainScript.Write(writer);
             }
             else
             {
-                writer.Write(HeaderScript.unkIntPairs);
-                for (int i = 0; i < HeaderScript.unkIntPairs; i++)
-                {
-                    writer.Write(HeaderScript.pairs[i].mainScriptIndex);
-                    writer.Write(HeaderScript.pairs[i].unkInt2);
-                }
+                HeaderScript.Write(writer);
             }
             writer.Write(script);
         }
-
         public override void Load(BinaryReader reader, int size)
         {
             var sk = reader.BaseStream.Position;
@@ -260,15 +381,19 @@ namespace Twinsanity
                 
             }
             script = reader.ReadBytes(size - (int)(reader.BaseStream.Position - sk));
+            size_saved = size;
         }
-
+        private int size_saved;
         protected override int GetSize()
         {
             if (flag != 0)
             {
-                return 4 + 4 + HeaderScript.pairs.Length * 8;
+                return HeaderScript.GetLength() + 4;
+            } else
+            {
+                return MainScript.GetLength() + 4;
             }
-            return 4 + script.Length +  4 + Name.Length;
+            
         }
     }
 }
