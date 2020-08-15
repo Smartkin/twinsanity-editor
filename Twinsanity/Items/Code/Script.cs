@@ -237,7 +237,10 @@ namespace Twinsanity
                 public void Write(BinaryWriter writer)
                 {
                     writer.Write(internalIndex);
-                    writer.Write(byteArray);
+                    if (null != byteArray)
+                    {
+                        writer.Write(byteArray);
+                    }
                     if ((internalIndex & 0x1000000) != 0)
                     {
                         nextType4.Write(writer);
@@ -245,7 +248,7 @@ namespace Twinsanity
                 }
                 public Int32 GetLength()
                 {
-                    return 4 + byteArray.Length + (((internalIndex & 0x1000000) != 0)?nextType4.GetLength():0);
+                    return 4 + ((byteArray != null)?byteArray.Length:0) + (((internalIndex & 0x1000000) != 0)?nextType4.GetLength():0);
                 }
                 public UInt32 unkUInt { get; set; }
                 public Int32 vTableAddress { get; set; }
@@ -381,17 +384,18 @@ namespace Twinsanity
                 
             }
             script = reader.ReadBytes(size - (int)(reader.BaseStream.Position - sk));
-            size_saved = size;
         }
-        private int size_saved;
         protected override int GetSize()
         {
             if (flag != 0)
             {
-                return HeaderScript.GetLength() + 4;
+                return HeaderScript.GetLength() + 4 + script.Length;
             } else
             {
-                return MainScript.GetLength() + 4;
+                int a = MainScript.GetLength();
+                int b = 4;
+                int c = script.Length;
+                return MainScript.GetLength() + 4 + script.Length;
             }
             
         }
