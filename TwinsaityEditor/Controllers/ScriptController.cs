@@ -10,6 +10,7 @@ namespace TwinsaityEditor
         public ScriptController(MainForm topform, Script item) : base (topform, item)
         {
             Data = item;
+            AddMenu("Open editor", Menu_OpenEditor);
         }
 
         protected override string GetName()
@@ -31,6 +32,10 @@ namespace TwinsaityEditor
                 }
             }
             TextPrev = text.ToArray();
+        }
+        private void Menu_OpenEditor()
+        {
+            MainFile.OpenEditor(this);
         }
     }
 }
