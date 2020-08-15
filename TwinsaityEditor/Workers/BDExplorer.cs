@@ -7,6 +7,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -111,11 +112,47 @@ namespace TwinsaityEditor
                     FileList.Add(new BH_Record(reader));
                 }
             }
+            public Data(String folderToPack)
+            {
+                Header = 0x501;
+                FileList = new List<BH_Record>();
+                String[] files = Directory.GetFiles(folderToPack, "*.*", SearchOption.AllDirectories);
+                Int32 offset = 0;
+                foreach (String file in files)
+                {
+                    BH_Record last = new BH_Record(folderToPack, file, offset);
+                    offset += last.Length;
+                    FileList.Add(last);
+                }
+            }
             public Int32 Header { get; private set; }
             public List<BH_Record> FileList { get; private set; }
+            public void WriteDataBH(BinaryWriter writer, Action<String> callback)
+            {
+                writer.Write(Header);
+                foreach (BH_Record record in FileList)
+                {
+                    record.WriteDataBH(writer, callback);
+                }
+            }
+            public void WriteDataBD(String source, BinaryWriter writer, Action<String> callback)
+            {
+                foreach (BH_Record record in FileList)
+                {
+                    record.WriteDataBD(source, writer, callback);
+                }
+            }
         }
         private class BH_Record
         {
+            public BH_Record(String root, String fileName, Int32 offset)
+            {
+                if (!root.EndsWith("\\")) root += "\\";
+                Path = fileName.Replace(root, "");
+                FileInfo info = new FileInfo(fileName);
+                Length = (Int32)info.Length;
+                Offset = offset;
+            }
             public BH_Record(BinaryReader reader)
             {
                 Int32 nameLength = reader.ReadInt32();
@@ -126,6 +163,25 @@ namespace TwinsaityEditor
             public String Path { get; private set; }
             public Int32 Offset { get; private set; }
             public Int32 Length { get; private set; }
+            public void WriteDataBH(BinaryWriter writer, Action<String> callback)
+            {
+                callback.Invoke(String.Format("Writing Header: {0}", Path));
+                writer.Write((Int32)Path.Length);
+                writer.Write(Path.ToCharArray());
+                writer.Write(Offset);
+                writer.Write(Length);
+
+            }
+            public void WriteDataBD(String source, BinaryWriter writer, Action<String> callback)
+            {
+                callback.Invoke(String.Format("Writing Data: {0}", Path));
+                using (FileStream fileStream = new FileStream(System.IO.Path.Combine(source,Path), FileMode.Open, FileAccess.Read))
+                using (BinaryReader reader = new BinaryReader(fileStream))
+                {
+                    writer.BaseStream.Position = Offset;
+                    writer.Write(reader.ReadBytes(Length));
+                }
+            }
         }
 
         private void extractAllToolStripMenuItem_Click(object sender, EventArgs e)
@@ -152,7 +208,7 @@ namespace TwinsaityEditor
             {
                 ShowError(ex.Message);
             }
-            statusBar.Text = "Ready";
+            CallBack("Ready");
         }
         private void extractSelectedToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -177,7 +233,7 @@ namespace TwinsaityEditor
             {
                 ShowError(ex.Message);
             }
-            statusBar.Text = "Ready";
+            CallBack("Ready");
         }
         private void ExtractRecursively(BinaryReader source, TreeNode node, String extractionPath)
         {
@@ -202,8 +258,7 @@ namespace TwinsaityEditor
             using (FileStream fileStream = new FileStream(fullPath, FileMode.Create, FileAccess.Write))
             using (BinaryWriter writer = new BinaryWriter(fileStream))
             {
-                statusBar.Text = String.Format("Extracting: {0}", record.Path);
-                Application.DoEvents();
+                CallBack(String.Format("Extracting: {0}", record.Path));
                 source.BaseStream.Position = record.Offset;
                 writer.Write(source.ReadBytes(record.Length));
             }
@@ -212,6 +267,77 @@ namespace TwinsaityEditor
         private void ShowError(String msg)
         {
             MessageBox.Show(String.Format("Unexpected exception happened\nMessage: {0}", msg), "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private void saveBHBDToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                String sourcePath = null;
+                String destinationPath = null;
+                String name = "CRASH"; //Hardcoded name
+                using (FolderBrowserDialog ofd = new FolderBrowserDialog())
+                {
+                    ofd.Description = "Select source folder";
+                    if (DialogResult.OK == ofd.ShowDialog())
+                    {
+                        sourcePath = ofd.SelectedPath;
+                    }
+                }
+                using (FolderBrowserDialog ofd = new FolderBrowserDialog())
+                {
+                    ofd.Description = "Select destination folder";
+                    if (DialogResult.OK == ofd.ShowDialog())
+                    {
+                        destinationPath = ofd.SelectedPath;
+                        if (
+                            File.Exists(Path.Combine(destinationPath, String.Format("{0}.BH", name))) ||
+                            File.Exists(Path.Combine(destinationPath, String.Format("{0}.BD", name)))
+                            )
+                        {
+                            DialogResult result = MessageBox.Show(String.Format("Archive with name {0} already in destination folder. Overwrite?", name), "Attention",
+                                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                            if (DialogResult.Yes != result)
+                            {
+                                destinationPath = null;
+                            }
+                        }
+
+                    }
+                }
+                if (null != sourcePath && null != destinationPath)
+                {
+                    PackArchive(sourcePath, destinationPath, name);
+                    UpdateView();
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex.Message);
+            }
+            CallBack("Ready");
+        }
+        private void PackArchive(String source, String destination, String name)
+        {
+            data = new Data(source);
+            String fullPathBH = Path.Combine(destination, String.Format("{0}.BH", name));
+            String fullPathBD = Path.Combine(destination, String.Format("{0}.BD", name));
+            using (FileStream fileStream = new FileStream(fullPathBH, FileMode.Create, FileAccess.Write))
+            using (BinaryWriter writer = new BinaryWriter(fileStream))
+            {
+                data.WriteDataBH(writer, CallBack);
+            }
+            using (FileStream fileStream = new FileStream(fullPathBD, FileMode.Create, FileAccess.Write))
+            using (BinaryWriter writer = new BinaryWriter(fileStream))
+            {
+                data.WriteDataBD(source, writer, CallBack);
+            }
+        }
+
+        private void CallBack(String message)
+        {
+            statusBar.Text = message;
+            Application.DoEvents();
         }
     }
 }

@@ -86,6 +86,7 @@
             this.saveBHBDToolStripMenuItem.Name = "saveBHBDToolStripMenuItem";
             this.saveBHBDToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveBHBDToolStripMenuItem.Text = "Save BH/BD";
+            this.saveBHBDToolStripMenuItem.Click += new System.EventHandler(this.saveBHBDToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
