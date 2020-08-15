@@ -119,7 +119,7 @@ namespace Twinsanity
                 public SupportType4(BinaryReader reader)
                 {
                     internalIndex = reader.ReadInt32();
-                    length = Type4SizeMapper[internalIndex & 0x0000FFFF];
+                    length = GetType4Size(internalIndex & 0x0000FFFF);
                     if (length - 0xC > 0x0)
                     {
                         byteArray = reader.ReadBytes(length - 0xC);
@@ -143,6 +143,15 @@ namespace Twinsanity
                 public Byte[] byteArray { get; set; }
                 public SupportType4 nextType4 { get; set; }
 
+
+                static Int32 GetType4Size(Int32 index)
+                {
+                    if (index < 0 || index > Type4SizeMapper.Length)
+                    {
+                        return 0;
+                    }
+                    return Type4SizeMapper[index];
+                }
                 static Int32[] Type4SizeMapper = {
                         0x00, 0x80, 0x0C, 0x20, 0x10, 0x0C, 0x00, 0x0C, 0x30, 0x24, 0x30, 0x48, 0x94, 0x0C, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x00, 0x00, 0x00, 0x10, 0x10, 0x00, 0x00, 0x10, 0x10, 0x20, 0x00, 0x10,
                         0x00, 0x10, 0x10, 0x0C, 0x0C, 0x00, 0x00, 0x0C, 0x00, 0x00, 0x10, 0x00, 0x50, 0x10, 0x00, 0x30, 0x30, 0x30, 0x0C, 0x20, 0x0C, 0x00, 0x1C, 0x40, 0x14, 0x10, 0x00, 0x10, 0x60, 0x0C, 0x20, 0x0C,
