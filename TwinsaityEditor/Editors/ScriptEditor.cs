@@ -26,11 +26,13 @@ namespace TwinsaityEditor
         private Script.MainScriptStruct.LinkedScript selectedLinked;
         private FileController File { get; set; }
         private TwinsFile FileData { get => File.Data; }
+        private Func<Script, bool> scriptPredicate;
         public ScriptEditor(SectionController c)
         {
             File = c.MainFile;
             controller = c;
             Text = $"Instance Editor (Section {c.Data.Parent.ID})";
+            scriptPredicate = s => { return s.Name.Contains(scriptNameFilter.Text); };
             InitializeComponent();
             PopulateList();
             UpdatePanels();
@@ -38,15 +40,22 @@ namespace TwinsaityEditor
 
         private void ScriptEditor_Load(object sender, EventArgs e)
         {
-
+            filterSelection.SelectedIndex = 0;
         }
         private void PopulateList()
+        {
+            PopulateList(s => true);
+        }
+        private void PopulateList(Func<Script, bool> predicate)
         {
             listBox1.BeginUpdate();
             listBox1.Items.Clear();
             foreach (Script i in controller.Data.Records)
             {
-                listBox1.Items.Add(GenTextForList(i));
+                if (predicate.Invoke(i))
+                {
+                    listBox1.Items.Add(GenTextForList(i));
+                }
             }
             listBox1.EndUpdate();
         }
@@ -983,6 +992,30 @@ namespace TwinsaityEditor
 
         }
 
+        private void scriptNameFilter_TextChanged(object sender, EventArgs e)
+        {
+            PopulateList(scriptPredicate);
+        }
 
+        private void filterSelection_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (filterSelection.SelectedIndex)
+            {
+                case 0:
+                    scriptPredicate = s =>
+                    {
+                        return s.Name.Contains(scriptNameFilter.Text);
+                    };
+                    break;
+                case 1:
+                    scriptPredicate = s =>
+                    {
+                        return scriptNameFilter.TextLength == 0 ||
+                                (scriptNameFilter.Text.All(c => { return char.IsDigit(c); }) &&
+                                s.ID == int.Parse(scriptNameFilter.Text));
+                    };
+                    break;
+            }
+        }
     }
 }
