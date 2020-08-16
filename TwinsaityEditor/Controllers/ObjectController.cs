@@ -11,6 +11,7 @@ namespace TwinsaityEditor
         public ObjectController(MainForm topform, GameObject item) : base (topform, item)
         {
             Data = item;
+            AddMenu("Open editor", Menu_OpenEditor);
         }
 
         protected override string GetName()
@@ -149,6 +150,10 @@ namespace TwinsaityEditor
                 text.Add(Data.cSounds[i].ToString());
 
             TextPrev = text.ToArray();
+        }
+        private void Menu_OpenEditor()
+        {
+            MainFile.OpenEditor(this);
         }
     }
 }
