@@ -66,10 +66,22 @@
             this.type1UnkShort = new System.Windows.Forms.TextBox();
             this.type1UnkInt = new System.Windows.Forms.TextBox();
             this.type1Warning = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.type2Bitfield = new System.Windows.Forms.TextBox();
+            this.type2Slot = new System.Windows.Forms.TextBox();
+            this.type2CreateType3 = new System.Windows.Forms.Button();
+            this.type2DeleteType3 = new System.Windows.Forms.Button();
+            this.label16 = new System.Windows.Forms.Label();
+            this.type2SelectedType4Pos = new System.Windows.Forms.TextBox();
+            this.type2AddType4 = new System.Windows.Forms.Button();
+            this.type2DeleteType4 = new System.Windows.Forms.Button();
+            this.type2BitfieldWarning = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.panelHeader.SuspendLayout();
             this.panelMain.SuspendLayout();
             this.panelType1.SuspendLayout();
+            this.panelType2.SuspendLayout();
             this.SuspendLayout();
             // 
             // listBox1
@@ -93,13 +105,13 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.panelType1);
             this.groupBox1.Controls.Add(this.panelType2);
             this.groupBox1.Controls.Add(this.panelType3);
             this.groupBox1.Controls.Add(this.panelType4);
             this.groupBox1.Controls.Add(this.panelLinked);
             this.groupBox1.Controls.Add(this.panelHeader);
             this.groupBox1.Controls.Add(this.panelMain);
+            this.groupBox1.Controls.Add(this.panelType1);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Right;
             this.groupBox1.Location = new System.Drawing.Point(456, 0);
             this.groupBox1.Name = "groupBox1";
@@ -162,6 +174,17 @@
             // 
             // panelType2
             // 
+            this.panelType2.Controls.Add(this.type2BitfieldWarning);
+            this.panelType2.Controls.Add(this.type2DeleteType4);
+            this.panelType2.Controls.Add(this.type2AddType4);
+            this.panelType2.Controls.Add(this.type2SelectedType4Pos);
+            this.panelType2.Controls.Add(this.label16);
+            this.panelType2.Controls.Add(this.type2DeleteType3);
+            this.panelType2.Controls.Add(this.type2CreateType3);
+            this.panelType2.Controls.Add(this.type2Slot);
+            this.panelType2.Controls.Add(this.type2Bitfield);
+            this.panelType2.Controls.Add(this.label15);
+            this.panelType2.Controls.Add(this.label14);
             this.panelType2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelType2.Location = new System.Drawing.Point(3, 16);
             this.panelType2.Name = "panelType2";
@@ -436,6 +459,109 @@
             this.type1Warning.TabIndex = 10;
             this.type1Warning.Text = "Bytes 1 and 2 do not match with length of ByteArray.\r\nIt must be B1 + 4*B2!";
             // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(51, 11);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(47, 13);
+            this.label14.TabIndex = 0;
+            this.label14.Text = "Bit Field:";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(10, 36);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(93, 13);
+            this.label15.TabIndex = 1;
+            this.label15.Text = "Linked Script Slot:";
+            // 
+            // type2Bitfield
+            // 
+            this.type2Bitfield.Location = new System.Drawing.Point(109, 8);
+            this.type2Bitfield.Name = "type2Bitfield";
+            this.type2Bitfield.Size = new System.Drawing.Size(100, 20);
+            this.type2Bitfield.TabIndex = 2;
+            this.type2Bitfield.TextChanged += new System.EventHandler(this.type2Bitfield_TextChanged);
+            // 
+            // type2Slot
+            // 
+            this.type2Slot.Location = new System.Drawing.Point(109, 33);
+            this.type2Slot.Name = "type2Slot";
+            this.type2Slot.Size = new System.Drawing.Size(100, 20);
+            this.type2Slot.TabIndex = 3;
+            this.type2Slot.TextChanged += new System.EventHandler(this.type2Slot_TextChanged);
+            // 
+            // type2CreateType3
+            // 
+            this.type2CreateType3.Location = new System.Drawing.Point(10, 60);
+            this.type2CreateType3.Name = "type2CreateType3";
+            this.type2CreateType3.Size = new System.Drawing.Size(88, 23);
+            this.type2CreateType3.TabIndex = 4;
+            this.type2CreateType3.Text = "Create Type3";
+            this.type2CreateType3.UseVisualStyleBackColor = true;
+            this.type2CreateType3.Click += new System.EventHandler(this.type2CreateType3_Click);
+            // 
+            // type2DeleteType3
+            // 
+            this.type2DeleteType3.Location = new System.Drawing.Point(10, 86);
+            this.type2DeleteType3.Name = "type2DeleteType3";
+            this.type2DeleteType3.Size = new System.Drawing.Size(88, 23);
+            this.type2DeleteType3.TabIndex = 5;
+            this.type2DeleteType3.Text = "Delete Type3";
+            this.type2DeleteType3.UseVisualStyleBackColor = true;
+            this.type2DeleteType3.Click += new System.EventHandler(this.type2DeleteType3_Click);
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(14, 123);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(80, 13);
+            this.label16.TabIndex = 6;
+            this.label16.Text = "Type4 Position:";
+            // 
+            // type2SelectedType4Pos
+            // 
+            this.type2SelectedType4Pos.Location = new System.Drawing.Point(109, 120);
+            this.type2SelectedType4Pos.Name = "type2SelectedType4Pos";
+            this.type2SelectedType4Pos.Size = new System.Drawing.Size(100, 20);
+            this.type2SelectedType4Pos.TabIndex = 7;
+            this.type2SelectedType4Pos.TextChanged += new System.EventHandler(this.type2SelectedType4Pos_TextChanged);
+            // 
+            // type2AddType4
+            // 
+            this.type2AddType4.Location = new System.Drawing.Point(13, 154);
+            this.type2AddType4.Name = "type2AddType4";
+            this.type2AddType4.Size = new System.Drawing.Size(88, 23);
+            this.type2AddType4.TabIndex = 8;
+            this.type2AddType4.Text = "Add Type4";
+            this.type2AddType4.UseVisualStyleBackColor = true;
+            this.type2AddType4.Click += new System.EventHandler(this.type2AddType4_Click);
+            // 
+            // type2DeleteType4
+            // 
+            this.type2DeleteType4.Location = new System.Drawing.Point(109, 154);
+            this.type2DeleteType4.Name = "type2DeleteType4";
+            this.type2DeleteType4.Size = new System.Drawing.Size(88, 23);
+            this.type2DeleteType4.TabIndex = 9;
+            this.type2DeleteType4.Text = "Delete Type4";
+            this.type2DeleteType4.UseVisualStyleBackColor = true;
+            this.type2DeleteType4.Click += new System.EventHandler(this.type2DeleteType4_Click);
+            // 
+            // type2BitfieldWarning
+            // 
+            this.type2BitfieldWarning.AutoSize = true;
+            this.type2BitfieldWarning.ForeColor = System.Drawing.Color.Red;
+            this.type2BitfieldWarning.Location = new System.Drawing.Point(7, 197);
+            this.type2BitfieldWarning.Name = "type2BitfieldWarning";
+            this.type2BitfieldWarning.Size = new System.Drawing.Size(279, 52);
+            this.type2BitfieldWarning.TabIndex = 10;
+            this.type2BitfieldWarning.Text = "Bit Field does not corresponds with held items!\r\n0xFF not zero - has type4\r\n0x200" +
+    " not zero - has type3\r\n0x800 not zero - has next type2 (edit Linked Script paren" +
+    "t)";
+            // 
             // ScriptEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -454,6 +580,8 @@
             this.panelMain.PerformLayout();
             this.panelType1.ResumeLayout(false);
             this.panelType1.PerformLayout();
+            this.panelType2.ResumeLayout(false);
+            this.panelType2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -498,5 +626,16 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label type1Warning;
+        private System.Windows.Forms.TextBox type2Slot;
+        private System.Windows.Forms.TextBox type2Bitfield;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Button type2DeleteType3;
+        private System.Windows.Forms.Button type2CreateType3;
+        private System.Windows.Forms.Button type2DeleteType4;
+        private System.Windows.Forms.Button type2AddType4;
+        private System.Windows.Forms.TextBox type2SelectedType4Pos;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label type2BitfieldWarning;
     }
 }

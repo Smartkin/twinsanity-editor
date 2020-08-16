@@ -412,6 +412,69 @@ namespace TwinsaityEditor
         }
         private void UpdateType2Panel()
         {
+            type2Bitfield.Text = Convert.ToString(selectedType2.bitfield, 16);
+            type2Slot.Text = selectedType2.linkedScriptListIndex.ToString();
+        }
+        private void type2Bitfield_TextChanged(object sender, EventArgs e)
+        {
+            Int32 val = selectedType2.bitfield;
+            if (Int32.TryParse(((TextBox)sender).Text, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out val))
+            {
+                ((TextBox)sender).BackColor = Color.White;
+                selectedType2.bitfield = val;
+            }
+            else
+            {
+                ((TextBox)sender).BackColor = Color.Red;
+                return;
+            }
+            if (selectedType2.isBitFieldValid())
+            {
+                type2BitfieldWarning.Visible = false;
+            }
+            else
+            {
+                type2BitfieldWarning.Visible = true;
+            }
+        }
+
+        private void type2Slot_TextChanged(object sender, EventArgs e)
+        {
+            Int32 val = selectedType2.linkedScriptListIndex;
+            if (Int32.TryParse(((TextBox)sender).Text, out val))
+            {
+                ((TextBox)sender).BackColor = Color.White;
+                selectedType2.linkedScriptListIndex = val;
+            }
+            else
+            {
+                ((TextBox)sender).BackColor = Color.Red;
+                return;
+            }
+        }
+
+        private void type2CreateType3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void type2DeleteType3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void type2SelectedType4Pos_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void type2AddType4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void type2DeleteType4_Click(object sender, EventArgs e)
+        {
 
         }
         private void UpdateType3Panel()

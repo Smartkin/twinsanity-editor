@@ -193,6 +193,34 @@ namespace Twinsanity
                 public SupportType3 type3 { get; set; }
                 public SupportType4 type4 { get; set; }
                 public SupportType2 nextType2 { get; set; }
+                public bool isBitFieldValid()
+                {
+                    if (((bitfield & 0x200) == 0) && (type3 != null))
+                    {
+                        return false;
+                    }
+                    if (((bitfield & 0x200) != 0) && (type3 == null))
+                    {
+                        return false;
+                    }
+                    if (((bitfield & 0xFF) == 0) && (type4 != null))
+                    {
+                        return false;
+                    }
+                    if (((bitfield & 0xFF) != 0) && (type4 == null))
+                    {
+                        return false;
+                    }
+                    if (((bitfield & 0x800) == 0) && (type4 != null))
+                    {
+                        return false;
+                    }
+                    if (((bitfield & 0x800) != 0) && (type4 == null))
+                    {
+                        return false;
+                    }
+                    return true;
+                }
             }
             public class SupportType3
             {
