@@ -67,7 +67,7 @@ namespace TwinsaityEditor
                 }
                 if (script.MainScript != null)
                 {
-                    TreeNode mainScriptNode = scriptTree.TopNode.Nodes.Add("Main Script");
+                    TreeNode mainScriptNode = scriptTree.TopNode.Nodes.Add("Main Script - State: " + script.MainScript.unkInt2);
                     mainScriptNode.Tag = script.MainScript;
                     Script.MainScriptStruct mainScript = script.MainScript;
                     Script.MainScriptStruct.LinkedScript ptr = mainScript.linkedScript1;
@@ -77,12 +77,25 @@ namespace TwinsaityEditor
                         ptr = ptr.nextLinked;
                     }
                 }
+                scriptTree.Nodes[0].ExpandAll();
                 scriptTree.EndUpdate();
             }
         }
         private void AddLinked(TreeNode parent, Script.MainScriptStruct.LinkedScript ptr)
         {
-            TreeNode node = parent.Nodes.Add($"Linked Script {ptr.scriptIndexOrSlot}");
+            string Name = $"State {parent.Nodes.Count}";
+            if (ptr.scriptIndexOrSlot != -1)
+            {
+                if (Enum.IsDefined(typeof(DefaultEnums.ScriptID), (ushort)ptr.scriptIndexOrSlot))
+                {
+                    Name += $" - ID: {ptr.scriptIndexOrSlot} {(DefaultEnums.ScriptID)(ushort)ptr.scriptIndexOrSlot}";
+                }
+                else
+                {
+                    Name += $" - Script {ptr.scriptIndexOrSlot}";
+                } 
+            }
+            TreeNode node = parent.Nodes.Add(Name);
             node.Tag = ptr;
             if (null != ptr.type1)
             {
@@ -97,12 +110,12 @@ namespace TwinsaityEditor
         }
         private void AddType1(TreeNode parent, Script.MainScriptStruct.SupportType1 ptr)
         {
-            TreeNode node = parent.Nodes.Add($"Type 1");
+            TreeNode node = parent.Nodes.Add($"Header");
             node.Tag = ptr;
         }
         private void AddType2(TreeNode parent, Script.MainScriptStruct.SupportType2 ptr)
         {
-            TreeNode node = parent.Nodes.Add($"Type 2 Linked Slot: {ptr.linkedScriptListIndex}");
+            TreeNode node = parent.Nodes.Add($"Switch - Go To State: {ptr.linkedScriptListIndex}");
             node.Tag = ptr;
             if (null != ptr.type3)
             {
@@ -117,12 +130,12 @@ namespace TwinsaityEditor
         }
         private void AddType3(TreeNode parent, Script.MainScriptStruct.SupportType3 ptr)
         {
-            TreeNode node = parent.Nodes.Add($"Type 3");
+            TreeNode node = parent.Nodes.Add($"Logic Gate {ptr.VTableIndex}");
             node.Tag = ptr;
         }
         private void AddType4(TreeNode parent, Script.MainScriptStruct.SupportType4 ptr)
         {
-            TreeNode node = parent.Nodes.Add($"Type 4 ");
+            TreeNode node = parent.Nodes.Add($"Command {ptr.VTableIndex}");
             node.Tag = ptr;
         }
         private void UpdatePanels()
