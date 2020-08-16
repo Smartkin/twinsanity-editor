@@ -16,6 +16,13 @@ namespace TwinsaityEditor
         private SectionController controller;
         private Script script;
 
+        private Script.HeaderScriptStruct selectedHeaderScript;
+        private Script.MainScriptStruct selectedMainScript;
+        private Script.MainScriptStruct.SupportType1 selectedType1;
+        private Script.MainScriptStruct.SupportType2 selectedType2;
+        private Script.MainScriptStruct.SupportType3 selectedType3;
+        private Script.MainScriptStruct.SupportType4 selectedType4;
+        private Script.MainScriptStruct.LinkedScript selectedLinked;
         private FileController File { get; set; }
         private TwinsFile FileData { get => File.Data; }
         public ScriptEditor(SectionController c)
@@ -123,32 +130,135 @@ namespace TwinsaityEditor
                 if (tag is Script.HeaderScriptStruct)
                 {
                     panelHeader.Visible = true;
+                    selectedHeaderScript = (Script.HeaderScriptStruct)tag;
+                    UpdateHeaderPanel();
                 }
                 if (tag is Script.MainScriptStruct)
                 {
                     panelMain.Visible = true;
+                    selectedMainScript = (Script.MainScriptStruct)tag;
+                    UpdateMainPanel();
                 }
                 if (tag is Script.MainScriptStruct.SupportType1)
                 {
                     panelType1.Visible = true;
+                    selectedType1 = (Script.MainScriptStruct.SupportType1)tag;
+                    UpdateType1Panel();
                 }
                 if (tag is Script.MainScriptStruct.SupportType2)
                 {
                     panelType2.Visible = true;
+                    selectedType2 = (Script.MainScriptStruct.SupportType2)tag;
+                    UpdateType2Panel();
                 }
                 if (tag is Script.MainScriptStruct.SupportType3)
                 {
                     panelType3.Visible = true;
+                    selectedType3 = (Script.MainScriptStruct.SupportType3)tag;
+                    UpdateType3Panel();
                 }
                 if (tag is Script.MainScriptStruct.SupportType4)
                 {
                     panelType4.Visible = true;
+                    selectedType4 = (Script.MainScriptStruct.SupportType4)tag;
+                    UpdateType4Panel();
                 }
                 if (tag is Script.MainScriptStruct.LinkedScript)
                 {
                     panelLinked.Visible = true;
+                    selectedLinked = (Script.MainScriptStruct.LinkedScript)tag;
+                    UpdateLinkedPanel();
                 }
             }
+        }
+
+        private void UpdateHeaderPanel()
+        {
+            headerSubScripts.Items.Clear();
+            foreach (Script.HeaderScriptStruct.UnkIntPairs pair in selectedHeaderScript.pairs)
+            {
+                headerSubScripts.Items.Add(pair);
+            }
+            if (headerSubScripts.Items.Count > 0)
+            {
+                headerSubScripts.SelectedIndex = 0;
+            }
+        }
+        private void headerSubScripts_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (headerSubScripts.SelectedItem != null)
+            {
+                Script.HeaderScriptStruct.UnkIntPairs pair = selectedHeaderScript.pairs[headerSubScripts.SelectedIndex];
+                headerSubscriptID.Text = pair.mainScriptIndex.ToString();
+                headerSubscriptArg.Text = pair.unkInt2.ToString();
+            }
+        }
+        private void headerSubscriptID_TextChanged(object sender, EventArgs e)
+        {
+            if (headerSubScripts.SelectedItem != null)
+            {
+                Script.HeaderScriptStruct.UnkIntPairs pair = selectedHeaderScript.pairs[headerSubScripts.SelectedIndex];
+                TextBox textBox = (TextBox)sender;
+                Int32 val = pair.mainScriptIndex;
+                if (Int32.TryParse(textBox.Text, out val))
+                {
+                    textBox.BackColor = Color.White;
+                    pair.mainScriptIndex = val;
+                    headerSubScripts.SelectedItem = pair;
+                    headerSubScripts.Text = headerSubScripts.SelectedItem.ToString();
+                }
+                else
+                {
+                    textBox.BackColor = Color.Red;
+                }
+
+            }
+        }
+
+        private void headerSubscriptArg_TextChanged(object sender, EventArgs e)
+        {
+            if (headerSubScripts.SelectedItem != null)
+            {
+                Script.HeaderScriptStruct.UnkIntPairs pair = selectedHeaderScript.pairs[headerSubScripts.SelectedIndex];
+                TextBox textBox = (TextBox)sender;
+                UInt32 val = pair.unkInt2;
+                if (UInt32.TryParse(textBox.Text, out val))
+                {
+                    textBox.BackColor = Color.White;
+                    pair.unkInt2 = val;
+                    headerSubScripts.SelectedItem = pair;
+                    headerSubScripts.Text = headerSubScripts.SelectedItem.ToString();
+                }
+                else
+                {
+                    textBox.BackColor = Color.Red;
+                }
+
+            }
+        }
+        private void UpdateMainPanel()
+        {
+
+        }
+        private void UpdateType1Panel()
+        {
+
+        }
+        private void UpdateType2Panel()
+        {
+
+        }
+        private void UpdateType3Panel()
+        {
+
+        }
+        private void UpdateType4Panel()
+        {
+
+        }
+        private void UpdateLinkedPanel()
+        {
+
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -164,11 +274,14 @@ namespace TwinsaityEditor
                 script = null;
             }
             BuildTree();
+            UpdatePanels();
         }
 
         private void scriptTree_AfterSelect(object sender, TreeViewEventArgs e)
         {
             UpdatePanels();
         }
+
+        
     }
 }

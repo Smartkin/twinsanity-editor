@@ -16,6 +16,7 @@ namespace Twinsanity
                 pairs = new UnkIntPairs[unkIntPairs];
                 for (int i = 0; i < unkIntPairs; i++)
                 {
+                    pairs[i] = new UnkIntPairs();
                     pairs[i].mainScriptIndex = reader.ReadInt32();
                     pairs[i].unkInt2 = reader.ReadUInt32();
                 }
@@ -34,10 +35,14 @@ namespace Twinsanity
             {
                 return (Int32)(4 + unkIntPairs * 8);
             }
-            public struct UnkIntPairs
+            public class UnkIntPairs
             {
                 public int mainScriptIndex;
                 public uint unkInt2;
+                public override string ToString()
+                {
+                    return $"ID: {mainScriptIndex} ({unkInt2})";
+                }
             }
             public uint unkIntPairs;
             public UnkIntPairs[] pairs;
