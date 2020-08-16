@@ -134,9 +134,15 @@ namespace TwinsaityEditor
             panelType3.Visible = false;
             panelType4.Visible = false;
             panelLinked.Visible = false;
+            panelGeneral.Visible = false;
             if (null != scriptTree.SelectedNode)
             {
                 Object tag = scriptTree.SelectedNode.Tag;
+                if (tag == null)
+                {
+                    panelGeneral.Visible = true;
+                    UpdateGeneralPanel();
+                }
                 if (tag is Script.HeaderScriptStruct)
                 {
                     panelHeader.Visible = true;
@@ -267,7 +273,8 @@ namespace TwinsaityEditor
             {
                 ((TextBox)sender).BackColor = Color.White;
                 selectedMainScript.unkInt2 = val;
-            } else
+            }
+            else
             {
                 ((TextBox)sender).BackColor = Color.Red;
             }
@@ -320,7 +327,7 @@ namespace TwinsaityEditor
             if (selectedType1.isValidArraySize())
             {
                 type1Warning.Visible = false;
-            } 
+            }
             else
             {
                 type1Warning.Visible = true;
@@ -708,14 +715,55 @@ namespace TwinsaityEditor
         {
 
         }
+        private void UpdateGeneralPanel()
+        {
+            generalArray.Text = GetTextFromArray(script.script);
+        }
+        private void generalArray_TextChanged(object sender, EventArgs e)
+        {
+            if (!String.IsNullOrWhiteSpace(((TextBox)sender).Text))
+            {
+                String[] strs = ((TextBox)sender).Text.Trim(' ').Split(' ');
+                Byte[] byteArray = new Byte[strs.Length];
+                Int32 i = 0;
+                foreach (String str in strs)
+                {
+                    Byte val = 0;
+                    if (Byte.TryParse(str, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out val))
+                    {
+                        ((TextBox)sender).BackColor = Color.White;
+                        byteArray[i] = val;
+                    }
+                    else
+                    {
+                        ((TextBox)sender).BackColor = Color.Red;
+                        return;
+                    }
+                    ++i;
+                }
+                script.script = byteArray;
+            }
+            else
+            {
+                script.script = new Byte[0];
+            }
+            if (script.script.Length == 0)
+            {
+                generalWarning.Visible = false;
+            }
+            else
+            {
+                generalWarning.Visible = true;
 
+            }
+        }
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (null != listBox1.SelectedItem)
             {
                 File.SelectItem((Script)controller.Data.Records[listBox1.SelectedIndex]);
                 script = (Script)File.SelectedItem;
-            } 
+            }
             else
             {
                 File.SelectItem(null);

@@ -508,7 +508,7 @@ namespace Twinsanity
         private byte flag;
         public HeaderScriptStruct HeaderScript { get; set; }
         public MainScriptStruct MainScript { get; set; }
-        private byte[] script;
+        public byte[] script;
 
         public override void Save(BinaryWriter writer)
         {
