@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.IO;
+using TwinsaityEditor.Properties;
 
 namespace TwinsaityEditor
 {
@@ -38,10 +39,14 @@ namespace TwinsaityEditor
         public EXEPatcher()
         {
             InitializeComponent();
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "NTSC-U executable|SLUS_209.09|NTSC-U 2.0 executable|SLUS_209.09|PAL executable|SLES_525.68|NTSC-J executable|SLPM_658.01";
+            OpenFileDialog ofd = new OpenFileDialog
+            {
+                InitialDirectory = Settings.Default.ExePatcherPath,
+                Filter = "NTSC-U executable|SLUS_209.09|NTSC-U 2.0 executable|SLUS_209.09|PAL executable|SLES_525.68|NTSC-J executable|SLPM_658.01"
+            };
             if (ofd.ShowDialog() == DialogResult.OK)
             {
+                Settings.Default.ExePatcherPath = ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('\\'));
                 fileName = ofd.FileName;
                 switch (ofd.FilterIndex)
                 {

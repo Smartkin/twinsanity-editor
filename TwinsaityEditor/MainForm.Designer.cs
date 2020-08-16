@@ -161,21 +161,21 @@
             // eLFPatcherToolStripMenuItem
             // 
             this.eLFPatcherToolStripMenuItem.Name = "eLFPatcherToolStripMenuItem";
-            this.eLFPatcherToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.eLFPatcherToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.eLFPatcherToolStripMenuItem.Text = "EXE Patcher";
             this.eLFPatcherToolStripMenuItem.Click += new System.EventHandler(this.eLFPatcherToolStripMenuItem_Click);
             // 
             // mHMBToolToolStripMenuItem
             // 
             this.mHMBToolToolStripMenuItem.Name = "mHMBToolToolStripMenuItem";
-            this.mHMBToolToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.mHMBToolToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.mHMBToolToolStripMenuItem.Text = "MH/MB Tool";
             this.mHMBToolToolStripMenuItem.Click += new System.EventHandler(this.mHMBToolToolStripMenuItem_Click);
             // 
             // bHBDToolToolStripMenuItem
             // 
             this.bHBDToolToolStripMenuItem.Name = "bHBDToolToolStripMenuItem";
-            this.bHBDToolToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.bHBDToolToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.bHBDToolToolStripMenuItem.Text = "BH/BD Tool";
             this.bHBDToolToolStripMenuItem.Click += new System.EventHandler(this.bHBDToolToolStripMenuItem_Click);
             // 
@@ -287,6 +287,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
             this.Text = "Twinsaity Editor";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);

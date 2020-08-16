@@ -12,6 +12,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using TwinsaityEditor.Properties;
+using WK.Libraries.BetterFolderBrowserNS;
+using WK.Libraries.BetterFolderBrowserNS.Helpers;
 
 namespace TwinsaityEditor
 {
@@ -36,11 +39,14 @@ namespace TwinsaityEditor
             {
                 using (OpenFileDialog ofd = new OpenFileDialog())
                 {
+                    ofd.InitialDirectory = Settings.Default.BDFilePath;
                     ofd.Filter = "Bandicoot Header|*.BH";
                     if (DialogResult.OK == ofd.ShowDialog())
                     {
-                        path = Path.GetDirectoryName(ofd.FileName);
-                        name = Path.GetFileNameWithoutExtension(ofd.FileName);
+                        var file = ofd.FileName;
+                        path = Path.GetDirectoryName(file);
+                        name = Path.GetFileNameWithoutExtension(file);
+                        Settings.Default.BDFilePath = file.Substring(0, file.LastIndexOf('\\'));
                         LoadData(path, name);
                     }
                 }
@@ -188,15 +194,20 @@ namespace TwinsaityEditor
         {
             try
             {
-                using (FolderBrowserDialog ofd = new FolderBrowserDialog())
+                using (BetterFolderBrowser ofd = new BetterFolderBrowser
+                {
+                    Title = "Select destination folder",
+                    RootFolder = Settings.Default.BDExtractPath
+                })
                 {
                     if (null != data)
                     {
                         using (FileStream fileStream = new FileStream(String.Format("{0}\\{1}.BD", path, name), FileMode.Open, FileAccess.Read))
                         using (BinaryReader reader = new BinaryReader(fileStream))
                         {
-                            if (DialogResult.OK == ofd.ShowDialog())
+                            if (DialogResult.OK == ofd.ShowDialog(this))
                             {
+                                Settings.Default.BDExtractPath = ofd.SelectedPath;
                                 ExtractRecursively(reader, archiveContentsTree.TopNode, ofd.SelectedPath);
                             }
                         }
@@ -214,15 +225,20 @@ namespace TwinsaityEditor
         {
             try
             {
-                using (FolderBrowserDialog ofd = new FolderBrowserDialog())
+                using (BetterFolderBrowser ofd = new BetterFolderBrowser
+                {
+                    Title = "Select destination folder",
+                    RootFolder = Settings.Default.BDExtractPath
+                })
                 {
                     if (null != data && null != archiveContentsTree.SelectedNode)
                     {
                         using (FileStream fileStream = new FileStream(String.Format("{0}\\{1}.BD", path, name), FileMode.Open, FileAccess.Read))
                         using (BinaryReader reader = new BinaryReader(fileStream))
                         {
-                            if (DialogResult.OK == ofd.ShowDialog())
+                            if (DialogResult.OK == ofd.ShowDialog(this))
                             {
+                                Settings.Default.BDExtractPath = ofd.SelectedPath;
                                 ExtractRecursively(reader, archiveContentsTree.SelectedNode, ofd.SelectedPath);
                             }
                         }
@@ -276,19 +292,33 @@ namespace TwinsaityEditor
                 String sourcePath = null;
                 String destinationPath = null;
                 String name = "CRASH"; //Hardcoded name
-                using (FolderBrowserDialog ofd = new FolderBrowserDialog())
+                using (BetterFolderBrowser ofd = new BetterFolderBrowser
                 {
-                    ofd.Description = "Select source folder";
-                    if (DialogResult.OK == ofd.ShowDialog())
+                    Title = "Select source folder",
+                    RootFolder = Settings.Default.BDSaveSrcPath
+                })
+                {
+                    if (DialogResult.OK == ofd.ShowDialog(this))
                     {
+                        Settings.Default.BDSaveSrcPath = ofd.SelectedPath;
                         sourcePath = ofd.SelectedPath;
                     }
-                }
-                using (FolderBrowserDialog ofd = new FolderBrowserDialog())
-                {
-                    ofd.Description = "Select destination folder";
-                    if (DialogResult.OK == ofd.ShowDialog())
+                    else
                     {
+                        return;
+                    }
+                }
+                using (BetterFolderBrowser ofd = new BetterFolderBrowser
+                {
+                    Title = "Select source folder",
+                    RootFolder = Settings.Default.BDSaveSrcPath
+                })
+                {
+                    ofd.Title = "Select destination folder";
+                    ofd.RootFolder = Settings.Default.BDSaveDstPath;
+                    if (DialogResult.OK == ofd.ShowDialog(this))
+                    {
+                        Settings.Default.BDSaveDstPath = ofd.SelectedPath;
                         destinationPath = ofd.SelectedPath;
                         if (
                             File.Exists(Path.Combine(destinationPath, String.Format("{0}.BH", name))) ||

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Media;
 using System.Windows.Forms;
+using TwinsaityEditor.Properties;
 using Twinsanity;
 
 namespace TwinsaityEditor
@@ -28,10 +29,14 @@ namespace TwinsaityEditor
 
         public MHViewer()
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Music Header|*.MH";
+            OpenFileDialog ofd = new OpenFileDialog
+            {
+                InitialDirectory = Settings.Default.MHFilePath,
+                Filter = "Music Header|*.MH"
+            };
             if (ofd.ShowDialog() == DialogResult.OK)
             {
+                Settings.Default.MHFilePath = ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('\\'));
                 fileName = ofd.FileName;
                 tracks = new List<Track>();
                 InitializeComponent();

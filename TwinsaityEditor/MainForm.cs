@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using TwinsaityEditor.Properties;
 using Twinsanity;
 
 namespace TwinsaityEditor
@@ -130,14 +131,18 @@ namespace TwinsaityEditor
 
         private void openRM2ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "RM2 files|*.rm2|SM2 files|*.sm2|RMX files|*.rmx|SMX files|*.smx|Demo RM2 files|*.rm2|Demo SM2 files|*.sm2";
+            OpenFileDialog ofd = new OpenFileDialog
+            {
+                InitialDirectory = Settings.Default.ChunkFilePath,
+                Filter = "RM2 files|*.rm2|SM2 files|*.sm2|RMX files|*.rmx|SMX files|*.smx|Demo RM2 files|*.rm2|Demo SM2 files|*.sm2"
+            };
             //ofd.Filter = "PS2 files (.rm2; .sm2)|*.rm2;*.sm2|XBOX files (.rmx; .smx)|*.rmx;*.smx|Demo files (.rm2; .sm2)|*.rm2; *.sm2";
             if (ofd.ShowDialog() == DialogResult.OK)
-            {
+            { 
                 if (CurCont != null)
                     CurCont.CloseFile();
                 Tag = null;
+                Settings.Default.ChunkFilePath = ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('\\'));
                 TwinsFile file = new TwinsFile();
                 TwinsFile aux_file = null;
                 TwinsFile default_file = null;
@@ -293,9 +298,14 @@ namespace TwinsaityEditor
             OpenBDTool();
         }
 
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Settings.Default.Save();
+        }
+
         public void OpenBDTool()
         {
-            if (exeForm == null)
+            if (bdForm == null)
             {
                 bdForm = new BDExplorer();
                 bdForm.FormClosed += delegate
