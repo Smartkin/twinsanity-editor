@@ -347,7 +347,21 @@ namespace Twinsanity
             }
 
         }
-        public string Name { get; set; }
+        public string Name { get {
+                if (MainScript != null)
+                {
+                    return MainScript.name;
+                } else
+                {
+                    return "Header script";
+                }
+            }
+            set {
+                if (MainScript != null)
+                {
+                    MainScript.name = value;
+                }
+            } }
 
         private ushort id;
         private byte mask;
@@ -380,11 +394,9 @@ namespace Twinsanity
             if (flag == 0)
             {
                 MainScript = new MainScriptStruct(reader);
-                Name = MainScript.name;
             }
             else
             {
-                Name = "Header script";
                 HeaderScript = new HeaderScriptStruct(reader);
                 
             }

@@ -44,8 +44,20 @@
             this.headerSubscriptArg = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.mainName = new System.Windows.Forms.TextBox();
+            this.mainLinkedCnt = new System.Windows.Forms.TextBox();
+            this.mainUnk = new System.Windows.Forms.TextBox();
+            this.mainAddLinked = new System.Windows.Forms.Button();
+            this.label8 = new System.Windows.Forms.Label();
+            this.mainLinkedPos = new System.Windows.Forms.TextBox();
+            this.mainDelLinked = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.panelHeader.SuspendLayout();
+            this.panelMain.SuspendLayout();
             this.SuspendLayout();
             // 
             // listBox1
@@ -69,13 +81,13 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.panelHeader);
             this.groupBox1.Controls.Add(this.panelMain);
             this.groupBox1.Controls.Add(this.panelType1);
             this.groupBox1.Controls.Add(this.panelType2);
             this.groupBox1.Controls.Add(this.panelType3);
             this.groupBox1.Controls.Add(this.panelType4);
             this.groupBox1.Controls.Add(this.panelLinked);
+            this.groupBox1.Controls.Add(this.panelHeader);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Right;
             this.groupBox1.Location = new System.Drawing.Point(456, 0);
             this.groupBox1.Name = "groupBox1";
@@ -100,6 +112,17 @@
             // 
             // panelMain
             // 
+            this.panelMain.Controls.Add(this.mainDelLinked);
+            this.panelMain.Controls.Add(this.mainLinkedPos);
+            this.panelMain.Controls.Add(this.label8);
+            this.panelMain.Controls.Add(this.mainAddLinked);
+            this.panelMain.Controls.Add(this.mainUnk);
+            this.panelMain.Controls.Add(this.mainLinkedCnt);
+            this.panelMain.Controls.Add(this.mainName);
+            this.panelMain.Controls.Add(this.label7);
+            this.panelMain.Controls.Add(this.label6);
+            this.panelMain.Controls.Add(this.label5);
+            this.panelMain.Controls.Add(this.label4);
             this.panelMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelMain.Location = new System.Drawing.Point(3, 16);
             this.panelMain.Name = "panelMain";
@@ -198,6 +221,103 @@
             this.label3.TabIndex = 5;
             this.label3.Text = "ScriptArg";
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(4, 4);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(90, 13);
+            this.label4.TabIndex = 0;
+            this.label4.Text = "Main Script Editor";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(4, 24);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(38, 13);
+            this.label5.TabIndex = 1;
+            this.label5.Text = "Name:";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(4, 45);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(73, 13);
+            this.label6.TabIndex = 2;
+            this.label6.Text = "LinkedScripits";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(4, 67);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(86, 13);
+            this.label7.TabIndex = 3;
+            this.label7.Text = "Unknown Value:";
+            // 
+            // mainName
+            // 
+            this.mainName.Location = new System.Drawing.Point(104, 21);
+            this.mainName.Name = "mainName";
+            this.mainName.Size = new System.Drawing.Size(100, 20);
+            this.mainName.TabIndex = 4;
+            this.mainName.TextChanged += new System.EventHandler(this.mainName_TextChanged);
+            // 
+            // mainLinkedCnt
+            // 
+            this.mainLinkedCnt.Location = new System.Drawing.Point(104, 43);
+            this.mainLinkedCnt.Name = "mainLinkedCnt";
+            this.mainLinkedCnt.ReadOnly = true;
+            this.mainLinkedCnt.Size = new System.Drawing.Size(100, 20);
+            this.mainLinkedCnt.TabIndex = 5;
+            // 
+            // mainUnk
+            // 
+            this.mainUnk.Location = new System.Drawing.Point(104, 64);
+            this.mainUnk.Name = "mainUnk";
+            this.mainUnk.Size = new System.Drawing.Size(100, 20);
+            this.mainUnk.TabIndex = 6;
+            this.mainUnk.TextChanged += new System.EventHandler(this.mainUnk_TextChanged);
+            // 
+            // mainAddLinked
+            // 
+            this.mainAddLinked.Location = new System.Drawing.Point(7, 125);
+            this.mainAddLinked.Name = "mainAddLinked";
+            this.mainAddLinked.Size = new System.Drawing.Size(75, 23);
+            this.mainAddLinked.TabIndex = 7;
+            this.mainAddLinked.Text = "Add";
+            this.mainAddLinked.UseVisualStyleBackColor = true;
+            this.mainAddLinked.Click += new System.EventHandler(this.mainAddLinked_Click);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(7, 91);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(112, 13);
+            this.label8.TabIndex = 8;
+            this.label8.Text = "Linked Script Position:";
+            // 
+            // mainLinkedPos
+            // 
+            this.mainLinkedPos.Location = new System.Drawing.Point(116, 88);
+            this.mainLinkedPos.Name = "mainLinkedPos";
+            this.mainLinkedPos.Size = new System.Drawing.Size(100, 20);
+            this.mainLinkedPos.TabIndex = 9;
+            this.mainLinkedPos.TextChanged += new System.EventHandler(this.mainLinkedPos_TextChanged);
+            // 
+            // mainDelLinked
+            // 
+            this.mainDelLinked.Location = new System.Drawing.Point(88, 125);
+            this.mainDelLinked.Name = "mainDelLinked";
+            this.mainDelLinked.Size = new System.Drawing.Size(75, 23);
+            this.mainDelLinked.TabIndex = 10;
+            this.mainDelLinked.Text = "Delete";
+            this.mainDelLinked.UseVisualStyleBackColor = true;
+            this.mainDelLinked.Click += new System.EventHandler(this.mainDelLinked_Click);
+            // 
             // ScriptEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -212,6 +332,8 @@
             this.groupBox1.ResumeLayout(false);
             this.panelHeader.ResumeLayout(false);
             this.panelHeader.PerformLayout();
+            this.panelMain.ResumeLayout(false);
+            this.panelMain.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -234,5 +356,16 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox headerSubscriptArg;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Button mainDelLinked;
+        private System.Windows.Forms.TextBox mainLinkedPos;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Button mainAddLinked;
+        private System.Windows.Forms.TextBox mainUnk;
+        private System.Windows.Forms.TextBox mainLinkedCnt;
+        private System.Windows.Forms.TextBox mainName;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label5;
     }
 }

@@ -57,24 +57,27 @@ namespace TwinsaityEditor
         {
             scriptTree.BeginUpdate();
             scriptTree.Nodes.Clear();
-            scriptTree.Nodes.Add(script.Name);
-            if (script.HeaderScript != null)
+            if (null != script)
             {
-                scriptTree.TopNode.Nodes.Add("Header Script").Tag = script.HeaderScript;
-            } 
-            if (script.MainScript != null)
-            {
-                TreeNode mainScriptNode = scriptTree.TopNode.Nodes.Add("Main Script");
-                mainScriptNode.Tag = script.MainScript;
-                Script.MainScriptStruct mainScript = script.MainScript;
-                Script.MainScriptStruct.LinkedScript ptr = mainScript.linkedScript1;
-                while (ptr != null)
+                scriptTree.Nodes.Add(script.Name);
+                if (script.HeaderScript != null)
                 {
-                    AddLinked(mainScriptNode, ptr);
-                    ptr = ptr.nextLinked;
+                    scriptTree.TopNode.Nodes.Add("Header Script").Tag = script.HeaderScript;
                 }
+                if (script.MainScript != null)
+                {
+                    TreeNode mainScriptNode = scriptTree.TopNode.Nodes.Add("Main Script");
+                    mainScriptNode.Tag = script.MainScript;
+                    Script.MainScriptStruct mainScript = script.MainScript;
+                    Script.MainScriptStruct.LinkedScript ptr = mainScript.linkedScript1;
+                    while (ptr != null)
+                    {
+                        AddLinked(mainScriptNode, ptr);
+                        ptr = ptr.nextLinked;
+                    }
+                }
+                scriptTree.EndUpdate();
             }
-            scriptTree.EndUpdate();
         }
         private void AddLinked(TreeNode parent, Script.MainScriptStruct.LinkedScript ptr)
         {
@@ -238,6 +241,43 @@ namespace TwinsaityEditor
         }
         private void UpdateMainPanel()
         {
+            mainName.Text = selectedMainScript.name;
+            mainLinkedCnt.Text = selectedMainScript.LinkedScriptsCount.ToString();
+            mainUnk.Text = selectedMainScript.unkInt2.ToString();
+            mainLinkedPos.Text = "0";
+        }
+        private void mainName_TextChanged(object sender, EventArgs e)
+        {
+            selectedMainScript.name = ((TextBox)sender).Text;
+            scriptTree.TopNode.Text = selectedMainScript.name;
+            //listBox1.Items[listBox1.SelectedIndex] = GenTextForList(script); Fuck this shit for being unstable piss that destroys my will to live
+        }
+
+        private void mainUnk_TextChanged(object sender, EventArgs e)
+        {
+            Int32 val = selectedMainScript.unkInt2;
+            if (Int32.TryParse(((TextBox)sender).Text, out val))
+            {
+                ((TextBox)sender).BackColor = Color.White;
+                selectedMainScript.unkInt2 = val;
+            } else
+            {
+                ((TextBox)sender).BackColor = Color.Red;
+            }
+        }
+
+        private void mainLinkedPos_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void mainAddLinked_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void mainDelLinked_Click(object sender, EventArgs e)
+        {
 
         }
         private void UpdateType1Panel()
@@ -281,7 +321,5 @@ namespace TwinsaityEditor
         {
             UpdatePanels();
         }
-
-        
     }
 }
