@@ -93,6 +93,17 @@
             this.type4BitField = new System.Windows.Forms.TextBox();
             this.type4ExpectedLength = new System.Windows.Forms.Label();
             this.type4Warning = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
+            this.linkedBitField = new System.Windows.Forms.TextBox();
+            this.linkedSlotIndex = new System.Windows.Forms.TextBox();
+            this.linkedCreateType1 = new System.Windows.Forms.Button();
+            this.linkedDeleteType1 = new System.Windows.Forms.Button();
+            this.linkedDeleteType2 = new System.Windows.Forms.Button();
+            this.linkedCreateType2 = new System.Windows.Forms.Button();
+            this.linkedWarning = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label25 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.panelHeader.SuspendLayout();
             this.panelMain.SuspendLayout();
@@ -100,6 +111,7 @@
             this.panelType2.SuspendLayout();
             this.panelType3.SuspendLayout();
             this.panelType4.SuspendLayout();
+            this.panelLinked.SuspendLayout();
             this.SuspendLayout();
             // 
             // listBox1
@@ -123,13 +135,13 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.panelType4);
             this.groupBox1.Controls.Add(this.panelLinked);
             this.groupBox1.Controls.Add(this.panelHeader);
             this.groupBox1.Controls.Add(this.panelMain);
             this.groupBox1.Controls.Add(this.panelType1);
             this.groupBox1.Controls.Add(this.panelType2);
             this.groupBox1.Controls.Add(this.panelType3);
+            this.groupBox1.Controls.Add(this.panelType4);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Right;
             this.groupBox1.Location = new System.Drawing.Point(456, 0);
             this.groupBox1.Name = "groupBox1";
@@ -243,11 +255,23 @@
             // 
             // panelLinked
             // 
+            this.panelLinked.Controls.Add(this.textBox1);
+            this.panelLinked.Controls.Add(this.label25);
+            this.panelLinked.Controls.Add(this.linkedWarning);
+            this.panelLinked.Controls.Add(this.linkedDeleteType2);
+            this.panelLinked.Controls.Add(this.linkedCreateType2);
+            this.panelLinked.Controls.Add(this.linkedDeleteType1);
+            this.panelLinked.Controls.Add(this.linkedCreateType1);
+            this.panelLinked.Controls.Add(this.linkedSlotIndex);
+            this.panelLinked.Controls.Add(this.linkedBitField);
+            this.panelLinked.Controls.Add(this.label24);
+            this.panelLinked.Controls.Add(this.label23);
             this.panelLinked.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelLinked.Location = new System.Drawing.Point(3, 16);
             this.panelLinked.Name = "panelLinked";
             this.panelLinked.Size = new System.Drawing.Size(303, 609);
             this.panelLinked.TabIndex = 0;
+            this.panelLinked.Paint += new System.Windows.Forms.PaintEventHandler(this.panelLinked_Paint);
             // 
             // label1
             // 
@@ -734,6 +758,108 @@
             this.type4Warning.Text = "Bit Field value and next Type4 presence in parent\r\ndo not correspond (Bit 0x0100 " +
     "set) or \r\nBit Array length and Expected Length do not match.\r\n";
             // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(20, 11);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(47, 13);
+            this.label23.TabIndex = 0;
+            this.label23.Text = "Bit Field:";
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(10, 36);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(57, 13);
+            this.label24.TabIndex = 1;
+            this.label24.Text = "Slot Index:";
+            // 
+            // linkedBitField
+            // 
+            this.linkedBitField.Location = new System.Drawing.Point(88, 8);
+            this.linkedBitField.Name = "linkedBitField";
+            this.linkedBitField.Size = new System.Drawing.Size(100, 20);
+            this.linkedBitField.TabIndex = 2;
+            this.linkedBitField.TextChanged += new System.EventHandler(this.linkedBitField_TextChanged);
+            // 
+            // linkedSlotIndex
+            // 
+            this.linkedSlotIndex.Location = new System.Drawing.Point(88, 33);
+            this.linkedSlotIndex.Name = "linkedSlotIndex";
+            this.linkedSlotIndex.Size = new System.Drawing.Size(100, 20);
+            this.linkedSlotIndex.TabIndex = 3;
+            this.linkedSlotIndex.TextChanged += new System.EventHandler(this.linkedSlotIndex_TextChanged);
+            // 
+            // linkedCreateType1
+            // 
+            this.linkedCreateType1.Location = new System.Drawing.Point(10, 67);
+            this.linkedCreateType1.Name = "linkedCreateType1";
+            this.linkedCreateType1.Size = new System.Drawing.Size(84, 23);
+            this.linkedCreateType1.TabIndex = 4;
+            this.linkedCreateType1.Text = "Create Type 1";
+            this.linkedCreateType1.UseVisualStyleBackColor = true;
+            this.linkedCreateType1.Click += new System.EventHandler(this.linkedCreateType1_Click);
+            // 
+            // linkedDeleteType1
+            // 
+            this.linkedDeleteType1.Location = new System.Drawing.Point(100, 67);
+            this.linkedDeleteType1.Name = "linkedDeleteType1";
+            this.linkedDeleteType1.Size = new System.Drawing.Size(84, 23);
+            this.linkedDeleteType1.TabIndex = 5;
+            this.linkedDeleteType1.Text = "Delete Type 1";
+            this.linkedDeleteType1.UseVisualStyleBackColor = true;
+            this.linkedDeleteType1.Click += new System.EventHandler(this.linkedDeleteType1_Click);
+            // 
+            // linkedDeleteType2
+            // 
+            this.linkedDeleteType2.Location = new System.Drawing.Point(101, 120);
+            this.linkedDeleteType2.Name = "linkedDeleteType2";
+            this.linkedDeleteType2.Size = new System.Drawing.Size(84, 23);
+            this.linkedDeleteType2.TabIndex = 9;
+            this.linkedDeleteType2.Text = "Delete Type 2";
+            this.linkedDeleteType2.UseVisualStyleBackColor = true;
+            this.linkedDeleteType2.Click += new System.EventHandler(this.linkedDeleteType2_Click);
+            // 
+            // linkedCreateType2
+            // 
+            this.linkedCreateType2.Location = new System.Drawing.Point(11, 120);
+            this.linkedCreateType2.Name = "linkedCreateType2";
+            this.linkedCreateType2.Size = new System.Drawing.Size(84, 23);
+            this.linkedCreateType2.TabIndex = 8;
+            this.linkedCreateType2.Text = "Add Type 2";
+            this.linkedCreateType2.UseVisualStyleBackColor = true;
+            this.linkedCreateType2.Click += new System.EventHandler(this.linkedCreateType2_Click);
+            // 
+            // linkedWarning
+            // 
+            this.linkedWarning.AutoSize = true;
+            this.linkedWarning.ForeColor = System.Drawing.Color.Red;
+            this.linkedWarning.Location = new System.Drawing.Point(10, 146);
+            this.linkedWarning.Name = "linkedWarning";
+            this.linkedWarning.Size = new System.Drawing.Size(238, 52);
+            this.linkedWarning.TabIndex = 10;
+            this.linkedWarning.Text = "Bit Field don\'t correspond with presense of items:\r\n0x4000 bit for Type1 presence" +
+    "\r\n0x8000 bit for having next Linked Script in parent\r\n0x1F not zero for presence" +
+    " of Type 2";
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(97, 99);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(100, 20);
+            this.textBox1.TabIndex = 12;
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(10, 102);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(83, 13);
+            this.label25.TabIndex = 11;
+            this.label25.Text = "Type 2 Position:";
+            // 
             // ScriptEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -758,6 +884,8 @@
             this.panelType3.PerformLayout();
             this.panelType4.ResumeLayout(false);
             this.panelType4.PerformLayout();
+            this.panelLinked.ResumeLayout(false);
+            this.panelLinked.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -829,5 +957,16 @@
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.Label type4Warning;
         private System.Windows.Forms.Label type4ExpectedLength;
+        private System.Windows.Forms.Button linkedDeleteType1;
+        private System.Windows.Forms.Button linkedCreateType1;
+        private System.Windows.Forms.TextBox linkedSlotIndex;
+        private System.Windows.Forms.TextBox linkedBitField;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.Button linkedDeleteType2;
+        private System.Windows.Forms.Button linkedCreateType2;
+        private System.Windows.Forms.Label linkedWarning;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label25;
     }
 }

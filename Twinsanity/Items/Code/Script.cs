@@ -456,6 +456,34 @@ namespace Twinsanity
                 public SupportType1 type1 { get; set; }
                 public SupportType2 type2 { get; set; }
                 public LinkedScript nextLinked { get; set; }
+                public bool isValidBits()
+                {
+                    if (((bitfield & 0x4000) != 0) && type1 == null)
+                    {
+                        return false;
+                    }
+                    if (((bitfield & 0x4000) == 0) && type1 != null)
+                    {
+                        return false;
+                    }
+                    if (((bitfield & 0x8000) != 0) && nextLinked == null)
+                    {
+                        return false;
+                    }
+                    if (((bitfield & 0x8000) == 0) && nextLinked != null)
+                    {
+                        return false;
+                    }
+                    if (((bitfield & 0x1F) != 0) && type2 == null)
+                    {
+                        return false;
+                    }
+                    if (((bitfield & 0x1F) == 0) && type2 != null)
+                    {
+                        return false;
+                    }
+                    return true;
+                }
             }
 
         }

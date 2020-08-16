@@ -647,6 +647,65 @@ namespace TwinsaityEditor
         }
         private void UpdateLinkedPanel()
         {
+            linkedBitField.Text = selectedLinked.bitfield.ToString("X4");
+            linkedSlotIndex.Text = selectedLinked.scriptIndexOrSlot.ToString();
+        }
+        private void linkedBitField_TextChanged(object sender, EventArgs e)
+        {
+            Int16 val = selectedLinked.bitfield;
+            if (Int16.TryParse(((TextBox)sender).Text, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out val))
+            {
+                ((TextBox)sender).BackColor = Color.White;
+                selectedLinked.bitfield = val;
+            }
+            else
+            {
+                ((TextBox)sender).BackColor = Color.Red;
+                return;
+            }
+            if (selectedLinked.isValidBits())
+            {
+                linkedWarning.Visible = false;
+            }
+            else
+            {
+                linkedWarning.Visible = true;
+
+            }
+        }
+
+        private void linkedSlotIndex_TextChanged(object sender, EventArgs e)
+        {
+            Int16 val = selectedLinked.scriptIndexOrSlot;
+            if (Int16.TryParse(((TextBox)sender).Text, out val))
+            {
+                ((TextBox)sender).BackColor = Color.White;
+                selectedLinked.scriptIndexOrSlot = val;
+            }
+            else
+            {
+                ((TextBox)sender).BackColor = Color.Red;
+                return;
+            }
+        }
+
+        private void linkedCreateType1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void linkedDeleteType1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void linkedCreateType2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void linkedDeleteType2_Click(object sender, EventArgs e)
+        {
 
         }
 
@@ -670,5 +729,12 @@ namespace TwinsaityEditor
         {
             UpdatePanels();
         }
+
+        private void panelLinked_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+
     }
 }
