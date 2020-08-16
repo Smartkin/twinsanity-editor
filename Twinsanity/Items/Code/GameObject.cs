@@ -5,6 +5,19 @@ namespace Twinsanity
 {
     public class GameObject : TwinsItem
     {
+        /*
+         * #0: (OnSpawn) 570
+#1: (OnTrigger) 570
+#2: (OnDamage) 578
+#3: (OnTouch) None
+#4: (OnHeadbutt) None
+#5: (OnLand) None
+#6: (OnGettingSpinAttacked) 578
+#7: (OnGettingBodyslamAttacked) None
+#8: (OnGettingSlideAttacked) None
+#9: (OnPhysicsCollision) None
+#10: (Unk10) None
+         */
         private int size;
         public uint UnkBitfield { get; set; }
         public byte[] ScriptSlots { get; set; } = new byte[8]; // Pairs;Scripts;GameObjects;UInt32s;Sounds;00;00;00 (last 3 are potentially a side effect of needing object name's length to be word aligned)

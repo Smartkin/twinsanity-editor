@@ -26,5 +26,38 @@ namespace TwinsaityEditor
         {
 
         }
+
+        private class ListManipulator
+        {
+            public ListManipulator(Object[] list, ListBox listBox, TextBox source)
+            {
+
+            }
+            public void PopulateList()
+            {
+
+            }
+
+            public void MoveUp()
+            {
+
+            }
+            public void MoveDown()
+            {
+
+            }
+            public void Remove()
+            {
+
+            }
+            public void Add()
+            {
+
+            }
+            public void Set()
+            {
+
+            }
+        }
     }
 }
