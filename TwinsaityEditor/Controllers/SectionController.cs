@@ -29,7 +29,8 @@ namespace TwinsaityEditor
                     || item.Type == SectionType.Position
                     || item.Type == SectionType.Path
                     || item.Type == SectionType.Trigger
-                    || item.Type == SectionType.Script)
+                    || item.Type == SectionType.Script
+                    || item.Type == SectionType.Object)
                 {
                     AddMenu("Re-ID by order", Menu_ReIDByOrder);
                     AddMenu("Open editor", Menu_OpenEditor);
