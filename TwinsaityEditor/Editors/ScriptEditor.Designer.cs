@@ -77,11 +77,20 @@
             this.type2AddType4 = new System.Windows.Forms.Button();
             this.type2DeleteType4 = new System.Windows.Forms.Button();
             this.type2BitfieldWarning = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.type3VTable = new System.Windows.Forms.TextBox();
+            this.type3UnkShort = new System.Windows.Forms.TextBox();
+            this.type3X = new System.Windows.Forms.TextBox();
+            this.type3Y = new System.Windows.Forms.TextBox();
+            this.type3Z = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.panelHeader.SuspendLayout();
             this.panelMain.SuspendLayout();
             this.panelType1.SuspendLayout();
             this.panelType2.SuspendLayout();
+            this.panelType3.SuspendLayout();
             this.SuspendLayout();
             // 
             // listBox1
@@ -105,13 +114,13 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.panelType2);
             this.groupBox1.Controls.Add(this.panelType3);
             this.groupBox1.Controls.Add(this.panelType4);
             this.groupBox1.Controls.Add(this.panelLinked);
             this.groupBox1.Controls.Add(this.panelHeader);
             this.groupBox1.Controls.Add(this.panelMain);
             this.groupBox1.Controls.Add(this.panelType1);
+            this.groupBox1.Controls.Add(this.panelType2);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Right;
             this.groupBox1.Location = new System.Drawing.Point(456, 0);
             this.groupBox1.Name = "groupBox1";
@@ -193,6 +202,14 @@
             // 
             // panelType3
             // 
+            this.panelType3.Controls.Add(this.type3Z);
+            this.panelType3.Controls.Add(this.type3Y);
+            this.panelType3.Controls.Add(this.type3X);
+            this.panelType3.Controls.Add(this.type3UnkShort);
+            this.panelType3.Controls.Add(this.type3VTable);
+            this.panelType3.Controls.Add(this.label19);
+            this.panelType3.Controls.Add(this.label18);
+            this.panelType3.Controls.Add(this.label17);
             this.panelType3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelType3.Location = new System.Drawing.Point(3, 16);
             this.panelType3.Name = "panelType3";
@@ -562,6 +579,73 @@
     " not zero - has type3\r\n0x800 not zero - has next type2 (edit Linked Script paren" +
     "t)";
             // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(20, 17);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(70, 13);
+            this.label17.TabIndex = 0;
+            this.label17.Text = "VTableIndex:";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(35, 41);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(55, 13);
+            this.label18.TabIndex = 1;
+            this.label18.Text = "UnkShort:";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(8, 67);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(98, 13);
+            this.label19.TabIndex = 2;
+            this.label19.Text = "Vector3 Parameter:";
+            // 
+            // type3VTable
+            // 
+            this.type3VTable.Location = new System.Drawing.Point(104, 11);
+            this.type3VTable.Name = "type3VTable";
+            this.type3VTable.Size = new System.Drawing.Size(100, 20);
+            this.type3VTable.TabIndex = 3;
+            this.type3VTable.TextChanged += new System.EventHandler(this.type3VTable_TextChanged);
+            // 
+            // type3UnkShort
+            // 
+            this.type3UnkShort.Location = new System.Drawing.Point(104, 38);
+            this.type3UnkShort.Name = "type3UnkShort";
+            this.type3UnkShort.Size = new System.Drawing.Size(100, 20);
+            this.type3UnkShort.TabIndex = 4;
+            this.type3UnkShort.TextChanged += new System.EventHandler(this.type3UnkShort_TextChanged);
+            // 
+            // type3X
+            // 
+            this.type3X.Location = new System.Drawing.Point(19, 86);
+            this.type3X.Name = "type3X";
+            this.type3X.Size = new System.Drawing.Size(75, 20);
+            this.type3X.TabIndex = 5;
+            this.type3X.TextChanged += new System.EventHandler(this.type3X_TextChanged);
+            // 
+            // type3Y
+            // 
+            this.type3Y.Location = new System.Drawing.Point(100, 85);
+            this.type3Y.Name = "type3Y";
+            this.type3Y.Size = new System.Drawing.Size(75, 20);
+            this.type3Y.TabIndex = 6;
+            this.type3Y.TextChanged += new System.EventHandler(this.type3Y_TextChanged);
+            // 
+            // type3Z
+            // 
+            this.type3Z.Location = new System.Drawing.Point(181, 85);
+            this.type3Z.Name = "type3Z";
+            this.type3Z.Size = new System.Drawing.Size(75, 20);
+            this.type3Z.TabIndex = 7;
+            this.type3Z.TextChanged += new System.EventHandler(this.type3Z_TextChanged);
+            // 
             // ScriptEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -582,6 +666,8 @@
             this.panelType1.PerformLayout();
             this.panelType2.ResumeLayout(false);
             this.panelType2.PerformLayout();
+            this.panelType3.ResumeLayout(false);
+            this.panelType3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -637,5 +723,13 @@
         private System.Windows.Forms.TextBox type2SelectedType4Pos;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label type2BitfieldWarning;
+        private System.Windows.Forms.TextBox type3Z;
+        private System.Windows.Forms.TextBox type3Y;
+        private System.Windows.Forms.TextBox type3X;
+        private System.Windows.Forms.TextBox type3UnkShort;
+        private System.Windows.Forms.TextBox type3VTable;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label label17;
     }
 }

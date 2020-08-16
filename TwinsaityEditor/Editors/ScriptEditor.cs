@@ -479,7 +479,85 @@ namespace TwinsaityEditor
         }
         private void UpdateType3Panel()
         {
+            type3VTable.Text = selectedType3.VTableIndex.ToString();
+            type3UnkShort.Text = selectedType3.UnkShort.ToString();
+            type3X.Text = selectedType3.X.ToString(CultureInfo.InvariantCulture);
+            type3Y.Text = selectedType3.Y.ToString(CultureInfo.InvariantCulture);
+            type3Z.Text = selectedType3.Z.ToString(CultureInfo.InvariantCulture);
+        }
+        private void type3VTable_TextChanged(object sender, EventArgs e)
+        {
+            UInt16 val = selectedType3.VTableIndex;
+            if (UInt16.TryParse(((TextBox)sender).Text, out val))
+            {
+                ((TextBox)sender).BackColor = Color.White;
+                selectedType3.VTableIndex = val;
+            }
+            else
+            {
+                ((TextBox)sender).BackColor = Color.Red;
+                return;
+            }
+        }
 
+        private void type3UnkShort_TextChanged(object sender, EventArgs e)
+        {
+            UInt16 val = selectedType3.UnkShort;
+            if (UInt16.TryParse(((TextBox)sender).Text, out val))
+            {
+                ((TextBox)sender).BackColor = Color.White;
+                selectedType3.UnkShort = val;
+            }
+            else
+            {
+                ((TextBox)sender).BackColor = Color.Red;
+                return;
+            }
+        }
+
+        private void type3X_TextChanged(object sender, EventArgs e)
+        {
+            Single val = selectedType3.X;
+            if (Single.TryParse(((TextBox)sender).Text, NumberStyles.Float, CultureInfo.InvariantCulture, out val))
+            {
+                ((TextBox)sender).BackColor = Color.White;
+                selectedType3.X = val;
+            }
+            else
+            {
+                ((TextBox)sender).BackColor = Color.Red;
+                return;
+            }
+        }
+
+        private void type3Y_TextChanged(object sender, EventArgs e)
+        {
+            Single val = selectedType3.Y;
+            if (Single.TryParse(((TextBox)sender).Text, NumberStyles.Float, CultureInfo.InvariantCulture, out val))
+            {
+                ((TextBox)sender).BackColor = Color.White;
+                selectedType3.Y = val;
+            }
+            else
+            {
+                ((TextBox)sender).BackColor = Color.Red;
+                return;
+            }
+        }
+
+        private void type3Z_TextChanged(object sender, EventArgs e)
+        {
+            Single val = selectedType3.Z;
+            if (Single.TryParse(((TextBox)sender).Text, NumberStyles.Float, CultureInfo.InvariantCulture, out val))
+            {
+                ((TextBox)sender).BackColor = Color.White;
+                selectedType3.Z = val;
+            }
+            else
+            {
+                ((TextBox)sender).BackColor = Color.Red;
+                return;
+            }
         }
         private void UpdateType4Panel()
         {

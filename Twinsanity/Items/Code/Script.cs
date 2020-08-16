@@ -248,6 +248,28 @@ namespace Twinsanity
                 public float X { get; set; }
                 public float Y { get; set; }
                 public float Z { get; set; }
+                public UInt16 VTableIndex
+                {
+                    get
+                    {
+                        return (UInt16)(unkInt1 & 0xffff);
+                    }
+                    set
+                    {
+                        unkInt1 = (Int32)(unkInt1 & 0xffff0000) | (value & 0xffff);
+                    }
+                }
+                public UInt16 UnkShort
+                {
+                    get
+                    {
+                        return (UInt16)((unkInt1 & 0xffff0000) >> 16);
+                    }
+                    set
+                    {
+                        unkInt1 = (unkInt1 & 0xffff) | (Int32)((value << 16) & 0xffff0000);
+                    }
+                }
             }
             public class SupportType4
             {
