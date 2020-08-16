@@ -316,7 +316,65 @@ namespace Twinsanity
                 public Byte[] byteArray { get; set; }
                 public SupportType4 nextType4 { get; set; }
 
+                public UInt16 VTableIndex
+                {
+                    get
+                    {
+                        return (UInt16)(internalIndex & 0xffff);
+                    }
+                    set
+                    {
+                        internalIndex = (Int32)(internalIndex & 0xffff0000) | (value & 0xffff);
+                    }
+                }
+                public UInt16 UnkShort
+                {
+                    get
+                    {
+                        return (UInt16)((internalIndex & 0xffff0000) >> 16);
+                    }
+                    set
+                    {
+                        internalIndex = (internalIndex & 0xffff) | (Int32)((value << 16) & 0xffff0000);
+                    }
+                }
 
+                public bool isValidBits()
+                {
+                    if (((internalIndex & 0x1000000) != 0) && nextType4 == null)
+                    {
+                        return false;
+                    }
+                    if (((internalIndex & 0x1000000) == 0) && nextType4 != null)
+                    {
+                        return false;
+                    }
+                    if (byteArray == null && (GetType4Size(internalIndex & 0xffff) > 0))
+                    {
+                        return false;
+                    }
+                    if (byteArray != null && (GetType4Size(internalIndex & 0xffff) == 0))
+                    {
+                        return false;
+                    }
+                    if (byteArray != null && byteArray.Length != GetExpectedSize())
+                    {
+                        return false;
+                    }
+                    return true;
+                }
+                public Int32 GetExpectedSize()
+                {
+                    Int32 sz = GetType4Size(internalIndex & 0xffff);
+                    if (sz - 0xC > 0)
+                    {
+                        return sz - 0xC;
+                    } 
+                    else
+                    {
+                        return 0;
+                    }
+                }
                 static Int32 GetType4Size(Int32 index)
                 {
                     if (index < 0 || index > Type4SizeMapper.Length)

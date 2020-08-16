@@ -561,7 +561,89 @@ namespace TwinsaityEditor
         }
         private void UpdateType4Panel()
         {
+            type4VTableIndex.Text = selectedType4.VTableIndex.ToString();
+            type4BitField.Text = selectedType4.UnkShort.ToString("X4");
+            type4Array.Text = GetTextFromArray(selectedType4.byteArray);
+        }
+        private void type4VTableIndex_TextChanged(object sender, EventArgs e)
+        {
+            UInt16 val = selectedType4.VTableIndex;
+            if (UInt16.TryParse(((TextBox)sender).Text, out val))
+            {
+                ((TextBox)sender).BackColor = Color.White;
+                selectedType4.VTableIndex = val;
+            }
+            else
+            {
+                ((TextBox)sender).BackColor = Color.Red;
+                return;
+            }
+            type4ExpectedLength.Text = $"Expected Length: {selectedType4.GetExpectedSize()}";
+            if (selectedType4.isValidBits())
+            {
+                type4Warning.Visible = false;
+            }
+            else
+            {
+                type4Warning.Visible = true;
 
+            }
+        }
+
+        private void type4BitField_TextChanged(object sender, EventArgs e)
+        {
+            UInt16 val = selectedType4.UnkShort;
+            if (UInt16.TryParse(((TextBox)sender).Text, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out val))
+            {
+                ((TextBox)sender).BackColor = Color.White;
+                selectedType4.UnkShort = val;
+            }
+            else
+            {
+                ((TextBox)sender).BackColor = Color.Red;
+                return;
+            }
+            if (selectedType4.isValidBits())
+            {
+                type4Warning.Visible = false;
+            }
+            else
+            {
+                type4Warning.Visible = true;
+
+            }
+        }
+
+        private void type4Array_TextChanged(object sender, EventArgs e)
+        {
+            String[] strs = ((TextBox)sender).Text.Trim(' ').Split(' ');
+            Byte[] byteArray = new Byte[strs.Length];
+            Int32 i = 0;
+            foreach (String str in strs)
+            {
+                Byte val = 0;
+                if (Byte.TryParse(str, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out val))
+                {
+                    ((TextBox)sender).BackColor = Color.White;
+                    byteArray[i] = val;
+                }
+                else
+                {
+                    ((TextBox)sender).BackColor = Color.Red;
+                    return;
+                }
+                ++i;
+            }
+            selectedType4.byteArray = byteArray;
+            if (selectedType4.isValidBits())
+            {
+                type4Warning.Visible = false;
+            }
+            else
+            {
+                type4Warning.Visible = true;
+
+            }
         }
         private void UpdateLinkedPanel()
         {

@@ -85,12 +85,21 @@
             this.type3X = new System.Windows.Forms.TextBox();
             this.type3Y = new System.Windows.Forms.TextBox();
             this.type3Z = new System.Windows.Forms.TextBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
+            this.type4Array = new System.Windows.Forms.TextBox();
+            this.type4VTableIndex = new System.Windows.Forms.TextBox();
+            this.type4BitField = new System.Windows.Forms.TextBox();
+            this.type4ExpectedLength = new System.Windows.Forms.Label();
+            this.type4Warning = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.panelHeader.SuspendLayout();
             this.panelMain.SuspendLayout();
             this.panelType1.SuspendLayout();
             this.panelType2.SuspendLayout();
             this.panelType3.SuspendLayout();
+            this.panelType4.SuspendLayout();
             this.SuspendLayout();
             // 
             // listBox1
@@ -114,13 +123,13 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.panelType3);
             this.groupBox1.Controls.Add(this.panelType4);
             this.groupBox1.Controls.Add(this.panelLinked);
             this.groupBox1.Controls.Add(this.panelHeader);
             this.groupBox1.Controls.Add(this.panelMain);
             this.groupBox1.Controls.Add(this.panelType1);
             this.groupBox1.Controls.Add(this.panelType2);
+            this.groupBox1.Controls.Add(this.panelType3);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Right;
             this.groupBox1.Location = new System.Drawing.Point(456, 0);
             this.groupBox1.Name = "groupBox1";
@@ -218,6 +227,14 @@
             // 
             // panelType4
             // 
+            this.panelType4.Controls.Add(this.type4Warning);
+            this.panelType4.Controls.Add(this.type4ExpectedLength);
+            this.panelType4.Controls.Add(this.type4BitField);
+            this.panelType4.Controls.Add(this.type4VTableIndex);
+            this.panelType4.Controls.Add(this.type4Array);
+            this.panelType4.Controls.Add(this.label22);
+            this.panelType4.Controls.Add(this.label21);
+            this.panelType4.Controls.Add(this.label20);
             this.panelType4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelType4.Location = new System.Drawing.Point(3, 16);
             this.panelType4.Name = "panelType4";
@@ -646,6 +663,77 @@
             this.type3Z.TabIndex = 7;
             this.type3Z.TextChanged += new System.EventHandler(this.type3Z_TextChanged);
             // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(9, 11);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(73, 13);
+            this.label20.TabIndex = 0;
+            this.label20.Text = "VTable Index:";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(35, 38);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(47, 13);
+            this.label21.TabIndex = 1;
+            this.label21.Text = "Bit Field:";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(32, 64);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(58, 13);
+            this.label22.TabIndex = 2;
+            this.label22.Text = "Byte Array:";
+            // 
+            // type4Array
+            // 
+            this.type4Array.Location = new System.Drawing.Point(10, 89);
+            this.type4Array.Name = "type4Array";
+            this.type4Array.Size = new System.Drawing.Size(287, 20);
+            this.type4Array.TabIndex = 3;
+            this.type4Array.TextChanged += new System.EventHandler(this.type4Array_TextChanged);
+            // 
+            // type4VTableIndex
+            // 
+            this.type4VTableIndex.Location = new System.Drawing.Point(88, 7);
+            this.type4VTableIndex.Name = "type4VTableIndex";
+            this.type4VTableIndex.Size = new System.Drawing.Size(100, 20);
+            this.type4VTableIndex.TabIndex = 4;
+            this.type4VTableIndex.TextChanged += new System.EventHandler(this.type4VTableIndex_TextChanged);
+            // 
+            // type4BitField
+            // 
+            this.type4BitField.Location = new System.Drawing.Point(88, 34);
+            this.type4BitField.Name = "type4BitField";
+            this.type4BitField.Size = new System.Drawing.Size(100, 20);
+            this.type4BitField.TabIndex = 5;
+            this.type4BitField.TextChanged += new System.EventHandler(this.type4BitField_TextChanged);
+            // 
+            // type4ExpectedLength
+            // 
+            this.type4ExpectedLength.AutoSize = true;
+            this.type4ExpectedLength.Location = new System.Drawing.Point(23, 116);
+            this.type4ExpectedLength.Name = "type4ExpectedLength";
+            this.type4ExpectedLength.Size = new System.Drawing.Size(94, 13);
+            this.type4ExpectedLength.TabIndex = 6;
+            this.type4ExpectedLength.Text = "Expected Length: ";
+            // 
+            // type4Warning
+            // 
+            this.type4Warning.AutoSize = true;
+            this.type4Warning.ForeColor = System.Drawing.Color.Red;
+            this.type4Warning.Location = new System.Drawing.Point(23, 135);
+            this.type4Warning.Name = "type4Warning";
+            this.type4Warning.Size = new System.Drawing.Size(251, 39);
+            this.type4Warning.TabIndex = 7;
+            this.type4Warning.Text = "Bit Field value and next Type4 presence in parent\r\ndo not correspond (Bit 0x0100 " +
+    "set) or \r\nBit Array length and Expected Length do not match.\r\n";
+            // 
             // ScriptEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -668,6 +756,8 @@
             this.panelType2.PerformLayout();
             this.panelType3.ResumeLayout(false);
             this.panelType3.PerformLayout();
+            this.panelType4.ResumeLayout(false);
+            this.panelType4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -731,5 +821,13 @@
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.TextBox type4BitField;
+        private System.Windows.Forms.TextBox type4VTableIndex;
+        private System.Windows.Forms.TextBox type4Array;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label type4Warning;
+        private System.Windows.Forms.Label type4ExpectedLength;
     }
 }
