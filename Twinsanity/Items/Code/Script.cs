@@ -185,7 +185,7 @@ namespace Twinsanity
                 {
                     return 4 + (((bitfield & 0x400) != 0) ? 4 : 0)
                         + (((bitfield & 0x200) != 0) ? type3.GetLength() : 0)
-                        + (((bitfield & 0xFF) != 0) ? type4.GetLength() : 0) 
+                        + (((bitfield & 0xFF) != 0) ? type4.GetLength() : 0)
                         + (((bitfield & 0x800) != 0) ? nextType2.GetLength() : 0);
                 }
                 public Int32 bitfield { get; set; }
@@ -307,7 +307,7 @@ namespace Twinsanity
                 }
                 public Int32 GetLength()
                 {
-                    return 4 + ((byteArray != null)?byteArray.Length:0) + (((internalIndex & 0x1000000) != 0)?nextType4.GetLength():0);
+                    return 4 + ((byteArray != null) ? byteArray.Length : 0) + (((internalIndex & 0x1000000) != 0) ? nextType4.GetLength() : 0);
                 }
                 public UInt32 unkUInt { get; set; }
                 public Int32 vTableAddress { get; set; }
@@ -369,7 +369,7 @@ namespace Twinsanity
                     if (sz - 0xC > 0)
                     {
                         return sz - 0xC;
-                    } 
+                    }
                     else
                     {
                         return 0;
@@ -486,22 +486,58 @@ namespace Twinsanity
                 }
             }
 
+            public bool DeleteLinkedScript(Int32 position)
+            {
+                if (position >= LinkedScriptsCount || position < 0)
+                {
+                    return false;
+                }
+                if (position == 0)
+                {
+                    linkedScript1 = linkedScript1.nextLinked;
+                }
+                else
+                {
+                    int pos = 0;
+                    LinkedScript prevPtr = null;
+                    LinkedScript ptr = linkedScript1;
+                    while (pos < position)
+                    {
+                        prevPtr = ptr;
+                        ptr = ptr.nextLinked;
+                        ++pos;
+                    }
+                    prevPtr.nextLinked = ptr.nextLinked;
+                    if (prevPtr.nextLinked == null)
+                    {
+                        prevPtr.bitfield = (Int16)(prevPtr.bitfield & ~0x8000);
+                    }
+                }
+                --LinkedScriptsCount;
+                return true;
+            }
         }
-        public string Name { get {
+        public string Name
+        {
+            get
+            {
                 if (MainScript != null)
                 {
                     return MainScript.name;
-                } else
+                }
+                else
                 {
                     return "Header script";
                 }
             }
-            set {
+            set
+            {
                 if (MainScript != null)
                 {
                     MainScript.name = value;
                 }
-            } }
+            }
+        }
 
         private ushort id;
         private byte mask;
@@ -538,7 +574,7 @@ namespace Twinsanity
             else
             {
                 HeaderScript = new HeaderScriptStruct(reader);
-                
+
             }
             script = reader.ReadBytes(size - (int)(reader.BaseStream.Position - sk));
         }
@@ -547,14 +583,15 @@ namespace Twinsanity
             if (flag != 0)
             {
                 return HeaderScript.GetLength() + 4 + script.Length;
-            } else
+            }
+            else
             {
                 int a = MainScript.GetLength();
                 int b = 4;
                 int c = script.Length;
                 return MainScript.GetLength() + 4 + script.Length;
             }
-            
+
         }
     }
 }
