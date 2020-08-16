@@ -55,9 +55,21 @@
             this.label8 = new System.Windows.Forms.Label();
             this.mainLinkedPos = new System.Windows.Forms.TextBox();
             this.mainDelLinked = new System.Windows.Forms.Button();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.type1Array = new System.Windows.Forms.TextBox();
+            this.type1UnkByte1 = new System.Windows.Forms.TextBox();
+            this.type1UnkByte2 = new System.Windows.Forms.TextBox();
+            this.type1UnkShort = new System.Windows.Forms.TextBox();
+            this.type1UnkInt = new System.Windows.Forms.TextBox();
+            this.type1Warning = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.panelHeader.SuspendLayout();
             this.panelMain.SuspendLayout();
+            this.panelType1.SuspendLayout();
             this.SuspendLayout();
             // 
             // listBox1
@@ -81,13 +93,13 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.panelMain);
             this.groupBox1.Controls.Add(this.panelType1);
             this.groupBox1.Controls.Add(this.panelType2);
             this.groupBox1.Controls.Add(this.panelType3);
             this.groupBox1.Controls.Add(this.panelType4);
             this.groupBox1.Controls.Add(this.panelLinked);
             this.groupBox1.Controls.Add(this.panelHeader);
+            this.groupBox1.Controls.Add(this.panelMain);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Right;
             this.groupBox1.Location = new System.Drawing.Point(456, 0);
             this.groupBox1.Name = "groupBox1";
@@ -131,6 +143,17 @@
             // 
             // panelType1
             // 
+            this.panelType1.Controls.Add(this.type1Warning);
+            this.panelType1.Controls.Add(this.type1UnkInt);
+            this.panelType1.Controls.Add(this.type1UnkShort);
+            this.panelType1.Controls.Add(this.type1UnkByte2);
+            this.panelType1.Controls.Add(this.type1UnkByte1);
+            this.panelType1.Controls.Add(this.type1Array);
+            this.panelType1.Controls.Add(this.label13);
+            this.panelType1.Controls.Add(this.label12);
+            this.panelType1.Controls.Add(this.label11);
+            this.panelType1.Controls.Add(this.label10);
+            this.panelType1.Controls.Add(this.label9);
             this.panelType1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelType1.Location = new System.Drawing.Point(3, 16);
             this.panelType1.Name = "panelType1";
@@ -318,6 +341,101 @@
             this.mainDelLinked.UseVisualStyleBackColor = true;
             this.mainDelLinked.Click += new System.EventHandler(this.mainDelLinked_Click);
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(7, 11);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(57, 13);
+            this.label9.TabIndex = 0;
+            this.label9.Text = "UnkByte1:";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(7, 37);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(57, 13);
+            this.label10.TabIndex = 1;
+            this.label10.Text = "UnkByte2:";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(4, 63);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(63, 13);
+            this.label11.TabIndex = 2;
+            this.label11.Text = "UnkUShort:";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(22, 88);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(42, 13);
+            this.label12.TabIndex = 3;
+            this.label12.Text = "UnkInt:";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(9, 123);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(55, 13);
+            this.label13.TabIndex = 4;
+            this.label13.Text = "ByteArray:";
+            // 
+            // type1Array
+            // 
+            this.type1Array.Location = new System.Drawing.Point(7, 139);
+            this.type1Array.Name = "type1Array";
+            this.type1Array.Size = new System.Drawing.Size(284, 20);
+            this.type1Array.TabIndex = 5;
+            this.type1Array.TextChanged += new System.EventHandler(this.type1Array_TextChanged);
+            // 
+            // type1UnkByte1
+            // 
+            this.type1UnkByte1.Location = new System.Drawing.Point(70, 8);
+            this.type1UnkByte1.Name = "type1UnkByte1";
+            this.type1UnkByte1.Size = new System.Drawing.Size(100, 20);
+            this.type1UnkByte1.TabIndex = 6;
+            this.type1UnkByte1.TextChanged += new System.EventHandler(this.type1UnkByte1_TextChanged);
+            // 
+            // type1UnkByte2
+            // 
+            this.type1UnkByte2.Location = new System.Drawing.Point(70, 34);
+            this.type1UnkByte2.Name = "type1UnkByte2";
+            this.type1UnkByte2.Size = new System.Drawing.Size(100, 20);
+            this.type1UnkByte2.TabIndex = 7;
+            this.type1UnkByte2.TextChanged += new System.EventHandler(this.type1UnkByte2_TextChanged);
+            // 
+            // type1UnkShort
+            // 
+            this.type1UnkShort.Location = new System.Drawing.Point(70, 60);
+            this.type1UnkShort.Name = "type1UnkShort";
+            this.type1UnkShort.Size = new System.Drawing.Size(100, 20);
+            this.type1UnkShort.TabIndex = 8;
+            this.type1UnkShort.TextChanged += new System.EventHandler(this.type1UnkShort_TextChanged);
+            // 
+            // type1UnkInt
+            // 
+            this.type1UnkInt.Location = new System.Drawing.Point(70, 86);
+            this.type1UnkInt.Name = "type1UnkInt";
+            this.type1UnkInt.Size = new System.Drawing.Size(100, 20);
+            this.type1UnkInt.TabIndex = 9;
+            this.type1UnkInt.TextChanged += new System.EventHandler(this.type1UnkInt_TextChanged);
+            // 
+            // type1Warning
+            // 
+            this.type1Warning.AutoSize = true;
+            this.type1Warning.ForeColor = System.Drawing.Color.Red;
+            this.type1Warning.Location = new System.Drawing.Point(10, 171);
+            this.type1Warning.Name = "type1Warning";
+            this.type1Warning.Size = new System.Drawing.Size(254, 26);
+            this.type1Warning.TabIndex = 10;
+            this.type1Warning.Text = "Bytes 1 and 2 do not match with length of ByteArray.\r\nIt must be B1 + 4*B2!";
+            // 
             // ScriptEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -334,6 +452,8 @@
             this.panelHeader.PerformLayout();
             this.panelMain.ResumeLayout(false);
             this.panelMain.PerformLayout();
+            this.panelType1.ResumeLayout(false);
+            this.panelType1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -367,5 +487,16 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox type1UnkInt;
+        private System.Windows.Forms.TextBox type1UnkShort;
+        private System.Windows.Forms.TextBox type1UnkByte2;
+        private System.Windows.Forms.TextBox type1UnkByte1;
+        private System.Windows.Forms.TextBox type1Array;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label type1Warning;
     }
 }

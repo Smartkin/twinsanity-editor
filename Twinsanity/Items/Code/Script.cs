@@ -134,6 +134,10 @@ namespace Twinsanity
                 public UInt16 unkUShort1 { get; set; }
                 public Int32 unkInt1 { get; set; }
                 public Byte[] byteArray { get; set; }
+                public bool isValidArraySize()
+                {
+                    return byteArray.Length == unkByte1 + 4 * unkByte2;
+                }
             }
             public class SupportType2
             {

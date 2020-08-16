@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Globalization;
 using Twinsanity;
 
 namespace TwinsaityEditor
@@ -83,7 +84,10 @@ namespace TwinsaityEditor
         {
             TreeNode node = parent.Nodes.Add($"Linked Script {ptr.scriptIndexOrSlot}");
             node.Tag = ptr;
-            AddType1(node, ptr.type1);
+            if (null != ptr.type1)
+            {
+                AddType1(node, ptr.type1);
+            }
             Script.MainScriptStruct.SupportType2 ptrType2 = ptr.type2;
             while (ptrType2 != null)
             {
@@ -100,7 +104,10 @@ namespace TwinsaityEditor
         {
             TreeNode node = parent.Nodes.Add($"Type 2 Linked Slot: {ptr.linkedScriptListIndex}");
             node.Tag = ptr;
-            AddType3(node, ptr.type3);
+            if (null != ptr.type3)
+            {
+                AddType3(node, ptr.type3);
+            }
             Script.MainScriptStruct.SupportType4 ptrType4 = ptr.type4;
             while (ptrType4 != null)
             {
@@ -282,7 +289,126 @@ namespace TwinsaityEditor
         }
         private void UpdateType1Panel()
         {
+            type1UnkByte1.Text = selectedType1.unkByte1.ToString();
+            type1UnkByte2.Text = selectedType1.unkByte2.ToString();
+            type1UnkShort.Text = selectedType1.unkUShort1.ToString();
+            type1UnkInt.Text = selectedType1.unkInt1.ToString();
+            type1Array.Text = GetTextFromArray(selectedType1.byteArray);
+        }
 
+        private String GetTextFromArray(Byte[] array)
+        {
+            StringBuilder builder = new StringBuilder();
+            foreach (Byte b in array)
+            {
+                builder.Append($"{b:X2} ");
+            }
+            return builder.ToString();
+        }
+        private void type1UnkByte1_TextChanged(object sender, EventArgs e)
+        {
+            Byte val = selectedType1.unkByte1;
+            if (Byte.TryParse(((TextBox)sender).Text, out val))
+            {
+                ((TextBox)sender).BackColor = Color.White;
+                selectedType1.unkByte1 = val;
+            }
+            else
+            {
+                ((TextBox)sender).BackColor = Color.Red;
+            }
+            if (selectedType1.isValidArraySize())
+            {
+                type1Warning.Visible = false;
+            } 
+            else
+            {
+                type1Warning.Visible = true;
+
+            }
+        }
+
+        private void type1UnkByte2_TextChanged(object sender, EventArgs e)
+        {
+            Byte val = selectedType1.unkByte2;
+            if (Byte.TryParse(((TextBox)sender).Text, out val))
+            {
+                ((TextBox)sender).BackColor = Color.White;
+                selectedType1.unkByte2 = val;
+            }
+            else
+            {
+                ((TextBox)sender).BackColor = Color.Red;
+            }
+            if (selectedType1.isValidArraySize())
+            {
+                type1Warning.Visible = false;
+            }
+            else
+            {
+                type1Warning.Visible = true;
+
+            }
+        }
+
+        private void type1UnkShort_TextChanged(object sender, EventArgs e)
+        {
+            UInt16 val = selectedType1.unkUShort1;
+            if (UInt16.TryParse(((TextBox)sender).Text, out val))
+            {
+                ((TextBox)sender).BackColor = Color.White;
+                selectedType1.unkUShort1 = val;
+            }
+            else
+            {
+                ((TextBox)sender).BackColor = Color.Red;
+            }
+        }
+
+        private void type1UnkInt_TextChanged(object sender, EventArgs e)
+        {
+            Int32 val = selectedType1.unkInt1;
+            if (Int32.TryParse(((TextBox)sender).Text, out val))
+            {
+                ((TextBox)sender).BackColor = Color.White;
+                selectedType1.unkInt1 = val;
+            }
+            else
+            {
+                ((TextBox)sender).BackColor = Color.Red;
+            }
+        }
+
+        private void type1Array_TextChanged(object sender, EventArgs e)
+        {
+            String[] strs = ((TextBox)sender).Text.Trim(' ').Split(' ');
+            Byte[] byteArray = new Byte[strs.Length];
+            Int32 i = 0;
+            foreach (String str in strs)
+            {
+                Byte val = 0;
+                if (Byte.TryParse(str, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out val))
+                {
+                    ((TextBox)sender).BackColor = Color.White;
+                    byteArray[i] = val;
+                }
+                else
+                {
+                    ((TextBox)sender).BackColor = Color.Red;
+                    return;
+                }
+                ++i;
+            }
+            selectedType1.byteArray = byteArray;
+            if (selectedType1.isValidArraySize())
+            {
+                type1Warning.Visible = false;
+            }
+            else
+            {
+                type1Warning.Visible = true;
+
+            }
         }
         private void UpdateType2Panel()
         {
