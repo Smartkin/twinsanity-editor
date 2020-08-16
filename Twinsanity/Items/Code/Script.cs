@@ -421,6 +421,14 @@ namespace Twinsanity
             }
             public class LinkedScript
             {
+                public LinkedScript()
+                {
+                    bitfield = 0;
+                    scriptIndexOrSlot = -1;
+                    type1 = null;
+                    type2 = null;
+                    nextLinked = null;
+                }
                 public LinkedScript(BinaryReader reader)
                 {
                     bitfield = reader.ReadInt16();
@@ -514,6 +522,57 @@ namespace Twinsanity
                     }
                 }
                 --LinkedScriptsCount;
+                return true;
+            }
+            public bool AddLinkedScript(Int32 position)
+            {
+                if (position > LinkedScriptsCount || position < 0)
+                {
+                    return false;
+                }
+                if (LinkedScriptsCount == 0)
+                {
+                    linkedScript1 = new LinkedScript();
+                } 
+                else if (position == LinkedScriptsCount)
+                {
+                    LinkedScript ptr = linkedScript1;
+                    while (ptr.nextLinked != null)
+                    {
+                        ptr = ptr.nextLinked;
+                    }
+                    ptr.bitfield = (Int16)(ptr.bitfield | 0x8000);
+                    ptr.nextLinked = new LinkedScript();
+                }
+                else
+                {
+                    int pos = 0;
+                    LinkedScript prevPtr = null;
+                    LinkedScript ptr = linkedScript1;
+                    LinkedScript newLinked = new LinkedScript();
+                    while (pos < position)
+                    {
+                        prevPtr = ptr;
+                        ptr = ptr.nextLinked;
+                        ++pos;
+                    }
+                    if (prevPtr != null)
+                    {
+                        prevPtr.nextLinked = newLinked;
+                        prevPtr.nextLinked.nextLinked = ptr;
+                    }
+                    else
+                    {
+                        newLinked.nextLinked = linkedScript1;
+                        linkedScript1 = newLinked;
+                    }
+                    
+                    if (newLinked.nextLinked != null)
+                    {
+                        newLinked.bitfield = (Int16)(newLinked.bitfield | 0x8000);
+                    }
+                }
+                ++LinkedScriptsCount;
                 return true;
             }
         }

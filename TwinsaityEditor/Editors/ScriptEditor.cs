@@ -287,7 +287,22 @@ namespace TwinsaityEditor
 
         private void mainAddLinked_Click(object sender, EventArgs e)
         {
-
+            Int32 val = 0;
+            if (Int32.TryParse(mainLinkedPos.Text, out val))
+            {
+                if (selectedMainScript.AddLinkedScript(val))
+                {
+                    TreeNode mainNode = scriptTree.SelectedNode;
+                    mainNode.Nodes.Clear();
+                    Script.MainScriptStruct.LinkedScript ptr = selectedMainScript.linkedScript1;
+                    while (ptr != null)
+                    {
+                        AddLinked(mainNode, ptr);
+                        ptr = ptr.nextLinked;
+                    }
+                    UpdateMainPanel();
+                }
+            }
         }
 
         private void mainDelLinked_Click(object sender, EventArgs e)
