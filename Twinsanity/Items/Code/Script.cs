@@ -237,9 +237,135 @@ namespace Twinsanity
                     }
                     return true;
                 }
+                public Byte type4Count
+                {
+                    get
+                    {
+                        return (Byte)(bitfield & 0xFF);
+                    }
+                    set
+                    {
+                        bitfield = (Int32)(bitfield & 0xFFFFFF00) | (value & 0xFF);
+                    }
+                }
+                public bool CreateType3()
+                {
+                    if (type3 == null)
+                    {
+                        type3 = new SupportType3();
+                        bitfield = (Int16)(bitfield | 0x200);
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+
+                }
+                public bool DeleteType3()
+                {
+                    if (type3 != null)
+                    {
+                        type3 = null;
+                        bitfield = (Int16)(bitfield & ~0x200);
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                public bool AddType4(Int32 position)
+                {
+                    if (position > type4Count || position < 0)
+                    {
+                        return false;
+                    }
+                    if (type4Count == 0)
+                    {
+                        type4 = new SupportType4();
+                    }
+                    else if (position == type4Count)
+                    {
+                        SupportType4 ptr = type4;
+                        while (ptr.nextType4 != null)
+                        {
+                            ptr = ptr.nextType4;
+                        }
+                        ptr.internalIndex = (Int16)(ptr.internalIndex | 0x1000000);
+                        ptr.nextType4 = new SupportType4();
+                    }
+                    else
+                    {
+                        int pos = 0;
+                        SupportType4 prevPtr = null;
+                        SupportType4 ptr = type4;
+                        SupportType4 newType2 = new SupportType4();
+                        while (pos < position)
+                        {
+                            prevPtr = ptr;
+                            ptr = ptr.nextType4;
+                            ++pos;
+                        }
+                        if (prevPtr != null)
+                        {
+                            prevPtr.nextType4 = newType2;
+                            prevPtr.nextType4.nextType4 = ptr;
+                        }
+                        else
+                        {
+                            newType2.nextType4 = type4;
+                            type4 = newType2;
+                        }
+
+                        if (newType2.nextType4 != null)
+                        {
+                            newType2.internalIndex = (Int32)(newType2.internalIndex | 0x1000000);
+                        }
+                    }
+                    ++type4Count;
+                    return true;
+                }
+                public bool DeleteType4(Int32 position)
+                {
+                    if (position >= type4Count || position < 0)
+                    {
+                        return false;
+                    }
+                    if (position == 0)
+                    {
+                        type4 = type4.nextType4;
+                    }
+                    else
+                    {
+                        int pos = 0;
+                        SupportType4 prevPtr = null;
+                        SupportType4 ptr = type4;
+                        while (pos < position)
+                        {
+                            prevPtr = ptr;
+                            ptr = ptr.nextType4;
+                            ++pos;
+                        }
+                        prevPtr.nextType4 = ptr.nextType4;
+                        if (prevPtr.nextType4 == null)
+                        {
+                            prevPtr.internalIndex = (Int32)(prevPtr.internalIndex & ~0x1000000);
+                        }
+                    }
+                    --type4Count;
+                    return true;
+                }
             }
             public class SupportType3
             {
+                public SupportType3()
+                {
+                    unkInt1 = 0;
+                    X = 0.0f;
+                    Y = 0.0f;
+                    Z = 0.0f;
+                }
                 public SupportType3(BinaryReader reader)
                 {
                     unkInt1 = reader.ReadInt32();
@@ -289,6 +415,11 @@ namespace Twinsanity
             }
             public class SupportType4
             {
+                public SupportType4()
+                {
+                    internalIndex = 0;
+                    byteArray = new byte[0];
+                }
                 public SupportType4(BinaryReader reader)
                 {
                     internalIndex = reader.ReadInt32();
@@ -296,6 +427,10 @@ namespace Twinsanity
                     if (length - 0xC > 0x0)
                     {
                         byteArray = reader.ReadBytes(length - 0xC);
+                    } 
+                    else
+                    {
+                        byteArray = new Byte[0];
                     }
                     if ((internalIndex & 0x1000000) != 0)
                     {

@@ -145,14 +145,14 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.panelLinked);
-            this.groupBox1.Controls.Add(this.panelHeader);
-            this.groupBox1.Controls.Add(this.panelMain);
-            this.groupBox1.Controls.Add(this.panelType1);
             this.groupBox1.Controls.Add(this.panelType2);
             this.groupBox1.Controls.Add(this.panelType3);
             this.groupBox1.Controls.Add(this.panelType4);
             this.groupBox1.Controls.Add(this.panelGeneral);
+            this.groupBox1.Controls.Add(this.panelLinked);
+            this.groupBox1.Controls.Add(this.panelHeader);
+            this.groupBox1.Controls.Add(this.panelMain);
+            this.groupBox1.Controls.Add(this.panelType1);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Right;
             this.groupBox1.Location = new System.Drawing.Point(588, 0);
             this.groupBox1.Name = "groupBox1";

@@ -418,25 +418,32 @@ namespace TwinsaityEditor
 
         private void type1Array_TextChanged(object sender, EventArgs e)
         {
-            String[] strs = ((TextBox)sender).Text.Trim(' ').Split(' ');
-            Byte[] byteArray = new Byte[strs.Length];
-            Int32 i = 0;
-            foreach (String str in strs)
+            if (!String.IsNullOrWhiteSpace(((TextBox)sender).Text))
             {
-                Byte val = 0;
-                if (Byte.TryParse(str, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out val))
+                String[] strs = ((TextBox)sender).Text.Trim(' ').Split(' ');
+                Byte[] byteArray = new Byte[strs.Length];
+                Int32 i = 0;
+                foreach (String str in strs)
                 {
-                    ((TextBox)sender).BackColor = Color.White;
-                    byteArray[i] = val;
+                    Byte val = 0;
+                    if (Byte.TryParse(str, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out val))
+                    {
+                        ((TextBox)sender).BackColor = Color.White;
+                        byteArray[i] = val;
+                    }
+                    else
+                    {
+                        ((TextBox)sender).BackColor = Color.Red;
+                        return;
+                    }
+                    ++i;
                 }
-                else
-                {
-                    ((TextBox)sender).BackColor = Color.Red;
-                    return;
-                }
-                ++i;
+                selectedType1.byteArray = byteArray;
             }
-            selectedType1.byteArray = byteArray;
+            else
+            {
+                selectedType1.byteArray = new byte[0];
+            }
             if (selectedType1.isValidArraySize())
             {
                 type1Warning.Visible = false;
@@ -492,12 +499,42 @@ namespace TwinsaityEditor
 
         private void type2CreateType3_Click(object sender, EventArgs e)
         {
-
+            if (selectedType2.CreateType3())
+            {
+                TreeNode node = scriptTree.SelectedNode;
+                node.Nodes.Clear();
+                if (selectedType2.type3 != null)
+                {
+                    AddType3(node, selectedType2.type3);
+                }
+                Script.MainScriptStruct.SupportType4 ptr = selectedType2.type4;
+                while (ptr != null)
+                {
+                    AddType4(node, ptr);
+                    ptr = ptr.nextType4;
+                }
+                UpdateType2Panel();
+            }
         }
 
         private void type2DeleteType3_Click(object sender, EventArgs e)
         {
-
+            if (selectedType2.DeleteType3())
+            {
+                TreeNode node = scriptTree.SelectedNode;
+                node.Nodes.Clear();
+                if (selectedType2.type3 != null)
+                {
+                    AddType3(node, selectedType2.type3);
+                }
+                Script.MainScriptStruct.SupportType4 ptr = selectedType2.type4;
+                while (ptr != null)
+                {
+                    AddType4(node, ptr);
+                    ptr = ptr.nextType4;
+                }
+                UpdateType2Panel();
+            }
         }
 
         private void type2SelectedType4Pos_TextChanged(object sender, EventArgs e)
@@ -507,12 +544,50 @@ namespace TwinsaityEditor
 
         private void type2AddType4_Click(object sender, EventArgs e)
         {
-
+            Int32 val = 0;
+            if (Int32.TryParse(type2SelectedType4Pos.Text, out val))
+            {
+                if (selectedType2.AddType4(val))
+                {
+                    TreeNode node = scriptTree.SelectedNode;
+                    node.Nodes.Clear();
+                    if (selectedType2.type3 != null)
+                    {
+                        AddType3(node, selectedType2.type3);
+                    }
+                    Script.MainScriptStruct.SupportType4 ptr = selectedType2.type4;
+                    while (ptr != null)
+                    {
+                        AddType4(node, ptr);
+                        ptr = ptr.nextType4;
+                    }
+                    UpdateType2Panel();
+                }
+            }
         }
 
         private void type2DeleteType4_Click(object sender, EventArgs e)
         {
-
+            Int32 val = 0;
+            if (Int32.TryParse(type2SelectedType4Pos.Text, out val))
+            {
+                if (selectedType2.DeleteType4(val))
+                {
+                    TreeNode node = scriptTree.SelectedNode;
+                    node.Nodes.Clear();
+                    if (selectedType2.type3 != null)
+                    {
+                        AddType3(node, selectedType2.type3);
+                    }
+                    Script.MainScriptStruct.SupportType4 ptr = selectedType2.type4;
+                    while (ptr != null)
+                    {
+                        AddType4(node, ptr);
+                        ptr = ptr.nextType4;
+                    }
+                    UpdateType2Panel();
+                }
+            }
         }
         private void UpdateType3Panel()
         {
@@ -653,25 +728,33 @@ namespace TwinsaityEditor
 
         private void type4Array_TextChanged(object sender, EventArgs e)
         {
-            String[] strs = ((TextBox)sender).Text.Trim(' ').Split(' ');
-            Byte[] byteArray = new Byte[strs.Length];
-            Int32 i = 0;
-            foreach (String str in strs)
+            if (!String.IsNullOrWhiteSpace(((TextBox)sender).Text))
             {
-                Byte val = 0;
-                if (Byte.TryParse(str, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out val))
+                String[] strs = ((TextBox)sender).Text.Trim(' ').Split(' ');
+                Byte[] byteArray = new Byte[strs.Length];
+                Int32 i = 0;
+                foreach (String str in strs)
                 {
-                    ((TextBox)sender).BackColor = Color.White;
-                    byteArray[i] = val;
+                    Byte val = 0;
+                    if (Byte.TryParse(str, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out val))
+                    {
+                        ((TextBox)sender).BackColor = Color.White;
+                        byteArray[i] = val;
+                    }
+                    else
+                    {
+                        ((TextBox)sender).BackColor = Color.Red;
+                        return;
+                    }
+                    ++i;
                 }
-                else
-                {
-                    ((TextBox)sender).BackColor = Color.Red;
-                    return;
-                }
-                ++i;
+                selectedType4.byteArray = byteArray;
+            } 
+            else
+            {
+                selectedType4.byteArray = new byte[0];
             }
-            selectedType4.byteArray = byteArray;
+            
             if (selectedType4.isValidBits())
             {
                 type4Warning.Visible = false;
@@ -707,7 +790,6 @@ namespace TwinsaityEditor
             else
             {
                 linkedWarning.Visible = true;
-
             }
         }
 
@@ -816,6 +898,14 @@ namespace TwinsaityEditor
         private void UpdateGeneralPanel()
         {
             generalArray.Text = GetTextFromArray(script.script);
+            if (script.script.Length == 0)
+            {
+                generalWarning.Visible = false;
+            }
+            else
+            {
+                generalWarning.Visible = true;
+            }
         }
         private void generalArray_TextChanged(object sender, EventArgs e)
         {
@@ -852,7 +942,6 @@ namespace TwinsaityEditor
             else
             {
                 generalWarning.Visible = true;
-
             }
         }
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
