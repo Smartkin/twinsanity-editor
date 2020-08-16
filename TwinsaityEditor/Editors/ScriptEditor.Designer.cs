@@ -32,7 +32,7 @@
             this.scriptTree = new System.Windows.Forms.TreeView();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.panelLinked = new System.Windows.Forms.Panel();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.linkedType2Pos = new System.Windows.Forms.TextBox();
             this.label25 = new System.Windows.Forms.Label();
             this.linkedWarning = new System.Windows.Forms.Label();
             this.linkedDeleteType2 = new System.Windows.Forms.Button();
@@ -145,14 +145,14 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.panelLinked);
+            this.groupBox1.Controls.Add(this.panelHeader);
             this.groupBox1.Controls.Add(this.panelMain);
             this.groupBox1.Controls.Add(this.panelType1);
             this.groupBox1.Controls.Add(this.panelType2);
             this.groupBox1.Controls.Add(this.panelType3);
             this.groupBox1.Controls.Add(this.panelType4);
             this.groupBox1.Controls.Add(this.panelGeneral);
-            this.groupBox1.Controls.Add(this.panelLinked);
-            this.groupBox1.Controls.Add(this.panelHeader);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Right;
             this.groupBox1.Location = new System.Drawing.Point(588, 0);
             this.groupBox1.Name = "groupBox1";
@@ -164,7 +164,7 @@
             // panelLinked
             // 
             this.panelLinked.Controls.Add(this.label30);
-            this.panelLinked.Controls.Add(this.textBox1);
+            this.panelLinked.Controls.Add(this.linkedType2Pos);
             this.panelLinked.Controls.Add(this.label25);
             this.panelLinked.Controls.Add(this.linkedWarning);
             this.panelLinked.Controls.Add(this.linkedDeleteType2);
@@ -182,12 +182,12 @@
             this.panelLinked.TabIndex = 0;
             this.panelLinked.Paint += new System.Windows.Forms.PaintEventHandler(this.panelLinked_Paint);
             // 
-            // textBox1
+            // linkedType2Pos
             // 
-            this.textBox1.Location = new System.Drawing.Point(97, 118);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 12;
+            this.linkedType2Pos.Location = new System.Drawing.Point(97, 118);
+            this.linkedType2Pos.Name = "linkedType2Pos";
+            this.linkedType2Pos.Size = new System.Drawing.Size(100, 20);
+            this.linkedType2Pos.TabIndex = 12;
             // 
             // label25
             // 
@@ -1068,7 +1068,7 @@
         private System.Windows.Forms.Button linkedDeleteType2;
         private System.Windows.Forms.Button linkedCreateType2;
         private System.Windows.Forms.Label linkedWarning;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox linkedType2Pos;
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.Label label26;

@@ -728,22 +728,90 @@ namespace TwinsaityEditor
 
         private void linkedCreateType1_Click(object sender, EventArgs e)
         {
-
+            if (selectedLinked.CreateType1())
+            {
+                TreeNode node = scriptTree.SelectedNode;
+                node.Nodes.Clear();
+                if (selectedLinked.type1 != null)
+                {
+                    AddType1(node, selectedLinked.type1);
+                }
+                Script.MainScriptStruct.SupportType2 ptr = selectedLinked.type2;
+                while (ptr != null)
+                {
+                    AddType2(node, ptr);
+                    ptr = ptr.nextType2;
+                }
+                UpdateLinkedPanel();
+            }
         }
 
         private void linkedDeleteType1_Click(object sender, EventArgs e)
         {
-
+            if (selectedLinked.DeleteType1())
+            {
+                TreeNode node = scriptTree.SelectedNode;
+                node.Nodes.Clear();
+                if (selectedLinked.type1 != null)
+                {
+                    AddType1(node, selectedLinked.type1);
+                }
+                Script.MainScriptStruct.SupportType2 ptr = selectedLinked.type2;
+                while (ptr != null)
+                {
+                    AddType2(node, ptr);
+                    ptr = ptr.nextType2;
+                }
+                UpdateLinkedPanel();
+            }
         }
 
         private void linkedCreateType2_Click(object sender, EventArgs e)
         {
-
+            Int32 val = 0;
+            if (Int32.TryParse(linkedType2Pos.Text, out val))
+            {
+                if (selectedLinked.AddType2(val))
+                {
+                    TreeNode node = scriptTree.SelectedNode;
+                    node.Nodes.Clear();
+                    if (selectedLinked.type1 != null)
+                    {
+                        AddType1(node, selectedLinked.type1);
+                    }
+                    Script.MainScriptStruct.SupportType2 ptr = selectedLinked.type2;
+                    while (ptr != null)
+                    {
+                        AddType2(node, ptr);
+                        ptr = ptr.nextType2;
+                    }
+                    UpdateLinkedPanel();
+                }
+            }
         }
 
         private void linkedDeleteType2_Click(object sender, EventArgs e)
         {
-
+            Int32 val = 0;
+            if (Int32.TryParse(linkedType2Pos.Text, out val))
+            {
+                if (selectedLinked.DeleteType2(val))
+                {
+                    TreeNode node = scriptTree.SelectedNode;
+                    node.Nodes.Clear();
+                    if (selectedLinked.type1 != null)
+                    {
+                        AddType1(node, selectedLinked.type1);
+                    }
+                    Script.MainScriptStruct.SupportType2 ptr = selectedLinked.type2;
+                    while (ptr != null)
+                    {
+                        AddType2(node, ptr);
+                        ptr = ptr.nextType2;
+                    }
+                    UpdateLinkedPanel();
+                }
+            }
         }
         private void UpdateGeneralPanel()
         {

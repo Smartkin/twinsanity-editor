@@ -108,6 +108,14 @@ namespace Twinsanity
 
             public class SupportType1
             {
+                public SupportType1()
+                {
+                    unkByte1 = 0;
+                    unkByte2 = 0;
+                    unkUShort1 = 0;
+                    unkInt1 = 0;
+                    byteArray = new byte[0];
+                }
                 public SupportType1(BinaryReader reader)
                 {
                     unkByte1 = reader.ReadByte();
@@ -141,6 +149,14 @@ namespace Twinsanity
             }
             public class SupportType2
             {
+                public SupportType2()
+                {
+                    bitfield = 0;
+                    linkedScriptListIndex = 0;
+                    type3 = null;
+                    type4 = null;
+                    nextType2 = null;
+                }
                 public SupportType2(BinaryReader reader)
                 {
                     bitfield = reader.ReadInt32();
@@ -211,11 +227,11 @@ namespace Twinsanity
                     {
                         return false;
                     }
-                    if (((bitfield & 0x800) == 0) && (type4 != null))
+                    if (((bitfield & 0x800) == 0) && (nextType2 != null))
                     {
                         return false;
                     }
-                    if (((bitfield & 0x800) != 0) && (type4 == null))
+                    if (((bitfield & 0x800) != 0) && (nextType2 == null))
                     {
                         return false;
                     }
@@ -416,8 +432,6 @@ namespace Twinsanity
                         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, };
-
-
             }
             public class LinkedScript
             {
@@ -428,6 +442,7 @@ namespace Twinsanity
                     type1 = null;
                     type2 = null;
                     nextLinked = null;
+                    type2Count = 0;
                 }
                 public LinkedScript(BinaryReader reader)
                 {
@@ -460,6 +475,16 @@ namespace Twinsanity
                     return 4 + (((bitfield & 0x4000) != 0) ? type1.GetLength() : 0) + (((bitfield & 0x8000) != 0) ? nextLinked.GetLength() : 0);
                 }
                 public Int16 bitfield { get; set; }
+                private Int16 type2Count {
+                    get
+                    {
+                        return (Int16)(((UInt16)bitfield) & 0x1F);
+                    }
+                    set
+                    {
+                        bitfield = (Int16)((((UInt16)bitfield) & 0xFFE0) | (value & 0x1F));
+                    }
+                }
                 public Int16 scriptIndexOrSlot { get; set; }
                 public SupportType1 type1 { get; set; }
                 public SupportType2 type2 { get; set; }
@@ -490,6 +515,114 @@ namespace Twinsanity
                     {
                         return false;
                     }
+                    return true;
+                }
+                public bool CreateType1()
+                {
+                    if (type1 == null)
+                    {
+                        type1 = new SupportType1();
+                        bitfield = (Int16)(bitfield | 0x4000);
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+
+                }
+                public bool DeleteType1()
+                {
+                    if (type1 != null)
+                    {
+                        type1 = null;
+                        bitfield = (Int16)(bitfield & ~0x4000);
+                        return true;
+                    } 
+                    else
+                    {
+                        return false;
+                    }
+                }
+                public bool AddType2(Int32 position)
+                {
+                    if (position > type2Count || position < 0)
+                    {
+                        return false;
+                    }
+                    if (type2Count == 0)
+                    {
+                        type2 = new SupportType2();
+                    }
+                    else if (position == type2Count)
+                    {
+                        SupportType2 ptr = type2;
+                        while (ptr.nextType2 != null)
+                        {
+                            ptr = ptr.nextType2;
+                        }
+                        ptr.bitfield = (Int16)(ptr.bitfield | 0x800);
+                        ptr.nextType2 = new SupportType2();
+                    }
+                    else
+                    {
+                        int pos = 0;
+                        SupportType2 prevPtr = null;
+                        SupportType2 ptr = type2;
+                        SupportType2 newType2 = new SupportType2();
+                        while (pos < position)
+                        {
+                            prevPtr = ptr;
+                            ptr = ptr.nextType2;
+                            ++pos;
+                        }
+                        if (prevPtr != null)
+                        {
+                            prevPtr.nextType2 = newType2;
+                            prevPtr.nextType2.nextType2 = ptr;
+                        }
+                        else
+                        {
+                            newType2.nextType2 = type2;
+                            type2 = newType2;
+                        }
+
+                        if (newType2.nextType2 != null)
+                        {
+                            newType2.bitfield = (Int32)(newType2.bitfield | 0x800);
+                        }
+                    }
+                    ++type2Count;
+                    return true;
+                }
+                public bool DeleteType2(Int32 position)
+                {
+                    if (position >= type2Count || position < 0)
+                    {
+                        return false;
+                    }
+                    if (position == 0)
+                    {
+                        type2 = type2.nextType2;
+                    }
+                    else
+                    {
+                        int pos = 0;
+                        SupportType2 prevPtr = null;
+                        SupportType2 ptr = type2;
+                        while (pos < position)
+                        {
+                            prevPtr = ptr;
+                            ptr = ptr.nextType2;
+                            ++pos;
+                        }
+                        prevPtr.nextType2 = ptr.nextType2;
+                        if (prevPtr.nextType2 == null)
+                        {
+                            prevPtr.bitfield = (Int32)(prevPtr.bitfield & ~0x800);
+                        }
+                    }
+                    --type2Count;
                     return true;
                 }
             }
