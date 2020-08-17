@@ -8,8 +8,19 @@ namespace Twinsanity
 {
     public class Script : TwinsItem
     {
+        public  Script() {
+            script = new byte[0];
+        }
         public class HeaderScriptStruct
         {
+            public HeaderScriptStruct(Int32 id)
+            {
+                unkIntPairs = 1;
+                pairs = new UnkIntPairs[1];
+                pairs[0] = new UnkIntPairs();
+                pairs[0].mainScriptIndex = id;
+                pairs[0].unkInt2 = 4294922800;
+            }
             public HeaderScriptStruct(BinaryReader reader)
             {
                 unkIntPairs = reader.ReadUInt32();
@@ -50,21 +61,28 @@ namespace Twinsanity
 
         public class MainScriptStruct
         {
+            public MainScriptStruct()
+            {
+
+            }
             public MainScriptStruct(BinaryReader reader)
             {
                 int len = reader.ReadInt32();
                 name = new string(reader.ReadChars(len));
                 LinkedScriptsCount = reader.ReadInt32();
                 unkInt2 = reader.ReadInt32();
-                linkedScript1 = new LinkedScript(reader);
-                LinkedScript ptr = linkedScript1;
-                while (null != ptr)
+                if (LinkedScriptsCount > 0)
                 {
-                    if ((ptr.bitfield & 0x1F) != 0)
+                    linkedScript1 = new LinkedScript(reader);
+                    LinkedScript ptr = linkedScript1;
+                    while (null != ptr)
                     {
-                        ptr.type2 = new SupportType2(reader);
+                        if ((ptr.bitfield & 0x1F) != 0)
+                        {
+                            ptr.type2 = new SupportType2(reader);
+                        }
+                        ptr = ptr.nextLinked;
                     }
-                    ptr = ptr.nextLinked;
                 }
             }
             public void Write(BinaryWriter writer)
@@ -73,21 +91,24 @@ namespace Twinsanity
                 writer.Write(name.ToCharArray());
                 writer.Write(LinkedScriptsCount);
                 writer.Write(unkInt2);
-                linkedScript1.Write(writer);
-                LinkedScript ptr = linkedScript1;
-                while (ptr != null)
+                if (LinkedScriptsCount > 0)
                 {
-                    if (null != ptr.type2)
+                    linkedScript1.Write(writer);
+                    LinkedScript ptr = linkedScript1;
+                    while (ptr != null)
                     {
-                        ptr.type2.Write(writer);
+                        if (null != ptr.type2)
+                        {
+                            ptr.type2.Write(writer);
+                        }
+                        ptr = ptr.nextLinked;
                     }
-                    ptr = ptr.nextLinked;
                 }
             }
             public Int32 GetLength()
             {
                 Int32 headerSize = 4 + name.Length + 4 + 4;
-                Int32 linkedSize = linkedScript1.GetLength();
+                Int32 linkedSize = ((linkedScript1 != null)?linkedScript1.GetLength():0);
                 Int32 type2Size = 0;
                 LinkedScript ptr = linkedScript1;
                 while (ptr != null)
@@ -868,7 +889,7 @@ namespace Twinsanity
 
         private ushort id;
         private byte mask;
-        private byte flag;
+        public byte flag;
         public HeaderScriptStruct HeaderScript { get; set; }
         public MainScriptStruct MainScript { get; set; }
         public byte[] script;
