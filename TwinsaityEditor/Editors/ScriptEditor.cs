@@ -1055,7 +1055,7 @@ namespace TwinsaityEditor
         private void createScriptToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ushort maxid = (ushort)controller.Data.RecordIDs.Select(p => p.Key).Max();
-            ushort id1 = Math.Max((ushort)(32 * 1024), maxid);
+            ushort id1 = Math.Max((ushort)(8192), maxid);
             ++id1;
             ushort id2 = id1;
             ++id2;

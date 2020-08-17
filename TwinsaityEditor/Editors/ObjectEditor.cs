@@ -202,7 +202,7 @@ namespace TwinsaityEditor
         private void createObjectToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ushort maxid = (ushort)controller.Data.RecordIDs.Select(p => p.Key).Max();
-            ushort id = Math.Max((ushort)(32 * 1024), maxid);
+            ushort id = Math.Max((ushort)(8192), maxid);
             ++id;
             GameObject newGameObject = new GameObject();
             newGameObject.ID = id;
@@ -221,7 +221,7 @@ namespace TwinsaityEditor
             if (gameObject != null)
             {
                 ushort maxid = (ushort)controller.Data.RecordIDs.Select(p => p.Key).Max();
-                ushort id = Math.Max((ushort)(32 * 1024), maxid);
+                ushort id = Math.Max((ushort)(8192), maxid);
                 ++id;
                 GameObject newGameObject = new GameObject();
                 using (MemoryStream stream = new MemoryStream())
