@@ -209,6 +209,12 @@
     <Compile Include="Editors\InstanceEditor.Designer.cs">
       <DependentUpon>InstanceEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Editors\ObjectEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\ObjectEditor.Designer.cs">
+      <DependentUpon>ObjectEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Editors\ScriptEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -254,6 +260,7 @@
     <Compile Include="TwinsanityEditor.cs" />
     <Compile Include="Types.cs" />
     <Compile Include="Utils\ControlExt.cs" />
+    <Compile Include="Utils\DataManipulators.cs" />
     <Compile Include="Utils\DictUtils.cs" />
     <Compile Include="Utils\MatrixWrapper.cs" />
     <Compile Include="Utils\MiscUtils.cs" />
@@ -320,6 +327,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\InstanceEditor.resx">
       <DependentUpon>InstanceEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\ObjectEditor.resx">
+      <DependentUpon>ObjectEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\ScriptEditor.resx">
       <DependentUpon>ScriptEditor.cs</DependentUpon>

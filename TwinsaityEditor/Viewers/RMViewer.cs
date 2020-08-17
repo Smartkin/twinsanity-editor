@@ -768,13 +768,13 @@ namespace TwinsaityEditor
                                 {
                                     if (gameObject.ID == ins.ObjectID)
                                     {
-                                        if (gameObject.OGIs.Length > 0 && gameObject.OGIs[0] != 65535)
+                                        if (gameObject.OGIs.Count > 0 && gameObject.OGIs[0] != 65535)
                                         {
                                             if (ins.UnkI323[0] != 0)
                                             {
-                                                if (gameObject.OGIs.Length > ins.UnkI323[0] && gameObject.OGIs[ins.UnkI323[0]] != 65535)
+                                                if (gameObject.OGIs.Count > ins.UnkI323[0] && gameObject.OGIs[(int)ins.UnkI323[0]] != 65535)
                                                 {
-                                                    TargetGI = gameObject.OGIs[ins.UnkI323[0]];
+                                                    TargetGI = gameObject.OGIs[(int)ins.UnkI323[0]];
                                                 }
                                                 else
                                                 {
@@ -798,7 +798,7 @@ namespace TwinsaityEditor
                                         {
                                             if (gameObject.ID == ins.ObjectID)
                                             {
-                                                if (gameObject.OGIs.Length > 0 && gameObject.OGIs[0] != 65535)
+                                                if (gameObject.OGIs.Count > 0 && gameObject.OGIs[0] != 65535)
                                                 {
                                                     TargetGI = gameObject.OGIs[0];
                                                 }

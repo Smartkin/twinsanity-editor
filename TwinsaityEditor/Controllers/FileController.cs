@@ -24,6 +24,7 @@ namespace TwinsaityEditor
         //Editors
         private Form editChunkLinks;
         private Form editScripts;
+        private Form editObjects;
         private readonly Form[] editInstances = new Form[8], editPositions = new Form[8], editPaths = new Form[8], editTriggers = new Form[8];
 
         //Viewers
@@ -142,6 +143,8 @@ namespace TwinsaityEditor
                 OpenEditor(ref editTriggers[((TriggerController)c).Data.Parent.Parent.ID], Editors.Trigger, (Controller)c.Node.Parent.Tag);
             else if (c is ScriptController)
                 OpenEditor(ref editScripts, Editors.Script, (Controller)c.Node.Parent.Tag);
+            else if (c is ObjectController)
+                OpenEditor(ref editObjects, Editors.Object, (Controller)c.Node.Parent.Tag);
             else if (c is SectionController s)
             {
                 if (s.Data.Type == SectionType.ObjectInstance)
@@ -154,6 +157,8 @@ namespace TwinsaityEditor
                     OpenEditor(ref editTriggers[s.Data.Parent.ID], Editors.Trigger, c);
                 else if (s.Data.Type == SectionType.Script)
                     OpenEditor(ref editScripts, Editors.Script, c);
+                else if (s.Data.Type == SectionType.Object)
+                    OpenEditor(ref editObjects, Editors.Object, c);
             }
         }
 
@@ -175,6 +180,7 @@ namespace TwinsaityEditor
                     case Editors.Instance: editor_var = new InstanceEditor((SectionController)cont) { Tag = TopForm }; break;
                     case Editors.Trigger: editor_var = new TriggerEditor((SectionController)cont) { Tag = TopForm }; break;
                     case Editors.Script: editor_var = new ScriptEditor((SectionController)cont) { Tag = TopForm }; break;
+                    case Editors.Object: editor_var = new ObjectEditor((SectionController)cont) { Tag = TopForm }; break;
                 }
                 editor_var.Show();
             }

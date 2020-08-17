@@ -107,7 +107,7 @@ namespace TwinsaityEditor
                 else
                 {
                     Name += $" - Script {ptr.scriptIndexOrSlot}";
-                } 
+                }
             }
             TreeNode node = parent.Nodes.Add(Name);
             node.Tag = ptr;
@@ -290,7 +290,7 @@ namespace TwinsaityEditor
         {
             selectedMainScript.name = ((TextBox)sender).Text;
             scriptTree.TopNode.Text = selectedMainScript.name;
-            //listBox1.Items[listBox1.SelectedIndex] = GenTextForList(script); Fuck this shit for being unstable piss that destroys my will to live
+            //scriptListBox.Items[scriptListBox.SelectedIndex] = GenTextForList(script); Fuck this shit for being unstable piss that destroys my will to live
         }
 
         private void mainUnk_TextChanged(object sender, EventArgs e)
@@ -776,12 +776,12 @@ namespace TwinsaityEditor
                     ++i;
                 }
                 selectedType4.byteArray = byteArray;
-            } 
+            }
             else
             {
                 selectedType4.byteArray = new byte[0];
             }
-            
+
             if (selectedType4.isValidBits())
             {
                 type4Warning.Visible = false;
@@ -924,6 +924,7 @@ namespace TwinsaityEditor
         }
         private void UpdateGeneralPanel()
         {
+            generalId.Text = script.ID.ToString();
             generalArray.Text = GetTextFromArray(script.script);
             if (script.script.Length == 0)
             {
@@ -969,6 +970,20 @@ namespace TwinsaityEditor
             else
             {
                 generalWarning.Visible = true;
+            }
+        }
+        private void generalId_TextChanged(object sender, EventArgs e)
+        {
+            UInt32 val = 0;
+            if (UInt32.TryParse(((TextBox)sender).Text, out val))
+            {
+                ((TextBox)sender).BackColor = Color.White;
+                script.ID = val;
+            }
+            else
+            {
+                ((TextBox)sender).BackColor = Color.Red;
+                return;
             }
         }
         private void scriptListBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -1021,6 +1036,58 @@ namespace TwinsaityEditor
                     };
                     break;
             }
+        }
+
+        private void deleteScriptToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var sel_i = scriptListBox.SelectedIndex;
+            if (sel_i == -1)
+                return;
+            controller.RemoveItem(script.ID);
+            scriptListBox.BeginUpdate();
+            scriptListBox.Items.RemoveAt(sel_i);
+            if (sel_i >= scriptListBox.Items.Count) sel_i = scriptListBox.Items.Count - 1;
+            scriptListBox.SelectedIndex = sel_i;
+            scriptListBox.EndUpdate();
+            controller.UpdateTextBox();
+        }
+
+        private void createScriptToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ushort maxid = (ushort)controller.Data.RecordIDs.Select(p => p.Key).Max();
+            ushort id1 = Math.Max((ushort)(32 * 1024), maxid);
+            ++id1;
+            ushort id2 = id1;
+            ++id2;
+            Script newScriptHeader = new Script();
+            newScriptHeader.HeaderScript = new Script.HeaderScriptStruct((int)id2);
+            newScriptHeader.ID = id1;
+            newScriptHeader.Name = "Header Script";
+            newScriptHeader.flag = 1;
+            controller.Data.AddItem(id1, newScriptHeader);
+            scriptIndices.Add(id1);
+            ((MainForm)Tag).GenTreeNode(newScriptHeader, controller);
+
+            script = newScriptHeader;
+            scriptListBox.Items.Add(GenTextForList(newScriptHeader));
+            controller.UpdateText();
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[newScriptHeader.ID]].Tag).UpdateText();
+            
+
+            Script newScriptMain = new Script();
+            newScriptMain.MainScript = new Script.MainScriptStruct();
+            newScriptMain.ID = id2;
+            newScriptMain.Name = "New Script";
+            controller.Data.AddItem(id2, newScriptMain);
+            scriptIndices.Add(id2);
+            ((MainForm)Tag).GenTreeNode(newScriptMain, controller);
+
+            scriptListBox.Items.Add(GenTextForList(newScriptMain));
+            
+            controller.UpdateText();
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[newScriptMain.ID]].Tag).UpdateText();
+            PopulateList();
+            scriptListBox.SelectedIndex = scriptListBox.Items.Count - 1;
         }
     }
 }

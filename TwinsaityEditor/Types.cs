@@ -77,6 +77,7 @@ namespace TwinsaityEditor
         Path,
         Instance,
         Trigger,
-        Script
+        Script,
+        Object
     };
 }

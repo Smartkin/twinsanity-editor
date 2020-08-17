@@ -11,6 +11,7 @@ namespace TwinsaityEditor
         public ObjectController(MainForm topform, GameObject item) : base (topform, item)
         {
             Data = item;
+            AddMenu("Open editor", Menu_OpenEditor);
         }
 
         protected override string GetName()
@@ -27,7 +28,7 @@ namespace TwinsaityEditor
             text.Add($"Offset: {Data.Offset} Size: {Data.Size}");
             text.Add($"Name: {Data.Name}");
             text.Add($"Unknown bitfield: 0x{Data.UnkBitfield.ToString("X")}");
-            for (int i = 0; i < Data.ScriptSlots.Length; ++i)
+            for (int i = 0; i < Data.ScriptSlots.Count; ++i)
             {
                 var slotName = "Reserved";
                 var slotAmt = Data.ScriptSlots[i];
@@ -66,20 +67,20 @@ namespace TwinsaityEditor
             text.Add($"Reference Data");
             text.Add($"");
 
-            text.Add($"UnknownInt32Count: {Data.UI32.Length}");
-            for (int i = 0; i < Data.UI32.Length; ++i)
+            text.Add($"UnknownInt32Count: {Data.UI32.Count}");
+            for (int i = 0; i < Data.UI32.Count; ++i)
                 text.Add(Data.UI32[i].ToString("X"));
 
-            text.Add($"OGICount: {Data.OGIs.Length}");
-            for (int i = 0; i < Data.OGIs.Length; ++i)
+            text.Add($"OGICount: {Data.OGIs.Count}");
+            for (int i = 0; i < Data.OGIs.Count; ++i)
                 text.Add(Data.OGIs[i].ToString());
 
-            text.Add($"AnimCount: {Data.Anims.Length}");
-            for (int i = 0; i < Data.Anims.Length; ++i)
+            text.Add($"AnimCount: {Data.Anims.Count}");
+            for (int i = 0; i < Data.Anims.Count; ++i)
                 text.Add(Data.Anims[i].ToString());
 
-            text.Add($"ScriptCount: {Data.Scripts.Length}");
-            for (int i = 0; i < Data.Scripts.Length; ++i)
+            text.Add($"ScriptCount: {Data.Scripts.Count}");
+            for (int i = 0; i < Data.Scripts.Count; ++i)
             {
                 string script_line = "#" + i.ToString() + ": ";
                 if (Enum.IsDefined(typeof(DefaultEnums.GameObjectScriptOrder), i))
@@ -97,36 +98,36 @@ namespace TwinsaityEditor
                 text.Add(script_line);
             }
 
-            text.Add($"ObjectCount: {Data.Objects.Length}");
-            for (int i = 0; i < Data.Objects.Length; ++i)
+            text.Add($"ObjectCount: {Data.Objects.Count}");
+            for (int i = 0; i < Data.Objects.Count; ++i)
                 text.Add(Data.Objects[i].ToString());
 
-            text.Add($"SoundCount: {Data.Sounds.Length}");
-            for (int i = 0; i < Data.Sounds.Length; ++i)
+            text.Add($"SoundCount: {Data.Sounds.Count}");
+            for (int i = 0; i < Data.Sounds.Count; ++i)
                 text.Add(Data.Sounds[i].ToString());
 
             text.Add($"");
             text.Add($"Preload Data");
             text.Add($"");
 
-            text.Add($"ObjectCount: {Data.cObjects.Length}");
-            for (int i = 0; i < Data.cObjects.Length; ++i)
+            text.Add($"ObjectCount: {Data.cObjects.Count}");
+            for (int i = 0; i < Data.cObjects.Count; ++i)
                 text.Add(Data.cObjects[i].ToString());
 
-            text.Add($"OGICount: {Data.cOGIs.Length}");
-            for (int i = 0; i < Data.cOGIs.Length; ++i)
+            text.Add($"OGICount: {Data.cOGIs.Count}");
+            for (int i = 0; i < Data.cOGIs.Count; ++i)
                 text.Add(Data.cOGIs[i].ToString());
 
-            text.Add($"AnimCount: {Data.cAnims.Length}");
-            for (int i = 0; i < Data.cAnims.Length; ++i)
+            text.Add($"AnimCount: {Data.cAnims.Count}");
+            for (int i = 0; i < Data.cAnims.Count; ++i)
                 text.Add(Data.cAnims[i].ToString());
 
-            text.Add($"CMCount: {Data.cCM.Length}");
-            for (int i = 0; i < Data.cCM.Length; ++i)
+            text.Add($"CMCount: {Data.cCM.Count}");
+            for (int i = 0; i < Data.cCM.Count; ++i)
                 text.Add(Data.cCM[i].ToString());
 
-            text.Add($"ScriptCount: {Data.cScripts.Length}");
-            for (int i = 0; i < Data.cScripts.Length; ++i)
+            text.Add($"ScriptCount: {Data.cScripts.Count}");
+            for (int i = 0; i < Data.cScripts.Count; ++i)
             {
                 string script_line = "#" + i.ToString() + ": ";
                 if (Enum.IsDefined(typeof(DefaultEnums.ScriptID), Data.cScripts[i]))
@@ -140,15 +141,19 @@ namespace TwinsaityEditor
                 text.Add(script_line);
             }
 
-            text.Add($"UnkCount: {Data.cUnk.Length}");
-            for (int i = 0; i < Data.cUnk.Length; ++i)
+            text.Add($"UnkCount: {Data.cUnk.Count}");
+            for (int i = 0; i < Data.cUnk.Count; ++i)
                 text.Add(Data.cUnk[i].ToString());
 
-            text.Add($"SoundCount: {Data.cSounds.Length}");
-            for (int i = 0; i < Data.cSounds.Length; ++i)
+            text.Add($"SoundCount: {Data.cSounds.Count}");
+            for (int i = 0; i < Data.cSounds.Count; ++i)
                 text.Add(Data.cSounds[i].ToString());
 
             TextPrev = text.ToArray();
+        }
+        private void Menu_OpenEditor()
+        {
+            MainFile.OpenEditor(this);
         }
     }
 }
