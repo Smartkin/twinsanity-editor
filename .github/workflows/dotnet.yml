@@ -2,9 +2,10 @@
 name: .NET
 
 on:
-  push:
-    branches: [ master ]
+  release:
+    types: [ published ]
   pull_request:
+    types: [ opened ]
     branches: [ master ]
 
 jobs:
