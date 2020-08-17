@@ -210,8 +210,12 @@ namespace TwinsaityEditor
             controller.Data.AddItem(id, newGameObject);
             ((MainForm)Tag).GenTreeNode(newGameObject, controller);
             gameObject = newGameObject;
+<<<<<<< HEAD
             int i = objectList.Items.Add(GenTextForList(newGameObject));
             objectList.SelectedIndex = i;
+=======
+            objectList.Items.Add(GenTextForList(newGameObject));
+>>>>>>> 4c3ec50355e2df7d1bc6482e0fc13b265228bcab
             controller.UpdateText();
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[newGameObject.ID]].Tag).UpdateText();
         }
@@ -236,8 +240,12 @@ namespace TwinsaityEditor
                 controller.Data.AddItem(id, newGameObject);
                 ((MainForm)Tag).GenTreeNode(newGameObject, controller);
                 gameObject = newGameObject;
+<<<<<<< HEAD
                 int i = objectList.Items.Add(GenTextForList(newGameObject));
                 objectList.SelectedIndex = i;
+=======
+                objectList.Items.Add(GenTextForList(newGameObject));
+>>>>>>> 4c3ec50355e2df7d1bc6482e0fc13b265228bcab
                 controller.UpdateText();
                 ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[newGameObject.ID]].Tag).UpdateText();
             }
