@@ -135,6 +135,38 @@
             this.cscriptsRemove = new System.Windows.Forms.Button();
             this.cscriptsUp = new System.Windows.Forms.Button();
             this.cscriptsList = new System.Windows.Forms.ListBox();
+            this.groupBox14 = new System.Windows.Forms.GroupBox();
+            this.unk4Source = new System.Windows.Forms.TextBox();
+            this.unk4Set = new System.Windows.Forms.Button();
+            this.unk4Add = new System.Windows.Forms.Button();
+            this.unk4Down = new System.Windows.Forms.Button();
+            this.unk4Remove = new System.Windows.Forms.Button();
+            this.unk4Up = new System.Windows.Forms.Button();
+            this.unk4List = new System.Windows.Forms.ListBox();
+            this.groupBox15 = new System.Windows.Forms.GroupBox();
+            this.unk3Source = new System.Windows.Forms.TextBox();
+            this.unk3Set = new System.Windows.Forms.Button();
+            this.unk3Add = new System.Windows.Forms.Button();
+            this.unk3Down = new System.Windows.Forms.Button();
+            this.unk3Remove = new System.Windows.Forms.Button();
+            this.unk3Up = new System.Windows.Forms.Button();
+            this.unk3List = new System.Windows.Forms.ListBox();
+            this.groupBox16 = new System.Windows.Forms.GroupBox();
+            this.unk2Source = new System.Windows.Forms.TextBox();
+            this.unk2Set = new System.Windows.Forms.Button();
+            this.unk2Add = new System.Windows.Forms.Button();
+            this.unk2Down = new System.Windows.Forms.Button();
+            this.unk2Remove = new System.Windows.Forms.Button();
+            this.unk2Up = new System.Windows.Forms.Button();
+            this.unk2List = new System.Windows.Forms.ListBox();
+            this.groupBox17 = new System.Windows.Forms.GroupBox();
+            this.unk1Source = new System.Windows.Forms.TextBox();
+            this.unk1Set = new System.Windows.Forms.Button();
+            this.unk1Add = new System.Windows.Forms.Button();
+            this.unk1Down = new System.Windows.Forms.Button();
+            this.unk1Remove = new System.Windows.Forms.Button();
+            this.unk1Up = new System.Windows.Forms.Button();
+            this.unk1List = new System.Windows.Forms.ListBox();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -146,12 +178,17 @@
             this.tabPage2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
             this.groupBox8.SuspendLayout();
             this.groupBox9.SuspendLayout();
             this.groupBox10.SuspendLayout();
             this.groupBox11.SuspendLayout();
             this.groupBox12.SuspendLayout();
             this.groupBox13.SuspendLayout();
+            this.groupBox14.SuspendLayout();
+            this.groupBox15.SuspendLayout();
+            this.groupBox16.SuspendLayout();
+            this.groupBox17.SuspendLayout();
             this.SuspendLayout();
             // 
             // objectList
@@ -724,6 +761,10 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.groupBox14);
+            this.tabPage3.Controls.Add(this.groupBox15);
+            this.tabPage3.Controls.Add(this.groupBox16);
+            this.tabPage3.Controls.Add(this.groupBox17);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Size = new System.Drawing.Size(727, 533);
@@ -1187,6 +1228,310 @@
             this.cscriptsList.Size = new System.Drawing.Size(148, 108);
             this.cscriptsList.TabIndex = 0;
             // 
+            // groupBox14
+            // 
+            this.groupBox14.Controls.Add(this.unk4Source);
+            this.groupBox14.Controls.Add(this.unk4Set);
+            this.groupBox14.Controls.Add(this.unk4Add);
+            this.groupBox14.Controls.Add(this.unk4Down);
+            this.groupBox14.Controls.Add(this.unk4Remove);
+            this.groupBox14.Controls.Add(this.unk4Up);
+            this.groupBox14.Controls.Add(this.unk4List);
+            this.groupBox14.Location = new System.Drawing.Point(6, 213);
+            this.groupBox14.Name = "groupBox14";
+            this.groupBox14.Size = new System.Drawing.Size(232, 195);
+            this.groupBox14.TabIndex = 15;
+            this.groupBox14.TabStop = false;
+            this.groupBox14.Text = "Unknown List";
+            // 
+            // unk4Source
+            // 
+            this.unk4Source.Location = new System.Drawing.Point(78, 148);
+            this.unk4Source.Name = "unk4Source";
+            this.unk4Source.Size = new System.Drawing.Size(148, 20);
+            this.unk4Source.TabIndex = 6;
+            // 
+            // unk4Set
+            // 
+            this.unk4Set.Location = new System.Drawing.Point(10, 162);
+            this.unk4Set.Name = "unk4Set";
+            this.unk4Set.Size = new System.Drawing.Size(55, 23);
+            this.unk4Set.TabIndex = 5;
+            this.unk4Set.Text = "Set";
+            this.unk4Set.UseVisualStyleBackColor = true;
+            // 
+            // unk4Add
+            // 
+            this.unk4Add.Location = new System.Drawing.Point(10, 133);
+            this.unk4Add.Name = "unk4Add";
+            this.unk4Add.Size = new System.Drawing.Size(55, 23);
+            this.unk4Add.TabIndex = 4;
+            this.unk4Add.Text = "Add";
+            this.unk4Add.UseVisualStyleBackColor = true;
+            // 
+            // unk4Down
+            // 
+            this.unk4Down.Location = new System.Drawing.Point(10, 104);
+            this.unk4Down.Name = "unk4Down";
+            this.unk4Down.Size = new System.Drawing.Size(55, 23);
+            this.unk4Down.TabIndex = 3;
+            this.unk4Down.Text = "Down";
+            this.unk4Down.UseVisualStyleBackColor = true;
+            // 
+            // unk4Remove
+            // 
+            this.unk4Remove.Location = new System.Drawing.Point(10, 60);
+            this.unk4Remove.Name = "unk4Remove";
+            this.unk4Remove.Size = new System.Drawing.Size(55, 23);
+            this.unk4Remove.TabIndex = 2;
+            this.unk4Remove.Text = "Remove";
+            this.unk4Remove.UseVisualStyleBackColor = true;
+            // 
+            // unk4Up
+            // 
+            this.unk4Up.Location = new System.Drawing.Point(10, 19);
+            this.unk4Up.Name = "unk4Up";
+            this.unk4Up.Size = new System.Drawing.Size(55, 23);
+            this.unk4Up.TabIndex = 1;
+            this.unk4Up.Text = "Up";
+            this.unk4Up.UseVisualStyleBackColor = true;
+            // 
+            // unk4List
+            // 
+            this.unk4List.FormattingEnabled = true;
+            this.unk4List.Location = new System.Drawing.Point(78, 19);
+            this.unk4List.Name = "unk4List";
+            this.unk4List.Size = new System.Drawing.Size(148, 108);
+            this.unk4List.TabIndex = 0;
+            // 
+            // groupBox15
+            // 
+            this.groupBox15.Controls.Add(this.unk3Source);
+            this.groupBox15.Controls.Add(this.unk3Set);
+            this.groupBox15.Controls.Add(this.unk3Add);
+            this.groupBox15.Controls.Add(this.unk3Down);
+            this.groupBox15.Controls.Add(this.unk3Remove);
+            this.groupBox15.Controls.Add(this.unk3Up);
+            this.groupBox15.Controls.Add(this.unk3List);
+            this.groupBox15.Location = new System.Drawing.Point(483, 12);
+            this.groupBox15.Name = "groupBox15";
+            this.groupBox15.Size = new System.Drawing.Size(232, 195);
+            this.groupBox15.TabIndex = 16;
+            this.groupBox15.TabStop = false;
+            this.groupBox15.Text = "Unknown List";
+            // 
+            // unk3Source
+            // 
+            this.unk3Source.Location = new System.Drawing.Point(78, 148);
+            this.unk3Source.Name = "unk3Source";
+            this.unk3Source.Size = new System.Drawing.Size(148, 20);
+            this.unk3Source.TabIndex = 6;
+            // 
+            // unk3Set
+            // 
+            this.unk3Set.Location = new System.Drawing.Point(10, 162);
+            this.unk3Set.Name = "unk3Set";
+            this.unk3Set.Size = new System.Drawing.Size(55, 23);
+            this.unk3Set.TabIndex = 5;
+            this.unk3Set.Text = "Set";
+            this.unk3Set.UseVisualStyleBackColor = true;
+            // 
+            // unk3Add
+            // 
+            this.unk3Add.Location = new System.Drawing.Point(10, 133);
+            this.unk3Add.Name = "unk3Add";
+            this.unk3Add.Size = new System.Drawing.Size(55, 23);
+            this.unk3Add.TabIndex = 4;
+            this.unk3Add.Text = "Add";
+            this.unk3Add.UseVisualStyleBackColor = true;
+            // 
+            // unk3Down
+            // 
+            this.unk3Down.Location = new System.Drawing.Point(10, 104);
+            this.unk3Down.Name = "unk3Down";
+            this.unk3Down.Size = new System.Drawing.Size(55, 23);
+            this.unk3Down.TabIndex = 3;
+            this.unk3Down.Text = "Down";
+            this.unk3Down.UseVisualStyleBackColor = true;
+            // 
+            // unk3Remove
+            // 
+            this.unk3Remove.Location = new System.Drawing.Point(10, 60);
+            this.unk3Remove.Name = "unk3Remove";
+            this.unk3Remove.Size = new System.Drawing.Size(55, 23);
+            this.unk3Remove.TabIndex = 2;
+            this.unk3Remove.Text = "Remove";
+            this.unk3Remove.UseVisualStyleBackColor = true;
+            // 
+            // unk3Up
+            // 
+            this.unk3Up.Location = new System.Drawing.Point(10, 19);
+            this.unk3Up.Name = "unk3Up";
+            this.unk3Up.Size = new System.Drawing.Size(55, 23);
+            this.unk3Up.TabIndex = 1;
+            this.unk3Up.Text = "Up";
+            this.unk3Up.UseVisualStyleBackColor = true;
+            // 
+            // unk3List
+            // 
+            this.unk3List.FormattingEnabled = true;
+            this.unk3List.Location = new System.Drawing.Point(78, 19);
+            this.unk3List.Name = "unk3List";
+            this.unk3List.Size = new System.Drawing.Size(148, 108);
+            this.unk3List.TabIndex = 0;
+            // 
+            // groupBox16
+            // 
+            this.groupBox16.Controls.Add(this.unk2Source);
+            this.groupBox16.Controls.Add(this.unk2Set);
+            this.groupBox16.Controls.Add(this.unk2Add);
+            this.groupBox16.Controls.Add(this.unk2Down);
+            this.groupBox16.Controls.Add(this.unk2Remove);
+            this.groupBox16.Controls.Add(this.unk2Up);
+            this.groupBox16.Controls.Add(this.unk2List);
+            this.groupBox16.Location = new System.Drawing.Point(245, 12);
+            this.groupBox16.Name = "groupBox16";
+            this.groupBox16.Size = new System.Drawing.Size(232, 195);
+            this.groupBox16.TabIndex = 17;
+            this.groupBox16.TabStop = false;
+            this.groupBox16.Text = "Unknown List";
+            // 
+            // unk2Source
+            // 
+            this.unk2Source.Location = new System.Drawing.Point(78, 148);
+            this.unk2Source.Name = "unk2Source";
+            this.unk2Source.Size = new System.Drawing.Size(148, 20);
+            this.unk2Source.TabIndex = 6;
+            // 
+            // unk2Set
+            // 
+            this.unk2Set.Location = new System.Drawing.Point(10, 162);
+            this.unk2Set.Name = "unk2Set";
+            this.unk2Set.Size = new System.Drawing.Size(55, 23);
+            this.unk2Set.TabIndex = 5;
+            this.unk2Set.Text = "Set";
+            this.unk2Set.UseVisualStyleBackColor = true;
+            // 
+            // unk2Add
+            // 
+            this.unk2Add.Location = new System.Drawing.Point(10, 133);
+            this.unk2Add.Name = "unk2Add";
+            this.unk2Add.Size = new System.Drawing.Size(55, 23);
+            this.unk2Add.TabIndex = 4;
+            this.unk2Add.Text = "Add";
+            this.unk2Add.UseVisualStyleBackColor = true;
+            // 
+            // unk2Down
+            // 
+            this.unk2Down.Location = new System.Drawing.Point(10, 104);
+            this.unk2Down.Name = "unk2Down";
+            this.unk2Down.Size = new System.Drawing.Size(55, 23);
+            this.unk2Down.TabIndex = 3;
+            this.unk2Down.Text = "Down";
+            this.unk2Down.UseVisualStyleBackColor = true;
+            // 
+            // unk2Remove
+            // 
+            this.unk2Remove.Location = new System.Drawing.Point(10, 60);
+            this.unk2Remove.Name = "unk2Remove";
+            this.unk2Remove.Size = new System.Drawing.Size(55, 23);
+            this.unk2Remove.TabIndex = 2;
+            this.unk2Remove.Text = "Remove";
+            this.unk2Remove.UseVisualStyleBackColor = true;
+            // 
+            // unk2Up
+            // 
+            this.unk2Up.Location = new System.Drawing.Point(10, 19);
+            this.unk2Up.Name = "unk2Up";
+            this.unk2Up.Size = new System.Drawing.Size(55, 23);
+            this.unk2Up.TabIndex = 1;
+            this.unk2Up.Text = "Up";
+            this.unk2Up.UseVisualStyleBackColor = true;
+            // 
+            // unk2List
+            // 
+            this.unk2List.FormattingEnabled = true;
+            this.unk2List.Location = new System.Drawing.Point(78, 19);
+            this.unk2List.Name = "unk2List";
+            this.unk2List.Size = new System.Drawing.Size(148, 108);
+            this.unk2List.TabIndex = 0;
+            // 
+            // groupBox17
+            // 
+            this.groupBox17.Controls.Add(this.unk1Source);
+            this.groupBox17.Controls.Add(this.unk1Set);
+            this.groupBox17.Controls.Add(this.unk1Add);
+            this.groupBox17.Controls.Add(this.unk1Down);
+            this.groupBox17.Controls.Add(this.unk1Remove);
+            this.groupBox17.Controls.Add(this.unk1Up);
+            this.groupBox17.Controls.Add(this.unk1List);
+            this.groupBox17.Location = new System.Drawing.Point(7, 12);
+            this.groupBox17.Name = "groupBox17";
+            this.groupBox17.Size = new System.Drawing.Size(232, 195);
+            this.groupBox17.TabIndex = 14;
+            this.groupBox17.TabStop = false;
+            this.groupBox17.Text = "Unknown List";
+            // 
+            // unk1Source
+            // 
+            this.unk1Source.Location = new System.Drawing.Point(78, 148);
+            this.unk1Source.Name = "unk1Source";
+            this.unk1Source.Size = new System.Drawing.Size(148, 20);
+            this.unk1Source.TabIndex = 6;
+            // 
+            // unk1Set
+            // 
+            this.unk1Set.Location = new System.Drawing.Point(10, 162);
+            this.unk1Set.Name = "unk1Set";
+            this.unk1Set.Size = new System.Drawing.Size(55, 23);
+            this.unk1Set.TabIndex = 5;
+            this.unk1Set.Text = "Set";
+            this.unk1Set.UseVisualStyleBackColor = true;
+            // 
+            // unk1Add
+            // 
+            this.unk1Add.Location = new System.Drawing.Point(10, 133);
+            this.unk1Add.Name = "unk1Add";
+            this.unk1Add.Size = new System.Drawing.Size(55, 23);
+            this.unk1Add.TabIndex = 4;
+            this.unk1Add.Text = "Add";
+            this.unk1Add.UseVisualStyleBackColor = true;
+            // 
+            // unk1Down
+            // 
+            this.unk1Down.Location = new System.Drawing.Point(10, 104);
+            this.unk1Down.Name = "unk1Down";
+            this.unk1Down.Size = new System.Drawing.Size(55, 23);
+            this.unk1Down.TabIndex = 3;
+            this.unk1Down.Text = "Down";
+            this.unk1Down.UseVisualStyleBackColor = true;
+            // 
+            // unk1Remove
+            // 
+            this.unk1Remove.Location = new System.Drawing.Point(10, 60);
+            this.unk1Remove.Name = "unk1Remove";
+            this.unk1Remove.Size = new System.Drawing.Size(55, 23);
+            this.unk1Remove.TabIndex = 2;
+            this.unk1Remove.Text = "Remove";
+            this.unk1Remove.UseVisualStyleBackColor = true;
+            // 
+            // unk1Up
+            // 
+            this.unk1Up.Location = new System.Drawing.Point(10, 19);
+            this.unk1Up.Name = "unk1Up";
+            this.unk1Up.Size = new System.Drawing.Size(55, 23);
+            this.unk1Up.TabIndex = 1;
+            this.unk1Up.Text = "Up";
+            this.unk1Up.UseVisualStyleBackColor = true;
+            // 
+            // unk1List
+            // 
+            this.unk1List.FormattingEnabled = true;
+            this.unk1List.Location = new System.Drawing.Point(78, 19);
+            this.unk1List.Name = "unk1List";
+            this.unk1List.Size = new System.Drawing.Size(148, 108);
+            this.unk1List.TabIndex = 0;
+            // 
             // ObjectEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1215,6 +1560,7 @@
             this.panel1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.tabPage3.ResumeLayout(false);
             this.groupBox8.ResumeLayout(false);
             this.groupBox8.PerformLayout();
             this.groupBox9.ResumeLayout(false);
@@ -1227,6 +1573,14 @@
             this.groupBox12.PerformLayout();
             this.groupBox13.ResumeLayout(false);
             this.groupBox13.PerformLayout();
+            this.groupBox14.ResumeLayout(false);
+            this.groupBox14.PerformLayout();
+            this.groupBox15.ResumeLayout(false);
+            this.groupBox15.PerformLayout();
+            this.groupBox16.ResumeLayout(false);
+            this.groupBox16.PerformLayout();
+            this.groupBox17.ResumeLayout(false);
+            this.groupBox17.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1340,5 +1694,37 @@
         private System.Windows.Forms.Button cscriptsUp;
         private System.Windows.Forms.ListBox cscriptsList;
         private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.GroupBox groupBox14;
+        private System.Windows.Forms.TextBox unk4Source;
+        private System.Windows.Forms.Button unk4Set;
+        private System.Windows.Forms.Button unk4Add;
+        private System.Windows.Forms.Button unk4Down;
+        private System.Windows.Forms.Button unk4Remove;
+        private System.Windows.Forms.Button unk4Up;
+        private System.Windows.Forms.ListBox unk4List;
+        private System.Windows.Forms.GroupBox groupBox15;
+        private System.Windows.Forms.TextBox unk3Source;
+        private System.Windows.Forms.Button unk3Set;
+        private System.Windows.Forms.Button unk3Add;
+        private System.Windows.Forms.Button unk3Down;
+        private System.Windows.Forms.Button unk3Remove;
+        private System.Windows.Forms.Button unk3Up;
+        private System.Windows.Forms.ListBox unk3List;
+        private System.Windows.Forms.GroupBox groupBox16;
+        private System.Windows.Forms.TextBox unk2Source;
+        private System.Windows.Forms.Button unk2Set;
+        private System.Windows.Forms.Button unk2Add;
+        private System.Windows.Forms.Button unk2Down;
+        private System.Windows.Forms.Button unk2Remove;
+        private System.Windows.Forms.Button unk2Up;
+        private System.Windows.Forms.ListBox unk2List;
+        private System.Windows.Forms.GroupBox groupBox17;
+        private System.Windows.Forms.TextBox unk1Source;
+        private System.Windows.Forms.Button unk1Set;
+        private System.Windows.Forms.Button unk1Add;
+        private System.Windows.Forms.Button unk1Down;
+        private System.Windows.Forms.Button unk1Remove;
+        private System.Windows.Forms.Button unk1Up;
+        private System.Windows.Forms.ListBox unk1List;
     }
 }
