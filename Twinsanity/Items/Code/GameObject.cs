@@ -36,6 +36,13 @@ namespace Twinsanity
         private Byte[] scriptData = new byte[0];
 
         public string Name { get; set; }
+        public GameObject()
+        {
+            while (ScriptSlots.Count < 8)
+            {
+                ScriptSlots.Add(0);
+            }
+        }
         private void UpdateSlots()
         {
             ScriptSlots[0] = (Byte)OGIs.Count;
@@ -157,7 +164,7 @@ namespace Twinsanity
             UnkBitfield = reader.ReadUInt32();
             for (int i = 0; i < 8; ++i)
             {
-                ScriptSlots.Add(reader.ReadByte());
+                ScriptSlots[i] = reader.ReadByte();
             }
 
             //Class1 = reader.ReadUInt32();

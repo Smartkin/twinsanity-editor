@@ -76,6 +76,7 @@
             this.label24 = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
             this.panelGeneral = new System.Windows.Forms.Panel();
+            this.label33 = new System.Windows.Forms.Label();
             this.generalWarning = new System.Windows.Forms.Label();
             this.generalArray = new System.Windows.Forms.TextBox();
             this.label31 = new System.Windows.Forms.Label();
@@ -120,6 +121,11 @@
             this.filterSelection = new System.Windows.Forms.ComboBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.generalId = new System.Windows.Forms.TextBox();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.scriptsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.createScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panelType1.SuspendLayout();
             this.panelMain.SuspendLayout();
             this.panelHeader.SuspendLayout();
@@ -139,15 +145,16 @@
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // scriptListBox
             // 
             this.scriptListBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.scriptListBox.FormattingEnabled = true;
-            this.scriptListBox.Location = new System.Drawing.Point(0, 0);
+            this.scriptListBox.Location = new System.Drawing.Point(0, 24);
             this.scriptListBox.Name = "scriptListBox";
-            this.scriptListBox.Size = new System.Drawing.Size(321, 591);
+            this.scriptListBox.Size = new System.Drawing.Size(321, 567);
             this.scriptListBox.TabIndex = 0;
             this.scriptListBox.SelectedIndexChanged += new System.EventHandler(this.scriptListBox_SelectedIndexChanged);
             // 
@@ -600,6 +607,8 @@
             // 
             // panelGeneral
             // 
+            this.panelGeneral.Controls.Add(this.generalId);
+            this.panelGeneral.Controls.Add(this.label33);
             this.panelGeneral.Controls.Add(this.generalWarning);
             this.panelGeneral.Controls.Add(this.generalArray);
             this.panelGeneral.Controls.Add(this.label31);
@@ -609,11 +618,20 @@
             this.panelGeneral.Size = new System.Drawing.Size(302, 609);
             this.panelGeneral.TabIndex = 0;
             // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(9, 17);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(21, 13);
+            this.label33.TabIndex = 14;
+            this.label33.Text = "ID:";
+            // 
             // generalWarning
             // 
             this.generalWarning.AutoSize = true;
             this.generalWarning.ForeColor = System.Drawing.Color.Red;
-            this.generalWarning.Location = new System.Drawing.Point(10, 56);
+            this.generalWarning.Location = new System.Drawing.Point(10, 89);
             this.generalWarning.Name = "generalWarning";
             this.generalWarning.Size = new System.Drawing.Size(217, 26);
             this.generalWarning.TabIndex = 13;
@@ -621,7 +639,7 @@
             // 
             // generalArray
             // 
-            this.generalArray.Location = new System.Drawing.Point(7, 24);
+            this.generalArray.Location = new System.Drawing.Point(7, 57);
             this.generalArray.Name = "generalArray";
             this.generalArray.Size = new System.Drawing.Size(284, 20);
             this.generalArray.TabIndex = 12;
@@ -630,7 +648,7 @@
             // label31
             // 
             this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(9, 8);
+            this.label31.Location = new System.Drawing.Point(9, 41);
             this.label31.Name = "label31";
             this.label31.Size = new System.Drawing.Size(79, 13);
             this.label31.TabIndex = 11;
@@ -960,14 +978,14 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.panelType2);
-            this.groupBox1.Controls.Add(this.panelType3);
-            this.groupBox1.Controls.Add(this.panelType4);
             this.groupBox1.Controls.Add(this.panelGeneral);
             this.groupBox1.Controls.Add(this.panelLinked);
             this.groupBox1.Controls.Add(this.panelHeader);
             this.groupBox1.Controls.Add(this.panelMain);
             this.groupBox1.Controls.Add(this.panelType1);
+            this.groupBox1.Controls.Add(this.panelType2);
+            this.groupBox1.Controls.Add(this.panelType3);
+            this.groupBox1.Controls.Add(this.panelType4);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
@@ -979,9 +997,9 @@
             // scriptNameFilter
             // 
             this.scriptNameFilter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.scriptNameFilter.Location = new System.Drawing.Point(112, 3);
+            this.scriptNameFilter.Location = new System.Drawing.Point(110, 3);
             this.scriptNameFilter.Name = "scriptNameFilter";
-            this.scriptNameFilter.Size = new System.Drawing.Size(464, 20);
+            this.scriptNameFilter.Size = new System.Drawing.Size(466, 20);
             this.scriptNameFilter.TabIndex = 3;
             this.scriptNameFilter.TextChanged += new System.EventHandler(this.scriptNameFilter_TextChanged);
             // 
@@ -1016,7 +1034,7 @@
             this.tableLayoutPanel2.ColumnCount = 3;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 38.88889F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 61.11111F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 469F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 471F));
             this.tableLayoutPanel2.Controls.Add(this.label32, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.scriptNameFilter, 2, 0);
             this.tableLayoutPanel2.Controls.Add(this.filterSelection, 1, 0);
@@ -1037,7 +1055,7 @@
             "ID"});
             this.filterSelection.Location = new System.Drawing.Point(45, 3);
             this.filterSelection.Name = "filterSelection";
-            this.filterSelection.Size = new System.Drawing.Size(61, 21);
+            this.filterSelection.Size = new System.Drawing.Size(59, 21);
             this.filterSelection.TabIndex = 5;
             this.filterSelection.SelectedIndexChanged += new System.EventHandler(this.filterSelection_SelectedIndexChanged);
             // 
@@ -1050,6 +1068,7 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.scriptListBox);
+            this.splitContainer1.Panel1.Controls.Add(this.menuStrip1);
             // 
             // splitContainer1.Panel2
             // 
@@ -1075,12 +1094,53 @@
             this.splitContainer2.SplitterDistance = 585;
             this.splitContainer2.TabIndex = 6;
             // 
+            // generalId
+            // 
+            this.generalId.Location = new System.Drawing.Point(53, 14);
+            this.generalId.Name = "generalId";
+            this.generalId.Size = new System.Drawing.Size(238, 20);
+            this.generalId.TabIndex = 15;
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.scriptsToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(321, 24);
+            this.menuStrip1.TabIndex = 1;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // scriptsToolStripMenuItem
+            // 
+            this.scriptsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.deleteScriptToolStripMenuItem,
+            this.createScriptToolStripMenuItem});
+            this.scriptsToolStripMenuItem.Name = "scriptsToolStripMenuItem";
+            this.scriptsToolStripMenuItem.Size = new System.Drawing.Size(54, 20);
+            this.scriptsToolStripMenuItem.Text = "Scripts";
+            // 
+            // deleteScriptToolStripMenuItem
+            // 
+            this.deleteScriptToolStripMenuItem.Name = "deleteScriptToolStripMenuItem";
+            this.deleteScriptToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.deleteScriptToolStripMenuItem.Text = "Delete Script";
+            this.deleteScriptToolStripMenuItem.Click += new System.EventHandler(this.deleteScriptToolStripMenuItem_Click);
+            // 
+            // createScriptToolStripMenuItem
+            // 
+            this.createScriptToolStripMenuItem.Name = "createScriptToolStripMenuItem";
+            this.createScriptToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.createScriptToolStripMenuItem.Text = "Create Script";
+            this.createScriptToolStripMenuItem.Click += new System.EventHandler(this.createScriptToolStripMenuItem_Click);
+            // 
             // ScriptEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(897, 628);
             this.Controls.Add(this.splitContainer2);
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "ScriptEditor";
             this.Text = "ScriptEditor";
             this.Load += new System.EventHandler(this.ScriptEditor_Load);
@@ -1105,6 +1165,7 @@
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
@@ -1112,6 +1173,8 @@
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1210,5 +1273,11 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.ComboBox filterSelection;
+        private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.TextBox generalId;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem scriptsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteScriptToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem createScriptToolStripMenuItem;
     }
 }

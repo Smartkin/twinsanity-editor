@@ -107,7 +107,7 @@ namespace TwinsaityEditor
                 else
                 {
                     Name += $" - Script {ptr.scriptIndexOrSlot}";
-                } 
+                }
             }
             TreeNode node = parent.Nodes.Add(Name);
             node.Tag = ptr;
@@ -290,7 +290,7 @@ namespace TwinsaityEditor
         {
             selectedMainScript.name = ((TextBox)sender).Text;
             scriptTree.TopNode.Text = selectedMainScript.name;
-            //listBox1.Items[listBox1.SelectedIndex] = GenTextForList(script); Fuck this shit for being unstable piss that destroys my will to live
+            //scriptListBox.Items[scriptListBox.SelectedIndex] = GenTextForList(script); Fuck this shit for being unstable piss that destroys my will to live
         }
 
         private void mainUnk_TextChanged(object sender, EventArgs e)
@@ -776,12 +776,12 @@ namespace TwinsaityEditor
                     ++i;
                 }
                 selectedType4.byteArray = byteArray;
-            } 
+            }
             else
             {
                 selectedType4.byteArray = new byte[0];
             }
-            
+
             if (selectedType4.isValidBits())
             {
                 type4Warning.Visible = false;
@@ -1036,17 +1036,19 @@ namespace TwinsaityEditor
                     };
                     break;
             }
+        }
+
         private void deleteScriptToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var sel_i = listBox1.SelectedIndex;
+            var sel_i = scriptListBox.SelectedIndex;
             if (sel_i == -1)
                 return;
             controller.RemoveItem(script.ID);
-            listBox1.BeginUpdate();
-            listBox1.Items.RemoveAt(sel_i);
-            if (sel_i >= listBox1.Items.Count) sel_i = listBox1.Items.Count - 1;
-            listBox1.SelectedIndex = sel_i;
-            listBox1.EndUpdate();
+            scriptListBox.BeginUpdate();
+            scriptListBox.Items.RemoveAt(sel_i);
+            if (sel_i >= scriptListBox.Items.Count) sel_i = scriptListBox.Items.Count - 1;
+            scriptListBox.SelectedIndex = sel_i;
+            scriptListBox.EndUpdate();
             controller.UpdateTextBox();
         }
 
@@ -1063,27 +1065,29 @@ namespace TwinsaityEditor
             newScriptHeader.Name = "Header Script";
             newScriptHeader.flag = 1;
             controller.Data.AddItem(id1, newScriptHeader);
+            scriptIndices.Add(id1);
             ((MainForm)Tag).GenTreeNode(newScriptHeader, controller);
 
             script = newScriptHeader;
-            listBox1.Items.Add(GenTextForList(newScriptHeader));
+            scriptListBox.Items.Add(GenTextForList(newScriptHeader));
             controller.UpdateText();
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[newScriptHeader.ID]].Tag).UpdateText();
+            
 
             Script newScriptMain = new Script();
             newScriptMain.MainScript = new Script.MainScriptStruct();
             newScriptMain.ID = id2;
             newScriptMain.Name = "New Script";
             controller.Data.AddItem(id2, newScriptMain);
+            scriptIndices.Add(id2);
             ((MainForm)Tag).GenTreeNode(newScriptMain, controller);
 
-            listBox1.SelectedIndex = listBox1.Items.Add(GenTextForList(newScriptMain));
+            scriptListBox.Items.Add(GenTextForList(newScriptMain));
+            
             controller.UpdateText();
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[newScriptMain.ID]].Tag).UpdateText();
-
-            listBox1.Focus();
+            PopulateList();
+            scriptListBox.SelectedIndex = scriptListBox.Items.Count - 1;
         }
-
-
     }
 }
