@@ -1021,6 +1021,60 @@ namespace TwinsaityEditor
                     };
                     break;
             }
+        private void deleteScriptToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var sel_i = listBox1.SelectedIndex;
+            if (sel_i == -1)
+                return;
+            controller.RemoveItem(script.ID);
+            listBox1.BeginUpdate();
+            listBox1.Items.RemoveAt(sel_i);
+            if (sel_i >= listBox1.Items.Count) sel_i = listBox1.Items.Count - 1;
+            listBox1.SelectedIndex = sel_i;
+            listBox1.EndUpdate();
+            controller.UpdateTextBox();
+        }
+
+        private void createScriptToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (controller.Data.RecordIDs.Count >= ushort.MaxValue) return;
+            uint id1;
+            for (id1 = 0; id1 < uint.MaxValue; ++id1)
+            {
+                if (!controller.Data.ContainsItem(id1))
+                    break;
+            }
+            uint id2;
+            for (id2 = id1 + 1; id2 < uint.MaxValue; ++id2)
+            {
+                if (!controller.Data.ContainsItem(id2))
+                    break;
+            }
+            Script newScriptHeader = new Script();
+            newScriptHeader.HeaderScript = new Script.HeaderScriptStruct((int)id2);
+            newScriptHeader.ID = id1;
+            newScriptHeader.Name = "Header Script";
+            newScriptHeader.flag = 1;
+            controller.Data.AddItem(id1, newScriptHeader);
+            ((MainForm)Tag).GenTreeNode(newScriptHeader, controller);
+
+            script = newScriptHeader;
+            listBox1.Items.Add(GenTextForList(newScriptHeader));
+            controller.UpdateText();
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[newScriptHeader.ID]].Tag).UpdateText();
+
+            Script newScriptMain = new Script();
+            newScriptMain.MainScript = new Script.MainScriptStruct();
+            newScriptMain.ID = id2;
+            newScriptMain.Name = "New Script";
+            controller.Data.AddItem(id2, newScriptMain);
+            ((MainForm)Tag).GenTreeNode(newScriptMain, controller);
+
+            listBox1.SelectedIndex = listBox1.Items.Add(GenTextForList(newScriptMain));
+            controller.UpdateText();
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[newScriptMain.ID]].Tag).UpdateText();
+
+            listBox1.Focus();
         }
     }
 }
