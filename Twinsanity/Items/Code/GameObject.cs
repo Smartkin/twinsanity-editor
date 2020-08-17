@@ -291,13 +291,30 @@ namespace Twinsanity
             int oldSize = size;
             size = 0;
 
-            size += 44;
+            size += 4;
+            size += 8;
+            size += 4;
             size += Name.Length;
 
+            size += 4;
             size += UI32.Count * 4;
 
-            size += (OGIs.Count + Anims.Count + Scripts.Count + Objects.Count + Sounds.Count) * 2;
+            size += 4;
+            size += OGIs.Count * 2;
 
+            size += 4;
+            size += Anims.Count * 2;
+
+            size += 4;
+            size += Scripts.Count * 2;
+
+            size += 4;
+            size += Objects.Count * 2;
+
+            size += 4;
+            size += Sounds.Count * 2;
+
+            size += 4;
             PHeader = (uint)((byte)pUi321.Count
                 | (pUi322.Count << 8)
                 | (pUi323.Count << 16));

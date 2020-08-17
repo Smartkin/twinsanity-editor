@@ -91,13 +91,13 @@ namespace TwinsaityEditor
             {
                 File.SelectItem((GameObject)controller.Data.Records[objectList.SelectedIndex]);
                 gameObject = (GameObject)File.SelectedItem;
+                InitLists();
             }
             else
             {
                 File.SelectItem(null);
                 gameObject = null;
             }
-            InitLists();
         }
         private void InitLists()
         {
@@ -186,7 +186,16 @@ namespace TwinsaityEditor
 
         private void deleteObjectToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Until better times");
+            var sel_i = objectList.SelectedIndex;
+            if (sel_i == -1)
+                return;
+            controller.RemoveItem(gameObject.ID);
+            objectList.BeginUpdate();
+            objectList.Items.RemoveAt(sel_i);
+            if (sel_i >= objectList.Items.Count) sel_i = objectList.Items.Count - 1;
+            objectList.SelectedIndex = sel_i;
+            objectList.EndUpdate();
+            controller.UpdateTextBox();
         }
 
         private void createObjectToolStripMenuItem_Click(object sender, EventArgs e)
@@ -208,6 +217,11 @@ namespace TwinsaityEditor
             objectList.Items.Add(GenTextForList(newGameObject));
             controller.UpdateText();
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[newGameObject.ID]].Tag).UpdateText();
+        }
+
+        private void duplicateObjectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
