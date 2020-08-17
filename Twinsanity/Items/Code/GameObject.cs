@@ -83,6 +83,7 @@ namespace Twinsanity
                 for (int i = 0; i < pUi323.Count; ++i)
                     writer.Write(pUi323[i]);
             }
+            updateFlag();
             writer.Write(flag);
             if (flag > 0)
             {
@@ -287,7 +288,90 @@ namespace Twinsanity
 
         protected override int GetSize()
         {
+            int oldSize = size;
+            size = 0;
+
+            size += 44;
+            size += Name.Length;
+
+            size += UI32.Count * 4;
+
+            size += (OGIs.Count + Anims.Count + Scripts.Count + Objects.Count + Sounds.Count) * 2;
+
+            PHeader = (uint)((byte)pUi321.Count
+                | (pUi322.Count << 8)
+                | (pUi323.Count << 16));
+            if (PHeader > 255)
+            {
+                size += 4;
+
+                size += 4;
+                size += pUi321.Count * 4;
+
+                size += 4;
+                size += pUi322.Count * 4;
+
+                size += 4;
+                size += pUi323.Count * 4;
+                size += 4;
+            }
+            updateFlag();
+            if (flag > 0)
+            {
+                if ((flag & 0x00000001) != 0)
+                {
+                    size += 4;
+                    size += cObjects.Count * 2;
+                }
+                if ((flag & 0x00000002) != 0)
+                {
+                    size += 4;
+                    size += cOGIs.Count * 2;
+                }
+                if ((flag & 0x00000004) != 0)
+                {
+                    size += 4;
+                    size += cAnims.Count * 2;
+                }
+                if ((flag & 0x00000008) != 0)
+                {
+                    size += 4;
+                    size += cCM.Count * 2;
+                }
+                if ((flag & 0x00000010) != 0)
+                {
+                    size += 4;
+                    size += cScripts.Count * 2;
+                }
+                if ((flag & 0x00000020) != 0)
+                {
+                    size += 4;
+                    size += cUnk.Count * 2;
+                }
+                if ((flag & 0x00000040) != 0)
+                {
+                    size += 4;
+                    size += cSounds.Count * 2;
+                }
+                size += 4;
+                if (scriptLen > 1)
+                {
+                    size += 18 * 2;
+                }
+                size += scriptData.Length;
+            }
             return size;
+        }
+        private void updateFlag()
+        {
+            flag = 0;
+            if (cObjects.Count > 0) flag |= 0x01;
+            if (cOGIs.Count > 0) flag |= 0x02;
+            if (cAnims.Count > 0) flag |= 0x04;
+            if (cCM.Count > 0) flag |= 0x08;
+            if (cScripts.Count > 0) flag |= 0x10;
+            if (cUnk.Count > 0) flag |= 0x20;
+            if (cSounds.Count > 0) flag |= 0x40;
         }
     }
 }

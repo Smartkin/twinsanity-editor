@@ -15,17 +15,22 @@ namespace TwinsaityEditor.Utils
         ListBox listBox;
         TextBox source;
         bool update;
-        public ListManipulatorUInt16(List<UInt16> list, ListBox listBox, TextBox source, Button addBtn, Button delBtn, Button setBtn, Button upBtn, Button downBtn)
+        public ListManipulatorUInt16(Button addBtn, Button delBtn, Button setBtn, Button upBtn, Button downBtn, ListBox listBox, TextBox source)
         {
-            this.list = list;
-            this.listBox = listBox;
+            
             this.source = source;
+            this.listBox = listBox;
             listBox.SelectedIndexChanged += UpdateSource;
             addBtn.Click += Add;
             delBtn.Click += Remove;
             setBtn.Click += Set;
             upBtn.Click += MoveUp;
             downBtn.Click += MoveDown;
+            
+        }
+        public void SetSource(List<UInt16> list)
+        {
+            this.list = list;
             update = true;
         }
         public void UpdateSource(Object sender, EventArgs args)
@@ -149,17 +154,22 @@ namespace TwinsaityEditor.Utils
         ListBox listBox;
         TextBox source;
         bool update;
-        public ListManipulatorUInt32(List<UInt32> list, ListBox listBox, TextBox source, Button addBtn, Button delBtn, Button setBtn, Button upBtn, Button downBtn)
+        public ListManipulatorUInt32(Button addBtn, Button delBtn, Button setBtn, Button upBtn, Button downBtn, ListBox listBox, TextBox source)
         {
-            this.list = list;
-            this.listBox = listBox;
+
             this.source = source;
+            this.listBox = listBox;
             listBox.SelectedIndexChanged += UpdateSource;
             addBtn.Click += Add;
             delBtn.Click += Remove;
             setBtn.Click += Set;
             upBtn.Click += MoveUp;
             downBtn.Click += MoveDown;
+
+        }
+        public void SetSource(List<UInt32> list)
+        {
+            this.list = list;
             update = true;
         }
         public void UpdateSource(Object sender, EventArgs args)
@@ -282,17 +292,22 @@ namespace TwinsaityEditor.Utils
         ListBox listBox;
         TextBox source;
         bool update;
-        public ListManipulatorSingle(List<Single> list, ListBox listBox, TextBox source, Button addBtn, Button delBtn, Button setBtn, Button upBtn, Button downBtn)
+        public ListManipulatorSingle(Button addBtn, Button delBtn, Button setBtn, Button upBtn, Button downBtn, ListBox listBox, TextBox source)
         {
-            this.list = list;
-            this.listBox = listBox;
+
             this.source = source;
+            this.listBox = listBox;
             listBox.SelectedIndexChanged += UpdateSource;
             addBtn.Click += Add;
             delBtn.Click += Remove;
             setBtn.Click += Set;
             upBtn.Click += MoveUp;
             downBtn.Click += MoveDown;
+
+        }
+        public void SetSource(List<Single> list)
+        {
+            this.list = list;
             update = true;
         }
         public void UpdateSource(Object sender, EventArgs args)

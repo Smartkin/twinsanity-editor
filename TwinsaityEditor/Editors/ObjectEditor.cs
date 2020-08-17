@@ -45,6 +45,24 @@ namespace TwinsaityEditor
             controller = c;
             Text = $"Instance Editor (Section {c.Data.Parent.ID})";
             InitializeComponent();
+            ScriptsManipulator = new ListManipulatorUInt16(scriptsAdd, scriptsRemove, scriptsSet, scriptsUp, scriptsDown, scriptsListBox, scrtiptIdSource);
+            ObjectsManipulator = new ListManipulatorUInt16(objectsAdd, objectsRemove, objectsSet, objectsUp, objectsDown, objectsListBox, objectIdSource);
+            OGIManipulator = new ListManipulatorUInt16(ogiAdd, ogiRemove, ogiSet, ogiUp, ogiDown, ogiListBox, ogiIdSource);
+            AnimationsManipulator = new ListManipulatorUInt16(animationsAdd, animationsRemove, animationsSet, animationsUp, animationsDown, animationsListBox, animationIdSource);
+            SoundManipulator = new ListManipulatorUInt16(soundsAdd, soundsRemove, soundsSet, soundsUp, soundsDown, soundsListBox, soundIdSource);
+            ParamsManipulator = new ListManipulatorUInt16(paramsAdd, paramsRemove, paramsSet, paramsUp, paramsDown, paramsListBox, paramSource);
+
+            cScriptsManipulator = new ListManipulatorUInt16(cscriptsAdd, cscriptsRemove, cscriptsSet, cscriptsUp, cscriptsDown, cscriptsList, cscriptIdSource);
+            cObjectsManipulator = new ListManipulatorUInt16(cobjectAdd, cobjectRemove, cobjectSet, cobjectUp, cobjectDown, cobjectList, cobjectIdSource);
+            cOGIManipulator = new ListManipulatorUInt16(cogiAdd, cogiRemove, cogiSet, cogiUp, cogiDown, cogiList, cogiIdSource);
+            cAnimationsManipulator = new ListManipulatorUInt16(canimationAdd, canimationRemove, canimationSet, canimationUp, canimationDown, canimationsList, canimationIdSource);
+            cSoundManipulator = new ListManipulatorUInt16(csoundAdd, csoundRemove, csoundSet, csoundUp, csoundDown, csoundsList, csoundIdSource);
+            cCmManipulator = new ListManipulatorUInt16(ccmAdd, ccmRemove, ccmSet, ccmUp, ccmDown, ccmList, ccmIdSource);
+
+            unk1Manipulator = new ListManipulatorUInt32(unk1Add, unk1Remove, unk1Set, unk1Up, unk1Down, unk1List, unk1Source);
+            unk2Manipulator = new ListManipulatorSingle(unk2Add, unk2Remove, unk2Set, unk2Up, unk2Down, unk2List, unk2Source);
+            unk3Manipulator = new ListManipulatorUInt32(unk3Add, unk3Remove, unk3Set, unk3Up, unk3Down, unk3List, unk3Source);
+            unk4Manipulator = new ListManipulatorUInt16(unk4Add, unk4Remove, unk4Set, unk4Up, unk4Down, unk4List, unk4Source);
             PopulateList();
         }
         public void PopulateList()
@@ -83,59 +101,43 @@ namespace TwinsaityEditor
         }
         private void InitLists()
         {
-            ScriptsManipulator = new ListManipulatorUInt16(gameObject.Scripts, scriptsListBox, scrtiptIdSource,
-                scriptsAdd, scriptsRemove, scriptsSet, scriptsUp, scriptsDown);
+            ScriptsManipulator.SetSource(gameObject.Scripts);
             ScriptsManipulator.PopulateList();
-            ObjectsManipulator = new ListManipulatorUInt16(gameObject.Objects, objectsListBox, objectIdSource,
-                objectsAdd, objectsRemove, objectsSet, objectsUp, objectsDown);
+            ObjectsManipulator.SetSource(gameObject.Objects);
             ObjectsManipulator.PopulateList();
-            OGIManipulator = new ListManipulatorUInt16(gameObject.OGIs, ogiListBox, ogiIdSource,
-                ogiAdd, ogiRemove, ogiSet, ogiUp, ogiDown);
+            OGIManipulator.SetSource(gameObject.OGIs);
             OGIManipulator.PopulateList();
-            AnimationsManipulator = new ListManipulatorUInt16(gameObject.Anims, animationsListBox, animationIdSource,
-                animationsAdd, animationsRemove, animationsSet, animationsUp, animationsDown);
+            AnimationsManipulator.SetSource(gameObject.Anims);
             AnimationsManipulator.PopulateList();
-            SoundManipulator = new ListManipulatorUInt16(gameObject.Sounds, soundsListBox, soundIdSource,
-                soundsAdd, soundsRemove, soundsSet, soundsUp, soundsDown);
+            SoundManipulator.SetSource(gameObject.Sounds);
             SoundManipulator.PopulateList();
-            ParamsManipulator = new ListManipulatorUInt16(gameObject.scriptParams, paramsListBox, paramSource,
-                paramsAdd, paramsRemove, paramsSet, paramsUp, paramsDown);
+            ParamsManipulator.SetSource(gameObject.scriptParams);
             ParamsManipulator.PopulateList();
 
-            cScriptsManipulator = new ListManipulatorUInt16(gameObject.cScripts, cscriptsList, cscriptIdSource,
-                cscriptsAdd, cscriptsRemove, cscriptsSet, cscriptsUp, cscriptsDown);
+            cScriptsManipulator.SetSource(gameObject.cScripts);
             cScriptsManipulator.PopulateList();
-            cObjectsManipulator = new ListManipulatorUInt16(gameObject.cObjects, cobjectList, cobjectIdSource,
-                cobjectAdd, cobjectRemove, cobjectSet, cobjectUp, cobjectDown);
+            cObjectsManipulator.SetSource(gameObject.cObjects);
             cObjectsManipulator.PopulateList();
-            cOGIManipulator = new ListManipulatorUInt16(gameObject.cOGIs, cogiList, cogiIdSource,
-                cogiAdd, cogiRemove, cogiSet, cogiUp, cogiDown);
+            cOGIManipulator.SetSource(gameObject.cOGIs);
             cOGIManipulator.PopulateList();
-            cAnimationsManipulator = new ListManipulatorUInt16(gameObject.cAnims, canimationsList, canimationIdSource,
-                canimationAdd, canimationRemove, canimationSet, canimationUp, canimationDown);
+            cAnimationsManipulator.SetSource(gameObject.cAnims);
             cAnimationsManipulator.PopulateList();
-            cSoundManipulator = new ListManipulatorUInt16(gameObject.cSounds, csoundsList, csoundIdSource,
-                csoundAdd, csoundRemove, csoundSet, csoundUp, csoundDown);
+            cSoundManipulator.SetSource(gameObject.cSounds);
             cSoundManipulator.PopulateList();
-            cCmManipulator = new ListManipulatorUInt16(gameObject.cCM, ccmList, ccmIdSource,
-                ccmAdd, ccmRemove, ccmSet, ccmUp, ccmDown);
+            cCmManipulator.SetSource(gameObject.cCM);
             cCmManipulator.PopulateList();
 
-            unk1Manipulator = new ListManipulatorUInt32(gameObject.pUi321, unk1List, unk1Source,
-                unk1Add, unk1Remove, unk1Set, unk1Up, unk1Down);
+            unk1Manipulator.SetSource(gameObject.pUi321);
             unk1Manipulator.PopulateList();
-            unk2Manipulator = new ListManipulatorSingle(gameObject.pUi322, unk2List, unk2Source,
-                unk2Add, unk2Remove, unk2Set, unk2Up, unk2Down);
+            unk2Manipulator.SetSource(gameObject.pUi322);
             unk2Manipulator.PopulateList();
-            unk3Manipulator = new ListManipulatorUInt32(gameObject.pUi323, unk3List, unk3Source,
-                unk3Add, unk3Remove, unk3Set, unk3Up, unk3Down);
+            unk3Manipulator.SetSource(gameObject.pUi323);
             unk3Manipulator.PopulateList();
-            unk4Manipulator = new ListManipulatorUInt16(gameObject.cUnk, unk4List, unk4Source,
-                unk4Add, unk4Remove, unk4Set, unk4Up, unk4Down);
+            unk4Manipulator.SetSource(gameObject.cUnk);
             unk4Manipulator.PopulateList();
 
             nameSource.Text = gameObject.Name;
-            flagSource.Text = Convert.ToString(gameObject.flag, 16);
+            objectId.Text = Convert.ToString(gameObject.ID, 10);
         }
 
         private void nameSource_TextChanged(object sender, EventArgs e)
@@ -162,6 +164,50 @@ namespace TwinsaityEditor
                 }
                 
             }
+        }
+
+        private void objectId_TextChanged(object sender, EventArgs e)
+        {
+            if (gameObject != null)
+            {
+                UInt32 val = 0;
+                if (UInt32.TryParse(((TextBox)sender).Text,  out val))
+                {
+                    gameObject.ID = val;
+                    ((TextBox)sender).BackColor = Color.White;
+                }
+                else
+                {
+                    ((TextBox)sender).BackColor = Color.Red;
+                }
+
+            }
+        }
+
+        private void deleteObjectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Until better times");
+        }
+
+        private void createObjectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (controller.Data.RecordIDs.Count >= ushort.MaxValue) return;
+            uint id;
+            for (id = 0; id < uint.MaxValue; ++id)
+            {
+                if (!controller.Data.ContainsItem(id))
+                    break;
+            }
+            GameObject newGameObject = new GameObject();
+            newGameObject.ID = id;
+            newGameObject.Name = "New Game Object";
+            GameObject cmp = gameObject;
+            controller.Data.AddItem(id, newGameObject);
+            ((MainForm)Tag).GenTreeNode(newGameObject, controller);
+            gameObject = newGameObject;
+            objectList.Items.Add(GenTextForList(newGameObject));
+            controller.UpdateText();
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[newGameObject.ID]].Tag).UpdateText();
         }
     }
 }
