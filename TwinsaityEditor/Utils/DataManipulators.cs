@@ -44,11 +44,17 @@ namespace TwinsaityEditor.Utils
         {
             listBox.BeginUpdate();
             listBox.Items.Clear();
+            int i = 0;
             foreach (UInt16 e in list)
             {
-                listBox.Items.Add(e.ToString());
+                listBox.Items.Add(GenerateText(i,e));
+                ++i;
             }
             listBox.EndUpdate();
+        }
+        private String GenerateText(int i, int e)
+        {
+            return $"{i:000}: {e}";
         }
 
         public void MoveUp(Object sender, EventArgs args)
@@ -61,8 +67,7 @@ namespace TwinsaityEditor.Utils
                 list[index - 1] = val1;
                 list[index] = val2;
                 DisableUpdate();
-                listBox.Items[index] = list[index].ToString();
-                listBox.Items[index - 1] = list[index - 1].ToString();
+                PopulateList();
                 int top = listBox.Items.Count - 1;
                 --index;
                 listBox.SelectedIndex = Math.Min(Math.Max(index, 0), top);
@@ -79,8 +84,7 @@ namespace TwinsaityEditor.Utils
                 list[index + 1] = val1;
                 list[index] = val2;
                 DisableUpdate();
-                listBox.Items[index] = list[index].ToString();
-                listBox.Items[index + 1] = list[index + 1].ToString();
+                PopulateList();
                 int top = listBox.Items.Count - 1;
                 ++index;
                 listBox.SelectedIndex = Math.Min(Math.Max(index, 0), top);
@@ -94,7 +98,7 @@ namespace TwinsaityEditor.Utils
                 int index = listBox.SelectedIndex;
                 list.RemoveAt(index);
                 DisableUpdate();
-                listBox.Items.RemoveAt(index);
+                PopulateList();
                 int top = listBox.Items.Count - 1;
                 listBox.SelectedIndex = Math.Min(Math.Max(index, 0), top);
                 EnableUpdate();
@@ -114,7 +118,7 @@ namespace TwinsaityEditor.Utils
             {
                 list.Insert(index, val);
                 DisableUpdate();
-                listBox.Items.Insert(index, source.Text);
+                PopulateList();
                 listBox.SelectedIndex = index;
                 EnableUpdate();
             }
@@ -132,7 +136,7 @@ namespace TwinsaityEditor.Utils
                     list[listBox.SelectedIndex] = val;
                     int index = listBox.SelectedIndex;
                     DisableUpdate();
-                    listBox.Items[listBox.SelectedIndex] = source.Text;
+                    listBox.Items[listBox.SelectedIndex] = GenerateText(index, val);
                     listBox.SelectedIndex = index;
                     EnableUpdate();
                 }
