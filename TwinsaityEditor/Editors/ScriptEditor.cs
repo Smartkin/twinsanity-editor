@@ -27,6 +27,7 @@ namespace TwinsaityEditor
         private FileController File { get; set; }
         private TwinsFile FileData { get => File.Data; }
         private Func<Script, bool> scriptPredicate;
+        private List<int> scriptIndices = new List<int>();
         public ScriptEditor(SectionController c)
         {
             File = c.MainFile;
@@ -48,16 +49,20 @@ namespace TwinsaityEditor
         }
         private void PopulateList(Func<Script, bool> predicate)
         {
-            listBox1.BeginUpdate();
-            listBox1.Items.Clear();
+            scriptListBox.BeginUpdate();
+            scriptListBox.Items.Clear();
+            scriptIndices.Clear();
+            var index = 0;
             foreach (Script i in controller.Data.Records)
             {
                 if (predicate.Invoke(i))
                 {
-                    listBox1.Items.Add(GenTextForList(i));
+                    scriptIndices.Add(index);
+                    scriptListBox.Items.Add(GenTextForList(i));
                 }
+                ++index;
             }
-            listBox1.EndUpdate();
+            scriptListBox.EndUpdate();
         }
         private string GenTextForList(Script script)
         {
@@ -966,11 +971,11 @@ namespace TwinsaityEditor
                 generalWarning.Visible = true;
             }
         }
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void scriptListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (null != listBox1.SelectedItem)
+            if (null != scriptListBox.SelectedItem)
             {
-                File.SelectItem((Script)controller.Data.Records[listBox1.SelectedIndex]);
+                File.SelectItem((Script)controller.Data.Records[scriptIndices[scriptListBox.SelectedIndex]]);
                 script = (Script)File.SelectedItem;
             }
             else
