@@ -8,7 +8,7 @@ namespace Twinsanity
     {
         private int size;
         public uint UnkBitfield { get; set; }
-        public byte[] ScriptSlots { get; set; } = new byte[8]; // Pairs;Scripts;GameObjects;UInt32s;Sounds;00;00;00 (last 3 are potentially a side effect of needing object name's length to be word aligned)
+        public List<Byte> ScriptSlots { get; set; } = new List<Byte>(); // Pairs;Scripts;GameObjects;UInt32s;Sounds;00;00;00 (last 3 are potentially a side effect of needing object name's length to be word aligned)
         public List<UInt32> UI32 { get; set; } = new List<UInt32>();
         public List<UInt16> OGIs { get; set; } = new List<UInt16>();
         public List<UInt16> Anims { get; set; } = new List<UInt16>();
@@ -36,11 +36,21 @@ namespace Twinsanity
         private Byte[] scriptData = new byte[0];
 
         public string Name { get; set; }
-
+        private void UpdateSlots()
+        {
+            ScriptSlots[0] = (Byte)OGIs.Count;
+            ScriptSlots[1] = (Byte)Scripts.Count;
+            ScriptSlots[2] = (Byte)Objects.Count;
+            ScriptSlots[3] = (Byte)UI32.Count;
+            ScriptSlots[4] = (Byte)Sounds.Count;
+            ScriptSlots[5] = 0;
+            ScriptSlots[6] = 0;
+            ScriptSlots[7] = 0;
+        }
         public override void Save(BinaryWriter writer)
         {
             var sk = writer.BaseStream.Position;
-
+            UpdateSlots();
             writer.Write(UnkBitfield);
             for (int i = 0; i < 8; ++i)
             {
@@ -147,7 +157,7 @@ namespace Twinsanity
             UnkBitfield = reader.ReadUInt32();
             for (int i = 0; i < 8; ++i)
             {
-                ScriptSlots[i] = reader.ReadByte();
+                ScriptSlots.Add(reader.ReadByte());
             }
 
             //Class1 = reader.ReadUInt32();
