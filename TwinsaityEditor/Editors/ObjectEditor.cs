@@ -34,6 +34,11 @@ namespace TwinsaityEditor
         private ListManipulatorUInt16 cOGIManipulator;
         private ListManipulatorUInt16 cSoundManipulator;
         private ListManipulatorUInt16 cCmManipulator;
+
+        private ListManipulatorUInt32 unk1Manipulator;
+        private ListManipulatorSingle unk2Manipulator;
+        private ListManipulatorUInt32 unk3Manipulator;
+        private ListManipulatorUInt16 unk4Manipulator;
         public ObjectEditor(SectionController c)
         {
             File = c.MainFile;
@@ -115,6 +120,19 @@ namespace TwinsaityEditor
             cCmManipulator = new ListManipulatorUInt16(gameObject.cCM, ccmList, ccmIdSource,
                 ccmAdd, ccmRemove, ccmSet, ccmUp, ccmDown);
             cCmManipulator.PopulateList();
+
+            unk1Manipulator = new ListManipulatorUInt32(gameObject.pUi321, unk1List, unk1Source,
+                unk1Add, unk1Remove, unk1Set, unk1Up, unk1Down);
+            unk1Manipulator.PopulateList();
+            unk2Manipulator = new ListManipulatorSingle(gameObject.pUi322, unk2List, unk2Source,
+                unk2Add, unk2Remove, unk2Set, unk2Up, unk2Down);
+            unk2Manipulator.PopulateList();
+            unk3Manipulator = new ListManipulatorUInt32(gameObject.pUi323, unk3List, unk3Source,
+                unk3Add, unk3Remove, unk3Set, unk3Up, unk3Down);
+            unk3Manipulator.PopulateList();
+            unk4Manipulator = new ListManipulatorUInt16(gameObject.cUnk, unk4List, unk4Source,
+                unk4Add, unk4Remove, unk4Set, unk4Up, unk4Down);
+            unk4Manipulator.PopulateList();
 
             nameSource.Text = gameObject.Name;
             flagSource.Text = Convert.ToString(gameObject.flag, 16);

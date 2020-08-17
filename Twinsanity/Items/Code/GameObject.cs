@@ -20,9 +20,9 @@ namespace Twinsanity
         //private int pUi321.Length = 0;
         //private int pUi322.Length = 1;
         //private int pUi323.Length = 2;
-        private List<UInt32> pUi321 = new List<UInt32>();
-        private List<Single> pUi322 = new List<Single>();
-        private List<UInt32> pUi323 = new List<UInt32>();
+        public List<UInt32> pUi321 = new List<UInt32>();
+        public List<Single> pUi322 = new List<Single>();
+        public List<UInt32> pUi323 = new List<UInt32>();
         public uint flag;
         public List<UInt16> cObjects = new List<UInt16>();
         public List<UInt16> cOGIs = new List<UInt16>();
