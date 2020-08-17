@@ -117,6 +117,8 @@
             this.scriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.label32 = new System.Windows.Forms.Label();
+            this.generalId = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.panelType2.SuspendLayout();
             this.panelType3.SuspendLayout();
@@ -150,14 +152,14 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.panelType2);
-            this.groupBox1.Controls.Add(this.panelType3);
-            this.groupBox1.Controls.Add(this.panelType4);
             this.groupBox1.Controls.Add(this.panelGeneral);
             this.groupBox1.Controls.Add(this.panelLinked);
             this.groupBox1.Controls.Add(this.panelHeader);
             this.groupBox1.Controls.Add(this.panelMain);
             this.groupBox1.Controls.Add(this.panelType1);
+            this.groupBox1.Controls.Add(this.panelType2);
+            this.groupBox1.Controls.Add(this.panelType3);
+            this.groupBox1.Controls.Add(this.panelType4);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Right;
             this.groupBox1.Location = new System.Drawing.Point(588, 24);
             this.groupBox1.Name = "groupBox1";
@@ -490,6 +492,8 @@
             // 
             // panelGeneral
             // 
+            this.panelGeneral.Controls.Add(this.generalId);
+            this.panelGeneral.Controls.Add(this.label32);
             this.panelGeneral.Controls.Add(this.generalWarning);
             this.panelGeneral.Controls.Add(this.generalArray);
             this.panelGeneral.Controls.Add(this.label31);
@@ -503,7 +507,7 @@
             // 
             this.generalWarning.AutoSize = true;
             this.generalWarning.ForeColor = System.Drawing.Color.Red;
-            this.generalWarning.Location = new System.Drawing.Point(10, 56);
+            this.generalWarning.Location = new System.Drawing.Point(9, 91);
             this.generalWarning.Name = "generalWarning";
             this.generalWarning.Size = new System.Drawing.Size(217, 26);
             this.generalWarning.TabIndex = 13;
@@ -511,7 +515,7 @@
             // 
             // generalArray
             // 
-            this.generalArray.Location = new System.Drawing.Point(7, 24);
+            this.generalArray.Location = new System.Drawing.Point(6, 59);
             this.generalArray.Name = "generalArray";
             this.generalArray.Size = new System.Drawing.Size(284, 20);
             this.generalArray.TabIndex = 12;
@@ -520,7 +524,7 @@
             // label31
             // 
             this.label31.AutoSize = true;
-            this.label31.Location = new System.Drawing.Point(9, 8);
+            this.label31.Location = new System.Drawing.Point(8, 43);
             this.label31.Name = "label31";
             this.label31.Size = new System.Drawing.Size(79, 13);
             this.label31.TabIndex = 11;
@@ -986,16 +990,33 @@
             // deleteScriptToolStripMenuItem
             // 
             this.deleteScriptToolStripMenuItem.Name = "deleteScriptToolStripMenuItem";
-            this.deleteScriptToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.deleteScriptToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.deleteScriptToolStripMenuItem.Text = "Delete Script";
             this.deleteScriptToolStripMenuItem.Click += new System.EventHandler(this.deleteScriptToolStripMenuItem_Click);
             // 
             // createScriptToolStripMenuItem
             // 
             this.createScriptToolStripMenuItem.Name = "createScriptToolStripMenuItem";
-            this.createScriptToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.createScriptToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.createScriptToolStripMenuItem.Text = "Create Script";
             this.createScriptToolStripMenuItem.Click += new System.EventHandler(this.createScriptToolStripMenuItem_Click);
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(7, 17);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(21, 13);
+            this.label32.TabIndex = 14;
+            this.label32.Text = "ID:";
+            // 
+            // generalId
+            // 
+            this.generalId.Location = new System.Drawing.Point(100, 17);
+            this.generalId.Name = "generalId";
+            this.generalId.Size = new System.Drawing.Size(189, 20);
+            this.generalId.TabIndex = 15;
+            this.generalId.TextChanged += new System.EventHandler(this.generalId_TextChanged);
             // 
             // ScriptEditor
             // 
@@ -1125,5 +1146,7 @@
         private System.Windows.Forms.ToolStripMenuItem scriptToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteScriptToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem createScriptToolStripMenuItem;
+        private System.Windows.Forms.TextBox generalId;
+        private System.Windows.Forms.Label label32;
     }
 }

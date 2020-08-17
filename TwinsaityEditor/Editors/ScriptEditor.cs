@@ -897,6 +897,7 @@ namespace TwinsaityEditor
         }
         private void UpdateGeneralPanel()
         {
+            generalId.Text = script.ID.ToString();
             generalArray.Text = GetTextFromArray(script.script);
             if (script.script.Length == 0)
             {
@@ -942,6 +943,20 @@ namespace TwinsaityEditor
             else
             {
                 generalWarning.Visible = true;
+            }
+        }
+        private void generalId_TextChanged(object sender, EventArgs e)
+        {
+            UInt32 val = 0;
+            if (UInt32.TryParse(((TextBox)sender).Text, out val))
+            {
+                ((TextBox)sender).BackColor = Color.White;
+                script.ID = val;
+            }
+            else
+            {
+                ((TextBox)sender).BackColor = Color.Red;
+                return;
             }
         }
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -1017,5 +1032,7 @@ namespace TwinsaityEditor
 
             listBox1.Focus();
         }
+
+
     }
 }
