@@ -201,13 +201,9 @@ namespace TwinsaityEditor
 
         private void createObjectToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (controller.Data.RecordIDs.Count >= ushort.MaxValue) return;
-            uint id;
-            for (id = 0; id < uint.MaxValue; ++id)
-            {
-                if (!controller.Data.ContainsItem(id))
-                    break;
-            }
+            ushort maxid = (ushort)controller.Data.RecordIDs.Select(p => p.Key).Max();
+            ushort id = Math.Max((ushort)(32 * 1024), maxid);
+            ++id;
             GameObject newGameObject = new GameObject();
             newGameObject.ID = id;
             newGameObject.Name = "New Game Object";
@@ -221,29 +217,28 @@ namespace TwinsaityEditor
 
         private void duplicateObjectToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (controller.Data.RecordIDs.Count >= ushort.MaxValue) return;
-            uint id;
-            for (id = 0; id < uint.MaxValue; ++id)
+            if (gameObject != null)
             {
-                if (!controller.Data.ContainsItem(id))
-                    break;
+                ushort maxid = (ushort)controller.Data.RecordIDs.Select(p => p.Key).Max();
+                ushort id = Math.Max((ushort)(32 * 1024), maxid);
+                ++id;
+                GameObject newGameObject = new GameObject();
+                using (MemoryStream stream = new MemoryStream())
+                using (BinaryWriter writer = new BinaryWriter(stream))
+                using (BinaryReader reader = new BinaryReader(stream))
+                {
+                    gameObject.Save(writer);
+                    reader.BaseStream.Position = 0;
+                    newGameObject.Load(reader, (int)reader.BaseStream.Length);
+                }
+                newGameObject.ID = id;
+                controller.Data.AddItem(id, newGameObject);
+                ((MainForm)Tag).GenTreeNode(newGameObject, controller);
+                gameObject = newGameObject;
+                objectList.Items.Add(GenTextForList(newGameObject));
+                controller.UpdateText();
+                ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[newGameObject.ID]].Tag).UpdateText();
             }
-            GameObject newGameObject = new GameObject();
-            using (MemoryStream stream = new MemoryStream())
-            using (BinaryWriter writer = new BinaryWriter(stream))
-            using (BinaryReader reader = new BinaryReader(stream))
-            {
-                gameObject.Save(writer);
-                reader.BaseStream.Position = 0;
-                newGameObject.Load(reader, (int)reader.BaseStream.Length);
-            }
-            newGameObject.ID = id;
-            controller.Data.AddItem(id, newGameObject);
-            ((MainForm)Tag).GenTreeNode(newGameObject, controller);
-            gameObject = newGameObject;
-            objectList.Items.Add(GenTextForList(newGameObject));
-            controller.UpdateText();
-            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[newGameObject.ID]].Tag).UpdateText();
         }
     }
 }

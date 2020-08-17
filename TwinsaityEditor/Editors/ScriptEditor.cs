@@ -986,19 +986,11 @@ namespace TwinsaityEditor
 
         private void createScriptToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (controller.Data.RecordIDs.Count >= ushort.MaxValue) return;
-            uint id1;
-            for (id1 = 0; id1 < uint.MaxValue; ++id1)
-            {
-                if (!controller.Data.ContainsItem(id1))
-                    break;
-            }
-            uint id2;
-            for (id2 = id1 + 1; id2 < uint.MaxValue; ++id2)
-            {
-                if (!controller.Data.ContainsItem(id2))
-                    break;
-            }
+            ushort maxid = (ushort)controller.Data.RecordIDs.Select(p => p.Key).Max();
+            ushort id1 = Math.Max((ushort)(32 * 1024), maxid);
+            ++id1;
+            ushort id2 = id1;
+            ++id2;
             Script newScriptHeader = new Script();
             newScriptHeader.HeaderScript = new Script.HeaderScriptStruct((int)id2);
             newScriptHeader.ID = id1;
