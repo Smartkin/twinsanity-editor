@@ -244,7 +244,7 @@
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(727, 509);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Main";
+            this.tabPage1.Text = "Slots";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // groupBox2
@@ -716,7 +716,7 @@
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(727, 509);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "C Lists";
+            this.tabPage2.Text = "Resources";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // groupBox8
@@ -1561,21 +1561,21 @@
             // deleteObjectToolStripMenuItem
             // 
             this.deleteObjectToolStripMenuItem.Name = "deleteObjectToolStripMenuItem";
-            this.deleteObjectToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.deleteObjectToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.deleteObjectToolStripMenuItem.Text = "Delete Object";
             this.deleteObjectToolStripMenuItem.Click += new System.EventHandler(this.deleteObjectToolStripMenuItem_Click);
             // 
             // createObjectToolStripMenuItem
             // 
             this.createObjectToolStripMenuItem.Name = "createObjectToolStripMenuItem";
-            this.createObjectToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.createObjectToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.createObjectToolStripMenuItem.Text = "Create Object";
             this.createObjectToolStripMenuItem.Click += new System.EventHandler(this.createObjectToolStripMenuItem_Click);
             // 
             // duplicateObjectToolStripMenuItem
             // 
             this.duplicateObjectToolStripMenuItem.Name = "duplicateObjectToolStripMenuItem";
-            this.duplicateObjectToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.duplicateObjectToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.duplicateObjectToolStripMenuItem.Text = "Duplicate Object";
             this.duplicateObjectToolStripMenuItem.Click += new System.EventHandler(this.duplicateObjectToolStripMenuItem_Click);
             // 
