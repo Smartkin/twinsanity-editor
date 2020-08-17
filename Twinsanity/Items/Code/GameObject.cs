@@ -6,19 +6,6 @@ namespace Twinsanity
 {
     public class GameObject : TwinsItem
     {
-        /*
-         * #0: (OnSpawn) 570
-#1: (OnTrigger) 570
-#2: (OnDamage) 578
-#3: (OnTouch) None
-#4: (OnHeadbutt) None
-#5: (OnLand) None
-#6: (OnGettingSpinAttacked) 578
-#7: (OnGettingBodyslamAttacked) None
-#8: (OnGettingSlideAttacked) None
-#9: (OnPhysicsCollision) None
-#10: (Unk10) None
-         */
         private int size;
         public uint UnkBitfield { get; set; }
         public byte[] ScriptSlots { get; set; } = new byte[8]; // Pairs;Scripts;GameObjects;UInt32s;Sounds;00;00;00 (last 3 are potentially a side effect of needing object name's length to be word aligned)
@@ -36,7 +23,7 @@ namespace Twinsanity
         private List<UInt32> pUi321 = new List<UInt32>();
         private List<Single> pUi322 = new List<Single>();
         private List<UInt32> pUi323 = new List<UInt32>();
-        private uint flag;
+        public uint flag;
         public List<UInt16> cObjects = new List<UInt16>();
         public List<UInt16> cOGIs = new List<UInt16>();
         public List<UInt16> cAnims = new List<UInt16>();
@@ -45,7 +32,7 @@ namespace Twinsanity
         public List<UInt16> cUnk = new List<UInt16>();
         public List<UInt16> cSounds = new List<UInt16>();
         private int scriptLen;
-        private List<UInt16> scriptParams = new List<UInt16>();
+        public List<UInt16> scriptParams = new List<UInt16>();
         private Byte[] scriptData = new byte[0];
 
         public string Name { get; set; }
