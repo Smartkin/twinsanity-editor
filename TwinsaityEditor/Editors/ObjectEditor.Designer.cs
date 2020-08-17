@@ -86,6 +86,55 @@
             this.paramsListBox = new System.Windows.Forms.ListBox();
             this.flagSource = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.ccmIdSource = new System.Windows.Forms.TextBox();
+            this.ccmSet = new System.Windows.Forms.Button();
+            this.ccmAdd = new System.Windows.Forms.Button();
+            this.ccmDown = new System.Windows.Forms.Button();
+            this.ccmRemove = new System.Windows.Forms.Button();
+            this.ccmUp = new System.Windows.Forms.Button();
+            this.ccmList = new System.Windows.Forms.ListBox();
+            this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.canimationIdSource = new System.Windows.Forms.TextBox();
+            this.canimationSet = new System.Windows.Forms.Button();
+            this.canimationAdd = new System.Windows.Forms.Button();
+            this.canimationDown = new System.Windows.Forms.Button();
+            this.canimationRemove = new System.Windows.Forms.Button();
+            this.canimationUp = new System.Windows.Forms.Button();
+            this.canimationsList = new System.Windows.Forms.ListBox();
+            this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.cogiIdSource = new System.Windows.Forms.TextBox();
+            this.cogiSet = new System.Windows.Forms.Button();
+            this.cogiAdd = new System.Windows.Forms.Button();
+            this.cogiDown = new System.Windows.Forms.Button();
+            this.cogiRemove = new System.Windows.Forms.Button();
+            this.cogiUp = new System.Windows.Forms.Button();
+            this.cogiList = new System.Windows.Forms.ListBox();
+            this.groupBox11 = new System.Windows.Forms.GroupBox();
+            this.csoundIdSource = new System.Windows.Forms.TextBox();
+            this.csoundSet = new System.Windows.Forms.Button();
+            this.csoundAdd = new System.Windows.Forms.Button();
+            this.csoundDown = new System.Windows.Forms.Button();
+            this.csoundRemove = new System.Windows.Forms.Button();
+            this.csoundUp = new System.Windows.Forms.Button();
+            this.csoundsList = new System.Windows.Forms.ListBox();
+            this.groupBox12 = new System.Windows.Forms.GroupBox();
+            this.cobjectIdSource = new System.Windows.Forms.TextBox();
+            this.cobjectSet = new System.Windows.Forms.Button();
+            this.cobjectAdd = new System.Windows.Forms.Button();
+            this.cobjectDown = new System.Windows.Forms.Button();
+            this.cobjectRemove = new System.Windows.Forms.Button();
+            this.cobjectUp = new System.Windows.Forms.Button();
+            this.cobjectList = new System.Windows.Forms.ListBox();
+            this.groupBox13 = new System.Windows.Forms.GroupBox();
+            this.cscriptIdSource = new System.Windows.Forms.TextBox();
+            this.cscriptsSet = new System.Windows.Forms.Button();
+            this.cscriptsAdd = new System.Windows.Forms.Button();
+            this.cscriptsDown = new System.Windows.Forms.Button();
+            this.cscriptsRemove = new System.Windows.Forms.Button();
+            this.cscriptsUp = new System.Windows.Forms.Button();
+            this.cscriptsList = new System.Windows.Forms.ListBox();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -94,8 +143,15 @@
             this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox8.SuspendLayout();
+            this.groupBox9.SuspendLayout();
+            this.groupBox10.SuspendLayout();
+            this.groupBox11.SuspendLayout();
+            this.groupBox12.SuspendLayout();
+            this.groupBox13.SuspendLayout();
             this.SuspendLayout();
             // 
             // objectList
@@ -124,6 +180,7 @@
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(3, 57);
             this.tabControl1.Name = "tabControl1";
@@ -144,7 +201,7 @@
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(727, 533);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Tab1";
+            this.tabPage1.Text = "Main";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // groupBox6
@@ -529,12 +586,18 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.groupBox8);
+            this.tabPage2.Controls.Add(this.groupBox9);
+            this.tabPage2.Controls.Add(this.groupBox10);
+            this.tabPage2.Controls.Add(this.groupBox11);
+            this.tabPage2.Controls.Add(this.groupBox12);
+            this.tabPage2.Controls.Add(this.groupBox13);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(727, 533);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Tab2";
+            this.tabPage2.Text = "C Lists";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // panel1
@@ -659,6 +722,471 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "Flag:";
             // 
+            // tabPage3
+            // 
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Size = new System.Drawing.Size(727, 533);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Unknown Values";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // groupBox8
+            // 
+            this.groupBox8.Controls.Add(this.ccmIdSource);
+            this.groupBox8.Controls.Add(this.ccmSet);
+            this.groupBox8.Controls.Add(this.ccmAdd);
+            this.groupBox8.Controls.Add(this.ccmDown);
+            this.groupBox8.Controls.Add(this.ccmRemove);
+            this.groupBox8.Controls.Add(this.ccmUp);
+            this.groupBox8.Controls.Add(this.ccmList);
+            this.groupBox8.Location = new System.Drawing.Point(6, 213);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(232, 195);
+            this.groupBox8.TabIndex = 11;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "Code Model List";
+            // 
+            // ccmIdSource
+            // 
+            this.ccmIdSource.Location = new System.Drawing.Point(78, 148);
+            this.ccmIdSource.Name = "ccmIdSource";
+            this.ccmIdSource.Size = new System.Drawing.Size(148, 20);
+            this.ccmIdSource.TabIndex = 6;
+            // 
+            // ccmSet
+            // 
+            this.ccmSet.Location = new System.Drawing.Point(10, 162);
+            this.ccmSet.Name = "ccmSet";
+            this.ccmSet.Size = new System.Drawing.Size(55, 23);
+            this.ccmSet.TabIndex = 5;
+            this.ccmSet.Text = "Set";
+            this.ccmSet.UseVisualStyleBackColor = true;
+            // 
+            // ccmAdd
+            // 
+            this.ccmAdd.Location = new System.Drawing.Point(10, 133);
+            this.ccmAdd.Name = "ccmAdd";
+            this.ccmAdd.Size = new System.Drawing.Size(55, 23);
+            this.ccmAdd.TabIndex = 4;
+            this.ccmAdd.Text = "Add";
+            this.ccmAdd.UseVisualStyleBackColor = true;
+            // 
+            // ccmDown
+            // 
+            this.ccmDown.Location = new System.Drawing.Point(10, 104);
+            this.ccmDown.Name = "ccmDown";
+            this.ccmDown.Size = new System.Drawing.Size(55, 23);
+            this.ccmDown.TabIndex = 3;
+            this.ccmDown.Text = "Down";
+            this.ccmDown.UseVisualStyleBackColor = true;
+            // 
+            // ccmRemove
+            // 
+            this.ccmRemove.Location = new System.Drawing.Point(10, 60);
+            this.ccmRemove.Name = "ccmRemove";
+            this.ccmRemove.Size = new System.Drawing.Size(55, 23);
+            this.ccmRemove.TabIndex = 2;
+            this.ccmRemove.Text = "Remove";
+            this.ccmRemove.UseVisualStyleBackColor = true;
+            // 
+            // ccmUp
+            // 
+            this.ccmUp.Location = new System.Drawing.Point(10, 19);
+            this.ccmUp.Name = "ccmUp";
+            this.ccmUp.Size = new System.Drawing.Size(55, 23);
+            this.ccmUp.TabIndex = 1;
+            this.ccmUp.Text = "Up";
+            this.ccmUp.UseVisualStyleBackColor = true;
+            // 
+            // ccmList
+            // 
+            this.ccmList.FormattingEnabled = true;
+            this.ccmList.Location = new System.Drawing.Point(78, 19);
+            this.ccmList.Name = "ccmList";
+            this.ccmList.Size = new System.Drawing.Size(148, 108);
+            this.ccmList.TabIndex = 0;
+            // 
+            // groupBox9
+            // 
+            this.groupBox9.Controls.Add(this.canimationIdSource);
+            this.groupBox9.Controls.Add(this.canimationSet);
+            this.groupBox9.Controls.Add(this.canimationAdd);
+            this.groupBox9.Controls.Add(this.canimationDown);
+            this.groupBox9.Controls.Add(this.canimationRemove);
+            this.groupBox9.Controls.Add(this.canimationUp);
+            this.groupBox9.Controls.Add(this.canimationsList);
+            this.groupBox9.Location = new System.Drawing.Point(483, 213);
+            this.groupBox9.Name = "groupBox9";
+            this.groupBox9.Size = new System.Drawing.Size(232, 195);
+            this.groupBox9.TabIndex = 14;
+            this.groupBox9.TabStop = false;
+            this.groupBox9.Text = "Animation List";
+            // 
+            // canimationIdSource
+            // 
+            this.canimationIdSource.Location = new System.Drawing.Point(78, 148);
+            this.canimationIdSource.Name = "canimationIdSource";
+            this.canimationIdSource.Size = new System.Drawing.Size(148, 20);
+            this.canimationIdSource.TabIndex = 6;
+            // 
+            // canimationSet
+            // 
+            this.canimationSet.Location = new System.Drawing.Point(10, 162);
+            this.canimationSet.Name = "canimationSet";
+            this.canimationSet.Size = new System.Drawing.Size(55, 23);
+            this.canimationSet.TabIndex = 5;
+            this.canimationSet.Text = "Set";
+            this.canimationSet.UseVisualStyleBackColor = true;
+            // 
+            // canimationAdd
+            // 
+            this.canimationAdd.Location = new System.Drawing.Point(10, 133);
+            this.canimationAdd.Name = "canimationAdd";
+            this.canimationAdd.Size = new System.Drawing.Size(55, 23);
+            this.canimationAdd.TabIndex = 4;
+            this.canimationAdd.Text = "Add";
+            this.canimationAdd.UseVisualStyleBackColor = true;
+            // 
+            // canimationDown
+            // 
+            this.canimationDown.Location = new System.Drawing.Point(10, 104);
+            this.canimationDown.Name = "canimationDown";
+            this.canimationDown.Size = new System.Drawing.Size(55, 23);
+            this.canimationDown.TabIndex = 3;
+            this.canimationDown.Text = "Down";
+            this.canimationDown.UseVisualStyleBackColor = true;
+            // 
+            // canimationRemove
+            // 
+            this.canimationRemove.Location = new System.Drawing.Point(10, 60);
+            this.canimationRemove.Name = "canimationRemove";
+            this.canimationRemove.Size = new System.Drawing.Size(55, 23);
+            this.canimationRemove.TabIndex = 2;
+            this.canimationRemove.Text = "Remove";
+            this.canimationRemove.UseVisualStyleBackColor = true;
+            // 
+            // canimationUp
+            // 
+            this.canimationUp.Location = new System.Drawing.Point(10, 19);
+            this.canimationUp.Name = "canimationUp";
+            this.canimationUp.Size = new System.Drawing.Size(55, 23);
+            this.canimationUp.TabIndex = 1;
+            this.canimationUp.Text = "Up";
+            this.canimationUp.UseVisualStyleBackColor = true;
+            // 
+            // canimationsList
+            // 
+            this.canimationsList.FormattingEnabled = true;
+            this.canimationsList.Location = new System.Drawing.Point(78, 19);
+            this.canimationsList.Name = "canimationsList";
+            this.canimationsList.Size = new System.Drawing.Size(148, 108);
+            this.canimationsList.TabIndex = 0;
+            // 
+            // groupBox10
+            // 
+            this.groupBox10.Controls.Add(this.cogiIdSource);
+            this.groupBox10.Controls.Add(this.cogiSet);
+            this.groupBox10.Controls.Add(this.cogiAdd);
+            this.groupBox10.Controls.Add(this.cogiDown);
+            this.groupBox10.Controls.Add(this.cogiRemove);
+            this.groupBox10.Controls.Add(this.cogiUp);
+            this.groupBox10.Controls.Add(this.cogiList);
+            this.groupBox10.Location = new System.Drawing.Point(245, 213);
+            this.groupBox10.Name = "groupBox10";
+            this.groupBox10.Size = new System.Drawing.Size(232, 195);
+            this.groupBox10.TabIndex = 15;
+            this.groupBox10.TabStop = false;
+            this.groupBox10.Text = "OGI List";
+            // 
+            // cogiIdSource
+            // 
+            this.cogiIdSource.Location = new System.Drawing.Point(78, 148);
+            this.cogiIdSource.Name = "cogiIdSource";
+            this.cogiIdSource.Size = new System.Drawing.Size(148, 20);
+            this.cogiIdSource.TabIndex = 6;
+            // 
+            // cogiSet
+            // 
+            this.cogiSet.Location = new System.Drawing.Point(10, 162);
+            this.cogiSet.Name = "cogiSet";
+            this.cogiSet.Size = new System.Drawing.Size(55, 23);
+            this.cogiSet.TabIndex = 5;
+            this.cogiSet.Text = "Set";
+            this.cogiSet.UseVisualStyleBackColor = true;
+            // 
+            // cogiAdd
+            // 
+            this.cogiAdd.Location = new System.Drawing.Point(10, 133);
+            this.cogiAdd.Name = "cogiAdd";
+            this.cogiAdd.Size = new System.Drawing.Size(55, 23);
+            this.cogiAdd.TabIndex = 4;
+            this.cogiAdd.Text = "Add";
+            this.cogiAdd.UseVisualStyleBackColor = true;
+            // 
+            // cogiDown
+            // 
+            this.cogiDown.Location = new System.Drawing.Point(10, 104);
+            this.cogiDown.Name = "cogiDown";
+            this.cogiDown.Size = new System.Drawing.Size(55, 23);
+            this.cogiDown.TabIndex = 3;
+            this.cogiDown.Text = "Down";
+            this.cogiDown.UseVisualStyleBackColor = true;
+            // 
+            // cogiRemove
+            // 
+            this.cogiRemove.Location = new System.Drawing.Point(10, 60);
+            this.cogiRemove.Name = "cogiRemove";
+            this.cogiRemove.Size = new System.Drawing.Size(55, 23);
+            this.cogiRemove.TabIndex = 2;
+            this.cogiRemove.Text = "Remove";
+            this.cogiRemove.UseVisualStyleBackColor = true;
+            // 
+            // cogiUp
+            // 
+            this.cogiUp.Location = new System.Drawing.Point(10, 19);
+            this.cogiUp.Name = "cogiUp";
+            this.cogiUp.Size = new System.Drawing.Size(55, 23);
+            this.cogiUp.TabIndex = 1;
+            this.cogiUp.Text = "Up";
+            this.cogiUp.UseVisualStyleBackColor = true;
+            // 
+            // cogiList
+            // 
+            this.cogiList.FormattingEnabled = true;
+            this.cogiList.Location = new System.Drawing.Point(78, 19);
+            this.cogiList.Name = "cogiList";
+            this.cogiList.Size = new System.Drawing.Size(148, 108);
+            this.cogiList.TabIndex = 0;
+            // 
+            // groupBox11
+            // 
+            this.groupBox11.Controls.Add(this.csoundIdSource);
+            this.groupBox11.Controls.Add(this.csoundSet);
+            this.groupBox11.Controls.Add(this.csoundAdd);
+            this.groupBox11.Controls.Add(this.csoundDown);
+            this.groupBox11.Controls.Add(this.csoundRemove);
+            this.groupBox11.Controls.Add(this.csoundUp);
+            this.groupBox11.Controls.Add(this.csoundsList);
+            this.groupBox11.Location = new System.Drawing.Point(483, 12);
+            this.groupBox11.Name = "groupBox11";
+            this.groupBox11.Size = new System.Drawing.Size(232, 195);
+            this.groupBox11.TabIndex = 12;
+            this.groupBox11.TabStop = false;
+            this.groupBox11.Text = "Sound List";
+            // 
+            // csoundIdSource
+            // 
+            this.csoundIdSource.Location = new System.Drawing.Point(78, 148);
+            this.csoundIdSource.Name = "csoundIdSource";
+            this.csoundIdSource.Size = new System.Drawing.Size(148, 20);
+            this.csoundIdSource.TabIndex = 6;
+            // 
+            // csoundSet
+            // 
+            this.csoundSet.Location = new System.Drawing.Point(10, 162);
+            this.csoundSet.Name = "csoundSet";
+            this.csoundSet.Size = new System.Drawing.Size(55, 23);
+            this.csoundSet.TabIndex = 5;
+            this.csoundSet.Text = "Set";
+            this.csoundSet.UseVisualStyleBackColor = true;
+            // 
+            // csoundAdd
+            // 
+            this.csoundAdd.Location = new System.Drawing.Point(10, 133);
+            this.csoundAdd.Name = "csoundAdd";
+            this.csoundAdd.Size = new System.Drawing.Size(55, 23);
+            this.csoundAdd.TabIndex = 4;
+            this.csoundAdd.Text = "Add";
+            this.csoundAdd.UseVisualStyleBackColor = true;
+            // 
+            // csoundDown
+            // 
+            this.csoundDown.Location = new System.Drawing.Point(10, 104);
+            this.csoundDown.Name = "csoundDown";
+            this.csoundDown.Size = new System.Drawing.Size(55, 23);
+            this.csoundDown.TabIndex = 3;
+            this.csoundDown.Text = "Down";
+            this.csoundDown.UseVisualStyleBackColor = true;
+            // 
+            // csoundRemove
+            // 
+            this.csoundRemove.Location = new System.Drawing.Point(10, 60);
+            this.csoundRemove.Name = "csoundRemove";
+            this.csoundRemove.Size = new System.Drawing.Size(55, 23);
+            this.csoundRemove.TabIndex = 2;
+            this.csoundRemove.Text = "Remove";
+            this.csoundRemove.UseVisualStyleBackColor = true;
+            // 
+            // csoundUp
+            // 
+            this.csoundUp.Location = new System.Drawing.Point(10, 19);
+            this.csoundUp.Name = "csoundUp";
+            this.csoundUp.Size = new System.Drawing.Size(55, 23);
+            this.csoundUp.TabIndex = 1;
+            this.csoundUp.Text = "Up";
+            this.csoundUp.UseVisualStyleBackColor = true;
+            // 
+            // csoundsList
+            // 
+            this.csoundsList.FormattingEnabled = true;
+            this.csoundsList.Location = new System.Drawing.Point(78, 19);
+            this.csoundsList.Name = "csoundsList";
+            this.csoundsList.Size = new System.Drawing.Size(148, 108);
+            this.csoundsList.TabIndex = 0;
+            // 
+            // groupBox12
+            // 
+            this.groupBox12.Controls.Add(this.cobjectIdSource);
+            this.groupBox12.Controls.Add(this.cobjectSet);
+            this.groupBox12.Controls.Add(this.cobjectAdd);
+            this.groupBox12.Controls.Add(this.cobjectDown);
+            this.groupBox12.Controls.Add(this.cobjectRemove);
+            this.groupBox12.Controls.Add(this.cobjectUp);
+            this.groupBox12.Controls.Add(this.cobjectList);
+            this.groupBox12.Location = new System.Drawing.Point(245, 12);
+            this.groupBox12.Name = "groupBox12";
+            this.groupBox12.Size = new System.Drawing.Size(232, 195);
+            this.groupBox12.TabIndex = 13;
+            this.groupBox12.TabStop = false;
+            this.groupBox12.Text = "Object List";
+            // 
+            // cobjectIdSource
+            // 
+            this.cobjectIdSource.Location = new System.Drawing.Point(78, 148);
+            this.cobjectIdSource.Name = "cobjectIdSource";
+            this.cobjectIdSource.Size = new System.Drawing.Size(148, 20);
+            this.cobjectIdSource.TabIndex = 6;
+            // 
+            // cobjectSet
+            // 
+            this.cobjectSet.Location = new System.Drawing.Point(10, 162);
+            this.cobjectSet.Name = "cobjectSet";
+            this.cobjectSet.Size = new System.Drawing.Size(55, 23);
+            this.cobjectSet.TabIndex = 5;
+            this.cobjectSet.Text = "Set";
+            this.cobjectSet.UseVisualStyleBackColor = true;
+            // 
+            // cobjectAdd
+            // 
+            this.cobjectAdd.Location = new System.Drawing.Point(10, 133);
+            this.cobjectAdd.Name = "cobjectAdd";
+            this.cobjectAdd.Size = new System.Drawing.Size(55, 23);
+            this.cobjectAdd.TabIndex = 4;
+            this.cobjectAdd.Text = "Add";
+            this.cobjectAdd.UseVisualStyleBackColor = true;
+            // 
+            // cobjectDown
+            // 
+            this.cobjectDown.Location = new System.Drawing.Point(10, 104);
+            this.cobjectDown.Name = "cobjectDown";
+            this.cobjectDown.Size = new System.Drawing.Size(55, 23);
+            this.cobjectDown.TabIndex = 3;
+            this.cobjectDown.Text = "Down";
+            this.cobjectDown.UseVisualStyleBackColor = true;
+            // 
+            // cobjectRemove
+            // 
+            this.cobjectRemove.Location = new System.Drawing.Point(10, 60);
+            this.cobjectRemove.Name = "cobjectRemove";
+            this.cobjectRemove.Size = new System.Drawing.Size(55, 23);
+            this.cobjectRemove.TabIndex = 2;
+            this.cobjectRemove.Text = "Remove";
+            this.cobjectRemove.UseVisualStyleBackColor = true;
+            // 
+            // cobjectUp
+            // 
+            this.cobjectUp.Location = new System.Drawing.Point(10, 19);
+            this.cobjectUp.Name = "cobjectUp";
+            this.cobjectUp.Size = new System.Drawing.Size(55, 23);
+            this.cobjectUp.TabIndex = 1;
+            this.cobjectUp.Text = "Up";
+            this.cobjectUp.UseVisualStyleBackColor = true;
+            // 
+            // cobjectList
+            // 
+            this.cobjectList.FormattingEnabled = true;
+            this.cobjectList.Location = new System.Drawing.Point(78, 19);
+            this.cobjectList.Name = "cobjectList";
+            this.cobjectList.Size = new System.Drawing.Size(148, 108);
+            this.cobjectList.TabIndex = 0;
+            // 
+            // groupBox13
+            // 
+            this.groupBox13.Controls.Add(this.cscriptIdSource);
+            this.groupBox13.Controls.Add(this.cscriptsSet);
+            this.groupBox13.Controls.Add(this.cscriptsAdd);
+            this.groupBox13.Controls.Add(this.cscriptsDown);
+            this.groupBox13.Controls.Add(this.cscriptsRemove);
+            this.groupBox13.Controls.Add(this.cscriptsUp);
+            this.groupBox13.Controls.Add(this.cscriptsList);
+            this.groupBox13.Location = new System.Drawing.Point(7, 12);
+            this.groupBox13.Name = "groupBox13";
+            this.groupBox13.Size = new System.Drawing.Size(232, 195);
+            this.groupBox13.TabIndex = 10;
+            this.groupBox13.TabStop = false;
+            this.groupBox13.Text = "Script List";
+            // 
+            // cscriptIdSource
+            // 
+            this.cscriptIdSource.Location = new System.Drawing.Point(78, 148);
+            this.cscriptIdSource.Name = "cscriptIdSource";
+            this.cscriptIdSource.Size = new System.Drawing.Size(148, 20);
+            this.cscriptIdSource.TabIndex = 6;
+            // 
+            // cscriptsSet
+            // 
+            this.cscriptsSet.Location = new System.Drawing.Point(10, 162);
+            this.cscriptsSet.Name = "cscriptsSet";
+            this.cscriptsSet.Size = new System.Drawing.Size(55, 23);
+            this.cscriptsSet.TabIndex = 5;
+            this.cscriptsSet.Text = "Set";
+            this.cscriptsSet.UseVisualStyleBackColor = true;
+            // 
+            // cscriptsAdd
+            // 
+            this.cscriptsAdd.Location = new System.Drawing.Point(10, 133);
+            this.cscriptsAdd.Name = "cscriptsAdd";
+            this.cscriptsAdd.Size = new System.Drawing.Size(55, 23);
+            this.cscriptsAdd.TabIndex = 4;
+            this.cscriptsAdd.Text = "Add";
+            this.cscriptsAdd.UseVisualStyleBackColor = true;
+            // 
+            // cscriptsDown
+            // 
+            this.cscriptsDown.Location = new System.Drawing.Point(10, 104);
+            this.cscriptsDown.Name = "cscriptsDown";
+            this.cscriptsDown.Size = new System.Drawing.Size(55, 23);
+            this.cscriptsDown.TabIndex = 3;
+            this.cscriptsDown.Text = "Down";
+            this.cscriptsDown.UseVisualStyleBackColor = true;
+            // 
+            // cscriptsRemove
+            // 
+            this.cscriptsRemove.Location = new System.Drawing.Point(10, 60);
+            this.cscriptsRemove.Name = "cscriptsRemove";
+            this.cscriptsRemove.Size = new System.Drawing.Size(55, 23);
+            this.cscriptsRemove.TabIndex = 2;
+            this.cscriptsRemove.Text = "Remove";
+            this.cscriptsRemove.UseVisualStyleBackColor = true;
+            // 
+            // cscriptsUp
+            // 
+            this.cscriptsUp.Location = new System.Drawing.Point(10, 19);
+            this.cscriptsUp.Name = "cscriptsUp";
+            this.cscriptsUp.Size = new System.Drawing.Size(55, 23);
+            this.cscriptsUp.TabIndex = 1;
+            this.cscriptsUp.Text = "Up";
+            this.cscriptsUp.UseVisualStyleBackColor = true;
+            // 
+            // cscriptsList
+            // 
+            this.cscriptsList.FormattingEnabled = true;
+            this.cscriptsList.Location = new System.Drawing.Point(78, 19);
+            this.cscriptsList.Name = "cscriptsList";
+            this.cscriptsList.Size = new System.Drawing.Size(148, 108);
+            this.cscriptsList.TabIndex = 0;
+            // 
             // ObjectEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -682,10 +1210,23 @@
             this.groupBox4.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox8.ResumeLayout(false);
+            this.groupBox8.PerformLayout();
+            this.groupBox9.ResumeLayout(false);
+            this.groupBox9.PerformLayout();
+            this.groupBox10.ResumeLayout(false);
+            this.groupBox10.PerformLayout();
+            this.groupBox11.ResumeLayout(false);
+            this.groupBox11.PerformLayout();
+            this.groupBox12.ResumeLayout(false);
+            this.groupBox12.PerformLayout();
+            this.groupBox13.ResumeLayout(false);
+            this.groupBox13.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -750,5 +1291,54 @@
         private System.Windows.Forms.ListBox paramsListBox;
         private System.Windows.Forms.TextBox flagSource;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.GroupBox groupBox8;
+        private System.Windows.Forms.TextBox ccmIdSource;
+        private System.Windows.Forms.Button ccmSet;
+        private System.Windows.Forms.Button ccmAdd;
+        private System.Windows.Forms.Button ccmDown;
+        private System.Windows.Forms.Button ccmRemove;
+        private System.Windows.Forms.Button ccmUp;
+        private System.Windows.Forms.ListBox ccmList;
+        private System.Windows.Forms.GroupBox groupBox9;
+        private System.Windows.Forms.TextBox canimationIdSource;
+        private System.Windows.Forms.Button canimationSet;
+        private System.Windows.Forms.Button canimationAdd;
+        private System.Windows.Forms.Button canimationDown;
+        private System.Windows.Forms.Button canimationRemove;
+        private System.Windows.Forms.Button canimationUp;
+        private System.Windows.Forms.ListBox canimationsList;
+        private System.Windows.Forms.GroupBox groupBox10;
+        private System.Windows.Forms.TextBox cogiIdSource;
+        private System.Windows.Forms.Button cogiSet;
+        private System.Windows.Forms.Button cogiAdd;
+        private System.Windows.Forms.Button cogiDown;
+        private System.Windows.Forms.Button cogiRemove;
+        private System.Windows.Forms.Button cogiUp;
+        private System.Windows.Forms.ListBox cogiList;
+        private System.Windows.Forms.GroupBox groupBox11;
+        private System.Windows.Forms.TextBox csoundIdSource;
+        private System.Windows.Forms.Button csoundSet;
+        private System.Windows.Forms.Button csoundAdd;
+        private System.Windows.Forms.Button csoundDown;
+        private System.Windows.Forms.Button csoundRemove;
+        private System.Windows.Forms.Button csoundUp;
+        private System.Windows.Forms.ListBox csoundsList;
+        private System.Windows.Forms.GroupBox groupBox12;
+        private System.Windows.Forms.TextBox cobjectIdSource;
+        private System.Windows.Forms.Button cobjectSet;
+        private System.Windows.Forms.Button cobjectAdd;
+        private System.Windows.Forms.Button cobjectDown;
+        private System.Windows.Forms.Button cobjectRemove;
+        private System.Windows.Forms.Button cobjectUp;
+        private System.Windows.Forms.ListBox cobjectList;
+        private System.Windows.Forms.GroupBox groupBox13;
+        private System.Windows.Forms.TextBox cscriptIdSource;
+        private System.Windows.Forms.Button cscriptsSet;
+        private System.Windows.Forms.Button cscriptsAdd;
+        private System.Windows.Forms.Button cscriptsDown;
+        private System.Windows.Forms.Button cscriptsRemove;
+        private System.Windows.Forms.Button cscriptsUp;
+        private System.Windows.Forms.ListBox cscriptsList;
+        private System.Windows.Forms.TabPage tabPage3;
     }
 }

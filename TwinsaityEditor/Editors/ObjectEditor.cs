@@ -27,6 +27,13 @@ namespace TwinsaityEditor
         private ListManipulatorUInt16 OGIManipulator;
         private ListManipulatorUInt16 SoundManipulator;
         private ListManipulatorUInt16 ParamsManipulator;
+
+        private ListManipulatorUInt16 cScriptsManipulator;
+        private ListManipulatorUInt16 cObjectsManipulator;
+        private ListManipulatorUInt16 cAnimationsManipulator;
+        private ListManipulatorUInt16 cOGIManipulator;
+        private ListManipulatorUInt16 cSoundManipulator;
+        private ListManipulatorUInt16 cCmManipulator;
         public ObjectEditor(SectionController c)
         {
             File = c.MainFile;
@@ -89,6 +96,26 @@ namespace TwinsaityEditor
             ParamsManipulator = new ListManipulatorUInt16(gameObject.scriptParams, paramsListBox, paramSource,
                 paramsAdd, paramsRemove, paramsSet, paramsUp, paramsDown);
             ParamsManipulator.PopulateList();
+
+            cScriptsManipulator = new ListManipulatorUInt16(gameObject.cScripts, cscriptsList, cscriptIdSource,
+                cscriptsAdd, cscriptsRemove, cscriptsSet, cscriptsUp, cscriptsDown);
+            cScriptsManipulator.PopulateList();
+            cObjectsManipulator = new ListManipulatorUInt16(gameObject.cObjects, cobjectList, cobjectIdSource,
+                cobjectAdd, cobjectRemove, cobjectSet, cobjectUp, cobjectDown);
+            cObjectsManipulator.PopulateList();
+            cOGIManipulator = new ListManipulatorUInt16(gameObject.cOGIs, cogiList, cogiIdSource,
+                cogiAdd, cogiRemove, cogiSet, cogiUp, cogiDown);
+            cOGIManipulator.PopulateList();
+            cAnimationsManipulator = new ListManipulatorUInt16(gameObject.cAnims, canimationsList, canimationIdSource,
+                canimationAdd, canimationRemove, canimationSet, canimationUp, canimationDown);
+            cAnimationsManipulator.PopulateList();
+            cSoundManipulator = new ListManipulatorUInt16(gameObject.cSounds, csoundsList, csoundIdSource,
+                csoundAdd, csoundRemove, csoundSet, csoundUp, csoundDown);
+            cSoundManipulator.PopulateList();
+            cCmManipulator = new ListManipulatorUInt16(gameObject.cCM, ccmList, ccmIdSource,
+                ccmAdd, ccmRemove, ccmSet, ccmUp, ccmDown);
+            cCmManipulator.PopulateList();
+
             nameSource.Text = gameObject.Name;
             flagSource.Text = Convert.ToString(gameObject.flag, 16);
         }
