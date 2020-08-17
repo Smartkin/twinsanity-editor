@@ -131,89 +131,90 @@ namespace TwinsaityEditor
 
         private void openRM2ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog
+            using (OpenFileDialog ofd = new OpenFileDialog
             {
                 InitialDirectory = Settings.Default.ChunkFilePath,
                 Filter = "RM2 files|*.rm2|SM2 files|*.sm2|RMX files|*.rmx|SMX files|*.smx|Demo RM2 files|*.rm2|Demo SM2 files|*.sm2"
-            };
-            //ofd.Filter = "PS2 files (.rm2; .sm2)|*.rm2;*.sm2|XBOX files (.rmx; .smx)|*.rmx;*.smx|Demo files (.rm2; .sm2)|*.rm2; *.sm2";
-            if (ofd.ShowDialog() == DialogResult.OK)
-            { 
-                if (CurCont != null)
-                    CurCont.CloseFile();
-                Tag = null;
-                Settings.Default.ChunkFilePath = ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('\\'));
-                TwinsFile file = new TwinsFile();
-                TwinsFile aux_file = null;
-                TwinsFile default_file = null;
-                bool IsScenery = ofd.FileName.Contains(".sm");
-                switch (ofd.FilterIndex)
+                //Filter = "PS2 files (.rm2; .sm2)|*.rm2;*.sm2|XBOX files (.rmx; .smx)|*.rmx;*.smx|Demo files (.rm2; .sm2)|*.rm2; *.sm2";
+            })
+            {
+                if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    case 1:
-                    case 2:
-                        if (IsScenery)
-                            file.LoadFile(ofd.FileName, TwinsFile.FileType.SM2);
-                        else
-                        {
-                            file.LoadFile(ofd.FileName, TwinsFile.FileType.RM2);
-                            aux_file = new TwinsFile();
-                            aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".sm2", TwinsFile.FileType.SM2);
-                            if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + "/Default.rm2"))
-                            {
-                                default_file = new TwinsFile();
-                                default_file.LoadFile(AppDomain.CurrentDomain.BaseDirectory + "/Default.rm2", TwinsFile.FileType.RM2);
-                            }
-                        }
-                        break;
-                    case 3:
-                    case 4:
-                        if (IsScenery)
-                            file.LoadFile(ofd.FileName, TwinsFile.FileType.SMX);
-                        else
-                        {
-                            file.LoadFile(ofd.FileName, TwinsFile.FileType.RMX);
-                            aux_file = new TwinsFile();
-                            aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".smx", TwinsFile.FileType.SMX);
-                        }
-                        break;
-                    case 5:
-                    case 6:
-                        if (IsScenery)
-                            file.LoadFile(ofd.FileName, TwinsFile.FileType.DemoSM2);
-                        else
-                        {
-                            file.LoadFile(ofd.FileName, TwinsFile.FileType.DemoRM2);
-                            aux_file = new TwinsFile();
-                            aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".sm2", TwinsFile.FileType.DemoSM2);
-                        }
-                        break;
-                }
-                if (IsScenery)
-                {
-                    sMViewerToolStripMenuItem.Enabled = true;
-                    rMViewerToolStripMenuItem.Enabled = false;
-                }
-                else
-                {
-                    rMViewerToolStripMenuItem.Enabled = true;
-                    sMViewerToolStripMenuItem.Enabled = false;
-                }
-                file.SafeFileName = ofd.SafeFileName;
-                Tag = new FileController(this, file);
-                ((FileController)Tag).DataAux = aux_file;
-                ((FileController)Tag).DataDefault = default_file;
-                if (default_file != null)
-                {
-                    ((FileController)Tag).DefaultCont = new FileController(this, default_file);
-                    foreach (var i in ((FileController)Tag).DataDefault.Records)
+                    if (CurCont != null)
+                        CurCont.CloseFile();
+                    Tag = null;
+                    Settings.Default.ChunkFilePath = ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('\\'));
+                    TwinsFile file = new TwinsFile();
+                    TwinsFile aux_file = null;
+                    TwinsFile default_file = null;
+                    bool IsScenery = ofd.FileName.Contains(".sm");
+                    switch (ofd.FilterIndex)
                     {
-                        GenTreeNode(i, ((FileController)Tag).DefaultCont, true);
+                        case 1:
+                        case 2:
+                            if (IsScenery)
+                                file.LoadFile(ofd.FileName, TwinsFile.FileType.SM2);
+                            else
+                            {
+                                file.LoadFile(ofd.FileName, TwinsFile.FileType.RM2);
+                                aux_file = new TwinsFile();
+                                aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".sm2", TwinsFile.FileType.SM2);
+                                if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + "/Default.rm2"))
+                                {
+                                    default_file = new TwinsFile();
+                                    default_file.LoadFile(AppDomain.CurrentDomain.BaseDirectory + "/Default.rm2", TwinsFile.FileType.RM2);
+                                }
+                            }
+                            break;
+                        case 3:
+                        case 4:
+                            if (IsScenery)
+                                file.LoadFile(ofd.FileName, TwinsFile.FileType.SMX);
+                            else
+                            {
+                                file.LoadFile(ofd.FileName, TwinsFile.FileType.RMX);
+                                aux_file = new TwinsFile();
+                                aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".smx", TwinsFile.FileType.SMX);
+                            }
+                            break;
+                        case 5:
+                        case 6:
+                            if (IsScenery)
+                                file.LoadFile(ofd.FileName, TwinsFile.FileType.DemoSM2);
+                            else
+                            {
+                                file.LoadFile(ofd.FileName, TwinsFile.FileType.DemoRM2);
+                                aux_file = new TwinsFile();
+                                aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".sm2", TwinsFile.FileType.DemoSM2);
+                            }
+                            break;
                     }
+                    if (IsScenery)
+                    {
+                        sMViewerToolStripMenuItem.Enabled = true;
+                        rMViewerToolStripMenuItem.Enabled = false;
+                    }
+                    else
+                    {
+                        rMViewerToolStripMenuItem.Enabled = true;
+                        sMViewerToolStripMenuItem.Enabled = false;
+                    }
+                    file.SafeFileName = ofd.SafeFileName;
+                    Tag = new FileController(this, file);
+                    ((FileController)Tag).DataAux = aux_file;
+                    ((FileController)Tag).DataDefault = default_file;
+                    if (default_file != null)
+                    {
+                        ((FileController)Tag).DefaultCont = new FileController(this, default_file);
+                        foreach (var i in ((FileController)Tag).DataDefault.Records)
+                        {
+                            GenTreeNode(i, ((FileController)Tag).DefaultCont, true);
+                        }
+                    }
+                    GenTree();
+                    Text = $"Twinsaity Editor [{ofd.FileName}]";
                 }
-                GenTree();
-                Text = $"Twinsaity Editor [{ofd.FileName}]";
             }
-            ofd.Dispose();
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)

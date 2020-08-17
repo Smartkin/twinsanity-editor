@@ -115,6 +115,7 @@ namespace TwinsaityEditor
             CloseAllModelViewers();
             CloseEditor(Editors.ChunkLinks);
             CloseEditor(Editors.ColData);
+            CloseEditor(Editors.Script);
             for (int i = 0; i <= 7; ++i)
             {
                 CloseEditor(Editors.Instance, i);
@@ -192,6 +193,7 @@ namespace TwinsaityEditor
                 case Editors.Position: editorForm = editPositions[arg]; break;
                 case Editors.Path: editorForm = editPaths[arg]; break;
                 case Editors.Trigger: editorForm = editTriggers[arg]; break;
+                case Editors.Script: editorForm = editScripts; break;
             }
             CloseForm(ref editorForm);
         }
