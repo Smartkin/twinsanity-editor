@@ -985,7 +985,7 @@ namespace TwinsaityEditor
                 generalWarning.Visible = true;
             }
         }
-        private void generalId_TextChanged(object sender, EventArgs e)
+        private void generalId_TextChanged_1(object sender, EventArgs e)
         {
             UInt32 val = 0;
             if (UInt32.TryParse(((TextBox)sender).Text, out val))
@@ -1068,8 +1068,9 @@ namespace TwinsaityEditor
         private void createScriptToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ushort maxid = (ushort)controller.Data.RecordIDs.Select(p => p.Key).Max();
-            ushort id1 = Math.Max((ushort)(8192), maxid);
+            ushort id1 = Math.Max((ushort)(8191), maxid);
             ++id1;
+            id1 += (ushort)(id1 % 2);
             ushort id2 = id1;
             ++id2;
             Script newScriptHeader = new Script();
@@ -1103,6 +1104,6 @@ namespace TwinsaityEditor
             scriptListBox.SelectedIndex = scriptListBox.Items.Count - 1;
         }
 
-
+        
     }
 }
