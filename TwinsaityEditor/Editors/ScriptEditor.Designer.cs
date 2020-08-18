@@ -998,14 +998,14 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.panelHeader);
+            this.groupBox1.Controls.Add(this.panelMain);
+            this.groupBox1.Controls.Add(this.panelType1);
             this.groupBox1.Controls.Add(this.panelType2);
             this.groupBox1.Controls.Add(this.panelType3);
             this.groupBox1.Controls.Add(this.panelType4);
             this.groupBox1.Controls.Add(this.panelGeneral);
             this.groupBox1.Controls.Add(this.panelLinked);
-            this.groupBox1.Controls.Add(this.panelHeader);
-            this.groupBox1.Controls.Add(this.panelMain);
-            this.groupBox1.Controls.Add(this.panelType1);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
@@ -1017,9 +1017,9 @@
             // scriptNameFilter
             // 
             this.scriptNameFilter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.scriptNameFilter.Location = new System.Drawing.Point(108, 3);
+            this.scriptNameFilter.Location = new System.Drawing.Point(107, 3);
             this.scriptNameFilter.Name = "scriptNameFilter";
-            this.scriptNameFilter.Size = new System.Drawing.Size(468, 20);
+            this.scriptNameFilter.Size = new System.Drawing.Size(469, 20);
             this.scriptNameFilter.TabIndex = 3;
             this.scriptNameFilter.TextChanged += new System.EventHandler(this.scriptNameFilter_TextChanged);
             // 
@@ -1029,7 +1029,7 @@
             this.label32.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label32.Location = new System.Drawing.Point(3, 0);
             this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(35, 25);
+            this.label32.Size = new System.Drawing.Size(34, 25);
             this.label32.TabIndex = 4;
             this.label32.Text = "Filter:";
             this.label32.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1054,7 +1054,7 @@
             this.tableLayoutPanel2.ColumnCount = 3;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 38.88889F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 61.11111F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 473F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 474F));
             this.tableLayoutPanel2.Controls.Add(this.label32, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.scriptNameFilter, 2, 0);
             this.tableLayoutPanel2.Controls.Add(this.filterSelection, 1, 0);
@@ -1073,7 +1073,7 @@
             this.filterSelection.Items.AddRange(new object[] {
             "Name",
             "ID"});
-            this.filterSelection.Location = new System.Drawing.Point(44, 3);
+            this.filterSelection.Location = new System.Drawing.Point(43, 3);
             this.filterSelection.Name = "filterSelection";
             this.filterSelection.Size = new System.Drawing.Size(58, 21);
             this.filterSelection.TabIndex = 5;

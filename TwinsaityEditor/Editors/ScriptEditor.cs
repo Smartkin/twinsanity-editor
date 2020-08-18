@@ -232,7 +232,7 @@ namespace TwinsaityEditor
             if (headerSubScripts.SelectedItem != null)
             {
                 Script.HeaderScriptStruct.UnkIntPairs pair = selectedHeaderScript.pairs[headerSubScripts.SelectedIndex];
-                headerSubscriptID.Text = pair.mainScriptIndex.ToString();
+                headerSubscriptID.Text = (pair.mainScriptIndex - 1).ToString();
                 headerSubscriptArg.Text = pair.unkInt2.ToString();
             }
         }
@@ -246,7 +246,7 @@ namespace TwinsaityEditor
                 if (Int32.TryParse(textBox.Text, out val))
                 {
                     textBox.BackColor = Color.White;
-                    pair.mainScriptIndex = val;
+                    pair.mainScriptIndex = val + 1;
                     headerSubScripts.SelectedItem = pair;
                     headerSubScripts.Text = headerSubScripts.SelectedItem.ToString();
                 }

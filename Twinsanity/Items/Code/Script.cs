@@ -18,7 +18,7 @@ namespace Twinsanity
                 unkIntPairs = 1;
                 pairs = new UnkIntPairs[1];
                 pairs[0] = new UnkIntPairs();
-                pairs[0].mainScriptIndex = id;
+                pairs[0].mainScriptIndex = id + 1;
                 pairs[0].unkInt2 = 4294922800;
             }
             public HeaderScriptStruct(BinaryReader reader)
@@ -896,6 +896,7 @@ namespace Twinsanity
 
         public override void Save(BinaryWriter writer)
         {
+            id = (ushort)ID;
             writer.Write(id);
             writer.Write(mask);
             writer.Write(flag);
