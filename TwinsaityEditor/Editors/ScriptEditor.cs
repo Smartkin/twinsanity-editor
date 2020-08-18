@@ -485,6 +485,7 @@ namespace TwinsaityEditor
         {
             type2Bitfield.Text = Convert.ToString(selectedType2.bitfield, 16);
             type2Slot.Text = selectedType2.linkedScriptListIndex.ToString();
+            type2TransitionEnabled.Checked = (selectedType2.bitfield & 0x400) != 0;
         }
         private void type2Bitfield_TextChanged(object sender, EventArgs e)
         {
@@ -562,6 +563,18 @@ namespace TwinsaityEditor
                 }
                 UpdateType2Panel();
             }
+        }
+        private void type2TransitionEnabled_CheckedChanged(object sender, EventArgs e)
+        {
+            if (((CheckBox)sender).Checked)
+            {
+                selectedType2.bitfield |= 0x400;
+            }
+            else
+            {
+                selectedType2.bitfield &= ~0x400;
+            }
+            type2Bitfield.Text = Convert.ToString(selectedType2.bitfield, 16);
         }
 
         private void type2SelectedType4Pos_TextChanged(object sender, EventArgs e)
@@ -1089,5 +1102,7 @@ namespace TwinsaityEditor
             PopulateList();
             scriptListBox.SelectedIndex = scriptListBox.Items.Count - 1;
         }
+
+
     }
 }

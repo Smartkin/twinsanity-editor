@@ -76,6 +76,7 @@
             this.label24 = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
             this.panelGeneral = new System.Windows.Forms.Panel();
+            this.generalId = new System.Windows.Forms.TextBox();
             this.label33 = new System.Windows.Forms.Label();
             this.generalWarning = new System.Windows.Forms.Label();
             this.generalArray = new System.Windows.Forms.TextBox();
@@ -101,6 +102,7 @@
             this.label18 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.panelType2 = new System.Windows.Forms.Panel();
+            this.type2TransitionEnabled = new System.Windows.Forms.CheckBox();
             this.label27 = new System.Windows.Forms.Label();
             this.type2BitfieldWarning = new System.Windows.Forms.Label();
             this.type2DeleteType4 = new System.Windows.Forms.Button();
@@ -120,12 +122,11 @@
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.filterSelection = new System.Windows.Forms.ComboBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.generalId = new System.Windows.Forms.TextBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.scriptsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.panelType1.SuspendLayout();
             this.panelMain.SuspendLayout();
             this.panelHeader.SuspendLayout();
@@ -141,11 +142,11 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // scriptListBox
@@ -618,6 +619,13 @@
             this.panelGeneral.Size = new System.Drawing.Size(302, 609);
             this.panelGeneral.TabIndex = 0;
             // 
+            // generalId
+            // 
+            this.generalId.Location = new System.Drawing.Point(53, 14);
+            this.generalId.Name = "generalId";
+            this.generalId.Size = new System.Drawing.Size(238, 20);
+            this.generalId.TabIndex = 15;
+            // 
             // label33
             // 
             this.label33.AutoSize = true;
@@ -846,6 +854,7 @@
             // 
             // panelType2
             // 
+            this.panelType2.Controls.Add(this.type2TransitionEnabled);
             this.panelType2.Controls.Add(this.label27);
             this.panelType2.Controls.Add(this.type2BitfieldWarning);
             this.panelType2.Controls.Add(this.type2DeleteType4);
@@ -863,6 +872,17 @@
             this.panelType2.Name = "panelType2";
             this.panelType2.Size = new System.Drawing.Size(302, 609);
             this.panelType2.TabIndex = 0;
+            // 
+            // type2TransitionEnabled
+            // 
+            this.type2TransitionEnabled.AutoSize = true;
+            this.type2TransitionEnabled.Location = new System.Drawing.Point(223, 60);
+            this.type2TransitionEnabled.Name = "type2TransitionEnabled";
+            this.type2TransitionEnabled.Size = new System.Drawing.Size(65, 17);
+            this.type2TransitionEnabled.TabIndex = 12;
+            this.type2TransitionEnabled.Text = "Enabled";
+            this.type2TransitionEnabled.UseVisualStyleBackColor = true;
+            this.type2TransitionEnabled.CheckedChanged += new System.EventHandler(this.type2TransitionEnabled_CheckedChanged);
             // 
             // label27
             // 
@@ -978,14 +998,14 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.panelType2);
+            this.groupBox1.Controls.Add(this.panelType3);
+            this.groupBox1.Controls.Add(this.panelType4);
             this.groupBox1.Controls.Add(this.panelGeneral);
             this.groupBox1.Controls.Add(this.panelLinked);
             this.groupBox1.Controls.Add(this.panelHeader);
             this.groupBox1.Controls.Add(this.panelMain);
             this.groupBox1.Controls.Add(this.panelType1);
-            this.groupBox1.Controls.Add(this.panelType2);
-            this.groupBox1.Controls.Add(this.panelType3);
-            this.groupBox1.Controls.Add(this.panelType4);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
@@ -997,9 +1017,9 @@
             // scriptNameFilter
             // 
             this.scriptNameFilter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.scriptNameFilter.Location = new System.Drawing.Point(110, 3);
+            this.scriptNameFilter.Location = new System.Drawing.Point(108, 3);
             this.scriptNameFilter.Name = "scriptNameFilter";
-            this.scriptNameFilter.Size = new System.Drawing.Size(466, 20);
+            this.scriptNameFilter.Size = new System.Drawing.Size(468, 20);
             this.scriptNameFilter.TabIndex = 3;
             this.scriptNameFilter.TextChanged += new System.EventHandler(this.scriptNameFilter_TextChanged);
             // 
@@ -1009,7 +1029,7 @@
             this.label32.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label32.Location = new System.Drawing.Point(3, 0);
             this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(36, 25);
+            this.label32.Size = new System.Drawing.Size(35, 25);
             this.label32.TabIndex = 4;
             this.label32.Text = "Filter:";
             this.label32.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1034,7 +1054,7 @@
             this.tableLayoutPanel2.ColumnCount = 3;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 38.88889F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 61.11111F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 471F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 473F));
             this.tableLayoutPanel2.Controls.Add(this.label32, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.scriptNameFilter, 2, 0);
             this.tableLayoutPanel2.Controls.Add(this.filterSelection, 1, 0);
@@ -1053,9 +1073,9 @@
             this.filterSelection.Items.AddRange(new object[] {
             "Name",
             "ID"});
-            this.filterSelection.Location = new System.Drawing.Point(45, 3);
+            this.filterSelection.Location = new System.Drawing.Point(44, 3);
             this.filterSelection.Name = "filterSelection";
-            this.filterSelection.Size = new System.Drawing.Size(59, 21);
+            this.filterSelection.Size = new System.Drawing.Size(58, 21);
             this.filterSelection.TabIndex = 5;
             this.filterSelection.SelectedIndexChanged += new System.EventHandler(this.filterSelection_SelectedIndexChanged);
             // 
@@ -1076,30 +1096,6 @@
             this.splitContainer1.Size = new System.Drawing.Size(579, 591);
             this.splitContainer1.SplitterDistance = 321;
             this.splitContainer1.TabIndex = 7;
-            // 
-            // splitContainer2
-            // 
-            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer2.Name = "splitContainer2";
-            // 
-            // splitContainer2.Panel1
-            // 
-            this.splitContainer2.Panel1.Controls.Add(this.tableLayoutPanel1);
-            // 
-            // splitContainer2.Panel2
-            // 
-            this.splitContainer2.Panel2.Controls.Add(this.groupBox1);
-            this.splitContainer2.Size = new System.Drawing.Size(897, 628);
-            this.splitContainer2.SplitterDistance = 585;
-            this.splitContainer2.TabIndex = 6;
-            // 
-            // generalId
-            // 
-            this.generalId.Location = new System.Drawing.Point(53, 14);
-            this.generalId.Name = "generalId";
-            this.generalId.Size = new System.Drawing.Size(238, 20);
-            this.generalId.TabIndex = 15;
             // 
             // menuStrip1
             // 
@@ -1123,16 +1119,33 @@
             // deleteScriptToolStripMenuItem
             // 
             this.deleteScriptToolStripMenuItem.Name = "deleteScriptToolStripMenuItem";
-            this.deleteScriptToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.deleteScriptToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.deleteScriptToolStripMenuItem.Text = "Delete Script";
             this.deleteScriptToolStripMenuItem.Click += new System.EventHandler(this.deleteScriptToolStripMenuItem_Click);
             // 
             // createScriptToolStripMenuItem
             // 
             this.createScriptToolStripMenuItem.Name = "createScriptToolStripMenuItem";
-            this.createScriptToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.createScriptToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.createScriptToolStripMenuItem.Text = "Create Script";
             this.createScriptToolStripMenuItem.Click += new System.EventHandler(this.createScriptToolStripMenuItem_Click);
+            // 
+            // splitContainer2
+            // 
+            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Name = "splitContainer2";
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.Controls.Add(this.tableLayoutPanel1);
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.Controls.Add(this.groupBox1);
+            this.splitContainer2.Size = new System.Drawing.Size(897, 628);
+            this.splitContainer2.SplitterDistance = 585;
+            this.splitContainer2.TabIndex = 6;
             // 
             // ScriptEditor
             // 
@@ -1169,12 +1182,12 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.splitContainer2.Panel1.ResumeLayout(false);
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1279,5 +1292,6 @@
         private System.Windows.Forms.ToolStripMenuItem scriptsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteScriptToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem createScriptToolStripMenuItem;
+        private System.Windows.Forms.CheckBox type2TransitionEnabled;
     }
 }
