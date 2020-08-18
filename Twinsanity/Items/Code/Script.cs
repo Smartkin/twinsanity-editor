@@ -893,6 +893,7 @@ namespace Twinsanity
         public HeaderScriptStruct HeaderScript { get; set; }
         public MainScriptStruct MainScript { get; set; }
         public byte[] script;
+        public byte[] data;
 
         public override void Save(BinaryWriter writer)
         {
@@ -900,6 +901,11 @@ namespace Twinsanity
             writer.Write(id);
             writer.Write(mask);
             writer.Write(flag);
+            if (data != null && data.Length > 0)
+            {
+                writer.Write(data);
+                return;
+            }
             if (flag == 0)
             {
                 MainScript.Write(writer);
@@ -916,6 +922,7 @@ namespace Twinsanity
             id = reader.ReadUInt16();
             mask = reader.ReadByte();
             flag = reader.ReadByte();
+            var datapos = reader.BaseStream.Position;
             if (flag == 0)
             {
                 MainScript = new MainScriptStruct(reader);
@@ -923,9 +930,21 @@ namespace Twinsanity
             else
             {
                 HeaderScript = new HeaderScriptStruct(reader);
-
             }
-            script = reader.ReadBytes(size - (int)(reader.BaseStream.Position - sk));
+            try
+            {
+                script = reader.ReadBytes(size - (int)(reader.BaseStream.Position - sk));
+            }
+            catch
+            {
+                if (flag == 0 && MainScript != null)
+                {
+                    Console.WriteLine("Failed to load script: " + MainScript.name);
+                }
+                script = null;
+                reader.BaseStream.Position = datapos;
+                data = reader.ReadBytes(size - 4);
+            }
         }
         protected override int GetSize()
         {
@@ -935,6 +954,10 @@ namespace Twinsanity
             }
             else
             {
+                if (data != null && data.Length > 0)
+                {
+                    return 4 + data.Length;
+                }
                 int a = MainScript.GetLength();
                 int b = 4;
                 int c = script.Length;

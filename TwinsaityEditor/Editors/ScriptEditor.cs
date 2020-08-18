@@ -144,12 +144,24 @@ namespace TwinsaityEditor
         }
         private void AddType3(TreeNode parent, Script.MainScriptStruct.SupportType3 ptr)
         {
-            TreeNode node = parent.Nodes.Add($"Logic Gate {ptr.VTableIndex}");
+            string Name = $"Condition {ptr.VTableIndex}";
+            if (Enum.IsDefined(typeof(DefaultEnums.ConditionID), ptr.VTableIndex))
+            {
+                Name = ((DefaultEnums.ConditionID)ptr.VTableIndex).ToString();
+            }
+
+            TreeNode node = parent.Nodes.Add(Name);
             node.Tag = ptr;
         }
         private void AddType4(TreeNode parent, Script.MainScriptStruct.SupportType4 ptr)
         {
-            TreeNode node = parent.Nodes.Add($"Command {ptr.VTableIndex}");
+            string Name = $"Command {ptr.VTableIndex}";
+            if (Enum.IsDefined(typeof(DefaultEnums.CommandID), ptr.VTableIndex))
+            {
+                Name = ((DefaultEnums.CommandID)ptr.VTableIndex).ToString();
+            }
+
+            TreeNode node = parent.Nodes.Add(Name);
             node.Tag = ptr;
         }
         private void UpdatePanels()

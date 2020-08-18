@@ -87,13 +87,13 @@ namespace TwinsaityEditor
                 {
                     script_line += "(" + (DefaultEnums.GameObjectScriptOrder)i + ") ";
                 }
-                if (Enum.IsDefined(typeof(DefaultEnums.ScriptID), Data.Scripts[i]))
-                {
-                    script_line += (DefaultEnums.ScriptID)Data.Scripts[i];
-                }
-                else
+                if (Data.Scripts[i] != 65535)
                 {
                     script_line += Data.Scripts[i].ToString();
+                }
+                if (Enum.IsDefined(typeof(DefaultEnums.ScriptID), Data.Scripts[i]))
+                {
+                    script_line += " " + (DefaultEnums.ScriptID)Data.Scripts[i];
                 }
                 text.Add(script_line);
             }
@@ -130,13 +130,13 @@ namespace TwinsaityEditor
             for (int i = 0; i < Data.cScripts.Count; ++i)
             {
                 string script_line = "#" + i.ToString() + ": ";
-                if (Enum.IsDefined(typeof(DefaultEnums.ScriptID), Data.cScripts[i]))
-                {
-                    script_line += (DefaultEnums.ScriptID)Data.cScripts[i];
-                }
-                else
+                if (Data.cScripts[i] != 65535)
                 {
                     script_line += Data.cScripts[i].ToString();
+                }
+                if (Enum.IsDefined(typeof(DefaultEnums.ScriptID), Data.cScripts[i]))
+                {
+                    script_line += " " + (DefaultEnums.ScriptID)Data.cScripts[i];
                 }
                 text.Add(script_line);
             }

@@ -500,6 +500,35 @@ namespace Twinsanity
             BoilerUnused = 136,
         }
 
+        public enum ConditionID : ushort
+        {
+            Always = 0,
+            DefaultCase = 2,
+            GetRandomFloat = 3,
+            InstanceType = 47,
+            IsVehicleRollerbrawl = 594,
+            IsVehicleHumiliskate = 596,
+            IsVehicle3 = 598,
+            GlobalProgression = 639,
+        }
+        public enum CommandID : ushort
+        {
+            Error = 0,
+            SpawnGlobalObject = 8,
+            PlayAnimation = 9,
+            SpawnParticle = 10,
+            PlaySound = 11,
+            DestroyHost = 85,
+            SpawnObject = 512,
+            ToggleActive = 515,
+            PropelPlayer = 523,
+            AddCrystal = 535,
+            AddLives = 585,
+            SwitchCharacter = 625,
+            AddAmmo = 636,
+
+        }
+
         public enum ScriptID : ushort
         {
             HEAD_COM_CRASH_IDLE = 0,
