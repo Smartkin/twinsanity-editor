@@ -17,13 +17,13 @@ namespace TwinsaityEditor
         private SectionController controller;
         private Script script;
 
-        private Script.HeaderScriptStruct selectedHeaderScript;
-        private Script.MainScriptStruct selectedMainScript;
-        private Script.MainScriptStruct.SupportType1 selectedType1;
-        private Script.MainScriptStruct.SupportType2 selectedType2;
-        private Script.MainScriptStruct.SupportType3 selectedType3;
-        private Script.MainScriptStruct.SupportType4 selectedType4;
-        private Script.MainScriptStruct.LinkedScript selectedLinked;
+        private Script.HeaderScript selectedHeaderScript;
+        private Script.MainScript selectedMainScript;
+        private Script.MainScript.SupportType1 selectedType1;
+        private Script.MainScript.ScriptStateBody selectedType2;
+        private Script.MainScript.ScriptCondition selectedType3;
+        private Script.MainScript.ScriptCommand selectedType4;
+        private Script.MainScript.ScriptState selectedLinked;
         private FileController File { get; set; }
         private TwinsFile FileData { get => File.Data; }
         private Func<Script, bool> scriptPredicate;
@@ -75,20 +75,20 @@ namespace TwinsaityEditor
             if (null != script)
             {
                 scriptTree.Nodes.Add(script.Name);
-                if (script.HeaderScript != null)
+                if (script.Header != null)
                 {
-                    scriptTree.TopNode.Nodes.Add("Header Script").Tag = script.HeaderScript;
+                    scriptTree.TopNode.Nodes.Add("Header Script").Tag = script.Header;
                 }
-                if (script.MainScript != null)
+                if (script.Main != null)
                 {
-                    TreeNode mainScriptNode = scriptTree.TopNode.Nodes.Add("Main Script - State: " + script.MainScript.unkInt2);
-                    mainScriptNode.Tag = script.MainScript;
-                    Script.MainScriptStruct mainScript = script.MainScript;
-                    Script.MainScriptStruct.LinkedScript ptr = mainScript.linkedScript1;
+                    TreeNode mainScriptNode = scriptTree.TopNode.Nodes.Add("Main Script - State: " + script.Main.unkInt2);
+                    mainScriptNode.Tag = script.Main;
+                    Script.MainScript mainScript = script.Main;
+                    Script.MainScript.ScriptState ptr = mainScript.scriptState1;
                     while (ptr != null)
                     {
                         AddLinked(mainScriptNode, ptr);
-                        ptr = ptr.nextLinked;
+                        ptr = ptr.nextState;
                     }
                 }
                 scriptTree.Nodes[0].ExpandAll();
@@ -96,7 +96,7 @@ namespace TwinsaityEditor
                 scriptTree.EndUpdate();
             }
         }
-        private void AddLinked(TreeNode parent, Script.MainScriptStruct.LinkedScript ptr)
+        private void AddLinked(TreeNode parent, Script.MainScript.ScriptState ptr)
         {
             string Name = $"State {parent.Nodes.Count}";
             if (ptr.scriptIndexOrSlot != -1)
@@ -116,34 +116,34 @@ namespace TwinsaityEditor
             {
                 AddType1(node, ptr.type1);
             }
-            Script.MainScriptStruct.SupportType2 ptrType2 = ptr.type2;
+            Script.MainScript.ScriptStateBody ptrType2 = ptr.scriptStateBody;
             while (ptrType2 != null)
             {
                 AddType2(node, ptrType2);
-                ptrType2 = ptrType2.nextType2;
+                ptrType2 = ptrType2.nextScriptStateBody;
             }
         }
-        private void AddType1(TreeNode parent, Script.MainScriptStruct.SupportType1 ptr)
+        private void AddType1(TreeNode parent, Script.MainScript.SupportType1 ptr)
         {
             TreeNode node = parent.Nodes.Add($"Header");
             node.Tag = ptr;
         }
-        private void AddType2(TreeNode parent, Script.MainScriptStruct.SupportType2 ptr)
+        private void AddType2(TreeNode parent, Script.MainScript.ScriptStateBody ptr)
         {
-            TreeNode node = parent.Nodes.Add($"To State: {ptr.linkedScriptListIndex}");
+            TreeNode node = parent.Nodes.Add($"To State: {ptr.scriptStateListIndex}");
             node.Tag = ptr;
-            if (null != ptr.type3)
+            if (null != ptr.condition)
             {
-                AddType3(node, ptr.type3);
+                AddType3(node, ptr.condition);
             }
-            Script.MainScriptStruct.SupportType4 ptrType4 = ptr.type4;
+            Script.MainScript.ScriptCommand ptrType4 = ptr.command;
             while (ptrType4 != null)
             {
                 AddType4(node, ptrType4);
-                ptrType4 = ptrType4.nextType4;
+                ptrType4 = ptrType4.nextCommand;
             }
         }
-        private void AddType3(TreeNode parent, Script.MainScriptStruct.SupportType3 ptr)
+        private void AddType3(TreeNode parent, Script.MainScript.ScriptCondition ptr)
         {
             string Name = $"Condition {ptr.VTableIndex}";
             bool IsDefined = false;
@@ -163,7 +163,7 @@ namespace TwinsaityEditor
             }
             
         }
-        private void AddType4(TreeNode parent, Script.MainScriptStruct.SupportType4 ptr)
+        private void AddType4(TreeNode parent, Script.MainScript.ScriptCommand ptr)
         {
             string Name = $"Command {ptr.VTableIndex}";
             bool IsDefined = false;
@@ -202,28 +202,28 @@ namespace TwinsaityEditor
                     panelGeneral.Visible = true;
                     UpdateGeneralPanel();
                 }
-                if (tag is Script.HeaderScriptStruct)
+                if (tag is Script.HeaderScript)
                 {
                     panelHeader.Visible = true;
-                    selectedHeaderScript = (Script.HeaderScriptStruct)tag;
+                    selectedHeaderScript = (Script.HeaderScript)tag;
                     UpdateHeaderPanel();
                 }
-                if (tag is Script.MainScriptStruct)
+                if (tag is Script.MainScript)
                 {
                     panelMain.Visible = true;
-                    selectedMainScript = (Script.MainScriptStruct)tag;
+                    selectedMainScript = (Script.MainScript)tag;
                     UpdateMainPanel();
                 }
-                if (tag is Script.MainScriptStruct.SupportType1)
+                if (tag is Script.MainScript.SupportType1)
                 {
                     panelType1.Visible = true;
-                    selectedType1 = (Script.MainScriptStruct.SupportType1)tag;
+                    selectedType1 = (Script.MainScript.SupportType1)tag;
                     UpdateType1Panel();
                 }
-                if (tag is Script.MainScriptStruct.SupportType2)
+                if (tag is Script.MainScript.ScriptStateBody)
                 {
                     panelType2.Visible = true;
-                    selectedType2 = (Script.MainScriptStruct.SupportType2)tag;
+                    selectedType2 = (Script.MainScript.ScriptStateBody)tag;
                     UpdateType2Panel();
                     /*
                     if (selectedType2.type3 != null)
@@ -235,22 +235,22 @@ namespace TwinsaityEditor
                     }
                     */
                 }
-                if (tag is Script.MainScriptStruct.SupportType3)
+                if (tag is Script.MainScript.ScriptCondition)
                 {
                     panelType3.Visible = true;
-                    selectedType3 = (Script.MainScriptStruct.SupportType3)tag;
+                    selectedType3 = (Script.MainScript.ScriptCondition)tag;
                     UpdateType3Panel();
                 }
-                if (tag is Script.MainScriptStruct.SupportType4)
+                if (tag is Script.MainScript.ScriptCommand)
                 {
                     panelType4.Visible = true;
-                    selectedType4 = (Script.MainScriptStruct.SupportType4)tag;
+                    selectedType4 = (Script.MainScript.ScriptCommand)tag;
                     UpdateType4Panel();
                 }
-                if (tag is Script.MainScriptStruct.LinkedScript)
+                if (tag is Script.MainScript.ScriptState)
                 {
                     panelLinked.Visible = true;
-                    selectedLinked = (Script.MainScriptStruct.LinkedScript)tag;
+                    selectedLinked = (Script.MainScript.ScriptState)tag;
                     UpdateLinkedPanel();
                 }
             }
@@ -259,7 +259,7 @@ namespace TwinsaityEditor
         private void UpdateHeaderPanel()
         {
             headerSubScripts.Items.Clear();
-            foreach (Script.HeaderScriptStruct.UnkIntPairs pair in selectedHeaderScript.pairs)
+            foreach (Script.HeaderScript.UnkIntPairs pair in selectedHeaderScript.pairs)
             {
                 headerSubScripts.Items.Add(pair);
             }
@@ -272,7 +272,7 @@ namespace TwinsaityEditor
         {
             if (headerSubScripts.SelectedItem != null)
             {
-                Script.HeaderScriptStruct.UnkIntPairs pair = selectedHeaderScript.pairs[headerSubScripts.SelectedIndex];
+                Script.HeaderScript.UnkIntPairs pair = selectedHeaderScript.pairs[headerSubScripts.SelectedIndex];
                 headerSubscriptID.Text = (pair.mainScriptIndex - 1).ToString();
                 headerSubscriptArg.Text = pair.unkInt2.ToString();
             }
@@ -281,7 +281,7 @@ namespace TwinsaityEditor
         {
             if (headerSubScripts.SelectedItem != null)
             {
-                Script.HeaderScriptStruct.UnkIntPairs pair = selectedHeaderScript.pairs[headerSubScripts.SelectedIndex];
+                Script.HeaderScript.UnkIntPairs pair = selectedHeaderScript.pairs[headerSubScripts.SelectedIndex];
                 TextBox textBox = (TextBox)sender;
                 Int32 val = pair.mainScriptIndex;
                 if (Int32.TryParse(textBox.Text, out val))
@@ -303,7 +303,7 @@ namespace TwinsaityEditor
         {
             if (headerSubScripts.SelectedItem != null)
             {
-                Script.HeaderScriptStruct.UnkIntPairs pair = selectedHeaderScript.pairs[headerSubScripts.SelectedIndex];
+                Script.HeaderScript.UnkIntPairs pair = selectedHeaderScript.pairs[headerSubScripts.SelectedIndex];
                 TextBox textBox = (TextBox)sender;
                 UInt32 val = pair.unkInt2;
                 if (UInt32.TryParse(textBox.Text, out val))
@@ -323,7 +323,7 @@ namespace TwinsaityEditor
         private void UpdateMainPanel()
         {
             mainName.Text = selectedMainScript.name;
-            mainLinkedCnt.Text = selectedMainScript.LinkedScriptsCount.ToString();
+            mainLinkedCnt.Text = selectedMainScript.StatesAmount.ToString();
             mainUnk.Text = selectedMainScript.unkInt2.ToString();
             mainLinkedPos.Text = "0";
         }
@@ -362,11 +362,11 @@ namespace TwinsaityEditor
                 {
                     TreeNode mainNode = scriptTree.SelectedNode;
                     mainNode.Nodes.Clear();
-                    Script.MainScriptStruct.LinkedScript ptr = selectedMainScript.linkedScript1;
+                    Script.MainScript.ScriptState ptr = selectedMainScript.scriptState1;
                     while (ptr != null)
                     {
                         AddLinked(mainNode, ptr);
-                        ptr = ptr.nextLinked;
+                        ptr = ptr.nextState;
                     }
                     UpdateMainPanel();
                 }
@@ -382,11 +382,11 @@ namespace TwinsaityEditor
                 {
                     TreeNode mainNode = scriptTree.SelectedNode;
                     mainNode.Nodes.Clear();
-                    Script.MainScriptStruct.LinkedScript ptr = selectedMainScript.linkedScript1;
+                    Script.MainScript.ScriptState ptr = selectedMainScript.scriptState1;
                     while (ptr != null)
                     {
                         AddLinked(mainNode, ptr);
-                        ptr = ptr.nextLinked;
+                        ptr = ptr.nextState;
                     }
                     UpdateMainPanel();
                 }
@@ -525,7 +525,7 @@ namespace TwinsaityEditor
         private void UpdateType2Panel()
         {
             type2Bitfield.Text = Convert.ToString(selectedType2.bitfield, 16);
-            type2Slot.Text = selectedType2.linkedScriptListIndex.ToString();
+            type2Slot.Text = selectedType2.scriptStateListIndex.ToString();
             type2TransitionEnabled.Checked = (selectedType2.bitfield & 0x400) != 0;
         }
         private void type2Bitfield_TextChanged(object sender, EventArgs e)
@@ -553,11 +553,11 @@ namespace TwinsaityEditor
 
         private void type2Slot_TextChanged(object sender, EventArgs e)
         {
-            Int32 val = selectedType2.linkedScriptListIndex;
+            Int32 val = selectedType2.scriptStateListIndex;
             if (Int32.TryParse(((TextBox)sender).Text, out val))
             {
                 ((TextBox)sender).BackColor = Color.White;
-                selectedType2.linkedScriptListIndex = val;
+                selectedType2.scriptStateListIndex = val;
             }
             else
             {
@@ -568,19 +568,19 @@ namespace TwinsaityEditor
 
         private void type2CreateType3_Click(object sender, EventArgs e)
         {
-            if (selectedType2.CreateType3())
+            if (selectedType2.CreateCondition())
             {
                 TreeNode node = scriptTree.SelectedNode;
                 node.Nodes.Clear();
-                if (selectedType2.type3 != null)
+                if (selectedType2.condition != null)
                 {
-                    AddType3(node, selectedType2.type3);
+                    AddType3(node, selectedType2.condition);
                 }
-                Script.MainScriptStruct.SupportType4 ptr = selectedType2.type4;
+                Script.MainScript.ScriptCommand ptr = selectedType2.command;
                 while (ptr != null)
                 {
                     AddType4(node, ptr);
-                    ptr = ptr.nextType4;
+                    ptr = ptr.nextCommand;
                 }
                 UpdateType2Panel();
             }
@@ -588,19 +588,19 @@ namespace TwinsaityEditor
 
         private void type2DeleteType3_Click(object sender, EventArgs e)
         {
-            if (selectedType2.DeleteType3())
+            if (selectedType2.DeleteCondition())
             {
                 TreeNode node = scriptTree.SelectedNode;
                 node.Nodes.Clear();
-                if (selectedType2.type3 != null)
+                if (selectedType2.condition != null)
                 {
-                    AddType3(node, selectedType2.type3);
+                    AddType3(node, selectedType2.condition);
                 }
-                Script.MainScriptStruct.SupportType4 ptr = selectedType2.type4;
+                Script.MainScript.ScriptCommand ptr = selectedType2.command;
                 while (ptr != null)
                 {
                     AddType4(node, ptr);
-                    ptr = ptr.nextType4;
+                    ptr = ptr.nextCommand;
                 }
                 UpdateType2Panel();
             }
@@ -628,19 +628,19 @@ namespace TwinsaityEditor
             Int32 val = 0;
             if (Int32.TryParse(type2SelectedType4Pos.Text, out val))
             {
-                if (selectedType2.AddType4(val))
+                if (selectedType2.AddCommand(val))
                 {
                     TreeNode node = scriptTree.SelectedNode;
                     node.Nodes.Clear();
-                    if (selectedType2.type3 != null)
+                    if (selectedType2.condition != null)
                     {
-                        AddType3(node, selectedType2.type3);
+                        AddType3(node, selectedType2.condition);
                     }
-                    Script.MainScriptStruct.SupportType4 ptr = selectedType2.type4;
+                    Script.MainScript.ScriptCommand ptr = selectedType2.command;
                     while (ptr != null)
                     {
                         AddType4(node, ptr);
-                        ptr = ptr.nextType4;
+                        ptr = ptr.nextCommand;
                     }
                     UpdateType2Panel();
                 }
@@ -652,19 +652,19 @@ namespace TwinsaityEditor
             Int32 val = 0;
             if (Int32.TryParse(type2SelectedType4Pos.Text, out val))
             {
-                if (selectedType2.DeleteType4(val))
+                if (selectedType2.DeleteCommand(val))
                 {
                     TreeNode node = scriptTree.SelectedNode;
                     node.Nodes.Clear();
-                    if (selectedType2.type3 != null)
+                    if (selectedType2.condition != null)
                     {
-                        AddType3(node, selectedType2.type3);
+                        AddType3(node, selectedType2.condition);
                     }
-                    Script.MainScriptStruct.SupportType4 ptr = selectedType2.type4;
+                    Script.MainScript.ScriptCommand ptr = selectedType2.command;
                     while (ptr != null)
                     {
                         AddType4(node, ptr);
-                        ptr = ptr.nextType4;
+                        ptr = ptr.nextCommand;
                     }
                     UpdateType2Panel();
                 }
@@ -1243,11 +1243,11 @@ namespace TwinsaityEditor
                 {
                     AddType1(node, selectedLinked.type1);
                 }
-                Script.MainScriptStruct.SupportType2 ptr = selectedLinked.type2;
+                Script.MainScript.ScriptStateBody ptr = selectedLinked.scriptStateBody;
                 while (ptr != null)
                 {
                     AddType2(node, ptr);
-                    ptr = ptr.nextType2;
+                    ptr = ptr.nextScriptStateBody;
                 }
                 UpdateLinkedPanel();
             }
@@ -1263,11 +1263,11 @@ namespace TwinsaityEditor
                 {
                     AddType1(node, selectedLinked.type1);
                 }
-                Script.MainScriptStruct.SupportType2 ptr = selectedLinked.type2;
+                Script.MainScript.ScriptStateBody ptr = selectedLinked.scriptStateBody;
                 while (ptr != null)
                 {
                     AddType2(node, ptr);
-                    ptr = ptr.nextType2;
+                    ptr = ptr.nextScriptStateBody;
                 }
                 UpdateLinkedPanel();
             }
@@ -1278,7 +1278,7 @@ namespace TwinsaityEditor
             Int32 val = 0;
             if (Int32.TryParse(linkedType2Pos.Text, out val))
             {
-                if (selectedLinked.AddType2(val))
+                if (selectedLinked.AddScriptStateBody(val))
                 {
                     TreeNode node = scriptTree.SelectedNode;
                     node.Nodes.Clear();
@@ -1286,11 +1286,11 @@ namespace TwinsaityEditor
                     {
                         AddType1(node, selectedLinked.type1);
                     }
-                    Script.MainScriptStruct.SupportType2 ptr = selectedLinked.type2;
+                    Script.MainScript.ScriptStateBody ptr = selectedLinked.scriptStateBody;
                     while (ptr != null)
                     {
                         AddType2(node, ptr);
-                        ptr = ptr.nextType2;
+                        ptr = ptr.nextScriptStateBody;
                     }
                     UpdateLinkedPanel();
                 }
@@ -1302,7 +1302,7 @@ namespace TwinsaityEditor
             Int32 val = 0;
             if (Int32.TryParse(linkedType2Pos.Text, out val))
             {
-                if (selectedLinked.DeleteType2(val))
+                if (selectedLinked.DeleteScriptStateBody(val))
                 {
                     TreeNode node = scriptTree.SelectedNode;
                     node.Nodes.Clear();
@@ -1310,11 +1310,11 @@ namespace TwinsaityEditor
                     {
                         AddType1(node, selectedLinked.type1);
                     }
-                    Script.MainScriptStruct.SupportType2 ptr = selectedLinked.type2;
+                    Script.MainScript.ScriptStateBody ptr = selectedLinked.scriptStateBody;
                     while (ptr != null)
                     {
                         AddType2(node, ptr);
-                        ptr = ptr.nextType2;
+                        ptr = ptr.nextScriptStateBody;
                     }
                     UpdateLinkedPanel();
                 }
@@ -1459,7 +1459,7 @@ namespace TwinsaityEditor
             ushort id2 = id1;
             ++id2;
             Script newScriptHeader = new Script();
-            newScriptHeader.HeaderScript = new Script.HeaderScriptStruct((int)id2);
+            newScriptHeader.Header = new Script.HeaderScript((int)id2);
             newScriptHeader.ID = id1;
             newScriptHeader.Name = "Header Script";
             newScriptHeader.flag = 1;
@@ -1474,7 +1474,7 @@ namespace TwinsaityEditor
             
 
             Script newScriptMain = new Script();
-            newScriptMain.MainScript = new Script.MainScriptStruct();
+            newScriptMain.Main = new Script.MainScript();
             newScriptMain.ID = id2;
             newScriptMain.Name = "New Script";
             controller.Data.AddItem(id2, newScriptMain);

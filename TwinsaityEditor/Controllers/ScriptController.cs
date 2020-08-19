@@ -23,12 +23,12 @@ namespace TwinsaityEditor
             List<string> text = new List<string>();
             text.Add($"ID: {Data.ID} {(Data.Name != null ? $" Name: {Data.Name}" : string.Empty)}");
             text.Add($"Offset: {Data.Offset} Size: {Data.Size}");
-            if (Data?.HeaderScript != null)
+            if (Data?.Header != null)
             {
-                text.Add($"Pairs(LinkedScriptIndex/UnkInt): {Data.HeaderScript.unkIntPairs}");
-                for (int i = 0; i < Data.HeaderScript.unkIntPairs; i++)
+                text.Add($"Pairs(LinkedScriptIndex/UnkInt): {Data.Header.unkIntPairs}");
+                for (int i = 0; i < Data.Header.unkIntPairs; i++)
                 {
-                    text.Add($"Pair: {Data.HeaderScript.pairs[i].mainScriptIndex - 1} / {Data.HeaderScript.pairs[i].unkInt2}");
+                    text.Add($"Pair: {Data.Header.pairs[i].mainScriptIndex - 1} / {Data.Header.pairs[i].unkInt2}");
                 }
             }
             TextPrev = text.ToArray();

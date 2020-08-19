@@ -8,12 +8,12 @@ namespace Twinsanity
 {
     public class Script : TwinsItem
     {
-        public  Script() {
+        public Script() {
             script = new byte[0];
         }
-        public class HeaderScriptStruct
+        public class HeaderScript
         {
-            public HeaderScriptStruct(Int32 id)
+            public HeaderScript(Int32 id)
             {
                 unkIntPairs = 1;
                 pairs = new UnkIntPairs[1];
@@ -21,7 +21,7 @@ namespace Twinsanity
                 pairs[0].mainScriptIndex = id + 1;
                 pairs[0].unkInt2 = 4294922800;
             }
-            public HeaderScriptStruct(BinaryReader reader)
+            public HeaderScript(BinaryReader reader)
             {
                 unkIntPairs = reader.ReadUInt32();
                 pairs = new UnkIntPairs[unkIntPairs];
@@ -59,29 +59,29 @@ namespace Twinsanity
             public UnkIntPairs[] pairs;
         }
 
-        public class MainScriptStruct
+        public class MainScript
         {
-            public MainScriptStruct()
+            public MainScript()
             {
 
             }
-            public MainScriptStruct(BinaryReader reader)
+            public MainScript(BinaryReader reader)
             {
                 int len = reader.ReadInt32();
                 name = new string(reader.ReadChars(len));
-                LinkedScriptsCount = reader.ReadInt32();
+                StatesAmount = reader.ReadInt32();
                 unkInt2 = reader.ReadInt32();
-                if (LinkedScriptsCount > 0)
+                if (StatesAmount > 0)
                 {
-                    linkedScript1 = new LinkedScript(reader);
-                    LinkedScript ptr = linkedScript1;
+                    scriptState1 = new ScriptState(reader);
+                    ScriptState ptr = scriptState1;
                     while (null != ptr)
                     {
                         if ((ptr.bitfield & 0x1F) != 0)
                         {
-                            ptr.type2 = new SupportType2(reader);
+                            ptr.scriptStateBody = new ScriptStateBody(reader);
                         }
-                        ptr = ptr.nextLinked;
+                        ptr = ptr.nextState;
                     }
                 }
             }
@@ -89,43 +89,43 @@ namespace Twinsanity
             {
                 writer.Write(name.Length);
                 writer.Write(name.ToCharArray());
-                writer.Write(LinkedScriptsCount);
+                writer.Write(StatesAmount);
                 writer.Write(unkInt2);
-                if (LinkedScriptsCount > 0)
+                if (StatesAmount > 0)
                 {
-                    linkedScript1.Write(writer);
-                    LinkedScript ptr = linkedScript1;
+                    scriptState1.Write(writer);
+                    ScriptState ptr = scriptState1;
                     while (ptr != null)
                     {
-                        if (null != ptr.type2)
+                        if (null != ptr.scriptStateBody)
                         {
-                            ptr.type2.Write(writer);
+                            ptr.scriptStateBody.Write(writer);
                         }
-                        ptr = ptr.nextLinked;
+                        ptr = ptr.nextState;
                     }
                 }
             }
             public Int32 GetLength()
             {
                 Int32 headerSize = 4 + name.Length + 4 + 4;
-                Int32 linkedSize = ((linkedScript1 != null)?linkedScript1.GetLength():0);
-                Int32 type2Size = 0;
-                LinkedScript ptr = linkedScript1;
+                Int32 linkedSize = ((scriptState1 != null)?scriptState1.GetLength():0);
+                Int32 scriptStateBodySize = 0;
+                ScriptState ptr = scriptState1;
                 while (ptr != null)
                 {
-                    if (null != ptr.type2)
+                    if (null != ptr.scriptStateBody)
                     {
-                        type2Size += ptr.type2.GetLength();
+                        scriptStateBodySize += ptr.scriptStateBody.GetLength();
                     }
-                    ptr = ptr.nextLinked;
+                    ptr = ptr.nextState;
                 }
-                return headerSize + linkedSize + type2Size;
+                return headerSize + linkedSize + scriptStateBodySize;
             }
             public String name { get; set; }
-            public Int32 LinkedScriptsCount { get; set; }
+            public Int32 StatesAmount { get; set; }
             public Int32 unkInt2 { get; set; }
-            public LinkedScript linkedScript1 { get; set; }
-            public LinkedScript linkedScript2 { get; set; }
+            public ScriptState scriptState1 { get; set; }
+            public ScriptState scriptState2 { get; set; }
 
             public class SupportType1
             {
@@ -168,34 +168,34 @@ namespace Twinsanity
                     return byteArray.Length == unkByte1 + 4 * unkByte2;
                 }
             }
-            public class SupportType2
+            public class ScriptStateBody
             {
-                public SupportType2()
+                public ScriptStateBody()
                 {
                     bitfield = 0;
-                    linkedScriptListIndex = 0;
-                    type3 = null;
-                    type4 = null;
-                    nextType2 = null;
+                    scriptStateListIndex = 0;
+                    condition = null;
+                    command = null;
+                    nextScriptStateBody = null;
                 }
-                public SupportType2(BinaryReader reader)
+                public ScriptStateBody(BinaryReader reader)
                 {
                     bitfield = reader.ReadInt32();
                     if ((bitfield & 0x400) != 0)
                     {
-                        linkedScriptListIndex = reader.ReadInt32();
+                        scriptStateListIndex = reader.ReadInt32();
                     }
                     if ((bitfield & 0x200) != 0)
                     {
-                        type3 = new SupportType3(reader);
+                        condition = new ScriptCondition(reader);
                     }
                     if ((bitfield & 0xFF) != 0)
                     {
-                        type4 = new SupportType4(reader);
+                        command = new ScriptCommand(reader);
                     }
                     if ((bitfield & 0x800) != 0)
                     {
-                        nextType2 = new SupportType2(reader);
+                        nextScriptStateBody = new ScriptStateBody(reader);
                     }
                 }
                 public void Write(BinaryWriter writer)
@@ -203,62 +203,62 @@ namespace Twinsanity
                     writer.Write(bitfield);
                     if ((bitfield & 0x400) != 0)
                     {
-                        writer.Write(linkedScriptListIndex);
+                        writer.Write(scriptStateListIndex);
                     }
                     if ((bitfield & 0x200) != 0)
                     {
-                        type3.Write(writer);
+                        condition.Write(writer);
                     }
                     if ((bitfield & 0xFF) != 0)
                     {
-                        type4.Write(writer);
+                        command.Write(writer);
                     }
                     if ((bitfield & 0x800) != 0)
                     {
-                        nextType2.Write(writer);
+                        nextScriptStateBody.Write(writer);
                     }
                 }
                 public Int32 GetLength()
                 {
                     return 4 + (((bitfield & 0x400) != 0) ? 4 : 0)
-                        + (((bitfield & 0x200) != 0) ? type3.GetLength() : 0)
-                        + (((bitfield & 0xFF) != 0) ? type4.GetLength() : 0)
-                        + (((bitfield & 0x800) != 0) ? nextType2.GetLength() : 0);
+                        + (((bitfield & 0x200) != 0) ? condition.GetLength() : 0)
+                        + (((bitfield & 0xFF) != 0) ? command.GetLength() : 0)
+                        + (((bitfield & 0x800) != 0) ? nextScriptStateBody.GetLength() : 0);
                 }
                 public Int32 bitfield { get; set; }
-                public Int32 linkedScriptListIndex { get; set; }
-                public SupportType3 type3 { get; set; }
-                public SupportType4 type4 { get; set; }
-                public SupportType2 nextType2 { get; set; }
+                public Int32 scriptStateListIndex { get; set; }
+                public ScriptCondition condition { get; set; }
+                public ScriptCommand command { get; set; }
+                public ScriptStateBody nextScriptStateBody { get; set; }
                 public bool isBitFieldValid()
                 {
-                    if (((bitfield & 0x200) == 0) && (type3 != null))
+                    if (((bitfield & 0x200) == 0) && (condition != null))
                     {
                         return false;
                     }
-                    if (((bitfield & 0x200) != 0) && (type3 == null))
+                    if (((bitfield & 0x200) != 0) && (condition == null))
                     {
                         return false;
                     }
-                    if (((bitfield & 0xFF) == 0) && (type4 != null))
+                    if (((bitfield & 0xFF) == 0) && (command != null))
                     {
                         return false;
                     }
-                    if (((bitfield & 0xFF) != 0) && (type4 == null))
+                    if (((bitfield & 0xFF) != 0) && (command == null))
                     {
                         return false;
                     }
-                    if (((bitfield & 0x800) == 0) && (nextType2 != null))
+                    if (((bitfield & 0x800) == 0) && (nextScriptStateBody != null))
                     {
                         return false;
                     }
-                    if (((bitfield & 0x800) != 0) && (nextType2 == null))
+                    if (((bitfield & 0x800) != 0) && (nextScriptStateBody == null))
                     {
                         return false;
                     }
                     return true;
                 }
-                public Byte type4Count
+                public Byte commandCount
                 {
                     get
                     {
@@ -269,11 +269,11 @@ namespace Twinsanity
                         bitfield = (Int32)(bitfield & 0xFFFFFF00) | (value & 0xFF);
                     }
                 }
-                public bool CreateType3()
+                public bool CreateCondition()
                 {
-                    if (type3 == null)
+                    if (condition == null)
                     {
-                        type3 = new SupportType3();
+                        condition = new ScriptCondition();
                         bitfield = (Int16)(bitfield | 0x200);
                         return true;
                     }
@@ -283,11 +283,11 @@ namespace Twinsanity
                     }
 
                 }
-                public bool DeleteType3()
+                public bool DeleteCondition()
                 {
-                    if (type3 != null)
+                    if (condition != null)
                     {
-                        type3 = null;
+                        condition = null;
                         bitfield = (Int16)(bitfield & ~0x200);
                         return true;
                     }
@@ -296,98 +296,98 @@ namespace Twinsanity
                         return false;
                     }
                 }
-                public bool AddType4(Int32 position)
+                public bool AddCommand(Int32 position)
                 {
-                    if (position > type4Count || position < 0)
+                    if (position > commandCount || position < 0)
                     {
                         return false;
                     }
-                    if (type4Count == 0)
+                    if (commandCount == 0)
                     {
-                        type4 = new SupportType4();
+                        command = new ScriptCommand();
                     }
-                    else if (position == type4Count)
+                    else if (position == commandCount)
                     {
-                        SupportType4 ptr = type4;
-                        while (ptr.nextType4 != null)
+                        ScriptCommand ptr = command;
+                        while (ptr.nextCommand != null)
                         {
-                            ptr = ptr.nextType4;
+                            ptr = ptr.nextCommand;
                         }
                         ptr.internalIndex = (Int16)(ptr.internalIndex | 0x1000000);
-                        ptr.nextType4 = new SupportType4();
+                        ptr.nextCommand = new ScriptCommand();
                     }
                     else
                     {
                         int pos = 0;
-                        SupportType4 prevPtr = null;
-                        SupportType4 ptr = type4;
-                        SupportType4 newType2 = new SupportType4();
+                        ScriptCommand prevPtr = null;
+                        ScriptCommand ptr = command;
+                        ScriptCommand newCommand = new ScriptCommand();
                         while (pos < position)
                         {
                             prevPtr = ptr;
-                            ptr = ptr.nextType4;
+                            ptr = ptr.nextCommand;
                             ++pos;
                         }
                         if (prevPtr != null)
                         {
-                            prevPtr.nextType4 = newType2;
-                            prevPtr.nextType4.nextType4 = ptr;
+                            prevPtr.nextCommand = newCommand;
+                            prevPtr.nextCommand.nextCommand = ptr;
                         }
                         else
                         {
-                            newType2.nextType4 = type4;
-                            type4 = newType2;
+                            newCommand.nextCommand = command;
+                            command = newCommand;
                         }
 
-                        if (newType2.nextType4 != null)
+                        if (newCommand.nextCommand != null)
                         {
-                            newType2.internalIndex = (Int32)(newType2.internalIndex | 0x1000000);
+                            newCommand.internalIndex = (Int32)(newCommand.internalIndex | 0x1000000);
                         }
                     }
-                    ++type4Count;
+                    ++commandCount;
                     return true;
                 }
-                public bool DeleteType4(Int32 position)
+                public bool DeleteCommand(Int32 position)
                 {
-                    if (position >= type4Count || position < 0)
+                    if (position >= commandCount || position < 0)
                     {
                         return false;
                     }
                     if (position == 0)
                     {
-                        type4 = type4.nextType4;
+                        command = command.nextCommand;
                     }
                     else
                     {
                         int pos = 0;
-                        SupportType4 prevPtr = null;
-                        SupportType4 ptr = type4;
+                        ScriptCommand prevPtr = null;
+                        ScriptCommand ptr = command;
                         while (pos < position)
                         {
                             prevPtr = ptr;
-                            ptr = ptr.nextType4;
+                            ptr = ptr.nextCommand;
                             ++pos;
                         }
-                        prevPtr.nextType4 = ptr.nextType4;
-                        if (prevPtr.nextType4 == null)
+                        prevPtr.nextCommand = ptr.nextCommand;
+                        if (prevPtr.nextCommand == null)
                         {
                             prevPtr.internalIndex = (Int32)(prevPtr.internalIndex & ~0x1000000);
                         }
                     }
-                    --type4Count;
+                    --commandCount;
                     return true;
                 }
             }
-            public class SupportType3
+            public class ScriptCondition
             {
-                public SupportType3()
+                public ScriptCondition()
                 {
                     unkInt1 = 0;
                     X = 0.0f;
                     Y = 0.0f;
                     Z = 0.0f;
                 }
-                public SupportType3(BinaryReader reader)
+                public ScriptCondition(BinaryReader reader)
                 {
                     unkInt1 = reader.ReadInt32();
                     vTableAddress = 0x0;
@@ -434,18 +434,18 @@ namespace Twinsanity
                     }
                 }
             }
-            public class SupportType4
+            public class ScriptCommand
             {
-                public SupportType4()
+                public ScriptCommand()
                 {
                     internalIndex = 0;
                     arguments = new List<uint>();
                 }
-                public SupportType4(BinaryReader reader)
+                public ScriptCommand(BinaryReader reader)
                 {
                     internalIndex = reader.ReadInt32();
                     arguments = new List<uint>();
-                    length = GetType4Size(internalIndex & 0x0000FFFF);
+                    length = GetCommandSize(internalIndex & 0x0000FFFF);
                     if (length - 0xC > 0x0)
                     {
                         int sz = (length - 0xC) / 4;
@@ -456,7 +456,7 @@ namespace Twinsanity
                     } 
                     if ((internalIndex & 0x1000000) != 0)
                     {
-                        nextType4 = new SupportType4(reader);
+                        nextCommand = new ScriptCommand(reader);
                         int flag = (length != 0) ? 1 : 0;
                         unkUInt = (UInt32)(((UInt64)unkUInt & 0xFEFFFFFF) | (UInt64)flag << 0x18);
                     }
@@ -478,12 +478,12 @@ namespace Twinsanity
                     }
                     if ((internalIndex & 0x1000000) != 0)
                     {
-                        nextType4.Write(writer);
+                        nextCommand.Write(writer);
                     }
                 }
                 public Int32 GetLength()
                 {
-                    return 4 + ((arguments != null) ? arguments.Count * 4 : 0) + (((internalIndex & 0x1000000) != 0) ? nextType4.GetLength() : 0);
+                    return 4 + ((arguments != null) ? arguments.Count * 4 : 0) + (((internalIndex & 0x1000000) != 0) ? nextCommand.GetLength() : 0);
                 }
                 public UInt32 unkUInt { get; set; }
                 public Int32 vTableAddress
@@ -513,7 +513,7 @@ namespace Twinsanity
                 public Int32 internalIndex { get; set; }
                 public Int32 length { get; set; }
                 public List<UInt32> arguments { get; set; }
-                public SupportType4 nextType4 { get; set; }
+                public ScriptCommand nextCommand { get; set; }
 
                 public UInt16 VTableIndex
                 {
@@ -540,19 +540,19 @@ namespace Twinsanity
 
                 public bool isValidBits()
                 {
-                    if (((internalIndex & 0x1000000) != 0) && nextType4 == null)
+                    if (((internalIndex & 0x1000000) != 0) && nextCommand == null)
                     {
                         return false;
                     }
-                    if (((internalIndex & 0x1000000) == 0) && nextType4 != null)
+                    if (((internalIndex & 0x1000000) == 0) && nextCommand != null)
                     {
                         return false;
                     }
-                    if (arguments == null && (GetType4Size(internalIndex & 0xffff) > 0))
+                    if (arguments == null && (GetCommandSize(internalIndex & 0xffff) > 0))
                     {
                         return false;
                     }
-                    if (arguments != null && (GetType4Size(internalIndex & 0xffff) == 0))
+                    if (arguments != null && (GetCommandSize(internalIndex & 0xffff) == 0))
                     {
                         return false;
                     }
@@ -564,7 +564,7 @@ namespace Twinsanity
                 }
                 public Int32 GetExpectedSize()
                 {
-                    Int32 sz = GetType4Size(internalIndex & 0xffff);
+                    Int32 sz = GetCommandSize(internalIndex & 0xffff);
                     if (sz - 0xC > 0)
                     {
                         return sz - 0xC;
@@ -574,15 +574,15 @@ namespace Twinsanity
                         return 0;
                     }
                 }
-                static Int32 GetType4Size(Int32 index)
+                static Int32 GetCommandSize(Int32 index)
                 {
-                    if (index < 0 || index > Type4SizeMapper.Length)
+                    if (index < 0 || index > CommandSizeMapper.Length)
                     {
                         return 0;
                     }
-                    return Type4SizeMapper[index];
+                    return CommandSizeMapper[index];
                 }
-                static Int32[] Type4SizeMapper = {
+                static Int32[] CommandSizeMapper = {
                         0x00, 0x80, 0x0C, 0x20, 0x10, 0x0C, 0x00, 0x0C, 0x30, 0x24, 0x30, 0x48, 0x94, 0x0C, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x00, 0x00, 0x00, 0x10, 0x10, 0x00, 0x00, 0x10, 0x10, 0x20, 0x00, 0x10,
                         0x00, 0x10, 0x10, 0x0C, 0x0C, 0x00, 0x00, 0x0C, 0x00, 0x00, 0x10, 0x00, 0x50, 0x10, 0x00, 0x30, 0x30, 0x30, 0x0C, 0x20, 0x0C, 0x00, 0x1C, 0x40, 0x14, 0x10, 0x00, 0x10, 0x60, 0x0C, 0x20, 0x0C,
                         0x30, 0x1C, 0x0C, 0x10, 0x14, 0x18, 0x00, 0x0C, 0x50, 0x00, 0x10, 0x10, 0x30, 0x0C, 0x14, 0x10, 0x50, 0x0C, 0x94, 0x94, 0x0C, 0x10, 0x28, 0x1C, 0x20, 0x10, 0x10, 0x10, 0x10, 0x10, 0x30, 0x10,
@@ -616,18 +616,18 @@ namespace Twinsanity
                         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, };
             }
-            public class LinkedScript
+            public class ScriptState
             {
-                public LinkedScript()
+                public ScriptState()
                 {
                     bitfield = 0;
                     scriptIndexOrSlot = -1;
                     type1 = null;
-                    type2 = null;
-                    nextLinked = null;
-                    type2Count = 0;
+                    scriptStateBody = null;
+                    nextState = null;
+                    scriptStateBodyCount = 0;
                 }
-                public LinkedScript(BinaryReader reader)
+                public ScriptState(BinaryReader reader)
                 {
                     bitfield = reader.ReadInt16();
                     scriptIndexOrSlot = reader.ReadInt16();
@@ -637,7 +637,7 @@ namespace Twinsanity
                     }
                     if ((bitfield & 0x8000) != 0)
                     {
-                        nextLinked = new LinkedScript(reader);
+                        nextState = new ScriptState(reader);
                     }
                 }
                 public void Write(BinaryWriter writer)
@@ -650,15 +650,15 @@ namespace Twinsanity
                     }
                     if ((bitfield & 0x8000) != 0)
                     {
-                        nextLinked.Write(writer);
+                        nextState.Write(writer);
                     }
                 }
                 public Int32 GetLength()
                 {
-                    return 4 + (((bitfield & 0x4000) != 0) ? type1.GetLength() : 0) + (((bitfield & 0x8000) != 0) ? nextLinked.GetLength() : 0);
+                    return 4 + (((bitfield & 0x4000) != 0) ? type1.GetLength() : 0) + (((bitfield & 0x8000) != 0) ? nextState.GetLength() : 0);
                 }
                 public Int16 bitfield { get; set; }
-                private Int16 type2Count {
+                private Int16 scriptStateBodyCount {
                     get
                     {
                         return (Int16)(((UInt16)bitfield) & 0x1F);
@@ -670,8 +670,8 @@ namespace Twinsanity
                 }
                 public Int16 scriptIndexOrSlot { get; set; }
                 public SupportType1 type1 { get; set; }
-                public SupportType2 type2 { get; set; }
-                public LinkedScript nextLinked { get; set; }
+                public ScriptStateBody scriptStateBody { get; set; }
+                public ScriptState nextState { get; set; }
                 public bool isValidBits()
                 {
                     if (((bitfield & 0x4000) != 0) && type1 == null)
@@ -682,19 +682,19 @@ namespace Twinsanity
                     {
                         return false;
                     }
-                    if (((bitfield & 0x8000) != 0) && nextLinked == null)
+                    if (((bitfield & 0x8000) != 0) && nextState == null)
                     {
                         return false;
                     }
-                    if (((bitfield & 0x8000) == 0) && nextLinked != null)
+                    if (((bitfield & 0x8000) == 0) && nextState != null)
                     {
                         return false;
                     }
-                    if (((bitfield & 0x1F) != 0) && type2 == null)
+                    if (((bitfield & 0x1F) != 0) && scriptStateBody == null)
                     {
                         return false;
                     }
-                    if (((bitfield & 0x1F) == 0) && type2 != null)
+                    if (((bitfield & 0x1F) == 0) && scriptStateBody != null)
                     {
                         return false;
                     }
@@ -727,168 +727,168 @@ namespace Twinsanity
                         return false;
                     }
                 }
-                public bool AddType2(Int32 position)
+                public bool AddScriptStateBody(Int32 position)
                 {
-                    if (position > type2Count || position < 0)
+                    if (position > scriptStateBodyCount || position < 0)
                     {
                         return false;
                     }
-                    if (type2Count == 0)
+                    if (scriptStateBodyCount == 0)
                     {
-                        type2 = new SupportType2();
+                        scriptStateBody = new ScriptStateBody();
                     }
-                    else if (position == type2Count)
+                    else if (position == scriptStateBodyCount)
                     {
-                        SupportType2 ptr = type2;
-                        while (ptr.nextType2 != null)
+                        ScriptStateBody ptr = scriptStateBody;
+                        while (ptr.nextScriptStateBody != null)
                         {
-                            ptr = ptr.nextType2;
+                            ptr = ptr.nextScriptStateBody;
                         }
                         ptr.bitfield = (Int16)(ptr.bitfield | 0x800);
-                        ptr.nextType2 = new SupportType2();
+                        ptr.nextScriptStateBody = new ScriptStateBody();
                     }
                     else
                     {
                         int pos = 0;
-                        SupportType2 prevPtr = null;
-                        SupportType2 ptr = type2;
-                        SupportType2 newType2 = new SupportType2();
+                        ScriptStateBody prevPtr = null;
+                        ScriptStateBody ptr = scriptStateBody;
+                        ScriptStateBody newType2 = new ScriptStateBody();
                         while (pos < position)
                         {
                             prevPtr = ptr;
-                            ptr = ptr.nextType2;
+                            ptr = ptr.nextScriptStateBody;
                             ++pos;
                         }
                         if (prevPtr != null)
                         {
-                            prevPtr.nextType2 = newType2;
-                            prevPtr.nextType2.nextType2 = ptr;
+                            prevPtr.nextScriptStateBody = newType2;
+                            prevPtr.nextScriptStateBody.nextScriptStateBody = ptr;
                         }
                         else
                         {
-                            newType2.nextType2 = type2;
-                            type2 = newType2;
+                            newType2.nextScriptStateBody = scriptStateBody;
+                            scriptStateBody = newType2;
                         }
 
-                        if (newType2.nextType2 != null)
+                        if (newType2.nextScriptStateBody != null)
                         {
                             newType2.bitfield = (Int32)(newType2.bitfield | 0x800);
                         }
                     }
-                    ++type2Count;
+                    ++scriptStateBodyCount;
                     return true;
                 }
-                public bool DeleteType2(Int32 position)
+                public bool DeleteScriptStateBody(Int32 position)
                 {
-                    if (position >= type2Count || position < 0)
+                    if (position >= scriptStateBodyCount || position < 0)
                     {
                         return false;
                     }
                     if (position == 0)
                     {
-                        type2 = type2.nextType2;
+                        scriptStateBody = scriptStateBody.nextScriptStateBody;
                     }
                     else
                     {
                         int pos = 0;
-                        SupportType2 prevPtr = null;
-                        SupportType2 ptr = type2;
+                        ScriptStateBody prevPtr = null;
+                        ScriptStateBody ptr = scriptStateBody;
                         while (pos < position)
                         {
                             prevPtr = ptr;
-                            ptr = ptr.nextType2;
+                            ptr = ptr.nextScriptStateBody;
                             ++pos;
                         }
-                        prevPtr.nextType2 = ptr.nextType2;
-                        if (prevPtr.nextType2 == null)
+                        prevPtr.nextScriptStateBody = ptr.nextScriptStateBody;
+                        if (prevPtr.nextScriptStateBody == null)
                         {
                             prevPtr.bitfield = (Int32)(prevPtr.bitfield & ~0x800);
                         }
                     }
-                    --type2Count;
+                    --scriptStateBodyCount;
                     return true;
                 }
             }
 
             public bool DeleteLinkedScript(Int32 position)
             {
-                if (position >= LinkedScriptsCount || position < 0)
+                if (position >= StatesAmount || position < 0)
                 {
                     return false;
                 }
                 if (position == 0)
                 {
-                    linkedScript1 = linkedScript1.nextLinked;
+                    scriptState1 = scriptState1.nextState;
                 }
                 else
                 {
                     int pos = 0;
-                    LinkedScript prevPtr = null;
-                    LinkedScript ptr = linkedScript1;
+                    ScriptState prevPtr = null;
+                    ScriptState ptr = scriptState1;
                     while (pos < position)
                     {
                         prevPtr = ptr;
-                        ptr = ptr.nextLinked;
+                        ptr = ptr.nextState;
                         ++pos;
                     }
-                    prevPtr.nextLinked = ptr.nextLinked;
-                    if (prevPtr.nextLinked == null)
+                    prevPtr.nextState = ptr.nextState;
+                    if (prevPtr.nextState == null)
                     {
                         prevPtr.bitfield = (Int16)(prevPtr.bitfield & ~0x8000);
                     }
                 }
-                --LinkedScriptsCount;
+                --StatesAmount;
                 return true;
             }
             public bool AddLinkedScript(Int32 position)
             {
-                if (position > LinkedScriptsCount || position < 0)
+                if (position > StatesAmount || position < 0)
                 {
                     return false;
                 }
-                if (LinkedScriptsCount == 0)
+                if (StatesAmount == 0)
                 {
-                    linkedScript1 = new LinkedScript();
+                    scriptState1 = new ScriptState();
                 } 
-                else if (position == LinkedScriptsCount)
+                else if (position == StatesAmount)
                 {
-                    LinkedScript ptr = linkedScript1;
-                    while (ptr.nextLinked != null)
+                    ScriptState ptr = scriptState1;
+                    while (ptr.nextState != null)
                     {
-                        ptr = ptr.nextLinked;
+                        ptr = ptr.nextState;
                     }
                     ptr.bitfield = (Int16)(ptr.bitfield | 0x8000);
-                    ptr.nextLinked = new LinkedScript();
+                    ptr.nextState = new ScriptState();
                 }
                 else
                 {
                     int pos = 0;
-                    LinkedScript prevPtr = null;
-                    LinkedScript ptr = linkedScript1;
-                    LinkedScript newLinked = new LinkedScript();
+                    ScriptState prevPtr = null;
+                    ScriptState ptr = scriptState1;
+                    ScriptState newState = new ScriptState();
                     while (pos < position)
                     {
                         prevPtr = ptr;
-                        ptr = ptr.nextLinked;
+                        ptr = ptr.nextState;
                         ++pos;
                     }
                     if (prevPtr != null)
                     {
-                        prevPtr.nextLinked = newLinked;
-                        prevPtr.nextLinked.nextLinked = ptr;
+                        prevPtr.nextState = newState;
+                        prevPtr.nextState.nextState = ptr;
                     }
                     else
                     {
-                        newLinked.nextLinked = linkedScript1;
-                        linkedScript1 = newLinked;
+                        newState.nextState = scriptState1;
+                        scriptState1 = newState;
                     }
                     
-                    if (newLinked.nextLinked != null)
+                    if (newState.nextState != null)
                     {
-                        newLinked.bitfield = (Int16)(newLinked.bitfield | 0x8000);
+                        newState.bitfield = (Int16)(newState.bitfield | 0x8000);
                     }
                 }
-                ++LinkedScriptsCount;
+                ++StatesAmount;
                 return true;
             }
         }
@@ -896,9 +896,9 @@ namespace Twinsanity
         {
             get
             {
-                if (MainScript != null)
+                if (Main != null)
                 {
-                    return MainScript.name;
+                    return Main.name;
                 }
                 else
                 {
@@ -907,9 +907,9 @@ namespace Twinsanity
             }
             set
             {
-                if (MainScript != null)
+                if (Main != null)
                 {
-                    MainScript.name = value;
+                    Main.name = value;
                 }
             }
         }
@@ -917,8 +917,8 @@ namespace Twinsanity
         private ushort id;
         private byte mask;
         public byte flag;
-        public HeaderScriptStruct HeaderScript { get; set; }
-        public MainScriptStruct MainScript { get; set; }
+        public HeaderScript Header { get; set; }
+        public MainScript Main { get; set; }
         public byte[] script;
         public byte[] data;
 
@@ -935,11 +935,11 @@ namespace Twinsanity
             }
             if (flag == 0)
             {
-                MainScript.Write(writer);
+                Main.Write(writer);
             }
             else
             {
-                HeaderScript.Write(writer);
+                Header.Write(writer);
             }
             writer.Write(script);
         }
@@ -952,11 +952,11 @@ namespace Twinsanity
             var datapos = reader.BaseStream.Position;
             if (flag == 0)
             {
-                MainScript = new MainScriptStruct(reader);
+                Main = new MainScript(reader);
             }
             else
             {
-                HeaderScript = new HeaderScriptStruct(reader);
+                Header = new HeaderScript(reader);
             }
             try
             {
@@ -964,9 +964,9 @@ namespace Twinsanity
             }
             catch
             {
-                if (flag == 0 && MainScript != null)
+                if (flag == 0 && Main != null)
                 {
-                    Console.WriteLine("Failed to load script: " + MainScript.name);
+                    Console.WriteLine("Failed to load script: " + Main.name);
                 }
                 script = null;
                 reader.BaseStream.Position = datapos;
@@ -977,7 +977,7 @@ namespace Twinsanity
         {
             if (flag != 0)
             {
-                return HeaderScript.GetLength() + 4 + script.Length;
+                return Header.GetLength() + 4 + script.Length;
             }
             else
             {
@@ -985,10 +985,10 @@ namespace Twinsanity
                 {
                     return 4 + data.Length;
                 }
-                int a = MainScript.GetLength();
+                int a = Main.GetLength();
                 int b = 4;
                 int c = script.Length;
-                return MainScript.GetLength() + 4 + script.Length;
+                return Main.GetLength() + 4 + script.Length;
             }
 
         }
