@@ -862,6 +862,7 @@ namespace TwinsaityEditor
             if (ignoreUpdate != 10) type4ArgSignedInt32.Text = ((Int32)val).ToString();
             if (ignoreUpdate != 11) type4ArgSignedInt16_1.Text = ((Int16)(val & 0xFFFF)).ToString();
             if (ignoreUpdate != 12) type4ArgSignedInt16_2.Text = ((Int16)((val & 0xFFFF0000) >> 16)).ToString();
+            if (ignoreUpdate != 13) type4ArgBinary.Text = Convert.ToString(val,2).PadLeft(32,'0');
         }
         private bool stopChanged = false;
         private int ignoreUpdate = 0;
@@ -1133,6 +1134,28 @@ namespace TwinsaityEditor
                     stopChanged = false;
                 }
                 else
+                {
+                    ((TextBox)sender).BackColor = Color.Red;
+                }
+            }
+        }
+        private void type4ArgBinary_TextChanged(object sender, EventArgs e)
+        {
+            if (type4Arguments.SelectedIndex >= 0 && !stopChanged)
+            {
+                try
+                {
+                    String text = ((TextBox)sender).Text;
+                    UInt32 val = Convert.ToUInt32(text, 2);
+                    selectedType4.arguments[type4Arguments.SelectedIndex] = val;
+                    ((TextBox)sender).BackColor = Color.White;
+                    stopChanged = true;
+                    ignoreUpdate = 13;
+                    UpdateArgRepresentations(selectedType4.arguments[type4Arguments.SelectedIndex]);
+                    ignoreUpdate = 0;
+                    stopChanged = false;
+                } 
+                catch
                 {
                     ((TextBox)sender).BackColor = Color.Red;
                 }
@@ -1441,5 +1464,7 @@ namespace TwinsaityEditor
         {
 
         }
+
+        
     }
 }
