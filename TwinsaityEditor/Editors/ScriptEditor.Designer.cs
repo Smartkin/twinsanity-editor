@@ -87,8 +87,6 @@
             this.type4ExpectedLength = new System.Windows.Forms.Label();
             this.type4BitField = new System.Windows.Forms.TextBox();
             this.type4VTableIndex = new System.Windows.Forms.TextBox();
-            this.type4Array = new System.Windows.Forms.TextBox();
-            this.label22 = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
             this.panelType3 = new System.Windows.Forms.Panel();
@@ -708,8 +706,6 @@
             this.panelType4.Controls.Add(this.type4ExpectedLength);
             this.panelType4.Controls.Add(this.type4BitField);
             this.panelType4.Controls.Add(this.type4VTableIndex);
-            this.panelType4.Controls.Add(this.type4Array);
-            this.panelType4.Controls.Add(this.label22);
             this.panelType4.Controls.Add(this.label21);
             this.panelType4.Controls.Add(this.label20);
             this.panelType4.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -731,7 +727,7 @@
             // 
             this.type4Warning.AutoSize = true;
             this.type4Warning.ForeColor = System.Drawing.Color.Red;
-            this.type4Warning.Location = new System.Drawing.Point(26, 130);
+            this.type4Warning.Location = new System.Drawing.Point(26, 77);
             this.type4Warning.Name = "type4Warning";
             this.type4Warning.Size = new System.Drawing.Size(241, 26);
             this.type4Warning.TabIndex = 7;
@@ -741,7 +737,7 @@
             // type4ExpectedLength
             // 
             this.type4ExpectedLength.AutoSize = true;
-            this.type4ExpectedLength.Location = new System.Drawing.Point(10, 163);
+            this.type4ExpectedLength.Location = new System.Drawing.Point(10, 110);
             this.type4ExpectedLength.Name = "type4ExpectedLength";
             this.type4ExpectedLength.Size = new System.Drawing.Size(94, 13);
             this.type4ExpectedLength.TabIndex = 6;
@@ -762,23 +758,6 @@
             this.type4VTableIndex.Size = new System.Drawing.Size(100, 20);
             this.type4VTableIndex.TabIndex = 4;
             this.type4VTableIndex.TextChanged += new System.EventHandler(this.type4VTableIndex_TextChanged);
-            // 
-            // type4Array
-            // 
-            this.type4Array.Location = new System.Drawing.Point(15, 105);
-            this.type4Array.Name = "type4Array";
-            this.type4Array.Size = new System.Drawing.Size(287, 20);
-            this.type4Array.TabIndex = 3;
-            this.type4Array.TextChanged += new System.EventHandler(this.type4Array_TextChanged);
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(37, 80);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(58, 13);
-            this.label22.TabIndex = 2;
-            this.label22.Text = "Byte Array:";
             // 
             // label21
             // 
@@ -1189,7 +1168,7 @@
             // type4Arguments
             // 
             this.type4Arguments.FormattingEnabled = true;
-            this.type4Arguments.Location = new System.Drawing.Point(16, 190);
+            this.type4Arguments.Location = new System.Drawing.Point(16, 137);
             this.type4Arguments.Name = "type4Arguments";
             this.type4Arguments.Size = new System.Drawing.Size(122, 212);
             this.type4Arguments.TabIndex = 9;
@@ -1198,7 +1177,7 @@
             // label34
             // 
             this.label34.AutoSize = true;
-            this.label34.Location = new System.Drawing.Point(152, 190);
+            this.label34.Location = new System.Drawing.Point(152, 137);
             this.label34.Name = "label34";
             this.label34.Size = new System.Drawing.Size(32, 13);
             this.label34.TabIndex = 10;
@@ -1206,7 +1185,7 @@
             // 
             // type4ArgHEX
             // 
-            this.type4ArgHEX.Location = new System.Drawing.Point(191, 187);
+            this.type4ArgHEX.Location = new System.Drawing.Point(191, 134);
             this.type4ArgHEX.Name = "type4ArgHEX";
             this.type4ArgHEX.Size = new System.Drawing.Size(100, 20);
             this.type4ArgHEX.TabIndex = 11;
@@ -1214,7 +1193,7 @@
             // 
             // type4ArgInt32
             // 
-            this.type4ArgInt32.Location = new System.Drawing.Point(191, 213);
+            this.type4ArgInt32.Location = new System.Drawing.Point(191, 160);
             this.type4ArgInt32.Name = "type4ArgInt32";
             this.type4ArgInt32.Size = new System.Drawing.Size(100, 20);
             this.type4ArgInt32.TabIndex = 13;
@@ -1223,7 +1202,7 @@
             // label35
             // 
             this.label35.AutoSize = true;
-            this.label35.Location = new System.Drawing.Point(152, 216);
+            this.label35.Location = new System.Drawing.Point(152, 163);
             this.label35.Name = "label35";
             this.label35.Size = new System.Drawing.Size(42, 13);
             this.label35.TabIndex = 12;
@@ -1231,7 +1210,7 @@
             // 
             // type4ArgFloat
             // 
-            this.type4ArgFloat.Location = new System.Drawing.Point(191, 239);
+            this.type4ArgFloat.Location = new System.Drawing.Point(191, 186);
             this.type4ArgFloat.Name = "type4ArgFloat";
             this.type4ArgFloat.Size = new System.Drawing.Size(100, 20);
             this.type4ArgFloat.TabIndex = 15;
@@ -1240,7 +1219,7 @@
             // label36
             // 
             this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(152, 242);
+            this.label36.Location = new System.Drawing.Point(152, 189);
             this.label36.Name = "label36";
             this.label36.Size = new System.Drawing.Size(33, 13);
             this.label36.TabIndex = 14;
@@ -1248,7 +1227,7 @@
             // 
             // type4ArgInt16_1
             // 
-            this.type4ArgInt16_1.Location = new System.Drawing.Point(191, 265);
+            this.type4ArgInt16_1.Location = new System.Drawing.Point(191, 212);
             this.type4ArgInt16_1.Name = "type4ArgInt16_1";
             this.type4ArgInt16_1.Size = new System.Drawing.Size(100, 20);
             this.type4ArgInt16_1.TabIndex = 17;
@@ -1257,7 +1236,7 @@
             // label37
             // 
             this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(139, 268);
+            this.label37.Location = new System.Drawing.Point(139, 215);
             this.label37.Name = "label37";
             this.label37.Size = new System.Drawing.Size(46, 13);
             this.label37.TabIndex = 16;
@@ -1265,7 +1244,7 @@
             // 
             // type4ArgInt16_2
             // 
-            this.type4ArgInt16_2.Location = new System.Drawing.Point(191, 291);
+            this.type4ArgInt16_2.Location = new System.Drawing.Point(191, 238);
             this.type4ArgInt16_2.Name = "type4ArgInt16_2";
             this.type4ArgInt16_2.Size = new System.Drawing.Size(100, 20);
             this.type4ArgInt16_2.TabIndex = 19;
@@ -1274,7 +1253,7 @@
             // label38
             // 
             this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(139, 294);
+            this.label38.Location = new System.Drawing.Point(139, 241);
             this.label38.Name = "label38";
             this.label38.Size = new System.Drawing.Size(46, 13);
             this.label38.TabIndex = 18;
@@ -1282,7 +1261,7 @@
             // 
             // type4ArgByte4
             // 
-            this.type4ArgByte4.Location = new System.Drawing.Point(191, 395);
+            this.type4ArgByte4.Location = new System.Drawing.Point(191, 342);
             this.type4ArgByte4.Name = "type4ArgByte4";
             this.type4ArgByte4.Size = new System.Drawing.Size(100, 20);
             this.type4ArgByte4.TabIndex = 27;
@@ -1291,7 +1270,7 @@
             // label39
             // 
             this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(152, 398);
+            this.label39.Location = new System.Drawing.Point(152, 345);
             this.label39.Name = "label39";
             this.label39.Size = new System.Drawing.Size(37, 13);
             this.label39.TabIndex = 26;
@@ -1299,7 +1278,7 @@
             // 
             // type4ArgByte3
             // 
-            this.type4ArgByte3.Location = new System.Drawing.Point(191, 369);
+            this.type4ArgByte3.Location = new System.Drawing.Point(191, 316);
             this.type4ArgByte3.Name = "type4ArgByte3";
             this.type4ArgByte3.Size = new System.Drawing.Size(100, 20);
             this.type4ArgByte3.TabIndex = 25;
@@ -1308,7 +1287,7 @@
             // label40
             // 
             this.label40.AutoSize = true;
-            this.label40.Location = new System.Drawing.Point(152, 372);
+            this.label40.Location = new System.Drawing.Point(152, 319);
             this.label40.Name = "label40";
             this.label40.Size = new System.Drawing.Size(37, 13);
             this.label40.TabIndex = 24;
@@ -1316,7 +1295,7 @@
             // 
             // type4ArgByte2
             // 
-            this.type4ArgByte2.Location = new System.Drawing.Point(191, 343);
+            this.type4ArgByte2.Location = new System.Drawing.Point(191, 290);
             this.type4ArgByte2.Name = "type4ArgByte2";
             this.type4ArgByte2.Size = new System.Drawing.Size(100, 20);
             this.type4ArgByte2.TabIndex = 23;
@@ -1325,7 +1304,7 @@
             // label41
             // 
             this.label41.AutoSize = true;
-            this.label41.Location = new System.Drawing.Point(152, 346);
+            this.label41.Location = new System.Drawing.Point(152, 293);
             this.label41.Name = "label41";
             this.label41.Size = new System.Drawing.Size(37, 13);
             this.label41.TabIndex = 22;
@@ -1333,7 +1312,7 @@
             // 
             // type4ArgByte1
             // 
-            this.type4ArgByte1.Location = new System.Drawing.Point(191, 317);
+            this.type4ArgByte1.Location = new System.Drawing.Point(191, 264);
             this.type4ArgByte1.Name = "type4ArgByte1";
             this.type4ArgByte1.Size = new System.Drawing.Size(100, 20);
             this.type4ArgByte1.TabIndex = 21;
@@ -1342,7 +1321,7 @@
             // label42
             // 
             this.label42.AutoSize = true;
-            this.label42.Location = new System.Drawing.Point(152, 320);
+            this.label42.Location = new System.Drawing.Point(152, 267);
             this.label42.Name = "label42";
             this.label42.Size = new System.Drawing.Size(37, 13);
             this.label42.TabIndex = 20;
@@ -1452,8 +1431,6 @@
         private System.Windows.Forms.Label type4ExpectedLength;
         private System.Windows.Forms.TextBox type4BitField;
         private System.Windows.Forms.TextBox type4VTableIndex;
-        private System.Windows.Forms.TextBox type4Array;
-        private System.Windows.Forms.Label label22;
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Panel panelType3;
