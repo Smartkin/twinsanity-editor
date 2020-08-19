@@ -144,6 +144,12 @@
             this.label41 = new System.Windows.Forms.Label();
             this.type4ArgByte1 = new System.Windows.Forms.TextBox();
             this.label42 = new System.Windows.Forms.Label();
+            this.type4ArgSignedInt32 = new System.Windows.Forms.TextBox();
+            this.label22 = new System.Windows.Forms.Label();
+            this.type4ArgSignedInt16_2 = new System.Windows.Forms.TextBox();
+            this.label43 = new System.Windows.Forms.Label();
+            this.type4ArgSignedInt16_1 = new System.Windows.Forms.TextBox();
+            this.label44 = new System.Windows.Forms.Label();
             this.panelType1.SuspendLayout();
             this.panelMain.SuspendLayout();
             this.panelHeader.SuspendLayout();
@@ -682,6 +688,12 @@
             // 
             // panelType4
             // 
+            this.panelType4.Controls.Add(this.type4ArgSignedInt16_2);
+            this.panelType4.Controls.Add(this.label43);
+            this.panelType4.Controls.Add(this.type4ArgSignedInt16_1);
+            this.panelType4.Controls.Add(this.label44);
+            this.panelType4.Controls.Add(this.type4ArgSignedInt32);
+            this.panelType4.Controls.Add(this.label22);
             this.panelType4.Controls.Add(this.type4ArgByte4);
             this.panelType4.Controls.Add(this.label39);
             this.panelType4.Controls.Add(this.type4ArgByte3);
@@ -713,6 +725,7 @@
             this.panelType4.Name = "panelType4";
             this.panelType4.Size = new System.Drawing.Size(302, 609);
             this.panelType4.TabIndex = 0;
+            this.panelType4.Paint += new System.Windows.Forms.PaintEventHandler(this.panelType4_Paint);
             // 
             // label29
             // 
@@ -1193,7 +1206,7 @@
             // 
             // type4ArgInt32
             // 
-            this.type4ArgInt32.Location = new System.Drawing.Point(191, 160);
+            this.type4ArgInt32.Location = new System.Drawing.Point(191, 190);
             this.type4ArgInt32.Name = "type4ArgInt32";
             this.type4ArgInt32.Size = new System.Drawing.Size(100, 20);
             this.type4ArgInt32.TabIndex = 13;
@@ -1202,7 +1215,7 @@
             // label35
             // 
             this.label35.AutoSize = true;
-            this.label35.Location = new System.Drawing.Point(152, 163);
+            this.label35.Location = new System.Drawing.Point(152, 193);
             this.label35.Name = "label35";
             this.label35.Size = new System.Drawing.Size(42, 13);
             this.label35.TabIndex = 12;
@@ -1210,7 +1223,7 @@
             // 
             // type4ArgFloat
             // 
-            this.type4ArgFloat.Location = new System.Drawing.Point(191, 186);
+            this.type4ArgFloat.Location = new System.Drawing.Point(191, 216);
             this.type4ArgFloat.Name = "type4ArgFloat";
             this.type4ArgFloat.Size = new System.Drawing.Size(100, 20);
             this.type4ArgFloat.TabIndex = 15;
@@ -1219,7 +1232,7 @@
             // label36
             // 
             this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(152, 189);
+            this.label36.Location = new System.Drawing.Point(152, 219);
             this.label36.Name = "label36";
             this.label36.Size = new System.Drawing.Size(33, 13);
             this.label36.TabIndex = 14;
@@ -1227,7 +1240,7 @@
             // 
             // type4ArgInt16_1
             // 
-            this.type4ArgInt16_1.Location = new System.Drawing.Point(191, 212);
+            this.type4ArgInt16_1.Location = new System.Drawing.Point(191, 242);
             this.type4ArgInt16_1.Name = "type4ArgInt16_1";
             this.type4ArgInt16_1.Size = new System.Drawing.Size(100, 20);
             this.type4ArgInt16_1.TabIndex = 17;
@@ -1236,15 +1249,15 @@
             // label37
             // 
             this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(139, 215);
+            this.label37.Location = new System.Drawing.Point(139, 245);
             this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(46, 13);
+            this.label37.Size = new System.Drawing.Size(54, 13);
             this.label37.TabIndex = 16;
-            this.label37.Text = "Int16_1:";
+            this.label37.Text = "UInt16_1:";
             // 
             // type4ArgInt16_2
             // 
-            this.type4ArgInt16_2.Location = new System.Drawing.Point(191, 238);
+            this.type4ArgInt16_2.Location = new System.Drawing.Point(191, 268);
             this.type4ArgInt16_2.Name = "type4ArgInt16_2";
             this.type4ArgInt16_2.Size = new System.Drawing.Size(100, 20);
             this.type4ArgInt16_2.TabIndex = 19;
@@ -1253,15 +1266,15 @@
             // label38
             // 
             this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(139, 241);
+            this.label38.Location = new System.Drawing.Point(139, 271);
             this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(46, 13);
+            this.label38.Size = new System.Drawing.Size(54, 13);
             this.label38.TabIndex = 18;
-            this.label38.Text = "Int16_2:";
+            this.label38.Text = "UInt16_2:";
             // 
             // type4ArgByte4
             // 
-            this.type4ArgByte4.Location = new System.Drawing.Point(191, 342);
+            this.type4ArgByte4.Location = new System.Drawing.Point(193, 424);
             this.type4ArgByte4.Name = "type4ArgByte4";
             this.type4ArgByte4.Size = new System.Drawing.Size(100, 20);
             this.type4ArgByte4.TabIndex = 27;
@@ -1270,7 +1283,7 @@
             // label39
             // 
             this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(152, 345);
+            this.label39.Location = new System.Drawing.Point(154, 427);
             this.label39.Name = "label39";
             this.label39.Size = new System.Drawing.Size(37, 13);
             this.label39.TabIndex = 26;
@@ -1278,7 +1291,7 @@
             // 
             // type4ArgByte3
             // 
-            this.type4ArgByte3.Location = new System.Drawing.Point(191, 316);
+            this.type4ArgByte3.Location = new System.Drawing.Point(193, 398);
             this.type4ArgByte3.Name = "type4ArgByte3";
             this.type4ArgByte3.Size = new System.Drawing.Size(100, 20);
             this.type4ArgByte3.TabIndex = 25;
@@ -1287,7 +1300,7 @@
             // label40
             // 
             this.label40.AutoSize = true;
-            this.label40.Location = new System.Drawing.Point(152, 319);
+            this.label40.Location = new System.Drawing.Point(154, 401);
             this.label40.Name = "label40";
             this.label40.Size = new System.Drawing.Size(37, 13);
             this.label40.TabIndex = 24;
@@ -1295,7 +1308,7 @@
             // 
             // type4ArgByte2
             // 
-            this.type4ArgByte2.Location = new System.Drawing.Point(191, 290);
+            this.type4ArgByte2.Location = new System.Drawing.Point(193, 372);
             this.type4ArgByte2.Name = "type4ArgByte2";
             this.type4ArgByte2.Size = new System.Drawing.Size(100, 20);
             this.type4ArgByte2.TabIndex = 23;
@@ -1304,7 +1317,7 @@
             // label41
             // 
             this.label41.AutoSize = true;
-            this.label41.Location = new System.Drawing.Point(152, 293);
+            this.label41.Location = new System.Drawing.Point(154, 375);
             this.label41.Name = "label41";
             this.label41.Size = new System.Drawing.Size(37, 13);
             this.label41.TabIndex = 22;
@@ -1312,7 +1325,7 @@
             // 
             // type4ArgByte1
             // 
-            this.type4ArgByte1.Location = new System.Drawing.Point(191, 264);
+            this.type4ArgByte1.Location = new System.Drawing.Point(193, 346);
             this.type4ArgByte1.Name = "type4ArgByte1";
             this.type4ArgByte1.Size = new System.Drawing.Size(100, 20);
             this.type4ArgByte1.TabIndex = 21;
@@ -1321,11 +1334,62 @@
             // label42
             // 
             this.label42.AutoSize = true;
-            this.label42.Location = new System.Drawing.Point(152, 267);
+            this.label42.Location = new System.Drawing.Point(154, 349);
             this.label42.Name = "label42";
             this.label42.Size = new System.Drawing.Size(37, 13);
             this.label42.TabIndex = 20;
             this.label42.Text = "Byte1:";
+            // 
+            // type4ArgSignedInt32
+            // 
+            this.type4ArgSignedInt32.Location = new System.Drawing.Point(191, 160);
+            this.type4ArgSignedInt32.Name = "type4ArgSignedInt32";
+            this.type4ArgSignedInt32.Size = new System.Drawing.Size(100, 20);
+            this.type4ArgSignedInt32.TabIndex = 29;
+            this.type4ArgSignedInt32.TextChanged += new System.EventHandler(this.type4ArgSignedInt32_TextChanged);
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(152, 163);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(34, 13);
+            this.label22.TabIndex = 28;
+            this.label22.Text = "Int32:";
+            // 
+            // type4ArgSignedInt16_2
+            // 
+            this.type4ArgSignedInt16_2.Location = new System.Drawing.Point(193, 320);
+            this.type4ArgSignedInt16_2.Name = "type4ArgSignedInt16_2";
+            this.type4ArgSignedInt16_2.Size = new System.Drawing.Size(100, 20);
+            this.type4ArgSignedInt16_2.TabIndex = 33;
+            this.type4ArgSignedInt16_2.TextChanged += new System.EventHandler(this.type4ArgSignedInt16_2_TextChanged);
+            // 
+            // label43
+            // 
+            this.label43.AutoSize = true;
+            this.label43.Location = new System.Drawing.Point(141, 323);
+            this.label43.Name = "label43";
+            this.label43.Size = new System.Drawing.Size(46, 13);
+            this.label43.TabIndex = 32;
+            this.label43.Text = "Int16_2:";
+            // 
+            // type4ArgSignedInt16_1
+            // 
+            this.type4ArgSignedInt16_1.Location = new System.Drawing.Point(193, 294);
+            this.type4ArgSignedInt16_1.Name = "type4ArgSignedInt16_1";
+            this.type4ArgSignedInt16_1.Size = new System.Drawing.Size(100, 20);
+            this.type4ArgSignedInt16_1.TabIndex = 31;
+            this.type4ArgSignedInt16_1.TextChanged += new System.EventHandler(this.type4ArgSignedInt16_1_TextChanged);
+            // 
+            // label44
+            // 
+            this.label44.AutoSize = true;
+            this.label44.Location = new System.Drawing.Point(141, 297);
+            this.label44.Name = "label44";
+            this.label44.Size = new System.Drawing.Size(46, 13);
+            this.label44.TabIndex = 30;
+            this.label44.Text = "Int16_1:";
             // 
             // ScriptEditor
             // 
@@ -1490,5 +1554,11 @@
         private System.Windows.Forms.Label label41;
         private System.Windows.Forms.TextBox type4ArgByte1;
         private System.Windows.Forms.Label label42;
+        private System.Windows.Forms.TextBox type4ArgSignedInt16_2;
+        private System.Windows.Forms.Label label43;
+        private System.Windows.Forms.TextBox type4ArgSignedInt16_1;
+        private System.Windows.Forms.Label label44;
+        private System.Windows.Forms.TextBox type4ArgSignedInt32;
+        private System.Windows.Forms.Label label22;
     }
 }

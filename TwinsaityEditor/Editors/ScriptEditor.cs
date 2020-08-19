@@ -861,6 +861,9 @@ namespace TwinsaityEditor
             if (ignoreUpdate != 7) type4ArgByte2.Text = ((val & 0xFF00) >> 8).ToString();
             if (ignoreUpdate != 8) type4ArgByte3.Text = ((val & 0xFF0000) >> 16).ToString();
             if (ignoreUpdate != 9) type4ArgByte4.Text = ((val & 0xFF000000) >> 24).ToString();
+            if (ignoreUpdate != 10) type4ArgSignedInt32.Text = ((Int32)val).ToString();
+            if (ignoreUpdate != 11) type4ArgSignedInt16_1.Text = ((Int16)(val & 0xFFFF)).ToString();
+            if (ignoreUpdate != 12) type4ArgSignedInt16_2.Text = ((Int16)((val & 0xFFFF0000) >> 16)).ToString();
         }
         private bool stopChanged = false;
         private int ignoreUpdate = 0;
@@ -1059,6 +1062,74 @@ namespace TwinsaityEditor
                     ((TextBox)sender).BackColor = Color.White;
                     stopChanged = true;
                     ignoreUpdate = 9;
+                    UpdateArgRepresentations(selectedType4.arguments[type4Arguments.SelectedIndex]);
+                    ignoreUpdate = 0;
+                    stopChanged = false;
+                }
+                else
+                {
+                    ((TextBox)sender).BackColor = Color.Red;
+                }
+            }
+        }
+        private void type4ArgSignedInt32_TextChanged(object sender, EventArgs e)
+        {
+            if (type4Arguments.SelectedIndex >= 0 && !stopChanged)
+            {
+                String text = ((TextBox)sender).Text;
+                Int32 val = 0;
+                if (Int32.TryParse(text, out val))
+                {
+                    selectedType4.arguments[type4Arguments.SelectedIndex] = (UInt32)val;
+                    ((TextBox)sender).BackColor = Color.White;
+                    stopChanged = true;
+                    ignoreUpdate = 2;
+                    UpdateArgRepresentations(selectedType4.arguments[type4Arguments.SelectedIndex]);
+                    ignoreUpdate = 10;
+                    stopChanged = false;
+                }
+                else
+                {
+                    ((TextBox)sender).BackColor = Color.Red;
+                }
+            }
+        }
+
+        private void type4ArgSignedInt16_1_TextChanged(object sender, EventArgs e)
+        {
+            if (type4Arguments.SelectedIndex >= 0 && !stopChanged)
+            {
+                String text = ((TextBox)sender).Text;
+                Int16 val = 0;
+                if (Int16.TryParse(text, out val))
+                {
+                    selectedType4.arguments[type4Arguments.SelectedIndex] = (selectedType4.arguments[type4Arguments.SelectedIndex] & 0xFFFF0000) | (UInt32)((UInt16)val & 0xFFFF);
+                    ((TextBox)sender).BackColor = Color.White;
+                    stopChanged = true;
+                    ignoreUpdate = 11;
+                    UpdateArgRepresentations(selectedType4.arguments[type4Arguments.SelectedIndex]);
+                    ignoreUpdate = 0;
+                    stopChanged = false;
+                }
+                else
+                {
+                    ((TextBox)sender).BackColor = Color.Red;
+                }
+            }
+        }
+
+        private void type4ArgSignedInt16_2_TextChanged(object sender, EventArgs e)
+        {
+            if (type4Arguments.SelectedIndex >= 0 && !stopChanged)
+            {
+                String text = ((TextBox)sender).Text;
+                Int16 val = 0;
+                if (Int16.TryParse(text, out val))
+                {
+                    selectedType4.arguments[type4Arguments.SelectedIndex] = (UInt32)((UInt16)val << 16) | (selectedType4.arguments[type4Arguments.SelectedIndex] & 0xFFFF);
+                    ((TextBox)sender).BackColor = Color.White;
+                    stopChanged = true;
+                    ignoreUpdate = 12;
                     UpdateArgRepresentations(selectedType4.arguments[type4Arguments.SelectedIndex]);
                     ignoreUpdate = 0;
                     stopChanged = false;
@@ -1366,6 +1437,11 @@ namespace TwinsaityEditor
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[newScriptMain.ID]].Tag).UpdateText();
             PopulateList();
             scriptListBox.SelectedIndex = scriptListBox.Items.Count - 1;
+        }
+
+        private void panelType4_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }
