@@ -69,7 +69,17 @@ namespace TwinsaityEditor
 
             text.Add($"UnknownInt32Count: {Data.UI32.Count}");
             for (int i = 0; i < Data.UI32.Count; ++i)
-                text.Add(Data.UI32[i].ToString("X"));
+            {
+                var u32 = Data.UI32[i];
+                ushort script = (ushort)((u32 >> 0xA) & 0x3FFF);
+                string scriptLine = Data.UI32[i].ToString("X");
+                scriptLine += " Packed script: " + script.ToString();
+                if (Enum.IsDefined(typeof(DefaultEnums.ScriptID), script))
+                {
+                    scriptLine += " " + (DefaultEnums.ScriptID)script;
+                }
+                text.Add(scriptLine);
+            }
 
             text.Add($"OGICount: {Data.OGIs.Count}");
             for (int i = 0; i < Data.OGIs.Count; ++i)
