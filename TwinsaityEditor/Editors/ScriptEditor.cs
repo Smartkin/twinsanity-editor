@@ -92,6 +92,7 @@ namespace TwinsaityEditor
                     }
                 }
                 scriptTree.Nodes[0].ExpandAll();
+                scriptTree.Nodes[0].EnsureVisible();
                 scriptTree.EndUpdate();
             }
         }
@@ -145,24 +146,43 @@ namespace TwinsaityEditor
         private void AddType3(TreeNode parent, Script.MainScriptStruct.SupportType3 ptr)
         {
             string Name = $"Condition {ptr.VTableIndex}";
+            bool IsDefined = false;
             if (Enum.IsDefined(typeof(DefaultEnums.ConditionID), ptr.VTableIndex))
             {
                 Name = ((DefaultEnums.ConditionID)ptr.VTableIndex).ToString();
+                IsDefined = true;
             }
 
+            parent.Text = string.Format("{1} - {0}", parent.Text, Name);
+            
             TreeNode node = parent.Nodes.Add(Name);
             node.Tag = ptr;
+            if (!IsDefined)
+            {
+                node.ForeColor = Color.FromKnownColor(KnownColor.ControlDarkDark);
+            }
+            
         }
         private void AddType4(TreeNode parent, Script.MainScriptStruct.SupportType4 ptr)
         {
             string Name = $"Command {ptr.VTableIndex}";
+            bool IsDefined = false;
             if (Enum.IsDefined(typeof(DefaultEnums.CommandID), ptr.VTableIndex))
             {
                 Name = ((DefaultEnums.CommandID)ptr.VTableIndex).ToString();
+                IsDefined = true;
             }
 
             TreeNode node = parent.Nodes.Add(Name);
             node.Tag = ptr;
+            if (!IsDefined)
+            {
+                node.ForeColor = Color.FromKnownColor(KnownColor.ControlDarkDark);
+            }
+            else if ((DefaultEnums.CommandID)ptr.VTableIndex == DefaultEnums.CommandID.Error)
+            {
+                node.ForeColor = Color.FromKnownColor(KnownColor.Red);
+            }
         }
         private void UpdatePanels()
         {
@@ -205,6 +225,15 @@ namespace TwinsaityEditor
                     panelType2.Visible = true;
                     selectedType2 = (Script.MainScriptStruct.SupportType2)tag;
                     UpdateType2Panel();
+                    /*
+                    if (selectedType2.type3 != null)
+                    {
+                        panelType2.Visible = false;
+                        panelType3.Visible = true;
+                        selectedType3 = selectedType2.type3;
+                        UpdateType3Panel();
+                    }
+                    */
                 }
                 if (tag is Script.MainScriptStruct.SupportType3)
                 {
