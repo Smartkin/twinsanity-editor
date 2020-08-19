@@ -729,9 +729,11 @@ namespace TwinsaityEditor
             type4BitField.Text = selectedType4.UnkShort.ToString("X4");
             type4Arguments.BeginUpdate();
             type4Arguments.Items.Clear();
+            int i = 0;
             foreach (UInt32 arg in selectedType4.arguments)
             {
-                type4Arguments.Items.Add(arg.ToString("X8"));
+                type4Arguments.Items.Add($"{i:000}: {arg:X8}");
+                ++i;
             }
             type4Arguments.EndUpdate();
             if (selectedType4.arguments.Count > 0)
@@ -836,11 +838,7 @@ namespace TwinsaityEditor
                 ListBox listBox = (ListBox)sender;
                 if (listBox.SelectedItem != null)
                 {
-                    UInt32 val = 0;
-                    if (UInt32.TryParse((String)listBox.SelectedItem, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out val))
-                    {
-                        UpdateArgRepresentations(val);
-                    }
+                    UpdateArgRepresentations(selectedType4.arguments[listBox.SelectedIndex]);
                 }
             }
         }
@@ -849,7 +847,7 @@ namespace TwinsaityEditor
             if (ignoreUpdate != 0 && type4Arguments.SelectedIndex >= 0)
             {
                 int index = type4Arguments.SelectedIndex;
-                type4Arguments.Items[index] = val.ToString("X8");
+                type4Arguments.Items[index] = $"{index:000}: {val:X8}";
                 type4Arguments.SelectedIndex = index;
             }
             if (ignoreUpdate != 1) type4ArgHEX.Text = val.ToString("X8");
