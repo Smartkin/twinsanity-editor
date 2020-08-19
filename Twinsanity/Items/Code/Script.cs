@@ -439,20 +439,21 @@ namespace Twinsanity
                 public SupportType4()
                 {
                     internalIndex = 0;
-                    byteArray = new byte[0];
+                    arguments = new List<uint>();
                 }
                 public SupportType4(BinaryReader reader)
                 {
                     internalIndex = reader.ReadInt32();
+                    arguments = new List<uint>();
                     length = GetType4Size(internalIndex & 0x0000FFFF);
                     if (length - 0xC > 0x0)
                     {
-                        byteArray = reader.ReadBytes(length - 0xC);
+                        int sz = (length - 0xC) / 4;
+                        for (int i = 0; i < sz; ++i)
+                        {
+                            arguments.Add(reader.ReadUInt32());
+                        }
                     } 
-                    else
-                    {
-                        byteArray = new Byte[0];
-                    }
                     if ((internalIndex & 0x1000000) != 0)
                     {
                         nextType4 = new SupportType4(reader);
@@ -468,9 +469,12 @@ namespace Twinsanity
                 public void Write(BinaryWriter writer)
                 {
                     writer.Write(internalIndex);
-                    if (null != byteArray)
+                    if (null != arguments)
                     {
-                        writer.Write(byteArray);
+                       foreach (UInt32 arg in arguments)
+                        {
+                            writer.Write(arg);
+                        }
                     }
                     if ((internalIndex & 0x1000000) != 0)
                     {
@@ -479,13 +483,36 @@ namespace Twinsanity
                 }
                 public Int32 GetLength()
                 {
-                    return 4 + ((byteArray != null) ? byteArray.Length : 0) + (((internalIndex & 0x1000000) != 0) ? nextType4.GetLength() : 0);
+                    return 4 + ((arguments != null) ? arguments.Count * 4 : 0) + (((internalIndex & 0x1000000) != 0) ? nextType4.GetLength() : 0);
                 }
                 public UInt32 unkUInt { get; set; }
-                public Int32 vTableAddress { get; set; }
+                public Int32 vTableAddress
+                {
+                    get
+                    {
+                        return vTableAddress;
+                    }
+                    set
+                    {
+                        vTableAddress = value;
+                        UpdateArguments();
+                    }
+                }
+                private void UpdateArguments()
+                {
+                    int sz = GetExpectedSize() / 4;
+                    while (sz > arguments.Count)
+                    {
+                        arguments.Add(0);
+                    }
+                    while (sz < arguments.Count)
+                    {
+                        arguments.RemoveAt(arguments.Count - 1);
+                    }
+                }
                 public Int32 internalIndex { get; set; }
                 public Int32 length { get; set; }
-                public Byte[] byteArray { get; set; }
+                public List<UInt32> arguments { get; set; }
                 public SupportType4 nextType4 { get; set; }
 
                 public UInt16 VTableIndex
@@ -521,15 +548,15 @@ namespace Twinsanity
                     {
                         return false;
                     }
-                    if (byteArray == null && (GetType4Size(internalIndex & 0xffff) > 0))
+                    if (arguments == null && (GetType4Size(internalIndex & 0xffff) > 0))
                     {
                         return false;
                     }
-                    if (byteArray != null && (GetType4Size(internalIndex & 0xffff) == 0))
+                    if (arguments != null && (GetType4Size(internalIndex & 0xffff) == 0))
                     {
                         return false;
                     }
-                    if (byteArray != null && byteArray.Length != GetExpectedSize())
+                    if (arguments != null && arguments.Count * 4 != GetExpectedSize())
                     {
                         return false;
                     }
