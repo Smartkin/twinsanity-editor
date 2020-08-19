@@ -669,6 +669,24 @@ namespace Twinsanity
                     }
                 }
                 public Int16 scriptIndexOrSlot { get; set; }
+                public bool IsSlot
+                {
+                    get
+                    {
+                        return (bitfield & 0x1000) != 0;
+                    }
+                    set
+                    {
+                        if (value)
+                        {
+                            bitfield = (Int16)(bitfield | 0x1000);
+                        }
+                        else
+                        {
+                            bitfield = (Int16)(bitfield & ~0x1000);
+                        }
+                    }
+                }
                 public SupportType1 type1 { get; set; }
                 public ScriptStateBody scriptStateBody { get; set; }
                 public ScriptState nextState { get; set; }

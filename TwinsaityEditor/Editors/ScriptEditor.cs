@@ -33,9 +33,9 @@ namespace TwinsaityEditor
             File = c.MainFile;
             controller = c;
             Text = $"Instance Editor (Section {c.Data.Parent.ID})";
-            scriptPredicate = s => { return s.Name.Contains(scriptNameFilter.Text); };
+            scriptPredicate = s => { return s.Name.Contains(scriptNameFilter.Text) && s.Main != null; };
             InitializeComponent();
-            PopulateList();
+            PopulateList(scriptPredicate);
             UpdatePanels();
         }
 
@@ -101,13 +101,20 @@ namespace TwinsaityEditor
             string Name = $"State {parent.Nodes.Count}";
             if (ptr.scriptIndexOrSlot != -1)
             {
-                if (Enum.IsDefined(typeof(DefaultEnums.ScriptID), (ushort)ptr.scriptIndexOrSlot))
+                if (ptr.IsSlot)
                 {
-                    Name += $" - ID: {ptr.scriptIndexOrSlot} {(DefaultEnums.ScriptID)(ushort)ptr.scriptIndexOrSlot}";
+                    Name += $" - Local: Script #{ptr.scriptIndexOrSlot}";
                 }
                 else
                 {
-                    Name += $" - Script {ptr.scriptIndexOrSlot}";
+                    if (Enum.IsDefined(typeof(DefaultEnums.ScriptID), (ushort)ptr.scriptIndexOrSlot))
+                    {
+                        Name += $" - ID: {ptr.scriptIndexOrSlot} {(DefaultEnums.ScriptID)(ushort)ptr.scriptIndexOrSlot}";
+                    }
+                    else
+                    {
+                        Name += $" - Script {ptr.scriptIndexOrSlot}";
+                    }
                 }
             }
             TreeNode node = parent.Nodes.Add(Name);
@@ -161,6 +168,7 @@ namespace TwinsaityEditor
             {
                 node.ForeColor = Color.FromKnownColor(KnownColor.ControlDarkDark);
             }
+            
             
         }
         private void AddType4(TreeNode parent, Script.MainScript.ScriptCommand ptr)
@@ -226,11 +234,11 @@ namespace TwinsaityEditor
                     selectedType2 = (Script.MainScript.ScriptStateBody)tag;
                     UpdateType2Panel();
                     /*
-                    if (selectedType2.type3 != null)
+                    if (selectedType2.condition != null)
                     {
                         panelType2.Visible = false;
                         panelType3.Visible = true;
-                        selectedType3 = selectedType2.type3;
+                        selectedType3 = selectedType2.condition;
                         UpdateType3Panel();
                     }
                     */
@@ -1194,6 +1202,7 @@ namespace TwinsaityEditor
         {
             linkedBitField.Text = selectedLinked.bitfield.ToString("X4");
             linkedSlotIndex.Text = selectedLinked.scriptIndexOrSlot.ToString();
+            checkBox_localScriptSlot.Checked = selectedLinked.IsSlot;
         }
         private void linkedBitField_TextChanged(object sender, EventArgs e)
         {
@@ -1422,7 +1431,7 @@ namespace TwinsaityEditor
                 case 0:
                     scriptPredicate = s =>
                     {
-                        return s.Name.Contains(scriptNameFilter.Text);
+                        return s.Name.ToUpper().Contains(scriptNameFilter.Text.ToUpper());
                     };
                     break;
                 case 1:
@@ -1494,6 +1503,50 @@ namespace TwinsaityEditor
 
         }
 
-        
+        private void checkBox_showHeaderScripts_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox_showHeaderScripts.Checked)
+            {
+                filterSelection_SelectedIndexChanged(null, null);
+            }
+            else
+            {
+                switch (filterSelection.SelectedIndex)
+                {
+                    case 0:
+                        scriptPredicate = s =>
+                        {
+                            return s.Name.ToUpper().Contains(scriptNameFilter.Text.ToUpper()) && s.Main != null;
+                        };
+                        break;
+                    case 1:
+                        scriptPredicate = s =>
+                        {
+                            return scriptNameFilter.TextLength == 0 ||
+                                    (scriptNameFilter.Text.All(c => { return char.IsDigit(c); }) &&
+                                    s.ID == int.Parse(scriptNameFilter.Text)) &&
+                                    s.Main != null;
+                        };
+                        break;
+                }
+            }
+            scriptNameFilter_TextChanged(null, null);
+        }
+
+        private void checkBox_localScriptSlot_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox_localScriptSlot.Checked)
+            {
+                selectedLinked.IsSlot = true;
+            }
+            else
+            {
+                selectedLinked.IsSlot = false;
+            }
+            if (sender != this && sender != null)
+            {
+                UpdateLinkedPanel();
+            }
+        }
     }
 }
