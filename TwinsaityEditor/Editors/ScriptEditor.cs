@@ -130,7 +130,7 @@ namespace TwinsaityEditor
         }
         private void AddType2(TreeNode parent, Script.MainScriptStruct.SupportType2 ptr)
         {
-            TreeNode node = parent.Nodes.Add($"Switch - Go To State: {ptr.linkedScriptListIndex}");
+            TreeNode node = parent.Nodes.Add($"To State: {ptr.linkedScriptListIndex}");
             node.Tag = ptr;
             if (null != ptr.type3)
             {
