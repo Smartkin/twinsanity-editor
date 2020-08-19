@@ -727,7 +727,21 @@ namespace TwinsaityEditor
         {
             type4VTableIndex.Text = selectedType4.VTableIndex.ToString();
             type4BitField.Text = selectedType4.UnkShort.ToString("X4");
-            type4Array.Text = GetTextFromArray(selectedType4.byteArray);
+            type4Arguments.BeginUpdate();
+            type4Arguments.Items.Clear();
+            int i = 0;
+            foreach (UInt32 arg in selectedType4.arguments)
+            {
+                type4Arguments.Items.Add($"{i:000}: {arg:X8}");
+                ++i;
+            }
+            type4Arguments.EndUpdate();
+            if (selectedType4.arguments.Count > 0)
+            {
+                ignoreUpdate = 0;
+                type4Arguments.SelectedIndex = 0;
+            }
+            
         }
         private void type4VTableIndex_TextChanged(object sender, EventArgs e)
         {
@@ -742,7 +756,7 @@ namespace TwinsaityEditor
                 ((TextBox)sender).BackColor = Color.Red;
                 return;
             }
-            type4ExpectedLength.Text = $"Expected Length: {selectedType4.GetExpectedSize()}";
+            type4ExpectedLength.Text = $"Arguments: {selectedType4.GetExpectedSize() / 4}";
             if (selectedType4.isValidBits())
             {
                 type4Warning.Visible = false;
@@ -800,11 +814,11 @@ namespace TwinsaityEditor
                     }
                     ++i;
                 }
-                selectedType4.byteArray = byteArray;
+                //selectedType4.byteArray = byteArray;
             }
             else
             {
-                selectedType4.byteArray = new byte[0];
+                //selectedType4.byteArray = new byte[0];
             }
 
             if (selectedType4.isValidBits())
@@ -815,6 +829,336 @@ namespace TwinsaityEditor
             {
                 type4Warning.Visible = true;
 
+            }
+        }
+        private void type4Arguments_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ignoreUpdate == 0)
+            {
+                ListBox listBox = (ListBox)sender;
+                if (listBox.SelectedItem != null)
+                {
+                    UpdateArgRepresentations(selectedType4.arguments[listBox.SelectedIndex]);
+                }
+            }
+        }
+        private void UpdateArgRepresentations(UInt32 val)
+        {
+            if (ignoreUpdate != 0 && type4Arguments.SelectedIndex >= 0)
+            {
+                int index = type4Arguments.SelectedIndex;
+                type4Arguments.Items[index] = $"{index:000}: {val:X8}";
+                type4Arguments.SelectedIndex = index;
+            }
+            if (ignoreUpdate != 1) type4ArgHEX.Text = val.ToString("X8");
+            if (ignoreUpdate != 2) type4ArgInt32.Text = val.ToString();
+            if (ignoreUpdate != 3) type4ArgFloat.Text = (BitConverter.ToSingle(BitConverter.GetBytes(val), 0)).ToString();
+            if (ignoreUpdate != 4) type4ArgInt16_1.Text = (val & 0xFFFF).ToString();
+            if (ignoreUpdate != 5) type4ArgInt16_2.Text = ((val & 0xFFFF0000) >> 16).ToString();
+            if (ignoreUpdate != 6) type4ArgByte1.Text = ((val & 0xFF) >> 0).ToString();
+            if (ignoreUpdate != 7) type4ArgByte2.Text = ((val & 0xFF00) >> 8).ToString();
+            if (ignoreUpdate != 8) type4ArgByte3.Text = ((val & 0xFF0000) >> 16).ToString();
+            if (ignoreUpdate != 9) type4ArgByte4.Text = ((val & 0xFF000000) >> 24).ToString();
+            if (ignoreUpdate != 10) type4ArgSignedInt32.Text = ((Int32)val).ToString();
+            if (ignoreUpdate != 11) type4ArgSignedInt16_1.Text = ((Int16)(val & 0xFFFF)).ToString();
+            if (ignoreUpdate != 12) type4ArgSignedInt16_2.Text = ((Int16)((val & 0xFFFF0000) >> 16)).ToString();
+            if (ignoreUpdate != 13) type4ArgBinary.Text = Convert.ToString(val,2).PadLeft(32,'0');
+        }
+        private bool stopChanged = false;
+        private int ignoreUpdate = 0;
+        private void type4ArgHEX_TextChanged(object sender, EventArgs e)
+        {
+            if (type4Arguments.SelectedIndex >= 0 && !stopChanged)
+            {
+                String text = ((TextBox)sender).Text;
+                UInt32 val = 0;
+                if (UInt32.TryParse(text, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out val))
+                {
+                    selectedType4.arguments[type4Arguments.SelectedIndex] = val;
+                    ((TextBox)sender).BackColor = Color.White;
+                    stopChanged = true;
+                    ignoreUpdate = 1;
+                    UpdateArgRepresentations(selectedType4.arguments[type4Arguments.SelectedIndex]);
+                    ignoreUpdate = 0;
+                    stopChanged = false;
+                } else
+                {
+                    ((TextBox)sender).BackColor = Color.Red;
+                }
+            }
+        }
+
+        private void type4ArgInt32_TextChanged(object sender, EventArgs e)
+        {
+            if (type4Arguments.SelectedIndex >= 0 && !stopChanged)
+            {
+                String text = ((TextBox)sender).Text;
+                UInt32 val = 0;
+                if (UInt32.TryParse(text, out val))
+                {
+                    selectedType4.arguments[type4Arguments.SelectedIndex] = val;
+                    ((TextBox)sender).BackColor = Color.White;
+                    stopChanged = true;
+                    ignoreUpdate = 2;
+                    UpdateArgRepresentations(selectedType4.arguments[type4Arguments.SelectedIndex]);
+                    ignoreUpdate = 0;
+                    stopChanged = false;
+                }
+                else
+                {
+                    ((TextBox)sender).BackColor = Color.Red;
+                }
+            }
+        }
+
+        private void type4ArgFloat_TextChanged(object sender, EventArgs e)
+        {
+            if (type4Arguments.SelectedIndex >= 0 && !stopChanged)
+            {
+                String text = ((TextBox)sender).Text;
+                Single val = 0;
+                if (Single.TryParse(text, out val))
+                {
+                    selectedType4.arguments[type4Arguments.SelectedIndex] = BitConverter.ToUInt32(BitConverter.GetBytes(val), 0);
+                    ((TextBox)sender).BackColor = Color.White;
+                    stopChanged = true;
+                    ignoreUpdate = 3;
+                    UpdateArgRepresentations(selectedType4.arguments[type4Arguments.SelectedIndex]);
+                    ignoreUpdate = 0;
+                    stopChanged = false;
+                }
+                else
+                {
+                    ((TextBox)sender).BackColor = Color.Red;
+                }
+            }
+        }
+
+        private void type4ArgInt16_1_TextChanged(object sender, EventArgs e)
+        {
+            if (type4Arguments.SelectedIndex >= 0 && !stopChanged)
+            {
+                String text = ((TextBox)sender).Text;
+                UInt16 val = 0;
+                if (UInt16.TryParse(text, out val))
+                {
+                    selectedType4.arguments[type4Arguments.SelectedIndex] =  (selectedType4.arguments[type4Arguments.SelectedIndex] & 0xFFFF0000) | (UInt32)(val & 0xFFFF);
+                    ((TextBox)sender).BackColor = Color.White;
+                    stopChanged = true;
+                    ignoreUpdate = 4;
+                    UpdateArgRepresentations(selectedType4.arguments[type4Arguments.SelectedIndex]);
+                    ignoreUpdate = 0;
+                    stopChanged = false;
+                }
+                else
+                {
+                    ((TextBox)sender).BackColor = Color.Red;
+                }
+            }
+        }
+
+        private void type4ArgInt16_2_TextChanged(object sender, EventArgs e)
+        {
+            if (type4Arguments.SelectedIndex >= 0 && !stopChanged)
+            {
+                String text = ((TextBox)sender).Text;
+                UInt16 val = 0;
+                if (UInt16.TryParse(text, out val))
+                {
+                    selectedType4.arguments[type4Arguments.SelectedIndex] = (UInt32)(val << 16) | (selectedType4.arguments[type4Arguments.SelectedIndex] & 0xFFFF);
+                    ((TextBox)sender).BackColor = Color.White;
+                    stopChanged = true;
+                    ignoreUpdate = 5;
+                    UpdateArgRepresentations(selectedType4.arguments[type4Arguments.SelectedIndex]);
+                    ignoreUpdate = 0;
+                    stopChanged = false;
+                }
+                else
+                {
+                    ((TextBox)sender).BackColor = Color.Red;
+                }
+            }
+        }
+
+        private void type4ArgByte1_TextChanged(object sender, EventArgs e)
+        {
+            if (type4Arguments.SelectedIndex >= 0 && !stopChanged)
+            {
+                String text = ((TextBox)sender).Text;
+                Byte val = 0;
+                if (Byte.TryParse(text, out val))
+                {
+                    selectedType4.arguments[type4Arguments.SelectedIndex] = (selectedType4.arguments[type4Arguments.SelectedIndex] & 0xFFFFFF00) | (UInt32)((val & 0xFF) << 0);
+                    ((TextBox)sender).BackColor = Color.White;
+                    stopChanged = true;
+                    ignoreUpdate = 6;
+                    UpdateArgRepresentations(selectedType4.arguments[type4Arguments.SelectedIndex]);
+                    ignoreUpdate = 0;
+                    stopChanged = false;
+                }
+                else
+                {
+                    ((TextBox)sender).BackColor = Color.Red;
+                }
+            }
+        }
+
+        private void type4ArgByte2_TextChanged(object sender, EventArgs e)
+        {
+            if (type4Arguments.SelectedIndex >= 0 && !stopChanged)
+            {
+                String text = ((TextBox)sender).Text;
+                Byte val = 0;
+                if (Byte.TryParse(text, out val))
+                {
+                    selectedType4.arguments[type4Arguments.SelectedIndex] = (selectedType4.arguments[type4Arguments.SelectedIndex] & 0xFFFF00FF) | (UInt32)((val & 0xFF) << 8);
+                    ((TextBox)sender).BackColor = Color.White;
+                    stopChanged = true;
+                    ignoreUpdate = 7;
+                    UpdateArgRepresentations(selectedType4.arguments[type4Arguments.SelectedIndex]);
+                    ignoreUpdate = 0;
+                    stopChanged = false;
+                }
+                else
+                {
+                    ((TextBox)sender).BackColor = Color.Red;
+                }
+            }
+        }
+
+        private void type4ArgByte3_TextChanged(object sender, EventArgs e)
+        {
+            if (type4Arguments.SelectedIndex >= 0 && !stopChanged)
+            {
+                String text = ((TextBox)sender).Text;
+                Byte val = 0;
+                if (Byte.TryParse(text, out val))
+                {
+                    selectedType4.arguments[type4Arguments.SelectedIndex] = (selectedType4.arguments[type4Arguments.SelectedIndex] & 0xFF00FFFF) | (UInt32)((val & 0xFF) << 16);
+                    ((TextBox)sender).BackColor = Color.White;
+                    stopChanged = true;
+                    ignoreUpdate = 8;
+                    UpdateArgRepresentations(selectedType4.arguments[type4Arguments.SelectedIndex]);
+                    ignoreUpdate = 0;
+                    stopChanged = false;
+                }
+                else
+                {
+                    ((TextBox)sender).BackColor = Color.Red;
+                }
+            }
+        }
+
+        private void type4ArgByte4_TextChanged(object sender, EventArgs e)
+        {
+            if (type4Arguments.SelectedIndex >= 0 && !stopChanged)
+            {
+                String text = ((TextBox)sender).Text;
+                Byte val = 0;
+                if (Byte.TryParse(text, out val))
+                {
+                    selectedType4.arguments[type4Arguments.SelectedIndex] = (selectedType4.arguments[type4Arguments.SelectedIndex] & 0x00FFFFFF) | (UInt32)((val & 0xFF) << 24);
+                    ((TextBox)sender).BackColor = Color.White;
+                    stopChanged = true;
+                    ignoreUpdate = 9;
+                    UpdateArgRepresentations(selectedType4.arguments[type4Arguments.SelectedIndex]);
+                    ignoreUpdate = 0;
+                    stopChanged = false;
+                }
+                else
+                {
+                    ((TextBox)sender).BackColor = Color.Red;
+                }
+            }
+        }
+        private void type4ArgSignedInt32_TextChanged(object sender, EventArgs e)
+        {
+            if (type4Arguments.SelectedIndex >= 0 && !stopChanged)
+            {
+                String text = ((TextBox)sender).Text;
+                Int32 val = 0;
+                if (Int32.TryParse(text, out val))
+                {
+                    selectedType4.arguments[type4Arguments.SelectedIndex] = (UInt32)val;
+                    ((TextBox)sender).BackColor = Color.White;
+                    stopChanged = true;
+                    ignoreUpdate = 2;
+                    UpdateArgRepresentations(selectedType4.arguments[type4Arguments.SelectedIndex]);
+                    ignoreUpdate = 10;
+                    stopChanged = false;
+                }
+                else
+                {
+                    ((TextBox)sender).BackColor = Color.Red;
+                }
+            }
+        }
+
+        private void type4ArgSignedInt16_1_TextChanged(object sender, EventArgs e)
+        {
+            if (type4Arguments.SelectedIndex >= 0 && !stopChanged)
+            {
+                String text = ((TextBox)sender).Text;
+                Int16 val = 0;
+                if (Int16.TryParse(text, out val))
+                {
+                    selectedType4.arguments[type4Arguments.SelectedIndex] = (selectedType4.arguments[type4Arguments.SelectedIndex] & 0xFFFF0000) | (UInt32)((UInt16)val & 0xFFFF);
+                    ((TextBox)sender).BackColor = Color.White;
+                    stopChanged = true;
+                    ignoreUpdate = 11;
+                    UpdateArgRepresentations(selectedType4.arguments[type4Arguments.SelectedIndex]);
+                    ignoreUpdate = 0;
+                    stopChanged = false;
+                }
+                else
+                {
+                    ((TextBox)sender).BackColor = Color.Red;
+                }
+            }
+        }
+
+        private void type4ArgSignedInt16_2_TextChanged(object sender, EventArgs e)
+        {
+            if (type4Arguments.SelectedIndex >= 0 && !stopChanged)
+            {
+                String text = ((TextBox)sender).Text;
+                Int16 val = 0;
+                if (Int16.TryParse(text, out val))
+                {
+                    selectedType4.arguments[type4Arguments.SelectedIndex] = (UInt32)((UInt16)val << 16) | (selectedType4.arguments[type4Arguments.SelectedIndex] & 0xFFFF);
+                    ((TextBox)sender).BackColor = Color.White;
+                    stopChanged = true;
+                    ignoreUpdate = 12;
+                    UpdateArgRepresentations(selectedType4.arguments[type4Arguments.SelectedIndex]);
+                    ignoreUpdate = 0;
+                    stopChanged = false;
+                }
+                else
+                {
+                    ((TextBox)sender).BackColor = Color.Red;
+                }
+            }
+        }
+        private void type4ArgBinary_TextChanged(object sender, EventArgs e)
+        {
+            if (type4Arguments.SelectedIndex >= 0 && !stopChanged)
+            {
+                try
+                {
+                    String text = ((TextBox)sender).Text;
+                    UInt32 val = Convert.ToUInt32(text, 2);
+                    selectedType4.arguments[type4Arguments.SelectedIndex] = val;
+                    ((TextBox)sender).BackColor = Color.White;
+                    stopChanged = true;
+                    ignoreUpdate = 13;
+                    UpdateArgRepresentations(selectedType4.arguments[type4Arguments.SelectedIndex]);
+                    ignoreUpdate = 0;
+                    stopChanged = false;
+                } 
+                catch
+                {
+                    ((TextBox)sender).BackColor = Color.Red;
+                }
             }
         }
         private void UpdateLinkedPanel()
@@ -1114,6 +1458,11 @@ namespace TwinsaityEditor
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[newScriptMain.ID]].Tag).UpdateText();
             PopulateList();
             scriptListBox.SelectedIndex = scriptListBox.Items.Count - 1;
+        }
+
+        private void panelType4_Paint(object sender, PaintEventArgs e)
+        {
+
         }
 
         
