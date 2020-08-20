@@ -143,6 +143,10 @@ namespace TwinsaityEditor
             {
                 AddType3(node, ptr.condition);
             }
+            if (!ptr.IsEnabled)
+            {
+                node.Text = string.Format("{1} {0}", node.Text, "(OFF)");
+            }
             Script.MainScript.ScriptCommand ptrType4 = ptr.command;
             while (ptrType4 != null)
             {
@@ -183,13 +187,13 @@ namespace TwinsaityEditor
 
             TreeNode node = parent.Nodes.Add(Name);
             node.Tag = ptr;
-            if (!IsDefined)
-            {
-                node.ForeColor = Color.FromKnownColor(KnownColor.ControlDarkDark);
-            }
-            else if ((DefaultEnums.CommandID)ptr.VTableIndex == DefaultEnums.CommandID.Error)
+            if (!ptr.isValidBits())
             {
                 node.ForeColor = Color.FromKnownColor(KnownColor.Red);
+            }
+            else if (!IsDefined)
+            {
+                node.ForeColor = Color.FromKnownColor(KnownColor.ControlDarkDark);
             }
         }
         private void UpdatePanels()

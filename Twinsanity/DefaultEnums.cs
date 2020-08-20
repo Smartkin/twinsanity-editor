@@ -521,6 +521,7 @@ namespace Twinsanity
             IsVehicleRollerbrawl = 594,
             IsVehicleHumiliskate = 596,
             IsVehicle3 = 598,
+            OutOfAmmo = 634,
             GlobalProgression = 639,
         }
         public enum CommandID : ushort

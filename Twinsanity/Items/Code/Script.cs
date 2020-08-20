@@ -258,6 +258,24 @@ namespace Twinsanity
                     }
                     return true;
                 }
+                public bool IsEnabled
+                {
+                    get
+                    {
+                        return (bitfield & 0x400) != 0;
+                    }
+                    set
+                    {
+                        if (value)
+                        {
+                            bitfield = (Int16)(bitfield | 0x400);
+                        }
+                        else
+                        {
+                            bitfield = (Int16)(bitfield & ~0x400);
+                        }
+                    }
+                }
                 public Byte commandCount
                 {
                     get
