@@ -2,6 +2,8 @@ using System.IO;
 using System;
 using System.Drawing;
 using Twinsanity.Properties;
+using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace Twinsanity
 {
@@ -10,38 +12,26 @@ namespace Twinsanity
     /// </summary>
     public class Texture : TwinsItem
     {
-        private short w, h;
-        private int type;
-        private ushort pal_size;
-        private byte m, pal_flag;
-        private byte[] tex_space = new byte[32], unk = new byte[176];
-        private byte[] pixels, mippixels;
-        private Color[] palette, pixel_data;
-        
-        public int Width { get => 1 << w; }
-        public int Height { get => 1 << h; }
-        //public byte HeaderSize;
-        //public ushort ImagePages;
-        //public ushort Reserved;
-        //public uint SomeKey;
-        //public uint Width;
-        //public ushort Width / 2 = 0;
-        //public uint IBlockSize;
-        //public uint Height;
-        //public byte m;
-        //public byte PaletteFlag;
-        //public ushort PaletteSize;
-        //public byte[] Space = new byte[32];
-        //public uint DataType;
-        //public byte[] Unexplored = new byte[176];
-        //// Image
-        //public Color[] palette;
-        //public byte[] pixels;
-        //public byte[] mippixels;
-        //public Color[] pixel_data;
+        Int32 Size;
+        Int32 Signature;
+        Int16 W;
+        Int16 H;
+        Byte Mips;
+        Byte Palette;
+        Int16 PaletteSize;
+
+        List<Int32> header_leftover;
+
+        Int32 typeIndex = 8;
+
+        List<Byte[]> blocks;
+
+        public int Width { get => 1 << W; }
+        public int Height { get => 1 << H; }
 
         public void ChangeState(bool UnSwizzlePic, bool SwizzlePic, bool FlipPic, bool Fix)
         {
+            /*
             if (type == 4)
                 return;
             if (UnSwizzlePic)
@@ -54,6 +44,7 @@ namespace Twinsanity
                 SwapPalette(ref palette);
             for (int i = 0; i <= pixel_data.Length - 1; i++)
                 pixel_data[i] = palette[pixels[i]];
+            */
         }
 
         public void Import(Color[] pixel_data, uint pwidth, uint pheight, BlockFormats format, bool m)
@@ -139,439 +130,49 @@ namespace Twinsanity
 
         public override void Load(BinaryReader reader, int size)
         {
-            var n = reader.ReadInt32();
-            reader.BaseStream.Position -= 4;
-            Data = reader.ReadBytes(n + 4);
-            reader.BaseStream.Position -= n;
-            var key = reader.ReadUInt32();
-            w = reader.ReadInt16();
-            h = reader.ReadInt16();
-            m = reader.ReadByte();
-            pal_flag = reader.ReadByte();
-            pal_size = reader.ReadUInt16();
-            tex_space = reader.ReadBytes(32);
-            type = reader.ReadInt32();
-            unk = reader.ReadBytes(176);
-            switch (type)
+            header_leftover = new List<int>();
+            blocks = new List<byte[]>();
+            Size = reader.ReadInt32();
+            Signature = reader.ReadInt32();
+            W = reader.ReadInt16();
+            H = reader.ReadInt16();
+            Mips = reader.ReadByte();
+            Palette = reader.ReadByte();
+            PaletteSize = reader.ReadInt16();
+            for (int i = 0; i < 53; ++i)
             {
-                case 1:
-                    {
-                        pixels = new byte[Width * Height];
-                        mippixels = new byte[Width / 2 * Height];
-                        palette = new Color[(n & 0xFFFFFF00) >> 4];
-                        pixel_data = new Color[Width * Height];
-                        if ((Width == 32) && (Height == 8))
-                        {
-                            for (int i = 0; i < 4; i++)
-                            {
-                                for (int j = 0; j < 64; j++)
-                                    pixels[j + i * 64] = reader.ReadByte();
-                                reader.BaseStream.Position += 192;
-                            }
-                            reader.BaseStream.Position += 12 * 256;
-                            for (int i = 0; i < 16; i++)
-                            {
-                                for (int j = 0; j < 16; j++)
-                                {
-                                    byte a, r, g, b;
-                                    r = reader.ReadByte();
-                                    g = reader.ReadByte();
-                                    b = reader.ReadByte();
-                                    a = (byte)(reader.ReadByte() << 1);
-                                    palette[j + i * 16] = Color.FromArgb(a, r, g, b);
-                                }
-                                reader.BaseStream.Position += 192;
-                            }
-                        }
-                        else if ((Width == 16) && (Height == 16))
-                        {
-                            for (int i = 0; i < 8; i++)
-                            {
-                                for (int j = 0; j < 32; j++)
-                                    pixels[j + i * 32] = reader.ReadByte();
-                                reader.BaseStream.Position += 224;
-                            }
-                            for (int i = 0; i < 4; i++)
-                            {
-                                for (int j = 0; j < 32; j++)
-                                    mippixels[j + i * 32] = reader.ReadByte();
-                                reader.BaseStream.Position += 224;
-                            }
-                            reader.BaseStream.Position += 4 * 256;
-                            for (int i = 0; i < 16; i++)
-                            {
-                                for (int j = 0; j < 16; j++)
-                                {
-                                    byte a, r, g, b;
-                                    r = reader.ReadByte();
-                                    g = reader.ReadByte();
-                                    b = reader.ReadByte();
-                                    a = (byte)(reader.ReadByte() << 1);
-                                    palette[j + i * 16] = Color.FromArgb(a, r, g, b);
-                                }
-                                reader.BaseStream.Position += 192;
-                            }
-                        }
-                        else if ((Width == 32) && (Height == 16))
-                        {
-                            for (int i = 0; i < 8; i++)
-                            {
-                                for (int j = 0; j < 64; j++)
-                                    pixels[j + i * 64] = reader.ReadByte();
-                                reader.BaseStream.Position += 192;
-                            }
-                            for (int i = 0; i < 8; i++)
-                            {
-                                for (int j = 0; j < 32; j++)
-                                    mippixels[j + i * 32] = reader.ReadByte();
-                                reader.BaseStream.Position += 224;
-                            }
-                            for (int i = 0; i < 16; i++)
-                            {
-                                for (int j = 0; j < 16; j++)
-                                {
-                                    byte a, r, g, b;
-                                    r = reader.ReadByte();
-                                    g = reader.ReadByte();
-                                    b = reader.ReadByte();
-                                    a = (byte)(reader.ReadByte() << 1);
-                                    palette[j + i * 16] = Color.FromArgb(a, r, g, b);
-                                }
-                                reader.BaseStream.Position += 192;
-                            }
-                        }
-                        else if ((Width == 32) && (Height == 32))
-                        {
-                            if (m == 1)
-                            {
-                                for (int i = 0; i < 16; i++)
-                                {
-                                    for (int j = 0; j < 64; j++)
-                                        pixels[j + i * 64] = reader.ReadByte();
-                                    reader.BaseStream.Position += 192;
-                                }
-                                for (int i = 0; i < 16; i++)
-                                {
-                                    for (int j = 0; j < 16; j++)
-                                    {
-                                        byte a, r, g, b;
-                                        r = reader.ReadByte();
-                                        g = reader.ReadByte();
-                                        b = reader.ReadByte();
-                                        a = (byte)(reader.ReadByte() << 1);
-                                        palette[j + i * 16] = Color.FromArgb(a, r, g, b);
-                                    }
-                                    reader.BaseStream.Position += 192;
-                                }
-                            }
-                            else
-                            {
-                                for (int i = 0; i < 16; i++)
-                                {
-                                    for (int j = 0; j < 64; j++)
-                                        pixels[j + i * 64] = reader.ReadByte();
-                                    for (int j = 0; j < 16; j++)
-                                    {
-                                        byte a, r, g, b;
-                                        r = reader.ReadByte();
-                                        g = reader.ReadByte();
-                                        b = reader.ReadByte();
-                                        a = (byte)(reader.ReadByte() << 1);
-                                        palette[j + i * 16] = Color.FromArgb(a, r, g, b);
-                                    }
-                                    reader.BaseStream.Position += 128;
-                                }
-                                for (int i = 0; i < 16; i++)
-                                {
-                                    for (int j = 0; j < 32; j++)
-                                        mippixels[j + i * 32] = reader.ReadByte();
-                                    reader.BaseStream.Position += 224;
-                                }
-                            }
-                        }
-                        else if ((Width == 32) && (Height == 64))
-                        {
-                            if (m == 1)
-                            {
-                                for (int i = 0; i < 32; i++)
-                                {
-                                    for (int j = 0; j < 64; j++)
-                                        pixels[j + i * 64] = reader.ReadByte();
-                                    for (int j = 0; j < 16; j++)
-                                    {
-                                        byte a, r, g, b;
-                                        r = reader.ReadByte();
-                                        g = reader.ReadByte();
-                                        b = reader.ReadByte();
-                                        a = (byte)(reader.ReadByte() << 1);
-                                        palette[j + i * 16] = Color.FromArgb(a, r, g, b);
-                                    }
-                                    reader.BaseStream.Position += 128;
-                                }
-                            }
-                            else
-                            {
-                                for (int i = 0; i < 16; i++)
-                                {
-                                    for (int j = 0; j < 64; j++)
-                                        pixels[j + i * 64] = reader.ReadByte();
-                                    for (int j = 0; j < 64; j++)
-                                        mippixels[j + i * 64] = reader.ReadByte();
-                                    for (int j = 0; j < 16; j++)
-                                    {
-                                        byte a, r, g, b;
-                                        r = reader.ReadByte();
-                                        g = reader.ReadByte();
-                                        b = reader.ReadByte();
-                                        a = (byte)(reader.ReadByte() << 1);
-                                        palette[j + i * 16] = Color.FromArgb(a, r, g, b);
-                                    }
-                                    reader.BaseStream.Position += 64;
-                                }
-                                for (int i = 0; i < 16; i++)
-                                {
-                                    for (int j = 0; j < 64; j++)
-                                        pixels[1024 + j + i * 64] = reader.ReadByte();
-                                    reader.BaseStream.Position += 64;
-                                    for (int j = 0; j < 16; j++)
-                                    {
-                                        byte a, r, g, b;
-                                        r = reader.ReadByte();
-                                        g = reader.ReadByte();
-                                        b = reader.ReadByte();
-                                        a = (byte)(reader.ReadByte() << 1);
-                                        palette[256 + j + i * 16] = Color.FromArgb(a, r, g, b);
-                                    }
-                                    reader.BaseStream.Position += 64;
-                                }
-                            }
-                        }
-                        else if ((Width == 64) && (Height == 32))
-                        {
-                            if (m == 1)
-                            {
-                                for (int i = 0; i < 16; i++)
-                                {
-                                    for (int j = 0; j < 128; j++)
-                                        pixels[j + i * 128] = reader.ReadByte();
-                                    reader.BaseStream.Position += 128;
-                                }
-                                for (int i = 0; i < 16; i++)
-                                {
-                                    for (int j = 0; j < 16; j++)
-                                    {
-                                        byte a, r, g, b;
-                                        r = reader.ReadByte();
-                                        g = reader.ReadByte();
-                                        b = reader.ReadByte();
-                                        a = (byte)(reader.ReadByte() << 1);
-                                        palette[j + i * 16] = Color.FromArgb(a, r, g, b);
-                                    }
-                                    reader.BaseStream.Position += 192;
-                                }
-                            }
-                            else
-                            {
-                                for (int i = 0; i < 16; i++)
-                                {
-                                    for (int j = 0; j < 128; j++)
-                                        pixels[j + i * 128] = reader.ReadByte();
-                                    reader.BaseStream.Position += 128;
-                                }
-                                for (int i = 0; i < 16; i++)
-                                {
-                                    for (int j = 0; j < 64; j++)
-                                        mippixels[j + i * 64] = reader.ReadByte();
-                                    for (int j = 0; j < 16; j++)
-                                    {
-                                        byte a, r, g, b;
-                                        r = reader.ReadByte();
-                                        g = reader.ReadByte();
-                                        b = reader.ReadByte();
-                                        a = (byte)(reader.ReadByte() << 1);
-                                        palette[j + i * 16] = Color.FromArgb(a, r, g, b);
-                                    }
-                                    reader.BaseStream.Position += 128;
-                                }
-                            }
-                        }
-                        else if ((Width == 64) && (Height == 64))
-                        {
-                            if (m == 1)
-                            {
-                                for (int i = 0; i < 32; i++)
-                                {
-                                    for (int j = 0; j < 128; j++)
-                                        pixels[j + i * 128] = reader.ReadByte();
-                                    for (int j = 0; j < 16; j++)
-                                    {
-                                        byte a, r, g, b;
-                                        r = reader.ReadByte();
-                                        g = reader.ReadByte();
-                                        b = reader.ReadByte();
-                                        a = (byte)(reader.ReadByte() << 1);
-                                        palette[j + i * 16] = Color.FromArgb(a, r, g, b);
-                                    }
-                                    reader.BaseStream.Position += 64;
-                                }
-                            }
-                            else
-                                for (int i = 0; i < 32; i++)
-                                {
-                                    for (int j = 0; j < 128; j++)
-                                        pixels[j + i * 128] = reader.ReadByte();
-                                    for (int j = 0; j < 64; j++)
-                                        mippixels[j + i * 64] = reader.ReadByte();
-                                    for (int j = 0; j < 16; j++)
-                                    {
-                                        byte a, r, g, b;
-                                        r = reader.ReadByte();
-                                        g = reader.ReadByte();
-                                        b = reader.ReadByte();
-                                        a = (byte)(reader.ReadByte() << 1);
-                                        palette[j + i * 16] = Color.FromArgb(a, r, g, b);
-                                    }
-                                }
-                        }
-                        //else
-                        //    System.Windows.Forms.MessageBox.Show("ID:" + ID + " Width: " + Width + " Height: " + Height, "Kesha, we have a problem!", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
-                        UnSwizzle(ref pixels, (ushort)Width, (ushort)Height);
-                        UnSwizzle(ref mippixels, (ushort)(Width / 2), (ushort)Height);
-                        Flip(ref pixels, (ushort)Width, (ushort)Height);
-                        SwapPalette(ref palette);
-                        for (int i = 0; i <= pixel_data.Length - 1; i++)
-                            pixel_data[i] = palette[pixels[i]];
-                        break;
-                    }
-
-                case 2:
-                    {
-                        Array.Resize(ref pixels, Width * Height);
-                        Array.Resize(ref mippixels, Width / 2 * Height);
-                        Array.Resize(ref palette, 512);
-                        if ((Width == 128) && (Height == 32))
-                        {
-                            pixels = reader.ReadBytes(4096);
-                            for (int i = 0; i < 16; i++)
-                            {
-                                for (int j = 0; j < 128; j++)
-                                    mippixels[j + i * 128] = reader.ReadByte();
-                                for (int j = 0; j < 16; j++)
-                                {
-                                    byte a, r, g, b;
-                                    r = reader.ReadByte();
-                                    g = reader.ReadByte();
-                                    b = reader.ReadByte();
-                                    a = (byte)(reader.ReadByte() << 1);
-                                    palette[j + i * 16] = Color.FromArgb(a, r, g, b);
-                                }
-                                reader.BaseStream.Position += 64;
-                            }
-                        }
-                        else if ((Width == 128) && (Height == 64))
-                        {
-                            pixels = reader.ReadBytes(8192);
-                            for (int i = 0; i < 16; i++)
-                            {
-                                for (int j = 0; j < 64; j++)
-                                    mippixels[j + i * 64] = reader.ReadByte();
-                                reader.BaseStream.Position += 192;
-                            }
-                            for (int i = 0; i < 16; i++)
-                            {
-                                for (int j = 0; j < 64; j++)
-                                    mippixels[512 + j + i * 64] = reader.ReadByte();
-                                for (int j = 0; j < 16; j++)
-                                {
-                                    byte a, r, g, b;
-                                    r = reader.ReadByte();
-                                    g = reader.ReadByte();
-                                    b = reader.ReadByte();
-                                    a = (byte)(reader.ReadByte() << 1);
-                                    palette[j + i * 16] = Color.FromArgb(a, r, g, b);
-                                }
-                                reader.BaseStream.Position += 128;
-                            }
-                        }
-                        else if ((Width == 128) && (Height == 128))
-                        {
-                            pixels = reader.ReadBytes(16384);
-                            if (m > 1)
-                            {
-                                for (int i = 0; i < 32; i++)
-                                {
-                                    for (int j = 0; j <= 191; j++)
-                                        mippixels[j + i * 192] = reader.ReadByte();
-                                    for (int j = 0; j < 16; j++)
-                                    {
-                                        byte a, r, g, b;
-                                        r = reader.ReadByte();
-                                        g = reader.ReadByte();
-                                        b = reader.ReadByte();
-                                        a = (byte)(reader.ReadByte() << 1);
-                                        palette[j + i * 16] = Color.FromArgb(a, r, g, b);
-                                    }
-                                }
-                            }
-                            else
-                                for (int i = 0; i < 32; i++)
-                                {
-                                    for (int j = 0; j < 16; j++)
-                                    {
-                                        byte a, r, g, b;
-                                        r = reader.ReadByte();
-                                        g = reader.ReadByte();
-                                        b = reader.ReadByte();
-                                        a = (byte)(reader.ReadByte() << 1);
-                                        palette[j + i * 16] = Color.FromArgb(a, r, g, b);
-                                    }
-                                    reader.BaseStream.Position += 192;
-                                }
-                        }
-                        else if ((Width == 128) && (Height == 256))
-                        {
-                            pixels = reader.ReadBytes(32768);
-                            for (int i = 0; i < 32; i++)
-                            {
-                                for (int j = 0; j < 16; j++)
-                                {
-                                    byte a, r, g, b;
-                                    r = reader.ReadByte();
-                                    g = reader.ReadByte();
-                                    b = reader.ReadByte();
-                                    a = (byte)(reader.ReadByte() << 1);
-                                    palette[j + i * 16] = Color.FromArgb(a, r, g, b);
-                                }
-                                reader.BaseStream.Position += 192;
-                            }
-                        }
-                        //else
-                        //    System.Windows.Forms.MessageBox.Show("ID:" + ID + " Width: " + Width + " Height: " + Height, "Kesha, we have a problem! Abort now!", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
-                        UnSwizzle(ref pixels, (ushort)Width, (ushort)Height);
-                        Flip(ref pixels, (ushort)Width, (ushort)Height);
-                        SwapPalette(ref palette);
-                        Array.Resize(ref pixel_data, pixels.Length);
-                        for (int i = 0; i <= pixel_data.Length - 1; i++)
-                            pixel_data[i] = palette[pixels[i]];
-                        break;
-                    }
-
-                case 4:
-                    {
-                        Array.Resize(ref pixel_data, (int)(Width * Height));
-                        for (int i = 0; i <= (Width) * Height - 1; i++)
-                        {
-                            byte a, r, g, b;
-                            r = reader.ReadByte();
-                            g = reader.ReadByte();
-                            b = reader.ReadByte();
-                            a = (byte)(reader.ReadByte() << 1);
-                            pixel_data[i] = Color.FromArgb(a, r, g, b);
-                        }
-
-                        break;
-                    }
+                header_leftover.Add(reader.ReadInt32());
             }
+            Int32 blocksCnt = (Size - 0xE0) / 0x100;
+            for (int i = 0; i < blocksCnt; ++i)
+            {
+                blocks.Add(reader.ReadBytes(0x100));
+            }
+        }
+        public override void Save(BinaryWriter writer)
+        {
+            long start = writer.BaseStream.Position;
+            writer.Write(Size);
+            writer.Write(Signature);
+            writer.Write(W);
+            writer.Write(H);
+            writer.Write(Mips);
+            writer.Write(Palette);
+            writer.Write(PaletteSize);
+            for (int i = 0; i < 53; ++i)
+            {
+                writer.Write(header_leftover[i]);
+            }
+            Int32 blocksCnt = (Size - 0xE0) / 0x100;
+            for (int i = 0; i < blocksCnt; ++i)
+            {
+                writer.Write(blocks[i]);
+            }
+        }
+
+        protected override int GetSize()
+        {
+            return Size + 4;
         }
 
         #region INTERNALS
@@ -1023,3 +624,440 @@ namespace Twinsanity
         #endregion
     }
 }
+/*
+ * 
+ * var n = reader.ReadInt32();
+            reader.BaseStream.Position -= 4;
+            Data = reader.ReadBytes(n + 4);
+            reader.BaseStream.Position -= n;
+            var key = reader.ReadUInt32();
+            w = reader.ReadInt16();
+            h = reader.ReadInt16();
+            m = reader.ReadByte();
+            pal_flag = reader.ReadByte();
+            pal_size = reader.ReadUInt16();
+            tex_space = reader.ReadBytes(32);
+            type = reader.ReadInt32();
+            unk = reader.ReadBytes(176);
+            switch (type)
+            {
+                case 1:
+                    {
+                        pixels = new byte[Width * Height];
+                        mippixels = new byte[Width / 2 * Height];
+                        palette = new Color[(n & 0xFFFFFF00) >> 4];
+                        pixel_data = new Color[Width * Height];
+                        if ((Width == 32) && (Height == 8))
+                        {
+                            for (int i = 0; i < 4; i++)
+                            {
+                                for (int j = 0; j < 64; j++)
+                                    pixels[j + i * 64] = reader.ReadByte();
+                                reader.BaseStream.Position += 192;
+                            }
+                            reader.BaseStream.Position += 12 * 256;
+                            for (int i = 0; i < 16; i++)
+                            {
+                                for (int j = 0; j < 16; j++)
+                                {
+                                    byte a, r, g, b;
+                                    r = reader.ReadByte();
+                                    g = reader.ReadByte();
+                                    b = reader.ReadByte();
+                                    a = (byte)(reader.ReadByte() << 1);
+                                    palette[j + i * 16] = Color.FromArgb(a, r, g, b);
+                                }
+                                reader.BaseStream.Position += 192;
+                            }
+                        }
+                        else if ((Width == 16) && (Height == 16))
+                        {
+                            for (int i = 0; i < 8; i++)
+                            {
+                                for (int j = 0; j < 32; j++)
+                                    pixels[j + i * 32] = reader.ReadByte();
+                                reader.BaseStream.Position += 224;
+                            }
+                            for (int i = 0; i < 4; i++)
+                            {
+                                for (int j = 0; j < 32; j++)
+                                    mippixels[j + i * 32] = reader.ReadByte();
+                                reader.BaseStream.Position += 224;
+                            }
+                            reader.BaseStream.Position += 4 * 256;
+                            for (int i = 0; i < 16; i++)
+                            {
+                                for (int j = 0; j < 16; j++)
+                                {
+                                    byte a, r, g, b;
+                                    r = reader.ReadByte();
+                                    g = reader.ReadByte();
+                                    b = reader.ReadByte();
+                                    a = (byte)(reader.ReadByte() << 1);
+                                    palette[j + i * 16] = Color.FromArgb(a, r, g, b);
+                                }
+                                reader.BaseStream.Position += 192;
+                            }
+                        }
+                        else if ((Width == 32) && (Height == 16))
+                        {
+                            for (int i = 0; i < 8; i++)
+                            {
+                                for (int j = 0; j < 64; j++)
+                                    pixels[j + i * 64] = reader.ReadByte();
+                                reader.BaseStream.Position += 192;
+                            }
+                            for (int i = 0; i < 8; i++)
+                            {
+                                for (int j = 0; j < 32; j++)
+                                    mippixels[j + i * 32] = reader.ReadByte();
+                                reader.BaseStream.Position += 224;
+                            }
+                            for (int i = 0; i < 16; i++)
+                            {
+                                for (int j = 0; j < 16; j++)
+                                {
+                                    byte a, r, g, b;
+                                    r = reader.ReadByte();
+                                    g = reader.ReadByte();
+                                    b = reader.ReadByte();
+                                    a = (byte)(reader.ReadByte() << 1);
+                                    palette[j + i * 16] = Color.FromArgb(a, r, g, b);
+                                }
+                                reader.BaseStream.Position += 192;
+                            }
+                        }
+                        else if ((Width == 32) && (Height == 32))
+                        {
+                            if (m == 1)
+                            {
+                                for (int i = 0; i < 16; i++)
+                                {
+                                    for (int j = 0; j < 64; j++)
+                                        pixels[j + i * 64] = reader.ReadByte();
+                                    reader.BaseStream.Position += 192;
+                                }
+                                for (int i = 0; i < 16; i++)
+                                {
+                                    for (int j = 0; j < 16; j++)
+                                    {
+                                        byte a, r, g, b;
+                                        r = reader.ReadByte();
+                                        g = reader.ReadByte();
+                                        b = reader.ReadByte();
+                                        a = (byte)(reader.ReadByte() << 1);
+                                        palette[j + i * 16] = Color.FromArgb(a, r, g, b);
+                                    }
+                                    reader.BaseStream.Position += 192;
+                                }
+                            }
+                            else
+                            {
+                                for (int i = 0; i < 16; i++)
+                                {
+                                    for (int j = 0; j < 64; j++)
+                                        pixels[j + i * 64] = reader.ReadByte();
+                                    for (int j = 0; j < 16; j++)
+                                    {
+                                        byte a, r, g, b;
+                                        r = reader.ReadByte();
+                                        g = reader.ReadByte();
+                                        b = reader.ReadByte();
+                                        a = (byte)(reader.ReadByte() << 1);
+                                        palette[j + i * 16] = Color.FromArgb(a, r, g, b);
+                                    }
+                                    reader.BaseStream.Position += 128;
+                                }
+                                for (int i = 0; i < 16; i++)
+                                {
+                                    for (int j = 0; j < 32; j++)
+                                        mippixels[j + i * 32] = reader.ReadByte();
+                                    reader.BaseStream.Position += 224;
+                                }
+                            }
+                        }
+                        else if ((Width == 32) && (Height == 64))
+                        {
+                            if (m == 1)
+                            {
+                                for (int i = 0; i < 32; i++)
+                                {
+                                    for (int j = 0; j < 64; j++)
+                                        pixels[j + i * 64] = reader.ReadByte();
+                                    for (int j = 0; j < 16; j++)
+                                    {
+                                        byte a, r, g, b;
+                                        r = reader.ReadByte();
+                                        g = reader.ReadByte();
+                                        b = reader.ReadByte();
+                                        a = (byte)(reader.ReadByte() << 1);
+                                        palette[j + i * 16] = Color.FromArgb(a, r, g, b);
+                                    }
+                                    reader.BaseStream.Position += 128;
+                                }
+                            }
+                            else
+                            {
+                                for (int i = 0; i < 16; i++)
+                                {
+                                    for (int j = 0; j < 64; j++)
+                                        pixels[j + i * 64] = reader.ReadByte();
+                                    for (int j = 0; j < 64; j++)
+                                        mippixels[j + i * 64] = reader.ReadByte();
+                                    for (int j = 0; j < 16; j++)
+                                    {
+                                        byte a, r, g, b;
+                                        r = reader.ReadByte();
+                                        g = reader.ReadByte();
+                                        b = reader.ReadByte();
+                                        a = (byte)(reader.ReadByte() << 1);
+                                        palette[j + i * 16] = Color.FromArgb(a, r, g, b);
+                                    }
+                                    reader.BaseStream.Position += 64;
+                                }
+                                for (int i = 0; i < 16; i++)
+                                {
+                                    for (int j = 0; j < 64; j++)
+                                        pixels[1024 + j + i * 64] = reader.ReadByte();
+                                    reader.BaseStream.Position += 64;
+                                    for (int j = 0; j < 16; j++)
+                                    {
+                                        byte a, r, g, b;
+                                        r = reader.ReadByte();
+                                        g = reader.ReadByte();
+                                        b = reader.ReadByte();
+                                        a = (byte)(reader.ReadByte() << 1);
+                                        palette[256 + j + i * 16] = Color.FromArgb(a, r, g, b);
+                                    }
+                                    reader.BaseStream.Position += 64;
+                                }
+                            }
+                        }
+                        else if ((Width == 64) && (Height == 32))
+                        {
+                            if (m == 1)
+                            {
+                                for (int i = 0; i < 16; i++)
+                                {
+                                    for (int j = 0; j < 128; j++)
+                                        pixels[j + i * 128] = reader.ReadByte();
+                                    reader.BaseStream.Position += 128;
+                                }
+                                for (int i = 0; i < 16; i++)
+                                {
+                                    for (int j = 0; j < 16; j++)
+                                    {
+                                        byte a, r, g, b;
+                                        r = reader.ReadByte();
+                                        g = reader.ReadByte();
+                                        b = reader.ReadByte();
+                                        a = (byte)(reader.ReadByte() << 1);
+                                        palette[j + i * 16] = Color.FromArgb(a, r, g, b);
+                                    }
+                                    reader.BaseStream.Position += 192;
+                                }
+                            }
+                            else
+                            {
+                                for (int i = 0; i < 16; i++)
+                                {
+                                    for (int j = 0; j < 128; j++)
+                                        pixels[j + i * 128] = reader.ReadByte();
+                                    reader.BaseStream.Position += 128;
+                                }
+                                for (int i = 0; i < 16; i++)
+                                {
+                                    for (int j = 0; j < 64; j++)
+                                        mippixels[j + i * 64] = reader.ReadByte();
+                                    for (int j = 0; j < 16; j++)
+                                    {
+                                        byte a, r, g, b;
+                                        r = reader.ReadByte();
+                                        g = reader.ReadByte();
+                                        b = reader.ReadByte();
+                                        a = (byte)(reader.ReadByte() << 1);
+                                        palette[j + i * 16] = Color.FromArgb(a, r, g, b);
+                                    }
+                                    reader.BaseStream.Position += 128;
+                                }
+                            }
+                        }
+                        else if ((Width == 64) && (Height == 64))
+                        {
+                            if (m == 1)
+                            {
+                                for (int i = 0; i < 32; i++)
+                                {
+                                    for (int j = 0; j < 128; j++)
+                                        pixels[j + i * 128] = reader.ReadByte();
+                                    for (int j = 0; j < 16; j++)
+                                    {
+                                        byte a, r, g, b;
+                                        r = reader.ReadByte();
+                                        g = reader.ReadByte();
+                                        b = reader.ReadByte();
+                                        a = (byte)(reader.ReadByte() << 1);
+                                        palette[j + i * 16] = Color.FromArgb(a, r, g, b);
+                                    }
+                                    reader.BaseStream.Position += 64;
+                                }
+                            }
+                            else
+                                for (int i = 0; i < 32; i++)
+                                {
+                                    for (int j = 0; j < 128; j++)
+                                        pixels[j + i * 128] = reader.ReadByte();
+                                    for (int j = 0; j < 64; j++)
+                                        mippixels[j + i * 64] = reader.ReadByte();
+                                    for (int j = 0; j < 16; j++)
+                                    {
+                                        byte a, r, g, b;
+                                        r = reader.ReadByte();
+                                        g = reader.ReadByte();
+                                        b = reader.ReadByte();
+                                        a = (byte)(reader.ReadByte() << 1);
+                                        palette[j + i * 16] = Color.FromArgb(a, r, g, b);
+                                    }
+                                }
+                        }
+                        //else
+                        //    System.Windows.Forms.MessageBox.Show("ID:" + ID + " Width: " + Width + " Height: " + Height, "Kesha, we have a problem!", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
+                        UnSwizzle(ref pixels, (ushort)Width, (ushort)Height);
+                        UnSwizzle(ref mippixels, (ushort)(Width / 2), (ushort)Height);
+                        Flip(ref pixels, (ushort)Width, (ushort)Height);
+                        SwapPalette(ref palette);
+                        for (int i = 0; i <= pixel_data.Length - 1; i++)
+                            pixel_data[i] = palette[pixels[i]];
+                        break;
+                    }
+
+                case 2:
+                    {
+                        Array.Resize(ref pixels, Width * Height);
+                        Array.Resize(ref mippixels, Width / 2 * Height);
+                        Array.Resize(ref palette, 512);
+                        if ((Width == 128) && (Height == 32))
+                        {
+                            pixels = reader.ReadBytes(4096);
+                            for (int i = 0; i < 16; i++)
+                            {
+                                for (int j = 0; j < 128; j++)
+                                    mippixels[j + i * 128] = reader.ReadByte();
+                                for (int j = 0; j < 16; j++)
+                                {
+                                    byte a, r, g, b;
+                                    r = reader.ReadByte();
+                                    g = reader.ReadByte();
+                                    b = reader.ReadByte();
+                                    a = (byte)(reader.ReadByte() << 1);
+                                    palette[j + i * 16] = Color.FromArgb(a, r, g, b);
+                                }
+                                reader.BaseStream.Position += 64;
+                            }
+                        }
+                        else if ((Width == 128) && (Height == 64))
+                        {
+                            pixels = reader.ReadBytes(8192);
+                            for (int i = 0; i < 16; i++)
+                            {
+                                for (int j = 0; j < 64; j++)
+                                    mippixels[j + i * 64] = reader.ReadByte();
+                                reader.BaseStream.Position += 192;
+                            }
+                            for (int i = 0; i < 16; i++)
+                            {
+                                for (int j = 0; j < 64; j++)
+                                    mippixels[512 + j + i * 64] = reader.ReadByte();
+                                for (int j = 0; j < 16; j++)
+                                {
+                                    byte a, r, g, b;
+                                    r = reader.ReadByte();
+                                    g = reader.ReadByte();
+                                    b = reader.ReadByte();
+                                    a = (byte)(reader.ReadByte() << 1);
+                                    palette[j + i * 16] = Color.FromArgb(a, r, g, b);
+                                }
+                                reader.BaseStream.Position += 128;
+                            }
+                        }
+                        else if ((Width == 128) && (Height == 128))
+                        {
+                            pixels = reader.ReadBytes(16384);
+                            if (m > 1)
+                            {
+                                for (int i = 0; i < 32; i++)
+                                {
+                                    for (int j = 0; j <= 191; j++)
+                                        mippixels[j + i * 192] = reader.ReadByte();
+                                    for (int j = 0; j < 16; j++)
+                                    {
+                                        byte a, r, g, b;
+                                        r = reader.ReadByte();
+                                        g = reader.ReadByte();
+                                        b = reader.ReadByte();
+                                        a = (byte)(reader.ReadByte() << 1);
+                                        palette[j + i * 16] = Color.FromArgb(a, r, g, b);
+                                    }
+                                }
+                            }
+                            else
+                                for (int i = 0; i < 32; i++)
+                                {
+                                    for (int j = 0; j < 16; j++)
+                                    {
+                                        byte a, r, g, b;
+                                        r = reader.ReadByte();
+                                        g = reader.ReadByte();
+                                        b = reader.ReadByte();
+                                        a = (byte)(reader.ReadByte() << 1);
+                                        palette[j + i * 16] = Color.FromArgb(a, r, g, b);
+                                    }
+                                    reader.BaseStream.Position += 192;
+                                }
+                        }
+                        else if ((Width == 128) && (Height == 256))
+                        {
+                            pixels = reader.ReadBytes(32768);
+                            for (int i = 0; i < 32; i++)
+                            {
+                                for (int j = 0; j < 16; j++)
+                                {
+                                    byte a, r, g, b;
+                                    r = reader.ReadByte();
+                                    g = reader.ReadByte();
+                                    b = reader.ReadByte();
+                                    a = (byte)(reader.ReadByte() << 1);
+                                    palette[j + i * 16] = Color.FromArgb(a, r, g, b);
+                                }
+                                reader.BaseStream.Position += 192;
+                            }
+                        }
+                        //else
+                        //    System.Windows.Forms.MessageBox.Show("ID:" + ID + " Width: " + Width + " Height: " + Height, "Kesha, we have a problem! Abort now!", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning);
+                        UnSwizzle(ref pixels, (ushort)Width, (ushort)Height);
+                        Flip(ref pixels, (ushort)Width, (ushort)Height);
+                        SwapPalette(ref palette);
+                        Array.Resize(ref pixel_data, pixels.Length);
+                        for (int i = 0; i <= pixel_data.Length - 1; i++)
+                            pixel_data[i] = palette[pixels[i]];
+                        break;
+                    }
+
+                case 4:
+                    {
+                        Array.Resize(ref pixel_data, (int)(Width * Height));
+                        for (int i = 0; i <= (Width) * Height - 1; i++)
+                        {
+                            byte a, r, g, b;
+                            r = reader.ReadByte();
+                            g = reader.ReadByte();
+                            b = reader.ReadByte();
+                            a = (byte)(reader.ReadByte() << 1);
+                            pixel_data[i] = Color.FromArgb(a, r, g, b);
+                        }
+
+                        break;
+                    }
+            }
+
+*/
