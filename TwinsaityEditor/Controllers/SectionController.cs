@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.IO;
+using System.Linq;
 
 namespace TwinsaityEditor
 {
@@ -23,6 +24,7 @@ namespace TwinsaityEditor
                 && item.Type != SectionType.Skydome && !(item is TwinsFile))
             {
                 AddMenu("Re-order by ID (asc.)", Menu_ReOrderByID_Asc);
+                
                 if (item.Type == SectionType.ObjectInstance
                     || item.Type == SectionType.AIPosition
                     || item.Type == SectionType.AIPath
@@ -34,6 +36,7 @@ namespace TwinsaityEditor
                 {
                     AddMenu("Re-ID by order", Menu_ReIDByOrder);
                     AddMenu("Open editor", Menu_OpenEditor);
+                    AddMenu("Add new item", Menu_AddNew);
                 }
                 else if (item.Type == SectionType.Instance)
                 {
@@ -43,6 +46,7 @@ namespace TwinsaityEditor
                 else if (item.Type >= SectionType.SE && item.Type <= SectionType.SE_Jpn)
                 {
                     AddMenu("Extract extra data", Menu_ExtractExtraData);
+                    AddMenu("Add new item", Menu_AddNew);
                 }
             }
             else if (item is TwinsFile f && f.Type == TwinsFile.FileType.RM2)
@@ -52,6 +56,7 @@ namespace TwinsaityEditor
             else
             {
                 AddMenu("Re-order by ID (desc.)", Menu_ReOrderByID_Desc);
+                AddMenu("Add new item", Menu_AddNew);
             }
             if (item.Type == SectionType.Mesh || item.Type == SectionType.MeshX || item.Type == SectionType.Model || item.Type == SectionType.StaticModel)
             {
@@ -112,6 +117,62 @@ namespace TwinsaityEditor
         public T GetItem<T>(uint id) where T : Controller
         {
             return Node.Nodes[Data.RecordIDs[id]].Tag as T;
+        }
+
+
+        private void Menu_AddNew()
+        {
+            TwinsItem newItem = null;
+            switch (Data.Type)
+            {
+                case SectionType.Texture:
+                    newItem = new Texture();
+                    break;
+                case SectionType.Material:
+                    newItem = new Material();
+                    break;
+                case SectionType.Mesh:
+                    newItem = new Mesh();
+                    break;
+                case SectionType.Model:
+                    newItem = new Model();
+                    break;
+                case SectionType.ArmatureModel:
+                    newItem = new ArmatureModel();
+                    break;
+                case SectionType.Object:
+                    newItem = new GameObject();
+                    break;
+                case SectionType.Script:
+                    newItem = new Script();
+                    break;
+                case SectionType.SE:
+                case SectionType.SE_Eng:
+                case SectionType.SE_Fre:
+                case SectionType.SE_Ger:
+                case SectionType.SE_Ita:
+                case SectionType.SE_Spa:
+                case SectionType.SE_Jpn:
+                    newItem = new SoundEffect();
+                    ((SoundEffect)newItem).SoundOffset = (uint)Data.ExtraData.Length;
+                    break;
+                default:
+                    newItem = new TwinsItem();
+                    break;
+            }
+
+            if (newItem == null)
+            {
+                throw new System.Exception("Unsupported");
+            }
+            else
+            {
+                uint newId = Data.RecordIDs.Keys.Max() + 1;
+                newItem.ID = newId;
+                newItem.Parent = Data;
+                AddItem(newId, newItem);
+            }
+            
         }
 
         private void Menu_ExtractExtraData()

@@ -22,6 +22,7 @@ namespace TwinsaityEditor
             AddMenu("Play sound", Menu_PlaySound);
             AddMenu("Export to .WAV", Menu_ExportWAV);
             AddMenu("Export to .VAG", Menu_ExportVAG);
+            AddMenu("Replace sound from .WAV", Menu_ReplaceSoundWav);
         }
 
         protected override string GetName()
@@ -49,6 +50,80 @@ namespace TwinsaityEditor
             player.Stop();
             player.Stream = new MemoryStream(SoundData);
             player.Play();
+        }
+
+        private void Menu_ReplaceSoundWav()
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "WAV|*.wav";
+            ofd.FileName = Data.ID.ToString();
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                using (FileStream file = new FileStream(ofd.FileName, FileMode.Open, FileAccess.Read))
+                using (BinaryReader reader = new BinaryReader(file))
+                {
+                    file.Position = 0x16;
+                    UInt16 channels = reader.ReadUInt16();
+                    UInt32 frequency = reader.ReadUInt32();
+                    file.Position = 0x28;
+                    Int32 len = reader.ReadInt32();
+                    Byte[] PCM = reader.ReadBytes(len);
+                    if (channels == 1)
+                    {
+                        Data.Freq = (ushort)frequency;
+                        Byte[] newData = ADPCM.FromPCMMono(PCM);
+                        UInt32 newSize = (uint)newData.Length;
+                        InjectData(Data.SoundOffset, Data.SoundSize, newData);
+                        Data.SoundSize = newSize;
+                    } else
+                    {
+                        throw new ArgumentException("ATM only mono, sorry fam");
+                    }
+                    LoadSoundData();
+                    GenText();
+                }
+            }
+        }
+
+        private void InjectData(UInt32 oldOffset, UInt32 oldSize, Byte[] newData)
+        {
+            Byte[] piece1 = new byte[oldOffset];
+            Byte[] piece2 = new byte[Data.Parent.ExtraData.Length - oldOffset - oldSize];
+            Array.Copy(Data.Parent.ExtraData, 0, piece1, 0, piece1.Length);
+            Array.Copy(Data.Parent.ExtraData, oldOffset + oldSize, piece2, 0, piece2.Length);
+            Data.Parent.ExtraData = new byte[piece1.Length + newData.Length + piece2.Length];
+            Array.Copy(piece1, 0, Data.Parent.ExtraData, 0, piece1.Length);
+            Array.Copy(newData, 0, Data.Parent.ExtraData, piece1.Length, newData.Length);
+            Array.Copy(piece2, 0, Data.Parent.ExtraData, piece1.Length + newData.Length, piece2.Length);
+            foreach (TwinsItem sectionItem in Data.Parent.Parent.Records)
+            {
+                if (sectionItem is TwinsSection)
+                {
+                    TwinsSection section = (TwinsSection)sectionItem;
+                    if (section != null)
+                    {
+                        switch (section.Type)
+                        {
+                            case SectionType.SE:
+                            case SectionType.SE_Eng:
+                            case SectionType.SE_Fre:
+                            case SectionType.SE_Ger:
+                            case SectionType.SE_Ita:
+                            case SectionType.SE_Spa:
+                            case SectionType.SE_Jpn:
+                                foreach (TwinsItem item in section.Records)
+                                {
+                                    SoundEffect se = (SoundEffect)item;
+                                    if (se.SoundOffset > oldOffset)
+                                    {
+                                        se.SoundOffset += (UInt32)(newData.Length - oldSize);
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                }
+            }
         }
 
         private void Menu_ExportWAV()

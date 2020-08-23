@@ -224,7 +224,7 @@ namespace Twinsanity
             double[] max = new double[5];
             double[][] buffer = new double[28][];
             for (int i = 0; i < 28; ++i)
-                buffer[28] = new double[5];
+                buffer[i] = new double[5];
             double s_0, s_1 = 0.0, s_2 = 0.0, min = 1e10;
             for (int i = 0; i < 5; ++i)
             {
