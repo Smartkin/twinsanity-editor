@@ -15,7 +15,7 @@ namespace TwinsaityEditor
 
         private static SoundPlayer player = new SoundPlayer();
 
-        public SEController(MainForm topform, SoundEffect item) : base (topform, item)
+        public SEController(MainForm topform, SoundEffect item) : base(topform, item)
         {
             Data = item;
             LoadSoundData();
@@ -95,37 +95,15 @@ namespace TwinsaityEditor
             Array.Copy(piece1, 0, Data.Parent.ExtraData, 0, piece1.Length);
             Array.Copy(newData, 0, Data.Parent.ExtraData, piece1.Length, newData.Length);
             Array.Copy(piece2, 0, Data.Parent.ExtraData, piece1.Length + newData.Length, piece2.Length);
-            foreach (TwinsItem sectionItem in Data.Parent.Parent.Records)
+            foreach (TwinsItem item in Data.Parent.Records)
             {
-                if (sectionItem is TwinsSection)
+                SoundEffect se = (SoundEffect)item;
+                if (se.SoundOffset > oldOffset)
                 {
-                    TwinsSection section = (TwinsSection)sectionItem;
-                    if (section != null)
-                    {
-                        switch (section.Type)
-                        {
-                            case SectionType.SE:
-                            case SectionType.SE_Eng:
-                            case SectionType.SE_Fre:
-                            case SectionType.SE_Ger:
-                            case SectionType.SE_Ita:
-                            case SectionType.SE_Spa:
-                            case SectionType.SE_Jpn:
-                                foreach (TwinsItem item in section.Records)
-                                {
-                                    SoundEffect se = (SoundEffect)item;
-                                    if (se.SoundOffset > oldOffset)
-                                    {
-                                        se.SoundOffset += (UInt32)(newData.Length - oldSize);
-                                    }
-                                }
-                                break;
-                        }
-                    }
+                    se.SoundOffset += (UInt32)(newData.Length - oldSize);
                 }
             }
         }
-
         private void Menu_ExportWAV()
         {
             SaveFileDialog sfd = new SaveFileDialog();
