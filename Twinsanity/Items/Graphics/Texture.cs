@@ -16,13 +16,19 @@ namespace Twinsanity
         Int32 Signature;
         Int16 W;
         Int16 H;
-        Byte Mips;
-        Byte Palette;
-        Int16 PaletteSize;
+        public Byte Mips;
+        public Byte Palette;
+        public Int16 PaletteSize;
 
         List<Int32> header_leftover;
 
         Int32 typeIndex = 8;
+
+        public Int32 type { get
+            {
+                return header_leftover[typeIndex];
+            } 
+        }
 
         List<Byte[]> blocks;
 
