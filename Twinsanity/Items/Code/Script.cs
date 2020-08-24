@@ -504,18 +504,7 @@ namespace Twinsanity
                     return 4 + ((arguments != null) ? arguments.Count * 4 : 0) + (((internalIndex & 0x1000000) != 0) ? nextCommand.GetLength() : 0);
                 }
                 public UInt32 unkUInt { get; set; }
-                public Int32 vTableAddress
-                {
-                    get
-                    {
-                        return vTableAddress;
-                    }
-                    set
-                    {
-                        vTableAddress = value;
-                        UpdateArguments();
-                    }
-                }
+                public Int32 vTableAddress;
                 private void UpdateArguments()
                 {
                     int sz = GetExpectedSize() / 4;
@@ -542,6 +531,7 @@ namespace Twinsanity
                     set
                     {
                         internalIndex = (Int32)(internalIndex & 0xffff0000) | (value & 0xffff);
+                        UpdateArguments();
                     }
                 }
                 public UInt16 UnkShort
