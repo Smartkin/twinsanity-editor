@@ -404,15 +404,42 @@ namespace TwinsaityEditor
                 }
             }
         }
+        bool blockType1IndexChanged = false;
         private void UpdateType1Panel()
         {
             type1UnkByte1.Text = selectedType1.unkByte1.ToString();
             type1UnkByte2.Text = selectedType1.unkByte2.ToString();
             type1UnkShort.Text = selectedType1.unkUShort1.ToString();
             type1UnkInt.Text = selectedType1.unkInt1.ToString();
-            type1Array.Text = GetTextFromArray(selectedType1.byteArray);
+            blockType1IndexChanged = true;
+            UpdateType1Bytes();
+            UpdateType1Floats();
+            blockType1IndexChanged = false;
         }
-
+        private void UpdateType1Bytes()
+        {
+            type1Bytes.BeginUpdate();
+            type1Bytes.Items.Clear();
+            int i = 0;
+            foreach (Byte b in selectedType1.bytes)
+            {
+                type1Bytes.Items.Add($"{i:000}: {b}");
+                ++i;
+            }
+            type1Bytes.EndUpdate();
+        }
+        private void UpdateType1Floats()
+        {
+            type1Floats.BeginUpdate();
+            type1Floats.Items.Clear();
+            int i = 0;
+            foreach (Single f in selectedType1.floats)
+            {
+                type1Floats.Items.Add($"{i:000}: {f}");
+                ++i;
+            }
+            type1Floats.EndUpdate();
+        }
         private String GetTextFromArray(Byte[] array)
         {
             StringBuilder builder = new StringBuilder();
@@ -429,6 +456,9 @@ namespace TwinsaityEditor
             {
                 ((TextBox)sender).BackColor = Color.White;
                 selectedType1.unkByte1 = val;
+                blockType1IndexChanged = true;
+                UpdateType1Bytes();
+                blockType1IndexChanged = false;
             }
             else
             {
@@ -452,6 +482,9 @@ namespace TwinsaityEditor
             {
                 ((TextBox)sender).BackColor = Color.White;
                 selectedType1.unkByte2 = val;
+                blockType1IndexChanged = true;
+                UpdateType1Floats();
+                blockType1IndexChanged = false;
             }
             else
             {
@@ -498,40 +531,30 @@ namespace TwinsaityEditor
 
         private void type1Array_TextChanged(object sender, EventArgs e)
         {
-            if (!String.IsNullOrWhiteSpace(((TextBox)sender).Text))
-            {
-                String[] strs = ((TextBox)sender).Text.Trim(' ').Split(' ');
-                Byte[] byteArray = new Byte[strs.Length];
-                Int32 i = 0;
-                foreach (String str in strs)
-                {
-                    Byte val = 0;
-                    if (Byte.TryParse(str, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out val))
-                    {
-                        ((TextBox)sender).BackColor = Color.White;
-                        byteArray[i] = val;
-                    }
-                    else
-                    {
-                        ((TextBox)sender).BackColor = Color.Red;
-                        return;
-                    }
-                    ++i;
-                }
-                selectedType1.byteArray = byteArray;
-            }
-            else
-            {
-                selectedType1.byteArray = new byte[0];
-            }
-            if (selectedType1.isValidArraySize())
-            {
-                type1Warning.Visible = false;
-            }
-            else
-            {
-                type1Warning.Visible = true;
 
+        }
+
+        private void type1Bytes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!blockType1IndexChanged)
+            {
+                ListBox list = (ListBox)sender;
+                if (list.SelectedItem != null)
+                {
+                    type1Byte.Text = selectedType1.bytes[list.SelectedIndex].ToString();
+                }
+            }
+        }
+
+        private void type1Floats_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!blockType1IndexChanged)
+            {
+                ListBox list = (ListBox)sender;
+                if (list.SelectedItem != null)
+                {
+                    type1Float.Text = selectedType1.floats[list.SelectedIndex].ToString();
+                }
             }
         }
         private void UpdateType2Panel()
@@ -783,6 +806,51 @@ namespace TwinsaityEditor
                 type4Arguments.SelectedIndex = 0;
             }
             
+        }
+        private void type1Byte_TextChanged(object sender, EventArgs e)
+        {
+            if (type1Bytes.SelectedIndex >= 0 && !stopChanged)
+            {
+                String text = ((TextBox)sender).Text;
+                Byte val = 0;
+                if (Byte.TryParse(text, out val))
+                {
+                    selectedType1.bytes[type1Bytes.SelectedIndex] = val;
+                    ((TextBox)sender).BackColor = Color.White;
+                    int index = type1Bytes.SelectedIndex;
+                    blockType1IndexChanged = true;
+                    type1Bytes.Items[index] = $"{index:000}: {selectedType1.bytes[index]}";
+                    type1Bytes.SelectedIndex = index;
+                    blockType1IndexChanged = false;
+                }
+                else
+                {
+                    ((TextBox)sender).BackColor = Color.Red;
+                }
+            }
+        }
+
+        private void type1Float_TextChanged(object sender, EventArgs e)
+        {
+            if (type1Floats.SelectedIndex >= 0 && !stopChanged)
+            {
+                String text = ((TextBox)sender).Text;
+                Single val = 0;
+                if (Single.TryParse(text, out val))
+                {
+                    selectedType1.floats[type1Floats.SelectedIndex] = val;
+                    ((TextBox)sender).BackColor = Color.White;
+                    int index = type1Floats.SelectedIndex;
+                    blockType1IndexChanged = true;
+                    type1Floats.Items[index] = $"{index:000}: {selectedType1.floats[index]}";
+                    type1Floats.SelectedIndex = index;
+                    blockType1IndexChanged = false;
+                }
+                else
+                {
+                    ((TextBox)sender).BackColor = Color.Red;
+                }
+            }
         }
         private void type4VTableIndex_TextChanged(object sender, EventArgs e)
         {
@@ -1552,5 +1620,7 @@ namespace TwinsaityEditor
                 UpdateLinkedPanel();
             }
         }
+
+
     }
 }

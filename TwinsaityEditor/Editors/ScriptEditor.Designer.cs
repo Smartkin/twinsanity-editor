@@ -37,8 +37,6 @@
             this.type1UnkShort = new System.Windows.Forms.TextBox();
             this.type1UnkByte2 = new System.Windows.Forms.TextBox();
             this.type1UnkByte1 = new System.Windows.Forms.TextBox();
-            this.type1Array = new System.Windows.Forms.TextBox();
-            this.label13 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
@@ -154,6 +152,12 @@
             this.deleteScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.type1Bytes = new System.Windows.Forms.ListBox();
+            this.type1Floats = new System.Windows.Forms.ListBox();
+            this.type1Byte = new System.Windows.Forms.TextBox();
+            this.type1Float = new System.Windows.Forms.TextBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label46 = new System.Windows.Forms.Label();
             this.panelType1.SuspendLayout();
             this.panelMain.SuspendLayout();
             this.panelHeader.SuspendLayout();
@@ -197,14 +201,18 @@
             // 
             // panelType1
             // 
+            this.panelType1.Controls.Add(this.label46);
+            this.panelType1.Controls.Add(this.label13);
+            this.panelType1.Controls.Add(this.type1Float);
+            this.panelType1.Controls.Add(this.type1Byte);
+            this.panelType1.Controls.Add(this.type1Floats);
+            this.panelType1.Controls.Add(this.type1Bytes);
             this.panelType1.Controls.Add(this.label26);
             this.panelType1.Controls.Add(this.type1Warning);
             this.panelType1.Controls.Add(this.type1UnkInt);
             this.panelType1.Controls.Add(this.type1UnkShort);
             this.panelType1.Controls.Add(this.type1UnkByte2);
             this.panelType1.Controls.Add(this.type1UnkByte1);
-            this.panelType1.Controls.Add(this.type1Array);
-            this.panelType1.Controls.Add(this.label13);
             this.panelType1.Controls.Add(this.label12);
             this.panelType1.Controls.Add(this.label11);
             this.panelType1.Controls.Add(this.label10);
@@ -228,7 +236,7 @@
             // 
             this.type1Warning.AutoSize = true;
             this.type1Warning.ForeColor = System.Drawing.Color.Red;
-            this.type1Warning.Location = new System.Drawing.Point(13, 190);
+            this.type1Warning.Location = new System.Drawing.Point(3, 386);
             this.type1Warning.Name = "type1Warning";
             this.type1Warning.Size = new System.Drawing.Size(254, 26);
             this.type1Warning.TabIndex = 10;
@@ -236,7 +244,7 @@
             // 
             // type1UnkInt
             // 
-            this.type1UnkInt.Location = new System.Drawing.Point(73, 105);
+            this.type1UnkInt.Location = new System.Drawing.Point(84, 105);
             this.type1UnkInt.Name = "type1UnkInt";
             this.type1UnkInt.Size = new System.Drawing.Size(100, 20);
             this.type1UnkInt.TabIndex = 9;
@@ -244,7 +252,7 @@
             // 
             // type1UnkShort
             // 
-            this.type1UnkShort.Location = new System.Drawing.Point(73, 79);
+            this.type1UnkShort.Location = new System.Drawing.Point(84, 79);
             this.type1UnkShort.Name = "type1UnkShort";
             this.type1UnkShort.Size = new System.Drawing.Size(100, 20);
             this.type1UnkShort.TabIndex = 8;
@@ -252,7 +260,7 @@
             // 
             // type1UnkByte2
             // 
-            this.type1UnkByte2.Location = new System.Drawing.Point(73, 53);
+            this.type1UnkByte2.Location = new System.Drawing.Point(84, 53);
             this.type1UnkByte2.Name = "type1UnkByte2";
             this.type1UnkByte2.Size = new System.Drawing.Size(100, 20);
             this.type1UnkByte2.TabIndex = 7;
@@ -260,33 +268,16 @@
             // 
             // type1UnkByte1
             // 
-            this.type1UnkByte1.Location = new System.Drawing.Point(73, 27);
+            this.type1UnkByte1.Location = new System.Drawing.Point(84, 27);
             this.type1UnkByte1.Name = "type1UnkByte1";
             this.type1UnkByte1.Size = new System.Drawing.Size(100, 20);
             this.type1UnkByte1.TabIndex = 6;
             this.type1UnkByte1.TextChanged += new System.EventHandler(this.type1UnkByte1_TextChanged);
             // 
-            // type1Array
-            // 
-            this.type1Array.Location = new System.Drawing.Point(10, 158);
-            this.type1Array.Name = "type1Array";
-            this.type1Array.Size = new System.Drawing.Size(284, 20);
-            this.type1Array.TabIndex = 5;
-            this.type1Array.TextChanged += new System.EventHandler(this.type1Array_TextChanged);
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(12, 142);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(55, 13);
-            this.label13.TabIndex = 4;
-            this.label13.Text = "ByteArray:";
-            // 
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(25, 107);
+            this.label12.Location = new System.Drawing.Point(34, 108);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(42, 13);
             this.label12.TabIndex = 3;
@@ -295,7 +286,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(7, 82);
+            this.label11.Location = new System.Drawing.Point(17, 80);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(63, 13);
             this.label11.TabIndex = 2;
@@ -306,18 +297,18 @@
             this.label10.AutoSize = true;
             this.label10.Location = new System.Drawing.Point(10, 56);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(57, 13);
+            this.label10.Size = new System.Drawing.Size(69, 13);
             this.label10.TabIndex = 1;
-            this.label10.Text = "UnkByte2:";
+            this.label10.Text = "FloatAmount:";
             // 
             // label9
             // 
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(10, 30);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(57, 13);
+            this.label9.Size = new System.Drawing.Size(67, 13);
             this.label9.TabIndex = 0;
-            this.label9.Text = "UnkByte1:";
+            this.label9.Text = "ByteAmount:";
             // 
             // panelMain
             // 
@@ -1277,14 +1268,14 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.panelType1);
+            this.groupBox1.Controls.Add(this.panelType2);
+            this.groupBox1.Controls.Add(this.panelType3);
             this.groupBox1.Controls.Add(this.panelLinked);
             this.groupBox1.Controls.Add(this.panelHeader);
             this.groupBox1.Controls.Add(this.panelType4);
             this.groupBox1.Controls.Add(this.panelGeneral);
             this.groupBox1.Controls.Add(this.panelMain);
-            this.groupBox1.Controls.Add(this.panelType1);
-            this.groupBox1.Controls.Add(this.panelType2);
-            this.groupBox1.Controls.Add(this.panelType3);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
@@ -1296,7 +1287,7 @@
             // scriptNameFilter
             // 
             this.scriptNameFilter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.scriptNameFilter.Location = new System.Drawing.Point(101, 3);
+            this.scriptNameFilter.Location = new System.Drawing.Point(100, 3);
             this.scriptNameFilter.Name = "scriptNameFilter";
             this.scriptNameFilter.Size = new System.Drawing.Size(294, 20);
             this.scriptNameFilter.TabIndex = 3;
@@ -1334,7 +1325,7 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 38.88889F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 61.11111F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 300F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 180F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 181F));
             this.tableLayoutPanel2.Controls.Add(this.label32, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.scriptNameFilter, 2, 0);
             this.tableLayoutPanel2.Controls.Add(this.filterSelection, 1, 0);
@@ -1356,7 +1347,7 @@
             "ID"});
             this.filterSelection.Location = new System.Drawing.Point(41, 3);
             this.filterSelection.Name = "filterSelection";
-            this.filterSelection.Size = new System.Drawing.Size(54, 21);
+            this.filterSelection.Size = new System.Drawing.Size(53, 21);
             this.filterSelection.TabIndex = 5;
             this.filterSelection.SelectedIndexChanged += new System.EventHandler(this.filterSelection_SelectedIndexChanged);
             // 
@@ -1364,9 +1355,9 @@
             // 
             this.checkBox_showHeaderScripts.AutoSize = true;
             this.checkBox_showHeaderScripts.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.checkBox_showHeaderScripts.Location = new System.Drawing.Point(401, 3);
+            this.checkBox_showHeaderScripts.Location = new System.Drawing.Point(400, 3);
             this.checkBox_showHeaderScripts.Name = "checkBox_showHeaderScripts";
-            this.checkBox_showHeaderScripts.Size = new System.Drawing.Size(175, 19);
+            this.checkBox_showHeaderScripts.Size = new System.Drawing.Size(176, 19);
             this.checkBox_showHeaderScripts.TabIndex = 6;
             this.checkBox_showHeaderScripts.Text = "Show Header Scripts";
             this.checkBox_showHeaderScripts.UseVisualStyleBackColor = true;
@@ -1440,6 +1431,58 @@
             this.splitContainer2.SplitterDistance = 585;
             this.splitContainer2.TabIndex = 6;
             // 
+            // type1Bytes
+            // 
+            this.type1Bytes.FormattingEnabled = true;
+            this.type1Bytes.Location = new System.Drawing.Point(3, 159);
+            this.type1Bytes.Name = "type1Bytes";
+            this.type1Bytes.Size = new System.Drawing.Size(120, 95);
+            this.type1Bytes.TabIndex = 12;
+            this.type1Bytes.SelectedIndexChanged += new System.EventHandler(this.type1Bytes_SelectedIndexChanged);
+            // 
+            // type1Floats
+            // 
+            this.type1Floats.FormattingEnabled = true;
+            this.type1Floats.Location = new System.Drawing.Point(129, 159);
+            this.type1Floats.Name = "type1Floats";
+            this.type1Floats.Size = new System.Drawing.Size(120, 95);
+            this.type1Floats.TabIndex = 13;
+            this.type1Floats.SelectedIndexChanged += new System.EventHandler(this.type1Floats_SelectedIndexChanged);
+            // 
+            // type1Byte
+            // 
+            this.type1Byte.Location = new System.Drawing.Point(3, 260);
+            this.type1Byte.Name = "type1Byte";
+            this.type1Byte.Size = new System.Drawing.Size(120, 20);
+            this.type1Byte.TabIndex = 14;
+            this.type1Byte.TextChanged += new System.EventHandler(this.type1Byte_TextChanged);
+            // 
+            // type1Float
+            // 
+            this.type1Float.Location = new System.Drawing.Point(129, 261);
+            this.type1Float.Name = "type1Float";
+            this.type1Float.Size = new System.Drawing.Size(120, 20);
+            this.type1Float.TabIndex = 15;
+            this.type1Float.TextChanged += new System.EventHandler(this.type1Float_TextChanged);
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(7, 140);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(36, 13);
+            this.label13.TabIndex = 16;
+            this.label13.Text = "Bytes:";
+            // 
+            // label46
+            // 
+            this.label46.AutoSize = true;
+            this.label46.Location = new System.Drawing.Point(133, 140);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(38, 13);
+            this.label46.TabIndex = 17;
+            this.label46.Text = "Floats:";
+            // 
             // ScriptEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1496,8 +1539,6 @@
         private System.Windows.Forms.TextBox type1UnkShort;
         private System.Windows.Forms.TextBox type1UnkByte2;
         private System.Windows.Forms.TextBox type1UnkByte1;
-        private System.Windows.Forms.TextBox type1Array;
-        private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Label label10;
@@ -1613,5 +1654,11 @@
         private System.Windows.Forms.Label label45;
         private System.Windows.Forms.CheckBox checkBox_showHeaderScripts;
         private System.Windows.Forms.CheckBox checkBox_localScriptSlot;
+        private System.Windows.Forms.TextBox type1Float;
+        private System.Windows.Forms.TextBox type1Byte;
+        private System.Windows.Forms.ListBox type1Floats;
+        private System.Windows.Forms.ListBox type1Bytes;
+        private System.Windows.Forms.Label label46;
+        private System.Windows.Forms.Label label13;
     }
 }

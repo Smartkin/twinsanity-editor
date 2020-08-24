@@ -140,8 +140,10 @@ namespace Twinsanity
                 }
                 public SupportType1(BinaryReader reader)
                 {
-                    unkByte1 = reader.ReadByte();
-                    unkByte2 = reader.ReadByte();
+                    bytes = new List<Byte>();
+                    floats = new List<Single>();
+                    _unkByte1 = reader.ReadByte();
+                    _unkByte2 = reader.ReadByte();
                     unkUShort1 = reader.ReadUInt16();
                     unkInt1 = reader.ReadInt32();
                     Int32 byteArrayLen = unkByte1 + unkByte2 * 4;
@@ -173,38 +175,40 @@ namespace Twinsanity
                 {
                     return 8 + floats.Count * 4 + bytes.Count;
                 }
+                private byte _unkByte1;
                 public byte unkByte1 { 
                     get 
                     {
-                        return unkByte1;
+                        return _unkByte1;
                     }
                     set
                     {
-                        unkByte1 = value;
-                        while (unkByte1 > bytes.Count)
+                        _unkByte1 = value;
+                        while (_unkByte1 > bytes.Count)
                         {
                             bytes.Add(0);
                         }
-                        while (unkByte1 < bytes.Count)
+                        while (_unkByte1 < bytes.Count)
                         {
                             bytes.RemoveAt(bytes.Count - 1);
                         }
                     }
                 }
+                private byte _unkByte2;
                 public byte unkByte2
                 {
                     get
                     {
-                        return unkByte2;
+                        return _unkByte2;
                     }
                     set
                     {
-                        unkByte2 = value;
-                        while (unkByte2 > floats.Count)
+                        _unkByte2 = value;
+                        while (_unkByte2 > floats.Count)
                         {
                             floats.Add(0);
                         }
-                        while (unkByte2 < floats.Count)
+                        while (_unkByte2 < floats.Count)
                         {
                             floats.RemoveAt(floats.Count - 1);
                         }
