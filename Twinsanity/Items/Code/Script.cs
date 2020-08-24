@@ -135,7 +135,8 @@ namespace Twinsanity
                     unkByte2 = 0;
                     unkUShort1 = 0;
                     unkInt1 = 0;
-                    byteArray = new byte[0];
+                    bytes = new List<Byte>();
+                    floats = new List<Single>();
                 }
                 public SupportType1(BinaryReader reader)
                 {
@@ -144,7 +145,14 @@ namespace Twinsanity
                     unkUShort1 = reader.ReadUInt16();
                     unkInt1 = reader.ReadInt32();
                     Int32 byteArrayLen = unkByte1 + unkByte2 * 4;
-                    byteArray = reader.ReadBytes(unkByte1 + unkByte2 * 4);
+                    for (int i = 0; i < unkByte2; ++i)
+                    {
+                        floats.Add(reader.ReadSingle());
+                    }
+                    for (int i = 0; i < unkByte1; ++i)
+                    {
+                        bytes.Add(reader.ReadByte());
+                    }
                 }
                 public void Write(BinaryWriter writer)
                 {
@@ -152,20 +160,63 @@ namespace Twinsanity
                     writer.Write(unkByte2);
                     writer.Write(unkUShort1);
                     writer.Write(unkInt1);
-                    writer.Write(byteArray);
+                    foreach (Single f in floats)
+                    {
+                        writer.Write(f);
+                    }
+                    foreach (Byte b in bytes)
+                    {
+                        writer.Write(b);
+                    }
                 }
                 public Int32 GetLength()
                 {
-                    return 8 + byteArray.Length;
+                    return 8 + floats.Count * 4 + bytes.Count;
                 }
-                public byte unkByte1 { get; set; }
-                public byte unkByte2 { get; set; }
+                public byte unkByte1 { 
+                    get 
+                    {
+                        return unkByte1;
+                    }
+                    set
+                    {
+                        unkByte1 = value;
+                        while (unkByte1 > bytes.Count)
+                        {
+                            bytes.Add(0);
+                        }
+                        while (unkByte1 < bytes.Count)
+                        {
+                            bytes.RemoveAt(bytes.Count - 1);
+                        }
+                    }
+                }
+                public byte unkByte2
+                {
+                    get
+                    {
+                        return unkByte2;
+                    }
+                    set
+                    {
+                        unkByte2 = value;
+                        while (unkByte2 > floats.Count)
+                        {
+                            floats.Add(0);
+                        }
+                        while (unkByte2 < floats.Count)
+                        {
+                            floats.RemoveAt(floats.Count - 1);
+                        }
+                    }
+                }
                 public UInt16 unkUShort1 { get; set; }
                 public Int32 unkInt1 { get; set; }
-                public Byte[] byteArray { get; set; }
+                public List<Byte> bytes { get; set; }
+                public List<Single> floats { get; set; }
                 public bool isValidArraySize()
                 {
-                    return byteArray.Length == unkByte1 + 4 * unkByte2;
+                    return true;
                 }
             }
             public class ScriptStateBody
