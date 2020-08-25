@@ -639,7 +639,7 @@ namespace Twinsanity
                 }
                 static Int32 GetCommandSize(Int32 index)
                 {
-                    if (index < 0 || index > CommandSizeMapper.Length)
+                    if (index < 0 || index >= CommandSizeMapper.Length)
                     {
                         return 0;
                     }
