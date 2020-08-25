@@ -135,16 +135,26 @@ namespace Twinsanity
                     unkByte2 = 0;
                     unkUShort1 = 0;
                     unkInt1 = 0;
-                    byteArray = new byte[0];
+                    bytes = new List<Byte>();
+                    floats = new List<Single>();
                 }
                 public SupportType1(BinaryReader reader)
                 {
-                    unkByte1 = reader.ReadByte();
-                    unkByte2 = reader.ReadByte();
+                    bytes = new List<Byte>();
+                    floats = new List<Single>();
+                    _unkByte1 = reader.ReadByte();
+                    _unkByte2 = reader.ReadByte();
                     unkUShort1 = reader.ReadUInt16();
                     unkInt1 = reader.ReadInt32();
                     Int32 byteArrayLen = unkByte1 + unkByte2 * 4;
-                    byteArray = reader.ReadBytes(unkByte1 + unkByte2 * 4);
+                    for (int i = 0; i < unkByte2; ++i)
+                    {
+                        floats.Add(reader.ReadSingle());
+                    }
+                    for (int i = 0; i < unkByte1; ++i)
+                    {
+                        bytes.Add(reader.ReadByte());
+                    }
                 }
                 public void Write(BinaryWriter writer)
                 {
@@ -152,20 +162,65 @@ namespace Twinsanity
                     writer.Write(unkByte2);
                     writer.Write(unkUShort1);
                     writer.Write(unkInt1);
-                    writer.Write(byteArray);
+                    foreach (Single f in floats)
+                    {
+                        writer.Write(f);
+                    }
+                    foreach (Byte b in bytes)
+                    {
+                        writer.Write(b);
+                    }
                 }
                 public Int32 GetLength()
                 {
-                    return 8 + byteArray.Length;
+                    return 8 + floats.Count * 4 + bytes.Count;
                 }
-                public byte unkByte1 { get; set; }
-                public byte unkByte2 { get; set; }
+                private byte _unkByte1;
+                public byte unkByte1 { 
+                    get 
+                    {
+                        return _unkByte1;
+                    }
+                    set
+                    {
+                        _unkByte1 = value;
+                        while (_unkByte1 > bytes.Count)
+                        {
+                            bytes.Add(0);
+                        }
+                        while (_unkByte1 < bytes.Count)
+                        {
+                            bytes.RemoveAt(bytes.Count - 1);
+                        }
+                    }
+                }
+                private byte _unkByte2;
+                public byte unkByte2
+                {
+                    get
+                    {
+                        return _unkByte2;
+                    }
+                    set
+                    {
+                        _unkByte2 = value;
+                        while (_unkByte2 > floats.Count)
+                        {
+                            floats.Add(0);
+                        }
+                        while (_unkByte2 < floats.Count)
+                        {
+                            floats.RemoveAt(floats.Count - 1);
+                        }
+                    }
+                }
                 public UInt16 unkUShort1 { get; set; }
                 public Int32 unkInt1 { get; set; }
-                public Byte[] byteArray { get; set; }
+                public List<Byte> bytes { get; set; }
+                public List<Single> floats { get; set; }
                 public bool isValidArraySize()
                 {
-                    return byteArray.Length == unkByte1 + 4 * unkByte2;
+                    return true;
                 }
             }
             public class ScriptStateBody
@@ -504,18 +559,7 @@ namespace Twinsanity
                     return 4 + ((arguments != null) ? arguments.Count * 4 : 0) + (((internalIndex & 0x1000000) != 0) ? nextCommand.GetLength() : 0);
                 }
                 public UInt32 unkUInt { get; set; }
-                public Int32 vTableAddress
-                {
-                    get
-                    {
-                        return vTableAddress;
-                    }
-                    set
-                    {
-                        vTableAddress = value;
-                        UpdateArguments();
-                    }
-                }
+                public Int32 vTableAddress;
                 private void UpdateArguments()
                 {
                     int sz = GetExpectedSize() / 4;
@@ -542,6 +586,7 @@ namespace Twinsanity
                     set
                     {
                         internalIndex = (Int32)(internalIndex & 0xffff0000) | (value & 0xffff);
+                        UpdateArguments();
                     }
                 }
                 public UInt16 UnkShort

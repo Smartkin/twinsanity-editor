@@ -7,6 +7,10 @@ namespace Twinsanity
     /// </summary>
     public class TwinsItem
     {
+        public TwinsItem()
+        {
+            Data = new byte[0];
+        }
         protected virtual int GetSize()
         {
             if (Data == null) return -1;

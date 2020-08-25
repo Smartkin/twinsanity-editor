@@ -17,7 +17,7 @@ namespace TwinsaityEditor.Utils
                 {
                     obj_name = obj_name.Split('|')[obj_name.Split('|').Length - 1];
                 }
-                if (obj_name != string.Empty && obj_name.Substring(0, 4) == "act_")
+                if (obj_name != string.Empty && obj_name.StartsWith("act_"))
                 {
                     obj_name = obj_name.Substring(4);
                 }
