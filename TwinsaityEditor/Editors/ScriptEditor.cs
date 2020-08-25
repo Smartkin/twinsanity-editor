@@ -28,6 +28,7 @@ namespace TwinsaityEditor
         private TwinsFile FileData { get => File.Data; }
         private Func<Script, bool> scriptPredicate;
         private List<int> scriptIndices = new List<int>();
+        private bool ignoreChange = false;
         public ScriptEditor(SectionController c)
         {
             File = c.MainFile;
@@ -99,6 +100,10 @@ namespace TwinsaityEditor
         private void AddLinked(TreeNode parent, Script.MainScript.ScriptState ptr)
         {
             string Name = $"State {parent.Nodes.Count}";
+            if (ptr.type1 != null)
+            {
+                Name += $" + Header";
+            }
             if (ptr.scriptIndexOrSlot != -1)
             {
                 if (ptr.IsSlot)
@@ -121,7 +126,7 @@ namespace TwinsaityEditor
             node.Tag = ptr;
             if (null != ptr.type1)
             {
-                AddType1(node, ptr.type1);
+                //AddType1(node, ptr.type1);
             }
             Script.MainScript.ScriptStateBody ptrType2 = ptr.scriptStateBody;
             while (ptrType2 != null)
@@ -165,14 +170,14 @@ namespace TwinsaityEditor
             }
 
             parent.Text = string.Format("{1} - {0}", parent.Text, Name);
-            
+            /*
             TreeNode node = parent.Nodes.Add(Name);
             node.Tag = ptr;
             if (!IsDefined)
             {
                 node.ForeColor = Color.FromKnownColor(KnownColor.ControlDarkDark);
             }
-            
+            */
             
         }
         private void AddType4(TreeNode parent, Script.MainScript.ScriptCommand ptr)
@@ -237,15 +242,23 @@ namespace TwinsaityEditor
                     panelType2.Visible = true;
                     selectedType2 = (Script.MainScript.ScriptStateBody)tag;
                     UpdateType2Panel();
-                    /*
+
+                    ignoreChange = true;
                     if (selectedType2.condition != null)
                     {
-                        panelType2.Visible = false;
+                        //panelType2.Visible = false;
+                        checkBox_type2_cond_toggle.Checked = true;
                         panelType3.Visible = true;
                         selectedType3 = selectedType2.condition;
                         UpdateType3Panel();
                     }
-                    */
+                    else
+                    {
+                        checkBox_type2_cond_toggle.Checked = false;
+                        panelType3.Visible = false;
+                    }
+                    ignoreChange = false;
+                    
                 }
                 if (tag is Script.MainScript.ScriptCondition)
                 {
@@ -264,6 +277,21 @@ namespace TwinsaityEditor
                     panelLinked.Visible = true;
                     selectedLinked = (Script.MainScript.ScriptState)tag;
                     UpdateLinkedPanel();
+
+                    ignoreChange = true;
+                    if (selectedLinked.type1 != null)
+                    {
+                        checkBox_state_header_toggle.Checked = true;
+                        panelType1.Visible = true;
+                        selectedType1 = selectedLinked.type1;
+                        UpdateType1Panel();
+                    }
+                    else
+                    {
+                        checkBox_state_header_toggle.Checked = false;
+                        panelType1.Visible = false;
+                    }
+                    ignoreChange = false;
                 }
             }
         }
@@ -1498,22 +1526,46 @@ namespace TwinsaityEditor
 
         private void filterSelection_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch (filterSelection.SelectedIndex)
+            if (checkBox_showHeaderScripts.Checked)
             {
-                case 0:
-                    scriptPredicate = s =>
-                    {
-                        return s.Name.ToUpper().Contains(scriptNameFilter.Text.ToUpper());
-                    };
-                    break;
-                case 1:
-                    scriptPredicate = s =>
-                    {
-                        return scriptNameFilter.TextLength == 0 ||
-                                (scriptNameFilter.Text.All(c => { return char.IsDigit(c); }) &&
-                                s.ID == int.Parse(scriptNameFilter.Text));
-                    };
-                    break;
+                switch (filterSelection.SelectedIndex)
+                {
+                    case 0:
+                        scriptPredicate = s =>
+                        {
+                            return s.Name.ToUpper().Contains(scriptNameFilter.Text.ToUpper());
+                        };
+                        break;
+                    case 1:
+                        scriptPredicate = s =>
+                        {
+                            return scriptNameFilter.TextLength == 0 ||
+                                    (scriptNameFilter.Text.All(c => { return char.IsDigit(c); }) &&
+                                    s.ID == int.Parse(scriptNameFilter.Text));
+                        };
+                        break;
+                }
+            }
+            else
+            {
+                switch (filterSelection.SelectedIndex)
+                {
+                    case 0:
+                        scriptPredicate = s =>
+                        {
+                            return s.Name.ToUpper().Contains(scriptNameFilter.Text.ToUpper()) && s.Main != null;
+                        };
+                        break;
+                    case 1:
+                        scriptPredicate = s =>
+                        {
+                            return scriptNameFilter.TextLength == 0 ||
+                                    (scriptNameFilter.Text.All(c => { return char.IsDigit(c); }) &&
+                                    s.ID == int.Parse(scriptNameFilter.Text)) &&
+                                    s.Main != null;
+                        };
+                        break;
+                }
             }
         }
 
@@ -1621,6 +1673,50 @@ namespace TwinsaityEditor
             }
         }
 
+        private void checkBox_type2_cond_toggle_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ignoreChange)
+            {
+                ignoreChange = false;
+                return;
+            }
+            if (selectedType2.condition != null)
+            {
+                selectedType2.DeleteCondition();
+                selectedType3 = null;
+                panelType3.Visible = false;
+            }
+            else
+            {
+                selectedType2.CreateCondition();
+                selectedType3 = selectedType2.condition;
+                UpdateType3Panel();
+                panelType3.Visible = true;
+            }
+            UpdateType2Panel();
+        }
 
+        private void checkBox_state_header_toggle_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ignoreChange)
+            {
+                ignoreChange = false;
+                return;
+            }
+            if (selectedLinked.type1 != null)
+            {
+                selectedLinked.DeleteType1();
+                selectedType1 = null;
+                panelType1.Visible = false;
+            }
+            else
+            {
+                selectedLinked.CreateType1();
+                selectedType1 = selectedLinked.type1;
+                UpdateType1Panel();
+                panelType1.Visible = true;
+            }
+            UpdateLinkedPanel();
+        }
     }
 }

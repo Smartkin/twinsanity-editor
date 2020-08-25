@@ -131,12 +131,12 @@ namespace Twinsanity
             {
                 public SupportType1()
                 {
+                    bytes = new List<Byte>();
+                    floats = new List<Single>();
                     unkByte1 = 0;
                     unkByte2 = 0;
                     unkUShort1 = 0;
                     unkInt1 = 0;
-                    bytes = new List<Byte>();
-                    floats = new List<Single>();
                 }
                 public SupportType1(BinaryReader reader)
                 {
