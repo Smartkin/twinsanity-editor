@@ -293,6 +293,7 @@ namespace TwinsaityEditor
                     }
                     ignoreChange = false;
                 }
+                UpdateNodeName();
             }
         }
 
@@ -366,6 +367,7 @@ namespace TwinsaityEditor
             mainLinkedCnt.Text = selectedMainScript.StatesAmount.ToString();
             mainUnk.Text = selectedMainScript.unkInt2.ToString();
             mainLinkedPos.Text = "0";
+            UpdateNodeName();
         }
         private void mainName_TextChanged(object sender, EventArgs e)
         {
@@ -386,6 +388,7 @@ namespace TwinsaityEditor
             {
                 ((TextBox)sender).BackColor = Color.Red;
             }
+            UpdateNodeName();
         }
 
         private void mainLinkedPos_TextChanged(object sender, EventArgs e)
@@ -443,6 +446,7 @@ namespace TwinsaityEditor
             UpdateType1Bytes();
             UpdateType1Floats();
             blockType1IndexChanged = false;
+            UpdateNodeName();
         }
         private void UpdateType1Bytes()
         {
@@ -590,6 +594,7 @@ namespace TwinsaityEditor
             type2Bitfield.Text = Convert.ToString(selectedType2.bitfield, 16);
             type2Slot.Text = selectedType2.scriptStateListIndex.ToString();
             type2TransitionEnabled.Checked = (selectedType2.bitfield & 0x400) != 0;
+            UpdateNodeName();
         }
         private void type2Bitfield_TextChanged(object sender, EventArgs e)
         {
@@ -627,6 +632,7 @@ namespace TwinsaityEditor
                 ((TextBox)sender).BackColor = Color.Red;
                 return;
             }
+            UpdateNodeName();
         }
 
         private void type2CreateType3_Click(object sender, EventArgs e)
@@ -679,6 +685,7 @@ namespace TwinsaityEditor
                 selectedType2.bitfield &= ~0x400;
             }
             type2Bitfield.Text = Convert.ToString(selectedType2.bitfield, 16);
+            UpdateNodeName();
         }
 
         private void type2SelectedType4Pos_TextChanged(object sender, EventArgs e)
@@ -740,6 +747,7 @@ namespace TwinsaityEditor
             type3X.Text = selectedType3.X.ToString(CultureInfo.InvariantCulture);
             type3Y.Text = selectedType3.Y.ToString(CultureInfo.InvariantCulture);
             type3Z.Text = selectedType3.Z.ToString(CultureInfo.InvariantCulture);
+            UpdateNodeName();
         }
         private void type3VTable_TextChanged(object sender, EventArgs e)
         {
@@ -754,6 +762,7 @@ namespace TwinsaityEditor
                 ((TextBox)sender).BackColor = Color.Red;
                 return;
             }
+            UpdateNodeName();
         }
 
         private void type3UnkShort_TextChanged(object sender, EventArgs e)
@@ -833,7 +842,7 @@ namespace TwinsaityEditor
                 ignoreUpdate = 0;
                 type4Arguments.SelectedIndex = 0;
             }
-            
+            UpdateNodeName();
         }
         private void type1Byte_TextChanged(object sender, EventArgs e)
         {
@@ -903,6 +912,7 @@ namespace TwinsaityEditor
                 type4Warning.Visible = true;
 
             }
+            UpdateNodeName();
         }
 
         private void type4BitField_TextChanged(object sender, EventArgs e)
@@ -1303,6 +1313,7 @@ namespace TwinsaityEditor
             linkedBitField.Text = selectedLinked.bitfield.ToString("X4");
             linkedSlotIndex.Text = selectedLinked.scriptIndexOrSlot.ToString();
             checkBox_localScriptSlot.Checked = selectedLinked.IsSlot;
+            UpdateNodeName();
         }
         private void linkedBitField_TextChanged(object sender, EventArgs e)
         {
@@ -1340,6 +1351,7 @@ namespace TwinsaityEditor
                 ((TextBox)sender).BackColor = Color.Red;
                 return;
             }
+            UpdateNodeName();
         }
 
         private void linkedCreateType1_Click(object sender, EventArgs e)
@@ -1717,6 +1729,103 @@ namespace TwinsaityEditor
                 panelType1.Visible = true;
             }
             UpdateLinkedPanel();
+        }
+
+        void UpdateNodeName()
+        {
+            if (null != scriptTree.SelectedNode)
+            {
+                Object tag = scriptTree.SelectedNode.Tag;
+                TreeNode node = scriptTree.SelectedNode;
+                if (tag is Script.MainScript)
+                {
+                    scriptTree.SelectedNode.Text = "Main Script - State: " + script.Main.unkInt2;
+                }
+                if (tag is Script.MainScript.ScriptStateBody)
+                {
+                    string Name = $"To State: {selectedType2.scriptStateListIndex}";
+                    
+                    if (null != selectedType2.condition)
+                    {
+                        if (Enum.IsDefined(typeof(DefaultEnums.ConditionID), selectedType2.condition.VTableIndex))
+                        {
+                            Name = string.Format("{1} - {0}", Name,((DefaultEnums.ConditionID)selectedType2.condition.VTableIndex).ToString());
+                        }
+                        else
+                        {
+                            Name = string.Format("{1} - {0}", Name, $"Condition {selectedType2.condition.VTableIndex}");
+                        }
+                    }
+                    if (!selectedType2.IsEnabled)
+                    {
+                        Name = string.Format("{1} {0}", Name, "(OFF)");
+                    }
+
+                    node.Text = Name;
+                }
+                if (tag is Script.MainScript.ScriptCommand)
+                {
+                    string Name = $"Command {selectedType4.VTableIndex}";
+                    bool IsDefined = false;
+                    if (Enum.IsDefined(typeof(DefaultEnums.CommandID), selectedType4.VTableIndex))
+                    {
+                        Name = ((DefaultEnums.CommandID)selectedType4.VTableIndex).ToString();
+                        IsDefined = true;
+                    }
+
+                    if (!selectedType4.isValidBits())
+                    {
+                        node.ForeColor = Color.FromKnownColor(KnownColor.Red);
+                    }
+                    else if (!IsDefined)
+                    {
+                        node.ForeColor = Color.FromKnownColor(KnownColor.ControlDarkDark);
+                    }
+                    else
+                    {
+                        node.ForeColor = Color.FromKnownColor(KnownColor.ControlText);
+                    }
+                    node.Text = Name;
+                }
+                if (tag is Script.MainScript.ScriptState)
+                {
+                    TreeNode parentNode = node.Parent;
+                    int index = 0;
+                    for (int n = 0; n < parentNode.Nodes.Count; n++)
+                    {
+                        if (parentNode.Nodes[n].Text == node.Text)
+                        {
+                            index = n;
+                        }
+                    }
+
+                    string Name = $"State {index}";
+                    if (selectedLinked.type1 != null)
+                    {
+                        Name += $" + Header";
+                    }
+                    if (selectedLinked.scriptIndexOrSlot != -1)
+                    {
+                        if (selectedLinked.IsSlot)
+                        {
+                            Name += $" - Local: Script #{selectedLinked.scriptIndexOrSlot}";
+                        }
+                        else
+                        {
+                            if (Enum.IsDefined(typeof(DefaultEnums.ScriptID), (ushort)selectedLinked.scriptIndexOrSlot))
+                            {
+                                Name += $" - ID: {selectedLinked.scriptIndexOrSlot} {(DefaultEnums.ScriptID)(ushort)selectedLinked.scriptIndexOrSlot}";
+                            }
+                            else
+                            {
+                                Name += $" - Script {selectedLinked.scriptIndexOrSlot}";
+                            }
+                        }
+                    }
+
+                    node.Text = Name;
+                }
+            }
         }
     }
 }
