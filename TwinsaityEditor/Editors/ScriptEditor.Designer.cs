@@ -108,6 +108,7 @@
             this.label21 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
             this.panelLinked = new System.Windows.Forms.Panel();
+            this.checkBox_state_header_toggle = new System.Windows.Forms.CheckBox();
             this.checkBox_localScriptSlot = new System.Windows.Forms.CheckBox();
             this.label30 = new System.Windows.Forms.Label();
             this.linkedType2Pos = new System.Windows.Forms.TextBox();
@@ -132,6 +133,7 @@
             this.label18 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.panelType2 = new System.Windows.Forms.Panel();
+            this.checkBox_type2_cond_toggle = new System.Windows.Forms.CheckBox();
             this.type2TransitionEnabled = new System.Windows.Forms.CheckBox();
             this.label27 = new System.Windows.Forms.Label();
             this.type2BitfieldWarning = new System.Windows.Forms.Label();
@@ -158,8 +160,6 @@
             this.deleteScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.checkBox_type2_cond_toggle = new System.Windows.Forms.CheckBox();
-            this.checkBox_state_header_toggle = new System.Windows.Forms.CheckBox();
             this.panelType1.SuspendLayout();
             this.panelMain.SuspendLayout();
             this.panelHeader.SuspendLayout();
@@ -195,6 +195,7 @@
             // scriptTree
             // 
             this.scriptTree.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.scriptTree.Indent = 11;
             this.scriptTree.Location = new System.Drawing.Point(0, 0);
             this.scriptTree.Name = "scriptTree";
             this.scriptTree.Size = new System.Drawing.Size(254, 591);
@@ -963,6 +964,17 @@
             this.panelLinked.TabIndex = 0;
             this.panelLinked.Paint += new System.Windows.Forms.PaintEventHandler(this.panelLinked_Paint);
             // 
+            // checkBox_state_header_toggle
+            // 
+            this.checkBox_state_header_toggle.AutoSize = true;
+            this.checkBox_state_header_toggle.Location = new System.Drawing.Point(12, 205);
+            this.checkBox_state_header_toggle.Name = "checkBox_state_header_toggle";
+            this.checkBox_state_header_toggle.Size = new System.Drawing.Size(61, 17);
+            this.checkBox_state_header_toggle.TabIndex = 15;
+            this.checkBox_state_header_toggle.Text = "Header";
+            this.checkBox_state_header_toggle.UseVisualStyleBackColor = true;
+            this.checkBox_state_header_toggle.CheckedChanged += new System.EventHandler(this.checkBox_state_header_toggle_CheckedChanged);
+            // 
             // checkBox_localScriptSlot
             // 
             this.checkBox_localScriptSlot.AutoSize = true;
@@ -1205,6 +1217,17 @@
             this.panelType2.Size = new System.Drawing.Size(302, 609);
             this.panelType2.TabIndex = 0;
             // 
+            // checkBox_type2_cond_toggle
+            // 
+            this.checkBox_type2_cond_toggle.AutoSize = true;
+            this.checkBox_type2_cond_toggle.Location = new System.Drawing.Point(16, 200);
+            this.checkBox_type2_cond_toggle.Name = "checkBox_type2_cond_toggle";
+            this.checkBox_type2_cond_toggle.Size = new System.Drawing.Size(70, 17);
+            this.checkBox_type2_cond_toggle.TabIndex = 13;
+            this.checkBox_type2_cond_toggle.Text = "Condition";
+            this.checkBox_type2_cond_toggle.UseVisualStyleBackColor = true;
+            this.checkBox_type2_cond_toggle.CheckedChanged += new System.EventHandler(this.checkBox_type2_cond_toggle_CheckedChanged);
+            // 
             // type2TransitionEnabled
             // 
             this.type2TransitionEnabled.AutoSize = true;
@@ -1351,7 +1374,7 @@
             // scriptNameFilter
             // 
             this.scriptNameFilter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.scriptNameFilter.Location = new System.Drawing.Point(97, 3);
+            this.scriptNameFilter.Location = new System.Drawing.Point(96, 3);
             this.scriptNameFilter.Name = "scriptNameFilter";
             this.scriptNameFilter.Size = new System.Drawing.Size(294, 20);
             this.scriptNameFilter.TabIndex = 3;
@@ -1389,7 +1412,7 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 38.88889F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 61.11111F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 300F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 184F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 185F));
             this.tableLayoutPanel2.Controls.Add(this.label32, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.scriptNameFilter, 2, 0);
             this.tableLayoutPanel2.Controls.Add(this.filterSelection, 1, 0);
@@ -1411,7 +1434,7 @@
             "ID"});
             this.filterSelection.Location = new System.Drawing.Point(39, 3);
             this.filterSelection.Name = "filterSelection";
-            this.filterSelection.Size = new System.Drawing.Size(52, 21);
+            this.filterSelection.Size = new System.Drawing.Size(51, 21);
             this.filterSelection.TabIndex = 5;
             this.filterSelection.SelectedIndexChanged += new System.EventHandler(this.filterSelection_SelectedIndexChanged);
             // 
@@ -1419,9 +1442,9 @@
             // 
             this.checkBox_showHeaderScripts.AutoSize = true;
             this.checkBox_showHeaderScripts.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.checkBox_showHeaderScripts.Location = new System.Drawing.Point(397, 3);
+            this.checkBox_showHeaderScripts.Location = new System.Drawing.Point(396, 3);
             this.checkBox_showHeaderScripts.Name = "checkBox_showHeaderScripts";
-            this.checkBox_showHeaderScripts.Size = new System.Drawing.Size(179, 19);
+            this.checkBox_showHeaderScripts.Size = new System.Drawing.Size(180, 19);
             this.checkBox_showHeaderScripts.TabIndex = 6;
             this.checkBox_showHeaderScripts.Text = "Show Header Scripts";
             this.checkBox_showHeaderScripts.UseVisualStyleBackColor = true;
@@ -1494,28 +1517,6 @@
             this.splitContainer2.Size = new System.Drawing.Size(897, 628);
             this.splitContainer2.SplitterDistance = 585;
             this.splitContainer2.TabIndex = 6;
-            // 
-            // checkBox_type2_cond_toggle
-            // 
-            this.checkBox_type2_cond_toggle.AutoSize = true;
-            this.checkBox_type2_cond_toggle.Location = new System.Drawing.Point(16, 200);
-            this.checkBox_type2_cond_toggle.Name = "checkBox_type2_cond_toggle";
-            this.checkBox_type2_cond_toggle.Size = new System.Drawing.Size(70, 17);
-            this.checkBox_type2_cond_toggle.TabIndex = 13;
-            this.checkBox_type2_cond_toggle.Text = "Condition";
-            this.checkBox_type2_cond_toggle.UseVisualStyleBackColor = true;
-            this.checkBox_type2_cond_toggle.CheckedChanged += new System.EventHandler(this.checkBox_type2_cond_toggle_CheckedChanged);
-            // 
-            // checkBox_state_header_toggle
-            // 
-            this.checkBox_state_header_toggle.AutoSize = true;
-            this.checkBox_state_header_toggle.Location = new System.Drawing.Point(12, 205);
-            this.checkBox_state_header_toggle.Name = "checkBox_state_header_toggle";
-            this.checkBox_state_header_toggle.Size = new System.Drawing.Size(61, 17);
-            this.checkBox_state_header_toggle.TabIndex = 15;
-            this.checkBox_state_header_toggle.Text = "Header";
-            this.checkBox_state_header_toggle.UseVisualStyleBackColor = true;
-            this.checkBox_state_header_toggle.CheckedChanged += new System.EventHandler(this.checkBox_state_header_toggle_CheckedChanged);
             // 
             // ScriptEditor
             // 
