@@ -67,7 +67,14 @@ namespace TwinsaityEditor
         }
         private string GenTextForList(Script script)
         {
-            return $"ID {script.ID} {(script.Name == string.Empty ? string.Empty : $" - {script.Name}")}";
+            if (script.script != null && script.script.Length > 0) // warn if there are leftovers
+            {
+                return $"(!)ID {script.ID} {(script.Name == string.Empty ? string.Empty : $" - {script.Name}")}";
+            }
+            else
+            {
+                return $"ID {script.ID} {(script.Name == string.Empty ? string.Empty : $" - {script.Name}")}";
+            }
         }
         private void BuildTree()
         {
