@@ -32,5 +32,6 @@ namespace Twinsanity
         public uint ID { get; set; }
         public int Size { get => GetSize(); }
         public TwinsSection Parent { get; set; }
+        public SectionType ParentType { get; set; }
     }
 }

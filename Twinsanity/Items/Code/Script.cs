@@ -65,21 +65,22 @@ namespace Twinsanity
             {
 
             }
-            public MainScript(BinaryReader reader)
+            public MainScript(BinaryReader reader, int ver)
             {
+                scriptGameVersion = ver;
                 int len = reader.ReadInt32();
                 name = new string(reader.ReadChars(len));
                 StatesAmount = reader.ReadInt32();
                 unkInt2 = reader.ReadInt32();
                 if (StatesAmount > 0)
                 {
-                    scriptState1 = new ScriptState(reader);
+                    scriptState1 = new ScriptState(reader, ver);
                     ScriptState ptr = scriptState1;
                     while (null != ptr)
                     {
                         if ((ptr.bitfield & 0x1F) != 0)
                         {
-                            ptr.scriptStateBody = new ScriptStateBody(reader);
+                            ptr.scriptStateBody = new ScriptStateBody(reader, ver);
                         }
                         ptr = ptr.nextState;
                     }
@@ -126,6 +127,7 @@ namespace Twinsanity
             public Int32 unkInt2 { get; set; }
             public ScriptState scriptState1 { get; set; }
             public ScriptState scriptState2 { get; set; }
+            public int scriptGameVersion { get; set; }
 
             public class SupportType1
             {
@@ -225,16 +227,18 @@ namespace Twinsanity
             }
             public class ScriptStateBody
             {
-                public ScriptStateBody()
+                public ScriptStateBody(int ver)
                 {
+                    scriptGameVersion = ver;
                     bitfield = 0;
                     scriptStateListIndex = 0;
                     condition = null;
                     command = null;
                     nextScriptStateBody = null;
                 }
-                public ScriptStateBody(BinaryReader reader)
+                public ScriptStateBody(BinaryReader reader, int ver)
                 {
+                    scriptGameVersion = ver;
                     bitfield = reader.ReadInt32();
                     if ((bitfield & 0x400) != 0)
                     {
@@ -246,11 +250,11 @@ namespace Twinsanity
                     }
                     if ((bitfield & 0xFF) != 0)
                     {
-                        command = new ScriptCommand(reader);
+                        command = new ScriptCommand(reader, scriptGameVersion);
                     }
                     if ((bitfield & 0x800) != 0)
                     {
-                        nextScriptStateBody = new ScriptStateBody(reader);
+                        nextScriptStateBody = new ScriptStateBody(reader, ver);
                     }
                 }
                 public void Write(BinaryWriter writer)
@@ -285,6 +289,7 @@ namespace Twinsanity
                 public ScriptCondition condition { get; set; }
                 public ScriptCommand command { get; set; }
                 public ScriptStateBody nextScriptStateBody { get; set; }
+                public int scriptGameVersion { get; set; }
                 public bool isBitFieldValid()
                 {
                     if (((bitfield & 0x200) == 0) && (condition != null))
@@ -377,7 +382,7 @@ namespace Twinsanity
                     }
                     if (commandCount == 0)
                     {
-                        command = new ScriptCommand();
+                        command = new ScriptCommand(scriptGameVersion);
                     }
                     else if (position == commandCount)
                     {
@@ -387,14 +392,14 @@ namespace Twinsanity
                             ptr = ptr.nextCommand;
                         }
                         ptr.internalIndex = (Int16)(ptr.internalIndex | 0x1000000);
-                        ptr.nextCommand = new ScriptCommand();
+                        ptr.nextCommand = new ScriptCommand(scriptGameVersion);
                     }
                     else
                     {
                         int pos = 0;
                         ScriptCommand prevPtr = null;
                         ScriptCommand ptr = command;
-                        ScriptCommand newCommand = new ScriptCommand();
+                        ScriptCommand newCommand = new ScriptCommand(scriptGameVersion);
                         while (pos < position)
                         {
                             prevPtr = ptr;
@@ -509,16 +514,18 @@ namespace Twinsanity
             }
             public class ScriptCommand
             {
-                public ScriptCommand()
+                public ScriptCommand(int ver)
                 {
+                    scriptGameVersion = ver;
                     internalIndex = 0;
                     arguments = new List<uint>();
                 }
-                public ScriptCommand(BinaryReader reader)
+                public ScriptCommand(BinaryReader reader, int ver)
                 {
+                    scriptGameVersion = ver;
                     internalIndex = reader.ReadInt32();
                     arguments = new List<uint>();
-                    length = GetCommandSize(internalIndex & 0x0000FFFF);
+                    length = GetCommandSize(internalIndex & 0x0000FFFF, ver);
                     if (length - 0xC > 0x0)
                     {
                         int sz = (length - 0xC) / 4;
@@ -529,7 +536,7 @@ namespace Twinsanity
                     } 
                     if ((internalIndex & 0x1000000) != 0)
                     {
-                        nextCommand = new ScriptCommand(reader);
+                        nextCommand = new ScriptCommand(reader, scriptGameVersion);
                         int flag = (length != 0) ? 1 : 0;
                         unkUInt = (UInt32)(((UInt64)unkUInt & 0xFEFFFFFF) | (UInt64)flag << 0x18);
                     }
@@ -579,6 +586,7 @@ namespace Twinsanity
                 public Int32 length { get; set; }
                 public List<UInt32> arguments { get; set; }
                 public ScriptCommand nextCommand { get; set; }
+                public int scriptGameVersion { get; set; }
 
                 public UInt16 VTableIndex
                 {
@@ -614,11 +622,11 @@ namespace Twinsanity
                     {
                         return false;
                     }
-                    if (arguments == null && (GetCommandSize(internalIndex & 0xffff) > 0))
+                    if (arguments == null && (GetCommandSize(internalIndex & 0xffff, scriptGameVersion) > 0))
                     {
                         return false;
                     }
-                    if (arguments != null && (GetCommandSize(internalIndex & 0xffff) == 0))
+                    if (arguments != null && (GetCommandSize(internalIndex & 0xffff, scriptGameVersion) == 0))
                     {
                         return false;
                     }
@@ -630,7 +638,7 @@ namespace Twinsanity
                 }
                 public Int32 GetExpectedSize()
                 {
-                    Int32 sz = GetCommandSize(internalIndex & 0xffff);
+                    Int32 sz = GetCommandSize(internalIndex & 0xffff, scriptGameVersion);
                     if (sz - 0xC > 0)
                     {
                         return sz - 0xC;
@@ -640,13 +648,22 @@ namespace Twinsanity
                         return 0;
                     }
                 }
-                static Int32 GetCommandSize(Int32 index)
+                static Int32 GetCommandSize(Int32 index, int ver)
                 {
                     if (index < 0 || index >= CommandSizeMapper_PS2.Length)
                     {
                         return 0;
                     }
-                    return CommandSizeMapper_PS2[index];
+                    switch (ver)
+                    {
+                        default:
+                        case 0:
+                            return CommandSizeMapper_PS2[index];
+                        case 1:
+                            return CommandSizeMapper_Xbox[index];
+                        case 2:
+                            return CommandSizeMapper_Demo[index];
+                    }
                 }
                 static Int32[] CommandSizeMapper_PS2 = {
                         0x00, 0x80, 0x0C, 0x20, 0x10, 0x0C, 0x00, 0x0C, 0x30, 0x24, 0x30, 0x48, 0x94, 0x0C, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x00, 0x00, 0x00, 0x10, 0x10, 0x00, 0x00, 0x10, 0x10, 0x20, 0x00, 0x10,
@@ -752,8 +769,9 @@ namespace Twinsanity
             }
             public class ScriptState
             {
-                public ScriptState()
+                public ScriptState(int ver)
                 {
+                    scriptGameVersion = ver;
                     bitfield = 0;
                     scriptIndexOrSlot = -1;
                     type1 = null;
@@ -761,8 +779,9 @@ namespace Twinsanity
                     nextState = null;
                     scriptStateBodyCount = 0;
                 }
-                public ScriptState(BinaryReader reader)
+                public ScriptState(BinaryReader reader, int ver)
                 {
+                    scriptGameVersion = ver;
                     bitfield = reader.ReadInt16();
                     scriptIndexOrSlot = reader.ReadInt16();
                     if ((bitfield & 0x4000) != 0)
@@ -771,7 +790,7 @@ namespace Twinsanity
                     }
                     if ((bitfield & 0x8000) != 0)
                     {
-                        nextState = new ScriptState(reader);
+                        nextState = new ScriptState(reader, scriptGameVersion);
                     }
                 }
                 public void Write(BinaryWriter writer)
@@ -824,6 +843,7 @@ namespace Twinsanity
                 public SupportType1 type1 { get; set; }
                 public ScriptStateBody scriptStateBody { get; set; }
                 public ScriptState nextState { get; set; }
+                public int scriptGameVersion { get; set; }
                 public bool isValidBits()
                 {
                     if (((bitfield & 0x4000) != 0) && type1 == null)
@@ -887,7 +907,7 @@ namespace Twinsanity
                     }
                     if (scriptStateBodyCount == 0)
                     {
-                        scriptStateBody = new ScriptStateBody();
+                        scriptStateBody = new ScriptStateBody(scriptGameVersion);
                     }
                     else if (position == scriptStateBodyCount)
                     {
@@ -897,14 +917,14 @@ namespace Twinsanity
                             ptr = ptr.nextScriptStateBody;
                         }
                         ptr.bitfield = (Int16)(ptr.bitfield | 0x800);
-                        ptr.nextScriptStateBody = new ScriptStateBody();
+                        ptr.nextScriptStateBody = new ScriptStateBody(scriptGameVersion);
                     }
                     else
                     {
                         int pos = 0;
                         ScriptStateBody prevPtr = null;
                         ScriptStateBody ptr = scriptStateBody;
-                        ScriptStateBody newType2 = new ScriptStateBody();
+                        ScriptStateBody newType2 = new ScriptStateBody(scriptGameVersion);
                         while (pos < position)
                         {
                             prevPtr = ptr;
@@ -1000,7 +1020,7 @@ namespace Twinsanity
                 }
                 if (StatesAmount == 0)
                 {
-                    scriptState1 = new ScriptState();
+                    scriptState1 = new ScriptState(scriptGameVersion);
                 } 
                 else if (position == StatesAmount)
                 {
@@ -1010,14 +1030,14 @@ namespace Twinsanity
                         ptr = ptr.nextState;
                     }
                     ptr.bitfield = (Int16)(ptr.bitfield | 0x8000);
-                    ptr.nextState = new ScriptState();
+                    ptr.nextState = new ScriptState(scriptGameVersion);
                 }
                 else
                 {
                     int pos = 0;
                     ScriptState prevPtr = null;
                     ScriptState ptr = scriptState1;
-                    ScriptState newState = new ScriptState();
+                    ScriptState newState = new ScriptState(scriptGameVersion);
                     while (pos < position)
                     {
                         prevPtr = ptr;
@@ -1073,6 +1093,7 @@ namespace Twinsanity
         public MainScript Main { get; set; }
         public byte[] script;
         public byte[] data;
+        public int scriptGameVersion;
 
         public override void Save(BinaryWriter writer)
         {
@@ -1097,6 +1118,18 @@ namespace Twinsanity
         }
         public override void Load(BinaryReader reader, int size)
         {
+            if (ParentType == SectionType.ScriptX)
+            {
+                scriptGameVersion = 1;
+            }
+            else if (ParentType == SectionType.ScriptDemo)
+            {
+                scriptGameVersion = 2;
+            }
+            else
+            {
+                scriptGameVersion = 0;
+            }
             var sk = reader.BaseStream.Position;
             id = reader.ReadUInt16();
             mask = reader.ReadByte();
@@ -1104,7 +1137,7 @@ namespace Twinsanity
             var datapos = reader.BaseStream.Position;
             if (flag == 0)
             {
-                Main = new MainScript(reader);
+                Main = new MainScript(reader, scriptGameVersion);
             }
             else
             {
