@@ -462,7 +462,19 @@ namespace TwinsaityEditor
             int i = 0;
             foreach (Byte b in selectedType1.bytes)
             {
-                type1Bytes.Items.Add($"{i:000}: {b}");
+                if (b == 255)
+                {
+                    type1Bytes.Items.Add($"{i:000}: N/A");
+                }
+                else if (b > 127)
+                {
+                    type1Bytes.Items.Add($"{i:000}: Inst. Float #{b - 128}");
+                }
+                else
+                {
+                    type1Bytes.Items.Add($"{i:000}: {b}");
+                }
+                
                 ++i;
             }
             type1Bytes.EndUpdate();
@@ -863,7 +875,19 @@ namespace TwinsaityEditor
                     ((TextBox)sender).BackColor = Color.White;
                     int index = type1Bytes.SelectedIndex;
                     blockType1IndexChanged = true;
-                    type1Bytes.Items[index] = $"{index:000}: {selectedType1.bytes[index]}";
+                    if (val == 255)
+                    {
+                        type1Bytes.Items[index] = $"{index:000}: N/A";
+                    }
+                    else if (val > 127)
+                    {
+                        type1Bytes.Items[index] = $"{index:000}: Inst. Float #{selectedType1.bytes[index] - 128}";
+                    }
+                    else
+                    {
+                        type1Bytes.Items[index] = $"{index:000}: {selectedType1.bytes[index]}";
+                    }
+                    
                     type1Bytes.SelectedIndex = index;
                     blockType1IndexChanged = false;
                 }
