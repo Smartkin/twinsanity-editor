@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Windows.Forms;
 using TwinsaityEditor.Properties;
+using TwinsaityEditor.Workers;
 using Twinsanity;
 
 namespace TwinsaityEditor
 {
     public partial class MainForm : Form
     {
-        private Form mhForm, exeForm, bdForm;
+        private Form mhForm, exeForm, bdForm, imageMakerForm;
 
         private TreeNode nodeLastSelected;
 
@@ -304,6 +305,11 @@ namespace TwinsaityEditor
             Settings.Default.Save();
         }
 
+        private void imageMakerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenImageMaker();
+        }
+
         public void OpenBDTool()
         {
             if (bdForm == null)
@@ -319,6 +325,21 @@ namespace TwinsaityEditor
                 bdForm.Select();
             }
                 
+        }
+
+        public void OpenImageMaker()
+        {
+            if (imageMakerForm == null)
+            {
+                imageMakerForm = new ImageMaker();
+                imageMakerForm.FormClosed += delegate
+                {
+                    imageMakerForm = null;
+                };
+            } else
+            {
+                imageMakerForm.Select();
+            }
         }
 
         public void Pref_EnableAllNames_Click(object sender, EventArgs e)

@@ -46,6 +46,7 @@
     <Prefer32Bit>true</Prefer32Bit>
     <WarningLevel>4</WarningLevel>
     <DefineConstants>DEBUG</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -59,6 +60,7 @@
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
     <Prefer32Bit>true</Prefer32Bit>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <OptionExplicit>On</OptionExplicit>
@@ -239,6 +241,7 @@
     <Compile Include="Editors\PositionEditor.Designer.cs">
       <DependentUpon>PositionEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Externals\PS2ImageMaker\PS2ImageMaker.cs" />
     <Compile Include="FontWrapper\FontFormat.cs" />
     <Compile Include="FontWrapper\FontService.cs" />
     <Compile Include="MainForm.cs">
@@ -305,6 +308,12 @@
     <Compile Include="Workers\EXEPatcher.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Workers\ImageMaker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Workers\ImageMaker.Designer.cs">
+      <DependentUpon>ImageMaker.cs</DependentUpon>
+    </Compile>
     <Compile Include="Workers\MHViewer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -365,6 +374,9 @@
     <EmbeddedResource Include="Workers\GameExeTool.resx">
       <DependentUpon>EXEPatcher.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Workers\ImageMaker.resx">
+      <DependentUpon>ImageMaker.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Workers\MHViewer.resx">
       <DependentUpon>MHViewer.cs</DependentUpon>
     </EmbeddedResource>
@@ -403,7 +415,10 @@
       <Name>Twinsanity</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Externals\Libx64\PS2ImageMaker64.dll" />
+    <Content Include="Externals\Libx86\PS2ImageMaker.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -413,7 +428,7 @@
     <Error Condition="!Exists('packages\SharpFont.4.0.1\build\SharpFont.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\SharpFont.4.0.1\build\SharpFont.props'))" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>call "$(ProjectDir)CopyLibs.bat"</PostBuildEvent>
+    <PostBuildEvent>call "$(ProjectDir)CopyLibs.bat"  $(ProjectDir)\Externals\</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
