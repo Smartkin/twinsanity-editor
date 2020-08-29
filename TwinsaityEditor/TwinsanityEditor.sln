@@ -6,8 +6,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwinsanityEditor", "Twinsan
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Twinsanity", "..\Twinsanity\Twinsanity.csproj", "{B8D8E685-7E23-0A0B-00A3-F413B32DAD1C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PS2ImageMaker", "..\..\PS2ImageMaker\PS2ImageMaker\PS2ImageMaker.vcxproj", "{1E7A9D11-3983-4592-9BF7-4313C1FC894C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,16 +40,6 @@ Global
 		{B8D8E685-7E23-0A0B-00A3-F413B32DAD1C}.Release|x64.Build.0 = Release|Any CPU
 		{B8D8E685-7E23-0A0B-00A3-F413B32DAD1C}.Release|x86.ActiveCfg = Release|Any CPU
 		{B8D8E685-7E23-0A0B-00A3-F413B32DAD1C}.Release|x86.Build.0 = Release|Any CPU
-		{1E7A9D11-3983-4592-9BF7-4313C1FC894C}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{1E7A9D11-3983-4592-9BF7-4313C1FC894C}.Debug|x64.ActiveCfg = Debug|x64
-		{1E7A9D11-3983-4592-9BF7-4313C1FC894C}.Debug|x64.Build.0 = Debug|x64
-		{1E7A9D11-3983-4592-9BF7-4313C1FC894C}.Debug|x86.ActiveCfg = Debug|Win32
-		{1E7A9D11-3983-4592-9BF7-4313C1FC894C}.Debug|x86.Build.0 = Debug|Win32
-		{1E7A9D11-3983-4592-9BF7-4313C1FC894C}.Release|Any CPU.ActiveCfg = Release|Win32
-		{1E7A9D11-3983-4592-9BF7-4313C1FC894C}.Release|x64.ActiveCfg = Release|x64
-		{1E7A9D11-3983-4592-9BF7-4313C1FC894C}.Release|x64.Build.0 = Release|x64
-		{1E7A9D11-3983-4592-9BF7-4313C1FC894C}.Release|x86.ActiveCfg = Release|Win32
-		{1E7A9D11-3983-4592-9BF7-4313C1FC894C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
