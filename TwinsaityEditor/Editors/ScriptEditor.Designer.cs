@@ -31,6 +31,12 @@
             this.scriptListBox = new System.Windows.Forms.ListBox();
             this.scriptTree = new System.Windows.Forms.TreeView();
             this.panelType1 = new System.Windows.Forms.Panel();
+            this.label46 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.type1Float = new System.Windows.Forms.TextBox();
+            this.type1Byte = new System.Windows.Forms.TextBox();
+            this.type1Floats = new System.Windows.Forms.ListBox();
+            this.type1Bytes = new System.Windows.Forms.ListBox();
             this.label26 = new System.Windows.Forms.Label();
             this.type1Warning = new System.Windows.Forms.Label();
             this.type1UnkInt = new System.Windows.Forms.TextBox();
@@ -152,12 +158,6 @@
             this.deleteScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.type1Bytes = new System.Windows.Forms.ListBox();
-            this.type1Floats = new System.Windows.Forms.ListBox();
-            this.type1Byte = new System.Windows.Forms.TextBox();
-            this.type1Float = new System.Windows.Forms.TextBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.label46 = new System.Windows.Forms.Label();
             this.panelType1.SuspendLayout();
             this.panelMain.SuspendLayout();
             this.panelHeader.SuspendLayout();
@@ -222,6 +222,58 @@
             this.panelType1.Name = "panelType1";
             this.panelType1.Size = new System.Drawing.Size(302, 609);
             this.panelType1.TabIndex = 0;
+            // 
+            // label46
+            // 
+            this.label46.AutoSize = true;
+            this.label46.Location = new System.Drawing.Point(133, 140);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(38, 13);
+            this.label46.TabIndex = 17;
+            this.label46.Text = "Floats:";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(7, 140);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(36, 13);
+            this.label13.TabIndex = 16;
+            this.label13.Text = "Bytes:";
+            // 
+            // type1Float
+            // 
+            this.type1Float.Location = new System.Drawing.Point(129, 261);
+            this.type1Float.Name = "type1Float";
+            this.type1Float.Size = new System.Drawing.Size(120, 20);
+            this.type1Float.TabIndex = 15;
+            this.type1Float.TextChanged += new System.EventHandler(this.type1Float_TextChanged);
+            // 
+            // type1Byte
+            // 
+            this.type1Byte.Location = new System.Drawing.Point(3, 260);
+            this.type1Byte.Name = "type1Byte";
+            this.type1Byte.Size = new System.Drawing.Size(120, 20);
+            this.type1Byte.TabIndex = 14;
+            this.type1Byte.TextChanged += new System.EventHandler(this.type1Byte_TextChanged);
+            // 
+            // type1Floats
+            // 
+            this.type1Floats.FormattingEnabled = true;
+            this.type1Floats.Location = new System.Drawing.Point(129, 159);
+            this.type1Floats.Name = "type1Floats";
+            this.type1Floats.Size = new System.Drawing.Size(120, 95);
+            this.type1Floats.TabIndex = 13;
+            this.type1Floats.SelectedIndexChanged += new System.EventHandler(this.type1Floats_SelectedIndexChanged);
+            // 
+            // type1Bytes
+            // 
+            this.type1Bytes.FormattingEnabled = true;
+            this.type1Bytes.Location = new System.Drawing.Point(3, 159);
+            this.type1Bytes.Name = "type1Bytes";
+            this.type1Bytes.Size = new System.Drawing.Size(120, 95);
+            this.type1Bytes.TabIndex = 12;
+            this.type1Bytes.SelectedIndexChanged += new System.EventHandler(this.type1Bytes_SelectedIndexChanged);
             // 
             // label26
             // 
@@ -1287,7 +1339,7 @@
             // scriptNameFilter
             // 
             this.scriptNameFilter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.scriptNameFilter.Location = new System.Drawing.Point(100, 3);
+            this.scriptNameFilter.Location = new System.Drawing.Point(99, 3);
             this.scriptNameFilter.Name = "scriptNameFilter";
             this.scriptNameFilter.Size = new System.Drawing.Size(294, 20);
             this.scriptNameFilter.TabIndex = 3;
@@ -1299,7 +1351,7 @@
             this.label32.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label32.Location = new System.Drawing.Point(3, 0);
             this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(32, 25);
+            this.label32.Size = new System.Drawing.Size(31, 25);
             this.label32.TabIndex = 4;
             this.label32.Text = "Filter:";
             this.label32.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1325,7 +1377,7 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 38.88889F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 61.11111F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 300F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 181F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 182F));
             this.tableLayoutPanel2.Controls.Add(this.label32, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.scriptNameFilter, 2, 0);
             this.tableLayoutPanel2.Controls.Add(this.filterSelection, 1, 0);
@@ -1345,7 +1397,7 @@
             this.filterSelection.Items.AddRange(new object[] {
             "Name",
             "ID"});
-            this.filterSelection.Location = new System.Drawing.Point(41, 3);
+            this.filterSelection.Location = new System.Drawing.Point(40, 3);
             this.filterSelection.Name = "filterSelection";
             this.filterSelection.Size = new System.Drawing.Size(53, 21);
             this.filterSelection.TabIndex = 5;
@@ -1355,9 +1407,9 @@
             // 
             this.checkBox_showHeaderScripts.AutoSize = true;
             this.checkBox_showHeaderScripts.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.checkBox_showHeaderScripts.Location = new System.Drawing.Point(400, 3);
+            this.checkBox_showHeaderScripts.Location = new System.Drawing.Point(399, 3);
             this.checkBox_showHeaderScripts.Name = "checkBox_showHeaderScripts";
-            this.checkBox_showHeaderScripts.Size = new System.Drawing.Size(176, 19);
+            this.checkBox_showHeaderScripts.Size = new System.Drawing.Size(177, 19);
             this.checkBox_showHeaderScripts.TabIndex = 6;
             this.checkBox_showHeaderScripts.Text = "Show Header Scripts";
             this.checkBox_showHeaderScripts.UseVisualStyleBackColor = true;
@@ -1430,58 +1482,6 @@
             this.splitContainer2.Size = new System.Drawing.Size(897, 628);
             this.splitContainer2.SplitterDistance = 585;
             this.splitContainer2.TabIndex = 6;
-            // 
-            // type1Bytes
-            // 
-            this.type1Bytes.FormattingEnabled = true;
-            this.type1Bytes.Location = new System.Drawing.Point(3, 159);
-            this.type1Bytes.Name = "type1Bytes";
-            this.type1Bytes.Size = new System.Drawing.Size(120, 95);
-            this.type1Bytes.TabIndex = 12;
-            this.type1Bytes.SelectedIndexChanged += new System.EventHandler(this.type1Bytes_SelectedIndexChanged);
-            // 
-            // type1Floats
-            // 
-            this.type1Floats.FormattingEnabled = true;
-            this.type1Floats.Location = new System.Drawing.Point(129, 159);
-            this.type1Floats.Name = "type1Floats";
-            this.type1Floats.Size = new System.Drawing.Size(120, 95);
-            this.type1Floats.TabIndex = 13;
-            this.type1Floats.SelectedIndexChanged += new System.EventHandler(this.type1Floats_SelectedIndexChanged);
-            // 
-            // type1Byte
-            // 
-            this.type1Byte.Location = new System.Drawing.Point(3, 260);
-            this.type1Byte.Name = "type1Byte";
-            this.type1Byte.Size = new System.Drawing.Size(120, 20);
-            this.type1Byte.TabIndex = 14;
-            this.type1Byte.TextChanged += new System.EventHandler(this.type1Byte_TextChanged);
-            // 
-            // type1Float
-            // 
-            this.type1Float.Location = new System.Drawing.Point(129, 261);
-            this.type1Float.Name = "type1Float";
-            this.type1Float.Size = new System.Drawing.Size(120, 20);
-            this.type1Float.TabIndex = 15;
-            this.type1Float.TextChanged += new System.EventHandler(this.type1Float_TextChanged);
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(7, 140);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(36, 13);
-            this.label13.TabIndex = 16;
-            this.label13.Text = "Bytes:";
-            // 
-            // label46
-            // 
-            this.label46.AutoSize = true;
-            this.label46.Location = new System.Drawing.Point(133, 140);
-            this.label46.Name = "label46";
-            this.label46.Size = new System.Drawing.Size(38, 13);
-            this.label46.TabIndex = 17;
-            this.label46.Text = "Floats:";
             // 
             // ScriptEditor
             // 

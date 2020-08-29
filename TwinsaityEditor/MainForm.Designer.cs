@@ -54,6 +54,7 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.imageMakerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -153,7 +154,8 @@
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.eLFPatcherToolStripMenuItem,
             this.mHMBToolToolStripMenuItem,
-            this.bHBDToolToolStripMenuItem});
+            this.bHBDToolToolStripMenuItem,
+            this.imageMakerToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -161,21 +163,21 @@
             // eLFPatcherToolStripMenuItem
             // 
             this.eLFPatcherToolStripMenuItem.Name = "eLFPatcherToolStripMenuItem";
-            this.eLFPatcherToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.eLFPatcherToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.eLFPatcherToolStripMenuItem.Text = "EXE Patcher";
             this.eLFPatcherToolStripMenuItem.Click += new System.EventHandler(this.eLFPatcherToolStripMenuItem_Click);
             // 
             // mHMBToolToolStripMenuItem
             // 
             this.mHMBToolToolStripMenuItem.Name = "mHMBToolToolStripMenuItem";
-            this.mHMBToolToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.mHMBToolToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.mHMBToolToolStripMenuItem.Text = "MH/MB Tool";
             this.mHMBToolToolStripMenuItem.Click += new System.EventHandler(this.mHMBToolToolStripMenuItem_Click);
             // 
             // bHBDToolToolStripMenuItem
             // 
             this.bHBDToolToolStripMenuItem.Name = "bHBDToolToolStripMenuItem";
-            this.bHBDToolToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.bHBDToolToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.bHBDToolToolStripMenuItem.Text = "BH/BD Tool";
             this.bHBDToolToolStripMenuItem.Click += new System.EventHandler(this.bHBDToolToolStripMenuItem_Click);
             // 
@@ -276,6 +278,13 @@
             this.textBox1.Size = new System.Drawing.Size(437, 345);
             this.textBox1.TabIndex = 0;
             // 
+            // imageMakerToolStripMenuItem
+            // 
+            this.imageMakerToolStripMenuItem.Name = "imageMakerToolStripMenuItem";
+            this.imageMakerToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.imageMakerToolStripMenuItem.Text = "Image Maker";
+            this.imageMakerToolStripMenuItem.Click += new System.EventHandler(this.imageMakerToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -327,5 +336,6 @@
         private System.Windows.Forms.ToolStripMenuItem Pref_TruncateNames_toolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem Pref_EnableAllNames_toolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bHBDToolToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem imageMakerToolStripMenuItem;
     }
 }

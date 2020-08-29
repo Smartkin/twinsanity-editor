@@ -106,5 +106,41 @@ namespace TwinsaityEditor.Properties {
                 this["BDSaveDstPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string TwinsUnpackedPath {
+            get {
+                return ((string)(this["TwinsUnpackedPath"]));
+            }
+            set {
+                this["TwinsUnpackedPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ImageName {
+            get {
+                return ((string)(this["ImageName"]));
+            }
+            set {
+                this["ImageName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ImageOutputPath {
+            get {
+                return ((string)(this["ImageOutputPath"]));
+            }
+            set {
+                this["ImageOutputPath"] = value;
+            }
+        }
     }
 }

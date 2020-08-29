@@ -34,7 +34,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <DefineDebug>true</DefineDebug>
@@ -43,9 +43,10 @@
     <DocumentationFile>
     </DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
-    <Prefer32Bit>true</Prefer32Bit>
+    <Prefer32Bit>false</Prefer32Bit>
     <WarningLevel>4</WarningLevel>
     <DefineConstants>DEBUG</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -239,6 +240,7 @@
     <Compile Include="Editors\PositionEditor.Designer.cs">
       <DependentUpon>PositionEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Externals\PS2ImageMaker\PS2ImageMaker.cs" />
     <Compile Include="FontWrapper\FontFormat.cs" />
     <Compile Include="FontWrapper\FontService.cs" />
     <Compile Include="MainForm.cs">
@@ -305,6 +307,12 @@
     <Compile Include="Workers\EXEPatcher.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Workers\ImageMaker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Workers\ImageMaker.Designer.cs">
+      <DependentUpon>ImageMaker.cs</DependentUpon>
+    </Compile>
     <Compile Include="Workers\MHViewer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -364,6 +372,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Workers\GameExeTool.resx">
       <DependentUpon>EXEPatcher.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Workers\ImageMaker.resx">
+      <DependentUpon>ImageMaker.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Workers\MHViewer.resx">
       <DependentUpon>MHViewer.cs</DependentUpon>
