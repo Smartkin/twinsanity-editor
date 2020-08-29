@@ -32,6 +32,8 @@ namespace TwinsaityEditor
                     || item.Type == SectionType.Path
                     || item.Type == SectionType.Trigger
                     || item.Type == SectionType.Script
+                    || item.Type == SectionType.ScriptDemo
+                    || item.Type == SectionType.ScriptX
                     || item.Type == SectionType.Object)
                 {
                     AddMenu("Re-ID by order", Menu_ReIDByOrder);
@@ -143,6 +145,8 @@ namespace TwinsaityEditor
                 case SectionType.Object:
                     newItem = new GameObject();
                     break;
+                case SectionType.ScriptDemo:
+                case SectionType.ScriptX:
                 case SectionType.Script:
                     newItem = new Script();
                     break;

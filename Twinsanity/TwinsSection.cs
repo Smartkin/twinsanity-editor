@@ -27,7 +27,7 @@ namespace Twinsanity
         Skydome,
 
         Object, ObjectDemo,
-        Script,
+        Script, ScriptX, ScriptDemo,
         Animation,
         OGI, GraphicsInfo,
         CodeModel,
@@ -212,7 +212,12 @@ namespace Twinsanity
                                     LoadSection(reader, sub, SectionType.Object);
                                 break;
                             case 1:
-                                LoadSection(reader, sub, SectionType.Script);
+                                if (Type == SectionType.Code)
+                                    LoadSection(reader, sub, SectionType.Script);
+                                else if (Type == SectionType.CodeX)
+                                    LoadSection(reader, sub, SectionType.ScriptX);
+                                else
+                                    LoadSection(reader, sub, SectionType.ScriptDemo);
                                 break;
                             case 2:
                                 LoadSection(reader, sub, SectionType.Animation);
@@ -312,7 +317,13 @@ namespace Twinsanity
                         LoadItem<TwinsItem>(reader, sub);
                         break;
                     case SectionType.Script:
-                        LoadItem<Script>(reader, sub);
+                        LoadItem<Script>(reader, sub, Type);
+                        break;
+                    case SectionType.ScriptX:
+                        LoadItem<Script>(reader, sub, Type);
+                        break;
+                    case SectionType.ScriptDemo:
+                        LoadItem<Script>(reader, sub, Type);
                         break;
                     case SectionType.SE:
                     case SectionType.SE_Eng:
@@ -381,6 +392,19 @@ namespace Twinsanity
                 Offset = (uint)reader.BaseStream.Position,
                 Parent = this
             };
+            rec.Load(reader, sub.Size);
+            RecordIDs.Add(sub.ID, Records.Count);
+            Records.Add(rec);
+        }
+        protected void LoadItem<T>(BinaryReader reader, TwinsSubInfo sub, SectionType type) where T : TwinsItem, new()
+        {
+            T rec = new T
+            {
+                ID = sub.ID,
+                Offset = (uint)reader.BaseStream.Position,
+                Parent = this
+            };
+            rec.ParentType = type;
             rec.Load(reader, sub.Size);
             RecordIDs.Add(sub.ID, Records.Count);
             Records.Add(rec);

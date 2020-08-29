@@ -155,7 +155,7 @@ namespace TwinsaityEditor
                     OpenEditor(ref editPaths[s.Data.Parent.ID], Editors.Path, c);
                 else if (s.Data.Type == SectionType.Trigger)
                     OpenEditor(ref editTriggers[s.Data.Parent.ID], Editors.Trigger, c);
-                else if (s.Data.Type == SectionType.Script)
+                else if (s.Data.Type == SectionType.Script || s.Data.Type == SectionType.ScriptDemo || s.Data.Type == SectionType.ScriptX)
                     OpenEditor(ref editScripts, Editors.Script, c);
                 else if (s.Data.Type == SectionType.Object)
                     OpenEditor(ref editObjects, Editors.Object, c);
