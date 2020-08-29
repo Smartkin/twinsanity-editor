@@ -39,9 +39,11 @@
             this.btnSelectTwinsPath = new System.Windows.Forms.Button();
             this.btnOutputPath = new System.Windows.Forms.Button();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.tsslblCurrentFile = new System.Windows.Forms.ToolStripStatusLabel();
+            this.tsslblStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.tspbGenerationProgress = new System.Windows.Forms.ToolStripProgressBar();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.cbOpenOutPath = new System.Windows.Forms.CheckBox();
+            this.cbPackAndCopy = new System.Windows.Forms.CheckBox();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -57,7 +59,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(31, 62);
+            this.label2.Location = new System.Drawing.Point(31, 65);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(66, 13);
             this.label2.TabIndex = 1;
@@ -129,36 +131,63 @@
             // 
             // statusStrip1
             // 
+            this.statusStrip1.AutoSize = false;
+            this.statusStrip1.Dock = System.Windows.Forms.DockStyle.None;
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsslblCurrentFile,
+            this.tsslblStatus,
             this.tspbGenerationProgress});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 118);
+            this.statusStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
+            this.statusStrip1.Location = new System.Drawing.Point(103, 92);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(478, 22);
+            this.statusStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
+            this.statusStrip1.Size = new System.Drawing.Size(373, 22);
+            this.statusStrip1.SizingGrip = false;
             this.statusStrip1.TabIndex = 9;
             this.statusStrip1.Text = "statusStrip1";
             // 
-            // tsslblCurrentFile
+            // tsslblStatus
             // 
-            this.tsslblCurrentFile.Name = "tsslblCurrentFile";
-            this.tsslblCurrentFile.Size = new System.Drawing.Size(72, 17);
-            this.tsslblCurrentFile.Text = "Current file: ";
+            this.tsslblStatus.Name = "tsslblStatus";
+            this.tsslblStatus.Size = new System.Drawing.Size(42, 17);
+            this.tsslblStatus.Text = "Status:";
             // 
             // tspbGenerationProgress
             // 
+            this.tspbGenerationProgress.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.tspbGenerationProgress.Name = "tspbGenerationProgress";
             this.tspbGenerationProgress.Size = new System.Drawing.Size(100, 16);
             // 
             // timer1
             // 
-            this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // cbOpenOutPath
+            // 
+            this.cbOpenOutPath.AutoSize = true;
+            this.cbOpenOutPath.Location = new System.Drawing.Point(13, 121);
+            this.cbOpenOutPath.Name = "cbOpenOutPath";
+            this.cbOpenOutPath.Size = new System.Drawing.Size(184, 17);
+            this.cbOpenOutPath.TabIndex = 10;
+            this.cbOpenOutPath.Text = "Open image path after generating";
+            this.cbOpenOutPath.UseVisualStyleBackColor = true;
+            // 
+            // cbPackAndCopy
+            // 
+            this.cbPackAndCopy.AutoSize = true;
+            this.cbPackAndCopy.Location = new System.Drawing.Point(241, 121);
+            this.cbPackAndCopy.Name = "cbPackAndCopy";
+            this.cbPackAndCopy.Size = new System.Drawing.Size(225, 17);
+            this.cbPackAndCopy.TabIndex = 11;
+            this.cbPackAndCopy.Text = "Pack and copy BD/BH to Twinsanity path";
+            this.cbPackAndCopy.UseVisualStyleBackColor = true;
             // 
             // ImageMaker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(478, 140);
+            this.Controls.Add(this.cbPackAndCopy);
+            this.Controls.Add(this.cbOpenOutPath);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.btnOutputPath);
             this.Controls.Add(this.btnSelectTwinsPath);
@@ -171,7 +200,7 @@
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "ImageMaker";
-            this.Text = "ImageMaker";
+            this.Text = "Image maker";
             this.Load += new System.EventHandler(this.ImageMaker_Load);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
@@ -192,8 +221,10 @@
         private System.Windows.Forms.Button btnSelectTwinsPath;
         private System.Windows.Forms.Button btnOutputPath;
         private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripStatusLabel tsslblCurrentFile;
+        private System.Windows.Forms.ToolStripStatusLabel tsslblStatus;
         private System.Windows.Forms.ToolStripProgressBar tspbGenerationProgress;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.CheckBox cbOpenOutPath;
+        private System.Windows.Forms.CheckBox cbPackAndCopy;
     }
 }

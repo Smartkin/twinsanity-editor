@@ -347,7 +347,7 @@ namespace TwinsaityEditor
             }
             CallBack("Ready");
         }
-        private void PackArchive(String source, String destination, String name)
+        private void PackArchive(String source, String destination, String name, Action callback = null)
         {
             data = new Data(source);
             String fullPathBH = Path.Combine(destination, String.Format("{0}.BH", name));
@@ -362,12 +362,40 @@ namespace TwinsaityEditor
             {
                 data.WriteDataBD(source, writer, CallBack);
             }
+            if (callback != null)
+            {
+                callback.Invoke();
+            }
         }
 
         private void CallBack(String message)
         {
             statusBar.Text = message;
             Application.DoEvents();
+        }
+
+        public bool PackBDArchives(string dest, Action callback = null)
+        {
+            String sourcePath = null;
+            String name = "CRASH";
+            using (BetterFolderBrowser ofd = new BetterFolderBrowser
+            {
+                Title = "Select BD/BD source folder",
+                RootFolder = Settings.Default.BDSaveSrcPath
+            })
+            {
+                if (DialogResult.OK == ofd.ShowDialog(this))
+                {
+                    Settings.Default.BDSaveSrcPath = ofd.SelectedPath;
+                    sourcePath = ofd.SelectedPath;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            PackArchive(sourcePath, dest, name, callback);
+            return true;
         }
     }
 }

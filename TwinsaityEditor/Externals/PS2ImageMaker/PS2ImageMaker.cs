@@ -11,24 +11,18 @@ namespace TwinsaityEditor.Externals.PS2ImageMaker
     {
         public unsafe static Progress StartPacking(string twinsPath, string imagePathName)
         {
-            imagePathName = imagePathName.Insert(imagePathName.Length, '\\'.ToString());
             var ptr = start_packing(twinsPath, imagePathName);
             ProgressC progress = new ProgressC();
             progress = (ProgressC)Marshal.PtrToStructure(ptr, typeof(ProgressC));
             Progress prog = new Progress
             {
-                Finished = progress.finished,
-                NewFile = progress.new_file,
-                NewState = progress.new_state,
+                Finished = progress.finished != 0,
+                NewFile = progress.new_file != 0,
+                NewState = progress.new_state != 0,
                 ProgressS = progress.state,
-                ProgressPercentage = progress.progress
+                ProgressPercentage = progress.progress,
+                File = progress.file_name
             };
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < progress.size; ++i)
-            {
-                builder.Append(*(progress.file_name + i));
-            }
-            prog.File = builder.ToString();
             return prog;
         }
 
@@ -39,18 +33,13 @@ namespace TwinsaityEditor.Externals.PS2ImageMaker
             progress = (ProgressC)Marshal.PtrToStructure(ptr, typeof(ProgressC));
             Progress prog = new Progress
             {
-                Finished = progress.finished,
-                NewFile = progress.new_file,
-                NewState = progress.new_state,
+                Finished = progress.finished != 0,
+                NewFile = progress.new_file != 0,
+                NewState = progress.new_state != 0,
                 ProgressS = progress.state,
-                ProgressPercentage = progress.progress
+                ProgressPercentage = progress.progress,
+                File = progress.file_name
             };
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < progress.size; ++i)
-            {
-                builder.Append(*(progress.file_name + i));
-            }
-            prog.File = builder.ToString();
             return prog;
         }
 
@@ -73,20 +62,21 @@ namespace TwinsaityEditor.Externals.PS2ImageMaker
             public bool NewFile;
         }
 
-        [StructLayout(LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
         unsafe struct ProgressC
         {
-            public fixed sbyte file_name[256];
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+            public string file_name;
             public int size;
             public ProgressState state;
             public float progress;
-            public bool finished;
-            public bool new_state;
-            public bool new_file;
+            public byte finished;
+            public byte new_state;
+            public byte new_file;
         }
 
         [DllImport("PS2ImageMaker", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        private unsafe static extern IntPtr start_packing(string game_path, string dest_path);
+        private unsafe static extern IntPtr start_packing([MarshalAs(UnmanagedType.LPStr)] string game_path, [MarshalAs(UnmanagedType.LPStr)] string dest_path);
         [DllImport("PS2ImageMaker", CallingConvention = CallingConvention.Cdecl)]
         private unsafe static extern IntPtr poll_progress();
     }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -15,6 +16,17 @@ namespace TwinsaityEditor.Workers
 {
     public partial class ImageMaker : Form
     {
+
+        private enum GenerationState
+        {
+            Idle,
+            PackBD,
+            ImageGeneration,
+        }
+
+        private GenerationState gen_state = GenerationState.Idle;
+        private BDExplorer BDExplorer = null;
+
         public ImageMaker()
         {
             InitializeComponent();
@@ -23,6 +35,10 @@ namespace TwinsaityEditor.Workers
 
         private void ImageMaker_Load(object sender, EventArgs e)
         {
+            BDExplorer = new BDExplorer();
+            BDExplorer.Hide();
+            tbOutputPath.Enabled = false;
+            tbTwinsanityPath.Enabled = false;
             tspbGenerationProgress.Maximum = 100;
             if (Directory.Exists(Settings.Default.TwinsUnpackedPath))
             {
@@ -55,7 +71,7 @@ namespace TwinsaityEditor.Workers
         {
             using (BetterFolderBrowser bfb = new BetterFolderBrowser
             {
-                RootFolder = Settings.Default.TwinsUnpackedPath,
+                RootFolder = Settings.Default.ImageOutputPath,
                 Title = "Select Twinsanity folder"
             })
             {
@@ -74,30 +90,97 @@ namespace TwinsaityEditor.Workers
 
         private void btnGenerate_Click(object sender, EventArgs e)
         {
-            var progress = Externals.PS2ImageMaker.PS2ImageMaker.StartPacking(tbTwinsanityPath.Text, tbOutputPath.Text + "\\" + tbImageName.Text + ".iso");
-            tsslblCurrentFile.Text = "Current file: " + progress.File;
-            tspbGenerationProgress.Value = (int)(progress.ProgressPercentage * 100);
+            DisableInterface();
+            if (cbPackAndCopy.Checked)
+            {
+                gen_state = GenerationState.PackBD;
+                tsslblStatus.Text = "Status: Generating archives";
+                PackArchives();
+            }
+            else
+            {
+                ArchivesPacked();
+            }
             timer1.Enabled = true;
             timer1.Start();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            if (gen_state == GenerationState.PackBD) return;
+
             var progress = Externals.PS2ImageMaker.PS2ImageMaker.PollProgress();
-            if (progress.ProgressS == Externals.PS2ImageMaker.PS2ImageMaker.ProgressState.FAILED)
-            {
-                timer1.Stop();
-                timer1.Enabled = false;
-                tsslblCurrentFile.Text = "Failed";
-                tspbGenerationProgress.Value = 0;
-                return;
-            }
-            tsslblCurrentFile.Text = "Current file: " + progress.File;
             tspbGenerationProgress.Value = (int)(progress.ProgressPercentage * 100);
-            if (progress.Finished)
+            switch (progress.ProgressS)
             {
-                timer1.Stop();
+                case Externals.PS2ImageMaker.PS2ImageMaker.ProgressState.FAILED:
+                    timer1.Enabled = false;
+                    EnableInterface();
+                    tsslblStatus.Text = "Status: Failed";
+                    tspbGenerationProgress.Value = 0;
+                    break;
+                case Externals.PS2ImageMaker.PS2ImageMaker.ProgressState.ENUM_FILES:
+                    tsslblStatus.Text = "Status: Enumerating files in directory";
+                    break;
+                case Externals.PS2ImageMaker.PS2ImageMaker.ProgressState.WRITE_SECTORS:
+                    tsslblStatus.Text = "Status: Writing sectors";
+                    break;
+                case Externals.PS2ImageMaker.PS2ImageMaker.ProgressState.WRITE_FILES:
+                    tsslblStatus.Text = "Status: Writing file " + progress.File;
+                    break;
+                case Externals.PS2ImageMaker.PS2ImageMaker.ProgressState.WRITE_END:
+                    tsslblStatus.Text = "Status: Writing special sectors";
+                    break;
+                case Externals.PS2ImageMaker.PS2ImageMaker.ProgressState.FINISHED:
+                    timer1.Enabled = false;
+                    EnableInterface();
+                    tsslblStatus.Text = "Status: Finished";
+                    tspbGenerationProgress.Value = 0;
+                    if (cbOpenOutPath.Checked)
+                    { // Open output path on finish
+                        Process.Start("explorer.exe", tbOutputPath.Text);
+                    }
+                    break;
             }
+        }
+
+        internal void EnableInterface()
+        {
+            btnGenerate.Enabled = true;
+            cbOpenOutPath.Enabled = true;
+            cbPackAndCopy.Enabled = true;
+            btnOutputPath.Enabled = true;
+            btnSelectTwinsPath.Enabled = true;
+            tbImageName.Enabled = true;
+        }
+
+        internal void DisableInterface()
+        {
+            btnGenerate.Enabled = false;
+            cbOpenOutPath.Enabled = false;
+            cbPackAndCopy.Enabled = false;
+            btnOutputPath.Enabled = false;
+            btnSelectTwinsPath.Enabled = false;
+            tbImageName.Enabled = false;
+        }
+
+        internal void PackArchives()
+        {
+            var result = BDExplorer.PackBDArchives(tbTwinsanityPath.Text + "\\" + "Crash6", ArchivesPacked);
+            if (!result)
+            {
+                timer1.Enabled = false;
+                EnableInterface();
+                tsslblStatus.Text = "Status: Failed";
+                tspbGenerationProgress.Value = 0;
+            }
+        }
+
+        internal void ArchivesPacked()
+        {
+            gen_state = GenerationState.ImageGeneration;
+            var progress = Externals.PS2ImageMaker.PS2ImageMaker.StartPacking(tbTwinsanityPath.Text, tbOutputPath.Text + "\\" + tbImageName.Text + ".iso");
+            tspbGenerationProgress.Value = (int)(progress.ProgressPercentage * 100);
         }
     }
 }
