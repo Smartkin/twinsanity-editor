@@ -49,6 +49,10 @@ namespace TwinsaityEditor.Workers
             {
                 tbOutputPath.Text = Settings.Default.ImageOutputPath;
             }
+            if (Directory.Exists(Settings.Default.PCSX2Path))
+            {
+                tbPcsx2Path.Text = Settings.Default.PCSX2Path;
+            }
         }
 
         private void btnSelectTwinsPath_Click(object sender, EventArgs e)
@@ -140,6 +144,15 @@ namespace TwinsaityEditor.Workers
                     { // Open output path on finish
                         Process.Start("explorer.exe", tbOutputPath.Text);
                     }
+                    if (cbRun.Checked)
+                    { // Open output path on finish
+                        String PCSXFolder = Settings.Default.PCSX2Path;
+                        String[] files = System.IO.Directory.GetFiles(PCSXFolder, "pcsx2.exe");
+                        if (files.Length > 0)
+                        {
+                            Process.Start(files[0], $"{Path.Combine(tbOutputPath.Text, $"{Settings.Default.ImageName}.iso")}");
+                        }
+                    }
                     break;
             }
         }
@@ -149,6 +162,7 @@ namespace TwinsaityEditor.Workers
             btnGenerate.Enabled = true;
             cbOpenOutPath.Enabled = true;
             cbPackAndCopy.Enabled = true;
+            cbRun.Enabled = true;
             btnOutputPath.Enabled = true;
             btnSelectTwinsPath.Enabled = true;
             tbImageName.Enabled = true;
@@ -159,6 +173,7 @@ namespace TwinsaityEditor.Workers
             btnGenerate.Enabled = false;
             cbOpenOutPath.Enabled = false;
             cbPackAndCopy.Enabled = false;
+            cbRun.Enabled = false;
             btnOutputPath.Enabled = false;
             btnSelectTwinsPath.Enabled = false;
             tbImageName.Enabled = false;
@@ -181,6 +196,30 @@ namespace TwinsaityEditor.Workers
             gen_state = GenerationState.ImageGeneration;
             var progress = Externals.PS2ImageMaker.PS2ImageMaker.StartPacking(tbTwinsanityPath.Text, tbOutputPath.Text + "\\" + tbImageName.Text + ".iso");
             tspbGenerationProgress.Value = (int)(progress.ProgressPercentage * 100);
+        }
+
+        private void btnPcsx2Path_Click(object sender, EventArgs e)
+        {
+            using (BetterFolderBrowser bfb = new BetterFolderBrowser
+            {
+                RootFolder = Settings.Default.PCSX2Path,
+                Title = "Select PCSX2 folder"
+            })
+            {
+                if (bfb.ShowDialog() == DialogResult.OK)
+                {
+                    String[] files = System.IO.Directory.GetFiles(bfb.SelectedFolder, "pcsx2.exe");
+                    if (files.Length == 0)
+                    {
+                        MessageBox.Show("PCSX2.EXE not found!", "PCSX2 not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else
+                    {
+                        Settings.Default.PCSX2Path = bfb.SelectedFolder;
+                        tbPcsx2Path.Text = bfb.SelectedFolder;
+                    }
+                }
+            }
         }
     }
 }

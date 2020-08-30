@@ -44,6 +44,10 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.cbOpenOutPath = new System.Windows.Forms.CheckBox();
             this.cbPackAndCopy = new System.Windows.Forms.CheckBox();
+            this.btnPcsx2Path = new System.Windows.Forms.Button();
+            this.tbPcsx2Path = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.cbRun = new System.Windows.Forms.CheckBox();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -181,11 +185,52 @@
             this.cbPackAndCopy.Text = "Pack and copy BD/BH to Twinsanity path";
             this.cbPackAndCopy.UseVisualStyleBackColor = true;
             // 
+            // btnPcsx2Path
+            // 
+            this.btnPcsx2Path.Location = new System.Drawing.Point(448, 144);
+            this.btnPcsx2Path.Name = "btnPcsx2Path";
+            this.btnPcsx2Path.Size = new System.Drawing.Size(28, 23);
+            this.btnPcsx2Path.TabIndex = 14;
+            this.btnPcsx2Path.Text = "...";
+            this.btnPcsx2Path.UseVisualStyleBackColor = true;
+            this.btnPcsx2Path.Click += new System.EventHandler(this.btnPcsx2Path_Click);
+            // 
+            // tbPcsx2Path
+            // 
+            this.tbPcsx2Path.Location = new System.Drawing.Point(206, 146);
+            this.tbPcsx2Path.Name = "tbPcsx2Path";
+            this.tbPcsx2Path.ReadOnly = true;
+            this.tbPcsx2Path.Size = new System.Drawing.Size(236, 20);
+            this.tbPcsx2Path.TabIndex = 13;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(128, 149);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(69, 13);
+            this.label4.TabIndex = 12;
+            this.label4.Text = "PCSX2 Path:";
+            // 
+            // cbRun
+            // 
+            this.cbRun.AutoSize = true;
+            this.cbRun.Location = new System.Drawing.Point(12, 148);
+            this.cbRun.Name = "cbRun";
+            this.cbRun.Size = new System.Drawing.Size(109, 17);
+            this.cbRun.TabIndex = 15;
+            this.cbRun.Text = "Run after finished";
+            this.cbRun.UseVisualStyleBackColor = true;
+            // 
             // ImageMaker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(478, 140);
+            this.ClientSize = new System.Drawing.Size(478, 177);
+            this.Controls.Add(this.cbRun);
+            this.Controls.Add(this.btnPcsx2Path);
+            this.Controls.Add(this.tbPcsx2Path);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.cbPackAndCopy);
             this.Controls.Add(this.cbOpenOutPath);
             this.Controls.Add(this.statusStrip1);
@@ -226,5 +271,9 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.CheckBox cbOpenOutPath;
         private System.Windows.Forms.CheckBox cbPackAndCopy;
+        private System.Windows.Forms.Button btnPcsx2Path;
+        private System.Windows.Forms.TextBox tbPcsx2Path;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.CheckBox cbRun;
     }
 }
