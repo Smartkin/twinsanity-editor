@@ -150,7 +150,7 @@ namespace TwinsaityEditor.Workers
                         String[] files = System.IO.Directory.GetFiles(PCSXFolder, "pcsx2.exe");
                         if (files.Length > 0)
                         {
-                            Process.Start(files[0], $"{Path.Combine(tbOutputPath.Text, $"{Settings.Default.ImageName}.iso")}");
+                            Process.Start(files[0], $"\"{Path.Combine(tbOutputPath.Text, $"{Settings.Default.ImageName}.iso")}\"");
                         }
                     }
                     break;
