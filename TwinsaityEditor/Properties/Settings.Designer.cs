@@ -142,5 +142,19 @@ namespace TwinsaityEditor.Properties {
                 this["ImageOutputPath"] = value;
             }
         }
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string PCSX2Path
+        {
+            get
+            {
+                return ((string)(this["PCSX2Path"]));
+            }
+            set
+            {
+                this["PCSX2Path"] = value;
+            }
+        }
     }
 }
