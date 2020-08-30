@@ -260,6 +260,41 @@ namespace TwinsaityEditor
             else
                 ModelViewers[id].Select();
         }
+        public void OpenModelViewer(SpecialModelController spec)
+        {
+            SectionController model_sec = GetItem<SectionController>(6).GetItem<SectionController>(6);
+            uint LODcount = spec.Data.K_Count;
+            int targetLOD = 3;
+            if (LODcount > 3)
+            {
+                targetLOD = 0;
+            }
+            else if (LODcount > 2)
+            {
+                targetLOD = 1;
+            }
+            else if (LODcount > 1)
+            {
+                targetLOD = 2;
+            }
+            ModelController c = model_sec.GetItem<ModelController>(spec.Data.LODModelIDs[targetLOD]);
+            var id = c.Data.ID;
+            if (!ModelViewers.ContainsKey(id))
+            {
+                var f = new Form { Size = new System.Drawing.Size(480, 480), Text = "Initializing viewer..." };
+                f.FormClosed += delegate
+                {
+                    ModelViewers.Remove(id);
+                };
+                f.Show();
+                ModelViewer v = new ModelViewer(c, ref f) { Dock = DockStyle.Fill };
+                f.Controls.Add(v);
+                f.Text = "ModelViewer";
+                ModelViewers.Add(id, f);
+            }
+            else
+                ModelViewers[id].Select();
+        }
 
         public void CloseModelViewer(uint id)
         {

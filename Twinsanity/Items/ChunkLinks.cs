@@ -6,6 +6,7 @@ namespace Twinsanity
     public class ChunkLinks : TwinsItem
     {
         public List<ChunkLink> Links { get; set; } = new List<ChunkLink>();
+        public byte[] Remain; //labext has some post-data
 
         /////////PARENTS FUNCTION//////////
         public override void Save(BinaryWriter writer)
@@ -71,10 +72,16 @@ namespace Twinsanity
                     writer.Write(i.Bytes);
                 }
             }
+            if (Remain != null && Remain.Length > 0)
+            {
+                writer.Write(Remain);
+            }
         }
 
         public override void Load(BinaryReader reader, int size)
         {
+            long start_pos = reader.BaseStream.Position;
+
             Links.Clear();
             var count = reader.ReadInt32();
             for (int i = 0; i < count; ++i)
@@ -143,6 +150,12 @@ namespace Twinsanity
                 }
                 Links.Add(link);
             }
+
+            Remain = new byte[0];
+            if (reader.BaseStream.Position != start_pos + size)
+            {
+                Remain = reader.ReadBytes((int)((start_pos + size) - reader.BaseStream.Position));
+            }
         }
 
         protected override int GetSize()
@@ -155,6 +168,10 @@ namespace Twinsanity
                     size += 64;
                 if (i.Type == 1 || i.Type == 3)
                     size += 410;
+            }
+            if (Remain != null && Remain.Length > 0)
+            {
+                size += Remain.Length;
             }
             return size;
         }

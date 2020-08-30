@@ -98,6 +98,17 @@ namespace Twinsanity
                                         Records.Add(rec);
                                         break;
                                     }
+                                case 8:
+                                    {
+                                        ParticleData rec = new ParticleData() { ID = s_id };
+                                        var sk = reader.BaseStream.Position;
+                                        reader.BaseStream.Position = rec.Offset = s_off;
+                                        rec.Load(reader, s_size);
+                                        reader.BaseStream.Position = sk;
+                                        RecordIDs.Add(s_id, Records.Count);
+                                        Records.Add(rec);
+                                        break;
+                                    }
                                 default:
                                     {
                                         TwinsItem rec = new TwinsItem { ID = s_id };
@@ -142,6 +153,28 @@ namespace Twinsanity
                                 case 5:
                                     {
                                         ChunkLinks rec = new ChunkLinks { ID = s_id };
+                                        var sk = reader.BaseStream.Position;
+                                        reader.BaseStream.Position = rec.Offset = s_off;
+                                        rec.Load(reader, s_size);
+                                        reader.BaseStream.Position = sk;
+                                        RecordIDs.Add(s_id, Records.Count);
+                                        Records.Add(rec);
+                                        break;
+                                    }
+                                case 0:
+                                    {
+                                        SceneryData rec = new SceneryData { ID = s_id };
+                                        var sk = reader.BaseStream.Position;
+                                        reader.BaseStream.Position = rec.Offset = s_off;
+                                        rec.Load(reader, s_size);
+                                        reader.BaseStream.Position = sk;
+                                        RecordIDs.Add(s_id, Records.Count);
+                                        Records.Add(rec);
+                                        break;
+                                    }
+                                case 4:
+                                    {
+                                        DynamicSceneryData rec = new DynamicSceneryData { ID = s_id };
                                         var sk = reader.BaseStream.Position;
                                         reader.BaseStream.Position = rec.Offset = s_off;
                                         rec.Load(reader, s_size);

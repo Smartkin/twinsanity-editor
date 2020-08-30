@@ -210,7 +210,7 @@ namespace TwinsaityEditor
                 SectionType type = SectionType.Null;
                 switch (i)
                 {
-                    case 0: type = SectionType.UnknownInstance; break;
+                    case 0: type = SectionType.InstanceTemplate; break;
                     case 1: type = SectionType.AIPosition; break;
                     case 2: type = SectionType.AIPath; break;
                     case 3: type = SectionType.Position; break;
