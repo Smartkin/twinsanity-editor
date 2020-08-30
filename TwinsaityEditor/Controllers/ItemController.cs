@@ -15,6 +15,7 @@ namespace TwinsaityEditor
             Data = item;
             AddMenu("Extract raw data to file", Menu_ExtractItem);
             AddMenu("Replace raw data with new file", Menu_ReplaceItem);
+            AddMenu("Remove item", Menu_RemoveItem);
         }
 
         protected override string GetName()
@@ -27,6 +28,29 @@ namespace TwinsaityEditor
             TextPrev = new string[2];
             TextPrev[0] = $"ID: {Data.ID}";
             TextPrev[1] = $"Offset: {Data.Offset} Size: {Data.Size}";
+        }
+
+        private void Menu_RemoveItem()
+        {
+            SectionController sectionController = (SectionController)Node.Parent.Tag;
+            switch (Data.Parent.Type)
+            {
+                case SectionType.SE:
+                case SectionType.SE_Eng:
+                case SectionType.SE_Fre:
+                case SectionType.SE_Ger:
+                case SectionType.SE_Ita:
+                case SectionType.SE_Spa:
+                case SectionType.SE_Jpn:
+                    SoundEffect se = (SoundEffect)Data;
+                    SEController IAmYouButBetter = (SEController)this;
+                    IAmYouButBetter.InjectData(se.SoundOffset, se.SoundSize, new byte[0]);
+                    sectionController.RemoveItem(Data.ID);
+                    break;
+                default:
+                    sectionController.RemoveItem(Data.ID);
+                    break;
+            }
         }
 
         private void Menu_ExtractItem()
