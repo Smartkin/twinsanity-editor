@@ -65,12 +65,18 @@
   <ItemGroup>
     <Compile Include="DefaultEnums.cs" />
     <Compile Include="Items\Code\GraphicsInfo.cs" />
+    <Compile Include="Items\DynamicSceneryData.cs" />
     <Compile Include="Items\Graphics\ArmatureModel.cs" />
     <Compile Include="Items\Graphics\ArmatureModelX.cs" />
     <Compile Include="Items\Graphics\MaterialDemo.cs" />
     <Compile Include="Items\Graphics\Skydome.cs" />
+    <Compile Include="Items\Graphics\SpecialModel.cs" />
     <Compile Include="Items\Instances\AIPath.cs" />
     <Compile Include="Items\Instances\AIPosition.cs" />
+    <Compile Include="Items\Instances\CollisionSurface.cs" />
+    <Compile Include="Items\Instances\InstanceTemplate.cs" />
+    <Compile Include="Items\ParticleData.cs" />
+    <Compile Include="Items\SceneryData.cs" />
     <Compile Include="RIFF.cs" />
     <Compile Include="ADPCM.cs" />
     <Compile Include="BDArchive.cs" />

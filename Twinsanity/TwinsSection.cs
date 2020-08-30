@@ -15,6 +15,7 @@ namespace Twinsanity
         Graphics, GraphicsX, GraphicsD, GraphicsDS,
         Code, CodeDemo, CodeX,
         Instance, InstanceDemo,
+        ParticleData,
 
         Texture, TextureX,
         Material, MaterialD,
@@ -39,7 +40,7 @@ namespace Twinsanity
         SE_Ita, Xbox_SE_Ita,
         SE_Jpn, Xbox_SE_Jpn,
 
-        UnknownInstance,
+        InstanceTemplate, InstanceTemplateDemo,
         AIPosition,
         AIPath,
         Position,
@@ -163,7 +164,10 @@ namespace Twinsanity
                         switch (sub.ID)
                         {
                             case 0:
-                                LoadSection(reader, sub, SectionType.UnknownInstance);
+                                if (Type == SectionType.InstanceDemo)
+                                    LoadSection(reader, sub, SectionType.InstanceTemplateDemo);
+                                else
+                                    LoadSection(reader, sub, SectionType.InstanceTemplate);
                                 break;
                             case 1:
                                 LoadSection(reader, sub, SectionType.AIPosition);
@@ -373,6 +377,18 @@ namespace Twinsanity
                         break;
                     case SectionType.ArmatureModelX: //XBOX Armature Models
                         LoadItem<ArmatureModelX>(reader, sub);
+                        break;
+                    case SectionType.SpecialModel:
+                        LoadItem<SpecialModel>(reader, sub);
+                        break;
+                    case SectionType.ParticleData:
+                        LoadItem<ParticleData>(reader, sub);
+                        break;
+                    case SectionType.CollisionSurface:
+                        LoadItem<CollisionSurface>(reader, sub);
+                        break;
+                    case SectionType.InstanceTemplate:
+                        LoadItem<InstanceTemplate>(reader, sub);
                         break;
                     default:
                         LoadItem<TwinsItem>(reader, sub);

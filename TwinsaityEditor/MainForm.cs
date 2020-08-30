@@ -110,6 +110,20 @@ namespace TwinsaityEditor
                 c = new ArmatureModelXController(this, (ArmatureModelX)a);
             else if (a is MaterialDemo)
                 c = new MaterialDController(this, (MaterialDemo)a);
+            else if (a is SceneryData)
+                c = new SceneryDataController(this, (SceneryData)a);
+            else if (a is SpecialModel)
+                c = new SpecialModelController(this, (SpecialModel)a);
+            else if (a is ParticleData)
+                c = new ParticleDataController(this, (ParticleData)a);
+            else if (a is DynamicSceneryData)
+                c = new DynamicSceneryDataController(this, (DynamicSceneryData)a);
+            else if (a is CollisionSurface)
+                c = new CollisionSurfaceController(this, (CollisionSurface)a);
+            else if (a is Camera)
+                c = new CameraController(this, (Camera)a);
+            else if (a is InstanceTemplate)
+                c = new InstaceTemplateController(this, (InstanceTemplate)a);
             else
                 c = new ItemController(this, a);
 
