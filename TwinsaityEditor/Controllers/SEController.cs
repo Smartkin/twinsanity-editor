@@ -84,8 +84,7 @@ namespace TwinsaityEditor
                 }
             }
         }
-
-        private void InjectData(UInt32 oldOffset, UInt32 oldSize, Byte[] newData)
+        public void InjectData(UInt32 oldOffset, UInt32 oldSize, Byte[] newData)
         {
             Byte[] piece1 = new byte[oldOffset];
             Byte[] piece2 = new byte[Data.Parent.ExtraData.Length - oldOffset - oldSize];
