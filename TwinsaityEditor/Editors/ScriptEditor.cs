@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Globalization;
 using Twinsanity;
+using System.ComponentModel.Design;
 
 namespace TwinsaityEditor
 {
@@ -38,11 +39,26 @@ namespace TwinsaityEditor
             InitializeComponent();
             PopulateList(scriptPredicate);
             UpdatePanels();
+            PopulateCommandList();
         }
 
         private void ScriptEditor_Load(object sender, EventArgs e)
         {
             filterSelection.SelectedIndex = 0;
+        }
+        private void PopulateCommandList()
+        {
+            // Populate with current script command knowledge
+            for (ushort i = 0; i < Script.MainScript.ScriptCommand.ScriptCommandTableSize; ++i)
+            {
+                if (Enum.IsDefined(typeof(DefaultEnums.CommandID), i))
+                {
+                    cbCommandIndex.Items.Add(((DefaultEnums.CommandID)i).ToString());
+                } else
+                {
+                    cbCommandIndex.Items.Add("Unexisting/Unknown " + i.ToString());
+                }
+            }
         }
         private void PopulateList()
         {
@@ -845,7 +861,7 @@ namespace TwinsaityEditor
         }
         private void UpdateType4Panel()
         {
-            type4VTableIndex.Text = selectedType4.VTableIndex.ToString();
+            cbCommandIndex.SelectedItem = cbCommandIndex.Items[selectedType4.VTableIndex];
             type4BitField.Text = selectedType4.UnkShort.ToString("X4");
             type4Arguments.BeginUpdate();
             type4Arguments.Items.Clear();
@@ -1857,6 +1873,32 @@ namespace TwinsaityEditor
                     node.Text = Name;
                 }
             }
+        }
+
+        private void cbCommandIndex_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UInt16 val = selectedType4.VTableIndex;
+            if (UInt16.TryParse(((ComboBox)sender).SelectedIndex.ToString(), out val))
+            {
+                ((ComboBox)sender).BackColor = Color.White;
+                selectedType4.VTableIndex = val;
+            }
+            else
+            {
+                ((ComboBox)sender).BackColor = Color.Red;
+                return;
+            }
+            type4ExpectedLength.Text = $"Arguments: {selectedType4.GetExpectedSize() / 4}";
+            if (selectedType4.isValidBits())
+            {
+                type4Warning.Visible = false;
+            }
+            else
+            {
+                type4Warning.Visible = true;
+
+            }
+            UpdateNodeName();
         }
     }
 }
