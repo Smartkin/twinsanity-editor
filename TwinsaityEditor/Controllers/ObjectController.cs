@@ -25,7 +25,7 @@ namespace TwinsaityEditor
         {
             List<string> text = new List<string>();
             text.Add($"ID: {Data.ID}");
-            text.Add($"Offset: {Data.Offset} Size: {Data.Size}");
+            text.Add($"Size: {Data.Size}");
             text.Add($"Name: {Data.Name}");
             text.Add($"Unknown bitfield: 0x{Data.UnkBitfield.ToString("X")}");
             for (int i = 0; i < Data.ScriptSlots.Count; ++i)

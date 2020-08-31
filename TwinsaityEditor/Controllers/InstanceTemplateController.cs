@@ -26,7 +26,7 @@ namespace TwinsaityEditor
             obj_name = Utils.TextUtils.TruncateObjectName(obj_name, Data.ObjectID, "", " (Not in Objects)");
 
             text.Add(string.Format("ID: {0:X8}", Data.ID));
-            text.Add($"Offset: {Data.Offset} Size: {Data.Size}");
+            text.Add($"Size: {Data.Size}");
             text.Add($"Name: {Data.Name}");
             text.Add($"HeaderInts: {Data.HeaderInt1}; {Data.HeaderInt2}; {Data.HeaderInt3} ");
             if (Data.HeaderInt1 != 0)

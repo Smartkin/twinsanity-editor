@@ -24,7 +24,7 @@ namespace TwinsaityEditor
             List<string> text = new List<string>();
 
             text.Add(string.Format("ID: {0:X8}", Data.ID));
-            text.Add($"Offset: {Data.Offset} Size: {Data.Size}");
+            text.Add($"Size: {Data.Size}");
             text.Add($"Header: {Data.Header}");
             text.Add($"Enabled: {Data.Enabled}");
             text.Add($"UnkFac1: {Data.UnkFac1}");

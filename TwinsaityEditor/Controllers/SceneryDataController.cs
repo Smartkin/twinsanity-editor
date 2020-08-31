@@ -24,7 +24,7 @@ namespace TwinsaityEditor
             List<string> text = new List<string>();
 
             text.Add($"ID: {Data.ID}");
-            text.Add($"Offset: {Data.Offset} Size: {Data.Size}");
+            text.Add($"Size: {Data.Size}");
             text.Add(string.Format("Chunk Name: {0}", Data.ChunkName));
             text.Add(string.Format("Header Version: {0}", Data.HeaderVersion));
             text.Add(string.Format("Skydome ID: {0:X8}", Data.SkydomeID));

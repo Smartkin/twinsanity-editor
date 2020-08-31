@@ -46,7 +46,7 @@ namespace TwinsaityEditor
             }
             TextPrev = new string[3 + ex_lines.Count];
             TextPrev[0] = string.Format("ID: {0:X8}", Data.ID);
-            TextPrev[1] = $"Offset: {Data.Offset} Size: {Data.Size}";
+            TextPrev[1] = $"Size: {Data.Size}";
             TextPrev[2] = $"SubMesh Count: {Data.SubModels.Count}";
             Array.Copy(ex_lines.ToArray(), 0, TextPrev, 3, ex_lines.Count);
         }

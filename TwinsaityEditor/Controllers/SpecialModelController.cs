@@ -23,7 +23,7 @@ namespace TwinsaityEditor
             List<string> text = new List<string>();
 
             text.Add(string.Format("ID: {0:X8}", Data.ID));
-            text.Add($"Offset: {Data.Offset} Size: {Data.Size}");
+            text.Add($"Size: {Data.Size}");
             text.Add($"LOD Count: {Data.K_Count - 1} ");
             int cur_LOD = 0;
             if (Data.K_Count > 1)
