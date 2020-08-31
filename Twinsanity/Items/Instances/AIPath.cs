@@ -4,6 +4,8 @@ namespace Twinsanity
 {
     public class AIPath : TwinsItem
     {
+        protected override int? ConstantSize => 10;
+
         public ushort[] Arg { get; set; } = new ushort[5];
 
         public override void Save(BinaryWriter writer)
