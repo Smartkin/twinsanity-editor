@@ -4,6 +4,8 @@ namespace Twinsanity
 {
     public class Position : TwinsItem
     {
+        protected override int? ConstantSize => 16;
+
         public Pos Pos { get; set; }
 
         public override void Save(BinaryWriter writer)

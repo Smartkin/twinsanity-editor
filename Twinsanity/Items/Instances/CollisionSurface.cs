@@ -4,6 +4,8 @@ namespace Twinsanity
 {
     public class CollisionSurface : TwinsItem
     {
+        protected override int? ConstantSize => 114;
+
         public byte[] Flags; //4
         public ushort SurfaceID;
         public ushort[] SoundIDs; //10

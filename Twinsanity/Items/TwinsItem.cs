@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.IO;
 
 namespace Twinsanity
@@ -19,8 +20,13 @@ namespace Twinsanity
 
         public byte[] Data { get; set; }
         public uint ID { get; set; }
+        protected virtual int? ConstantSize => null;
         public int Size { get
             {
+                if (ConstantSize.HasValue)
+                {
+                    return ConstantSize.Value;
+                }
                 using (BinaryWriter writer = new BinaryWriter(new MemoryStream()))
                 {
                     Save(writer);

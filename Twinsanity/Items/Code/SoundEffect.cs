@@ -5,6 +5,7 @@ namespace Twinsanity
 {
     public class SoundEffect : TwinsItem
     {
+        protected override int? ConstantSize => 22;
 
         public SoundEffect()
         {

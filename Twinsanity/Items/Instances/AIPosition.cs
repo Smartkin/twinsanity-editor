@@ -4,6 +4,8 @@ namespace Twinsanity
 {
     public class AIPosition : TwinsItem
     {
+        protected override int? ConstantSize => 18;
+
         public Pos Pos { get; set; }
         public ushort Num { get; set; }
 
