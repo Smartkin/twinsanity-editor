@@ -185,11 +185,6 @@ namespace Twinsanity
             Data = reader.ReadBytes(size);
         }
 
-        protected override int GetSize()
-        {
-            return (int)ItemSize;
-        }
-
         public struct GI_Type0
         {
             public uint ID;

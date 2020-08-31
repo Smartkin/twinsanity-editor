@@ -18,10 +18,5 @@ namespace Twinsanity
         {
             Pos = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
         }
-
-        protected override int GetSize()
-        {
-            return 16;
-        }
     }
 }

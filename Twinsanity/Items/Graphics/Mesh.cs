@@ -200,37 +200,6 @@ namespace Twinsanity
             }
         }
 
-        protected override int GetSize()
-        {
-            int size = 4;
-            foreach(var i in SubModels)
-            {
-                size += 24;
-                foreach (var j in i.Groups)
-                {
-                    size += 48;
-                    if (j.VertHead > 0)
-                    {
-                        size += 4 + 12 * j.VertexCount;
-                    }
-                    if (j.VDataHead > 0)
-                    {
-                        size += 4 + 16 * j.VertexCount;
-                    }
-                    if (j.UVHead > 0)
-                    {
-                        size += 4 + 12 * j.VertexCount;
-                    }
-                    if (j.ShiteHead > 0)
-                    {
-                        size += 4 + 4 * j.VertexCount;
-                    }
-                    size += j.leftovers.Length;
-                }
-            }
-            return size;
-        }
-
         public void Import(RawData[][] RawData)
         {
             /*

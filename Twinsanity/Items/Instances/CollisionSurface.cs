@@ -58,10 +58,5 @@ namespace Twinsanity
                 UnkInts[i] = reader.ReadUInt16();
             }
         }
-
-        protected override int GetSize()
-        {
-            return 114;
-        }
     }
 }

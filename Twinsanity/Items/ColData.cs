@@ -17,11 +17,6 @@ namespace Twinsanity
             Vertices = new List<Pos>();
         }
 
-        protected override int GetSize()
-        {
-            return isEmpty ? 0 : (20 + Triggers.Count * 32 + Groups.Count * 8 + Tris.Count * 8 + Vertices.Count * 16);
-        }
-
         /// <summary>
         /// Write converted binary data to file.
         /// </summary>

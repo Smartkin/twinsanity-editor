@@ -158,24 +158,6 @@ namespace Twinsanity
             }
         }
 
-        protected override int GetSize()
-        {
-            int size = 4;
-            foreach (var i in Links)
-            {
-                size += i.Path.Length + 8 + 132;
-                if ((i.Flags & 0x80000) != 0)
-                    size += 64;
-                if (i.Type == 1 || i.Type == 3)
-                    size += 410;
-            }
-            if (Remain != null && Remain.Length > 0)
-            {
-                size += Remain.Length;
-            }
-            return size;
-        }
-
         #region STRUCTURES
         public struct ChunkLink
         {

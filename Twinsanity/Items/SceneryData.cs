@@ -43,34 +43,6 @@ namespace Twinsanity
 
         }
 
-        protected override int GetSize()
-        {
-            int count = 2 + 2 + 4 + ChunkName.Length + 4 + 4 + 1 + 4;
-            count += 4 * HeaderUnkVars.Length;
-            count += HeaderBuffer.Length;
-            count += 4 + 4 + 4 + 4 + 4;
-
-            if (LightsAmbient.Count > 0)
-            {
-                count += LightsAmbient.Count * (4 + 4 + 4 + 4 + 4 + 4 + 16 + 32);
-            }
-            if (LightsDirectional.Count > 0)
-            {
-                count += LightsDirectional.Count * (4 + 4 + 4 + 4 + 4 + 4 + 16 + 48 + 2);
-            }
-            if (LightsPoint.Count > 0)
-            {
-                count += LightsPoint.Count * (4 + 4 + 4 + 4 + 4 + 4 + 16 + 32 + 2);
-            }
-            if (LightsNegative.Count > 0)
-            {
-                count += LightsNegative.Count * (4 + 4 + 4 + 4 + 4 + 4 + 16 + 48 + 20);
-            }
-
-            count += Remain.Length;
-            return count;
-        }
-
         public override void Save(BinaryWriter writer)
         {
 

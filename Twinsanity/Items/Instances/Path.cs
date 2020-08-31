@@ -40,11 +40,6 @@ namespace Twinsanity
             }
         }
 
-        protected override int GetSize()
-        {
-            return 8 + Positions.Count * 16 + Params.Count * 8;
-        }
-
         #region STRUCTURES
         public class PathParam
         {

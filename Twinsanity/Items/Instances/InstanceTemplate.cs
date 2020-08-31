@@ -113,32 +113,5 @@ namespace Twinsanity
             }
 
         }
-
-        protected override int GetSize()
-        {
-            int len = Name.Length + 4 + 12;
-            if (HeaderInt1 == 1)
-            {
-                len += 2;
-            }
-            len += 14;
-            len += 4;
-            if (Flags.Length > 0)
-            {
-                len += Flags.Length * 4;
-            }
-            len += 4;
-            if (Floats.Length > 0)
-            {
-                len += Floats.Length * 4;
-            }
-            len += 4;
-            if (Ints.Length > 0)
-            {
-                len += Ints.Length * 4;
-            }
-
-            return len;
-        }
     }
 }

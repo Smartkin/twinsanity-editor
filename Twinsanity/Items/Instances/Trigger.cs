@@ -59,10 +59,5 @@ namespace Twinsanity
             SomeUInt163 = reader.ReadUInt16();
             SomeUInt164 = reader.ReadUInt16();
         }
-
-        protected override int GetSize()
-        {
-            return 80 + Instances.Count * 2;
-        }
     }
 }

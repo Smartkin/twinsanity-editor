@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System;
-using System.IO;
+﻿using System.IO;
 
 namespace Twinsanity
 {
@@ -17,13 +15,6 @@ namespace Twinsanity
         public SpecialModel()
         {
 
-        }
-
-        protected override int GetSize()
-        {
-            int count = 4 + 4 + 1 + 4 + 4 + 4 + 4;
-            count += (int)(K_Count * 4);
-            return count;
         }
 
         /// <summary>

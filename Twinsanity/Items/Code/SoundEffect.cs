@@ -58,11 +58,6 @@ namespace Twinsanity
             SoundOffset = reader.ReadUInt32();
         }
 
-        protected override int GetSize()
-        {
-            return 22;
-        }
-
         public static ushort GetFreq(ushort freq)
         {
             switch (freq)

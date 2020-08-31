@@ -26,10 +26,5 @@ namespace Twinsanity
                 MaterialIDs[i] = reader.ReadUInt32();
             MeshID = reader.ReadUInt32();
         }
-
-        protected override int GetSize()
-        {
-            return 12 + MaterialIDs.Length * 4;
-        }
     }
 }

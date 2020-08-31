@@ -62,10 +62,5 @@ namespace Twinsanity
             Type = reader.ReadByte();
             base.Load(reader, size-0xBB);
         }
-
-        protected override int GetSize()
-        {
-            return Data.Length + 0xBB;
-        }
     }
 }

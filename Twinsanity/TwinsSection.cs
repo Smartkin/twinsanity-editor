@@ -462,14 +462,6 @@ namespace Twinsanity
             writer.Write(ExtraData);
         }
 
-        protected override int GetSize()
-        {
-            if (size < 0xC)
-                return size;
-            else
-                return (Records.Count + 1) * 12 + ContentSize + ExtraData.Length;
-        }
-
         private int GetContentSize()
         {
             int c_size = 0;

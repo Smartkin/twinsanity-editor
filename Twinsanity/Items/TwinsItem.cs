@@ -7,16 +7,6 @@ namespace Twinsanity
     /// </summary>
     public class TwinsItem
     {
-        public TwinsItem()
-        {
-            Data = new byte[0];
-        }
-        protected virtual int GetSize()
-        {
-            if (Data == null) return -1;
-            else return Data.Length;
-        }
-
         public virtual void Save(BinaryWriter writer)
         {
             writer.Write(Data);
@@ -29,7 +19,15 @@ namespace Twinsanity
 
         public byte[] Data { get; set; }
         public uint ID { get; set; }
-        public int Size { get => GetSize(); }
+        public int Size { get
+            {
+                using (BinaryWriter writer = new BinaryWriter(new MemoryStream()))
+                {
+                    Save(writer);
+                    return (int)writer.BaseStream.Position;
+                }
+            }
+        }
         public TwinsSection Parent { get; set; }
         public SectionType ParentType { get; set; }
     }

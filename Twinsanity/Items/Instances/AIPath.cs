@@ -23,10 +23,5 @@ namespace Twinsanity
             Arg[3] = reader.ReadUInt16();
             Arg[4] = reader.ReadUInt16();
         }
-
-        protected override int GetSize()
-        {
-            return 10;
-        }
     }
 }

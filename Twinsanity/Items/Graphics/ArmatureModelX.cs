@@ -42,10 +42,5 @@ namespace Twinsanity
             reader.BaseStream.Position = pre_pos;
             Data = reader.ReadBytes(size);
         }
-
-        protected override int GetSize()
-        {
-            return (int)ItemSize;
-        }
     }
 }

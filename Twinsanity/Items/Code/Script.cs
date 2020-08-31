@@ -1162,24 +1162,5 @@ namespace Twinsanity
                 data = reader.ReadBytes(size - 4);
             }
         }
-        protected override int GetSize()
-        {
-            if (flag != 0)
-            {
-                return Header.GetLength() + 4 + script.Length;
-            }
-            else
-            {
-                if (data != null && data.Length > 0)
-                {
-                    return 4 + data.Length;
-                }
-                int a = Main.GetLength();
-                int b = 4;
-                int c = script.Length;
-                return Main.GetLength() + 4 + script.Length;
-            }
-
-        }
     }
 }

@@ -116,10 +116,5 @@ namespace Twinsanity
             for (int i = 0; i < n; ++i)
                 UnkI323.Add(reader.ReadUInt32());
         }
-
-        protected override int GetSize()
-        {
-            return 90 + (InstanceIDs.Count + PositionIDs.Count + PathIDs.Count) * 2 + (UnkI321.Count + UnkI322.Count + UnkI323.Count) * 4;
-        }
     }
 }

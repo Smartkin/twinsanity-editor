@@ -26,27 +26,6 @@ namespace Twinsanity
 
         }
 
-        protected override int GetSize()
-        {
-            if (Header1 == 0x616E6942)
-            {
-                return (int)DataSize;
-            }
-            int count = 12;
-            count += PreHeader.Count * 4;
-            count += Remain.Length;
-            count += (int)ParticleInstanceCount * 0x44;
-            if (ParticleTypeCount > 0)
-            {
-                for (int i = 0; i < ParticleTypes.Length; i++)
-                {
-                    count += 0x10;
-                    count += ParticleTypes[i].Remain.Length;
-                }
-            }
-            return count;
-        }
-
         public override void Save(BinaryWriter writer)
         {
             if (Header1 == 0x616E6942)

@@ -23,10 +23,5 @@ namespace Twinsanity
             for (int i = 0; i < count; ++i)
                 ModelIDs[i] = reader.ReadUInt32();
         }
-
-        protected override int GetSize()
-        {
-            return 8 + ModelIDs.Length * 4;
-        }
     }
 }

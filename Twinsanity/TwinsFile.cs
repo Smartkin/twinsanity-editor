@@ -239,11 +239,6 @@ namespace Twinsanity
             return c_size;
         }
 
-        protected override int GetSize()
-        {
-            return ContentSize + Records.Count * 12 + 12;
-        }
-
         //NOTE: Do NOT use "First"
         public enum FileType { First = SectionType.Last, RM2, SM2, DemoRM2, DemoSM2, RMX, SMX };
     }

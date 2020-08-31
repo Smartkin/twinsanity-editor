@@ -69,10 +69,5 @@ namespace Twinsanity
             Last = reader.ReadUInt32();
             reader.BaseStream.Position = sk + size;
         }
-
-        protected override int GetSize()
-        {
-            return 105 + Name.Length + Remain.Length;
-        }
     }
 }

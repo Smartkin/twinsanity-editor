@@ -20,11 +20,6 @@ namespace Twinsanity
 
         }
 
-        protected override int GetSize()
-        {
-            return DataSize;
-        }
-
         /// <summary>
         /// Write converted binary data to file.
         /// </summary>
