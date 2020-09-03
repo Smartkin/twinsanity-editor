@@ -75,7 +75,7 @@ namespace TwinsaityEditor
         {
             TextPrev = new string[Data.ExtraData == null ? 3 : 4];
             TextPrev[0] = $"ID: {Data.ID}";
-            TextPrev[1] = $"Offset: {Data.Offset} Size: {Data.Size}";
+            TextPrev[1] = $"Size: {Data.Size}";
             TextPrev[2] = $"ContentSize: {Data.ContentSize} Element Count: {Data.Records.Count}";
             if (Data.ExtraData != null)
                 TextPrev[3] = $"ExtraDataSize: {Data.ExtraData.Length}";
@@ -226,7 +226,6 @@ namespace TwinsaityEditor
                     {
                         ID = i,
                         Level = Data.Level + 1,
-                        Offset = 0,
                         Type = type,
                         Parent = Data
                     };
@@ -245,7 +244,6 @@ namespace TwinsaityEditor
                     {
                         ID = i,
                         Level = Data.Level + 1,
-                        Offset = 0,
                         Type = SectionType.Instance,
                         Parent = Data
                     };

@@ -33,7 +33,7 @@ namespace TwinsaityEditor
             if (!Data.IsStandalone)
             {
                 text.Add($"ID: {Data.ID}");
-                text.Add($"Offset: {Data.Offset} Size: {Data.Size}");
+                text.Add($"Size: {Data.Size}");
             }
             else
             {

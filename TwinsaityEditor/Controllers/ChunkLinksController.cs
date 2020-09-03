@@ -22,7 +22,7 @@ namespace TwinsaityEditor
         {
             TextPrev = new string[3 + Data.Links.Count * 4];
             TextPrev[0] = $"ID: {Data.ID}";
-            TextPrev[1] = $"Offset: {Data.Offset} Size: {Data.Size}";
+            TextPrev[1] = $"Size: {Data.Size}";
             TextPrev[2] = $"LinkCount: {Data.Links.Count}";
             for (int i = 0; i < Data.Links.Count; ++i)
             {

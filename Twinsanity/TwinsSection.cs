@@ -405,7 +405,6 @@ namespace Twinsanity
             T rec = new T
             {
                 ID = sub.ID,
-                Offset = (uint)reader.BaseStream.Position,
                 Parent = this
             };
             rec.Load(reader, sub.Size);
@@ -417,7 +416,6 @@ namespace Twinsanity
             T rec = new T
             {
                 ID = sub.ID,
-                Offset = (uint)reader.BaseStream.Position,
                 Parent = this
             };
             rec.ParentType = type;
@@ -431,7 +429,6 @@ namespace Twinsanity
             TwinsSection sec = new TwinsSection {
                 ID = sub.ID,
                 Level = Level + 1,
-                Offset = (uint)reader.BaseStream.Position,
                 Type = type,
                 Parent = this
             };

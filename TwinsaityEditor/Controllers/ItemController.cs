@@ -27,7 +27,7 @@ namespace TwinsaityEditor
         {
             TextPrev = new string[2];
             TextPrev[0] = $"ID: {Data.ID}";
-            TextPrev[1] = $"Offset: {Data.Offset} Size: {Data.Size}";
+            TextPrev[1] = $"Size: {Data.Size}";
         }
 
         private void Menu_RemoveItem()

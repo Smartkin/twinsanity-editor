@@ -550,6 +550,7 @@ namespace Twinsanity
             InstanceSubtype = 92,
             HasXLinks = 118,
             ChunksLoaded = 176,
+
             DistanceToPlayer = 517,
             PlayerCollision = 520,
             HitBySpin = 521,
@@ -572,8 +573,10 @@ namespace Twinsanity
             IsVehicleHumiliskate = 596,
             IsVehicle3 = 598,
             HitByCortexBolt = 610,
+            IsPushingObject = 617,
             OutOfAmmo = 634,
             GlobalProgression = 639,
+            IsMoviePlaying = 641,
         }
         public enum CommandID : ushort
         {
@@ -593,11 +596,13 @@ namespace Twinsanity
             PlayGlobalSound = 86,
             PlayGlobalSound2 = 88,
             PhysicsResetVelocity = 120,
+
             SpawnObject = 512,
             AddWumpa = 513,
             CreateDamageZone = 514,
             ToggleActive = 515,
             RestartFromCheckpoint = 517,
+            AddHealth = 520,
             ToggleActiveAndState = 521,
             PropelPlayer = 523,
             SetGlobalProgression = 534,
@@ -609,14 +614,25 @@ namespace Twinsanity
             SetVehicleRollerbrawl = 570,
             SetVehicleHoverboard = 571,
             AddLives = 585,
+            CutsceneStart = 589,
+            CutsceneEnd = 590,
             StartWhackaworm = 596,
-            WinWhackaworm = 597,
+            ProgressWhackaworm = 597,
             AbortWhackaworm = 598,
+            DisplayBottomText = 603,
+            ForceGameOver = 618,
+            ShowBottomText = 619,
+            HideBottomText = 620,
             SwitchCharacter = 625,
             SetPlayerMode = 633,
+            PlayMovie = 634,
             AddAmmo = 636,
+            EnableBossMode = 638,
             DamageBoss = 639,
+            ExitBossMode = 640,
             SetGlobalProgression2 = 647,
+            PlayCredits = 654,
+            DisplayBottomTextInstance = 657,
 
         }
 

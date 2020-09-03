@@ -28,7 +28,6 @@ namespace Twinsanity
         }
 
         public byte[] Data { get; set; }
-        public uint Offset { get; set; }
         public uint ID { get; set; }
         public int Size { get => GetSize(); }
         public TwinsSection Parent { get; set; }
