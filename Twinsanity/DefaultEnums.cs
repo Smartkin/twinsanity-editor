@@ -576,6 +576,7 @@ namespace Twinsanity
             IsPushingObject = 617,
             OutOfAmmo = 634,
             GlobalProgression = 639,
+            IsMoviePlaying = 641,
         }
         public enum CommandID : ushort
         {
@@ -616,16 +617,21 @@ namespace Twinsanity
             CutsceneStart = 589,
             CutsceneEnd = 590,
             StartWhackaworm = 596,
-            WinWhackaworm = 597,
+            ProgressWhackaworm = 597,
             AbortWhackaworm = 598,
             DisplayBottomText = 603,
+            ForceGameOver = 618,
             ShowBottomText = 619,
             HideBottomText = 620,
             SwitchCharacter = 625,
             SetPlayerMode = 633,
+            PlayMovie = 634,
             AddAmmo = 636,
+            EnableBossMode = 638,
             DamageBoss = 639,
+            ExitBossMode = 640,
             SetGlobalProgression2 = 647,
+            PlayCredits = 654,
             DisplayBottomTextInstance = 657,
 
         }
