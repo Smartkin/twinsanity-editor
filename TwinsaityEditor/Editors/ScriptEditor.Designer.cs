@@ -194,6 +194,7 @@
             // 
             // scriptTree
             // 
+            this.scriptTree.Dock = System.Windows.Forms.DockStyle.Fill;
             this.scriptTree.Indent = 11;
             this.scriptTree.Location = new System.Drawing.Point(0, 0);
             this.scriptTree.Name = "scriptTree";
@@ -1376,7 +1377,7 @@
             // scriptNameFilter
             // 
             this.scriptNameFilter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.scriptNameFilter.Location = new System.Drawing.Point(93, 3);
+            this.scriptNameFilter.Location = new System.Drawing.Point(92, 3);
             this.scriptNameFilter.Name = "scriptNameFilter";
             this.scriptNameFilter.Size = new System.Drawing.Size(294, 20);
             this.scriptNameFilter.TabIndex = 3;
@@ -1414,7 +1415,7 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 38.88889F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 61.11111F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 300F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 188F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 189F));
             this.tableLayoutPanel2.Controls.Add(this.label32, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.scriptNameFilter, 2, 0);
             this.tableLayoutPanel2.Controls.Add(this.filterSelection, 1, 0);
@@ -1436,7 +1437,7 @@
             "ID"});
             this.filterSelection.Location = new System.Drawing.Point(38, 3);
             this.filterSelection.Name = "filterSelection";
-            this.filterSelection.Size = new System.Drawing.Size(49, 21);
+            this.filterSelection.Size = new System.Drawing.Size(48, 21);
             this.filterSelection.TabIndex = 5;
             this.filterSelection.SelectedIndexChanged += new System.EventHandler(this.filterSelection_SelectedIndexChanged);
             // 
@@ -1444,9 +1445,9 @@
             // 
             this.checkBox_showHeaderScripts.AutoSize = true;
             this.checkBox_showHeaderScripts.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.checkBox_showHeaderScripts.Location = new System.Drawing.Point(393, 3);
+            this.checkBox_showHeaderScripts.Location = new System.Drawing.Point(392, 3);
             this.checkBox_showHeaderScripts.Name = "checkBox_showHeaderScripts";
-            this.checkBox_showHeaderScripts.Size = new System.Drawing.Size(183, 19);
+            this.checkBox_showHeaderScripts.Size = new System.Drawing.Size(184, 19);
             this.checkBox_showHeaderScripts.TabIndex = 6;
             this.checkBox_showHeaderScripts.Text = "Show Header Scripts";
             this.checkBox_showHeaderScripts.UseVisualStyleBackColor = true;
