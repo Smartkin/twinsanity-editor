@@ -31,10 +31,10 @@ namespace Twinsanity
         public List<UInt16> cScripts = new List<UInt16>();
         public List<UInt16> cUnk = new List<UInt16>();
         public List<UInt16> cSounds = new List<UInt16>();
-        private int scriptCommandsAmount;
+        public int scriptCommandsAmount;
         public List<UInt16> scriptParams = new List<UInt16>();
         public int scriptGameVersion = 0;
-        private Script.MainScript.ScriptCommand scriptCommand = new Script.MainScript.ScriptCommand(0);
+        public Script.MainScript.ScriptCommand scriptCommand = null;
 
         public string Name { get; set; }
         public GameObject()

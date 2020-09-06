@@ -159,6 +159,24 @@ namespace TwinsaityEditor
             for (int i = 0; i < Data.cSounds.Count; ++i)
                 text.Add(Data.cSounds[i].ToString());
 
+            text.Add($"Commands amount: {Data.scriptCommandsAmount}");
+            if (Data.scriptCommandsAmount > 0)
+            {
+                var command = Data.scriptCommand;
+                do
+                {
+                    if (Enum.IsDefined(typeof(DefaultEnums.CommandID), command.VTableIndex))
+                    {
+                        text.Add($"{(DefaultEnums.CommandID)command.VTableIndex}: {command.VTableIndex}");
+                    }
+                    else
+                    {
+                        text.Add($"{command.VTableIndex}");
+                    }
+                    command = command.nextCommand;
+                } while (command != null);
+            }
+
             TextPrev = text.ToArray();
         }
         private void Menu_OpenEditor()
