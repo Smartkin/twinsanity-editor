@@ -31,7 +31,7 @@ namespace Twinsanity
         public List<UInt16> cScripts = new List<UInt16>();
         public List<UInt16> cUnk = new List<UInt16>();
         public List<UInt16> cSounds = new List<UInt16>();
-        private int scriptLen;
+        private int scriptCommandsAmount;
         public List<UInt16> scriptParams = new List<UInt16>();
         private Script.MainScript.ScriptCommand scriptCommand = new Script.MainScript.ScriptCommand(0);
 
@@ -146,13 +146,11 @@ namespace Twinsanity
                     for (int i = 0; i < cSounds.Count; ++i)
                         writer.Write(cSounds[i]);
                 }
-                writer.Write(scriptLen);
-                if (scriptLen > 1)
+                writer.Write(scriptCommandsAmount);
+                if (scriptCommand != null)
                 {
-                    for (int i = 0; i < 18; ++i)
-                        writer.Write(scriptParams[i]);
+                    scriptCommand.Write(writer);
                 }
-                scriptCommand.Write(writer);
             }
             size = (int)(writer.BaseStream.Position - sk);
         }
@@ -292,8 +290,8 @@ namespace Twinsanity
                         cSounds.Add(reader.ReadUInt16());
                 }
             }
-            scriptLen = (int)reader.ReadUInt32();
-            if (scriptLen != 0)
+            scriptCommandsAmount = (int)reader.ReadUInt32();
+            if (scriptCommandsAmount != 0)
             {
                 scriptCommand = new Script.MainScript.ScriptCommand(reader, 0);
             } else
