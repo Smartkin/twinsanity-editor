@@ -315,7 +315,7 @@ namespace Twinsanity
                         LoadItem<Skydome>(reader, sub);
                         break;
                     case SectionType.Object:
-                        LoadItem<GameObject>(reader, sub);
+                        LoadItem<GameObject>(reader, sub, Type);
                         break;
                     case SectionType.ObjectDemo: //PS2 DEMO objects
                         LoadItem<TwinsItem>(reader, sub);

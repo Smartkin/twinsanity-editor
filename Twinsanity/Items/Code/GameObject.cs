@@ -33,6 +33,7 @@ namespace Twinsanity
         public List<UInt16> cSounds = new List<UInt16>();
         private int scriptCommandsAmount;
         public List<UInt16> scriptParams = new List<UInt16>();
+        public int scriptGameVersion = 0;
         private Script.MainScript.ScriptCommand scriptCommand = new Script.MainScript.ScriptCommand(0);
 
         public string Name { get; set; }
@@ -157,6 +158,19 @@ namespace Twinsanity
 
         public override void Load(BinaryReader reader, int size)
         {
+            if (ParentType == SectionType.ScriptX)
+            {
+                scriptGameVersion = 1;
+            }
+            else if (ParentType == SectionType.ScriptDemo)
+            {
+                scriptGameVersion = 2;
+            }
+            else
+            {
+                scriptGameVersion = 0;
+            }
+
             var sk = reader.BaseStream.Position;
 
             UnkBitfield = reader.ReadUInt32();
@@ -293,7 +307,7 @@ namespace Twinsanity
             scriptCommandsAmount = (int)reader.ReadUInt32();
             if (scriptCommandsAmount != 0)
             {
-                scriptCommand = new Script.MainScript.ScriptCommand(reader, 0);
+                scriptCommand = new Script.MainScript.ScriptCommand(reader, scriptGameVersion);
             } else
             {
                 scriptCommand = null;
