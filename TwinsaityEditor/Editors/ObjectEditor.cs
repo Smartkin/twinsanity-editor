@@ -36,9 +36,9 @@ namespace TwinsaityEditor
         private ListManipulatorUInt16 cSoundManipulator;
         private ListManipulatorUInt16 cCmManipulator;
 
-        private ListManipulatorUInt32 unk1Manipulator;
-        private ListManipulatorSingle unk2Manipulator;
-        private ListManipulatorUInt32 unk3Manipulator;
+        private ListManipulatorUInt32 instFlagsManipulator;
+        private ListManipulatorSingle instFloatsManipulator;
+        private ListManipulatorUInt32 instIntergersManipulator;
         private ListManipulatorUInt16 unk4Manipulator;
         public ObjectEditor(SectionController c)
         {
@@ -60,9 +60,9 @@ namespace TwinsaityEditor
             cSoundManipulator = new ListManipulatorUInt16(csoundAdd, csoundRemove, csoundSet, csoundUp, csoundDown, csoundsList, csoundIdSource);
             cCmManipulator = new ListManipulatorUInt16(ccmAdd, ccmRemove, ccmSet, ccmUp, ccmDown, ccmList, ccmIdSource);
 
-            unk1Manipulator = new ListManipulatorUInt32(unk1Add, unk1Remove, unk1Set, unk1Up, unk1Down, unk1List, unk1Source);
-            unk2Manipulator = new ListManipulatorSingle(unk2Add, unk2Remove, unk2Set, unk2Up, unk2Down, unk2List, unk2Source);
-            unk3Manipulator = new ListManipulatorUInt32(unk3Add, unk3Remove, unk3Set, unk3Up, unk3Down, unk3List, unk3Source);
+            instFlagsManipulator = new ListManipulatorUInt32(unk1Add, unk1Remove, unk1Set, unk1Up, unk1Down, instFlagsList, unk1Source);
+            instFloatsManipulator = new ListManipulatorSingle(unk2Add, unk2Remove, unk2Set, unk2Up, unk2Down, instFloatsList, unk2Source);
+            instIntergersManipulator = new ListManipulatorUInt32(unk3Add, unk3Remove, unk3Set, unk3Up, unk3Down, instIntegersList, unk3Source);
             unk4Manipulator = new ListManipulatorUInt16(unk4Add, unk4Remove, unk4Set, unk4Up, unk4Down, unk4List, unk4Source);
             PopulateList();
         }
@@ -128,12 +128,12 @@ namespace TwinsaityEditor
             cCmManipulator.SetSource(gameObject.cCM);
             cCmManipulator.PopulateList();
 
-            unk1Manipulator.SetSource(gameObject.instFlagsList);
-            unk1Manipulator.PopulateList();
-            unk2Manipulator.SetSource(gameObject.instFloatsList);
-            unk2Manipulator.PopulateList();
-            unk3Manipulator.SetSource(gameObject.instIntegerList);
-            unk3Manipulator.PopulateList();
+            instFlagsManipulator.SetSource(gameObject.instFlagsList);
+            instFlagsManipulator.PopulateList();
+            instFloatsManipulator.SetSource(gameObject.instFloatsList);
+            instFloatsManipulator.PopulateList();
+            instIntergersManipulator.SetSource(gameObject.instIntegerList);
+            instIntergersManipulator.PopulateList();
             unk4Manipulator.SetSource(gameObject.cUnk);
             unk4Manipulator.PopulateList();
 

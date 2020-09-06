@@ -145,7 +145,7 @@
             this.unk3Down = new System.Windows.Forms.Button();
             this.unk3Remove = new System.Windows.Forms.Button();
             this.unk3Up = new System.Windows.Forms.Button();
-            this.unk3List = new System.Windows.Forms.ListBox();
+            this.instIntegersList = new System.Windows.Forms.ListBox();
             this.groupBox16 = new System.Windows.Forms.GroupBox();
             this.unk2Source = new System.Windows.Forms.TextBox();
             this.unk2Set = new System.Windows.Forms.Button();
@@ -153,7 +153,7 @@
             this.unk2Down = new System.Windows.Forms.Button();
             this.unk2Remove = new System.Windows.Forms.Button();
             this.unk2Up = new System.Windows.Forms.Button();
-            this.unk2List = new System.Windows.Forms.ListBox();
+            this.instFloatsList = new System.Windows.Forms.ListBox();
             this.groupBox17 = new System.Windows.Forms.GroupBox();
             this.unk1Source = new System.Windows.Forms.TextBox();
             this.unk1Set = new System.Windows.Forms.Button();
@@ -161,7 +161,7 @@
             this.unk1Down = new System.Windows.Forms.Button();
             this.unk1Remove = new System.Windows.Forms.Button();
             this.unk1Up = new System.Windows.Forms.Button();
-            this.unk1List = new System.Windows.Forms.ListBox();
+            this.instFlagsList = new System.Windows.Forms.ListBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.objectId = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -1185,7 +1185,7 @@
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Size = new System.Drawing.Size(727, 509);
             this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Unknown Values";
+            this.tabPage3.Text = "Instance values";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // groupBox14
@@ -1272,13 +1272,13 @@
             this.groupBox15.Controls.Add(this.unk3Down);
             this.groupBox15.Controls.Add(this.unk3Remove);
             this.groupBox15.Controls.Add(this.unk3Up);
-            this.groupBox15.Controls.Add(this.unk3List);
+            this.groupBox15.Controls.Add(this.instIntegersList);
             this.groupBox15.Location = new System.Drawing.Point(483, 12);
             this.groupBox15.Name = "groupBox15";
             this.groupBox15.Size = new System.Drawing.Size(232, 195);
             this.groupBox15.TabIndex = 16;
             this.groupBox15.TabStop = false;
-            this.groupBox15.Text = "Unknown List";
+            this.groupBox15.Text = "Instance integers";
             // 
             // unk3Source
             // 
@@ -1332,13 +1332,13 @@
             this.unk3Up.Text = "Up";
             this.unk3Up.UseVisualStyleBackColor = true;
             // 
-            // unk3List
+            // instIntegersList
             // 
-            this.unk3List.FormattingEnabled = true;
-            this.unk3List.Location = new System.Drawing.Point(78, 19);
-            this.unk3List.Name = "unk3List";
-            this.unk3List.Size = new System.Drawing.Size(148, 108);
-            this.unk3List.TabIndex = 0;
+            this.instIntegersList.FormattingEnabled = true;
+            this.instIntegersList.Location = new System.Drawing.Point(78, 19);
+            this.instIntegersList.Name = "instIntegersList";
+            this.instIntegersList.Size = new System.Drawing.Size(148, 108);
+            this.instIntegersList.TabIndex = 0;
             // 
             // groupBox16
             // 
@@ -1348,13 +1348,13 @@
             this.groupBox16.Controls.Add(this.unk2Down);
             this.groupBox16.Controls.Add(this.unk2Remove);
             this.groupBox16.Controls.Add(this.unk2Up);
-            this.groupBox16.Controls.Add(this.unk2List);
+            this.groupBox16.Controls.Add(this.instFloatsList);
             this.groupBox16.Location = new System.Drawing.Point(245, 12);
             this.groupBox16.Name = "groupBox16";
             this.groupBox16.Size = new System.Drawing.Size(232, 195);
             this.groupBox16.TabIndex = 17;
             this.groupBox16.TabStop = false;
-            this.groupBox16.Text = "Unknown List";
+            this.groupBox16.Text = "Instance floats";
             // 
             // unk2Source
             // 
@@ -1408,13 +1408,13 @@
             this.unk2Up.Text = "Up";
             this.unk2Up.UseVisualStyleBackColor = true;
             // 
-            // unk2List
+            // instFloatsList
             // 
-            this.unk2List.FormattingEnabled = true;
-            this.unk2List.Location = new System.Drawing.Point(78, 19);
-            this.unk2List.Name = "unk2List";
-            this.unk2List.Size = new System.Drawing.Size(148, 108);
-            this.unk2List.TabIndex = 0;
+            this.instFloatsList.FormattingEnabled = true;
+            this.instFloatsList.Location = new System.Drawing.Point(78, 19);
+            this.instFloatsList.Name = "instFloatsList";
+            this.instFloatsList.Size = new System.Drawing.Size(148, 108);
+            this.instFloatsList.TabIndex = 0;
             // 
             // groupBox17
             // 
@@ -1424,13 +1424,13 @@
             this.groupBox17.Controls.Add(this.unk1Down);
             this.groupBox17.Controls.Add(this.unk1Remove);
             this.groupBox17.Controls.Add(this.unk1Up);
-            this.groupBox17.Controls.Add(this.unk1List);
+            this.groupBox17.Controls.Add(this.instFlagsList);
             this.groupBox17.Location = new System.Drawing.Point(7, 12);
             this.groupBox17.Name = "groupBox17";
             this.groupBox17.Size = new System.Drawing.Size(232, 195);
             this.groupBox17.TabIndex = 14;
             this.groupBox17.TabStop = false;
-            this.groupBox17.Text = "Unknown List";
+            this.groupBox17.Text = "Instance flags";
             // 
             // unk1Source
             // 
@@ -1484,13 +1484,13 @@
             this.unk1Up.Text = "Up";
             this.unk1Up.UseVisualStyleBackColor = true;
             // 
-            // unk1List
+            // instFlagsList
             // 
-            this.unk1List.FormattingEnabled = true;
-            this.unk1List.Location = new System.Drawing.Point(78, 19);
-            this.unk1List.Name = "unk1List";
-            this.unk1List.Size = new System.Drawing.Size(148, 108);
-            this.unk1List.TabIndex = 0;
+            this.instFlagsList.FormattingEnabled = true;
+            this.instFlagsList.Location = new System.Drawing.Point(78, 19);
+            this.instFlagsList.Name = "instFlagsList";
+            this.instFlagsList.Size = new System.Drawing.Size(148, 108);
+            this.instFlagsList.TabIndex = 0;
             // 
             // panel1
             // 
@@ -1759,7 +1759,7 @@
         private System.Windows.Forms.Button unk3Down;
         private System.Windows.Forms.Button unk3Remove;
         private System.Windows.Forms.Button unk3Up;
-        private System.Windows.Forms.ListBox unk3List;
+        private System.Windows.Forms.ListBox instIntegersList;
         private System.Windows.Forms.GroupBox groupBox16;
         private System.Windows.Forms.TextBox unk2Source;
         private System.Windows.Forms.Button unk2Set;
@@ -1767,7 +1767,7 @@
         private System.Windows.Forms.Button unk2Down;
         private System.Windows.Forms.Button unk2Remove;
         private System.Windows.Forms.Button unk2Up;
-        private System.Windows.Forms.ListBox unk2List;
+        private System.Windows.Forms.ListBox instFloatsList;
         private System.Windows.Forms.GroupBox groupBox17;
         private System.Windows.Forms.TextBox unk1Source;
         private System.Windows.Forms.Button unk1Set;
@@ -1775,7 +1775,7 @@
         private System.Windows.Forms.Button unk1Down;
         private System.Windows.Forms.Button unk1Remove;
         private System.Windows.Forms.Button unk1Up;
-        private System.Windows.Forms.ListBox unk1List;
+        private System.Windows.Forms.ListBox instFlagsList;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem objectsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteObjectToolStripMenuItem;
