@@ -229,7 +229,6 @@ namespace Twinsanity
                 instIntegerList.Clear();
                 for (int i = 0; i < cnt; ++i)
                     instIntegerList.Add(reader.ReadUInt32());
-                flag = reader.ReadUInt32();
             }
             else
             {
