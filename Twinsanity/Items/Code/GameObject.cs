@@ -343,13 +343,10 @@ namespace Twinsanity
             size += 4;
             size += Sounds.Count * 2;
 
-            size += 4;
-            PHeader = (uint)((byte)instFlagsList.Count
-                | (instFloatsList.Count << 8)
-                | (instIntegerList.Count << 16));
-            if (PHeader > 255)
+            if ((UnkBitfield & 0x20000000) != 0x0)
             {
-                size += 4;
+                size += 4; // PHeader
+                size += 4; // UnkInt
 
                 size += 4;
                 size += instFlagsList.Count * 4;
@@ -359,11 +356,12 @@ namespace Twinsanity
 
                 size += 4;
                 size += instIntegerList.Count * 4;
-                size += 4;
             }
             updateFlag();
-            if (flag > 0)
+            if ((UnkBitfield & 0x40000000) != 0x0)
             {
+                size += 4;
+
                 if ((flag & 0x00000001) != 0)
                 {
                     size += 4;
@@ -399,11 +397,11 @@ namespace Twinsanity
                     size += 4;
                     size += cSounds.Count * 2;
                 }
-                size += 4;
-                if (scriptCommand != null)
-                {
-                    size += scriptCommand.GetLength();
-                }
+            }
+            size += 4;
+            if (scriptCommand != null)
+            {
+                size += scriptCommand.GetLength();
             }
             return size;
         }
