@@ -128,11 +128,11 @@ namespace TwinsaityEditor
             cCmManipulator.SetSource(gameObject.cCM);
             cCmManipulator.PopulateList();
 
-            unk1Manipulator.SetSource(gameObject.pUi321);
+            unk1Manipulator.SetSource(gameObject.instFlagsList);
             unk1Manipulator.PopulateList();
-            unk2Manipulator.SetSource(gameObject.pUi322);
+            unk2Manipulator.SetSource(gameObject.instFloatsList);
             unk2Manipulator.PopulateList();
-            unk3Manipulator.SetSource(gameObject.pUi323);
+            unk3Manipulator.SetSource(gameObject.instIntegerList);
             unk3Manipulator.PopulateList();
             unk4Manipulator.SetSource(gameObject.cUnk);
             unk4Manipulator.PopulateList();
