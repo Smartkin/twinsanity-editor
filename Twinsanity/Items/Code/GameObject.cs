@@ -360,7 +360,7 @@ namespace Twinsanity
             updateFlag();
             if ((UnkBitfield & 0x40000000) != 0x0)
             {
-                size += 4;
+                size += 4; // Flag
 
                 if ((flag & 0x00000001) != 0)
                 {
@@ -398,7 +398,7 @@ namespace Twinsanity
                     size += cSounds.Count * 2;
                 }
             }
-            size += 4;
+            size += 4; // Amount of script commands
             if (scriptCommand != null)
             {
                 size += scriptCommand.GetLength();
