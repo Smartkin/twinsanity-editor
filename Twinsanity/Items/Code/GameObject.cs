@@ -35,6 +35,7 @@ namespace Twinsanity
         public List<UInt16> scriptParams = new List<UInt16>();
         public int scriptGameVersion = 0;
         public Script.MainScript.ScriptCommand scriptCommand = null;
+        public List<Script.MainScript.ScriptCommand> scriptCommands = new List<Script.MainScript.ScriptCommand>();
 
         public string Name { get; set; }
         public GameObject()
@@ -308,6 +309,12 @@ namespace Twinsanity
             if (scriptCommandsAmount != 0)
             {
                 scriptCommand = new Script.MainScript.ScriptCommand(reader, scriptGameVersion);
+                var command = scriptCommand;
+                do
+                {
+                    scriptCommands.Add(command);
+                    command = command.nextCommand;
+                } while (command != null);
             } else
             {
                 scriptCommand = null;
