@@ -1689,21 +1689,23 @@
             // 
             // btnAddCommand
             // 
-            this.btnAddCommand.Location = new System.Drawing.Point(296, 478);
+            this.btnAddCommand.Location = new System.Drawing.Point(564, 450);
             this.btnAddCommand.Name = "btnAddCommand";
-            this.btnAddCommand.Size = new System.Drawing.Size(112, 23);
+            this.btnAddCommand.Size = new System.Drawing.Size(158, 23);
             this.btnAddCommand.TabIndex = 1;
             this.btnAddCommand.Text = "Add command";
             this.btnAddCommand.UseVisualStyleBackColor = true;
+            this.btnAddCommand.Click += new System.EventHandler(this.btnAddCommand_Click);
             // 
             // btnDeleteCommand
             // 
-            this.btnDeleteCommand.Location = new System.Drawing.Point(414, 478);
+            this.btnDeleteCommand.Location = new System.Drawing.Point(296, 478);
             this.btnDeleteCommand.Name = "btnDeleteCommand";
-            this.btnDeleteCommand.Size = new System.Drawing.Size(116, 23);
+            this.btnDeleteCommand.Size = new System.Drawing.Size(144, 23);
             this.btnDeleteCommand.TabIndex = 2;
             this.btnDeleteCommand.Text = "Delete command";
             this.btnDeleteCommand.UseVisualStyleBackColor = true;
+            this.btnDeleteCommand.Click += new System.EventHandler(this.btnDeleteCommand_Click);
             // 
             // cbVTableIndexes
             // 
@@ -1728,13 +1730,13 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(300, 455);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(96, 13);
+            this.label4.Size = new System.Drawing.Size(124, 13);
             this.label4.TabIndex = 5;
-            this.label4.Text = "Command position:";
+            this.label4.Text = "Command insert position:";
             // 
             // tbCommandPosition
             // 
-            this.tbCommandPosition.Location = new System.Drawing.Point(402, 452);
+            this.tbCommandPosition.Location = new System.Drawing.Point(430, 452);
             this.tbCommandPosition.Name = "tbCommandPosition";
             this.tbCommandPosition.Size = new System.Drawing.Size(128, 20);
             this.tbCommandPosition.TabIndex = 6;

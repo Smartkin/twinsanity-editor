@@ -85,11 +85,13 @@ namespace Twinsanity
             writer.Write(Sounds.Count);
             for (int i = 0; i < Sounds.Count; ++i)
                 writer.Write(Sounds[i]);
-            PHeader = (uint)((byte)instFlagsList.Count
+            
+            if ((UnkBitfield & 0x20000000) != 0x0)
+            {
+                PHeader = (uint)((byte)instFlagsList.Count
                 | (instFloatsList.Count << 8)
                 | (instIntegerList.Count << 16));
-            if (PHeader > 0)
-            {
+
                 writer.Write(PHeader);
                 writer.Write(PUI32);
                 writer.Write(instFlagsList.Count);
@@ -102,10 +104,11 @@ namespace Twinsanity
                 for (int i = 0; i < instIntegerList.Count; ++i)
                     writer.Write(instIntegerList[i]);
             }
-            updateFlag();
-            writer.Write(flag);
-            if (flag > 0)
+
+            if ((UnkBitfield & 0x40000000) != 0x0)
             {
+                updateFlag();
+                writer.Write(flag);
                 if ((flag & 0x01) != 0)
                 {
                     writer.Write(cObjects.Count);
@@ -148,11 +151,11 @@ namespace Twinsanity
                     for (int i = 0; i < cSounds.Count; ++i)
                         writer.Write(cSounds[i]);
                 }
-                writer.Write(scriptCommandsAmount);
-                if (scriptCommand != null)
-                {
-                    scriptCommand.Write(writer);
-                }
+            }
+            writer.Write(scriptCommandsAmount);
+            if (scriptCommand != null)
+            {
+                scriptCommand.Write(writer);
             }
             size = (int)(writer.BaseStream.Position - sk);
         }

@@ -277,7 +277,7 @@ namespace TwinsaityEditor
 
         private void commandsList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (skipUpdate) return;
+            if (skipUpdate || commandsList.SelectedIndex == -1) return;
             
             var command = gameObject.scriptCommands[commandsList.SelectedIndex];
             cbVTableIndexes.SelectedIndex = command.VTableIndex;
@@ -303,6 +303,7 @@ namespace TwinsaityEditor
         }
         private void UpdateRepresentation(uint val, object sender)
         {
+            // Imagine C# not having a proper way to temporarily and properly disabling Text firing TextChanged event
             skipUpdate = true;
             if (tbHEXRepres != sender) tbHEXRepres.Text = val.ToString("X8");
             if (tbUInt32Repres != sender)  tbUInt32Repres.Text = val.ToString();
@@ -554,6 +555,79 @@ namespace TwinsaityEditor
             }
             tbBitfield.Text = command.UnkShort.ToString("X4");
             tbCommandPosition.Text = "";
+        }
+        private void btnAddCommand_Click(object sender, EventArgs e)
+        {
+            UInt32 position;
+            if (UInt32.TryParse(tbCommandPosition.Text, out position))
+            {
+                if (position > gameObject.scriptCommandsAmount)
+                {
+                    position = (UInt32)gameObject.scriptCommandsAmount;
+                }
+            }
+            var newCom = new Script.MainScript.ScriptCommand(gameObject.scriptGameVersion);
+            if (position == 0)
+            {
+                if (gameObject.scriptCommandsAmount > 1)
+                {
+                    newCom.nextCommand = gameObject.scriptCommands[(Int32)position];
+                    newCom.internalIndex |= 0x1000000;
+                }
+                gameObject.scriptCommand = newCom;
+            }
+            else if (position != (UInt32)gameObject.scriptCommandsAmount)
+            {
+                var prevCom = gameObject.scriptCommands[(Int32)(position - 1)];
+                newCom.nextCommand = prevCom.nextCommand;
+                prevCom.nextCommand = newCom;
+                newCom.internalIndex |= 0x1000000;
+            }
+            else
+            {
+                var prevCom = gameObject.scriptCommands[(Int32)(position - 1)];
+                prevCom.nextCommand = newCom;
+                prevCom.internalIndex |= 0x1000000;
+            }
+            gameObject.scriptCommands.Insert((Int32)position, newCom);
+            gameObject.scriptCommandsAmount++;
+            PopulateObjectCommandList();
+        }
+
+        private void btnDeleteCommand_Click(object sender, EventArgs e)
+        {
+            if (commandsList.SelectedItem != null)
+            {
+                if (gameObject.scriptCommandsAmount > 1 && commandsList.SelectedIndex == gameObject.scriptCommandsAmount - 1)
+                {
+                    var prevCom = gameObject.scriptCommands[commandsList.SelectedIndex - 1];
+                    prevCom.nextCommand = null;
+                    prevCom.internalIndex &= 0x70FFFFFF;
+                }
+                else if (commandsList.SelectedIndex != 0)
+                {
+                    var remCom = gameObject.scriptCommands[commandsList.SelectedIndex];
+                    var prevCom = gameObject.scriptCommands[commandsList.SelectedIndex - 1];
+                    prevCom.nextCommand = remCom.nextCommand;
+                }
+                else
+                { // If first command is being removed, set new starting command
+                    if (gameObject.scriptCommandsAmount > 1)
+                    {
+                        gameObject.scriptCommand = gameObject.scriptCommands[1];
+                    }
+                    else
+                    {
+                        gameObject.scriptCommand = null;
+                    }
+                }
+                gameObject.scriptCommands.RemoveAt(commandsList.SelectedIndex);
+                gameObject.scriptCommandsAmount--;
+                ClearRepresentation();
+                lbCommandArguments.Items.Clear();
+                lblArguments.Text = "Arguments: 0";
+                PopulateObjectCommandList();
+            }
         }
     }
 }
