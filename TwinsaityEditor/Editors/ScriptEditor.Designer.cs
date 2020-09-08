@@ -73,6 +73,7 @@
             this.generalArray = new System.Windows.Forms.TextBox();
             this.label31 = new System.Windows.Forms.Label();
             this.panelType4 = new System.Windows.Forms.Panel();
+            this.cbCommandIndex = new System.Windows.Forms.ComboBox();
             this.type4ArgBinary = new System.Windows.Forms.TextBox();
             this.label45 = new System.Windows.Forms.Label();
             this.type4ArgSignedInt16_2 = new System.Windows.Forms.TextBox();
@@ -104,7 +105,6 @@
             this.type4Warning = new System.Windows.Forms.Label();
             this.type4ExpectedLength = new System.Windows.Forms.Label();
             this.type4BitField = new System.Windows.Forms.TextBox();
-            this.type4VTableIndex = new System.Windows.Forms.TextBox();
             this.label21 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
             this.panelLinked = new System.Windows.Forms.Panel();
@@ -608,6 +608,7 @@
             // 
             // panelType4
             // 
+            this.panelType4.Controls.Add(this.cbCommandIndex);
             this.panelType4.Controls.Add(this.type4ArgBinary);
             this.panelType4.Controls.Add(this.label45);
             this.panelType4.Controls.Add(this.type4ArgSignedInt16_2);
@@ -639,7 +640,6 @@
             this.panelType4.Controls.Add(this.type4Warning);
             this.panelType4.Controls.Add(this.type4ExpectedLength);
             this.panelType4.Controls.Add(this.type4BitField);
-            this.panelType4.Controls.Add(this.type4VTableIndex);
             this.panelType4.Controls.Add(this.label21);
             this.panelType4.Controls.Add(this.label20);
             this.panelType4.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -648,6 +648,15 @@
             this.panelType4.Size = new System.Drawing.Size(302, 609);
             this.panelType4.TabIndex = 0;
             this.panelType4.Paint += new System.Windows.Forms.PaintEventHandler(this.panelType4_Paint);
+            // 
+            // cbCommandIndex
+            // 
+            this.cbCommandIndex.FormattingEnabled = true;
+            this.cbCommandIndex.Location = new System.Drawing.Point(93, 23);
+            this.cbCommandIndex.Name = "cbCommandIndex";
+            this.cbCommandIndex.Size = new System.Drawing.Size(198, 21);
+            this.cbCommandIndex.TabIndex = 36;
+            this.cbCommandIndex.SelectedIndexChanged += new System.EventHandler(this.cbCommandIndex_SelectedIndexChanged);
             // 
             // type4ArgBinary
             // 
@@ -912,17 +921,9 @@
             // 
             this.type4BitField.Location = new System.Drawing.Point(93, 50);
             this.type4BitField.Name = "type4BitField";
-            this.type4BitField.Size = new System.Drawing.Size(100, 20);
+            this.type4BitField.Size = new System.Drawing.Size(198, 20);
             this.type4BitField.TabIndex = 5;
             this.type4BitField.TextChanged += new System.EventHandler(this.type4BitField_TextChanged);
-            // 
-            // type4VTableIndex
-            // 
-            this.type4VTableIndex.Location = new System.Drawing.Point(93, 23);
-            this.type4VTableIndex.Name = "type4VTableIndex";
-            this.type4VTableIndex.Size = new System.Drawing.Size(100, 20);
-            this.type4VTableIndex.TabIndex = 4;
-            this.type4VTableIndex.TextChanged += new System.EventHandler(this.type4VTableIndex_TextChanged);
             // 
             // label21
             // 
@@ -1376,7 +1377,7 @@
             // scriptNameFilter
             // 
             this.scriptNameFilter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.scriptNameFilter.Location = new System.Drawing.Point(95, 3);
+            this.scriptNameFilter.Location = new System.Drawing.Point(91, 3);
             this.scriptNameFilter.Name = "scriptNameFilter";
             this.scriptNameFilter.Size = new System.Drawing.Size(294, 20);
             this.scriptNameFilter.TabIndex = 3;
@@ -1388,7 +1389,7 @@
             this.label32.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label32.Location = new System.Drawing.Point(3, 0);
             this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(30, 25);
+            this.label32.Size = new System.Drawing.Size(28, 25);
             this.label32.TabIndex = 4;
             this.label32.Text = "Filter:";
             this.label32.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1414,7 +1415,7 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 38.88889F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 61.11111F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 300F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 186F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 190F));
             this.tableLayoutPanel2.Controls.Add(this.label32, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.scriptNameFilter, 2, 0);
             this.tableLayoutPanel2.Controls.Add(this.filterSelection, 1, 0);
@@ -1434,9 +1435,9 @@
             this.filterSelection.Items.AddRange(new object[] {
             "Name",
             "ID"});
-            this.filterSelection.Location = new System.Drawing.Point(39, 3);
+            this.filterSelection.Location = new System.Drawing.Point(37, 3);
             this.filterSelection.Name = "filterSelection";
-            this.filterSelection.Size = new System.Drawing.Size(50, 21);
+            this.filterSelection.Size = new System.Drawing.Size(48, 21);
             this.filterSelection.TabIndex = 5;
             this.filterSelection.SelectedIndexChanged += new System.EventHandler(this.filterSelection_SelectedIndexChanged);
             // 
@@ -1444,9 +1445,9 @@
             // 
             this.checkBox_showHeaderScripts.AutoSize = true;
             this.checkBox_showHeaderScripts.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.checkBox_showHeaderScripts.Location = new System.Drawing.Point(395, 3);
+            this.checkBox_showHeaderScripts.Location = new System.Drawing.Point(391, 3);
             this.checkBox_showHeaderScripts.Name = "checkBox_showHeaderScripts";
-            this.checkBox_showHeaderScripts.Size = new System.Drawing.Size(181, 19);
+            this.checkBox_showHeaderScripts.Size = new System.Drawing.Size(185, 19);
             this.checkBox_showHeaderScripts.TabIndex = 6;
             this.checkBox_showHeaderScripts.Text = "Show Header Scripts";
             this.checkBox_showHeaderScripts.UseVisualStyleBackColor = true;
@@ -1621,7 +1622,6 @@
         private System.Windows.Forms.Label type4Warning;
         private System.Windows.Forms.Label type4ExpectedLength;
         private System.Windows.Forms.TextBox type4BitField;
-        private System.Windows.Forms.TextBox type4VTableIndex;
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Panel panelType3;
@@ -1699,5 +1699,6 @@
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.CheckBox checkBox_type2_cond_toggle;
         private System.Windows.Forms.CheckBox checkBox_state_header_toggle;
+        private System.Windows.Forms.ComboBox cbCommandIndex;
     }
 }

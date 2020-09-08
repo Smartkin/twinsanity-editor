@@ -587,6 +587,13 @@ namespace Twinsanity
                 public List<UInt32> arguments { get; set; }
                 public ScriptCommand nextCommand { get; set; }
                 public int scriptGameVersion { get; set; }
+                public static int ScriptCommandTableSize
+                {
+                    get
+                    {
+                        return CommandSizeMapper_PS2.Length;
+                    }
+                }
 
                 public UInt16 VTableIndex
                 {
