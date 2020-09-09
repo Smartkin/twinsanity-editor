@@ -27,7 +27,7 @@ namespace TwinsaityEditor
             text.Add($"ID: {Data.ID}");
             text.Add($"Size: {Data.Size}");
             text.Add($"Name: {Data.Name}");
-            text.Add($"Unknown bitfield: 0x{Data.UnkBitfield.ToString("X")}");
+            text.Add($"Unknown bitfield: 0x{Data.UnkBitfield:X}");
             for (int i = 0; i < Data.ScriptSlots.Count; ++i)
             {
                 var slotName = "Reserved";
