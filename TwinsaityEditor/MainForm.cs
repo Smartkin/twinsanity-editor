@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using TwinsaityEditor.Controllers;
 using TwinsaityEditor.Properties;
 using TwinsaityEditor.Workers;
 using Twinsanity;
@@ -84,6 +85,8 @@ namespace TwinsaityEditor
                 c = new ObjectController(this, (GameObject)a);
             else if (a is Script)
                 c = new ScriptController(this, (Script)a);
+            else if (a is Animation)
+                c = new AnimationController(this, (Animation)a);
             else if (a is SoundEffect)
                 c = new SEController(this, (SoundEffect)a);
             else if (a is AIPosition)
