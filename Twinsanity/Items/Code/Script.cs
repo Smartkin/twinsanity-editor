@@ -655,7 +655,7 @@ namespace Twinsanity
                         return 0;
                     }
                 }
-                static Int32 GetCommandSize(Int32 index, int ver)
+                public static Int32 GetCommandSize(Int32 index, int ver)
                 {
                     if (index < 0 || index >= CommandSizeMapper_PS2.Length)
                     {

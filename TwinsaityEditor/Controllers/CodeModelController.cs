@@ -23,6 +23,7 @@ namespace TwinsaityEditor.Controllers
             for (var i = 0; i < Data.ArraySize; ++i)
             {
                 text.Add($"Addition {i}");
+                text.Add($"\tScript ID: {Data.unkShorts[i]}");
                 var agentLabAddition = Data.agentLabAdditionsList[i];
                 text.Add($"\tCommands amount: {agentLabAddition.scriptCommandsAmount}");
                 if (agentLabAddition.scriptCommandsAmount > 0)
@@ -41,7 +42,6 @@ namespace TwinsaityEditor.Controllers
                         command = command.nextCommand;
                     } while (command != null);
                 }
-                text.Add($"\tUnkShort: {Data.unkShorts[i]}");
             }
             text.Add($"Unk AgentLab addition");
             var cmd = Data.scriptCommand;
