@@ -32,7 +32,7 @@ namespace Twinsanity
         Script, ScriptX, ScriptDemo,
         Animation,
         OGI, GraphicsInfo,
-        CodeModel,
+        CodeModel, CodeModelX, CodeModelDemo,
         SE, Xbox_SE,
         SE_Eng, Xbox_SE_Eng,
         SE_Fre, Xbox_SE_Fre,
@@ -231,7 +231,12 @@ namespace Twinsanity
                                 LoadSection(reader, sub, SectionType.OGI);
                                 break;
                             case 4:
-                                LoadSection(reader, sub, SectionType.CodeModel);
+                                if (Type == SectionType.Code)
+                                    LoadSection(reader, sub, SectionType.CodeModel);
+                                else if (Type == SectionType.CodeX)
+                                    LoadSection(reader, sub, SectionType.CodeModelX);
+                                else
+                                    LoadSection(reader, sub, SectionType.CodeModelDemo);
                                 break;
                             case 6:
                                 //Temporary workaround for XBOX chunks to work until someone figures this out
@@ -322,6 +327,12 @@ namespace Twinsanity
                         LoadItem<TwinsItem>(reader, sub);
                         break;
                     case SectionType.CodeModel:
+                        LoadItem<CodeModel>(reader, sub, Type);
+                        break;
+                    case SectionType.CodeModelX:
+                        LoadItem<CodeModel>(reader, sub, Type);
+                        break;
+                    case SectionType.CodeModelDemo:
                         LoadItem<CodeModel>(reader, sub, Type);
                         break;
                     case SectionType.Script:

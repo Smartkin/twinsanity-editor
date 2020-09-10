@@ -74,11 +74,11 @@ namespace Twinsanity
 
         public override void Load(BinaryReader reader, int size)
         {
-            if (ParentType == SectionType.ScriptX)
+            if (ParentType == SectionType.CodeModelX)
             {
                 scriptGameVersion = 1;
             }
-            else if (ParentType == SectionType.ScriptDemo)
+            else if (ParentType == SectionType.CodeModelDemo)
             {
                 scriptGameVersion = 2;
             }
