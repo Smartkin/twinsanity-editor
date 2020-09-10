@@ -33,13 +33,15 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.duplicateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.button_PosFromCam = new System.Windows.Forms.Button();
             this.groupBox12 = new System.Windows.Forms.GroupBox();
             this.numericUpDown12 = new System.Windows.Forms.NumericUpDown();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.btnEditInstanceFlags = new System.Windows.Forms.Button();
+            this.tbInstanceFlags = new System.Windows.Forms.TextBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.numericUpDown15 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown14 = new System.Windows.Forms.NumericUpDown();
@@ -83,7 +85,6 @@
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.numericUpDown9 = new System.Windows.Forms.NumericUpDown();
             this.textBox2 = new System.Windows.Forms.TextBox();
-            this.duplicateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -178,6 +179,13 @@
             this.removeToolStripMenuItem.Text = "Remove";
             this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
             // 
+            // duplicateToolStripMenuItem
+            // 
+            this.duplicateToolStripMenuItem.Name = "duplicateToolStripMenuItem";
+            this.duplicateToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
+            this.duplicateToolStripMenuItem.Text = "Duplicate";
+            this.duplicateToolStripMenuItem.Click += new System.EventHandler(this.duplicateToolStripMenuItem_Click);
+            // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
@@ -209,9 +217,9 @@
             // button_PosFromCam
             // 
             this.button_PosFromCam.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_PosFromCam.Location = new System.Drawing.Point(438, 70);
+            this.button_PosFromCam.Location = new System.Drawing.Point(438, 82);
             this.button_PosFromCam.Name = "button_PosFromCam";
-            this.button_PosFromCam.Size = new System.Drawing.Size(52, 58);
+            this.button_PosFromCam.Size = new System.Drawing.Size(52, 50);
             this.button_PosFromCam.TabIndex = 11;
             this.button_PosFromCam.Text = "Copy Viewer Pos";
             this.button_PosFromCam.UseVisualStyleBackColor = true;
@@ -244,24 +252,35 @@
             // 
             // groupBox5
             // 
-            this.groupBox5.AutoSize = true;
             this.groupBox5.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.groupBox5.Controls.Add(this.textBox1);
-            this.groupBox5.Location = new System.Drawing.Point(420, 6);
+            this.groupBox5.Controls.Add(this.btnEditInstanceFlags);
+            this.groupBox5.Controls.Add(this.tbInstanceFlags);
+            this.groupBox5.Location = new System.Drawing.Point(423, 6);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(76, 58);
+            this.groupBox5.Size = new System.Drawing.Size(76, 70);
             this.groupBox5.TabIndex = 10;
             this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "Properties";
+            this.groupBox5.Text = "Flags";
             // 
-            // textBox1
+            // btnEditInstanceFlags
             // 
-            this.textBox1.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.textBox1.Location = new System.Drawing.Point(6, 19);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(64, 20);
-            this.textBox1.TabIndex = 0;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.btnEditInstanceFlags.Location = new System.Drawing.Point(6, 41);
+            this.btnEditInstanceFlags.Name = "btnEditInstanceFlags";
+            this.btnEditInstanceFlags.Size = new System.Drawing.Size(64, 23);
+            this.btnEditInstanceFlags.TabIndex = 1;
+            this.btnEditInstanceFlags.Text = "Edit";
+            this.btnEditInstanceFlags.UseVisualStyleBackColor = true;
+            this.btnEditInstanceFlags.Click += new System.EventHandler(this.btnEditInstanceFlags_Click);
+            // 
+            // tbInstanceFlags
+            // 
+            this.tbInstanceFlags.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.tbInstanceFlags.Enabled = false;
+            this.tbInstanceFlags.Location = new System.Drawing.Point(6, 19);
+            this.tbInstanceFlags.Name = "tbInstanceFlags";
+            this.tbInstanceFlags.ReadOnly = true;
+            this.tbInstanceFlags.Size = new System.Drawing.Size(64, 20);
+            this.tbInstanceFlags.TabIndex = 0;
             // 
             // groupBox4
             // 
@@ -282,7 +301,7 @@
             this.groupBox4.Controls.Add(this.label6);
             this.groupBox4.Controls.Add(this.label5);
             this.groupBox4.Controls.Add(this.trackBar1);
-            this.groupBox4.Location = new System.Drawing.Point(6, 134);
+            this.groupBox4.Location = new System.Drawing.Point(8, 138);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(488, 186);
             this.groupBox4.TabIndex = 9;
@@ -472,7 +491,7 @@
             this.groupBox3.Controls.Add(this.label2);
             this.groupBox3.Controls.Add(this.label1);
             this.groupBox3.Controls.Add(this.numericUpDown2);
-            this.groupBox3.Location = new System.Drawing.Point(6, 70);
+            this.groupBox3.Location = new System.Drawing.Point(6, 74);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(426, 58);
             this.groupBox3.TabIndex = 2;
@@ -837,13 +856,6 @@
             this.textBox2.TabIndex = 0;
             this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
-            // duplicateToolStripMenuItem
-            // 
-            this.duplicateToolStripMenuItem.Name = "duplicateToolStripMenuItem";
-            this.duplicateToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
-            this.duplicateToolStripMenuItem.Text = "Duplicate";
-            this.duplicateToolStripMenuItem.Click += new System.EventHandler(this.duplicateToolStripMenuItem_Click);
-            // 
             // InstanceEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -939,7 +951,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.NumericUpDown numericUpDown2;
         private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox tbInstanceFlags;
         private System.Windows.Forms.GroupBox groupBox9;
         private System.Windows.Forms.TextBox textBox5;
         private System.Windows.Forms.GroupBox groupBox8;
@@ -963,5 +975,6 @@
         private System.Windows.Forms.NumericUpDown numericUpDown13;
         private System.Windows.Forms.Button button_PosFromCam;
         private System.Windows.Forms.ToolStripMenuItem duplicateToolStripMenuItem;
+        private System.Windows.Forms.Button btnEditInstanceFlags;
     }
 }

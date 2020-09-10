@@ -220,6 +220,12 @@
     <Compile Include="Editors\InstanceEditor.Designer.cs">
       <DependentUpon>InstanceEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Editors\InstanceFlagsEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\InstanceFlagsEditor.Designer.cs">
+      <DependentUpon>InstanceFlagsEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Editors\ObjectEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -345,6 +351,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\InstanceEditor.resx">
       <DependentUpon>InstanceEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\InstanceFlagsEditor.resx">
+      <DependentUpon>InstanceFlagsEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\ObjectEditor.resx">
       <DependentUpon>ObjectEditor.cs</DependentUpon>

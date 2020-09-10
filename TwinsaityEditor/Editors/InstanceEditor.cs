@@ -11,6 +11,7 @@ namespace TwinsaityEditor
         private const string angleFormat = "{0:0.000}º";
         private SectionController controller;
         private Instance ins;
+        private InstanceFlagsEditor flagsEditor;
         
         private FileController File { get; set; }
         private TwinsFile FileData { get => File.Data; }
@@ -72,6 +73,10 @@ namespace TwinsaityEditor
             {
                 UpdateTab2();
             }
+            if (flagsEditor != null)
+            {
+                flagsEditor.Instance = ins;
+            }
 
             ignore_value_change = false;
 
@@ -100,7 +105,7 @@ namespace TwinsaityEditor
             numericUpDown3.Value = (decimal)ins.Pos.Y;
             numericUpDown4.Value = (decimal)ins.Pos.Z;
             numericUpDown5.Value = (decimal)ins.Pos.W;
-            textBox1.Text = Convert.ToString(ins.UnkI32, 16);
+            tbInstanceFlags.Text = Convert.ToString(ins.UnkI32, 16);
             tabControl1.Tag = (int)tabControl1.Tag | 0x01;
             numericUpDown13.Value = ins.COMRotX;
             numericUpDown14.Value = ins.COMRotY;
@@ -189,16 +194,6 @@ namespace TwinsaityEditor
             {
                 ins.ObjectID = oid;
                 listBox1.Items[listBox1.SelectedIndex] = GenTextForList(ins);
-            }
-            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-            if (ignore_value_change) return;
-            if (uint.TryParse(textBox1.Text, System.Globalization.NumberStyles.HexNumber, null, out uint o))
-            {
-                ins.UnkI32 = o;
             }
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
         }
@@ -549,6 +544,15 @@ namespace TwinsaityEditor
             listBox1.Items.Add(GenTextForList(ins));
             controller.UpdateText();
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
+        }
+
+        private void btnEditInstanceFlags_Click(object sender, EventArgs e)
+        {
+            if (flagsEditor == null || flagsEditor.IsDisposed)
+            {
+                flagsEditor = new InstanceFlagsEditor(ins, tbInstanceFlags);
+            }
+            flagsEditor.Show();
         }
     }
 }
