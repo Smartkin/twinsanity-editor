@@ -123,6 +123,8 @@
             this.label24 = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
             this.panelType3 = new System.Windows.Forms.Panel();
+            this.label48 = new System.Windows.Forms.Label();
+            this.label47 = new System.Windows.Forms.Label();
             this.type3CbNotGate = new System.Windows.Forms.CheckBox();
             this.label28 = new System.Windows.Forms.Label();
             this.type3Z = new System.Windows.Forms.TextBox();
@@ -161,8 +163,6 @@
             this.deleteScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.label47 = new System.Windows.Forms.Label();
-            this.label48 = new System.Windows.Forms.Label();
             this.panelType1.SuspendLayout();
             this.panelMain.SuspendLayout();
             this.panelHeader.SuspendLayout();
@@ -1127,6 +1127,24 @@
             this.panelType3.Size = new System.Drawing.Size(302, 470);
             this.panelType3.TabIndex = 0;
             // 
+            // label48
+            // 
+            this.label48.AutoSize = true;
+            this.label48.Location = new System.Drawing.Point(17, 136);
+            this.label48.Name = "label48";
+            this.label48.Size = new System.Drawing.Size(80, 13);
+            this.label48.TabIndex = 11;
+            this.label48.Text = "Return Inverse:";
+            // 
+            // label47
+            // 
+            this.label47.AutoSize = true;
+            this.label47.Location = new System.Drawing.Point(21, 110);
+            this.label47.Name = "label47";
+            this.label47.Size = new System.Drawing.Size(76, 13);
+            this.label47.TabIndex = 10;
+            this.label47.Text = "Return Check:";
+            // 
             // type3CbNotGate
             // 
             this.type3CbNotGate.AutoSize = true;
@@ -1394,7 +1412,7 @@
             // scriptNameFilter
             // 
             this.scriptNameFilter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.scriptNameFilter.Location = new System.Drawing.Point(88, 3);
+            this.scriptNameFilter.Location = new System.Drawing.Point(87, 3);
             this.scriptNameFilter.Name = "scriptNameFilter";
             this.scriptNameFilter.Size = new System.Drawing.Size(294, 20);
             this.scriptNameFilter.TabIndex = 3;
@@ -1432,7 +1450,7 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 38.88889F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 61.11111F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 300F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 193F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 194F));
             this.tableLayoutPanel2.Controls.Add(this.label32, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.scriptNameFilter, 2, 0);
             this.tableLayoutPanel2.Controls.Add(this.filterSelection, 1, 0);
@@ -1454,7 +1472,7 @@
             "ID"});
             this.filterSelection.Location = new System.Drawing.Point(36, 3);
             this.filterSelection.Name = "filterSelection";
-            this.filterSelection.Size = new System.Drawing.Size(46, 21);
+            this.filterSelection.Size = new System.Drawing.Size(45, 21);
             this.filterSelection.TabIndex = 5;
             this.filterSelection.SelectedIndexChanged += new System.EventHandler(this.filterSelection_SelectedIndexChanged);
             // 
@@ -1462,9 +1480,9 @@
             // 
             this.checkBox_showHeaderScripts.AutoSize = true;
             this.checkBox_showHeaderScripts.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.checkBox_showHeaderScripts.Location = new System.Drawing.Point(388, 3);
+            this.checkBox_showHeaderScripts.Location = new System.Drawing.Point(387, 3);
             this.checkBox_showHeaderScripts.Name = "checkBox_showHeaderScripts";
-            this.checkBox_showHeaderScripts.Size = new System.Drawing.Size(188, 19);
+            this.checkBox_showHeaderScripts.Size = new System.Drawing.Size(189, 19);
             this.checkBox_showHeaderScripts.TabIndex = 6;
             this.checkBox_showHeaderScripts.Text = "Show Header Scripts";
             this.checkBox_showHeaderScripts.UseVisualStyleBackColor = true;
@@ -1537,24 +1555,6 @@
             this.splitContainer2.Size = new System.Drawing.Size(897, 628);
             this.splitContainer2.SplitterDistance = 585;
             this.splitContainer2.TabIndex = 6;
-            // 
-            // label47
-            // 
-            this.label47.AutoSize = true;
-            this.label47.Location = new System.Drawing.Point(21, 110);
-            this.label47.Name = "label47";
-            this.label47.Size = new System.Drawing.Size(76, 13);
-            this.label47.TabIndex = 10;
-            this.label47.Text = "Return Check:";
-            // 
-            // label48
-            // 
-            this.label48.AutoSize = true;
-            this.label48.Location = new System.Drawing.Point(17, 136);
-            this.label48.Name = "label48";
-            this.label48.Size = new System.Drawing.Size(80, 13);
-            this.label48.TabIndex = 11;
-            this.label48.Text = "Return Inverse:";
             // 
             // ScriptEditor
             // 
