@@ -778,7 +778,8 @@ namespace TwinsaityEditor
         private void UpdateType3Panel()
         {
             type3VTable.Text = selectedType3.VTableIndex.ToString();
-            type3UnkShort.Text = selectedType3.UnkShort.ToString();
+            type3UnkShort.Text = selectedType3.UnkData.ToString();
+            type3CbNotGate.Checked = selectedType3.NotGate;
             type3X.Text = selectedType3.X.ToString(CultureInfo.InvariantCulture);
             type3Y.Text = selectedType3.Y.ToString(CultureInfo.InvariantCulture);
             type3Z.Text = selectedType3.Z.ToString(CultureInfo.InvariantCulture);
@@ -802,11 +803,11 @@ namespace TwinsaityEditor
 
         private void type3UnkShort_TextChanged(object sender, EventArgs e)
         {
-            UInt16 val = selectedType3.UnkShort;
+            UInt16 val = selectedType3.UnkData;
             if (UInt16.TryParse(((TextBox)sender).Text, out val))
             {
                 ((TextBox)sender).BackColor = Color.White;
-                selectedType3.UnkShort = val;
+                selectedType3.UnkData = val;
             }
             else
             {
@@ -1900,6 +1901,11 @@ namespace TwinsaityEditor
             }
             UpdateNodeName();
             UpdateType4Panel();
+        }
+
+        private void cbNotGate_CheckedChanged(object sender, EventArgs e)
+        {
+            selectedType3.NotGate = type3CbNotGate.Checked;
         }
     }
 }
