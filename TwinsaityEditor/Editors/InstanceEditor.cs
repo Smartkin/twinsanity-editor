@@ -109,7 +109,7 @@ namespace TwinsaityEditor
             numericUpDown3.Value = (decimal)ins.Pos.Y;
             numericUpDown4.Value = (decimal)ins.Pos.Z;
             numericUpDown5.Value = (decimal)ins.Pos.W;
-            tbInstanceFlags.Text = Convert.ToString(ins.UnkI32, 16);
+            tbInstanceFlags.Text = Convert.ToString(ins.Flags, 16);
             tabControl1.Tag = (int)tabControl1.Tag | 0x01;
             numericUpDown13.Value = ins.COMRotX;
             numericUpDown14.Value = ins.COMRotY;
@@ -391,7 +391,7 @@ namespace TwinsaityEditor
                 if (!controller.Data.ContainsItem(id))
                     break;
             }
-            Instance new_ins = new Instance { ID = id, AfterOID = 0xFFFFFFFF, Pos = new Pos(0, 0, 0, 1), SomeNum1 = 10, SomeNum2 = 10, SomeNum3 = 10, UnkI32 = 0x1CE,
+            Instance new_ins = new Instance { ID = id, AfterOID = 0xFFFFFFFF, Pos = new Pos(0, 0, 0, 1), SomeNum1 = 10, SomeNum2 = 10, SomeNum3 = 10, Flags = 0x1CE,
                 UnkI322 = new List<float>() { 1 },
                 UnkI323 = new List<uint>() { 0, 0 } };
             controller.Data.AddItem(id, new_ins);
@@ -533,7 +533,7 @@ namespace TwinsaityEditor
                 SomeNum1 = last_inst.SomeNum1,
                 SomeNum2 = last_inst.SomeNum2,
                 SomeNum3 = last_inst.SomeNum3,
-                UnkI32 = last_inst.UnkI32,
+                Flags = last_inst.Flags,
                 UnkI321 = last_inst.UnkI321,
                 UnkI322 = last_inst.UnkI322,
                 UnkI323 = last_inst.UnkI323,

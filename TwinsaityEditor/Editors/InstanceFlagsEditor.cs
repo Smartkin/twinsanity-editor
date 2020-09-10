@@ -69,38 +69,38 @@ namespace TwinsaityEditor
 
         private void UpdateFlags()
         {
-            cbFlag1.Checked = (inst.UnkI32 & 0x1) != 0;
-            cbFlag2.Checked = (inst.UnkI32 & 0x2) != 0;
-            cbFlagVisible.Checked = (inst.UnkI32 & 0x4) != 0;
-            cbFlag4.Checked = (inst.UnkI32 & 0x8) != 0;
-            cbFlag5.Checked = (inst.UnkI32 & 0x10) != 0;
-            cbFlag6.Checked = (inst.UnkI32 & 0x20) != 0;
-            cbFlag7.Checked = (inst.UnkI32 & 0x40) != 0;
-            cbFlag8.Checked = (inst.UnkI32 & 0x80) != 0;
-            cbFlag9.Checked = (inst.UnkI32 & 0x100) != 0;
-            cbFlag10.Checked = (inst.UnkI32 & 0x200) != 0;
-            cbFlag11.Checked = (inst.UnkI32 & 0x400) != 0;
-            cbFlag12.Checked = (inst.UnkI32 & 0x800) != 0;
-            cbFlag13.Checked = (inst.UnkI32 & 0x1000) != 0;
-            cbFlag14.Checked = (inst.UnkI32 & 0x2000) != 0;
-            cbFlag15.Checked = (inst.UnkI32 & 0x4000) != 0;
-            cbFlag16.Checked = (inst.UnkI32 & 0x8000) != 0;
-            cbFlag17.Checked = (inst.UnkI32 & 0x10000) != 0;
-            cbFlag18.Checked = (inst.UnkI32 & 0x20000) != 0;
-            cbFlag19.Checked = (inst.UnkI32 & 0x40000) != 0;
-            cbFlag20.Checked = (inst.UnkI32 & 0x80000) != 0;
-            cbFlag21.Checked = (inst.UnkI32 & 0x100000) != 0;
-            cbFlag22.Checked = (inst.UnkI32 & 0x200000) != 0;
-            cbFlag23.Checked = (inst.UnkI32 & 0x400000) != 0;
-            cbFlag24.Checked = (inst.UnkI32 & 0x800000) != 0;
-            cbFlag25.Checked = (inst.UnkI32 & 0x1000000) != 0;
-            cbFlag26.Checked = (inst.UnkI32 & 0x2000000) != 0;
-            cbFlag27.Checked = (inst.UnkI32 & 0x4000000) != 0;
-            cbFlag28.Checked = (inst.UnkI32 & 0x8000000) != 0;
-            cbFlag29.Checked = (inst.UnkI32 & 0x10000000) != 0;
-            cbFlag30.Checked = (inst.UnkI32 & 0x20000000) != 0;
-            cbFlag31.Checked = (inst.UnkI32 & 0x40000000) != 0;
-            cbFlag32.Checked = (inst.UnkI32 & 0x80000000) != 0;
+            cbFlag1.Checked = (inst.Flags & 0x1) != 0;
+            cbFlag2.Checked = (inst.Flags & 0x2) != 0;
+            cbFlagVisible.Checked = (inst.Flags & 0x4) != 0;
+            cbFlag4.Checked = (inst.Flags & 0x8) != 0;
+            cbFlag5.Checked = (inst.Flags & 0x10) != 0;
+            cbFlag6.Checked = (inst.Flags & 0x20) != 0;
+            cbFlag7.Checked = (inst.Flags & 0x40) != 0;
+            cbFlag8.Checked = (inst.Flags & 0x80) != 0;
+            cbFlag9.Checked = (inst.Flags & 0x100) != 0;
+            cbFlag10.Checked = (inst.Flags & 0x200) != 0;
+            cbFlag11.Checked = (inst.Flags & 0x400) != 0;
+            cbFlag12.Checked = (inst.Flags & 0x800) != 0;
+            cbFlag13.Checked = (inst.Flags & 0x1000) != 0;
+            cbFlag14.Checked = (inst.Flags & 0x2000) != 0;
+            cbFlag15.Checked = (inst.Flags & 0x4000) != 0;
+            cbFlag16.Checked = (inst.Flags & 0x8000) != 0;
+            cbFlag17.Checked = (inst.Flags & 0x10000) != 0;
+            cbFlag18.Checked = (inst.Flags & 0x20000) != 0;
+            cbFlag19.Checked = (inst.Flags & 0x40000) != 0;
+            cbFlag20.Checked = (inst.Flags & 0x80000) != 0;
+            cbFlag21.Checked = (inst.Flags & 0x100000) != 0;
+            cbFlag22.Checked = (inst.Flags & 0x200000) != 0;
+            cbFlag23.Checked = (inst.Flags & 0x400000) != 0;
+            cbFlag24.Checked = (inst.Flags & 0x800000) != 0;
+            cbFlag25.Checked = (inst.Flags & 0x1000000) != 0;
+            cbFlag26.Checked = (inst.Flags & 0x2000000) != 0;
+            cbFlag27.Checked = (inst.Flags & 0x4000000) != 0;
+            cbFlag28.Checked = (inst.Flags & 0x8000000) != 0;
+            cbFlag29.Checked = (inst.Flags & 0x10000000) != 0;
+            cbFlag30.Checked = (inst.Flags & 0x20000000) != 0;
+            cbFlag31.Checked = (inst.Flags & 0x40000000) != 0;
+            cbFlag32.Checked = (inst.Flags & 0x80000000) != 0;
         }
 
         private void cbFlag_CheckChanged(object sender, EventArgs e)
@@ -109,13 +109,13 @@ namespace TwinsaityEditor
             UInt32 flag = (UInt32)cb.Tag;
             if (cb.Checked)
             {
-                inst.UnkI32 |= flag;
+                inst.Flags |= flag;
             }
             else
             {
-                inst.UnkI32 &= ~flag;
+                inst.Flags &= ~flag;
             }
-            tbFlags.Text = inst.UnkI32.ToString("X");
+            tbFlags.Text = inst.Flags.ToString("X");
         }
     }
 }
