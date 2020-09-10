@@ -1899,6 +1899,7 @@ namespace TwinsaityEditor
 
             }
             UpdateNodeName();
+            UpdateType4Panel();
         }
     }
 }
