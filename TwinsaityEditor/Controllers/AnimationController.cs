@@ -23,16 +23,18 @@ namespace TwinsaityEditor.Controllers
 
         protected override void GenText()
         {
-            List<string> text = new List<string>();
-            text.Add($"ID: {Data.ID}");
-            text.Add($"Size: {Data.Size}");
-            text.Add($"Unknown bitfield: 0x{Data.Bitfield:X}");
-            text.Add($"Blob packed 1: 0x{Data.UnkBlobSizePacked1:X}");
-            text.Add($"Blob size helper 1: 0x{Data.UnkBlobSizeHelper1:X}");
-            text.Add($"Blob 1 size: {Data.unkBlob1.Length}");
-            text.Add($"Blob packed 2: 0x{Data.UnkBlobSizePacked2:X}");
-            text.Add($"Blob size helper 2: 0x{Data.UnkBlobSizeHelper2:X}");
-            text.Add($"Blob 2 size: {Data.unkBlob2.Length}");
+            List<string> text = new List<string>
+            {
+                $"ID: {Data.ID}",
+                $"Size: {Data.Size}",
+                $"Unknown bitfield: 0x{Data.Bitfield:X}",
+                $"Blob packed 1: 0x{Data.UnkBlobSizePacked1:X}",
+                $"Blob size helper 1: 0x{Data.UnkBlobSizeHelper1:X}",
+                $"Blob 1 size: {Data.unkBlob1.Length}",
+                $"Blob packed 2: 0x{Data.UnkBlobSizePacked2:X}",
+                $"Blob size helper 2: 0x{Data.UnkBlobSizeHelper2:X}",
+                $"Blob 2 size: {Data.unkBlob2.Length}"
+            };
             TextPrev = text.ToArray();
         }
     }
