@@ -508,7 +508,7 @@ namespace Twinsanity
                     }
                     set
                     {
-                        unkInt1 = (unkInt1 & 0xffff) | (Int32)((value << 17) & 0xffff0000);
+                        unkInt1 = (unkInt1 & 0x1ffff) | (Int32)((value << 17) & 0xfffe0000);
                     }
                 }
                 public bool NotGate
