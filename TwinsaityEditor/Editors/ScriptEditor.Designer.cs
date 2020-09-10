@@ -123,6 +123,7 @@
             this.label24 = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
             this.panelType3 = new System.Windows.Forms.Panel();
+            this.type3CbNotGate = new System.Windows.Forms.CheckBox();
             this.label28 = new System.Windows.Forms.Label();
             this.type3Z = new System.Windows.Forms.TextBox();
             this.type3Y = new System.Windows.Forms.TextBox();
@@ -1106,6 +1107,7 @@
             // 
             // panelType3
             // 
+            this.panelType3.Controls.Add(this.type3CbNotGate);
             this.panelType3.Controls.Add(this.label28);
             this.panelType3.Controls.Add(this.type3Z);
             this.panelType3.Controls.Add(this.type3Y);
@@ -1120,6 +1122,17 @@
             this.panelType3.Name = "panelType3";
             this.panelType3.Size = new System.Drawing.Size(302, 470);
             this.panelType3.TabIndex = 0;
+            // 
+            // type3CbNotGate
+            // 
+            this.type3CbNotGate.AutoSize = true;
+            this.type3CbNotGate.Location = new System.Drawing.Point(211, 56);
+            this.type3CbNotGate.Name = "type3CbNotGate";
+            this.type3CbNotGate.Size = new System.Drawing.Size(73, 17);
+            this.type3CbNotGate.TabIndex = 9;
+            this.type3CbNotGate.Text = "NOT gate";
+            this.type3CbNotGate.UseVisualStyleBackColor = true;
+            this.type3CbNotGate.CheckedChanged += new System.EventHandler(this.cbNotGate_CheckedChanged);
             // 
             // label28
             // 
@@ -1377,7 +1390,7 @@
             // scriptNameFilter
             // 
             this.scriptNameFilter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.scriptNameFilter.Location = new System.Drawing.Point(91, 3);
+            this.scriptNameFilter.Location = new System.Drawing.Point(89, 3);
             this.scriptNameFilter.Name = "scriptNameFilter";
             this.scriptNameFilter.Size = new System.Drawing.Size(294, 20);
             this.scriptNameFilter.TabIndex = 3;
@@ -1389,7 +1402,7 @@
             this.label32.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label32.Location = new System.Drawing.Point(3, 0);
             this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(28, 25);
+            this.label32.Size = new System.Drawing.Size(27, 25);
             this.label32.TabIndex = 4;
             this.label32.Text = "Filter:";
             this.label32.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1415,7 +1428,7 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 38.88889F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 61.11111F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 300F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 190F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 192F));
             this.tableLayoutPanel2.Controls.Add(this.label32, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.scriptNameFilter, 2, 0);
             this.tableLayoutPanel2.Controls.Add(this.filterSelection, 1, 0);
@@ -1435,9 +1448,9 @@
             this.filterSelection.Items.AddRange(new object[] {
             "Name",
             "ID"});
-            this.filterSelection.Location = new System.Drawing.Point(37, 3);
+            this.filterSelection.Location = new System.Drawing.Point(36, 3);
             this.filterSelection.Name = "filterSelection";
-            this.filterSelection.Size = new System.Drawing.Size(48, 21);
+            this.filterSelection.Size = new System.Drawing.Size(47, 21);
             this.filterSelection.TabIndex = 5;
             this.filterSelection.SelectedIndexChanged += new System.EventHandler(this.filterSelection_SelectedIndexChanged);
             // 
@@ -1445,9 +1458,9 @@
             // 
             this.checkBox_showHeaderScripts.AutoSize = true;
             this.checkBox_showHeaderScripts.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.checkBox_showHeaderScripts.Location = new System.Drawing.Point(391, 3);
+            this.checkBox_showHeaderScripts.Location = new System.Drawing.Point(389, 3);
             this.checkBox_showHeaderScripts.Name = "checkBox_showHeaderScripts";
-            this.checkBox_showHeaderScripts.Size = new System.Drawing.Size(185, 19);
+            this.checkBox_showHeaderScripts.Size = new System.Drawing.Size(187, 19);
             this.checkBox_showHeaderScripts.TabIndex = 6;
             this.checkBox_showHeaderScripts.Text = "Show Header Scripts";
             this.checkBox_showHeaderScripts.UseVisualStyleBackColor = true;
@@ -1700,5 +1713,6 @@
         private System.Windows.Forms.CheckBox checkBox_type2_cond_toggle;
         private System.Windows.Forms.CheckBox checkBox_state_header_toggle;
         private System.Windows.Forms.ComboBox cbCommandIndex;
+        private System.Windows.Forms.CheckBox type3CbNotGate;
     }
 }

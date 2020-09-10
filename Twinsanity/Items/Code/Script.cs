@@ -500,15 +500,26 @@ namespace Twinsanity
                         unkInt1 = (Int32)(unkInt1 & 0xffff0000) | (value & 0xffff);
                     }
                 }
-                public UInt16 UnkShort
+                public UInt16 UnkData
                 {
                     get
                     {
-                        return (UInt16)((unkInt1 & 0xffff0000) >> 16);
+                        return (UInt16)((unkInt1 & 0xffff0000) >> 17);
                     }
                     set
                     {
-                        unkInt1 = (unkInt1 & 0xffff) | (Int32)((value << 16) & 0xffff0000);
+                        unkInt1 = (unkInt1 & 0xffff) | (Int32)((value << 17) & 0xffff0000);
+                    }
+                }
+                public bool NotGate
+                {
+                    get
+                    {
+                        return (unkInt1 & 0x10000) != 0;
+                    }
+                    set
+                    {
+                        unkInt1 = (Int32)(unkInt1 & 0xfffeffff) | (Convert.ToInt32(value) << 16);
                     }
                 }
             }
