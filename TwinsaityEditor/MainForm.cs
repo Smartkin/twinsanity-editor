@@ -87,6 +87,8 @@ namespace TwinsaityEditor
                 c = new CodeModelController(this, (CodeModel)a);
             else if (a is Script)
                 c = new ScriptController(this, (Script)a);
+            else if (a is Animation)
+                c = new AnimationController(this, (Animation)a);
             else if (a is SoundEffect)
                 c = new SEController(this, (SoundEffect)a);
             else if (a is AIPosition)

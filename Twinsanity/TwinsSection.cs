@@ -333,6 +333,9 @@ namespace Twinsanity
                     case SectionType.ScriptDemo:
                         LoadItem<Script>(reader, sub, Type);
                         break;
+                    case SectionType.Animation:
+                        LoadItem<Animation>(reader, sub);
+                        break;
                     case SectionType.SE:
                     case SectionType.SE_Eng:
                     case SectionType.SE_Fre:
