@@ -19,11 +19,6 @@ namespace Twinsanity
             {
                 scriptCommand = new Script.MainScript.ScriptCommand(ver);
             }
-
-            public int GetSize()
-            {
-                return 4 + scriptCommand.GetLength();
-            }
         }
         public List<AgentLabAdditions> agentLabAdditionsList = new List<AgentLabAdditions>();
         public List<UInt16> scriptIds = new List<UInt16>();
@@ -52,9 +47,13 @@ namespace Twinsanity
             var totalSize = 4; // Header
             foreach (var agentLabAddition in agentLabAdditionsList)
             {
-                totalSize += agentLabAddition.GetSize();
+                totalSize += 4;
+                if (agentLabAddition.scriptCommandsAmount > 0)
+                {
+                    totalSize += agentLabAddition.scriptCommand.GetLength();
+                }
+                totalSize += 2;
             }
-            totalSize += scriptIds.Count * 2;
             totalSize += scriptCommand.GetLength();
             return totalSize;
         }
@@ -66,7 +65,10 @@ namespace Twinsanity
             for (var i = 0; i < arraySize; ++i)
             {
                 writer.Write(agentLabAdditionsList[i].scriptCommandsAmount);
-                agentLabAdditionsList[i].scriptCommand.Write(writer);
+                if (agentLabAdditionsList[i].scriptCommandsAmount > 0)
+                {
+                    agentLabAdditionsList[i].scriptCommand.Write(writer);
+                }
                 writer.Write(scriptIds[i]);
             }
             scriptCommand.Write(writer);
