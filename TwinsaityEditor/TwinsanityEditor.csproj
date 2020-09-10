@@ -180,6 +180,7 @@
     <Compile Include="Controllers\ArmatureModelController.cs" />
     <Compile Include="Controllers\ArmatureModelXController.cs" />
     <Compile Include="Controllers\CameraController.cs" />
+    <Compile Include="Controllers\CodeModelController.cs" />
     <Compile Include="Controllers\CollisionSurfaceController.cs" />
     <Compile Include="Controllers\Controller.cs" />
     <Compile Include="Controllers\ColDataController.cs" />

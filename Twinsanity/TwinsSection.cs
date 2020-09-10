@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Twinsanity;
 
 namespace Twinsanity
 {
@@ -319,6 +320,9 @@ namespace Twinsanity
                         break;
                     case SectionType.ObjectDemo: //PS2 DEMO objects
                         LoadItem<TwinsItem>(reader, sub);
+                        break;
+                    case SectionType.CodeModel:
+                        LoadItem<CodeModel>(reader, sub, Type);
                         break;
                     case SectionType.Script:
                         LoadItem<Script>(reader, sub, Type);

@@ -83,6 +83,8 @@ namespace TwinsaityEditor
                 c = new SkydomeController(this, (Skydome)a);
             else if (a is GameObject)
                 c = new ObjectController(this, (GameObject)a);
+            else if (a is CodeModel)
+                c = new CodeModelController(this, (CodeModel)a);
             else if (a is Script)
                 c = new ScriptController(this, (Script)a);
             else if (a is Animation)
