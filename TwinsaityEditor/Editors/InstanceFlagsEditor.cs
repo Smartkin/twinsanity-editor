@@ -65,6 +65,39 @@ namespace TwinsaityEditor
             cbFlag31.Tag = (UInt32)0x40000000;
             cbFlag32.Tag = (UInt32)0x80000000;
             UpdateFlags();
+
+            cbFlag1.Text = "0: Deactivated?";
+            cbFlag2.Text = "1: Collision active?";
+            cbFlagVisible.Text = "2: Visible";
+            cbFlag4.Text = "3";
+            cbFlag5.Text = "4";
+            cbFlag6.Text = "5";
+            cbFlag7.Text = "6";
+            cbFlag8.Text = "7";
+            cbFlag9.Text = "8: Receive OnTrigger signals?";
+            cbFlag10.Text = "9: Can damage character?";
+            cbFlag11.Text = "10";
+            cbFlag12.Text = "11";
+            cbFlag13.Text = "12";
+            cbFlag14.Text = "13";
+            cbFlag15.Text = "14";
+            cbFlag16.Text = "15";
+            cbFlag17.Text = "16: Can always damage character?";
+            cbFlag18.Text = "17";
+            cbFlag19.Text = "18";
+            cbFlag20.Text = "19";
+            cbFlag21.Text = "20";
+            cbFlag22.Text = "21";
+            cbFlag23.Text = "22";
+            cbFlag24.Text = "23";
+            cbFlag25.Text = "24";
+            cbFlag26.Text = "25";
+            cbFlag27.Text = "26";
+            cbFlag28.Text = "27";
+            cbFlag29.Text = "28";
+            cbFlag30.Text = "29";
+            cbFlag31.Text = "30";
+            cbFlag32.Text = "31";
         }
 
         private void UpdateFlags()

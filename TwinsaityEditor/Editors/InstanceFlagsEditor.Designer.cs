@@ -241,7 +241,7 @@
             // cbFlag17
             // 
             this.cbFlag17.AutoSize = true;
-            this.cbFlag17.Location = new System.Drawing.Point(12, 380);
+            this.cbFlag17.Location = new System.Drawing.Point(185, 12);
             this.cbFlag17.Name = "cbFlag17";
             this.cbFlag17.Size = new System.Drawing.Size(175, 17);
             this.cbFlag17.TabIndex = 16;
@@ -252,7 +252,7 @@
             // cbFlag18
             // 
             this.cbFlag18.AutoSize = true;
-            this.cbFlag18.Location = new System.Drawing.Point(12, 403);
+            this.cbFlag18.Location = new System.Drawing.Point(185, 35);
             this.cbFlag18.Name = "cbFlag18";
             this.cbFlag18.Size = new System.Drawing.Size(72, 17);
             this.cbFlag18.TabIndex = 17;
@@ -263,7 +263,7 @@
             // cbFlag19
             // 
             this.cbFlag19.AutoSize = true;
-            this.cbFlag19.Location = new System.Drawing.Point(12, 426);
+            this.cbFlag19.Location = new System.Drawing.Point(185, 58);
             this.cbFlag19.Name = "cbFlag19";
             this.cbFlag19.Size = new System.Drawing.Size(72, 17);
             this.cbFlag19.TabIndex = 18;
@@ -274,7 +274,7 @@
             // cbFlag20
             // 
             this.cbFlag20.AutoSize = true;
-            this.cbFlag20.Location = new System.Drawing.Point(176, 12);
+            this.cbFlag20.Location = new System.Drawing.Point(185, 81);
             this.cbFlag20.Name = "cbFlag20";
             this.cbFlag20.Size = new System.Drawing.Size(72, 17);
             this.cbFlag20.TabIndex = 19;
@@ -285,7 +285,7 @@
             // cbFlag21
             // 
             this.cbFlag21.AutoSize = true;
-            this.cbFlag21.Location = new System.Drawing.Point(176, 35);
+            this.cbFlag21.Location = new System.Drawing.Point(185, 104);
             this.cbFlag21.Name = "cbFlag21";
             this.cbFlag21.Size = new System.Drawing.Size(72, 17);
             this.cbFlag21.TabIndex = 20;
@@ -296,7 +296,7 @@
             // cbFlag22
             // 
             this.cbFlag22.AutoSize = true;
-            this.cbFlag22.Location = new System.Drawing.Point(176, 58);
+            this.cbFlag22.Location = new System.Drawing.Point(185, 127);
             this.cbFlag22.Name = "cbFlag22";
             this.cbFlag22.Size = new System.Drawing.Size(72, 17);
             this.cbFlag22.TabIndex = 21;
@@ -307,7 +307,7 @@
             // cbFlag23
             // 
             this.cbFlag23.AutoSize = true;
-            this.cbFlag23.Location = new System.Drawing.Point(176, 81);
+            this.cbFlag23.Location = new System.Drawing.Point(185, 150);
             this.cbFlag23.Name = "cbFlag23";
             this.cbFlag23.Size = new System.Drawing.Size(72, 17);
             this.cbFlag23.TabIndex = 22;
@@ -318,7 +318,7 @@
             // cbFlag24
             // 
             this.cbFlag24.AutoSize = true;
-            this.cbFlag24.Location = new System.Drawing.Point(176, 104);
+            this.cbFlag24.Location = new System.Drawing.Point(185, 173);
             this.cbFlag24.Name = "cbFlag24";
             this.cbFlag24.Size = new System.Drawing.Size(72, 17);
             this.cbFlag24.TabIndex = 23;
@@ -329,7 +329,7 @@
             // cbFlag25
             // 
             this.cbFlag25.AutoSize = true;
-            this.cbFlag25.Location = new System.Drawing.Point(176, 127);
+            this.cbFlag25.Location = new System.Drawing.Point(185, 196);
             this.cbFlag25.Name = "cbFlag25";
             this.cbFlag25.Size = new System.Drawing.Size(72, 17);
             this.cbFlag25.TabIndex = 24;
@@ -340,7 +340,7 @@
             // cbFlag26
             // 
             this.cbFlag26.AutoSize = true;
-            this.cbFlag26.Location = new System.Drawing.Point(176, 150);
+            this.cbFlag26.Location = new System.Drawing.Point(185, 219);
             this.cbFlag26.Name = "cbFlag26";
             this.cbFlag26.Size = new System.Drawing.Size(72, 17);
             this.cbFlag26.TabIndex = 25;
@@ -351,7 +351,7 @@
             // cbFlag27
             // 
             this.cbFlag27.AutoSize = true;
-            this.cbFlag27.Location = new System.Drawing.Point(176, 173);
+            this.cbFlag27.Location = new System.Drawing.Point(185, 242);
             this.cbFlag27.Name = "cbFlag27";
             this.cbFlag27.Size = new System.Drawing.Size(72, 17);
             this.cbFlag27.TabIndex = 26;
@@ -362,7 +362,7 @@
             // cbFlag28
             // 
             this.cbFlag28.AutoSize = true;
-            this.cbFlag28.Location = new System.Drawing.Point(176, 196);
+            this.cbFlag28.Location = new System.Drawing.Point(185, 265);
             this.cbFlag28.Name = "cbFlag28";
             this.cbFlag28.Size = new System.Drawing.Size(72, 17);
             this.cbFlag28.TabIndex = 27;
@@ -373,7 +373,7 @@
             // cbFlag29
             // 
             this.cbFlag29.AutoSize = true;
-            this.cbFlag29.Location = new System.Drawing.Point(176, 219);
+            this.cbFlag29.Location = new System.Drawing.Point(185, 288);
             this.cbFlag29.Name = "cbFlag29";
             this.cbFlag29.Size = new System.Drawing.Size(72, 17);
             this.cbFlag29.TabIndex = 28;
@@ -384,7 +384,7 @@
             // cbFlag30
             // 
             this.cbFlag30.AutoSize = true;
-            this.cbFlag30.Location = new System.Drawing.Point(176, 242);
+            this.cbFlag30.Location = new System.Drawing.Point(185, 311);
             this.cbFlag30.Name = "cbFlag30";
             this.cbFlag30.Size = new System.Drawing.Size(72, 17);
             this.cbFlag30.TabIndex = 29;
@@ -395,7 +395,7 @@
             // cbFlag31
             // 
             this.cbFlag31.AutoSize = true;
-            this.cbFlag31.Location = new System.Drawing.Point(176, 265);
+            this.cbFlag31.Location = new System.Drawing.Point(185, 334);
             this.cbFlag31.Name = "cbFlag31";
             this.cbFlag31.Size = new System.Drawing.Size(72, 17);
             this.cbFlag31.TabIndex = 30;
@@ -406,7 +406,7 @@
             // cbFlag32
             // 
             this.cbFlag32.AutoSize = true;
-            this.cbFlag32.Location = new System.Drawing.Point(176, 288);
+            this.cbFlag32.Location = new System.Drawing.Point(185, 357);
             this.cbFlag32.Name = "cbFlag32";
             this.cbFlag32.Size = new System.Drawing.Size(72, 17);
             this.cbFlag32.TabIndex = 31;
@@ -418,7 +418,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(270, 450);
+            this.ClientSize = new System.Drawing.Size(372, 384);
             this.Controls.Add(this.cbFlag32);
             this.Controls.Add(this.cbFlag31);
             this.Controls.Add(this.cbFlag30);
