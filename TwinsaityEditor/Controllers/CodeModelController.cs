@@ -23,7 +23,7 @@ namespace TwinsaityEditor.Controllers
             for (var i = 0; i < Data.ArraySize; ++i)
             {
                 text.Add($"Addition {i}");
-                text.Add($"\tScript ID: {Data.unkShorts[i]}");
+                text.Add($"\tScript ID: {Data.scriptIds[i]}");
                 var agentLabAddition = Data.agentLabAdditionsList[i];
                 text.Add($"\tCommands amount: {agentLabAddition.scriptCommandsAmount}");
                 if (agentLabAddition.scriptCommandsAmount > 0)

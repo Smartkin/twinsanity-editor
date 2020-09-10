@@ -26,7 +26,7 @@ namespace Twinsanity
             }
         }
         public List<AgentLabAdditions> agentLabAdditionsList = new List<AgentLabAdditions>();
-        public List<UInt16> unkShorts = new List<UInt16>();
+        public List<UInt16> scriptIds = new List<UInt16>();
         public Script.MainScript.ScriptCommand scriptCommand = null;
         public int scriptGameVersion;
         private uint arraySize;
@@ -54,7 +54,7 @@ namespace Twinsanity
             {
                 totalSize += agentLabAddition.GetSize();
             }
-            totalSize += unkShorts.Count * 2;
+            totalSize += scriptIds.Count * 2;
             totalSize += scriptCommand.GetLength();
             return totalSize;
         }
@@ -67,7 +67,7 @@ namespace Twinsanity
             {
                 writer.Write(agentLabAdditionsList[i].scriptCommandsAmount);
                 agentLabAdditionsList[i].scriptCommand.Write(writer);
-                writer.Write(unkShorts[i]);
+                writer.Write(scriptIds[i]);
             }
             scriptCommand.Write(writer);
         }
@@ -98,7 +98,7 @@ namespace Twinsanity
                     agentLabAddition.scriptCommand = new Script.MainScript.ScriptCommand(reader, scriptGameVersion);
                 }
                 agentLabAdditionsList.Add(agentLabAddition);
-                unkShorts.Add(reader.ReadUInt16());
+                scriptIds.Add(reader.ReadUInt16());
             }
             scriptCommand = new Script.MainScript.ScriptCommand(reader, scriptGameVersion);
         }
