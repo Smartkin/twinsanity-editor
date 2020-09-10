@@ -33,6 +33,10 @@ namespace TwinsaityEditor
         private void InstanceEditor_FormClosed(object sender, FormClosedEventArgs e)
         {
             File.SelectItem(null);
+            if (flagsEditor != null)
+            {
+                flagsEditor.Close();
+            }
         }
 
         private void PopulateList()
