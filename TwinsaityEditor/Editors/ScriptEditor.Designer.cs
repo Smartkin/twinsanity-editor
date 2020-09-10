@@ -161,6 +161,8 @@
             this.deleteScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.label47 = new System.Windows.Forms.Label();
+            this.label48 = new System.Windows.Forms.Label();
             this.panelType1.SuspendLayout();
             this.panelMain.SuspendLayout();
             this.panelHeader.SuspendLayout();
@@ -1107,6 +1109,8 @@
             // 
             // panelType3
             // 
+            this.panelType3.Controls.Add(this.label48);
+            this.panelType3.Controls.Add(this.label47);
             this.panelType3.Controls.Add(this.type3CbNotGate);
             this.panelType3.Controls.Add(this.label28);
             this.panelType3.Controls.Add(this.type3Z);
@@ -1137,7 +1141,7 @@
             // label28
             // 
             this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(19, 10);
+            this.label28.Location = new System.Drawing.Point(10, 8);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(120, 13);
             this.label28.TabIndex = 8;
@@ -1145,25 +1149,25 @@
             // 
             // type3Z
             // 
-            this.type3Z.Location = new System.Drawing.Point(181, 101);
+            this.type3Z.Location = new System.Drawing.Point(104, 133);
             this.type3Z.Name = "type3Z";
-            this.type3Z.Size = new System.Drawing.Size(75, 20);
+            this.type3Z.Size = new System.Drawing.Size(100, 20);
             this.type3Z.TabIndex = 7;
             this.type3Z.TextChanged += new System.EventHandler(this.type3Z_TextChanged);
             // 
             // type3Y
             // 
-            this.type3Y.Location = new System.Drawing.Point(100, 101);
+            this.type3Y.Location = new System.Drawing.Point(104, 107);
             this.type3Y.Name = "type3Y";
-            this.type3Y.Size = new System.Drawing.Size(75, 20);
+            this.type3Y.Size = new System.Drawing.Size(100, 20);
             this.type3Y.TabIndex = 6;
             this.type3Y.TextChanged += new System.EventHandler(this.type3Y_TextChanged);
             // 
             // type3X
             // 
-            this.type3X.Location = new System.Drawing.Point(19, 102);
+            this.type3X.Location = new System.Drawing.Point(104, 81);
             this.type3X.Name = "type3X";
-            this.type3X.Size = new System.Drawing.Size(75, 20);
+            this.type3X.Size = new System.Drawing.Size(100, 20);
             this.type3X.TabIndex = 5;
             this.type3X.TextChanged += new System.EventHandler(this.type3X_TextChanged);
             // 
@@ -1186,25 +1190,25 @@
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(8, 83);
+            this.label19.Location = new System.Drawing.Point(50, 84);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(98, 13);
+            this.label19.Size = new System.Drawing.Size(47, 13);
             this.label19.TabIndex = 2;
-            this.label19.Text = "Vector3 Parameter:";
+            this.label19.Text = "Modifier:";
             // 
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(35, 57);
+            this.label18.Location = new System.Drawing.Point(39, 57);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(55, 13);
+            this.label18.Size = new System.Drawing.Size(58, 13);
             this.label18.TabIndex = 1;
-            this.label18.Text = "UnkShort:";
+            this.label18.Text = "Parameter:";
             // 
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(20, 33);
+            this.label17.Location = new System.Drawing.Point(28, 30);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(70, 13);
             this.label17.TabIndex = 0;
@@ -1390,7 +1394,7 @@
             // scriptNameFilter
             // 
             this.scriptNameFilter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.scriptNameFilter.Location = new System.Drawing.Point(89, 3);
+            this.scriptNameFilter.Location = new System.Drawing.Point(88, 3);
             this.scriptNameFilter.Name = "scriptNameFilter";
             this.scriptNameFilter.Size = new System.Drawing.Size(294, 20);
             this.scriptNameFilter.TabIndex = 3;
@@ -1428,7 +1432,7 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 38.88889F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 61.11111F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 300F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 192F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 193F));
             this.tableLayoutPanel2.Controls.Add(this.label32, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.scriptNameFilter, 2, 0);
             this.tableLayoutPanel2.Controls.Add(this.filterSelection, 1, 0);
@@ -1450,7 +1454,7 @@
             "ID"});
             this.filterSelection.Location = new System.Drawing.Point(36, 3);
             this.filterSelection.Name = "filterSelection";
-            this.filterSelection.Size = new System.Drawing.Size(47, 21);
+            this.filterSelection.Size = new System.Drawing.Size(46, 21);
             this.filterSelection.TabIndex = 5;
             this.filterSelection.SelectedIndexChanged += new System.EventHandler(this.filterSelection_SelectedIndexChanged);
             // 
@@ -1458,9 +1462,9 @@
             // 
             this.checkBox_showHeaderScripts.AutoSize = true;
             this.checkBox_showHeaderScripts.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.checkBox_showHeaderScripts.Location = new System.Drawing.Point(389, 3);
+            this.checkBox_showHeaderScripts.Location = new System.Drawing.Point(388, 3);
             this.checkBox_showHeaderScripts.Name = "checkBox_showHeaderScripts";
-            this.checkBox_showHeaderScripts.Size = new System.Drawing.Size(187, 19);
+            this.checkBox_showHeaderScripts.Size = new System.Drawing.Size(188, 19);
             this.checkBox_showHeaderScripts.TabIndex = 6;
             this.checkBox_showHeaderScripts.Text = "Show Header Scripts";
             this.checkBox_showHeaderScripts.UseVisualStyleBackColor = true;
@@ -1533,6 +1537,24 @@
             this.splitContainer2.Size = new System.Drawing.Size(897, 628);
             this.splitContainer2.SplitterDistance = 585;
             this.splitContainer2.TabIndex = 6;
+            // 
+            // label47
+            // 
+            this.label47.AutoSize = true;
+            this.label47.Location = new System.Drawing.Point(21, 110);
+            this.label47.Name = "label47";
+            this.label47.Size = new System.Drawing.Size(76, 13);
+            this.label47.TabIndex = 10;
+            this.label47.Text = "Return Check:";
+            // 
+            // label48
+            // 
+            this.label48.AutoSize = true;
+            this.label48.Location = new System.Drawing.Point(17, 136);
+            this.label48.Name = "label48";
+            this.label48.Size = new System.Drawing.Size(80, 13);
+            this.label48.TabIndex = 11;
+            this.label48.Text = "Return Inverse:";
             // 
             // ScriptEditor
             // 
@@ -1714,5 +1736,7 @@
         private System.Windows.Forms.CheckBox checkBox_state_header_toggle;
         private System.Windows.Forms.ComboBox cbCommandIndex;
         private System.Windows.Forms.CheckBox type3CbNotGate;
+        private System.Windows.Forms.Label label48;
+        private System.Windows.Forms.Label label47;
     }
 }

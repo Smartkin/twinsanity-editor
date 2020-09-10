@@ -545,7 +545,7 @@ namespace Twinsanity
             PersistentFlag = 12,
             InstanceType = 47,
             TriggerArgument1 = 51,
-            InstanceProperties = 67,
+            InstanceFlag = 67,
             DistanceToTarget = 88,
             InstanceSubtype = 92,
             HasXLinks = 118,
