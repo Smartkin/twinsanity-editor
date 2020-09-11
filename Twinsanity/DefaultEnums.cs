@@ -556,7 +556,7 @@ namespace Twinsanity
             HitBySpin = 521,
             HitByBodySlam = 522,
             HitBySlide = 523,
-            IsHoldingTool = 524,
+            IsNotHoldingTool = 524,
             HitByTwinSlam = 532,
             HitByTwinThrow = 533,
             HitByJumpedOn = 535,
@@ -575,7 +575,7 @@ namespace Twinsanity
             HitByCortexBolt = 610,
             IsPushingObject = 617,
             HasActorWeight = 623,
-            OutOfAmmo = 634,
+            HasAmmo = 634,
             GlobalProgression = 639,
             IsMoviePlaying = 641,
         }

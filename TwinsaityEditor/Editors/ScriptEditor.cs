@@ -131,7 +131,7 @@ namespace TwinsaityEditor
             {
                 if (ptr.IsSlot)
                 {
-                    Name += $" - Local: Script #{ptr.scriptIndexOrSlot}";
+                    Name += $" - Object Script #{ptr.scriptIndexOrSlot}";
                 }
                 else
                 {
@@ -190,6 +190,10 @@ namespace TwinsaityEditor
             {
                 Name = ((DefaultEnums.ConditionID)ptr.VTableIndex).ToString();
                 IsDefined = true;
+            }
+            if (ptr.NotGate)
+            {
+                Name = "NOT " + Name;
             }
 
             parent.Text = string.Format("{1} - {0}", parent.Text, Name);
@@ -1792,16 +1796,30 @@ namespace TwinsaityEditor
                 if (tag is Script.MainScript.ScriptStateBody)
                 {
                     string Name = $"To State: {selectedType2.scriptStateListIndex}";
-                    
+
                     if (null != selectedType2.condition)
                     {
                         if (Enum.IsDefined(typeof(DefaultEnums.ConditionID), selectedType2.condition.VTableIndex))
                         {
-                            Name = string.Format("{1} - {0}", Name,((DefaultEnums.ConditionID)selectedType2.condition.VTableIndex).ToString());
+                            if (selectedType2.condition.NotGate)
+                            {
+                                Name = string.Format("NOT {1} - {0}", Name, ((DefaultEnums.ConditionID)selectedType2.condition.VTableIndex).ToString());
+                            }
+                            else
+                            {
+                                Name = string.Format("{1} - {0}", Name, ((DefaultEnums.ConditionID)selectedType2.condition.VTableIndex).ToString());
+                            }
                         }
                         else
                         {
-                            Name = string.Format("{1} - {0}", Name, $"Condition {selectedType2.condition.VTableIndex}");
+                            if (selectedType2.condition.NotGate)
+                            {
+                                Name = string.Format("NOT {1} - {0}", Name, $"Condition {selectedType2.condition.VTableIndex}");
+                            }
+                            else
+                            {
+                                Name = string.Format("{1} - {0}", Name, $"Condition {selectedType2.condition.VTableIndex}");
+                            }
                         }
                     }
                     if (!selectedType2.IsEnabled)
@@ -1856,7 +1874,7 @@ namespace TwinsaityEditor
                     {
                         if (selectedLinked.IsSlot)
                         {
-                            Name += $" - Local: Script #{selectedLinked.scriptIndexOrSlot}";
+                            Name += $" - Object Script #{selectedLinked.scriptIndexOrSlot}";
                         }
                         else
                         {
@@ -1906,6 +1924,7 @@ namespace TwinsaityEditor
         private void cbNotGate_CheckedChanged(object sender, EventArgs e)
         {
             selectedType3.NotGate = type3CbNotGate.Checked;
+            UpdateNodeName();
         }
     }
 }
