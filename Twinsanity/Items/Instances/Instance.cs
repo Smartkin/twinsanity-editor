@@ -21,7 +21,7 @@ namespace Twinsanity
         public ushort ObjectID { get; set; }
         public uint AfterOID { get; set; }
         public uint PHeader { get; set; }
-        public uint UnkI32 { get; set; }
+        public uint Flags { get; set; }
         public List<uint> UnkI321 { get; set; } = new List<uint>();
         public List<float> UnkI322 { get; set; } = new List<float>();
         public List<uint> UnkI323 { get; set; } = new List<uint>();
@@ -59,7 +59,7 @@ namespace Twinsanity
                 | (UnkI322.Count << 8)
                 | (UnkI323.Count << 16));
             writer.Write(PHeader);
-            writer.Write(UnkI32);
+            writer.Write(Flags);
             writer.Write(UnkI321.Count);
             for (int i = 0; i < UnkI321.Count; ++i)
                 writer.Write(UnkI321[i]);
@@ -102,7 +102,7 @@ namespace Twinsanity
             ObjectID = reader.ReadUInt16();
             AfterOID = reader.ReadUInt32();
             PHeader = reader.ReadUInt32();
-            UnkI32 = reader.ReadUInt32();
+            Flags = reader.ReadUInt32();
             n = reader.ReadInt32();
             UnkI321.Clear();
             for (int i = 0; i < n; ++i)
