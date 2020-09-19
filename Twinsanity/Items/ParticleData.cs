@@ -9,6 +9,7 @@ namespace Twinsanity
 
         //Works for all versions AND Xbox's .PTL files, how nice. (may even work for TWOC with some adjustments)
         public bool IsStandalone = false;
+        public bool IsDefault = false;
 
         public long DataSize;
 
@@ -17,9 +18,16 @@ namespace Twinsanity
         public ParticleSystemDefinition[] ParticleTypes;
         public uint ParticleInstanceCount;
         public List<ParticleSystemInstance> ParticleInstances;
-        public List<uint> PreHeader;
+        
+        public uint ParticleTextureID_1;
+        public uint ParticleMaterialID_1;
+        public uint ParticleTextureID_2;
+        public uint ParticleMaterialID_2;
+        public uint ParticleTextureID_3;
+        public uint ParticleMaterialID_3;
         public byte[] Remain;
-
+        public uint DecalTextureID;
+        public uint DecalMaterialID;
 
         public ParticleData()
         {
@@ -33,7 +41,10 @@ namespace Twinsanity
                 return (int)DataSize;
             }
             int count = 12;
-            count += PreHeader.Count * 4;
+            if (IsDefault)
+            {
+                count += 28;
+            }
             count += Remain.Length;
             count += (int)ParticleInstanceCount * 0x44;
             if (ParticleTypeCount > 0)
@@ -55,12 +66,14 @@ namespace Twinsanity
                 return;
             }
 
-            if (PreHeader.Count > 0)
+            if (IsDefault)
             {
-                for (int i = 0; i < PreHeader.Count; i++)
-                {
-                    writer.Write(PreHeader[i]);
-                }
+                writer.Write(ParticleTextureID_1);
+                writer.Write(ParticleMaterialID_1);
+                writer.Write(ParticleTextureID_2);
+                writer.Write(ParticleMaterialID_2);
+                writer.Write(ParticleTextureID_3);
+                writer.Write(ParticleMaterialID_3);
             }
 
             writer.Write(Header1);
@@ -77,7 +90,10 @@ namespace Twinsanity
                 }
             }
 
-            writer.Write(ParticleInstanceCount);
+            if (!IsDefault)
+            {
+                writer.Write(ParticleInstanceCount);
+            }
             if (ParticleInstanceCount > 0 && ParticleInstanceCount < 65536)
             {
                 for (int i = 0; i < ParticleInstanceCount; i++)
@@ -99,6 +115,12 @@ namespace Twinsanity
                     }
                     writer.Write(ParticleInstances[i].EndZero);
                 }
+            }
+
+            if (IsDefault)
+            {
+                writer.Write(DecalTextureID);
+                writer.Write(DecalMaterialID);
             }
 
             if (Remain.Length > 0)
@@ -124,26 +146,17 @@ namespace Twinsanity
                 return;
             }
 
-            PreHeader = new List<uint>();
-            //Default.rm has some pre-header data
+            //Default.rm has some pre-header data: 3x (texture ID + material ID)
             if (Header1 > 0xFF)
             {
-                PreHeader.Add(Header1);
-                bool check = false;
-                uint HeaderTest = 0;
-                while (!check)
-                {
-                    HeaderTest = reader.ReadUInt32();
-                    if (HeaderTest <= 0xFF)
-                    {
-                        check = true;
-                        Header1 = HeaderTest;
-                    }
-                    else
-                    {
-                        PreHeader.Add(HeaderTest);
-                    }
-                }
+                IsDefault = true;
+                ParticleTextureID_1 = Header1;
+                ParticleMaterialID_1 = reader.ReadUInt32();
+                ParticleTextureID_2 = reader.ReadUInt32();
+                ParticleMaterialID_2 = reader.ReadUInt32();
+                ParticleTextureID_3 = reader.ReadUInt32();
+                ParticleMaterialID_3 = reader.ReadUInt32();
+                Header1 = reader.ReadUInt32();
             }
 
             ParticleTypeCount = reader.ReadUInt32();
@@ -167,7 +180,8 @@ namespace Twinsanity
                 }
             }
 
-            ParticleInstanceCount = reader.ReadUInt32();
+            uint InstanceCheck = reader.ReadUInt32();
+            ParticleInstanceCount = InstanceCheck;
             if (ParticleInstanceCount > 0 && ParticleInstanceCount < 65536)
             {
                 ParticleInstances = new List<ParticleSystemInstance>();
@@ -198,7 +212,15 @@ namespace Twinsanity
                 ParticleInstanceCount = 0;
             }
 
-            // Default.rm has some extra data (water ripple/footstep stuff?)
+            // Default.rm has some extra data (decal stuff)
+            if (IsDefault)
+            {
+                DecalTextureID = InstanceCheck;
+                DecalMaterialID = reader.ReadUInt32();
+            }
+
+            // todo: more data after this in default
+
             int RemainBytes = (int)((start_pos + size) - reader.BaseStream.Position);
             if (RemainBytes > 0)
             {
