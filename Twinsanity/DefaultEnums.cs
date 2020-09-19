@@ -610,6 +610,10 @@ namespace Twinsanity
             CacheLinkedInstance = 111,
             SpawnCachedObject = 112,
             PhysicsResetVelocity = 120,
+            SetShadow = 187,
+            SetShadowCircle = 188,
+            SetShadowMesh = 189,
+            SetShadowRectangle = 190,
 
             SpawnObject = 512,
             AddWumpa = 513,
@@ -647,6 +651,7 @@ namespace Twinsanity
             StartWhackaworm = 596,
             ProgressWhackaworm = 597,
             EndWhackaworm = 598,
+            FadeoutScreen = 602,
             DisplayBottomText = 603,
             CameraFocusObject = 606,
             CameraStopFocusObject = 607,
