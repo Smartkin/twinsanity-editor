@@ -154,7 +154,7 @@ namespace TwinsaityEditor
             using (OpenFileDialog ofd = new OpenFileDialog
             {
                 InitialDirectory = Settings.Default.ChunkFilePath,
-                Filter = "RM2 files|*.rm2|SM2 files|*.sm2|RMX files|*.rmx|SMX files|*.smx|Demo RM2 files|*.rm2|Demo SM2 files|*.sm2"
+                Filter = "RM2 files|*.rm2|SM2 files|*.sm2|RMX files|*.rmx|SMX files|*.smx|Demo RM2 files|*.rm2|Demo SM2 files|*.sm2|Frontend|Frontend.bin"
                 //Filter = "PS2 files (.rm2; .sm2)|*.rm2;*.sm2|XBOX files (.rmx; .smx)|*.rmx;*.smx|Demo files (.rm2; .sm2)|*.rm2; *.sm2";
             })
             {
@@ -207,6 +207,9 @@ namespace TwinsaityEditor
                                 aux_file = new TwinsFile();
                                 aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".sm2", TwinsFile.FileType.DemoSM2);
                             }
+                            break;
+                        case 7:
+                            file.LoadFile(ofd.FileName, TwinsFile.FileType.Frontend);
                             break;
                     }
                     if (IsScenery)

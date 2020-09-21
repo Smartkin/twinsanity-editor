@@ -25,8 +25,24 @@ namespace Twinsanity
                 return;
             Records = new List<TwinsItem>();
             RecordIDs = new Dictionary<uint, int>();
-            BinaryReader reader = new BinaryReader(new FileStream(path, FileMode.Open, FileAccess.Read));
+            var file = new FileStream(path, FileMode.Open, FileAccess.Read);
+            BinaryReader reader = new BinaryReader(file);
             Type = type;
+            if (type == FileType.Frontend)
+            {
+                TwinsSection sec = new TwinsSection
+                {
+                    ID = 3,
+                    Type = SectionType.SE,
+                };
+                var sk = reader.BaseStream.Position;
+                sec.Load(reader, (int)file.Length);
+                reader.BaseStream.Position = sk;
+                RecordIDs.Add(3, Records.Count);
+                Records.Add(sec);
+                reader.Close();
+                return;
+            }
             if ((Magic = reader.ReadUInt32()) != magic)
                 throw new Exception("LoadFile: Magic number is wrong.");
             FileName = path;
@@ -245,6 +261,6 @@ namespace Twinsanity
         }
 
         //NOTE: Do NOT use "First"
-        public enum FileType { First = SectionType.Last, RM2, SM2, DemoRM2, DemoSM2, RMX, SMX };
+        public enum FileType { First = SectionType.Last, RM2, SM2, DemoRM2, DemoSM2, RMX, SMX, Frontend };
     }
 }
