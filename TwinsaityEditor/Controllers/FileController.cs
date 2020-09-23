@@ -263,7 +263,7 @@ namespace TwinsaityEditor
         public void OpenModelViewer(SpecialModelController spec)
         {
             SectionController model_sec = GetItem<SectionController>(6).GetItem<SectionController>(6);
-            uint LODcount = spec.Data.LodAmount;
+            uint LODcount = spec.Data.ModelsAmount;
             int targetLOD = (int)(LODcount - 1);
             ModelController c = model_sec.GetItem<ModelController>(spec.Data.LODModelIDs[targetLOD]);
             var id = c.Data.ID;

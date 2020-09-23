@@ -24,10 +24,10 @@ namespace TwinsaityEditor
 
             text.Add(string.Format("ID: {0:X8}", Data.ID));
             text.Add($"Size: {Data.Size}");
-            text.Add($"LOD Amount: {Data.LodAmount} ");
-            for (int i = 0; i < Data.LodAmount; ++i)
+            text.Add($"Models in LOD: {Data.ModelsAmount} ");
+            for (int i = 0; i < Data.ModelsAmount; ++i)
             {
-                text.Add($"LOD {i} Model ID: {Data.LODModelIDs[i]:X8}");
+                text.Add($"Model ID: {Data.LODModelIDs[i]:X8}");
             }
             /*int cur_LOD = 0;
             if (Data.LodAmount > 1)

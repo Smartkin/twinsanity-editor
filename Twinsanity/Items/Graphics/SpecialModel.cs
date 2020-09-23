@@ -8,7 +8,7 @@ namespace Twinsanity
     {
 
         public uint Header;
-        public uint LodAmount;
+        public uint ModelsAmount;
         public int UnkInt1;
         public int UnkInt2;
         public byte[] UnkData;
@@ -23,7 +23,7 @@ namespace Twinsanity
 
         protected override int GetSize()
         {
-            return 21 + LODModelIDs.Length * 4;
+            return 25 + LODModelIDs.Length * 4;
         }
 
         /// <summary>
@@ -32,11 +32,11 @@ namespace Twinsanity
         public override void Save(BinaryWriter writer)
         {
             writer.Write(Header);
-            writer.Write((byte)LodAmount);
+            writer.Write((byte)ModelsAmount);
             writer.Write(UnkInt1);
             writer.Write(UnkInt2);
             writer.Write(UnkData);
-            for (int i = 0; i < LodAmount; ++i)
+            for (int i = 0; i < ModelsAmount; ++i)
             {
                 writer.Write(LODModelIDs[i]);
             }
@@ -45,12 +45,12 @@ namespace Twinsanity
         public override void Load(BinaryReader reader, int size)
         {
             Header = reader.ReadUInt32();
-            LodAmount = reader.ReadByte();
+            ModelsAmount = reader.ReadByte();
             UnkInt1 = reader.ReadInt32();
             UnkInt2 = reader.ReadInt32();
             UnkData = reader.ReadBytes(0xC);
-            LODModelIDs = new uint[LodAmount];
-            for (int i = 0; i < LodAmount; ++i)
+            LODModelIDs = new uint[ModelsAmount];
+            for (int i = 0; i < ModelsAmount; ++i)
             {
                 LODModelIDs[i] = reader.ReadUInt32();
             }
