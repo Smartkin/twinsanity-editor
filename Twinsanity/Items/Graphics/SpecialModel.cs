@@ -8,8 +8,10 @@ namespace Twinsanity
     {
 
         public uint Header;
-        public uint K_Count;
-        public uint[] K_Val;
+        public uint LodAmount;
+        public int UnkInt1;
+        public int UnkInt2;
+        public byte[] UnkData;
         public uint[] LODModelIDs; // 4
 
         public long DataSize;
@@ -21,9 +23,7 @@ namespace Twinsanity
 
         protected override int GetSize()
         {
-            int count = 4 + 4 + 1 + 4 + 4 + 4 + 4;
-            count += (int)(K_Count * 4);
-            return count;
+            return 21 + LODModelIDs.Length * 4;
         }
 
         /// <summary>
@@ -32,35 +32,28 @@ namespace Twinsanity
         public override void Save(BinaryWriter writer)
         {
             writer.Write(Header);
-            writer.Write(K_Count);
-            writer.Write((byte)0x00);
-            for (int i = 0; i < K_Count; i++)
+            writer.Write((byte)LodAmount);
+            writer.Write(UnkInt1);
+            writer.Write(UnkInt2);
+            writer.Write(UnkData);
+            for (int i = 0; i < LodAmount; ++i)
             {
-                writer.Write(K_Val[i]);
+                writer.Write(LODModelIDs[i]);
             }
-            writer.Write(LODModelIDs[0]);
-            writer.Write(LODModelIDs[1]);
-            writer.Write(LODModelIDs[2]);
-            writer.Write(LODModelIDs[3]);
         }
 
         public override void Load(BinaryReader reader, int size)
         {
-            long start_pos = reader.BaseStream.Position;
-
             Header = reader.ReadUInt32();
-            K_Count = reader.ReadUInt32();
-            reader.ReadByte();
-            K_Val = new uint[K_Count];
-            for (int i = 0; i < K_Count; i++)
+            LodAmount = reader.ReadByte();
+            UnkInt1 = reader.ReadInt32();
+            UnkInt2 = reader.ReadInt32();
+            UnkData = reader.ReadBytes(0xC);
+            LODModelIDs = new uint[LodAmount];
+            for (int i = 0; i < LodAmount; ++i)
             {
-                K_Val[i] = reader.ReadUInt32();
+                LODModelIDs[i] = reader.ReadUInt32();
             }
-            LODModelIDs = new uint[4];
-            LODModelIDs[0] = reader.ReadUInt32();
-            LODModelIDs[1] = reader.ReadUInt32();
-            LODModelIDs[2] = reader.ReadUInt32();
-            LODModelIDs[3] = reader.ReadUInt32();
         }
 
     }
