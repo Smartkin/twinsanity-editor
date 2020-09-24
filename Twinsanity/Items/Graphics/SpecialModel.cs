@@ -9,12 +9,9 @@ namespace Twinsanity
 
         public uint Header;
         public uint ModelsAmount;
-        public int UnkInt1;
-        public int UnkInt2;
-        public byte[] UnkData;
+        public uint Zero;
+        public uint[] LODDistance; // 4
         public uint[] LODModelIDs; // 4
-
-        public long DataSize;
 
         public SpecialModel()
         {
@@ -33,9 +30,11 @@ namespace Twinsanity
         {
             writer.Write(Header);
             writer.Write((byte)ModelsAmount);
-            writer.Write(UnkInt1);
-            writer.Write(UnkInt2);
-            writer.Write(UnkData);
+            writer.Write(Zero);
+            for (int i = 0; i < LODDistance.Length; ++i)
+            {
+                writer.Write(LODDistance[i]);
+            }
             for (int i = 0; i < ModelsAmount; ++i)
             {
                 writer.Write(LODModelIDs[i]);
@@ -46,9 +45,12 @@ namespace Twinsanity
         {
             Header = reader.ReadUInt32();
             ModelsAmount = reader.ReadByte();
-            UnkInt1 = reader.ReadInt32();
-            UnkInt2 = reader.ReadInt32();
-            UnkData = reader.ReadBytes(0xC);
+            Zero = reader.ReadUInt32();
+            LODDistance = new uint[4];
+            for (int i = 0; i < LODDistance.Length; ++i)
+            {
+                LODDistance[i] = reader.ReadUInt32();
+            }
             LODModelIDs = new uint[ModelsAmount];
             for (int i = 0; i < ModelsAmount; ++i)
             {
