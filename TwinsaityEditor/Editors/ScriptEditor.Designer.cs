@@ -1412,7 +1412,7 @@
             // scriptNameFilter
             // 
             this.scriptNameFilter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.scriptNameFilter.Location = new System.Drawing.Point(87, 3);
+            this.scriptNameFilter.Location = new System.Drawing.Point(86, 3);
             this.scriptNameFilter.Name = "scriptNameFilter";
             this.scriptNameFilter.Size = new System.Drawing.Size(294, 20);
             this.scriptNameFilter.TabIndex = 3;
@@ -1424,7 +1424,7 @@
             this.label32.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label32.Location = new System.Drawing.Point(3, 0);
             this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(27, 25);
+            this.label32.Size = new System.Drawing.Size(26, 25);
             this.label32.TabIndex = 4;
             this.label32.Text = "Filter:";
             this.label32.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1450,7 +1450,7 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 38.88889F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 61.11111F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 300F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 194F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 195F));
             this.tableLayoutPanel2.Controls.Add(this.label32, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.scriptNameFilter, 2, 0);
             this.tableLayoutPanel2.Controls.Add(this.filterSelection, 1, 0);
@@ -1470,7 +1470,7 @@
             this.filterSelection.Items.AddRange(new object[] {
             "Name",
             "ID"});
-            this.filterSelection.Location = new System.Drawing.Point(36, 3);
+            this.filterSelection.Location = new System.Drawing.Point(35, 3);
             this.filterSelection.Name = "filterSelection";
             this.filterSelection.Size = new System.Drawing.Size(45, 21);
             this.filterSelection.TabIndex = 5;
@@ -1480,9 +1480,9 @@
             // 
             this.checkBox_showHeaderScripts.AutoSize = true;
             this.checkBox_showHeaderScripts.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.checkBox_showHeaderScripts.Location = new System.Drawing.Point(387, 3);
+            this.checkBox_showHeaderScripts.Location = new System.Drawing.Point(386, 3);
             this.checkBox_showHeaderScripts.Name = "checkBox_showHeaderScripts";
-            this.checkBox_showHeaderScripts.Size = new System.Drawing.Size(189, 19);
+            this.checkBox_showHeaderScripts.Size = new System.Drawing.Size(190, 19);
             this.checkBox_showHeaderScripts.TabIndex = 6;
             this.checkBox_showHeaderScripts.Text = "Show Header Scripts";
             this.checkBox_showHeaderScripts.UseVisualStyleBackColor = true;
