@@ -207,6 +207,7 @@
             // button6
             // 
             this.button6.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.button6.Enabled = false;
             this.button6.Location = new System.Drawing.Point(3, 483);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(298, 23);
@@ -217,6 +218,7 @@
             // button5
             // 
             this.button5.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.button5.Enabled = false;
             this.button5.Location = new System.Drawing.Point(3, 506);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(298, 23);
@@ -280,6 +282,7 @@
             // button4
             // 
             this.button4.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.button4.Enabled = false;
             this.button4.Location = new System.Drawing.Point(3, 483);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(231, 23);
@@ -299,6 +302,7 @@
             // button3
             // 
             this.button3.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.button3.Enabled = false;
             this.button3.Location = new System.Drawing.Point(3, 506);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(231, 23);
@@ -485,6 +489,7 @@
             // button2
             // 
             this.button2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.button2.Enabled = false;
             this.button2.Location = new System.Drawing.Point(3, 483);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(287, 23);
@@ -495,6 +500,7 @@
             // button1
             // 
             this.button1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.button1.Enabled = false;
             this.button1.Location = new System.Drawing.Point(3, 506);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(287, 23);
@@ -559,6 +565,7 @@
             // button7
             // 
             this.button7.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.button7.Enabled = false;
             this.button7.Location = new System.Drawing.Point(3, 483);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(298, 23);
@@ -569,6 +576,7 @@
             // button8
             // 
             this.button8.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.button8.Enabled = false;
             this.button8.Location = new System.Drawing.Point(3, 506);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(298, 23);
@@ -629,6 +637,7 @@
             // button9
             // 
             this.button9.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.button9.Enabled = false;
             this.button9.Location = new System.Drawing.Point(3, 483);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(231, 23);
@@ -648,6 +657,7 @@
             // button10
             // 
             this.button10.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.button10.Enabled = false;
             this.button10.Location = new System.Drawing.Point(3, 506);
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(231, 23);
@@ -833,6 +843,7 @@
             // button11
             // 
             this.button11.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.button11.Enabled = false;
             this.button11.Location = new System.Drawing.Point(3, 483);
             this.button11.Name = "button11";
             this.button11.Size = new System.Drawing.Size(289, 23);
@@ -843,6 +854,7 @@
             // button12
             // 
             this.button12.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.button12.Enabled = false;
             this.button12.Location = new System.Drawing.Point(3, 506);
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(289, 23);
