@@ -72,16 +72,19 @@ namespace Twinsanity
             var displacements = (UnkBlobSizePacked1 & 0x7F);
             var scales = (UnkBlobSizePacked1 >> 0xA & 0xFFE) / 2;
             var rotations = (UnkBlobSizePacked1 >> 0x16);
+            Displacements.Clear();
             for (var i = 0; i < displacements; ++i)
             {
                 Displacements.Add(new DisplacementKeys());
                 Displacements[i].Read(reader);
             }
+            Scales.Clear();
             for (var i = 0; i < scales; ++i)
             {
                 Scales.Add(new ScaleKeys());
                 Scales[i].Read(reader);
             }
+            Rotations.Clear();
             for (var i = 0; i < rotations; ++i)
             {
                 Rotations.Add(new RotationKeys(RotationKeysRelated1));
@@ -94,7 +97,9 @@ namespace Twinsanity
             displacements = (UnkBlobSizePacked2 & 0x7F);
             scales = (UnkBlobSizePacked2 >> 0xA & 0xFFE) / 2;
             rotations = (UnkBlobSizePacked2 >> 0x16);
-
+            Displacements2.Clear();
+            Scales2.Clear();
+            Rotations2.Clear();
             if (blobSize > 0)
             {
                 for (var i = 0; i < displacements; ++i)

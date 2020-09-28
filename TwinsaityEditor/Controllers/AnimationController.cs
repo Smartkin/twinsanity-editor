@@ -7,13 +7,14 @@ using Twinsanity;
 
 namespace TwinsaityEditor.Controllers
 {
-    class AnimationController : ItemController
+    public class AnimationController : ItemController
     {
         public new Animation Data { get; set; }
         
         public AnimationController(MainForm topform, Animation item) : base(topform, item)
         {
             Data = item;
+            AddMenu("Open editor", Menu_OpenEditor);
         }
 
         protected override string GetName()
@@ -38,6 +39,11 @@ namespace TwinsaityEditor.Controllers
                 $"Rotations 2: {Data.Rotations2.Count}",
             };
             TextPrev = text.ToArray();
+        }
+
+        private void Menu_OpenEditor()
+        {
+            MainFile.OpenEditor(this);
         }
     }
 }
