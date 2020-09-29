@@ -17,12 +17,12 @@ namespace TwinsaityEditor
     {
         private SectionController controller;
         private Animation animation;
-        private Animation.DisplacementKeys Displacement;
-        private Animation.DisplacementKeys Displacement2;
-        private Animation.RotationKeys Rotation;
-        private Animation.RotationKeys Rotation2;
-        private Animation.ScaleKeys Scale;
-        private Animation.ScaleKeys Scale2;
+        private Animation.BoneSettings BoneSettings;
+        private Animation.BoneSettings BoneSettings2;
+        private Animation.Timeline Timelines;
+        private Animation.Timeline Timeline2;
+        private Animation.EndTransformations Transformation;
+        private Animation.EndTransformations Transformation2;
 
         public AnimationEditor(SectionController c)
         {
@@ -54,12 +54,12 @@ namespace TwinsaityEditor
         private void lbAnimations_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lbAnimations.SelectedIndex == -1) return;
-            Displacement = null;
-            Displacement2 = null;
-            Rotation = null;
-            Rotation2 = null;
-            Scale = null;
-            Scale2 = null;
+            BoneSettings = null;
+            BoneSettings2 = null;
+            Timelines = null;
+            Timeline2 = null;
+            Transformation = null;
+            Transformation2 = null;
             tbDisB1.Text = "";
             tbDisB2.Text = "";
             tbDisB3.Text = "";
@@ -83,12 +83,12 @@ namespace TwinsaityEditor
             tbRotationBytes.Text = "";
             tbRotation2Bytes.Text = "";
             animation = (Animation)controller.Data.Records[lbAnimations.SelectedIndex];
-            PopulateWithAnimData(lbDisplacements.Items, animation.Displacements, "Displacement");
-            PopulateWithAnimData(lbScales.Items, animation.Scales, "Scale");
-            PopulateWithAnimData(lbRotations.Items, animation.Rotations, "Rotation");
-            PopulateWithAnimData(lbDisplacements2.Items, animation.Displacements2, "Displacement");
-            PopulateWithAnimData(lbScales2.Items, animation.Scales2, "Scale");
-            PopulateWithAnimData(lbRotations2.Items, animation.Rotations2, "Rotation");
+            PopulateWithAnimData(lbDisplacements.Items, animation.BonesSettings, "Bone setting");
+            PopulateWithAnimData(lbScales.Items, animation.Transformations, "Transformation");
+            PopulateWithAnimData(lbRotations.Items, animation.Timelines, "Timeline");
+            PopulateWithAnimData(lbDisplacements2.Items, animation.BonesSettings2, "Bone setting");
+            PopulateWithAnimData(lbScales2.Items, animation.Transformations2, "Transformation");
+            PopulateWithAnimData(lbRotations2.Items, animation.Timelines2, "Timeline");
         }
 
         private void lbDisplacements_SelectedIndexChanged(object sender, EventArgs e)
@@ -96,8 +96,8 @@ namespace TwinsaityEditor
             var list = (ListBox)sender;
             if (list.SelectedIndex == -1) return;
 
-            Animation.DisplacementKeys displacement = animation.Displacements[list.SelectedIndex];
-            Displacement = displacement;
+            Animation.BoneSettings displacement = animation.BonesSettings[list.SelectedIndex];
+            BoneSettings = displacement;
             tbDisB1.Text = displacement.Unknown[0].ToString();
             tbDisB2.Text = displacement.Unknown[1].ToString();
             tbDisB3.Text = displacement.Unknown[2].ToString();
@@ -113,8 +113,8 @@ namespace TwinsaityEditor
             var list = (ListBox)sender;
             if (list.SelectedIndex == -1) return;
 
-            Animation.ScaleKeys scale = animation.Scales[list.SelectedIndex];
-            Scale = scale;
+            Animation.EndTransformations scale = animation.Transformations[list.SelectedIndex];
+            Transformation = scale;
             tbScaleB1.Text = scale.Unknown[0].ToString();
             tbScaleB2.Text = scale.Unknown[1].ToString();
         }
@@ -124,8 +124,8 @@ namespace TwinsaityEditor
             var list = (ListBox)sender;
             if (list.SelectedIndex == -1) return;
 
-            Animation.RotationKeys rotation = animation.Rotations[list.SelectedIndex];
-            Rotation = rotation;
+            Animation.Timeline rotation = animation.Timelines[list.SelectedIndex];
+            Timelines = rotation;
             tbRotationBytes.Text = "";
             for (int i = 0; i < rotation.Unknown.Length; i++)
             {
@@ -143,8 +143,8 @@ namespace TwinsaityEditor
             var list = (ListBox)sender;
             if (list.SelectedIndex == -1) return;
 
-            Animation.DisplacementKeys displacement = animation.Displacements2[list.SelectedIndex];
-            Displacement2 = displacement;
+            Animation.BoneSettings displacement = animation.BonesSettings2[list.SelectedIndex];
+            BoneSettings2 = displacement;
             tbDis2B1.Text = displacement.Unknown[0].ToString();
             tbDis2B2.Text = displacement.Unknown[1].ToString();
             tbDis2B3.Text = displacement.Unknown[2].ToString();
@@ -160,8 +160,8 @@ namespace TwinsaityEditor
             var list = (ListBox)sender;
             if (list.SelectedIndex == -1) return;
 
-            Animation.ScaleKeys scale = animation.Scales2[list.SelectedIndex];
-            Scale2 = scale;
+            Animation.EndTransformations scale = animation.Transformations2[list.SelectedIndex];
+            Transformation2 = scale;
             tbScale2B1.Text = scale.Unknown[0].ToString();
             tbScale2B2.Text = scale.Unknown[1].ToString();
         }
@@ -171,8 +171,8 @@ namespace TwinsaityEditor
             var list = (ListBox)sender;
             if (list.SelectedIndex == -1) return;
 
-            Animation.RotationKeys rotation = animation.Rotations2[list.SelectedIndex];
-            Rotation2 = rotation;
+            Animation.Timeline rotation = animation.Timelines2[list.SelectedIndex];
+            Timeline2 = rotation;
             tbRotation2Bytes.Text = "";
             for (int i = 0; i < rotation.Unknown.Length; i++)
             {
@@ -188,77 +188,77 @@ namespace TwinsaityEditor
         private void tbDisB1_TextChanged(object sender, EventArgs e)
         {
             var tb = (TextBox)sender;
-            if (!Byte.TryParse(tb.Text, out Byte result) || Displacement == null) return;
-            Displacement.Unknown[0] = result;
+            if (!Byte.TryParse(tb.Text, out Byte result) || BoneSettings == null) return;
+            BoneSettings.Unknown[0] = result;
         }
 
         private void tbDisB2_TextChanged(object sender, EventArgs e)
         {
             var tb = (TextBox)sender;
-            if (!Byte.TryParse(tb.Text, out Byte result) || Displacement == null) return;
-            Displacement.Unknown[1] = result;
+            if (!Byte.TryParse(tb.Text, out Byte result) || BoneSettings == null) return;
+            BoneSettings.Unknown[1] = result;
         }
 
         private void tbDisB3_TextChanged(object sender, EventArgs e)
         {
             var tb = (TextBox)sender;
-            if (!Byte.TryParse(tb.Text, out Byte result) || Displacement == null) return;
-            Displacement.Unknown[2] = result;
+            if (!Byte.TryParse(tb.Text, out Byte result) || BoneSettings == null) return;
+            BoneSettings.Unknown[2] = result;
         }
 
         private void tbDisB4_TextChanged(object sender, EventArgs e)
         {
             var tb = (TextBox)sender;
-            if (!Byte.TryParse(tb.Text, out Byte result) || Displacement == null) return;
-            Displacement.Unknown[3] = result;
+            if (!Byte.TryParse(tb.Text, out Byte result) || BoneSettings == null) return;
+            BoneSettings.Unknown[3] = result;
         }
 
         private void tbDisB5_TextChanged(object sender, EventArgs e)
         {
             var tb = (TextBox)sender;
-            if (!Byte.TryParse(tb.Text, out Byte result) || Displacement == null) return;
-            Displacement.Unknown[4] = result;
+            if (!Byte.TryParse(tb.Text, out Byte result) || BoneSettings == null) return;
+            BoneSettings.Unknown[4] = result;
         }
 
         private void tbDisB6_TextChanged(object sender, EventArgs e)
         {
             var tb = (TextBox)sender;
-            if (!Byte.TryParse(tb.Text, out Byte result) || Displacement == null) return;
-            Displacement.Unknown[5] = result;
+            if (!Byte.TryParse(tb.Text, out Byte result) || BoneSettings == null) return;
+            BoneSettings.Unknown[5] = result;
         }
 
         private void tbDisB7_TextChanged(object sender, EventArgs e)
         {
             var tb = (TextBox)sender;
-            if (!Byte.TryParse(tb.Text, out Byte result) || Displacement == null) return;
-            Displacement.Unknown[6] = result;
+            if (!Byte.TryParse(tb.Text, out Byte result) || BoneSettings == null) return;
+            BoneSettings.Unknown[6] = result;
         }
 
         private void tbDisB8_TextChanged(object sender, EventArgs e)
         {
             var tb = (TextBox)sender;
-            if (!Byte.TryParse(tb.Text, out Byte result) || Displacement == null) return;
-            Displacement.Unknown[7] = result;
+            if (!Byte.TryParse(tb.Text, out Byte result) || BoneSettings == null) return;
+            BoneSettings.Unknown[7] = result;
         }
 
         private void tbScaleB1_TextChanged(object sender, EventArgs e)
         {
             var tb = (TextBox)sender;
-            if (!Byte.TryParse(tb.Text, out Byte result) || Scale == null) return;
-            Scale.Unknown[0] = result;
+            if (!Byte.TryParse(tb.Text, out Byte result) || Transformation == null) return;
+            Transformation.Unknown[0] = result;
         }
 
         private void tbScaleB2_TextChanged(object sender, EventArgs e)
         {
             var tb = (TextBox)sender;
-            if (!Byte.TryParse(tb.Text, out Byte result) || Scale == null) return;
-            Scale.Unknown[1] = result;
+            if (!Byte.TryParse(tb.Text, out Byte result) || Transformation == null) return;
+            Transformation.Unknown[1] = result;
         }
 
         private void tbRotationBytes_TextChanged(object sender, EventArgs e)
         {
             var tb = (TextBox)sender;
-            if (Rotation == null) return;
+            if (Timelines == null) return;
             var bytes = tb.Text.Split(' ');
             var newBytes = new List<Byte>();
             foreach (var b in bytes)
@@ -266,84 +266,84 @@ namespace TwinsaityEditor
                 if (!Byte.TryParse(b, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out Byte result)) return;
                 newBytes.Add(result);
             }
-            if (newBytes.Count != Rotation.Unknown.Length) return;
-            Rotation.Unknown = newBytes.ToArray();
+            if (newBytes.Count != Timelines.Unknown.Length) return;
+            Timelines.Unknown = newBytes.ToArray();
         }
 
         private void tbDis2B1_TextChanged(object sender, EventArgs e)
         {
             var tb = (TextBox)sender;
-            if (!Byte.TryParse(tb.Text, out Byte result) || Displacement2 == null) return;
-            Displacement2.Unknown[0] = result;
+            if (!Byte.TryParse(tb.Text, out Byte result) || BoneSettings2 == null) return;
+            BoneSettings2.Unknown[0] = result;
         }
 
         private void tbDis2B2_TextChanged(object sender, EventArgs e)
         {
             var tb = (TextBox)sender;
-            if (!Byte.TryParse(tb.Text, out Byte result) || Displacement2 == null) return;
-            Displacement2.Unknown[1] = result;
+            if (!Byte.TryParse(tb.Text, out Byte result) || BoneSettings2 == null) return;
+            BoneSettings2.Unknown[1] = result;
         }
 
         private void tbDis2B3_TextChanged(object sender, EventArgs e)
         {
             var tb = (TextBox)sender;
-            if (!Byte.TryParse(tb.Text, out Byte result) || Displacement2 == null) return;
-            Displacement2.Unknown[2] = result;
+            if (!Byte.TryParse(tb.Text, out Byte result) || BoneSettings2 == null) return;
+            BoneSettings2.Unknown[2] = result;
         }
 
         private void tbDis2B4_TextChanged(object sender, EventArgs e)
         {
             var tb = (TextBox)sender;
-            if (!Byte.TryParse(tb.Text, out Byte result) || Displacement2 == null) return;
-            Displacement2.Unknown[3] = result;
+            if (!Byte.TryParse(tb.Text, out Byte result) || BoneSettings2 == null) return;
+            BoneSettings2.Unknown[3] = result;
         }
 
         private void tbDis2B5_TextChanged(object sender, EventArgs e)
         {
             var tb = (TextBox)sender;
-            if (!Byte.TryParse(tb.Text, out Byte result) || Displacement2 == null) return;
-            Displacement2.Unknown[4] = result;
+            if (!Byte.TryParse(tb.Text, out Byte result) || BoneSettings2 == null) return;
+            BoneSettings2.Unknown[4] = result;
         }
 
         private void tbDis2B6_TextChanged(object sender, EventArgs e)
         {
             var tb = (TextBox)sender;
-            if (!Byte.TryParse(tb.Text, out Byte result) || Displacement2 == null) return;
-            Displacement2.Unknown[5] = result;
+            if (!Byte.TryParse(tb.Text, out Byte result) || BoneSettings2 == null) return;
+            BoneSettings2.Unknown[5] = result;
         }
 
         private void tbDis2B7_TextChanged(object sender, EventArgs e)
         {
             var tb = (TextBox)sender;
-            if (!Byte.TryParse(tb.Text, out Byte result) || Displacement2 == null) return;
-            Displacement2.Unknown[6] = result;
+            if (!Byte.TryParse(tb.Text, out Byte result) || BoneSettings2 == null) return;
+            BoneSettings2.Unknown[6] = result;
         }
 
         private void tbDis2B8_TextChanged(object sender, EventArgs e)
         {
             var tb = (TextBox)sender;
-            if (!Byte.TryParse(tb.Text, out Byte result) || Displacement2 == null) return;
-            Displacement2.Unknown[7] = result;
+            if (!Byte.TryParse(tb.Text, out Byte result) || BoneSettings2 == null) return;
+            BoneSettings2.Unknown[7] = result;
         }
 
         private void tbScale2B1_TextChanged(object sender, EventArgs e)
         {
             var tb = (TextBox)sender;
-            if (!Byte.TryParse(tb.Text, out Byte result) || Scale2 == null) return;
-            Scale2.Unknown[0] = result;
+            if (!Byte.TryParse(tb.Text, out Byte result) || Transformation2 == null) return;
+            Transformation2.Unknown[0] = result;
         }
 
         private void tbScale2B2_TextChanged(object sender, EventArgs e)
         {
             var tb = (TextBox)sender;
-            if (!Byte.TryParse(tb.Text, out Byte result) || Scale2 == null) return;
-            Scale2.Unknown[1] = result;
+            if (!Byte.TryParse(tb.Text, out Byte result) || Transformation2 == null) return;
+            Transformation2.Unknown[1] = result;
         }
 
         private void tbRotation2Bytes_TextChanged(object sender, EventArgs e)
         {
             var tb = (TextBox)sender;
-            if (Rotation2 == null) return;
+            if (Timeline2 == null) return;
             var bytes = tb.Text.Split(' ');
             var newBytes = new List<Byte>();
             foreach (var b in bytes)
@@ -351,8 +351,8 @@ namespace TwinsaityEditor
                 if (!Byte.TryParse(b, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out Byte result)) return;
                 newBytes.Add(result);
             }
-            if (newBytes.Count != Rotation2.Unknown.Length) return;
-            Rotation2.Unknown = newBytes.ToArray();
+            if (newBytes.Count != Timeline2.Unknown.Length) return;
+            Timeline2.Unknown = newBytes.ToArray();
         }
     }
 }

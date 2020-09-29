@@ -30,13 +30,13 @@ namespace TwinsaityEditor.Controllers
                 $"Size: {Data.Size}",
                 $"Unknown bitfield: 0x{Data.Bitfield:X}",
                 $"Blob packed 1: 0x{Data.UnkBlobSizePacked1:X}",
-                $"Displacements 1: {Data.Displacements.Count}",
-                $"Scales 1: {Data.Scales.Count}",
-                $"Rotations 1: {Data.Rotations.Count}",
+                $"Bone settings 1: {Data.BonesSettings.Count}",
+                $"Transformations 1: {Data.Transformations.Count}",
+                $"Timelines 1: {Data.Timelines.Count}",
                 $"Blob packed 2: 0x{Data.UnkBlobSizePacked2:X}",
-                $"Displacements 2: {Data.Displacements2.Count}",
-                $"Scales 2: {Data.Scales2.Count}",
-                $"Rotations 2: {Data.Rotations2.Count}",
+                $"Bone settings 2: {Data.BonesSettings2.Count}",
+                $"Transformations 2: {Data.Transformations2.Count}",
+                $"Timelines 2: {Data.Timelines2.Count}",
             };
             TextPrev = text.ToArray();
         }

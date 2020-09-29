@@ -185,7 +185,7 @@
             this.groupBox5.Size = new System.Drawing.Size(304, 532);
             this.groupBox5.TabIndex = 2;
             this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "Rotations";
+            this.groupBox5.Text = "Timelines";
             // 
             // label11
             // 
@@ -252,7 +252,7 @@
             this.groupBox4.Size = new System.Drawing.Size(237, 532);
             this.groupBox4.TabIndex = 1;
             this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Scales";
+            this.groupBox4.Text = "Transformations";
             // 
             // tbScaleB2
             // 
@@ -348,7 +348,7 @@
             this.groupBox3.Size = new System.Drawing.Size(293, 532);
             this.groupBox3.TabIndex = 0;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Displacements";
+            this.groupBox3.Text = "Bone settings";
             // 
             // label8
             // 
@@ -544,7 +544,7 @@
             this.groupBox6.Size = new System.Drawing.Size(304, 532);
             this.groupBox6.TabIndex = 5;
             this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "Rotations2";
+            this.groupBox6.Text = "Timelines 2";
             // 
             // label12
             // 
@@ -609,7 +609,7 @@
             this.groupBox7.Size = new System.Drawing.Size(237, 532);
             this.groupBox7.TabIndex = 4;
             this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "Scales2";
+            this.groupBox7.Text = "Transformations 2";
             // 
             // tbScale2B2
             // 
@@ -702,7 +702,7 @@
             this.groupBox8.Size = new System.Drawing.Size(295, 532);
             this.groupBox8.TabIndex = 3;
             this.groupBox8.TabStop = false;
-            this.groupBox8.Text = "Displacements2";
+            this.groupBox8.Text = "Bone settings 2";
             // 
             // label15
             // 
