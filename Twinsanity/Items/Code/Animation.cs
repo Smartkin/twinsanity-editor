@@ -139,14 +139,11 @@ namespace Twinsanity
 
         public class EndTransformations
         {
-            public Byte[] Unknown;
-            public EndTransformations()
-            {
-                Unknown = new Byte[2];
-            }
+            public Int16 Unknown;
+
             public void Read(BinaryReader reader)
             {
-                Unknown = reader.ReadBytes(Unknown.Length);
+                Unknown = reader.ReadInt16();
             }
             public void Write(BinaryWriter writer)
             {
@@ -174,9 +171,9 @@ namespace Twinsanity
         protected override int GetSize()
         {
             var totalSize = 10; // Bitfield, blob packed, blob size helper
-            totalSize += BonesSettings.Sum(d => d.Unknown.Length) + Transformations.Sum(s => s.Unknown.Length) + Timelines.Sum(r => r.Unknown.Length);
+            totalSize += BonesSettings.Sum(d => d.Unknown.Length) + Transformations.Count * 2 + Timelines.Sum(r => r.Unknown.Length);
             totalSize += 6; // blob packed 2, blob size helper 2
-            totalSize += BonesSettings2.Sum(d => d.Unknown.Length) + Transformations2.Sum(s => s.Unknown.Length) + Timelines2.Sum(r => r.Unknown.Length);
+            totalSize += BonesSettings2.Sum(d => d.Unknown.Length) + Transformations2.Count * 2 + Timelines2.Sum(r => r.Unknown.Length);
             return totalSize;
         }
     }

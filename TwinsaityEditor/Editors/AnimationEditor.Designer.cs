@@ -40,9 +40,7 @@
             this.button5 = new System.Windows.Forms.Button();
             this.lbRotations = new System.Windows.Forms.ListBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.tbScaleB2 = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.tbScaleB1 = new System.Windows.Forms.TextBox();
+            this.tbTransformation = new System.Windows.Forms.TextBox();
             this.button4 = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
@@ -75,9 +73,7 @@
             this.button8 = new System.Windows.Forms.Button();
             this.lbRotations2 = new System.Windows.Forms.ListBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.tbScale2B2 = new System.Windows.Forms.TextBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.tbScale2B1 = new System.Windows.Forms.TextBox();
+            this.tbTransformation2 = new System.Windows.Forms.TextBox();
             this.button9 = new System.Windows.Forms.Button();
             this.label14 = new System.Windows.Forms.Label();
             this.button10 = new System.Windows.Forms.Button();
@@ -239,9 +235,7 @@
             // groupBox4
             // 
             this.groupBox4.AutoSize = true;
-            this.groupBox4.Controls.Add(this.tbScaleB2);
-            this.groupBox4.Controls.Add(this.label9);
-            this.groupBox4.Controls.Add(this.tbScaleB1);
+            this.groupBox4.Controls.Add(this.tbTransformation);
             this.groupBox4.Controls.Add(this.button4);
             this.groupBox4.Controls.Add(this.label10);
             this.groupBox4.Controls.Add(this.button3);
@@ -254,30 +248,13 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Transformations";
             // 
-            // tbScaleB2
+            // tbTransformation
             // 
-            this.tbScaleB2.Location = new System.Drawing.Point(145, 460);
-            this.tbScaleB2.Name = "tbScaleB2";
-            this.tbScaleB2.Size = new System.Drawing.Size(86, 20);
-            this.tbScaleB2.TabIndex = 20;
-            this.tbScaleB2.TextChanged += new System.EventHandler(this.tbScaleB2_TextChanged);
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(102, 464);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(37, 13);
-            this.label9.TabIndex = 20;
-            this.label9.Text = "Byte 2";
-            // 
-            // tbScaleB1
-            // 
-            this.tbScaleB1.Location = new System.Drawing.Point(49, 460);
-            this.tbScaleB1.Name = "tbScaleB1";
-            this.tbScaleB1.Size = new System.Drawing.Size(47, 20);
-            this.tbScaleB1.TabIndex = 19;
-            this.tbScaleB1.TextChanged += new System.EventHandler(this.tbScaleB1_TextChanged);
+            this.tbTransformation.Location = new System.Drawing.Point(76, 460);
+            this.tbTransformation.Name = "tbTransformation";
+            this.tbTransformation.Size = new System.Drawing.Size(155, 20);
+            this.tbTransformation.TabIndex = 20;
+            this.tbTransformation.TextChanged += new System.EventHandler(this.tbTransformation_TextChanged);
             // 
             // button4
             // 
@@ -295,9 +272,9 @@
             this.label10.AutoSize = true;
             this.label10.Location = new System.Drawing.Point(6, 463);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(37, 13);
+            this.label10.Size = new System.Drawing.Size(64, 13);
             this.label10.TabIndex = 19;
-            this.label10.Text = "Byte 1";
+            this.label10.Text = "Value(Int16)";
             // 
             // button3
             // 
@@ -596,9 +573,7 @@
             // 
             // groupBox7
             // 
-            this.groupBox7.Controls.Add(this.tbScale2B2);
-            this.groupBox7.Controls.Add(this.label13);
-            this.groupBox7.Controls.Add(this.tbScale2B1);
+            this.groupBox7.Controls.Add(this.tbTransformation2);
             this.groupBox7.Controls.Add(this.button9);
             this.groupBox7.Controls.Add(this.label14);
             this.groupBox7.Controls.Add(this.button10);
@@ -611,28 +586,13 @@
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Transformations 2";
             // 
-            // tbScale2B2
+            // tbTransformation2
             // 
-            this.tbScale2B2.Location = new System.Drawing.Point(145, 460);
-            this.tbScale2B2.Name = "tbScale2B2";
-            this.tbScale2B2.Size = new System.Drawing.Size(86, 20);
-            this.tbScale2B2.TabIndex = 20;
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(102, 464);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(37, 13);
-            this.label13.TabIndex = 20;
-            this.label13.Text = "Byte 2";
-            // 
-            // tbScale2B1
-            // 
-            this.tbScale2B1.Location = new System.Drawing.Point(49, 460);
-            this.tbScale2B1.Name = "tbScale2B1";
-            this.tbScale2B1.Size = new System.Drawing.Size(47, 20);
-            this.tbScale2B1.TabIndex = 19;
+            this.tbTransformation2.Location = new System.Drawing.Point(82, 460);
+            this.tbTransformation2.Name = "tbTransformation2";
+            this.tbTransformation2.Size = new System.Drawing.Size(149, 20);
+            this.tbTransformation2.TabIndex = 20;
+            this.tbTransformation2.TextChanged += new System.EventHandler(this.tbTransformation2_TextChanged);
             // 
             // button9
             // 
@@ -650,9 +610,9 @@
             this.label14.AutoSize = true;
             this.label14.Location = new System.Drawing.Point(6, 463);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(37, 13);
+            this.label14.Size = new System.Drawing.Size(70, 13);
             this.label14.TabIndex = 19;
-            this.label14.Text = "Byte 1";
+            this.label14.Text = "Value (Int16 )";
             // 
             // button10
             // 
@@ -939,10 +899,7 @@
         private System.Windows.Forms.TextBox tbDisB3;
         private System.Windows.Forms.TextBox tbDisB2;
         private System.Windows.Forms.TextBox tbDisB1;
-        private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.TextBox tbScaleB2;
-        private System.Windows.Forms.TextBox tbScaleB1;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox tbRotationBytes;
         private System.Windows.Forms.GroupBox groupBox6;
@@ -952,9 +909,7 @@
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.ListBox lbRotations2;
         private System.Windows.Forms.GroupBox groupBox7;
-        private System.Windows.Forms.TextBox tbScale2B2;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.TextBox tbScale2B1;
+        private System.Windows.Forms.TextBox tbTransformation2;
         private System.Windows.Forms.Button button9;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Button button10;
@@ -979,5 +934,6 @@
         private System.Windows.Forms.Button button11;
         private System.Windows.Forms.Button button12;
         private System.Windows.Forms.ListBox lbDisplacements2;
+        private System.Windows.Forms.TextBox tbTransformation;
     }
 }
