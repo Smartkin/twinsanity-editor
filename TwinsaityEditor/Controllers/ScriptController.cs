@@ -22,7 +22,7 @@ namespace TwinsaityEditor
         {
             List<string> text = new List<string>();
             text.Add($"ID: {Data.ID} {(Data.Name != null ? $" Name: {Data.Name}" : string.Empty)}");
-            text.Add($"Offset: {Data.Offset} Size: {Data.Size}");
+            text.Add($"Size: {Data.Size}");
             if (Data?.Header != null)
             {
                 text.Add($"Pairs(LinkedScriptIndex/UnkInt): {Data.Header.unkIntPairs}");

@@ -146,147 +146,47 @@ namespace TwinsaityEditor
 
         private void openRM2ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (OpenFileDialog ofd = new OpenFileDialog
-            {
-                InitialDirectory = Settings.Default.ChunkFilePath,
-                Filter = "RM2 files|*.rm2|SM2 files|*.sm2|RMX files|*.rmx|SMX files|*.smx|Demo RM2 files|*.rm2|Demo SM2 files|*.sm2"
-                //Filter = "PS2 files (.rm2; .sm2)|*.rm2;*.sm2|XBOX files (.rmx; .smx)|*.rmx;*.smx|Demo files (.rm2; .sm2)|*.rm2; *.sm2";
-            })
-            {
-                if (ofd.ShowDialog() == DialogResult.OK)
-                {
-                    if (CurCont != null)
-                        CurCont.CloseFile();
-                    Tag = null;
-                    Settings.Default.ChunkFilePath = ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('\\'));
-                    TwinsFile file = new TwinsFile();
-                    TwinsFile aux_file = null;
-                    TwinsFile default_file = null;
-                    bool IsScenery = ofd.FileName.Contains(".sm");
-                    switch (ofd.FilterIndex)
-                    {
-                        case 1:
-                        case 2:
-                            if (IsScenery)
-                                file.LoadFile(ofd.FileName, TwinsFile.FileType.SM2);
-                            else
-                            {
-                                file.LoadFile(ofd.FileName, TwinsFile.FileType.RM2);
-                                aux_file = new TwinsFile();
-                                aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".sm2", TwinsFile.FileType.SM2);
-                                if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + "/Default.rm2"))
-                                {
-                                    default_file = new TwinsFile();
-                                    default_file.LoadFile(AppDomain.CurrentDomain.BaseDirectory + "/Default.rm2", TwinsFile.FileType.RM2);
-                                }
-                            }
-                            break;
-                        case 3:
-                        case 4:
-                            if (IsScenery)
-                                file.LoadFile(ofd.FileName, TwinsFile.FileType.SMX);
-                            else
-                            {
-                                file.LoadFile(ofd.FileName, TwinsFile.FileType.RMX);
-                                aux_file = new TwinsFile();
-                                aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".smx", TwinsFile.FileType.SMX);
-                            }
-                            break;
-                        case 5:
-                        case 6:
-                            if (IsScenery)
-                                file.LoadFile(ofd.FileName, TwinsFile.FileType.DemoSM2);
-                            else
-                            {
-                                file.LoadFile(ofd.FileName, TwinsFile.FileType.DemoRM2);
-                                aux_file = new TwinsFile();
-                                aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".sm2", TwinsFile.FileType.DemoSM2);
-                            }
-                            break;
-                    }
-                    if (IsScenery)
-                    {
-                        sMViewerToolStripMenuItem.Enabled = true;
-                        rMViewerToolStripMenuItem.Enabled = false;
-                    }
-                    else
-                    {
-                        rMViewerToolStripMenuItem.Enabled = true;
-                        sMViewerToolStripMenuItem.Enabled = false;
-                    }
-                    file.SafeFileName = ofd.SafeFileName;
-                    Tag = new FileController(this, file);
-                    ((FileController)Tag).DataAux = aux_file;
-                    ((FileController)Tag).DataDefault = default_file;
-                    if (default_file != null)
-                    {
-                        ((FileController)Tag).DefaultCont = new FileController(this, default_file);
-                        foreach (var i in ((FileController)Tag).DataDefault.Records)
-                        {
-                            GenTreeNode(i, ((FileController)Tag).DefaultCont, true);
-                        }
-                    }
-                    GenTree();
-                    Text = $"Twinsaity Editor [{ofd.FileName}]";
-                }
-            }
+           
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "RM2/RMX files|*.rm*|SM2/SMX files|*.sm*";
-            if (sfd.ShowDialog() == DialogResult.OK)
-            {
-                CurFile.SaveFile(sfd.FileName);
-                CurCont.Data.FileName = sfd.FileName;
-                Text = $"Twinsaity Editor [{sfd.FileName}] ";
-            }
+         
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Overwrite original file?", "Save", MessageBoxButtons.OKCancel) == DialogResult.OK)
-                CurFile.SaveFile(CurCont.FileName);
+           
         }
 
         private void rMViewerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CurCont.OpenRMViewer();
+            
         }
 
         private void eLFPatcherToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenEXETool();
+          
         }
 
         private void sMViewerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CurCont.OpenSMViewer();
+           
         }
 
         private void mHMBToolToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenMHTool();
+        
         }
 
         public void OpenEXETool()
         {
-            if (exeForm == null)
-            {
-                exeForm = new EXEPatcher();
-                exeForm.FormClosed += delegate
-                {
-                    exeForm = null;
-                };
-            }
-            else
-                exeForm.Select();
+           
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("TwinsaityEditor + Twinsanity API v0.24\nDeveloped by Neo_Kesha, Smartkin, ManDude, Marko, BetaM\nSource code available at: https://github.com/smartkin/twinsanity-editor", "About", MessageBoxButtons.OK);
+            MessageBox.Show("Menu strip last used in build 0.30\nIt's left behind because I was too lazy to fix a bug and this would work\nSource code available at: https://github.com/smartkin/twinsanity-editor", "About", MessageBoxButtons.OK);
         }
 
         public void OpenMHTool()

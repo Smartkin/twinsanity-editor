@@ -21,7 +21,7 @@ namespace TwinsaityEditor
         {
             TextPrev = new string[3 + Data.ModelIDs.Length];
             TextPrev[0] = string.Format("ID: {0:X8}", Data.ID);
-            TextPrev[1] = $"Offset: {Data.Offset} Size: {Data.Size}";
+            TextPrev[1] = $"Size: {Data.Size}";
             TextPrev[2] = $"Unknown: {Data.Unknown} ModelCount: {Data.ModelIDs.Length}";
             for (int i = 0; i < Data.ModelIDs.Length; ++i)
                 TextPrev[3 + i] = string.Format("{0:X8}", Data.ModelIDs[i]);

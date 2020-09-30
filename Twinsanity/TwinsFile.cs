@@ -25,8 +25,24 @@ namespace Twinsanity
                 return;
             Records = new List<TwinsItem>();
             RecordIDs = new Dictionary<uint, int>();
-            BinaryReader reader = new BinaryReader(new FileStream(path, FileMode.Open, FileAccess.Read));
+            var file = new FileStream(path, FileMode.Open, FileAccess.Read);
+            BinaryReader reader = new BinaryReader(file);
             Type = type;
+            if (type == FileType.Frontend)
+            {
+                TwinsSection sec = new TwinsSection
+                {
+                    ID = 3,
+                    Type = SectionType.SE,
+                };
+                var sk = reader.BaseStream.Position;
+                sec.Load(reader, (int)file.Length);
+                reader.BaseStream.Position = sk;
+                RecordIDs.Add(3, Records.Count);
+                Records.Add(sec);
+                reader.Close();
+                return;
+            }
             if ((Magic = reader.ReadUInt32()) != magic)
                 throw new Exception("LoadFile: Magic number is wrong.");
             FileName = path;
@@ -79,7 +95,7 @@ namespace Twinsanity
                                             else
                                                 sec.Type = SectionType.Graphics;
                                         var sk = reader.BaseStream.Position;
-                                        reader.BaseStream.Position = sec.Offset = s_off;
+                                        reader.BaseStream.Position = s_off;
                                         sec.Level = 1;
                                         sec.Load(reader, s_size);
                                         reader.BaseStream.Position = sk;
@@ -91,7 +107,7 @@ namespace Twinsanity
                                     {
                                         ColData rec = new ColData() { ID = s_id };
                                         var sk = reader.BaseStream.Position;
-                                        reader.BaseStream.Position = rec.Offset = s_off;
+                                        reader.BaseStream.Position = s_off;
                                         rec.Load(reader, s_size);
                                         reader.BaseStream.Position = sk;
                                         RecordIDs.Add(s_id, Records.Count);
@@ -102,7 +118,7 @@ namespace Twinsanity
                                     {
                                         ParticleData rec = new ParticleData() { ID = s_id };
                                         var sk = reader.BaseStream.Position;
-                                        reader.BaseStream.Position = rec.Offset = s_off;
+                                        reader.BaseStream.Position = s_off;
                                         rec.Load(reader, s_size);
                                         reader.BaseStream.Position = sk;
                                         RecordIDs.Add(s_id, Records.Count);
@@ -113,7 +129,7 @@ namespace Twinsanity
                                     {
                                         TwinsItem rec = new TwinsItem { ID = s_id };
                                         var sk = reader.BaseStream.Position;
-                                        reader.BaseStream.Position = rec.Offset = s_off;
+                                        reader.BaseStream.Position = s_off;
                                         rec.Load(reader, s_size);
                                         reader.BaseStream.Position = sk;
                                         RecordIDs.Add(s_id, Records.Count);
@@ -143,7 +159,7 @@ namespace Twinsanity
                                             Level = 1
                                         };
                                         var sk = reader.BaseStream.Position;
-                                        reader.BaseStream.Position = sec.Offset = s_off;
+                                        reader.BaseStream.Position = s_off;
                                         sec.Load(reader, s_size);
                                         reader.BaseStream.Position = sk;
                                         RecordIDs.Add(s_id, Records.Count);
@@ -154,7 +170,7 @@ namespace Twinsanity
                                     {
                                         ChunkLinks rec = new ChunkLinks { ID = s_id };
                                         var sk = reader.BaseStream.Position;
-                                        reader.BaseStream.Position = rec.Offset = s_off;
+                                        reader.BaseStream.Position = s_off;
                                         rec.Load(reader, s_size);
                                         reader.BaseStream.Position = sk;
                                         RecordIDs.Add(s_id, Records.Count);
@@ -165,7 +181,7 @@ namespace Twinsanity
                                     {
                                         SceneryData rec = new SceneryData { ID = s_id };
                                         var sk = reader.BaseStream.Position;
-                                        reader.BaseStream.Position = rec.Offset = s_off;
+                                        reader.BaseStream.Position = s_off;
                                         rec.Load(reader, s_size);
                                         reader.BaseStream.Position = sk;
                                         RecordIDs.Add(s_id, Records.Count);
@@ -176,7 +192,7 @@ namespace Twinsanity
                                     {
                                         DynamicSceneryData rec = new DynamicSceneryData { ID = s_id };
                                         var sk = reader.BaseStream.Position;
-                                        reader.BaseStream.Position = rec.Offset = s_off;
+                                        reader.BaseStream.Position = s_off;
                                         rec.Load(reader, s_size);
                                         reader.BaseStream.Position = sk;
                                         RecordIDs.Add(s_id, Records.Count);
@@ -187,7 +203,7 @@ namespace Twinsanity
                                     {
                                         TwinsItem rec = new TwinsItem { ID = s_id };
                                         var sk = reader.BaseStream.Position;
-                                        reader.BaseStream.Position = rec.Offset = s_off;
+                                        reader.BaseStream.Position = s_off;
                                         rec.Load(reader, s_size);
                                         reader.BaseStream.Position = sk;
                                         RecordIDs.Add(s_id, Records.Count);
@@ -245,6 +261,6 @@ namespace Twinsanity
         }
 
         //NOTE: Do NOT use "First"
-        public enum FileType { First = SectionType.Last, RM2, SM2, DemoRM2, DemoSM2, RMX, SMX };
+        public enum FileType { First = SectionType.Last, RM2, SM2, DemoRM2, DemoSM2, RMX, SMX, Frontend };
     }
 }

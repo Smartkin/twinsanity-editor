@@ -23,7 +23,7 @@ namespace Twinsanity
         public override void Save(BinaryWriter writer)
         {
             writer.Write((uint)Name.Length);
-            writer.Write(Name);
+            writer.Write(Name.ToCharArray());
             writer.Write(ObjectID);
             writer.Write(Bitfield);
             writer.Write(HeaderInt1);

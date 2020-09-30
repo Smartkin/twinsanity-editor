@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Globalization;
 using Twinsanity;
+using System.ComponentModel.Design;
 
 namespace TwinsaityEditor
 {
@@ -38,11 +39,26 @@ namespace TwinsaityEditor
             InitializeComponent();
             PopulateList(scriptPredicate);
             UpdatePanels();
+            PopulateCommandList();
         }
 
         private void ScriptEditor_Load(object sender, EventArgs e)
         {
             filterSelection.SelectedIndex = 0;
+        }
+        private void PopulateCommandList()
+        {
+            // Populate with current script command knowledge
+            for (ushort i = 0; i < Script.MainScript.ScriptCommand.ScriptCommandTableSize; ++i)
+            {
+                if (Enum.IsDefined(typeof(DefaultEnums.CommandID), i))
+                {
+                    cbCommandIndex.Items.Add(((DefaultEnums.CommandID)i).ToString());
+                } else
+                {
+                    cbCommandIndex.Items.Add("Unexisting/Unknown " + i.ToString());
+                }
+            }
         }
         private void PopulateList()
         {
@@ -115,7 +131,7 @@ namespace TwinsaityEditor
             {
                 if (ptr.IsSlot)
                 {
-                    Name += $" - Local: Script #{ptr.scriptIndexOrSlot}";
+                    Name += $" - Object Script #{ptr.scriptIndexOrSlot}";
                 }
                 else
                 {
@@ -174,6 +190,10 @@ namespace TwinsaityEditor
             {
                 Name = ((DefaultEnums.ConditionID)ptr.VTableIndex).ToString();
                 IsDefined = true;
+            }
+            if (ptr.NotGate)
+            {
+                Name = "NOT " + Name;
             }
 
             parent.Text = string.Format("{1} - {0}", parent.Text, Name);
@@ -762,7 +782,8 @@ namespace TwinsaityEditor
         private void UpdateType3Panel()
         {
             type3VTable.Text = selectedType3.VTableIndex.ToString();
-            type3UnkShort.Text = selectedType3.UnkShort.ToString();
+            type3UnkShort.Text = selectedType3.UnkData.ToString();
+            type3CbNotGate.Checked = selectedType3.NotGate;
             type3X.Text = selectedType3.X.ToString(CultureInfo.InvariantCulture);
             type3Y.Text = selectedType3.Y.ToString(CultureInfo.InvariantCulture);
             type3Z.Text = selectedType3.Z.ToString(CultureInfo.InvariantCulture);
@@ -786,11 +807,11 @@ namespace TwinsaityEditor
 
         private void type3UnkShort_TextChanged(object sender, EventArgs e)
         {
-            UInt16 val = selectedType3.UnkShort;
+            UInt16 val = selectedType3.UnkData;
             if (UInt16.TryParse(((TextBox)sender).Text, out val))
             {
                 ((TextBox)sender).BackColor = Color.White;
-                selectedType3.UnkShort = val;
+                selectedType3.UnkData = val;
             }
             else
             {
@@ -845,7 +866,7 @@ namespace TwinsaityEditor
         }
         private void UpdateType4Panel()
         {
-            type4VTableIndex.Text = selectedType4.VTableIndex.ToString();
+            cbCommandIndex.SelectedItem = cbCommandIndex.Items[selectedType4.VTableIndex];
             type4BitField.Text = selectedType4.UnkShort.ToString("X4");
             type4Arguments.BeginUpdate();
             type4Arguments.Items.Clear();
@@ -1775,16 +1796,30 @@ namespace TwinsaityEditor
                 if (tag is Script.MainScript.ScriptStateBody)
                 {
                     string Name = $"To State: {selectedType2.scriptStateListIndex}";
-                    
+
                     if (null != selectedType2.condition)
                     {
                         if (Enum.IsDefined(typeof(DefaultEnums.ConditionID), selectedType2.condition.VTableIndex))
                         {
-                            Name = string.Format("{1} - {0}", Name,((DefaultEnums.ConditionID)selectedType2.condition.VTableIndex).ToString());
+                            if (selectedType2.condition.NotGate)
+                            {
+                                Name = string.Format("NOT {1} - {0}", Name, ((DefaultEnums.ConditionID)selectedType2.condition.VTableIndex).ToString());
+                            }
+                            else
+                            {
+                                Name = string.Format("{1} - {0}", Name, ((DefaultEnums.ConditionID)selectedType2.condition.VTableIndex).ToString());
+                            }
                         }
                         else
                         {
-                            Name = string.Format("{1} - {0}", Name, $"Condition {selectedType2.condition.VTableIndex}");
+                            if (selectedType2.condition.NotGate)
+                            {
+                                Name = string.Format("NOT {1} - {0}", Name, $"Condition {selectedType2.condition.VTableIndex}");
+                            }
+                            else
+                            {
+                                Name = string.Format("{1} - {0}", Name, $"Condition {selectedType2.condition.VTableIndex}");
+                            }
                         }
                     }
                     if (!selectedType2.IsEnabled)
@@ -1839,7 +1874,7 @@ namespace TwinsaityEditor
                     {
                         if (selectedLinked.IsSlot)
                         {
-                            Name += $" - Local: Script #{selectedLinked.scriptIndexOrSlot}";
+                            Name += $" - Object Script #{selectedLinked.scriptIndexOrSlot}";
                         }
                         else
                         {
@@ -1857,6 +1892,39 @@ namespace TwinsaityEditor
                     node.Text = Name;
                 }
             }
+        }
+
+        private void cbCommandIndex_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UInt16 val = selectedType4.VTableIndex;
+            if (UInt16.TryParse(((ComboBox)sender).SelectedIndex.ToString(), out val))
+            {
+                ((ComboBox)sender).BackColor = Color.White;
+                selectedType4.VTableIndex = val;
+            }
+            else
+            {
+                ((ComboBox)sender).BackColor = Color.Red;
+                return;
+            }
+            type4ExpectedLength.Text = $"Arguments: {selectedType4.GetExpectedSize() / 4}";
+            if (selectedType4.isValidBits())
+            {
+                type4Warning.Visible = false;
+            }
+            else
+            {
+                type4Warning.Visible = true;
+
+            }
+            UpdateNodeName();
+            UpdateType4Panel();
+        }
+
+        private void cbNotGate_CheckedChanged(object sender, EventArgs e)
+        {
+            selectedType3.NotGate = type3CbNotGate.Checked;
+            UpdateNodeName();
         }
     }
 }

@@ -145,7 +145,7 @@
             this.unk3Down = new System.Windows.Forms.Button();
             this.unk3Remove = new System.Windows.Forms.Button();
             this.unk3Up = new System.Windows.Forms.Button();
-            this.unk3List = new System.Windows.Forms.ListBox();
+            this.instIntegersList = new System.Windows.Forms.ListBox();
             this.groupBox16 = new System.Windows.Forms.GroupBox();
             this.unk2Source = new System.Windows.Forms.TextBox();
             this.unk2Set = new System.Windows.Forms.Button();
@@ -153,7 +153,7 @@
             this.unk2Down = new System.Windows.Forms.Button();
             this.unk2Remove = new System.Windows.Forms.Button();
             this.unk2Up = new System.Windows.Forms.Button();
-            this.unk2List = new System.Windows.Forms.ListBox();
+            this.instFloatsList = new System.Windows.Forms.ListBox();
             this.groupBox17 = new System.Windows.Forms.GroupBox();
             this.unk1Source = new System.Windows.Forms.TextBox();
             this.unk1Set = new System.Windows.Forms.Button();
@@ -161,7 +161,7 @@
             this.unk1Down = new System.Windows.Forms.Button();
             this.unk1Remove = new System.Windows.Forms.Button();
             this.unk1Up = new System.Windows.Forms.Button();
-            this.unk1List = new System.Windows.Forms.ListBox();
+            this.instFlagsList = new System.Windows.Forms.ListBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.objectId = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -172,6 +172,45 @@
             this.deleteObjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createObjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.duplicateObjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.groupBox18 = new System.Windows.Forms.GroupBox();
+            this.commandsList = new System.Windows.Forms.ListBox();
+            this.btnAddCommand = new System.Windows.Forms.Button();
+            this.btnDeleteCommand = new System.Windows.Forms.Button();
+            this.cbVTableIndexes = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.tbCommandPosition = new System.Windows.Forms.TextBox();
+            this.lbCommandArguments = new System.Windows.Forms.ListBox();
+            this.tbHEXRepres = new System.Windows.Forms.TextBox();
+            this.tbInt32Repres = new System.Windows.Forms.TextBox();
+            this.tbUInt32Repres = new System.Windows.Forms.TextBox();
+            this.tbFloatRepres = new System.Windows.Forms.TextBox();
+            this.tbInt16_1Repres = new System.Windows.Forms.TextBox();
+            this.tbInt16_2Repres = new System.Windows.Forms.TextBox();
+            this.tbUint16_1Repres = new System.Windows.Forms.TextBox();
+            this.tbUInt16_2Repres = new System.Windows.Forms.TextBox();
+            this.tbByte1Repres = new System.Windows.Forms.TextBox();
+            this.tbByte2Repres = new System.Windows.Forms.TextBox();
+            this.tbByte3Repres = new System.Windows.Forms.TextBox();
+            this.tbByte4Repres = new System.Windows.Forms.TextBox();
+            this.tbBinaryRepres = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.lblArguments = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.tbBitfield = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -195,6 +234,8 @@
             this.groupBox17.SuspendLayout();
             this.panel1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            this.tabPage4.SuspendLayout();
+            this.groupBox18.SuspendLayout();
             this.SuspendLayout();
             // 
             // objectList
@@ -224,6 +265,7 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(3, 57);
             this.tabControl1.Name = "tabControl1";
@@ -1185,7 +1227,7 @@
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Size = new System.Drawing.Size(727, 509);
             this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Unknown Values";
+            this.tabPage3.Text = "Instance values";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // groupBox14
@@ -1272,13 +1314,13 @@
             this.groupBox15.Controls.Add(this.unk3Down);
             this.groupBox15.Controls.Add(this.unk3Remove);
             this.groupBox15.Controls.Add(this.unk3Up);
-            this.groupBox15.Controls.Add(this.unk3List);
+            this.groupBox15.Controls.Add(this.instIntegersList);
             this.groupBox15.Location = new System.Drawing.Point(483, 12);
             this.groupBox15.Name = "groupBox15";
             this.groupBox15.Size = new System.Drawing.Size(232, 195);
             this.groupBox15.TabIndex = 16;
             this.groupBox15.TabStop = false;
-            this.groupBox15.Text = "Unknown List";
+            this.groupBox15.Text = "Instance integers";
             // 
             // unk3Source
             // 
@@ -1332,13 +1374,13 @@
             this.unk3Up.Text = "Up";
             this.unk3Up.UseVisualStyleBackColor = true;
             // 
-            // unk3List
+            // instIntegersList
             // 
-            this.unk3List.FormattingEnabled = true;
-            this.unk3List.Location = new System.Drawing.Point(78, 19);
-            this.unk3List.Name = "unk3List";
-            this.unk3List.Size = new System.Drawing.Size(148, 108);
-            this.unk3List.TabIndex = 0;
+            this.instIntegersList.FormattingEnabled = true;
+            this.instIntegersList.Location = new System.Drawing.Point(78, 19);
+            this.instIntegersList.Name = "instIntegersList";
+            this.instIntegersList.Size = new System.Drawing.Size(148, 108);
+            this.instIntegersList.TabIndex = 0;
             // 
             // groupBox16
             // 
@@ -1348,13 +1390,13 @@
             this.groupBox16.Controls.Add(this.unk2Down);
             this.groupBox16.Controls.Add(this.unk2Remove);
             this.groupBox16.Controls.Add(this.unk2Up);
-            this.groupBox16.Controls.Add(this.unk2List);
+            this.groupBox16.Controls.Add(this.instFloatsList);
             this.groupBox16.Location = new System.Drawing.Point(245, 12);
             this.groupBox16.Name = "groupBox16";
             this.groupBox16.Size = new System.Drawing.Size(232, 195);
             this.groupBox16.TabIndex = 17;
             this.groupBox16.TabStop = false;
-            this.groupBox16.Text = "Unknown List";
+            this.groupBox16.Text = "Instance floats";
             // 
             // unk2Source
             // 
@@ -1408,13 +1450,13 @@
             this.unk2Up.Text = "Up";
             this.unk2Up.UseVisualStyleBackColor = true;
             // 
-            // unk2List
+            // instFloatsList
             // 
-            this.unk2List.FormattingEnabled = true;
-            this.unk2List.Location = new System.Drawing.Point(78, 19);
-            this.unk2List.Name = "unk2List";
-            this.unk2List.Size = new System.Drawing.Size(148, 108);
-            this.unk2List.TabIndex = 0;
+            this.instFloatsList.FormattingEnabled = true;
+            this.instFloatsList.Location = new System.Drawing.Point(78, 19);
+            this.instFloatsList.Name = "instFloatsList";
+            this.instFloatsList.Size = new System.Drawing.Size(148, 108);
+            this.instFloatsList.TabIndex = 0;
             // 
             // groupBox17
             // 
@@ -1424,13 +1466,13 @@
             this.groupBox17.Controls.Add(this.unk1Down);
             this.groupBox17.Controls.Add(this.unk1Remove);
             this.groupBox17.Controls.Add(this.unk1Up);
-            this.groupBox17.Controls.Add(this.unk1List);
+            this.groupBox17.Controls.Add(this.instFlagsList);
             this.groupBox17.Location = new System.Drawing.Point(7, 12);
             this.groupBox17.Name = "groupBox17";
             this.groupBox17.Size = new System.Drawing.Size(232, 195);
             this.groupBox17.TabIndex = 14;
             this.groupBox17.TabStop = false;
-            this.groupBox17.Text = "Unknown List";
+            this.groupBox17.Text = "Instance flags";
             // 
             // unk1Source
             // 
@@ -1484,13 +1526,13 @@
             this.unk1Up.Text = "Up";
             this.unk1Up.UseVisualStyleBackColor = true;
             // 
-            // unk1List
+            // instFlagsList
             // 
-            this.unk1List.FormattingEnabled = true;
-            this.unk1List.Location = new System.Drawing.Point(78, 19);
-            this.unk1List.Name = "unk1List";
-            this.unk1List.Size = new System.Drawing.Size(148, 108);
-            this.unk1List.TabIndex = 0;
+            this.instFlagsList.FormattingEnabled = true;
+            this.instFlagsList.Location = new System.Drawing.Point(78, 19);
+            this.instFlagsList.Name = "instFlagsList";
+            this.instFlagsList.Size = new System.Drawing.Size(148, 108);
+            this.instFlagsList.TabIndex = 0;
             // 
             // panel1
             // 
@@ -1579,6 +1621,381 @@
             this.duplicateObjectToolStripMenuItem.Text = "Duplicate Object";
             this.duplicateObjectToolStripMenuItem.Click += new System.EventHandler(this.duplicateObjectToolStripMenuItem_Click);
             // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.tbBitfield);
+            this.tabPage4.Controls.Add(this.label19);
+            this.tabPage4.Controls.Add(this.lblArguments);
+            this.tabPage4.Controls.Add(this.label17);
+            this.tabPage4.Controls.Add(this.label16);
+            this.tabPage4.Controls.Add(this.label15);
+            this.tabPage4.Controls.Add(this.label14);
+            this.tabPage4.Controls.Add(this.label13);
+            this.tabPage4.Controls.Add(this.label12);
+            this.tabPage4.Controls.Add(this.label11);
+            this.tabPage4.Controls.Add(this.label10);
+            this.tabPage4.Controls.Add(this.label9);
+            this.tabPage4.Controls.Add(this.label8);
+            this.tabPage4.Controls.Add(this.label7);
+            this.tabPage4.Controls.Add(this.label6);
+            this.tabPage4.Controls.Add(this.label5);
+            this.tabPage4.Controls.Add(this.tbBinaryRepres);
+            this.tabPage4.Controls.Add(this.tbByte4Repres);
+            this.tabPage4.Controls.Add(this.tbByte3Repres);
+            this.tabPage4.Controls.Add(this.tbByte2Repres);
+            this.tabPage4.Controls.Add(this.tbByte1Repres);
+            this.tabPage4.Controls.Add(this.tbUInt16_2Repres);
+            this.tabPage4.Controls.Add(this.tbUint16_1Repres);
+            this.tabPage4.Controls.Add(this.tbInt16_2Repres);
+            this.tabPage4.Controls.Add(this.tbInt16_1Repres);
+            this.tabPage4.Controls.Add(this.tbFloatRepres);
+            this.tabPage4.Controls.Add(this.tbUInt32Repres);
+            this.tabPage4.Controls.Add(this.tbInt32Repres);
+            this.tabPage4.Controls.Add(this.tbHEXRepres);
+            this.tabPage4.Controls.Add(this.lbCommandArguments);
+            this.tabPage4.Controls.Add(this.tbCommandPosition);
+            this.tabPage4.Controls.Add(this.label4);
+            this.tabPage4.Controls.Add(this.label2);
+            this.tabPage4.Controls.Add(this.cbVTableIndexes);
+            this.tabPage4.Controls.Add(this.btnDeleteCommand);
+            this.tabPage4.Controls.Add(this.btnAddCommand);
+            this.tabPage4.Controls.Add(this.groupBox18);
+            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Size = new System.Drawing.Size(727, 509);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Commands";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // groupBox18
+            // 
+            this.groupBox18.Controls.Add(this.commandsList);
+            this.groupBox18.Location = new System.Drawing.Point(3, 3);
+            this.groupBox18.Name = "groupBox18";
+            this.groupBox18.Size = new System.Drawing.Size(290, 501);
+            this.groupBox18.TabIndex = 0;
+            this.groupBox18.TabStop = false;
+            this.groupBox18.Text = "Commands";
+            // 
+            // commandsList
+            // 
+            this.commandsList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.commandsList.FormattingEnabled = true;
+            this.commandsList.Location = new System.Drawing.Point(3, 16);
+            this.commandsList.Name = "commandsList";
+            this.commandsList.Size = new System.Drawing.Size(284, 482);
+            this.commandsList.TabIndex = 0;
+            this.commandsList.SelectedIndexChanged += new System.EventHandler(this.commandsList_SelectedIndexChanged);
+            // 
+            // btnAddCommand
+            // 
+            this.btnAddCommand.Location = new System.Drawing.Point(564, 450);
+            this.btnAddCommand.Name = "btnAddCommand";
+            this.btnAddCommand.Size = new System.Drawing.Size(158, 23);
+            this.btnAddCommand.TabIndex = 1;
+            this.btnAddCommand.Text = "Add command";
+            this.btnAddCommand.UseVisualStyleBackColor = true;
+            this.btnAddCommand.Click += new System.EventHandler(this.btnAddCommand_Click);
+            // 
+            // btnDeleteCommand
+            // 
+            this.btnDeleteCommand.Location = new System.Drawing.Point(296, 478);
+            this.btnDeleteCommand.Name = "btnDeleteCommand";
+            this.btnDeleteCommand.Size = new System.Drawing.Size(144, 23);
+            this.btnDeleteCommand.TabIndex = 2;
+            this.btnDeleteCommand.Text = "Delete command";
+            this.btnDeleteCommand.UseVisualStyleBackColor = true;
+            this.btnDeleteCommand.Click += new System.EventHandler(this.btnDeleteCommand_Click);
+            // 
+            // cbVTableIndexes
+            // 
+            this.cbVTableIndexes.FormattingEnabled = true;
+            this.cbVTableIndexes.Location = new System.Drawing.Point(373, 9);
+            this.cbVTableIndexes.Name = "cbVTableIndexes";
+            this.cbVTableIndexes.Size = new System.Drawing.Size(157, 21);
+            this.cbVTableIndexes.TabIndex = 3;
+            this.cbVTableIndexes.SelectedIndexChanged += new System.EventHandler(this.cbVTableIndexes_SelectedIndexChanged);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(300, 12);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(70, 13);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "VTableIndex:";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(300, 455);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(124, 13);
+            this.label4.TabIndex = 5;
+            this.label4.Text = "Command insert position:";
+            // 
+            // tbCommandPosition
+            // 
+            this.tbCommandPosition.Location = new System.Drawing.Point(430, 452);
+            this.tbCommandPosition.Name = "tbCommandPosition";
+            this.tbCommandPosition.Size = new System.Drawing.Size(128, 20);
+            this.tbCommandPosition.TabIndex = 6;
+            // 
+            // lbCommandArguments
+            // 
+            this.lbCommandArguments.FormattingEnabled = true;
+            this.lbCommandArguments.Location = new System.Drawing.Point(296, 84);
+            this.lbCommandArguments.Name = "lbCommandArguments";
+            this.lbCommandArguments.Size = new System.Drawing.Size(144, 355);
+            this.lbCommandArguments.TabIndex = 7;
+            this.lbCommandArguments.SelectedIndexChanged += new System.EventHandler(this.lbCommandArguments_SelectedIndexChanged);
+            // 
+            // tbHEXRepres
+            // 
+            this.tbHEXRepres.Location = new System.Drawing.Point(505, 65);
+            this.tbHEXRepres.Name = "tbHEXRepres";
+            this.tbHEXRepres.Size = new System.Drawing.Size(100, 20);
+            this.tbHEXRepres.TabIndex = 8;
+            this.tbHEXRepres.TextChanged += new System.EventHandler(this.textbox_RepresentationTextChanged);
+            // 
+            // tbInt32Repres
+            // 
+            this.tbInt32Repres.Location = new System.Drawing.Point(505, 91);
+            this.tbInt32Repres.Name = "tbInt32Repres";
+            this.tbInt32Repres.Size = new System.Drawing.Size(100, 20);
+            this.tbInt32Repres.TabIndex = 9;
+            this.tbInt32Repres.TextChanged += new System.EventHandler(this.textbox_RepresentationTextChanged);
+            // 
+            // tbUInt32Repres
+            // 
+            this.tbUInt32Repres.Location = new System.Drawing.Point(505, 117);
+            this.tbUInt32Repres.Name = "tbUInt32Repres";
+            this.tbUInt32Repres.Size = new System.Drawing.Size(100, 20);
+            this.tbUInt32Repres.TabIndex = 10;
+            this.tbUInt32Repres.TextChanged += new System.EventHandler(this.textbox_RepresentationTextChanged);
+            // 
+            // tbFloatRepres
+            // 
+            this.tbFloatRepres.Location = new System.Drawing.Point(505, 143);
+            this.tbFloatRepres.Name = "tbFloatRepres";
+            this.tbFloatRepres.Size = new System.Drawing.Size(100, 20);
+            this.tbFloatRepres.TabIndex = 11;
+            this.tbFloatRepres.TextChanged += new System.EventHandler(this.textbox_RepresentationTextChanged);
+            // 
+            // tbInt16_1Repres
+            // 
+            this.tbInt16_1Repres.Location = new System.Drawing.Point(505, 169);
+            this.tbInt16_1Repres.Name = "tbInt16_1Repres";
+            this.tbInt16_1Repres.Size = new System.Drawing.Size(100, 20);
+            this.tbInt16_1Repres.TabIndex = 12;
+            this.tbInt16_1Repres.TextChanged += new System.EventHandler(this.textbox_RepresentationTextChanged);
+            // 
+            // tbInt16_2Repres
+            // 
+            this.tbInt16_2Repres.Location = new System.Drawing.Point(505, 195);
+            this.tbInt16_2Repres.Name = "tbInt16_2Repres";
+            this.tbInt16_2Repres.Size = new System.Drawing.Size(100, 20);
+            this.tbInt16_2Repres.TabIndex = 13;
+            this.tbInt16_2Repres.TextChanged += new System.EventHandler(this.textbox_RepresentationTextChanged);
+            // 
+            // tbUint16_1Repres
+            // 
+            this.tbUint16_1Repres.Location = new System.Drawing.Point(505, 221);
+            this.tbUint16_1Repres.Name = "tbUint16_1Repres";
+            this.tbUint16_1Repres.Size = new System.Drawing.Size(100, 20);
+            this.tbUint16_1Repres.TabIndex = 14;
+            this.tbUint16_1Repres.TextChanged += new System.EventHandler(this.textbox_RepresentationTextChanged);
+            // 
+            // tbUInt16_2Repres
+            // 
+            this.tbUInt16_2Repres.Location = new System.Drawing.Point(505, 247);
+            this.tbUInt16_2Repres.Name = "tbUInt16_2Repres";
+            this.tbUInt16_2Repres.Size = new System.Drawing.Size(100, 20);
+            this.tbUInt16_2Repres.TabIndex = 15;
+            this.tbUInt16_2Repres.TextChanged += new System.EventHandler(this.textbox_RepresentationTextChanged);
+            // 
+            // tbByte1Repres
+            // 
+            this.tbByte1Repres.Location = new System.Drawing.Point(505, 273);
+            this.tbByte1Repres.Name = "tbByte1Repres";
+            this.tbByte1Repres.Size = new System.Drawing.Size(100, 20);
+            this.tbByte1Repres.TabIndex = 16;
+            this.tbByte1Repres.TextChanged += new System.EventHandler(this.textbox_RepresentationTextChanged);
+            // 
+            // tbByte2Repres
+            // 
+            this.tbByte2Repres.Location = new System.Drawing.Point(505, 299);
+            this.tbByte2Repres.Name = "tbByte2Repres";
+            this.tbByte2Repres.Size = new System.Drawing.Size(100, 20);
+            this.tbByte2Repres.TabIndex = 17;
+            this.tbByte2Repres.TextChanged += new System.EventHandler(this.textbox_RepresentationTextChanged);
+            // 
+            // tbByte3Repres
+            // 
+            this.tbByte3Repres.Location = new System.Drawing.Point(505, 325);
+            this.tbByte3Repres.Name = "tbByte3Repres";
+            this.tbByte3Repres.Size = new System.Drawing.Size(100, 20);
+            this.tbByte3Repres.TabIndex = 18;
+            this.tbByte3Repres.TextChanged += new System.EventHandler(this.textbox_RepresentationTextChanged);
+            // 
+            // tbByte4Repres
+            // 
+            this.tbByte4Repres.Location = new System.Drawing.Point(505, 351);
+            this.tbByte4Repres.Name = "tbByte4Repres";
+            this.tbByte4Repres.Size = new System.Drawing.Size(100, 20);
+            this.tbByte4Repres.TabIndex = 19;
+            this.tbByte4Repres.TextChanged += new System.EventHandler(this.textbox_RepresentationTextChanged);
+            // 
+            // tbBinaryRepres
+            // 
+            this.tbBinaryRepres.Location = new System.Drawing.Point(446, 389);
+            this.tbBinaryRepres.Name = "tbBinaryRepres";
+            this.tbBinaryRepres.Size = new System.Drawing.Size(276, 20);
+            this.tbBinaryRepres.TabIndex = 20;
+            this.tbBinaryRepres.TextChanged += new System.EventHandler(this.textbox_RepresentationTextChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(464, 68);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(32, 13);
+            this.label5.TabIndex = 21;
+            this.label5.Text = "HEX:";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(454, 120);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(42, 13);
+            this.label6.TabIndex = 22;
+            this.label6.Text = "UInt32:";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(442, 224);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(54, 13);
+            this.label7.TabIndex = 23;
+            this.label7.Text = "UInt16_1:";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(449, 172);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(46, 13);
+            this.label8.TabIndex = 24;
+            this.label8.Text = "Int16_1:";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(460, 276);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(37, 13);
+            this.label9.TabIndex = 25;
+            this.label9.Text = "Byte1:";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(462, 94);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(34, 13);
+            this.label10.TabIndex = 26;
+            this.label10.Text = "Int32:";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(462, 146);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(33, 13);
+            this.label11.TabIndex = 27;
+            this.label11.Text = "Float:";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(442, 250);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(54, 13);
+            this.label12.TabIndex = 28;
+            this.label12.Text = "UInt16_2:";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(449, 198);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(46, 13);
+            this.label13.TabIndex = 29;
+            this.label13.Text = "Int16_2:";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(459, 302);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(37, 13);
+            this.label14.TabIndex = 30;
+            this.label14.Text = "Byte2:";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(460, 328);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(37, 13);
+            this.label15.TabIndex = 31;
+            this.label15.Text = "Byte3:";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(459, 354);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(37, 13);
+            this.label16.TabIndex = 32;
+            this.label16.Text = "Byte4:";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(456, 373);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(39, 13);
+            this.label17.TabIndex = 33;
+            this.label17.Text = "Binary:";
+            // 
+            // lblArguments
+            // 
+            this.lblArguments.AutoSize = true;
+            this.lblArguments.Location = new System.Drawing.Point(297, 65);
+            this.lblArguments.Name = "lblArguments";
+            this.lblArguments.Size = new System.Drawing.Size(69, 13);
+            this.lblArguments.TabIndex = 34;
+            this.lblArguments.Text = "Arguments: 0";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(326, 39);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(41, 13);
+            this.label19.TabIndex = 35;
+            this.label19.Text = "Bitfield:";
+            // 
+            // tbBitfield
+            // 
+            this.tbBitfield.Location = new System.Drawing.Point(373, 36);
+            this.tbBitfield.Name = "tbBitfield";
+            this.tbBitfield.Size = new System.Drawing.Size(157, 20);
+            this.tbBitfield.TabIndex = 36;
+            // 
             // ObjectEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1632,6 +2049,9 @@
             this.panel1.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage4.PerformLayout();
+            this.groupBox18.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1759,7 +2179,7 @@
         private System.Windows.Forms.Button unk3Down;
         private System.Windows.Forms.Button unk3Remove;
         private System.Windows.Forms.Button unk3Up;
-        private System.Windows.Forms.ListBox unk3List;
+        private System.Windows.Forms.ListBox instIntegersList;
         private System.Windows.Forms.GroupBox groupBox16;
         private System.Windows.Forms.TextBox unk2Source;
         private System.Windows.Forms.Button unk2Set;
@@ -1767,7 +2187,7 @@
         private System.Windows.Forms.Button unk2Down;
         private System.Windows.Forms.Button unk2Remove;
         private System.Windows.Forms.Button unk2Up;
-        private System.Windows.Forms.ListBox unk2List;
+        private System.Windows.Forms.ListBox instFloatsList;
         private System.Windows.Forms.GroupBox groupBox17;
         private System.Windows.Forms.TextBox unk1Source;
         private System.Windows.Forms.Button unk1Set;
@@ -1775,7 +2195,7 @@
         private System.Windows.Forms.Button unk1Down;
         private System.Windows.Forms.Button unk1Remove;
         private System.Windows.Forms.Button unk1Up;
-        private System.Windows.Forms.ListBox unk1List;
+        private System.Windows.Forms.ListBox instFlagsList;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem objectsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteObjectToolStripMenuItem;
@@ -1783,5 +2203,44 @@
         private System.Windows.Forms.TextBox objectId;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ToolStripMenuItem duplicateObjectToolStripMenuItem;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.GroupBox groupBox18;
+        private System.Windows.Forms.ListBox commandsList;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ComboBox cbVTableIndexes;
+        private System.Windows.Forms.Button btnDeleteCommand;
+        private System.Windows.Forms.Button btnAddCommand;
+        private System.Windows.Forms.ListBox lbCommandArguments;
+        private System.Windows.Forms.TextBox tbCommandPosition;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox tbBinaryRepres;
+        private System.Windows.Forms.TextBox tbByte4Repres;
+        private System.Windows.Forms.TextBox tbByte3Repres;
+        private System.Windows.Forms.TextBox tbByte2Repres;
+        private System.Windows.Forms.TextBox tbByte1Repres;
+        private System.Windows.Forms.TextBox tbUInt16_2Repres;
+        private System.Windows.Forms.TextBox tbUint16_1Repres;
+        private System.Windows.Forms.TextBox tbInt16_2Repres;
+        private System.Windows.Forms.TextBox tbInt16_1Repres;
+        private System.Windows.Forms.TextBox tbFloatRepres;
+        private System.Windows.Forms.TextBox tbUInt32Repres;
+        private System.Windows.Forms.TextBox tbInt32Repres;
+        private System.Windows.Forms.TextBox tbHEXRepres;
+        private System.Windows.Forms.Label lblArguments;
+        private System.Windows.Forms.TextBox tbBitfield;
+        private System.Windows.Forms.Label label19;
     }
 }

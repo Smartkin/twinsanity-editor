@@ -180,7 +180,7 @@
             this.RM2ViewerButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this.RM2ViewerButton.FlatAppearance.BorderSize = 0;
             this.RM2ViewerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.RM2ViewerButton.Font = new System.Drawing.Font("Twelve Ton Goldfish", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RM2ViewerButton.Font = new System.Drawing.Font("Twelve Ton Goldfish", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RM2ViewerButton.Location = new System.Drawing.Point(7, 140);
             this.RM2ViewerButton.Name = "RM2ViewerButton";
             this.RM2ViewerButton.Size = new System.Drawing.Size(112, 38);
