@@ -25,9 +25,9 @@ namespace TwinsaityEditor
         {
             List<string> text = new List<string>();
             text.Add($"ID: {Data.ID}");
-            text.Add($"Size: {Data.Size}");
+            text.Add($"Offset: {Data.Offset} Size: {Data.Size}");
             text.Add($"Name: {Data.Name}");
-            text.Add($"Unknown bitfield: 0x{Data.UnkBitfield:X}");
+            text.Add($"Unknown bitfield: 0x{Data.UnkBitfield.ToString("X")}");
             for (int i = 0; i < Data.ScriptSlots.Count; ++i)
             {
                 var slotName = "Reserved";
@@ -158,24 +158,6 @@ namespace TwinsaityEditor
             text.Add($"SoundCount: {Data.cSounds.Count}");
             for (int i = 0; i < Data.cSounds.Count; ++i)
                 text.Add(Data.cSounds[i].ToString());
-
-            text.Add($"Commands amount: {Data.scriptCommandsAmount}");
-            if (Data.scriptCommandsAmount > 0)
-            {
-                var command = Data.scriptCommand;
-                do
-                {
-                    if (Enum.IsDefined(typeof(DefaultEnums.CommandID), command.VTableIndex))
-                    {
-                        text.Add($"{(DefaultEnums.CommandID)command.VTableIndex}: {command.VTableIndex}");
-                    }
-                    else
-                    {
-                        text.Add($"{command.VTableIndex}");
-                    }
-                    command = command.nextCommand;
-                } while (command != null);
-            }
 
             TextPrev = text.ToArray();
         }

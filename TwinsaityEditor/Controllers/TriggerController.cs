@@ -22,7 +22,7 @@ namespace TwinsaityEditor
         {
             TextPrev = new string[8 + Data.Instances.Count];
             TextPrev[0] = $"ID: {Data.ID}";
-            TextPrev[1] = $"Size: {Data.Size}";
+            TextPrev[1] = $"Offset: {Data.Offset} Size: {Data.Size}";
             TextPrev[2] = $"Other ({Data.Coords[0].X}, {Data.Coords[0].Y}, {Data.Coords[0].Z}, {Data.Coords[0].W})";
             TextPrev[3] = $"Position ({Data.Coords[1].X}, {Data.Coords[1].Y}, {Data.Coords[1].Z}, {Data.Coords[1].W})";
             TextPrev[4] = $"Size ({Data.Coords[2].X}, {Data.Coords[2].Y}, {Data.Coords[2].Z}, {Data.Coords[2].W})";

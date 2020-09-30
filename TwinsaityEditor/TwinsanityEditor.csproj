@@ -176,11 +176,9 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Controllers\AIPathController.cs" />
-    <Compile Include="Controllers\AnimationController.cs" />
     <Compile Include="Controllers\ArmatureModelController.cs" />
     <Compile Include="Controllers\ArmatureModelXController.cs" />
     <Compile Include="Controllers\CameraController.cs" />
-    <Compile Include="Controllers\CodeModelController.cs" />
     <Compile Include="Controllers\CollisionSurfaceController.cs" />
     <Compile Include="Controllers\Controller.cs" />
     <Compile Include="Controllers\ColDataController.cs" />
@@ -219,12 +217,6 @@
     </Compile>
     <Compile Include="Editors\InstanceEditor.Designer.cs">
       <DependentUpon>InstanceEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Editors\InstanceFlagsEditor.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Editors\InstanceFlagsEditor.Designer.cs">
-      <DependentUpon>InstanceFlagsEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Editors\ObjectEditor.cs">
       <SubType>Form</SubType>
@@ -351,9 +343,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\InstanceEditor.resx">
       <DependentUpon>InstanceEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Editors\InstanceFlagsEditor.resx">
-      <DependentUpon>InstanceFlagsEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\ObjectEditor.resx">
       <DependentUpon>ObjectEditor.cs</DependentUpon>

@@ -20,7 +20,7 @@ namespace TwinsaityEditor
         {
             TextPrev = new string[7];
             TextPrev[0] = $"ID: {Data.ID}";
-            TextPrev[1] = $"Size: {Data.Size}";
+            TextPrev[1] = $"Offset: {Data.Offset} Size: {Data.Size}";
             TextPrev[2] = $"Argument0: {Data.Arg[0]}";
             TextPrev[3] = $"Argument1: {Data.Arg[1]}";
             TextPrev[4] = $"Argument2: {Data.Arg[2]}";

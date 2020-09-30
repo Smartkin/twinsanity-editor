@@ -64,8 +64,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DefaultEnums.cs" />
-    <Compile Include="Items\Code\Animation.cs" />
-    <Compile Include="Items\Code\CodeModel.cs" />
     <Compile Include="Items\Code\GraphicsInfo.cs" />
     <Compile Include="Items\DynamicSceneryData.cs" />
     <Compile Include="Items\Graphics\ArmatureModel.cs" />

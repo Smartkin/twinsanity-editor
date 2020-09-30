@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Twinsanity;
 
 namespace Twinsanity
 {
@@ -32,7 +31,7 @@ namespace Twinsanity
         Script, ScriptX, ScriptDemo,
         Animation,
         OGI, GraphicsInfo,
-        CodeModel, CodeModelX, CodeModelDemo,
+        CodeModel,
         SE, Xbox_SE,
         SE_Eng, Xbox_SE_Eng,
         SE_Fre, Xbox_SE_Fre,
@@ -231,12 +230,7 @@ namespace Twinsanity
                                 LoadSection(reader, sub, SectionType.OGI);
                                 break;
                             case 4:
-                                if (Type == SectionType.Code)
-                                    LoadSection(reader, sub, SectionType.CodeModel);
-                                else if (Type == SectionType.CodeX)
-                                    LoadSection(reader, sub, SectionType.CodeModelX);
-                                else
-                                    LoadSection(reader, sub, SectionType.CodeModelDemo);
+                                LoadSection(reader, sub, SectionType.CodeModel);
                                 break;
                             case 6:
                                 //Temporary workaround for XBOX chunks to work until someone figures this out
@@ -321,19 +315,10 @@ namespace Twinsanity
                         LoadItem<Skydome>(reader, sub);
                         break;
                     case SectionType.Object:
-                        LoadItem<GameObject>(reader, sub, Type);
+                        LoadItem<GameObject>(reader, sub);
                         break;
                     case SectionType.ObjectDemo: //PS2 DEMO objects
                         LoadItem<TwinsItem>(reader, sub);
-                        break;
-                    case SectionType.CodeModel:
-                        LoadItem<CodeModel>(reader, sub, Type);
-                        break;
-                    case SectionType.CodeModelX:
-                        LoadItem<CodeModel>(reader, sub, Type);
-                        break;
-                    case SectionType.CodeModelDemo:
-                        LoadItem<CodeModel>(reader, sub, Type);
                         break;
                     case SectionType.Script:
                         LoadItem<Script>(reader, sub, Type);
@@ -343,9 +328,6 @@ namespace Twinsanity
                         break;
                     case SectionType.ScriptDemo:
                         LoadItem<Script>(reader, sub, Type);
-                        break;
-                    case SectionType.Animation:
-                        LoadItem<Animation>(reader, sub);
                         break;
                     case SectionType.SE:
                     case SectionType.SE_Eng:
@@ -423,6 +405,7 @@ namespace Twinsanity
             T rec = new T
             {
                 ID = sub.ID,
+                Offset = (uint)reader.BaseStream.Position,
                 Parent = this
             };
             rec.Load(reader, sub.Size);
@@ -434,6 +417,7 @@ namespace Twinsanity
             T rec = new T
             {
                 ID = sub.ID,
+                Offset = (uint)reader.BaseStream.Position,
                 Parent = this
             };
             rec.ParentType = type;
@@ -447,6 +431,7 @@ namespace Twinsanity
             TwinsSection sec = new TwinsSection {
                 ID = sub.ID,
                 Level = Level + 1,
+                Offset = (uint)reader.BaseStream.Position,
                 Type = type,
                 Parent = this
             };

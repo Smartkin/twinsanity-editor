@@ -11,7 +11,6 @@ namespace TwinsaityEditor
         private const string angleFormat = "{0:0.000}º";
         private SectionController controller;
         private Instance ins;
-        private InstanceFlagsEditor flagsEditor;
         
         private FileController File { get; set; }
         private TwinsFile FileData { get => File.Data; }
@@ -33,10 +32,6 @@ namespace TwinsaityEditor
         private void InstanceEditor_FormClosed(object sender, FormClosedEventArgs e)
         {
             File.SelectItem(null);
-            if (flagsEditor != null)
-            {
-                flagsEditor.Close();
-            }
         }
 
         private void PopulateList()
@@ -77,10 +72,6 @@ namespace TwinsaityEditor
             {
                 UpdateTab2();
             }
-            if (flagsEditor != null)
-            {
-                flagsEditor.Instance = ins;
-            }
 
             ignore_value_change = false;
 
@@ -109,7 +100,7 @@ namespace TwinsaityEditor
             numericUpDown3.Value = (decimal)ins.Pos.Y;
             numericUpDown4.Value = (decimal)ins.Pos.Z;
             numericUpDown5.Value = (decimal)ins.Pos.W;
-            tbInstanceFlags.Text = Convert.ToString(ins.Flags, 16);
+            textBox1.Text = Convert.ToString(ins.UnkI32, 16);
             tabControl1.Tag = (int)tabControl1.Tag | 0x01;
             numericUpDown13.Value = ins.COMRotX;
             numericUpDown14.Value = ins.COMRotY;
@@ -198,6 +189,16 @@ namespace TwinsaityEditor
             {
                 ins.ObjectID = oid;
                 listBox1.Items[listBox1.SelectedIndex] = GenTextForList(ins);
+            }
+            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            if (ignore_value_change) return;
+            if (uint.TryParse(textBox1.Text, System.Globalization.NumberStyles.HexNumber, null, out uint o))
+            {
+                ins.UnkI32 = o;
             }
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
         }
@@ -391,7 +392,7 @@ namespace TwinsaityEditor
                 if (!controller.Data.ContainsItem(id))
                     break;
             }
-            Instance new_ins = new Instance { ID = id, AfterOID = 0xFFFFFFFF, Pos = new Pos(0, 0, 0, 1), SomeNum1 = 10, SomeNum2 = 10, SomeNum3 = 10, Flags = 0x1CE,
+            Instance new_ins = new Instance { ID = id, AfterOID = 0xFFFFFFFF, Pos = new Pos(0, 0, 0, 1), SomeNum1 = 10, SomeNum2 = 10, SomeNum3 = 10, UnkI32 = 0x1CE,
                 UnkI322 = new List<float>() { 1 },
                 UnkI323 = new List<uint>() { 0, 0 } };
             controller.Data.AddItem(id, new_ins);
@@ -533,7 +534,7 @@ namespace TwinsaityEditor
                 SomeNum1 = last_inst.SomeNum1,
                 SomeNum2 = last_inst.SomeNum2,
                 SomeNum3 = last_inst.SomeNum3,
-                Flags = last_inst.Flags,
+                UnkI32 = last_inst.UnkI32,
                 UnkI321 = last_inst.UnkI321,
                 UnkI322 = last_inst.UnkI322,
                 UnkI323 = last_inst.UnkI323,
@@ -548,15 +549,6 @@ namespace TwinsaityEditor
             listBox1.Items.Add(GenTextForList(ins));
             controller.UpdateText();
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
-        }
-
-        private void btnEditInstanceFlags_Click(object sender, EventArgs e)
-        {
-            if (flagsEditor == null || flagsEditor.IsDisposed)
-            {
-                flagsEditor = new InstanceFlagsEditor(ins, tbInstanceFlags);
-            }
-            flagsEditor.Show();
         }
     }
 }

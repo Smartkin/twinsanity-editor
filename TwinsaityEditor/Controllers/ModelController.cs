@@ -24,7 +24,7 @@ namespace TwinsaityEditor
         {
             TextPrev = new string[4 + Data.MaterialIDs.Length];
             TextPrev[0] = string.Format("ID: {0:X8}", Data.ID);
-            TextPrev[1] = $"Size: {Data.Size}";
+            TextPrev[1] = $"Offset: {Data.Offset} Size: {Data.Size}";
             TextPrev[2] = $"Header: {Data.Header} MaterialCount: {Data.MaterialIDs.Length}";
             for (int i = 0; i < Data.MaterialIDs.Length; ++i)
                 TextPrev[3 + i] = MainFile.GetMaterialName(Data.MaterialIDs[i]);

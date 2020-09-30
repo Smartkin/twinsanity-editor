@@ -29,7 +29,7 @@ namespace TwinsaityEditor
         {
             TextPrev = new string[6];// + Data.Triggers.Count + Data.Groups.Count + Data.Tris.Count + Data.Vertices.Count];
             TextPrev[0] = $"ID: {Data.ID}";
-            TextPrev[1] = $"Size: {Data.Size}";
+            TextPrev[1] = $"Offset: {Data.Offset} Size: {Data.Size}";
             TextPrev[2] = $"TriggerCount: {Data.Triggers.Count}";
             TextPrev[3] = $"GroupCount: {Data.Groups.Count}";
             TextPrev[4] = $"PolyCount: {Data.Tris.Count}";

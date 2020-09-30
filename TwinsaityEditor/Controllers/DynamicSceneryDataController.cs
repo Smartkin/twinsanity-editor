@@ -23,7 +23,7 @@ namespace TwinsaityEditor
             List<string> text = new List<string>();
 
             text.Add($"ID: {Data.ID}");
-            text.Add($"Size: {Data.Size}");
+            text.Add($"Offset: {Data.Offset} Size: {Data.Size}");
             text.Add($"Model Count: {Data.ModelCount}");
 
             if (Data.ModelCount > 0)

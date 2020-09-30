@@ -33,19 +33,11 @@ namespace TwinsaityEditor
             if (!Data.IsStandalone)
             {
                 text.Add($"ID: {Data.ID}");
-                text.Add($"Size: {Data.Size}");
+                text.Add($"Offset: {Data.Offset} Size: {Data.Size}");
             }
             else
             {
                 text.Add($"Size: {Data.Size}");
-            }
-
-            if (Data.IsDefault)
-            {
-                text.Add(string.Format("Particle Bank 1: Material ID: {0:X8}; Texture ID: {1:X8}", Data.ParticleMaterialID_1, Data.ParticleTextureID_1));
-                text.Add(string.Format("Particle Bank 2: Material ID: {0:X8}; Texture ID: {1:X8}", Data.ParticleMaterialID_2, Data.ParticleTextureID_2));
-                text.Add(string.Format("Particle Bank 3: Material ID: {0:X8}; Texture ID: {1:X8}", Data.ParticleMaterialID_3, Data.ParticleTextureID_3));
-                text.Add(string.Format("Decal Bank: Material ID: {0:X8}; Texture ID: {1:X8}", Data.DecalMaterialID, Data.DecalTextureID));
             }
 
             text.Add($"Particle Types: {Data.ParticleTypeCount}");

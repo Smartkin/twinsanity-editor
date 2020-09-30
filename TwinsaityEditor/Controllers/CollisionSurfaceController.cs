@@ -33,7 +33,7 @@ namespace TwinsaityEditor
             List<string> text = new List<string>();
 
             text.Add(string.Format("ID: {0:X8}", Data.ID));
-            text.Add($"Size: {Data.Size}");
+            text.Add($"Offset: {Data.Offset} Size: {Data.Size}");
 
             uint surf = Data.SurfaceID;
             if (Enum.IsDefined(typeof(DefaultEnums.SurfaceTypes), surf))

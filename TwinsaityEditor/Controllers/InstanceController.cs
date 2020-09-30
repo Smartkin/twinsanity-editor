@@ -31,7 +31,7 @@ namespace TwinsaityEditor
 
             TextPrev = new string[5];//12 + Data.InstanceIDs.Count + Data.PositionIDs.Count + Data.PathIDs.Count + Data.UnkI321.Count + Data.UnkI322.Count + Data.UnkI323.Count];
             TextPrev[0] = $"ID: {Data.ID}";
-            TextPrev[1] = $"Size: {Data.Size}";
+            TextPrev[1] = $"Offset: {Data.Offset} Size: {Data.Size}";
             TextPrev[2] = $"Object ID {Data.ObjectID} - {(obj_name != string.Empty ? obj_name : string.Empty)}";
             TextPrev[3] = $"Position ({Data.Pos.X}, {Data.Pos.Y}, {Data.Pos.Z}, {Data.Pos.W})";
             TextPrev[4] = $"Rotation ({Data.RotX} | {Data.RotY} | {Data.RotZ})";

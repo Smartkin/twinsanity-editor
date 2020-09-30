@@ -20,9 +20,9 @@ namespace Twinsanity
         //private int pUi321.Length = 0;
         //private int pUi322.Length = 1;
         //private int pUi323.Length = 2;
-        public List<UInt32> instFlagsList = new List<UInt32>();
-        public List<Single> instFloatsList = new List<Single>();
-        public List<UInt32> instIntegerList = new List<UInt32>();
+        public List<UInt32> pUi321 = new List<UInt32>();
+        public List<Single> pUi322 = new List<Single>();
+        public List<UInt32> pUi323 = new List<UInt32>();
         public uint flag;
         public List<UInt16> cObjects = new List<UInt16>();
         public List<UInt16> cOGIs = new List<UInt16>();
@@ -31,11 +31,9 @@ namespace Twinsanity
         public List<UInt16> cScripts = new List<UInt16>();
         public List<UInt16> cUnk = new List<UInt16>();
         public List<UInt16> cSounds = new List<UInt16>();
-        public int scriptCommandsAmount;
+        private int scriptLen;
         public List<UInt16> scriptParams = new List<UInt16>();
-        public int scriptGameVersion = 0;
-        public Script.MainScript.ScriptCommand scriptCommand = null;
-        public List<Script.MainScript.ScriptCommand> scriptCommands = new List<Script.MainScript.ScriptCommand>();
+        private Byte[] scriptData = new byte[0];
 
         public string Name { get; set; }
         public GameObject()
@@ -85,30 +83,27 @@ namespace Twinsanity
             writer.Write(Sounds.Count);
             for (int i = 0; i < Sounds.Count; ++i)
                 writer.Write(Sounds[i]);
-            
-            if ((UnkBitfield & 0x20000000) != 0x0)
+            PHeader = (uint)((byte)pUi321.Count
+                | (pUi322.Count << 8)
+                | (pUi323.Count << 16));
+            if (PHeader > 0)
             {
-                PHeader = (uint)((byte)instFlagsList.Count
-                | (instFloatsList.Count << 8)
-                | (instIntegerList.Count << 16));
-
                 writer.Write(PHeader);
                 writer.Write(PUI32);
-                writer.Write(instFlagsList.Count);
-                for (int i = 0; i < instFlagsList.Count; ++i)
-                    writer.Write(instFlagsList[i]);
-                writer.Write(instFloatsList.Count);
-                for (int i = 0; i < instFloatsList.Count; ++i)
-                    writer.Write(instFloatsList[i]);
-                writer.Write(instIntegerList.Count);
-                for (int i = 0; i < instIntegerList.Count; ++i)
-                    writer.Write(instIntegerList[i]);
+                writer.Write(pUi321.Count);
+                for (int i = 0; i < pUi321.Count; ++i)
+                    writer.Write(pUi321[i]);
+                writer.Write(pUi322.Count);
+                for (int i = 0; i < pUi322.Count; ++i)
+                    writer.Write(pUi322[i]);
+                writer.Write(pUi323.Count);
+                for (int i = 0; i < pUi323.Count; ++i)
+                    writer.Write(pUi323[i]);
             }
-
-            if ((UnkBitfield & 0x40000000) != 0x0)
+            updateFlag();
+            writer.Write(flag);
+            if (flag > 0)
             {
-                updateFlag();
-                writer.Write(flag);
                 if ((flag & 0x01) != 0)
                 {
                     writer.Write(cObjects.Count);
@@ -151,30 +146,19 @@ namespace Twinsanity
                     for (int i = 0; i < cSounds.Count; ++i)
                         writer.Write(cSounds[i]);
                 }
-            }
-            writer.Write(scriptCommandsAmount);
-            if (scriptCommand != null)
-            {
-                scriptCommand.Write(writer);
+                writer.Write(scriptLen);
+                if (scriptLen > 1)
+                {
+                    for (int i = 0; i < 18; ++i)
+                        writer.Write(scriptParams[i]);
+                }
+                writer.Write(scriptData);
             }
             size = (int)(writer.BaseStream.Position - sk);
         }
 
         public override void Load(BinaryReader reader, int size)
         {
-            if (ParentType == SectionType.ScriptX)
-            {
-                scriptGameVersion = 1;
-            }
-            else if (ParentType == SectionType.ScriptDemo)
-            {
-                scriptGameVersion = 2;
-            }
-            else
-            {
-                scriptGameVersion = 0;
-            }
-
             var sk = reader.BaseStream.Position;
 
             UnkBitfield = reader.ReadUInt32();
@@ -225,39 +209,39 @@ namespace Twinsanity
             for (int i = 0; i < cnt; ++i)
                 Sounds.Add(reader.ReadUInt16());
 
-            // Read instance properties
-            if ((UnkBitfield & 0x20000000) != 0x0)
+            flag = reader.ReadUInt32();
+            if (flag > 255)
             {
-                PHeader = reader.ReadUInt32();
+                PHeader = flag;
                 PUI32 = reader.ReadUInt32();
 
                 cnt = reader.ReadInt32();
-                instFlagsList.Clear();
+                pUi321.Clear();
                 for (int i = 0; i < cnt; ++i)
-                    instFlagsList.Add(reader.ReadUInt32());
+                    pUi321.Add(reader.ReadUInt32());
 
                 cnt = reader.ReadInt32();
-                instFloatsList.Clear();
+                pUi322.Clear();
                 for (int i = 0; i < cnt; ++i)
-                    instFloatsList.Add(reader.ReadSingle());
+                    pUi322.Add(reader.ReadSingle());
 
                 cnt = reader.ReadInt32();
-                instIntegerList.Clear();
+                pUi323.Clear();
                 for (int i = 0; i < cnt; ++i)
-                    instIntegerList.Add(reader.ReadUInt32());
+                    pUi323.Add(reader.ReadUInt32());
+                flag = reader.ReadUInt32();
             }
             else
             {
                 PHeader = 0;
                 PUI32 = 0;
-                instFlagsList.Clear();
-                instFloatsList.Clear();
-                instIntegerList.Clear();
+                pUi321.Clear();
+                pUi322.Clear();
+                pUi323.Clear();
             }
             // Read IDs needed for instance creation
-            if ((UnkBitfield & 0x40000000) != 0x0)
+            if (flag > 0)
             {
-                flag = reader.ReadUInt32();
                 if ((flag & 0x00000001) != 0)
                 {
                     cnt = reader.ReadInt32();
@@ -307,20 +291,14 @@ namespace Twinsanity
                     for (int i = 0; i < cnt; ++i)
                         cSounds.Add(reader.ReadUInt16());
                 }
-            }
-            scriptCommandsAmount = (int)reader.ReadUInt32();
-            if (scriptCommandsAmount != 0)
-            {
-                scriptCommand = new Script.MainScript.ScriptCommand(reader, scriptGameVersion);
-                var command = scriptCommand;
-                do
+                scriptLen = (int)reader.ReadUInt32();
+                if (scriptLen > 1)
                 {
-                    scriptCommands.Add(command);
-                    command = command.nextCommand;
-                } while (command != null);
-            } else
-            {
-                scriptCommand = null;
+                    scriptParams.Clear();
+                    for (int i = 0; i < 18; ++i)
+                        scriptParams.Add(reader.ReadUInt16());
+                }
+                scriptData = reader.ReadBytes((int)(size - (reader.BaseStream.Position - sk)));
             }
             this.size = size;
         }
@@ -353,25 +331,27 @@ namespace Twinsanity
             size += 4;
             size += Sounds.Count * 2;
 
-            if ((UnkBitfield & 0x20000000) != 0x0)
+            size += 4;
+            PHeader = (uint)((byte)pUi321.Count
+                | (pUi322.Count << 8)
+                | (pUi323.Count << 16));
+            if (PHeader > 255)
             {
-                size += 4; // PHeader
-                size += 4; // UnkInt
+                size += 4;
 
                 size += 4;
-                size += instFlagsList.Count * 4;
+                size += pUi321.Count * 4;
 
                 size += 4;
-                size += instFloatsList.Count * 4;
+                size += pUi322.Count * 4;
 
                 size += 4;
-                size += instIntegerList.Count * 4;
+                size += pUi323.Count * 4;
+                size += 4;
             }
             updateFlag();
-            if ((UnkBitfield & 0x40000000) != 0x0)
+            if (flag > 0)
             {
-                size += 4; // Flag
-
                 if ((flag & 0x00000001) != 0)
                 {
                     size += 4;
@@ -407,11 +387,12 @@ namespace Twinsanity
                     size += 4;
                     size += cSounds.Count * 2;
                 }
-            }
-            size += 4; // Amount of script commands
-            if (scriptCommand != null)
-            {
-                size += scriptCommand.GetLength();
+                size += 4;
+                if (scriptLen > 1)
+                {
+                    size += 18 * 2;
+                }
+                size += scriptData.Length;
             }
             return size;
         }
