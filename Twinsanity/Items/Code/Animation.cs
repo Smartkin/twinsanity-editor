@@ -43,10 +43,9 @@ namespace Twinsanity
             {
                 rotation.Write(writer);
             }
-            UInt32 packed2 = (UInt32)BonesSettings.Count & 0x1F;
-            packed2 |= (UInt32)((Transformations.Count * 2) << 0xA) & 0xFFE;
-            packed2 |= (UInt32)(Timelines.Count << 0x16);
-            UnkBlobSizePacked2 ^= packed2;
+            UInt32 packed2 = (UInt32)BonesSettings2.Count & 0x1F;
+            packed2 |= (UInt32)((Transformations2.Count * 2) << 0xA) & 0xFFE;
+            packed2 |= (UInt32)(Timelines2.Count << 0x16);
             packed2 |= UnkBlobSizePacked2;
             writer.Write(packed2);
             writer.Write(TimelineRelated2);
