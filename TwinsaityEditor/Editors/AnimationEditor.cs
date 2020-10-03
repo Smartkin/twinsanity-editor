@@ -19,7 +19,7 @@ namespace TwinsaityEditor
         private Animation animation;
         private Animation.BoneSettings BoneSettings;
         private Animation.BoneSettings BoneSettings2;
-        private Animation.Timeline Timelines;
+        private Animation.Timeline Timeline;
         private Animation.Timeline Timeline2;
         private Animation.FinalTransformation Transformation;
         private Animation.FinalTransformation Transformation2;
@@ -29,6 +29,10 @@ namespace TwinsaityEditor
             controller = c;
             InitializeComponent();
             Text = $"Animation editor";
+            tbTimeline.TickStyle = TickStyle.Both;
+            tbTimeline2.TickStyle = TickStyle.Both;
+            tbTimeline.Enabled = false;
+            tbTimeline2.Enabled = false;
             PopulateList();
         }
 
@@ -57,7 +61,7 @@ namespace TwinsaityEditor
             if (lbAnimations.SelectedIndex == -1) return;
             BoneSettings = null;
             BoneSettings2 = null;
-            Timelines = null;
+            Timeline = null;
             Timeline2 = null;
             Transformation = null;
             Transformation2 = null;
@@ -79,8 +83,6 @@ namespace TwinsaityEditor
             tbDis2B8.Text = "";
             tbTransformation.Text = "";
             tbTransformation2.Text = "";
-            tbRotationBytes.Text = "";
-            tbRotation2Bytes.Text = "";
             animation = (Animation)controller.Data.Records[lbAnimations.SelectedIndex];
             Action<IList, String[], int> listAdder = (list, name, index) =>
             {
@@ -106,12 +108,12 @@ namespace TwinsaityEditor
                 "Scale {0} {1} X",
                 "Scale {0} {1} Y"
             };
-            PopulateWithAnimData(lbDisplacements.Items, animation.BonesSettings, listAdder, "Bone setting");
-            PopulateWithAnimData(lbScales.Items, animation.Transformations, transformationAdder, tranformationPattern);
-            PopulateWithAnimData(lbRotations.Items, animation.Timelines, listAdder, "Timeline");
-            PopulateWithAnimData(lbDisplacements2.Items, animation.BonesSettings2, listAdder, "Bone setting");
-            PopulateWithAnimData(lbScales2.Items, animation.Transformations2, transformationAdder, tranformationPattern);
-            PopulateWithAnimData(lbRotations2.Items, animation.Timelines2, listAdder, "Timeline");
+            PopulateWithAnimData(lbBoneSettings.Items, animation.BonesSettings, listAdder, "Bone setting");
+            PopulateWithAnimData(lbTransformations.Items, animation.Transformations, transformationAdder, tranformationPattern);
+            PopulateWithAnimData(lbTimelines.Items, animation.Timelines, listAdder, "Timeline");
+            PopulateWithAnimData(lbBoneSettings2.Items, animation.BonesSettings2, listAdder, "Bone setting");
+            PopulateWithAnimData(lbTransformations2.Items, animation.Transformations2, transformationAdder, tranformationPattern);
+            PopulateWithAnimData(lbTimelines2.Items, animation.Timelines2, listAdder, "Timeline");
         }
 
         private void lbDisplacements_SelectedIndexChanged(object sender, EventArgs e)
@@ -146,18 +148,13 @@ namespace TwinsaityEditor
             var list = (ListBox)sender;
             if (list.SelectedIndex == -1) return;
 
-            Animation.Timeline rotation = animation.Timelines[list.SelectedIndex];
-            Timelines = rotation;
-            tbRotationBytes.Text = "";
-            for (int i = 0; i < rotation.Unknown.Length; i++)
-            {
-                var b = rotation.Unknown[i];
-                tbRotationBytes.Text += b.ToString("X2");
-                if (i != rotation.Unknown.Length - 1)
-                {
-                    tbRotationBytes.Text += " ";
-                }
-            }
+            Animation.Timeline timeline = animation.Timelines[list.SelectedIndex];
+            Timeline = timeline;
+            tbTimeline.Enabled = true;
+            tbTimeline.Value = 0;
+            tbTimeline.Minimum = 0;
+            tbTimeline.Maximum = timeline.TransformationOffsets.Count - 1;
+            tbTimeline_Scroll(sender, e);
         }
 
         private void lbDisplacements2_SelectedIndexChanged(object sender, EventArgs e)
@@ -192,18 +189,13 @@ namespace TwinsaityEditor
             var list = (ListBox)sender;
             if (list.SelectedIndex == -1) return;
 
-            Animation.Timeline rotation = animation.Timelines2[list.SelectedIndex];
-            Timeline2 = rotation;
-            tbRotation2Bytes.Text = "";
-            for (int i = 0; i < rotation.Unknown.Length; i++)
-            {
-                var b = rotation.Unknown[i];
-                tbRotation2Bytes.Text += b.ToString("X2");
-                if (i != rotation.Unknown.Length - 1)
-                {
-                    tbRotation2Bytes.Text += " ";
-                }
-            }
+            Animation.Timeline timeline = animation.Timelines2[list.SelectedIndex];
+            Timeline2 = timeline;
+            tbTimeline2.Enabled = true;
+            tbTimeline2.Value = 0;
+            tbTimeline2.Minimum = 0;
+            tbTimeline2.Maximum = timeline.TransformationOffsets.Count - 1;
+            tbTimeline2_Scroll(sender, e);
         }
 
         private void tbDisB1_TextChanged(object sender, EventArgs e)
@@ -269,21 +261,6 @@ namespace TwinsaityEditor
             Transformation.Value = result;
         }
 
-        private void tbRotationBytes_TextChanged(object sender, EventArgs e)
-        {
-            var tb = (TextBox)sender;
-            if (Timelines == null) return;
-            var bytes = tb.Text.Split(' ');
-            var newBytes = new List<Byte>();
-            foreach (var b in bytes)
-            {
-                if (!Byte.TryParse(b, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out Byte result)) return;
-                newBytes.Add(result);
-            }
-            if (newBytes.Count != Timelines.Unknown.Length) return;
-            Timelines.Unknown = newBytes.ToArray();
-        }
-
         private void tbDis2B1_TextChanged(object sender, EventArgs e)
         {
             var tb = (TextBox)sender;
@@ -347,19 +324,30 @@ namespace TwinsaityEditor
             Transformation2.Value = result;
         }
 
-        private void tbRotation2Bytes_TextChanged(object sender, EventArgs e)
+        private void tbTimeline_Scroll(object sender, EventArgs e)
+        {
+            lblFrame.Text = $"Frame: {tbTimeline.Value}";
+            tbTransformOffset.Text = Timeline.GetOffset(tbTimeline.Value).ToString();
+        }
+
+        private void tbTransformOffset_TextChanged(object sender, EventArgs e)
         {
             var tb = (TextBox)sender;
-            if (Timeline2 == null) return;
-            var bytes = tb.Text.Split(' ');
-            var newBytes = new List<Byte>();
-            foreach (var b in bytes)
-            {
-                if (!Byte.TryParse(b, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out Byte result)) return;
-                newBytes.Add(result);
-            }
-            if (newBytes.Count != Timeline2.Unknown.Length) return;
-            Timeline2.Unknown = newBytes.ToArray();
+            if (!Single.TryParse(tb.Text, out Single result) || Timeline == null) return;
+            Timeline.SetOffset(tbTimeline.Value, result);
+        }
+
+        private void tbTimeline2_Scroll(object sender, EventArgs e)
+        {
+            lblFrame2.Text = $"Frame: {tbTimeline2.Value}";
+            tbTransformOffset2.Text = Timeline2.GetOffset(tbTimeline2.Value).ToString();
+        }
+
+        private void tbTransformOffset2_TextChanged(object sender, EventArgs e)
+        {
+            var tb = (TextBox)sender;
+            if (!Single.TryParse(tb.Text, out Single result) || Timeline2 == null) return;
+            Timeline2.SetOffset(tbTimeline2.Value, result);
         }
     }
 }

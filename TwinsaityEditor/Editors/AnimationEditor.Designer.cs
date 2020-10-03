@@ -34,17 +34,19 @@
             this.tcProperties = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.tbRotationBytes = new System.Windows.Forms.TextBox();
+            this.lblFrame = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.tbTransformOffset = new System.Windows.Forms.TextBox();
+            this.tbTimeline = new System.Windows.Forms.TrackBar();
             this.button6 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
-            this.lbRotations = new System.Windows.Forms.ListBox();
+            this.lbTimelines = new System.Windows.Forms.ListBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.tbTransformation = new System.Windows.Forms.TextBox();
             this.button4 = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
-            this.lbScales = new System.Windows.Forms.ListBox();
+            this.lbTransformations = new System.Windows.Forms.ListBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
@@ -64,20 +66,18 @@
             this.tbDisB1 = new System.Windows.Forms.TextBox();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.lbDisplacements = new System.Windows.Forms.ListBox();
+            this.lbBoneSettings = new System.Windows.Forms.ListBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.label12 = new System.Windows.Forms.Label();
-            this.tbRotation2Bytes = new System.Windows.Forms.TextBox();
             this.button7 = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
-            this.lbRotations2 = new System.Windows.Forms.ListBox();
+            this.lbTimelines2 = new System.Windows.Forms.ListBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.tbTransformation2 = new System.Windows.Forms.TextBox();
             this.button9 = new System.Windows.Forms.Button();
             this.label14 = new System.Windows.Forms.Label();
             this.button10 = new System.Windows.Forms.Button();
-            this.lbScales2 = new System.Windows.Forms.ListBox();
+            this.lbTransformations2 = new System.Windows.Forms.ListBox();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.label15 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
@@ -97,18 +97,24 @@
             this.tbDis2B1 = new System.Windows.Forms.TextBox();
             this.button11 = new System.Windows.Forms.Button();
             this.button12 = new System.Windows.Forms.Button();
-            this.lbDisplacements2 = new System.Windows.Forms.ListBox();
+            this.lbBoneSettings2 = new System.Windows.Forms.ListBox();
+            this.lblFrame2 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.tbTransformOffset2 = new System.Windows.Forms.TextBox();
+            this.tbTimeline2 = new System.Windows.Forms.TrackBar();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tcProperties.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbTimeline)).BeginInit();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.groupBox8.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbTimeline2)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -170,35 +176,54 @@
             // groupBox5
             // 
             this.groupBox5.AutoSize = true;
-            this.groupBox5.Controls.Add(this.label11);
-            this.groupBox5.Controls.Add(this.tbRotationBytes);
+            this.groupBox5.Controls.Add(this.lblFrame);
+            this.groupBox5.Controls.Add(this.label9);
+            this.groupBox5.Controls.Add(this.tbTransformOffset);
+            this.groupBox5.Controls.Add(this.tbTimeline);
             this.groupBox5.Controls.Add(this.button6);
             this.groupBox5.Controls.Add(this.button5);
-            this.groupBox5.Controls.Add(this.lbRotations);
-            this.groupBox5.Dock = System.Windows.Forms.DockStyle.Left;
+            this.groupBox5.Controls.Add(this.lbTimelines);
+            this.groupBox5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox5.Location = new System.Drawing.Point(533, 3);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(304, 532);
+            this.groupBox5.Size = new System.Drawing.Size(312, 532);
             this.groupBox5.TabIndex = 2;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Timelines";
             // 
-            // label11
+            // lblFrame
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(6, 461);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(33, 13);
-            this.label11.TabIndex = 4;
-            this.label11.Text = "Bytes";
+            this.lblFrame.AutoSize = true;
+            this.lblFrame.Location = new System.Drawing.Point(7, 455);
+            this.lblFrame.Name = "lblFrame";
+            this.lblFrame.Size = new System.Drawing.Size(48, 13);
+            this.lblFrame.TabIndex = 6;
+            this.lblFrame.Text = "Frame: 0";
             // 
-            // tbRotationBytes
+            // label9
             // 
-            this.tbRotationBytes.Location = new System.Drawing.Point(45, 457);
-            this.tbRotationBytes.Name = "tbRotationBytes";
-            this.tbRotationBytes.Size = new System.Drawing.Size(253, 20);
-            this.tbRotationBytes.TabIndex = 3;
-            this.tbRotationBytes.TextChanged += new System.EventHandler(this.tbRotationBytes_TextChanged);
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(87, 454);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(66, 13);
+            this.label9.TabIndex = 5;
+            this.label9.Text = "Value (Float)";
+            // 
+            // tbTransformOffset
+            // 
+            this.tbTransformOffset.Location = new System.Drawing.Point(159, 449);
+            this.tbTransformOffset.Name = "tbTransformOffset";
+            this.tbTransformOffset.Size = new System.Drawing.Size(147, 20);
+            this.tbTransformOffset.TabIndex = 4;
+            this.tbTransformOffset.TextChanged += new System.EventHandler(this.tbTransformOffset_TextChanged);
+            // 
+            // tbTimeline
+            // 
+            this.tbTimeline.Location = new System.Drawing.Point(6, 405);
+            this.tbTimeline.Name = "tbTimeline";
+            this.tbTimeline.Size = new System.Drawing.Size(303, 45);
+            this.tbTimeline.TabIndex = 3;
+            this.tbTimeline.Scroll += new System.EventHandler(this.tbTimeline_Scroll);
             // 
             // button6
             // 
@@ -206,7 +231,7 @@
             this.button6.Enabled = false;
             this.button6.Location = new System.Drawing.Point(3, 483);
             this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(298, 23);
+            this.button6.Size = new System.Drawing.Size(306, 23);
             this.button6.TabIndex = 2;
             this.button6.Text = "Add";
             this.button6.UseVisualStyleBackColor = true;
@@ -217,20 +242,20 @@
             this.button5.Enabled = false;
             this.button5.Location = new System.Drawing.Point(3, 506);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(298, 23);
+            this.button5.Size = new System.Drawing.Size(306, 23);
             this.button5.TabIndex = 1;
             this.button5.Text = "Delete";
             this.button5.UseVisualStyleBackColor = true;
             // 
-            // lbRotations
+            // lbTimelines
             // 
-            this.lbRotations.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lbRotations.FormattingEnabled = true;
-            this.lbRotations.Location = new System.Drawing.Point(3, 16);
-            this.lbRotations.Name = "lbRotations";
-            this.lbRotations.Size = new System.Drawing.Size(298, 433);
-            this.lbRotations.TabIndex = 0;
-            this.lbRotations.SelectedIndexChanged += new System.EventHandler(this.lbRotations_SelectedIndexChanged);
+            this.lbTimelines.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lbTimelines.FormattingEnabled = true;
+            this.lbTimelines.Location = new System.Drawing.Point(3, 16);
+            this.lbTimelines.Name = "lbTimelines";
+            this.lbTimelines.Size = new System.Drawing.Size(306, 381);
+            this.lbTimelines.TabIndex = 0;
+            this.lbTimelines.SelectedIndexChanged += new System.EventHandler(this.lbRotations_SelectedIndexChanged);
             // 
             // groupBox4
             // 
@@ -239,7 +264,7 @@
             this.groupBox4.Controls.Add(this.button4);
             this.groupBox4.Controls.Add(this.label10);
             this.groupBox4.Controls.Add(this.button3);
-            this.groupBox4.Controls.Add(this.lbScales);
+            this.groupBox4.Controls.Add(this.lbTransformations);
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox4.Location = new System.Drawing.Point(296, 3);
             this.groupBox4.Name = "groupBox4";
@@ -272,9 +297,9 @@
             this.label10.AutoSize = true;
             this.label10.Location = new System.Drawing.Point(6, 463);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(64, 13);
+            this.label10.Size = new System.Drawing.Size(63, 13);
             this.label10.TabIndex = 19;
-            this.label10.Text = "Value(Int16)";
+            this.label10.Text = "Value(Float)";
             // 
             // button3
             // 
@@ -287,15 +312,15 @@
             this.button3.Text = "Delete";
             this.button3.UseVisualStyleBackColor = true;
             // 
-            // lbScales
+            // lbTransformations
             // 
-            this.lbScales.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lbScales.FormattingEnabled = true;
-            this.lbScales.Location = new System.Drawing.Point(3, 16);
-            this.lbScales.Name = "lbScales";
-            this.lbScales.Size = new System.Drawing.Size(231, 433);
-            this.lbScales.TabIndex = 0;
-            this.lbScales.SelectedIndexChanged += new System.EventHandler(this.lbScales_SelectedIndexChanged);
+            this.lbTransformations.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lbTransformations.FormattingEnabled = true;
+            this.lbTransformations.Location = new System.Drawing.Point(3, 16);
+            this.lbTransformations.Name = "lbTransformations";
+            this.lbTransformations.Size = new System.Drawing.Size(231, 433);
+            this.lbTransformations.TabIndex = 0;
+            this.lbTransformations.SelectedIndexChanged += new System.EventHandler(this.lbScales_SelectedIndexChanged);
             // 
             // groupBox3
             // 
@@ -318,7 +343,7 @@
             this.groupBox3.Controls.Add(this.tbDisB1);
             this.groupBox3.Controls.Add(this.button2);
             this.groupBox3.Controls.Add(this.button1);
-            this.groupBox3.Controls.Add(this.lbDisplacements);
+            this.groupBox3.Controls.Add(this.lbBoneSettings);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox3.Location = new System.Drawing.Point(3, 3);
             this.groupBox3.Name = "groupBox3";
@@ -485,15 +510,15 @@
             this.button1.Text = "Delete";
             this.button1.UseVisualStyleBackColor = true;
             // 
-            // lbDisplacements
+            // lbBoneSettings
             // 
-            this.lbDisplacements.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lbDisplacements.FormattingEnabled = true;
-            this.lbDisplacements.Location = new System.Drawing.Point(3, 16);
-            this.lbDisplacements.Name = "lbDisplacements";
-            this.lbDisplacements.Size = new System.Drawing.Size(287, 355);
-            this.lbDisplacements.TabIndex = 0;
-            this.lbDisplacements.SelectedIndexChanged += new System.EventHandler(this.lbDisplacements_SelectedIndexChanged);
+            this.lbBoneSettings.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lbBoneSettings.FormattingEnabled = true;
+            this.lbBoneSettings.Location = new System.Drawing.Point(3, 16);
+            this.lbBoneSettings.Name = "lbBoneSettings";
+            this.lbBoneSettings.Size = new System.Drawing.Size(287, 355);
+            this.lbBoneSettings.TabIndex = 0;
+            this.lbBoneSettings.SelectedIndexChanged += new System.EventHandler(this.lbDisplacements_SelectedIndexChanged);
             // 
             // tabPage2
             // 
@@ -510,11 +535,13 @@
             // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.lblFrame2);
             this.groupBox6.Controls.Add(this.label12);
-            this.groupBox6.Controls.Add(this.tbRotation2Bytes);
+            this.groupBox6.Controls.Add(this.tbTransformOffset2);
+            this.groupBox6.Controls.Add(this.tbTimeline2);
             this.groupBox6.Controls.Add(this.button7);
             this.groupBox6.Controls.Add(this.button8);
-            this.groupBox6.Controls.Add(this.lbRotations2);
+            this.groupBox6.Controls.Add(this.lbTimelines2);
             this.groupBox6.Dock = System.Windows.Forms.DockStyle.Right;
             this.groupBox6.Location = new System.Drawing.Point(541, 3);
             this.groupBox6.Name = "groupBox6";
@@ -522,22 +549,6 @@
             this.groupBox6.TabIndex = 5;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Timelines 2";
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(6, 463);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(33, 13);
-            this.label12.TabIndex = 4;
-            this.label12.Text = "Bytes";
-            // 
-            // tbRotation2Bytes
-            // 
-            this.tbRotation2Bytes.Location = new System.Drawing.Point(45, 457);
-            this.tbRotation2Bytes.Name = "tbRotation2Bytes";
-            this.tbRotation2Bytes.Size = new System.Drawing.Size(253, 20);
-            this.tbRotation2Bytes.TabIndex = 3;
             // 
             // button7
             // 
@@ -561,15 +572,15 @@
             this.button8.Text = "Delete";
             this.button8.UseVisualStyleBackColor = true;
             // 
-            // lbRotations2
+            // lbTimelines2
             // 
-            this.lbRotations2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lbRotations2.FormattingEnabled = true;
-            this.lbRotations2.Location = new System.Drawing.Point(3, 16);
-            this.lbRotations2.Name = "lbRotations2";
-            this.lbRotations2.Size = new System.Drawing.Size(298, 433);
-            this.lbRotations2.TabIndex = 0;
-            this.lbRotations2.SelectedIndexChanged += new System.EventHandler(this.lbRotations2_SelectedIndexChanged);
+            this.lbTimelines2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lbTimelines2.FormattingEnabled = true;
+            this.lbTimelines2.Location = new System.Drawing.Point(3, 16);
+            this.lbTimelines2.Name = "lbTimelines2";
+            this.lbTimelines2.Size = new System.Drawing.Size(298, 381);
+            this.lbTimelines2.TabIndex = 0;
+            this.lbTimelines2.SelectedIndexChanged += new System.EventHandler(this.lbRotations2_SelectedIndexChanged);
             // 
             // groupBox7
             // 
@@ -577,7 +588,7 @@
             this.groupBox7.Controls.Add(this.button9);
             this.groupBox7.Controls.Add(this.label14);
             this.groupBox7.Controls.Add(this.button10);
-            this.groupBox7.Controls.Add(this.lbScales2);
+            this.groupBox7.Controls.Add(this.lbTransformations2);
             this.groupBox7.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox7.Location = new System.Drawing.Point(298, 3);
             this.groupBox7.Name = "groupBox7";
@@ -610,9 +621,9 @@
             this.label14.AutoSize = true;
             this.label14.Location = new System.Drawing.Point(6, 463);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(70, 13);
+            this.label14.Size = new System.Drawing.Size(66, 13);
             this.label14.TabIndex = 19;
-            this.label14.Text = "Value (Int16 )";
+            this.label14.Text = "Value (Float)";
             // 
             // button10
             // 
@@ -625,15 +636,15 @@
             this.button10.Text = "Delete";
             this.button10.UseVisualStyleBackColor = true;
             // 
-            // lbScales2
+            // lbTransformations2
             // 
-            this.lbScales2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lbScales2.FormattingEnabled = true;
-            this.lbScales2.Location = new System.Drawing.Point(3, 16);
-            this.lbScales2.Name = "lbScales2";
-            this.lbScales2.Size = new System.Drawing.Size(231, 433);
-            this.lbScales2.TabIndex = 0;
-            this.lbScales2.SelectedIndexChanged += new System.EventHandler(this.lbScales2_SelectedIndexChanged);
+            this.lbTransformations2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lbTransformations2.FormattingEnabled = true;
+            this.lbTransformations2.Location = new System.Drawing.Point(3, 16);
+            this.lbTransformations2.Name = "lbTransformations2";
+            this.lbTransformations2.Size = new System.Drawing.Size(231, 433);
+            this.lbTransformations2.TabIndex = 0;
+            this.lbTransformations2.SelectedIndexChanged += new System.EventHandler(this.lbScales2_SelectedIndexChanged);
             // 
             // groupBox8
             // 
@@ -655,7 +666,7 @@
             this.groupBox8.Controls.Add(this.tbDis2B1);
             this.groupBox8.Controls.Add(this.button11);
             this.groupBox8.Controls.Add(this.button12);
-            this.groupBox8.Controls.Add(this.lbDisplacements2);
+            this.groupBox8.Controls.Add(this.lbBoneSettings2);
             this.groupBox8.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox8.Location = new System.Drawing.Point(3, 3);
             this.groupBox8.Name = "groupBox8";
@@ -822,15 +833,49 @@
             this.button12.Text = "Delete";
             this.button12.UseVisualStyleBackColor = true;
             // 
-            // lbDisplacements2
+            // lbBoneSettings2
             // 
-            this.lbDisplacements2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lbDisplacements2.FormattingEnabled = true;
-            this.lbDisplacements2.Location = new System.Drawing.Point(3, 16);
-            this.lbDisplacements2.Name = "lbDisplacements2";
-            this.lbDisplacements2.Size = new System.Drawing.Size(289, 355);
-            this.lbDisplacements2.TabIndex = 0;
-            this.lbDisplacements2.SelectedIndexChanged += new System.EventHandler(this.lbDisplacements2_SelectedIndexChanged);
+            this.lbBoneSettings2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lbBoneSettings2.FormattingEnabled = true;
+            this.lbBoneSettings2.Location = new System.Drawing.Point(3, 16);
+            this.lbBoneSettings2.Name = "lbBoneSettings2";
+            this.lbBoneSettings2.Size = new System.Drawing.Size(289, 355);
+            this.lbBoneSettings2.TabIndex = 0;
+            this.lbBoneSettings2.SelectedIndexChanged += new System.EventHandler(this.lbDisplacements2_SelectedIndexChanged);
+            // 
+            // lblFrame2
+            // 
+            this.lblFrame2.AutoSize = true;
+            this.lblFrame2.Location = new System.Drawing.Point(6, 460);
+            this.lblFrame2.Name = "lblFrame2";
+            this.lblFrame2.Size = new System.Drawing.Size(48, 13);
+            this.lblFrame2.TabIndex = 10;
+            this.lblFrame2.Text = "Frame: 0";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(82, 460);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(66, 13);
+            this.label12.TabIndex = 9;
+            this.label12.Text = "Value (Float)";
+            // 
+            // tbTransformOffset2
+            // 
+            this.tbTransformOffset2.Location = new System.Drawing.Point(154, 456);
+            this.tbTransformOffset2.Name = "tbTransformOffset2";
+            this.tbTransformOffset2.Size = new System.Drawing.Size(147, 20);
+            this.tbTransformOffset2.TabIndex = 8;
+            this.tbTransformOffset2.TextChanged += new System.EventHandler(this.tbTransformOffset2_TextChanged);
+            // 
+            // tbTimeline2
+            // 
+            this.tbTimeline2.Location = new System.Drawing.Point(1, 414);
+            this.tbTimeline2.Name = "tbTimeline2";
+            this.tbTimeline2.Size = new System.Drawing.Size(303, 45);
+            this.tbTimeline2.TabIndex = 7;
+            this.tbTimeline2.Scroll += new System.EventHandler(this.tbTimeline2_Scroll);
             // 
             // AnimationEditor
             // 
@@ -848,6 +893,7 @@
             this.tabPage1.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbTimeline)).EndInit();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.groupBox3.ResumeLayout(false);
@@ -859,6 +905,7 @@
             this.groupBox7.PerformLayout();
             this.groupBox8.ResumeLayout(false);
             this.groupBox8.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbTimeline2)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -871,18 +918,18 @@
         private System.Windows.Forms.TabControl tcProperties;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.ListBox lbDisplacements;
+        private System.Windows.Forms.ListBox lbBoneSettings;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.ListBox lbScales;
+        private System.Windows.Forms.ListBox lbTransformations;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.ListBox lbRotations;
+        private System.Windows.Forms.ListBox lbTimelines;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
@@ -900,20 +947,16 @@
         private System.Windows.Forms.TextBox tbDisB2;
         private System.Windows.Forms.TextBox tbDisB1;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.TextBox tbRotationBytes;
         private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.TextBox tbRotation2Bytes;
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Button button8;
-        private System.Windows.Forms.ListBox lbRotations2;
+        private System.Windows.Forms.ListBox lbTimelines2;
         private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.TextBox tbTransformation2;
         private System.Windows.Forms.Button button9;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Button button10;
-        private System.Windows.Forms.ListBox lbScales2;
+        private System.Windows.Forms.ListBox lbTransformations2;
         private System.Windows.Forms.GroupBox groupBox8;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label16;
@@ -933,7 +976,15 @@
         private System.Windows.Forms.TextBox tbDis2B1;
         private System.Windows.Forms.Button button11;
         private System.Windows.Forms.Button button12;
-        private System.Windows.Forms.ListBox lbDisplacements2;
+        private System.Windows.Forms.ListBox lbBoneSettings2;
         private System.Windows.Forms.TextBox tbTransformation;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox tbTransformOffset;
+        private System.Windows.Forms.TrackBar tbTimeline;
+        private System.Windows.Forms.Label lblFrame;
+        private System.Windows.Forms.Label lblFrame2;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TextBox tbTransformOffset2;
+        private System.Windows.Forms.TrackBar tbTimeline2;
     }
 }

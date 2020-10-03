@@ -31,17 +31,17 @@ namespace Twinsanity
             packed1 |= UnkBlobSizePacked1;
             writer.Write(packed1);
             writer.Write(TimelineLength1);
-            foreach (var displacement in BonesSettings)
+            foreach (var boneSetting in BonesSettings)
             {
-                displacement.Write(writer);
+                boneSetting.Write(writer);
             }
-            foreach (var scale in Transformations)
+            foreach (var transformation in Transformations)
             {
-                scale.Write(writer);
+                transformation.Write(writer);
             }
-            foreach (var rotation in Timelines)
+            foreach (var timeline in Timelines)
             {
-                rotation.Write(writer);
+                timeline.Write(writer);
             }
             UInt32 packed2 = (UInt32)BonesSettings2.Count & 0x1F;
             packed2 |= (UInt32)((Transformations2.Count * 2) << 0xA) & 0xFFE;
@@ -49,17 +49,17 @@ namespace Twinsanity
             packed2 |= UnkBlobSizePacked2;
             writer.Write(packed2);
             writer.Write(TimelineLength2);
-            foreach (var displacement in BonesSettings2)
+            foreach (var boneSetting in BonesSettings2)
             {
-                displacement.Write(writer);
+                boneSetting.Write(writer);
             }
-            foreach (var scale in Transformations2)
+            foreach (var transformation in Transformations2)
             {
-                scale.Write(writer);
+                transformation.Write(writer);
             }
-            foreach (var rotation in Timelines2)
+            foreach (var timeline in Timelines2)
             {
-                rotation.Write(writer);
+                timeline.Write(writer);
             }
         }
 
@@ -164,27 +164,44 @@ namespace Twinsanity
 
         public class Timeline
         {
-            public Byte[] Unknown;
-            public Timeline(UInt16 rotationKeysSize)
+            public List<Int16> TransformationOffsets;
+
+            public Single GetOffset(Int32 index)
             {
-                Unknown = new Byte[rotationKeysSize * 2];
+                return TransformationOffsets[index] / 4096f;
+            }
+
+            public void SetOffset(Int32 index, Single value)
+            {
+                TransformationOffsets[index] = (Int16)(value * 4096);
+            }
+
+            public Timeline(UInt16 timelineLength)
+            {
+                TransformationOffsets = new List<Int16>(timelineLength);
             }
             public void Read(BinaryReader reader)
             {
-                Unknown = reader.ReadBytes(Unknown.Length);
+                for (var i = 0; i < TransformationOffsets.Capacity; ++i)
+                {
+                    TransformationOffsets.Add(reader.ReadInt16());
+                }
             }
             public void Write(BinaryWriter writer)
             {
-                writer.Write(Unknown);
+                foreach (var offset in TransformationOffsets)
+                {
+                    writer.Write(offset);
+                }
             }
         }
 
         protected override int GetSize()
         {
             var totalSize = 10; // Bitfield, blob packed, blob size helper
-            totalSize += BonesSettings.Sum(d => d.Unknown.Length) + Transformations.Count * 2 + Timelines.Sum(r => r.Unknown.Length);
+            totalSize += BonesSettings.Sum(d => d.Unknown.Length) + Transformations.Count * 2 + Timelines.Sum(r => r.TransformationOffsets.Count * 2);
             totalSize += 6; // blob packed 2, blob size helper 2
-            totalSize += BonesSettings2.Sum(d => d.Unknown.Length) + Transformations2.Count * 2 + Timelines2.Sum(r => r.Unknown.Length);
+            totalSize += BonesSettings2.Sum(d => d.Unknown.Length) + Transformations2.Count * 2 + Timelines2.Sum(r => r.TransformationOffsets.Count * 2);
             return totalSize;
         }
     }
