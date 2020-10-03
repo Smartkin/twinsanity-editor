@@ -21,8 +21,8 @@ namespace TwinsaityEditor
         private Animation.BoneSettings BoneSettings2;
         private Animation.Timeline Timelines;
         private Animation.Timeline Timeline2;
-        private Animation.EndTransformations Transformation;
-        private Animation.EndTransformations Transformation2;
+        private Animation.FinalTransformation Transformation;
+        private Animation.FinalTransformation Transformation2;
 
         public AnimationEditor(SectionController c)
         {
@@ -41,13 +41,14 @@ namespace TwinsaityEditor
                 lbAnimations.Items.Add($"Animation ID {anim.ID}");
             }
         }
-        private void PopulateWithAnimData(IList list, IList data, String name)
+
+        private void PopulateWithAnimData(IList list, IList data, Action<IList, String[], int> adder, params String[] namePattern)
         {
             list.Clear();
             var index = 1;
             foreach (var d in data)
             {
-                list.Add($"{name} {index++}");
+                adder.Invoke(list, namePattern, index++);
             }
         }
 
@@ -81,12 +82,36 @@ namespace TwinsaityEditor
             tbRotationBytes.Text = "";
             tbRotation2Bytes.Text = "";
             animation = (Animation)controller.Data.Records[lbAnimations.SelectedIndex];
-            PopulateWithAnimData(lbDisplacements.Items, animation.BonesSettings, "Bone setting");
-            PopulateWithAnimData(lbScales.Items, animation.Transformations, "Transformation");
-            PopulateWithAnimData(lbRotations.Items, animation.Timelines, "Timeline");
-            PopulateWithAnimData(lbDisplacements2.Items, animation.BonesSettings2, "Bone setting");
-            PopulateWithAnimData(lbScales2.Items, animation.Transformations2, "Transformation");
-            PopulateWithAnimData(lbRotations2.Items, animation.Timelines2, "Timeline");
+            Action<IList, String[], int> listAdder = (list, name, index) =>
+            {
+                list.Add($"{name[0]} {index}");
+            };
+            Action<IList, String[], int> transformationAdder = (list, namePattern, index) =>
+            {
+                var ind = index - 1;
+                var nameFormat = namePattern[ind % namePattern.Length];
+                var param0 = (ind / 8) >= 1 ? "bone" : "model";
+                var param1 = (ind / 8) == 0 ? "" : (ind / 8).ToString();
+
+                list.Add(String.Format(nameFormat, param0, param1));
+            };
+            String[] tranformationPattern =
+            {
+                "Translate {0} {1} X",
+                "Translate {0} {1} Z",
+                "Translate {0} {1} Y",
+                "Rotate {0} {1} X",
+                "Rotate {0} {1} Z",
+                "Rotate {0} {1} Y",
+                "Scale {0} {1} X",
+                "Scale {0} {1} Y"
+            };
+            PopulateWithAnimData(lbDisplacements.Items, animation.BonesSettings, listAdder, "Bone setting");
+            PopulateWithAnimData(lbScales.Items, animation.Transformations, transformationAdder, tranformationPattern);
+            PopulateWithAnimData(lbRotations.Items, animation.Timelines, listAdder, "Timeline");
+            PopulateWithAnimData(lbDisplacements2.Items, animation.BonesSettings2, listAdder, "Bone setting");
+            PopulateWithAnimData(lbScales2.Items, animation.Transformations2, transformationAdder, tranformationPattern);
+            PopulateWithAnimData(lbRotations2.Items, animation.Timelines2, listAdder, "Timeline");
         }
 
         private void lbDisplacements_SelectedIndexChanged(object sender, EventArgs e)
@@ -111,9 +136,9 @@ namespace TwinsaityEditor
             var list = (ListBox)sender;
             if (list.SelectedIndex == -1) return;
 
-            Animation.EndTransformations scale = animation.Transformations[list.SelectedIndex];
+            Animation.FinalTransformation scale = animation.Transformations[list.SelectedIndex];
             Transformation = scale;
-            tbTransformation.Text = scale.Unknown.ToString();
+            tbTransformation.Text = scale.Value.ToString();
         }
 
         private void lbRotations_SelectedIndexChanged(object sender, EventArgs e)
@@ -157,9 +182,9 @@ namespace TwinsaityEditor
             var list = (ListBox)sender;
             if (list.SelectedIndex == -1) return;
 
-            Animation.EndTransformations scale = animation.Transformations2[list.SelectedIndex];
+            Animation.FinalTransformation scale = animation.Transformations2[list.SelectedIndex];
             Transformation2 = scale;
-            tbTransformation2.Text = scale.Unknown.ToString();
+            tbTransformation2.Text = scale.Value.ToString();
         }
 
         private void lbRotations2_SelectedIndexChanged(object sender, EventArgs e)
@@ -240,8 +265,8 @@ namespace TwinsaityEditor
         private void tbTransformation_TextChanged(object sender, EventArgs e)
         {
             var tb = (TextBox)sender;
-            if (!Int16.TryParse(tb.Text, out Int16 result) || Transformation == null) return;
-            Transformation.Unknown = result;
+            if (!Single.TryParse(tb.Text, out Single result) || Transformation == null) return;
+            Transformation.Value = result;
         }
 
         private void tbRotationBytes_TextChanged(object sender, EventArgs e)
@@ -318,8 +343,8 @@ namespace TwinsaityEditor
         private void tbTransformation2_TextChanged(object sender, EventArgs e)
         {
             var tb = (TextBox)sender;
-            if (!Int16.TryParse(tb.Text, out Int16 result) || Transformation2 == null) return;
-            Transformation2.Unknown = result;
+            if (!Single.TryParse(tb.Text, out Single result) || Transformation2 == null) return;
+            Transformation2.Value = result;
         }
 
         private void tbRotation2Bytes_TextChanged(object sender, EventArgs e)

@@ -13,12 +13,12 @@ namespace Twinsanity
         public UInt32 UnkBlobSizePacked1;
         private UInt16 TimelineLength1;
         public List<BoneSettings> BonesSettings = new List<BoneSettings>();
-        public List<EndTransformations> Transformations = new List<EndTransformations>();
+        public List<FinalTransformation> Transformations = new List<FinalTransformation>();
         public List<Timeline> Timelines = new List<Timeline>();
         public UInt32 UnkBlobSizePacked2;
         private UInt16 TimelineLength2;
         public List<BoneSettings> BonesSettings2 = new List<BoneSettings>();
-        public List<EndTransformations> Transformations2 = new List<EndTransformations>();
+        public List<FinalTransformation> Transformations2 = new List<FinalTransformation>();
         public List<Timeline> Timelines2 = new List<Timeline>();
 
         public override void Save(BinaryWriter writer)
@@ -80,7 +80,7 @@ namespace Twinsanity
             Transformations.Clear();
             for (var i = 0; i < transformations; ++i)
             {
-                Transformations.Add(new EndTransformations());
+                Transformations.Add(new FinalTransformation());
                 Transformations[i].Read(reader);
             }
             Timelines.Clear();
@@ -108,7 +108,7 @@ namespace Twinsanity
                 }
                 for (var i = 0; i < transformations; ++i)
                 {
-                    Transformations2.Add(new EndTransformations());
+                    Transformations2.Add(new FinalTransformation());
                     Transformations2[i].Read(reader);
                 }
                 for (var i = 0; i < timelines; ++i)
@@ -136,9 +136,21 @@ namespace Twinsanity
             }
         }
 
-        public class EndTransformations
+        public class FinalTransformation
         {
             public Int16 Unknown;
+
+            public Single Value
+            {
+                get
+                {
+                    return Unknown / 4096f;
+                }
+                set
+                {
+                    Unknown = (Int16)(value * 4096);
+                }
+            }
 
             public void Read(BinaryReader reader)
             {
