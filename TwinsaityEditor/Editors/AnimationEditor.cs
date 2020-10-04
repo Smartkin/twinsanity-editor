@@ -86,6 +86,11 @@ namespace TwinsaityEditor
             tbTransformation.Text = "";
             tbTransformation2.Text = "";
             animation = (Animation)controller.Data.Records[lbAnimations.SelectedIndex];
+            UpdateLists();
+        }
+
+        private void UpdateLists()
+        {
             Action<IList, String[], int> listAdder = (list, name, index) =>
             {
                 list.Add($"{name[0]} {index}");
@@ -350,6 +355,18 @@ namespace TwinsaityEditor
             var tb = (TextBox)sender;
             if (!Int16.TryParse(tb.Text, out Int16 result) || Timeline2 == null) return;
             Timeline2.SetOffset(tbTimeline2.Value, result);
+        }
+
+        private void btnAddTransformation_Click(object sender, EventArgs e)
+        {
+            animation.Transformations.Add(new Animation.Transformation());
+            UpdateLists();
+        }
+
+        private void btnDeleteTransformation_Click(object sender, EventArgs e)
+        {
+            animation.Transformations.RemoveAt(animation.Transformations.Count - 1);
+            UpdateLists();
         }
     }
 }

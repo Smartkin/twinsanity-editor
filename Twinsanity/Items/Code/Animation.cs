@@ -24,12 +24,15 @@ namespace Twinsanity
         public override void Save(BinaryWriter writer)
         {
             writer.Write(Bitfield);
+            UnkBlobSizePacked1 &= ~0x1FU;
+            UnkBlobSizePacked1 &= ~(0xFFEU << 0xA);
+            UnkBlobSizePacked1 &= ~(0xFFCU << 0x16);
             UInt32 packed1 = (UInt32)BonesSettings.Count & 0x1F;
-            packed1 |= (UInt32)((Transformations.Count * 2) << 0xA) & 0xFFE;
+            packed1 |= (UInt32)(((Transformations.Count * 2) & 0xFFE) << 0xA);
             packed1 |= (UInt32)(Timelines.Count << 0x16);
-            UnkBlobSizePacked1 ^= packed1;
             packed1 |= UnkBlobSizePacked1;
             writer.Write(packed1);
+            UnkBlobSizePacked1 = packed1;
             writer.Write(TimelineLength1);
             foreach (var boneSetting in BonesSettings)
             {
@@ -43,11 +46,15 @@ namespace Twinsanity
             {
                 timeline.Write(writer);
             }
+            UnkBlobSizePacked2 &= ~0x1FU;
+            UnkBlobSizePacked2 &= ~(0xFFEU << 0xA);
+            UnkBlobSizePacked2 &= ~(0xFFCU << 0x16);
             UInt32 packed2 = (UInt32)BonesSettings2.Count & 0x1F;
-            packed2 |= (UInt32)((Transformations2.Count * 2) << 0xA) & 0xFFE;
+            packed2 |= (UInt32)(((Transformations2.Count * 2) & 0xFFE) << 0xA);
             packed2 |= (UInt32)(Timelines2.Count << 0x16);
             packed2 |= UnkBlobSizePacked2;
             writer.Write(packed2);
+            UnkBlobSizePacked2 = packed2;
             writer.Write(TimelineLength2);
             foreach (var boneSetting in BonesSettings2)
             {

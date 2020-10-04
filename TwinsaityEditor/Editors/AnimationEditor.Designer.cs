@@ -43,9 +43,9 @@
             this.lbTimelines = new System.Windows.Forms.ListBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.tbTransformation = new System.Windows.Forms.TextBox();
-            this.button4 = new System.Windows.Forms.Button();
+            this.btnAddTransformation = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
-            this.button3 = new System.Windows.Forms.Button();
+            this.btnDeleteTransformation = new System.Windows.Forms.Button();
             this.lbTransformations = new System.Windows.Forms.ListBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label8 = new System.Windows.Forms.Label();
@@ -261,9 +261,9 @@
             // 
             this.groupBox4.AutoSize = true;
             this.groupBox4.Controls.Add(this.tbTransformation);
-            this.groupBox4.Controls.Add(this.button4);
+            this.groupBox4.Controls.Add(this.btnAddTransformation);
             this.groupBox4.Controls.Add(this.label10);
-            this.groupBox4.Controls.Add(this.button3);
+            this.groupBox4.Controls.Add(this.btnDeleteTransformation);
             this.groupBox4.Controls.Add(this.lbTransformations);
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox4.Location = new System.Drawing.Point(296, 3);
@@ -281,16 +281,16 @@
             this.tbTransformation.TabIndex = 20;
             this.tbTransformation.TextChanged += new System.EventHandler(this.tbTransformation_TextChanged);
             // 
-            // button4
+            // btnAddTransformation
             // 
-            this.button4.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.button4.Enabled = false;
-            this.button4.Location = new System.Drawing.Point(3, 483);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(231, 23);
-            this.button4.TabIndex = 2;
-            this.button4.Text = "Add";
-            this.button4.UseVisualStyleBackColor = true;
+            this.btnAddTransformation.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnAddTransformation.Location = new System.Drawing.Point(3, 483);
+            this.btnAddTransformation.Name = "btnAddTransformation";
+            this.btnAddTransformation.Size = new System.Drawing.Size(231, 23);
+            this.btnAddTransformation.TabIndex = 2;
+            this.btnAddTransformation.Text = "Add";
+            this.btnAddTransformation.UseVisualStyleBackColor = true;
+            this.btnAddTransformation.Click += new System.EventHandler(this.btnAddTransformation_Click);
             // 
             // label10
             // 
@@ -301,16 +301,16 @@
             this.label10.TabIndex = 19;
             this.label10.Text = "Value(Float)";
             // 
-            // button3
+            // btnDeleteTransformation
             // 
-            this.button3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.button3.Enabled = false;
-            this.button3.Location = new System.Drawing.Point(3, 506);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(231, 23);
-            this.button3.TabIndex = 1;
-            this.button3.Text = "Delete";
-            this.button3.UseVisualStyleBackColor = true;
+            this.btnDeleteTransformation.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnDeleteTransformation.Location = new System.Drawing.Point(3, 506);
+            this.btnDeleteTransformation.Name = "btnDeleteTransformation";
+            this.btnDeleteTransformation.Size = new System.Drawing.Size(231, 23);
+            this.btnDeleteTransformation.TabIndex = 1;
+            this.btnDeleteTransformation.Text = "Delete";
+            this.btnDeleteTransformation.UseVisualStyleBackColor = true;
+            this.btnDeleteTransformation.Click += new System.EventHandler(this.btnDeleteTransformation_Click);
             // 
             // lbTransformations
             // 
@@ -921,8 +921,8 @@
         private System.Windows.Forms.ListBox lbBoneSettings;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button btnAddTransformation;
+        private System.Windows.Forms.Button btnDeleteTransformation;
         private System.Windows.Forms.ListBox lbTransformations;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button1;
