@@ -38,8 +38,8 @@
             this.label9 = new System.Windows.Forms.Label();
             this.tbTransformOffset = new System.Windows.Forms.TextBox();
             this.tbTimeline = new System.Windows.Forms.TrackBar();
-            this.button6 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
+            this.btnAddTimeline = new System.Windows.Forms.Button();
+            this.btnDeleteTimeline = new System.Windows.Forms.Button();
             this.lbTimelines = new System.Windows.Forms.ListBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.tbTransformation = new System.Windows.Forms.TextBox();
@@ -64,8 +64,6 @@
             this.tbDisB3 = new System.Windows.Forms.TextBox();
             this.tbDisB2 = new System.Windows.Forms.TextBox();
             this.tbDisB1 = new System.Windows.Forms.TextBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.lbBoneSettings = new System.Windows.Forms.ListBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
@@ -73,14 +71,14 @@
             this.label12 = new System.Windows.Forms.Label();
             this.tbTransformOffset2 = new System.Windows.Forms.TextBox();
             this.tbTimeline2 = new System.Windows.Forms.TrackBar();
-            this.button7 = new System.Windows.Forms.Button();
-            this.button8 = new System.Windows.Forms.Button();
+            this.btnAddTimeline2 = new System.Windows.Forms.Button();
+            this.btnDeleteTimeline2 = new System.Windows.Forms.Button();
             this.lbTimelines2 = new System.Windows.Forms.ListBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.tbTransformation2 = new System.Windows.Forms.TextBox();
-            this.button9 = new System.Windows.Forms.Button();
+            this.btnAddTransformation2 = new System.Windows.Forms.Button();
             this.label14 = new System.Windows.Forms.Label();
-            this.button10 = new System.Windows.Forms.Button();
+            this.btnDeleteTransformation2 = new System.Windows.Forms.Button();
             this.lbTransformations2 = new System.Windows.Forms.ListBox();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.label15 = new System.Windows.Forms.Label();
@@ -99,8 +97,6 @@
             this.tbDis2B3 = new System.Windows.Forms.TextBox();
             this.tbDis2B2 = new System.Windows.Forms.TextBox();
             this.tbDis2B1 = new System.Windows.Forms.TextBox();
-            this.button11 = new System.Windows.Forms.Button();
-            this.button12 = new System.Windows.Forms.Button();
             this.lbBoneSettings2 = new System.Windows.Forms.ListBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -180,8 +176,8 @@
             this.groupBox5.Controls.Add(this.label9);
             this.groupBox5.Controls.Add(this.tbTransformOffset);
             this.groupBox5.Controls.Add(this.tbTimeline);
-            this.groupBox5.Controls.Add(this.button6);
-            this.groupBox5.Controls.Add(this.button5);
+            this.groupBox5.Controls.Add(this.btnAddTimeline);
+            this.groupBox5.Controls.Add(this.btnDeleteTimeline);
             this.groupBox5.Controls.Add(this.lbTimelines);
             this.groupBox5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox5.Location = new System.Drawing.Point(533, 3);
@@ -225,27 +221,27 @@
             this.tbTimeline.TabIndex = 3;
             this.tbTimeline.Scroll += new System.EventHandler(this.tbTimeline_Scroll);
             // 
-            // button6
+            // btnAddTimeline
             // 
-            this.button6.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.button6.Enabled = false;
-            this.button6.Location = new System.Drawing.Point(3, 483);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(306, 23);
-            this.button6.TabIndex = 2;
-            this.button6.Text = "Add";
-            this.button6.UseVisualStyleBackColor = true;
+            this.btnAddTimeline.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnAddTimeline.Location = new System.Drawing.Point(3, 483);
+            this.btnAddTimeline.Name = "btnAddTimeline";
+            this.btnAddTimeline.Size = new System.Drawing.Size(306, 23);
+            this.btnAddTimeline.TabIndex = 2;
+            this.btnAddTimeline.Text = "Add";
+            this.btnAddTimeline.UseVisualStyleBackColor = true;
+            this.btnAddTimeline.Click += new System.EventHandler(this.btnAddTimeline_Click);
             // 
-            // button5
+            // btnDeleteTimeline
             // 
-            this.button5.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.button5.Enabled = false;
-            this.button5.Location = new System.Drawing.Point(3, 506);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(306, 23);
-            this.button5.TabIndex = 1;
-            this.button5.Text = "Delete";
-            this.button5.UseVisualStyleBackColor = true;
+            this.btnDeleteTimeline.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnDeleteTimeline.Location = new System.Drawing.Point(3, 506);
+            this.btnDeleteTimeline.Name = "btnDeleteTimeline";
+            this.btnDeleteTimeline.Size = new System.Drawing.Size(306, 23);
+            this.btnDeleteTimeline.TabIndex = 1;
+            this.btnDeleteTimeline.Text = "Delete";
+            this.btnDeleteTimeline.UseVisualStyleBackColor = true;
+            this.btnDeleteTimeline.Click += new System.EventHandler(this.btnDeleteTimeline_Click);
             // 
             // lbTimelines
             // 
@@ -341,8 +337,6 @@
             this.groupBox3.Controls.Add(this.tbDisB3);
             this.groupBox3.Controls.Add(this.tbDisB2);
             this.groupBox3.Controls.Add(this.tbDisB1);
-            this.groupBox3.Controls.Add(this.button2);
-            this.groupBox3.Controls.Add(this.button1);
             this.groupBox3.Controls.Add(this.lbBoneSettings);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox3.Location = new System.Drawing.Point(3, 3);
@@ -488,28 +482,6 @@
             this.tbDisB1.TabIndex = 3;
             this.tbDisB1.TextChanged += new System.EventHandler(this.tbDisB1_TextChanged);
             // 
-            // button2
-            // 
-            this.button2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.button2.Enabled = false;
-            this.button2.Location = new System.Drawing.Point(3, 483);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(287, 23);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "Add";
-            this.button2.UseVisualStyleBackColor = true;
-            // 
-            // button1
-            // 
-            this.button1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.button1.Enabled = false;
-            this.button1.Location = new System.Drawing.Point(3, 506);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(287, 23);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Delete";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
             // lbBoneSettings
             // 
             this.lbBoneSettings.Dock = System.Windows.Forms.DockStyle.Top;
@@ -539,8 +511,8 @@
             this.groupBox6.Controls.Add(this.label12);
             this.groupBox6.Controls.Add(this.tbTransformOffset2);
             this.groupBox6.Controls.Add(this.tbTimeline2);
-            this.groupBox6.Controls.Add(this.button7);
-            this.groupBox6.Controls.Add(this.button8);
+            this.groupBox6.Controls.Add(this.btnAddTimeline2);
+            this.groupBox6.Controls.Add(this.btnDeleteTimeline2);
             this.groupBox6.Controls.Add(this.lbTimelines2);
             this.groupBox6.Dock = System.Windows.Forms.DockStyle.Right;
             this.groupBox6.Location = new System.Drawing.Point(541, 3);
@@ -584,27 +556,27 @@
             this.tbTimeline2.TabIndex = 7;
             this.tbTimeline2.Scroll += new System.EventHandler(this.tbTimeline2_Scroll);
             // 
-            // button7
+            // btnAddTimeline2
             // 
-            this.button7.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.button7.Enabled = false;
-            this.button7.Location = new System.Drawing.Point(3, 483);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(298, 23);
-            this.button7.TabIndex = 2;
-            this.button7.Text = "Add";
-            this.button7.UseVisualStyleBackColor = true;
+            this.btnAddTimeline2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnAddTimeline2.Location = new System.Drawing.Point(3, 483);
+            this.btnAddTimeline2.Name = "btnAddTimeline2";
+            this.btnAddTimeline2.Size = new System.Drawing.Size(298, 23);
+            this.btnAddTimeline2.TabIndex = 2;
+            this.btnAddTimeline2.Text = "Add";
+            this.btnAddTimeline2.UseVisualStyleBackColor = true;
+            this.btnAddTimeline2.Click += new System.EventHandler(this.btnAddTimeline2_Click);
             // 
-            // button8
+            // btnDeleteTimeline2
             // 
-            this.button8.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.button8.Enabled = false;
-            this.button8.Location = new System.Drawing.Point(3, 506);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(298, 23);
-            this.button8.TabIndex = 1;
-            this.button8.Text = "Delete";
-            this.button8.UseVisualStyleBackColor = true;
+            this.btnDeleteTimeline2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnDeleteTimeline2.Location = new System.Drawing.Point(3, 506);
+            this.btnDeleteTimeline2.Name = "btnDeleteTimeline2";
+            this.btnDeleteTimeline2.Size = new System.Drawing.Size(298, 23);
+            this.btnDeleteTimeline2.TabIndex = 1;
+            this.btnDeleteTimeline2.Text = "Delete";
+            this.btnDeleteTimeline2.UseVisualStyleBackColor = true;
+            this.btnDeleteTimeline2.Click += new System.EventHandler(this.btnDeleteTimeline2_Click);
             // 
             // lbTimelines2
             // 
@@ -619,9 +591,9 @@
             // groupBox7
             // 
             this.groupBox7.Controls.Add(this.tbTransformation2);
-            this.groupBox7.Controls.Add(this.button9);
+            this.groupBox7.Controls.Add(this.btnAddTransformation2);
             this.groupBox7.Controls.Add(this.label14);
-            this.groupBox7.Controls.Add(this.button10);
+            this.groupBox7.Controls.Add(this.btnDeleteTransformation2);
             this.groupBox7.Controls.Add(this.lbTransformations2);
             this.groupBox7.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox7.Location = new System.Drawing.Point(298, 3);
@@ -639,16 +611,16 @@
             this.tbTransformation2.TabIndex = 20;
             this.tbTransformation2.TextChanged += new System.EventHandler(this.tbTransformation2_TextChanged);
             // 
-            // button9
+            // btnAddTransformation2
             // 
-            this.button9.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.button9.Enabled = false;
-            this.button9.Location = new System.Drawing.Point(3, 483);
-            this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(231, 23);
-            this.button9.TabIndex = 2;
-            this.button9.Text = "Add";
-            this.button9.UseVisualStyleBackColor = true;
+            this.btnAddTransformation2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnAddTransformation2.Location = new System.Drawing.Point(3, 483);
+            this.btnAddTransformation2.Name = "btnAddTransformation2";
+            this.btnAddTransformation2.Size = new System.Drawing.Size(231, 23);
+            this.btnAddTransformation2.TabIndex = 2;
+            this.btnAddTransformation2.Text = "Add";
+            this.btnAddTransformation2.UseVisualStyleBackColor = true;
+            this.btnAddTransformation2.Click += new System.EventHandler(this.btnAddTransformation2_Click);
             // 
             // label14
             // 
@@ -659,16 +631,16 @@
             this.label14.TabIndex = 19;
             this.label14.Text = "Value (Float)";
             // 
-            // button10
+            // btnDeleteTransformation2
             // 
-            this.button10.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.button10.Enabled = false;
-            this.button10.Location = new System.Drawing.Point(3, 506);
-            this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(231, 23);
-            this.button10.TabIndex = 1;
-            this.button10.Text = "Delete";
-            this.button10.UseVisualStyleBackColor = true;
+            this.btnDeleteTransformation2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnDeleteTransformation2.Location = new System.Drawing.Point(3, 506);
+            this.btnDeleteTransformation2.Name = "btnDeleteTransformation2";
+            this.btnDeleteTransformation2.Size = new System.Drawing.Size(231, 23);
+            this.btnDeleteTransformation2.TabIndex = 1;
+            this.btnDeleteTransformation2.Text = "Delete";
+            this.btnDeleteTransformation2.UseVisualStyleBackColor = true;
+            this.btnDeleteTransformation2.Click += new System.EventHandler(this.btnDeleteTransformation2_Click);
             // 
             // lbTransformations2
             // 
@@ -698,8 +670,6 @@
             this.groupBox8.Controls.Add(this.tbDis2B3);
             this.groupBox8.Controls.Add(this.tbDis2B2);
             this.groupBox8.Controls.Add(this.tbDis2B1);
-            this.groupBox8.Controls.Add(this.button11);
-            this.groupBox8.Controls.Add(this.button12);
             this.groupBox8.Controls.Add(this.lbBoneSettings2);
             this.groupBox8.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox8.Location = new System.Drawing.Point(3, 3);
@@ -845,28 +815,6 @@
             this.tbDis2B1.TabIndex = 3;
             this.tbDis2B1.TextChanged += new System.EventHandler(this.tbDis2B1_TextChanged);
             // 
-            // button11
-            // 
-            this.button11.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.button11.Enabled = false;
-            this.button11.Location = new System.Drawing.Point(3, 483);
-            this.button11.Name = "button11";
-            this.button11.Size = new System.Drawing.Size(289, 23);
-            this.button11.TabIndex = 2;
-            this.button11.Text = "Add";
-            this.button11.UseVisualStyleBackColor = true;
-            // 
-            // button12
-            // 
-            this.button12.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.button12.Enabled = false;
-            this.button12.Location = new System.Drawing.Point(3, 506);
-            this.button12.Name = "button12";
-            this.button12.Size = new System.Drawing.Size(289, 23);
-            this.button12.TabIndex = 1;
-            this.button12.Text = "Delete";
-            this.button12.UseVisualStyleBackColor = true;
-            // 
             // lbBoneSettings2
             // 
             this.lbBoneSettings2.Dock = System.Windows.Forms.DockStyle.Top;
@@ -924,11 +872,9 @@
         private System.Windows.Forms.Button btnAddTransformation;
         private System.Windows.Forms.Button btnDeleteTransformation;
         private System.Windows.Forms.ListBox lbTransformations;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.Button button6;
-        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button btnAddTimeline;
+        private System.Windows.Forms.Button btnDeleteTimeline;
         private System.Windows.Forms.ListBox lbTimelines;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
@@ -948,14 +894,14 @@
         private System.Windows.Forms.TextBox tbDisB1;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.Button button7;
-        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.Button btnAddTimeline2;
+        private System.Windows.Forms.Button btnDeleteTimeline2;
         private System.Windows.Forms.ListBox lbTimelines2;
         private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.TextBox tbTransformation2;
-        private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.Button btnAddTransformation2;
         private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.Button button10;
+        private System.Windows.Forms.Button btnDeleteTransformation2;
         private System.Windows.Forms.ListBox lbTransformations2;
         private System.Windows.Forms.GroupBox groupBox8;
         private System.Windows.Forms.Label label15;
@@ -974,8 +920,6 @@
         private System.Windows.Forms.TextBox tbDis2B3;
         private System.Windows.Forms.TextBox tbDis2B2;
         private System.Windows.Forms.TextBox tbDis2B1;
-        private System.Windows.Forms.Button button11;
-        private System.Windows.Forms.Button button12;
         private System.Windows.Forms.ListBox lbBoneSettings2;
         private System.Windows.Forms.TextBox tbTransformation;
         private System.Windows.Forms.Label label9;

@@ -160,7 +160,7 @@ namespace TwinsaityEditor
             tbTimeline.Enabled = true;
             tbTimeline.Value = 0;
             tbTimeline.Minimum = 0;
-            tbTimeline.Maximum = timeline.TransformationOffsets.Count - 1;
+            tbTimeline.Maximum = timeline.UnknownInt16s.Count - 1;
             tbTimeline_Scroll(sender, e);
         }
 
@@ -201,7 +201,7 @@ namespace TwinsaityEditor
             tbTimeline2.Enabled = true;
             tbTimeline2.Value = 0;
             tbTimeline2.Minimum = 0;
-            tbTimeline2.Maximum = timeline.TransformationOffsets.Count - 1;
+            tbTimeline2.Maximum = timeline.UnknownInt16s.Count - 1;
             tbTimeline2_Scroll(sender, e);
         }
 
@@ -359,13 +359,69 @@ namespace TwinsaityEditor
 
         private void btnAddTransformation_Click(object sender, EventArgs e)
         {
+            if (animation == null) return;
             animation.Transformations.Add(new Animation.Transformation());
             UpdateLists();
         }
 
         private void btnDeleteTransformation_Click(object sender, EventArgs e)
         {
+            if (animation == null) return;
             animation.Transformations.RemoveAt(animation.Transformations.Count - 1);
+            UpdateLists();
+        }
+
+        private void btnAddTimeline_Click(object sender, EventArgs e)
+        {
+            if (animation == null) return;
+            animation.Timelines.Add(new Animation.Timeline(animation.TimelineLength1));
+            for (var i = 0; i < animation.Timelines[animation.Timelines.Count - 1].UnknownInt16s.Capacity; ++i)
+            {
+                animation.Timelines[animation.Timelines.Count - 1].UnknownInt16s.Add(0);
+            }
+            UpdateLists();
+        }
+
+        private void btnDeleteTimeline_Click(object sender, EventArgs e)
+        {
+            if (animation == null) return;
+            animation.Timelines.RemoveAt(animation.Timelines.Count - 1);
+            UpdateLists();
+        }
+
+        private void btnAddTransformation2_Click(object sender, EventArgs e)
+        {
+            if (animation == null) return;
+            animation.Transformations2.Add(new Animation.Transformation());
+            UpdateLists();
+        }
+
+        private void btnDeleteTransformation2_Click(object sender, EventArgs e)
+        {
+            if (animation == null) return;
+            animation.Transformations2.RemoveAt(animation.Transformations2.Count - 1);
+            UpdateLists();
+        }
+
+        private void btnAddTimeline2_Click(object sender, EventArgs e)
+        {
+            if (animation == null) return;
+            if (animation.TimelineLength2 == 0)
+            {
+                animation.TimelineLength2 = 1;
+            }
+            animation.Timelines2.Add(new Animation.Timeline(animation.TimelineLength2));
+            for (var i = 0; i < animation.Timelines2[animation.Timelines2.Count - 1].UnknownInt16s.Capacity; ++i)
+            {
+                animation.Timelines2[animation.Timelines2.Count - 1].UnknownInt16s.Add(0);
+            }
+            UpdateLists();
+        }
+
+        private void btnDeleteTimeline2_Click(object sender, EventArgs e)
+        {
+            if (animation == null) return;
+            animation.Timelines2.RemoveAt(animation.Timelines2.Count - 1);
             UpdateLists();
         }
     }

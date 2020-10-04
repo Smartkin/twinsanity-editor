@@ -11,12 +11,12 @@ namespace Twinsanity
     {
         public UInt32 Bitfield;
         public UInt32 UnkBlobSizePacked1;
-        private UInt16 TimelineLength1;
+        public UInt16 TimelineLength1;
         public List<BoneSettings> BonesSettings = new List<BoneSettings>();
         public List<Transformation> Transformations = new List<Transformation>();
         public List<Timeline> Timelines = new List<Timeline>();
         public UInt32 UnkBlobSizePacked2;
-        private UInt16 TimelineLength2;
+        public UInt16 TimelineLength2;
         public List<BoneSettings> BonesSettings2 = new List<BoneSettings>();
         public List<Transformation> Transformations2 = new List<Transformation>();
         public List<Timeline> Timelines2 = new List<Timeline>();
@@ -24,10 +24,10 @@ namespace Twinsanity
         public override void Save(BinaryWriter writer)
         {
             writer.Write(Bitfield);
-            UnkBlobSizePacked1 &= ~0x1FU;
+            UnkBlobSizePacked1 &= ~0x7FU;
             UnkBlobSizePacked1 &= ~(0xFFEU << 0xA);
-            UnkBlobSizePacked1 &= ~(0xFFCU << 0x16);
-            UInt32 packed1 = (UInt32)BonesSettings.Count & 0x1F;
+            UnkBlobSizePacked1 &= ~(0x3FFU << 0x16);
+            UInt32 packed1 = (UInt32)BonesSettings.Count & 0x7F;
             packed1 |= (UInt32)(((Transformations.Count * 2) & 0xFFE) << 0xA);
             packed1 |= (UInt32)(Timelines.Count << 0x16);
             packed1 |= UnkBlobSizePacked1;
@@ -46,10 +46,10 @@ namespace Twinsanity
             {
                 timeline.Write(writer);
             }
-            UnkBlobSizePacked2 &= ~0x1FU;
+            UnkBlobSizePacked2 &= ~0x7FU;
             UnkBlobSizePacked2 &= ~(0xFFEU << 0xA);
-            UnkBlobSizePacked2 &= ~(0xFFCU << 0x16);
-            UInt32 packed2 = (UInt32)BonesSettings2.Count & 0x1F;
+            UnkBlobSizePacked2 &= ~(0x3FFU << 0x16);
+            UInt32 packed2 = (UInt32)BonesSettings2.Count & 0x7F;
             packed2 |= (UInt32)(((Transformations2.Count * 2) & 0xFFE) << 0xA);
             packed2 |= (UInt32)(Timelines2.Count << 0x16);
             packed2 |= UnkBlobSizePacked2;
@@ -171,32 +171,32 @@ namespace Twinsanity
 
         public class Timeline
         {
-            public List<Int16> TransformationOffsets;
+            public List<Int16> UnknownInt16s;
 
             public Int16 GetOffset(Int32 index)
             {
-                return TransformationOffsets[index];
+                return UnknownInt16s[index];
             }
 
             public void SetOffset(Int32 index, Int16 value)
             {
-                TransformationOffsets[index] = value;
+                UnknownInt16s[index] = value;
             }
 
             public Timeline(UInt16 timelineLength)
             {
-                TransformationOffsets = new List<Int16>(timelineLength);
+                UnknownInt16s = new List<Int16>(timelineLength);
             }
             public void Read(BinaryReader reader)
             {
-                for (var i = 0; i < TransformationOffsets.Capacity; ++i)
+                for (var i = 0; i < UnknownInt16s.Capacity; ++i)
                 {
-                    TransformationOffsets.Add(reader.ReadInt16());
+                    UnknownInt16s.Add(reader.ReadInt16());
                 }
             }
             public void Write(BinaryWriter writer)
             {
-                foreach (var offset in TransformationOffsets)
+                foreach (var offset in UnknownInt16s)
                 {
                     writer.Write(offset);
                 }
@@ -206,9 +206,9 @@ namespace Twinsanity
         protected override int GetSize()
         {
             var totalSize = 10; // Bitfield, blob packed, blob size helper
-            totalSize += BonesSettings.Sum(d => d.Unknown.Length) + Transformations.Count * 2 + Timelines.Sum(r => r.TransformationOffsets.Count * 2);
+            totalSize += BonesSettings.Sum(d => d.Unknown.Length) + Transformations.Count * 2 + Timelines.Sum(r => r.UnknownInt16s.Count * 2);
             totalSize += 6; // blob packed 2, blob size helper 2
-            totalSize += BonesSettings2.Sum(d => d.Unknown.Length) + Transformations2.Count * 2 + Timelines2.Sum(r => r.TransformationOffsets.Count * 2);
+            totalSize += BonesSettings2.Sum(d => d.Unknown.Length) + Transformations2.Count * 2 + Timelines2.Sum(r => r.UnknownInt16s.Count * 2);
             return totalSize;
         }
     }
