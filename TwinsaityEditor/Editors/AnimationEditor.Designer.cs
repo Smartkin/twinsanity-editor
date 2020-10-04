@@ -69,6 +69,10 @@
             this.lbBoneSettings = new System.Windows.Forms.ListBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.lblFrame2 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.tbTransformOffset2 = new System.Windows.Forms.TextBox();
+            this.tbTimeline2 = new System.Windows.Forms.TrackBar();
             this.button7 = new System.Windows.Forms.Button();
             this.button8 = new System.Windows.Forms.Button();
             this.lbTimelines2 = new System.Windows.Forms.ListBox();
@@ -98,10 +102,6 @@
             this.button11 = new System.Windows.Forms.Button();
             this.button12 = new System.Windows.Forms.Button();
             this.lbBoneSettings2 = new System.Windows.Forms.ListBox();
-            this.lblFrame2 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.tbTransformOffset2 = new System.Windows.Forms.TextBox();
-            this.tbTimeline2 = new System.Windows.Forms.TrackBar();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tcProperties.SuspendLayout();
@@ -112,9 +112,9 @@
             this.groupBox3.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.groupBox6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbTimeline2)).BeginInit();
             this.groupBox7.SuspendLayout();
             this.groupBox8.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tbTimeline2)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -205,9 +205,9 @@
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(87, 454);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(66, 13);
+            this.label9.Size = new System.Drawing.Size(67, 13);
             this.label9.TabIndex = 5;
-            this.label9.Text = "Value (Float)";
+            this.label9.Text = "Value (Int16)";
             // 
             // tbTransformOffset
             // 
@@ -550,6 +550,40 @@
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Timelines 2";
             // 
+            // lblFrame2
+            // 
+            this.lblFrame2.AutoSize = true;
+            this.lblFrame2.Location = new System.Drawing.Point(6, 460);
+            this.lblFrame2.Name = "lblFrame2";
+            this.lblFrame2.Size = new System.Drawing.Size(48, 13);
+            this.lblFrame2.TabIndex = 10;
+            this.lblFrame2.Text = "Frame: 0";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(82, 460);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(67, 13);
+            this.label12.TabIndex = 9;
+            this.label12.Text = "Value (Int16)";
+            // 
+            // tbTransformOffset2
+            // 
+            this.tbTransformOffset2.Location = new System.Drawing.Point(154, 456);
+            this.tbTransformOffset2.Name = "tbTransformOffset2";
+            this.tbTransformOffset2.Size = new System.Drawing.Size(147, 20);
+            this.tbTransformOffset2.TabIndex = 8;
+            this.tbTransformOffset2.TextChanged += new System.EventHandler(this.tbTransformOffset2_TextChanged);
+            // 
+            // tbTimeline2
+            // 
+            this.tbTimeline2.Location = new System.Drawing.Point(1, 414);
+            this.tbTimeline2.Name = "tbTimeline2";
+            this.tbTimeline2.Size = new System.Drawing.Size(303, 45);
+            this.tbTimeline2.TabIndex = 7;
+            this.tbTimeline2.Scroll += new System.EventHandler(this.tbTimeline2_Scroll);
+            // 
             // button7
             // 
             this.button7.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -843,40 +877,6 @@
             this.lbBoneSettings2.TabIndex = 0;
             this.lbBoneSettings2.SelectedIndexChanged += new System.EventHandler(this.lbDisplacements2_SelectedIndexChanged);
             // 
-            // lblFrame2
-            // 
-            this.lblFrame2.AutoSize = true;
-            this.lblFrame2.Location = new System.Drawing.Point(6, 460);
-            this.lblFrame2.Name = "lblFrame2";
-            this.lblFrame2.Size = new System.Drawing.Size(48, 13);
-            this.lblFrame2.TabIndex = 10;
-            this.lblFrame2.Text = "Frame: 0";
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(82, 460);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(66, 13);
-            this.label12.TabIndex = 9;
-            this.label12.Text = "Value (Float)";
-            // 
-            // tbTransformOffset2
-            // 
-            this.tbTransformOffset2.Location = new System.Drawing.Point(154, 456);
-            this.tbTransformOffset2.Name = "tbTransformOffset2";
-            this.tbTransformOffset2.Size = new System.Drawing.Size(147, 20);
-            this.tbTransformOffset2.TabIndex = 8;
-            this.tbTransformOffset2.TextChanged += new System.EventHandler(this.tbTransformOffset2_TextChanged);
-            // 
-            // tbTimeline2
-            // 
-            this.tbTimeline2.Location = new System.Drawing.Point(1, 414);
-            this.tbTimeline2.Name = "tbTimeline2";
-            this.tbTimeline2.Size = new System.Drawing.Size(303, 45);
-            this.tbTimeline2.TabIndex = 7;
-            this.tbTimeline2.Scroll += new System.EventHandler(this.tbTimeline2_Scroll);
-            // 
             // AnimationEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -901,11 +901,11 @@
             this.tabPage2.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbTimeline2)).EndInit();
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
             this.groupBox8.ResumeLayout(false);
             this.groupBox8.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tbTimeline2)).EndInit();
             this.ResumeLayout(false);
 
         }

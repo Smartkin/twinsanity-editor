@@ -21,8 +21,8 @@ namespace TwinsaityEditor
         private Animation.BoneSettings BoneSettings2;
         private Animation.Timeline Timeline;
         private Animation.Timeline Timeline2;
-        private Animation.FinalTransformation Transformation;
-        private Animation.FinalTransformation Transformation2;
+        private Animation.Transformation Transformation;
+        private Animation.Transformation Transformation2;
 
         public AnimationEditor(SectionController c)
         {
@@ -65,6 +65,8 @@ namespace TwinsaityEditor
             Timeline2 = null;
             Transformation = null;
             Transformation2 = null;
+            tbTimeline.Enabled = false;
+            tbTimeline2.Enabled = false;
             tbDisB1.Text = "";
             tbDisB2.Text = "";
             tbDisB3.Text = "";
@@ -138,7 +140,7 @@ namespace TwinsaityEditor
             var list = (ListBox)sender;
             if (list.SelectedIndex == -1) return;
 
-            Animation.FinalTransformation scale = animation.Transformations[list.SelectedIndex];
+            Animation.Transformation scale = animation.Transformations[list.SelectedIndex];
             Transformation = scale;
             tbTransformation.Text = scale.Value.ToString();
         }
@@ -179,7 +181,7 @@ namespace TwinsaityEditor
             var list = (ListBox)sender;
             if (list.SelectedIndex == -1) return;
 
-            Animation.FinalTransformation scale = animation.Transformations2[list.SelectedIndex];
+            Animation.Transformation scale = animation.Transformations2[list.SelectedIndex];
             Transformation2 = scale;
             tbTransformation2.Text = scale.Value.ToString();
         }
@@ -333,7 +335,7 @@ namespace TwinsaityEditor
         private void tbTransformOffset_TextChanged(object sender, EventArgs e)
         {
             var tb = (TextBox)sender;
-            if (!Single.TryParse(tb.Text, out Single result) || Timeline == null) return;
+            if (!Int16.TryParse(tb.Text, out Int16 result) || Timeline == null) return;
             Timeline.SetOffset(tbTimeline.Value, result);
         }
 
@@ -346,7 +348,7 @@ namespace TwinsaityEditor
         private void tbTransformOffset2_TextChanged(object sender, EventArgs e)
         {
             var tb = (TextBox)sender;
-            if (!Single.TryParse(tb.Text, out Single result) || Timeline2 == null) return;
+            if (!Int16.TryParse(tb.Text, out Int16 result) || Timeline2 == null) return;
             Timeline2.SetOffset(tbTimeline2.Value, result);
         }
     }

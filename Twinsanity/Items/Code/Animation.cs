@@ -13,12 +13,12 @@ namespace Twinsanity
         public UInt32 UnkBlobSizePacked1;
         private UInt16 TimelineLength1;
         public List<BoneSettings> BonesSettings = new List<BoneSettings>();
-        public List<FinalTransformation> Transformations = new List<FinalTransformation>();
+        public List<Transformation> Transformations = new List<Transformation>();
         public List<Timeline> Timelines = new List<Timeline>();
         public UInt32 UnkBlobSizePacked2;
         private UInt16 TimelineLength2;
         public List<BoneSettings> BonesSettings2 = new List<BoneSettings>();
-        public List<FinalTransformation> Transformations2 = new List<FinalTransformation>();
+        public List<Transformation> Transformations2 = new List<Transformation>();
         public List<Timeline> Timelines2 = new List<Timeline>();
 
         public override void Save(BinaryWriter writer)
@@ -80,7 +80,7 @@ namespace Twinsanity
             Transformations.Clear();
             for (var i = 0; i < transformations; ++i)
             {
-                Transformations.Add(new FinalTransformation());
+                Transformations.Add(new Transformation());
                 Transformations[i].Read(reader);
             }
             Timelines.Clear();
@@ -108,7 +108,7 @@ namespace Twinsanity
                 }
                 for (var i = 0; i < transformations; ++i)
                 {
-                    Transformations2.Add(new FinalTransformation());
+                    Transformations2.Add(new Transformation());
                     Transformations2[i].Read(reader);
                 }
                 for (var i = 0; i < timelines; ++i)
@@ -136,7 +136,7 @@ namespace Twinsanity
             }
         }
 
-        public class FinalTransformation
+        public class Transformation
         {
             public Int16 Unknown;
 
@@ -166,14 +166,14 @@ namespace Twinsanity
         {
             public List<Int16> TransformationOffsets;
 
-            public Single GetOffset(Int32 index)
+            public Int16 GetOffset(Int32 index)
             {
-                return TransformationOffsets[index] / 4096f;
+                return TransformationOffsets[index];
             }
 
-            public void SetOffset(Int32 index, Single value)
+            public void SetOffset(Int32 index, Int16 value)
             {
-                TransformationOffsets[index] = (Int16)(value * 4096);
+                TransformationOffsets[index] = value;
             }
 
             public Timeline(UInt16 timelineLength)
