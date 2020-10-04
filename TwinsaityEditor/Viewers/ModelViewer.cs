@@ -4,10 +4,10 @@ namespace TwinsaityEditor
 {
     public class ModelViewer : MeshViewer
     {
-        private ModelController model;
+        private RigidModelController model;
         private FileController file;
 
-        public ModelViewer(ModelController model, ref Form pform) : base(model.MainFile.MeshSection.GetItem<MeshController>(model.Data.MeshID), ref pform)
+        public ModelViewer(RigidModelController model, ref Form pform) : base(model.MainFile.MeshSection.GetItem<ModelController>(model.Data.MeshID), ref pform)
         {
             //initialize variables here
             this.model = model;

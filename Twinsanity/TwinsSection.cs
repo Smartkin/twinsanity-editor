@@ -20,12 +20,12 @@ namespace Twinsanity
 
         Texture, TextureX,
         Material, MaterialD,
-        Mesh, MeshX, MeshDS,
-        Model,
-        ArmatureModel, ArmatureModelX,
-        ActorModel,
-        StaticModel,
-        SpecialModel,
+        Model, ModelX, ModelDS,
+        RigidModel,
+        Skin, SkinX,
+        BlendSkin,
+        Mesh,
+        LodModel,
         Skydome,
 
         Object, ObjectDemo,
@@ -128,29 +128,29 @@ namespace Twinsanity
                                 break;
                             case 2:
                                 if (Type == SectionType.GraphicsX)
-                                    LoadSection(reader, sub, SectionType.MeshX);
+                                    LoadSection(reader, sub, SectionType.ModelX);
                                 else if (Type == SectionType.GraphicsDS)
-                                    LoadSection(reader, sub, SectionType.MeshDS);
+                                    LoadSection(reader, sub, SectionType.ModelDS);
                                 else
-                                    LoadSection(reader, sub, SectionType.Mesh);
+                                    LoadSection(reader, sub, SectionType.Model);
                                 break;
                             case 3:
-                                LoadSection(reader, sub, SectionType.Model);
+                                LoadSection(reader, sub, SectionType.RigidModel);
                                 break;
                             case 4:
                                 if (Type == SectionType.GraphicsX)
-                                    LoadSection(reader, sub, SectionType.ArmatureModelX);
+                                    LoadSection(reader, sub, SectionType.SkinX);
                                 else
-                                    LoadSection(reader, sub, SectionType.ArmatureModel);
+                                    LoadSection(reader, sub, SectionType.Skin);
                                 break;
                             case 5:
-                                LoadSection(reader, sub, SectionType.ActorModel);
+                                LoadSection(reader, sub, SectionType.BlendSkin);
                                 break;
                             case 6:
-                                LoadSection(reader, sub, SectionType.StaticModel);
+                                LoadSection(reader, sub, SectionType.Mesh);
                                 break;
                             case 7:
-                                LoadSection(reader, sub, SectionType.SpecialModel);
+                                LoadSection(reader, sub, SectionType.LodModel);
                                 break;
                             case 8:
                                 LoadSection(reader, sub, SectionType.Skydome);
@@ -304,18 +304,18 @@ namespace Twinsanity
                     case SectionType.MaterialD: //PS2 DEMO Materials
                         LoadItem<MaterialDemo>(reader, sub);
                         break;
-                    case SectionType.Mesh:
-                        LoadItem<Mesh>(reader, sub);
-                        break;
-                    case SectionType.MeshX: //XBOX meshes
-                        LoadItem<TwinsItem>(reader, sub);
-                        break;
-                    case SectionType.MeshDS: //PS2 DEMO SM2 meshes
-                        LoadItem<TwinsItem>(reader, sub);
-                        break;
                     case SectionType.Model:
-                    case SectionType.StaticModel:
                         LoadItem<Model>(reader, sub);
+                        break;
+                    case SectionType.ModelX: //XBOX meshes
+                        LoadItem<TwinsItem>(reader, sub);
+                        break;
+                    case SectionType.ModelDS: //PS2 DEMO SM2 meshes
+                        LoadItem<TwinsItem>(reader, sub);
+                        break;
+                    case SectionType.RigidModel:
+                    case SectionType.Mesh:
+                        LoadItem<RigidModel>(reader, sub);
                         break;
                     case SectionType.Skydome:
                         LoadItem<Skydome>(reader, sub);
@@ -390,14 +390,14 @@ namespace Twinsanity
                     case SectionType.OGI:
                         LoadItem<GraphicsInfo>(reader, sub);
                         break;
-                    case SectionType.ArmatureModel:
-                        LoadItem<ArmatureModel>(reader, sub);
+                    case SectionType.Skin:
+                        LoadItem<Skin>(reader, sub);
                         break;
-                    case SectionType.ArmatureModelX: //XBOX Armature Models
-                        LoadItem<ArmatureModelX>(reader, sub);
+                    case SectionType.SkinX: //XBOX Skins
+                        LoadItem<SkinX>(reader, sub);
                         break;
-                    case SectionType.SpecialModel:
-                        LoadItem<SpecialModel>(reader, sub);
+                    case SectionType.LodModel:
+                        LoadItem<LodModel>(reader, sub);
                         break;
                     case SectionType.ParticleData:
                         LoadItem<ParticleData>(reader, sub);

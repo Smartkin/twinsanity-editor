@@ -204,7 +204,7 @@ namespace TwinsaityEditor
             CloseForm(ref editorForm);
         }
 
-        public void OpenMeshViewer(MeshController c)
+        public void OpenMeshViewer(ModelController c)
         {
             var id = c.Data.ID;
             if (!MeshViewers.ContainsKey(id))
@@ -241,7 +241,7 @@ namespace TwinsaityEditor
             }
         }
 
-        public void OpenModelViewer(ModelController c)
+        public void OpenModelViewer(RigidModelController c)
         {
             var id = c.Data.ID;
             if (!ModelViewers.ContainsKey(id))
@@ -260,12 +260,12 @@ namespace TwinsaityEditor
             else
                 ModelViewers[id].Select();
         }
-        public void OpenModelViewer(SpecialModelController spec)
+        public void OpenModelViewer(LodModelController spec)
         {
             SectionController model_sec = GetItem<SectionController>(6).GetItem<SectionController>(6);
             uint LODcount = spec.Data.ModelsAmount;
             int targetLOD = LODcount == 1 ? 0 : 1;
-            ModelController c = model_sec.GetItem<ModelController>(spec.Data.LODModelIDs[targetLOD]);
+            RigidModelController c = model_sec.GetItem<RigidModelController>(spec.Data.LODModelIDs[targetLOD]);
             var id = c.Data.ID;
             if (!ModelViewers.ContainsKey(id))
             {

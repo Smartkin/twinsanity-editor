@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace TwinsaityEditor
 {
-    public class SpecialModelController : ItemController
+    public class LodModelController : ItemController
     {
-        public new SpecialModel Data { get; set; }
+        public new LodModel Data { get; set; }
 
-        public SpecialModelController(MainForm topform, SpecialModel item) : base(topform, item)
+        public LodModelController(MainForm topform, LodModel item) : base(topform, item)
         {
             Data = item;
             AddMenu("Open model viewer", Menu_OpenViewer);
@@ -15,7 +15,7 @@ namespace TwinsaityEditor
 
         protected override string GetName()
         {
-            return string.Format("Special Model [ID {0:X8}]", Data.ID);
+            return string.Format("LOD [ID {0:X8}/{0}]", Data.ID);
         }
 
         protected override void GenText()

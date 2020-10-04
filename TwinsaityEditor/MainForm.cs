@@ -75,10 +75,10 @@ namespace TwinsaityEditor
                 c = new TextureController(this, (Texture)a);
             else if (a is Material)
                 c = new MaterialController(this, (Material)a);
-            else if (a is Mesh)
-                c = new MeshController(this, (Mesh)a);
             else if (a is Model)
                 c = new ModelController(this, (Model)a);
+            else if (a is RigidModel)
+                c = new RigidModelController(this, (RigidModel)a);
             else if (a is Skydome)
                 c = new SkydomeController(this, (Skydome)a);
             else if (a is GameObject)
@@ -109,16 +109,16 @@ namespace TwinsaityEditor
                 c = new ChunkLinksController(this, (ChunkLinks)a);
             else if (a is GraphicsInfo)
                 c = new GraphicsInfoController(this, (GraphicsInfo)a);
-            else if (a is ArmatureModel)
-                c = new ArmatureModelController(this, (ArmatureModel)a);
-            else if (a is ArmatureModelX)
-                c = new ArmatureModelXController(this, (ArmatureModelX)a);
+            else if (a is Skin)
+                c = new SkinController(this, (Skin)a);
+            else if (a is SkinX)
+                c = new SkinXController(this, (SkinX)a);
             else if (a is MaterialDemo)
                 c = new MaterialDController(this, (MaterialDemo)a);
             else if (a is SceneryData)
                 c = new SceneryDataController(this, (SceneryData)a);
-            else if (a is SpecialModel)
-                c = new SpecialModelController(this, (SpecialModel)a);
+            else if (a is LodModel)
+                c = new LodModelController(this, (LodModel)a);
             else if (a is ParticleData)
                 c = new ParticleDataController(this, (ParticleData)a);
             else if (a is DynamicSceneryData)

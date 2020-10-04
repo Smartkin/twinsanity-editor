@@ -4,7 +4,7 @@ using System.IO;
 
 namespace Twinsanity
 {
-    public sealed class SpecialModel : TwinsItem
+    public sealed class LodModel : TwinsItem
     {
 
         public uint Header;
@@ -13,7 +13,7 @@ namespace Twinsanity
         public uint[] LODDistance; // 4
         public uint[] LODModelIDs; // 4
 
-        public SpecialModel()
+        public LodModel()
         {
 
         }

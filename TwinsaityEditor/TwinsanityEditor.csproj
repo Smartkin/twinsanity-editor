@@ -177,8 +177,8 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Controllers\AIPathController.cs" />
     <Compile Include="Controllers\AnimationController.cs" />
-    <Compile Include="Controllers\ArmatureModelController.cs" />
-    <Compile Include="Controllers\ArmatureModelXController.cs" />
+    <Compile Include="Controllers\SkinController.cs" />
+    <Compile Include="Controllers\SkinXController.cs" />
     <Compile Include="Controllers\CameraController.cs" />
     <Compile Include="Controllers\CodeModelController.cs" />
     <Compile Include="Controllers\CollisionSurfaceController.cs" />
@@ -197,13 +197,13 @@
     <Compile Include="Controllers\AIPositionController.cs" />
     <Compile Include="Controllers\PositionController.cs" />
     <Compile Include="Controllers\SEController.cs" />
-    <Compile Include="Controllers\SpecialModelController.cs" />
+    <Compile Include="Controllers\LodModelController.cs" />
     <Compile Include="Controllers\TriggerController.cs" />
     <Compile Include="Controllers\InstanceController.cs" />
     <Compile Include="Controllers\ScriptController.cs" />
     <Compile Include="Controllers\ObjectController.cs" />
+    <Compile Include="Controllers\RigidModelController.cs" />
     <Compile Include="Controllers\ModelController.cs" />
-    <Compile Include="Controllers\MeshController.cs" />
     <Compile Include="Controllers\MaterialController.cs" />
     <Compile Include="Controllers\TextureController.cs" />
     <Compile Include="Controllers\SectionController.cs" />
