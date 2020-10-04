@@ -208,6 +208,12 @@
     <Compile Include="Controllers\TextureController.cs" />
     <Compile Include="Controllers\SectionController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
+    <Compile Include="Editors\AnimationEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\AnimationEditor.Designer.cs">
+      <DependentUpon>AnimationEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Editors\ChunkLinksEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -346,6 +352,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Editors\AnimationEditor.resx">
+      <DependentUpon>AnimationEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Editors\ChunkLinksEditor.resx">
       <DependentUpon>ChunkLinksEditor.cs</DependentUpon>
     </EmbeddedResource>
