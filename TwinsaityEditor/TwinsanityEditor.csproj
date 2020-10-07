@@ -458,7 +458,7 @@
     <Error Condition="!Exists('packages\SharpFont.4.0.1\build\SharpFont.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\SharpFont.4.0.1\build\SharpFont.props'))" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>call "$(ProjectDir)CopyLibs.bat"  $(ProjectDir)\Externals\</PostBuildEvent>
+    <PostBuildEvent>call "$(ProjectDir)CopyLibs.bat"  $(ProjectDir)\</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
