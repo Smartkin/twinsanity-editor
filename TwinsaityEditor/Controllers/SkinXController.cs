@@ -2,18 +2,18 @@
 
 namespace TwinsaityEditor
 {
-    public class ArmatureModelController : ItemController
+    public class SkinXController : ItemController
     {
-        public new ArmatureModel Data { get; set; }
+        public new SkinX Data { get; set; }
 
-        public ArmatureModelController(MainForm topform, ArmatureModel item) : base(topform, item)
+        public SkinXController(MainForm topform, SkinX item) : base(topform, item)
         {
             Data = item;
         }
 
         protected override string GetName()
         {
-            return $"Armature Model [ID {Data.ID}]";
+            return $"Skin X [ID {Data.ID:X}/{Data.ID}]";
         }
 
         protected override void GenText()

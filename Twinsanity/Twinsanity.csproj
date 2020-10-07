@@ -66,17 +66,20 @@
     <Compile Include="DefaultEnums.cs" />
     <Compile Include="Items\Code\Animation.cs" />
     <Compile Include="Items\Code\CodeModel.cs" />
+    <Compile Include="Items\Code\GameObjectDemo.cs" />
     <Compile Include="Items\Code\GraphicsInfo.cs" />
     <Compile Include="Items\DynamicSceneryData.cs" />
-    <Compile Include="Items\Graphics\ArmatureModel.cs" />
-    <Compile Include="Items\Graphics\ArmatureModelX.cs" />
+    <Compile Include="Items\Graphics\Skin.cs" />
+    <Compile Include="Items\Graphics\SkinX.cs" />
     <Compile Include="Items\Graphics\MaterialDemo.cs" />
     <Compile Include="Items\Graphics\Skydome.cs" />
-    <Compile Include="Items\Graphics\SpecialModel.cs" />
+    <Compile Include="Items\Graphics\LodModel.cs" />
     <Compile Include="Items\Instances\AIPath.cs" />
     <Compile Include="Items\Instances\AIPosition.cs" />
     <Compile Include="Items\Instances\CollisionSurface.cs" />
+    <Compile Include="Items\Instances\InstanceDemo.cs" />
     <Compile Include="Items\Instances\InstanceTemplate.cs" />
+    <Compile Include="Items\Instances\InstanceTemplateDemo.cs" />
     <Compile Include="Items\ParticleData.cs" />
     <Compile Include="Items\SceneryData.cs" />
     <Compile Include="RIFF.cs" />
@@ -107,9 +110,9 @@
     <Compile Include="BitConv.cs" />
     <Compile Include="Types.cs" />
     <Compile Include="Items\Code\GameObject.cs" />
-    <Compile Include="Items\Graphics\Model.cs" />
+    <Compile Include="Items\Graphics\RigidModel.cs" />
     <Compile Include="Items\Instances\Instance.cs" />
-    <Compile Include="Items\Graphics\Mesh.cs" />
+    <Compile Include="Items\Graphics\Model.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Items\Code\Script.cs" />
   </ItemGroup>

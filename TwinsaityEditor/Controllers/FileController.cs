@@ -1,6 +1,7 @@
 ﻿using Twinsanity;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using TwinsaityEditor.Controllers;
 
 namespace TwinsaityEditor
 {
@@ -25,6 +26,7 @@ namespace TwinsaityEditor
         private Form editChunkLinks;
         private Form editScripts;
         private Form editObjects;
+        private Form editAnimations;
         private readonly Form[] editInstances = new Form[8], editPositions = new Form[8], editPaths = new Form[8], editTriggers = new Form[8];
 
         //Viewers
@@ -61,11 +63,21 @@ namespace TwinsaityEditor
 
         private void LoadFileInfo()
         {
-            if ((Data.Type == TwinsFile.FileType.RM2 || Data.Type == TwinsFile.FileType.RMX) && Data.ContainsItem(10) && Data.GetItem<TwinsSection>(10).ContainsItem(0))
+            if ((Data.Type == TwinsFile.FileType.RM2 || Data.Type == TwinsFile.FileType.RMX || Data.Type == TwinsFile.FileType.DemoRM2) && Data.ContainsItem(10) && Data.GetItem<TwinsSection>(10).ContainsItem(0))
             {
-                foreach (GameObject obj in Data.GetItem<TwinsSection>(10).GetItem<TwinsSection>(0).Records)
+                if (Data.Type == TwinsFile.FileType.DemoRM2)
                 {
-                    ObjectNames.Add(obj.ID, obj.Name);
+                    foreach (GameObjectDemo obj in Data.GetItem<TwinsSection>(10).GetItem<TwinsSection>(0).Records)
+                    {
+                        ObjectNames.Add(obj.ID, obj.Name);
+                    }
+                }
+                else
+                {
+                    foreach (GameObject obj in Data.GetItem<TwinsSection>(10).GetItem<TwinsSection>(0).Records)
+                    {
+                        ObjectNames.Add(obj.ID, obj.Name);
+                    }
                 }
             }
             uint gfx_id = 11;
@@ -117,6 +129,7 @@ namespace TwinsaityEditor
             CloseEditor(Editors.ChunkLinks);
             CloseEditor(Editors.ColData);
             CloseEditor(Editors.Script);
+            CloseEditor(Editors.Animation);
             for (int i = 0; i <= 7; ++i)
             {
                 CloseEditor(Editors.Instance, i);
@@ -143,6 +156,8 @@ namespace TwinsaityEditor
                 OpenEditor(ref editTriggers[((TriggerController)c).Data.Parent.Parent.ID], Editors.Trigger, (Controller)c.Node.Parent.Tag);
             else if (c is ScriptController)
                 OpenEditor(ref editScripts, Editors.Script, (Controller)c.Node.Parent.Tag);
+            else if (c is AnimationController)
+                OpenEditor(ref editAnimations, Editors.Animation, (Controller)c.Node.Parent.Tag);
             else if (c is ObjectController)
                 OpenEditor(ref editObjects, Editors.Object, (Controller)c.Node.Parent.Tag);
             else if (c is SectionController s)
@@ -159,6 +174,8 @@ namespace TwinsaityEditor
                     OpenEditor(ref editScripts, Editors.Script, c);
                 else if (s.Data.Type == SectionType.Object)
                     OpenEditor(ref editObjects, Editors.Object, c);
+                else if (s.Data.Type == SectionType.Animation)
+                    OpenEditor(ref editAnimations, Editors.Animation, c);
             }
         }
 
@@ -181,6 +198,7 @@ namespace TwinsaityEditor
                     case Editors.Trigger: editor_var = new TriggerEditor((SectionController)cont) { Tag = TopForm }; break;
                     case Editors.Script: editor_var = new ScriptEditor((SectionController)cont) { Tag = TopForm }; break;
                     case Editors.Object: editor_var = new ObjectEditor((SectionController)cont) { Tag = TopForm }; break;
+                    case Editors.Animation: editor_var = new AnimationEditor((SectionController)cont) { Tag = TopForm }; break;
                 }
                 editor_var.Show();
             }
@@ -200,11 +218,12 @@ namespace TwinsaityEditor
                 case Editors.Path: editorForm = editPaths[arg]; break;
                 case Editors.Trigger: editorForm = editTriggers[arg]; break;
                 case Editors.Script: editorForm = editScripts; break;
+                case Editors.Animation: editorForm = editAnimations; break;
             }
             CloseForm(ref editorForm);
         }
 
-        public void OpenMeshViewer(MeshController c)
+        public void OpenMeshViewer(ModelController c)
         {
             var id = c.Data.ID;
             if (!MeshViewers.ContainsKey(id))
@@ -241,7 +260,7 @@ namespace TwinsaityEditor
             }
         }
 
-        public void OpenModelViewer(ModelController c)
+        public void OpenModelViewer(RigidModelController c)
         {
             var id = c.Data.ID;
             if (!ModelViewers.ContainsKey(id))
@@ -260,12 +279,12 @@ namespace TwinsaityEditor
             else
                 ModelViewers[id].Select();
         }
-        public void OpenModelViewer(SpecialModelController spec)
+        public void OpenModelViewer(LodModelController spec)
         {
             SectionController model_sec = GetItem<SectionController>(6).GetItem<SectionController>(6);
             uint LODcount = spec.Data.ModelsAmount;
             int targetLOD = LODcount == 1 ? 0 : 1;
-            ModelController c = model_sec.GetItem<ModelController>(spec.Data.LODModelIDs[targetLOD]);
+            RigidModelController c = model_sec.GetItem<RigidModelController>(spec.Data.LODModelIDs[targetLOD]);
             var id = c.Data.ID;
             if (!ModelViewers.ContainsKey(id))
             {

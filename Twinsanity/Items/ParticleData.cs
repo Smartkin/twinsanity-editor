@@ -182,7 +182,7 @@ namespace Twinsanity
 
             uint InstanceCheck = reader.ReadUInt32();
             ParticleInstanceCount = InstanceCheck;
-            if (ParticleInstanceCount > 0 && ParticleInstanceCount < 65536)
+            if (!IsDefault && ParticleInstanceCount > 0 && ParticleInstanceCount < 65536)
             {
                 ParticleInstances = new List<ParticleSystemInstance>();
 

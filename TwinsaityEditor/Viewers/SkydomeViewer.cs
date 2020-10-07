@@ -19,7 +19,7 @@ namespace TwinsaityEditor
             this.sky = sky;
             file = sky.MainFile;
             zFar = 100F;
-            InitVBO(sky.Data.ModelIDs.Length);
+            InitVBO(sky.Data.MeshIDs.Length);
             pform.Text = "Loading models...";
             LoadModels();
         }
@@ -83,11 +83,11 @@ namespace TwinsaityEditor
             SectionController mesh_sec = file.GetItem<SectionController>(6).GetItem<SectionController>(2);
             SectionController model_sec = file.GetItem<SectionController>(6).GetItem<SectionController>(6);
             SectionController special_sec = file.GetItem<SectionController>(6).GetItem<SectionController>(7);
-            for (int i = 0; i < sky.Data.ModelIDs.Length; ++i)
+            for (int i = 0; i < sky.Data.MeshIDs.Length; ++i)
             {
-                if (special_sec.Data.ContainsItem(sky.Data.ModelIDs[i]))
+                if (special_sec.Data.ContainsItem(sky.Data.MeshIDs[i]))
                     continue;
-                MeshController mesh = mesh_sec.GetItem<MeshController>(model_sec.GetItem<ModelController>(sky.Data.ModelIDs[i]).Data.MeshID);
+                ModelController mesh = mesh_sec.GetItem<ModelController>(model_sec.GetItem<RigidModelController>(sky.Data.MeshIDs[i]).Data.MeshID);
                 mesh.LoadMeshData();
                 foreach (var v in mesh.Vertices)
                 {

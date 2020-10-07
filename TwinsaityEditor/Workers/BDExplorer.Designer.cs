@@ -140,6 +140,8 @@
             this.Controls.Add(this.OpenBDBH);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.archiveContentsTree);
+            this.MaximumSize = new System.Drawing.Size(566, 99999);
+            this.MinimumSize = new System.Drawing.Size(566, 573);
             this.Name = "BDExplorer";
             this.Text = "BDExplorer";
             this.Load += new System.EventHandler(this.BDExplorer_Load);

@@ -6,12 +6,12 @@ namespace TwinsaityEditor
 {
     public class MeshViewer : ThreeDViewer
     {
-        private MeshController mesh;
+        private ModelController mesh;
         private FileController file;
 
         private bool lighting, wire;
 
-        public MeshViewer(MeshController mesh, ref Form pform)
+        public MeshViewer(ModelController mesh, ref Form pform)
         {
             //initialize variables here
             this.mesh = mesh;

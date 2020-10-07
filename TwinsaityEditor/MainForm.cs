@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using TwinsaityEditor.Controllers;
 using TwinsaityEditor.Properties;
 using TwinsaityEditor.Workers;
 using Twinsanity;
@@ -74,16 +75,20 @@ namespace TwinsaityEditor
                 c = new TextureController(this, (Texture)a);
             else if (a is Material)
                 c = new MaterialController(this, (Material)a);
-            else if (a is Mesh)
-                c = new MeshController(this, (Mesh)a);
             else if (a is Model)
                 c = new ModelController(this, (Model)a);
+            else if (a is RigidModel)
+                c = new RigidModelController(this, (RigidModel)a);
             else if (a is Skydome)
                 c = new SkydomeController(this, (Skydome)a);
             else if (a is GameObject)
                 c = new ObjectController(this, (GameObject)a);
+            else if (a is CodeModel)
+                c = new CodeModelController(this, (CodeModel)a);
             else if (a is Script)
                 c = new ScriptController(this, (Script)a);
+            else if (a is Animation)
+                c = new AnimationController(this, (Animation)a);
             else if (a is SoundEffect)
                 c = new SEController(this, (SoundEffect)a);
             else if (a is AIPosition)
@@ -104,16 +109,16 @@ namespace TwinsaityEditor
                 c = new ChunkLinksController(this, (ChunkLinks)a);
             else if (a is GraphicsInfo)
                 c = new GraphicsInfoController(this, (GraphicsInfo)a);
-            else if (a is ArmatureModel)
-                c = new ArmatureModelController(this, (ArmatureModel)a);
-            else if (a is ArmatureModelX)
-                c = new ArmatureModelXController(this, (ArmatureModelX)a);
+            else if (a is Skin)
+                c = new SkinController(this, (Skin)a);
+            else if (a is SkinX)
+                c = new SkinXController(this, (SkinX)a);
             else if (a is MaterialDemo)
                 c = new MaterialDController(this, (MaterialDemo)a);
             else if (a is SceneryData)
                 c = new SceneryDataController(this, (SceneryData)a);
-            else if (a is SpecialModel)
-                c = new SpecialModelController(this, (SpecialModel)a);
+            else if (a is LodModel)
+                c = new LodModelController(this, (LodModel)a);
             else if (a is ParticleData)
                 c = new ParticleDataController(this, (ParticleData)a);
             else if (a is DynamicSceneryData)
@@ -124,6 +129,12 @@ namespace TwinsaityEditor
                 c = new CameraController(this, (Camera)a);
             else if (a is InstanceTemplate)
                 c = new InstaceTemplateController(this, (InstanceTemplate)a);
+            else if (a is InstanceTemplateDemo)
+                c = new InstaceTemplateDemoController(this, (InstanceTemplateDemo)a);
+            else if (a is InstanceDemo)
+                c = new InstanceDemoController(this, (InstanceDemo)a);
+            else if (a is GameObjectDemo)
+                c = new ObjectDemoController(this, (GameObjectDemo)a);
             else
                 c = new ItemController(this, a);
 
@@ -340,7 +351,18 @@ namespace TwinsaityEditor
 
         private void button3_Click(object sender, EventArgs e)
         {
-            CurCont.OpenRMViewer();
+            if (rMViewerToolStripMenuItem.Enabled == true)
+            {
+                CurCont.OpenRMViewer();
+            }
+            else if(sMViewerToolStripMenuItem.Enabled == true)
+            {
+                CurCont.OpenSMViewer();
+            }
+            else
+            {
+
+            }
         }
 
         private void button5_Click(object sender, EventArgs e)

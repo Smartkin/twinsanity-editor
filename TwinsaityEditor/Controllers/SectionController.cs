@@ -17,10 +17,10 @@ namespace TwinsaityEditor
             MainFile = TopForm.CurCont;
             Data = item;
             if (item.Type != SectionType.Texture && item.Type != SectionType.TextureX
-                && item.Type != SectionType.Material && item.Type != SectionType.Mesh
-                && item.Type != SectionType.MeshX && item.Type != SectionType.Model
-                && item.Type != SectionType.ArmatureModel && item.Type != SectionType.ActorModel && item.Type != SectionType.ArmatureModelX
-                && item.Type != SectionType.StaticModel && item.Type != SectionType.SpecialModel
+                && item.Type != SectionType.Material && item.Type != SectionType.Model
+                && item.Type != SectionType.ModelX && item.Type != SectionType.RigidModel
+                && item.Type != SectionType.Skin && item.Type != SectionType.BlendSkin && item.Type != SectionType.SkinX
+                && item.Type != SectionType.Mesh && item.Type != SectionType.LodModel
                 && item.Type != SectionType.Skydome && !(item is TwinsFile))
             {
                 AddMenu("Re-order by ID (asc.)", Menu_ReOrderByID_Asc);
@@ -60,7 +60,7 @@ namespace TwinsaityEditor
                 AddMenu("Re-order by ID (desc.)", Menu_ReOrderByID_Desc);
                 AddMenu("Add new item", Menu_AddNew);
             }
-            if (item.Type == SectionType.Mesh || item.Type == SectionType.MeshX || item.Type == SectionType.Model || item.Type == SectionType.StaticModel)
+            if (item.Type == SectionType.Model || item.Type == SectionType.ModelX || item.Type == SectionType.RigidModel || item.Type == SectionType.Mesh)
             {
                 AddMenu("Export all meshes to PLY", Menu_ExportAllPLY);
             }
@@ -133,14 +133,14 @@ namespace TwinsaityEditor
                 case SectionType.Material:
                     newItem = new Material();
                     break;
-                case SectionType.Mesh:
-                    newItem = new Mesh();
-                    break;
                 case SectionType.Model:
                     newItem = new Model();
                     break;
-                case SectionType.ArmatureModel:
-                    newItem = new ArmatureModel();
+                case SectionType.RigidModel:
+                    newItem = new RigidModel();
+                    break;
+                case SectionType.Skin:
+                    newItem = new Skin();
                     break;
                 case SectionType.Object:
                     newItem = new GameObject();
@@ -321,7 +321,7 @@ namespace TwinsaityEditor
 
         private void Menu_ExportAllPLY()
         {
-            if (Data.Type == SectionType.Model || Data.Type == SectionType.StaticModel)
+            if (Data.Type == SectionType.RigidModel || Data.Type == SectionType.Mesh)
                 if (MessageBox.Show("PLY export is experimental, material and texture information will not be exported. Continue anyway?", "Export Warning", MessageBoxButtons.YesNo) == DialogResult.No) return;
             var fdbSave = new CommonOpenFileDialog { IsFolderPicker = true };
             if (fdbSave.ShowDialog() == CommonFileDialogResult.Ok)
@@ -329,13 +329,13 @@ namespace TwinsaityEditor
                 foreach (TreeNode n in Node.Nodes)
                 {
                     string fname = fdbSave.FileName + @"\{n.Text}.ply";
-                    if (n.Tag is MeshController c)
+                    if (n.Tag is ModelController c)
                     {
                         File.WriteAllBytes(fname, c.Data.ToPLY());
                     }
-                    else if (n.Tag is ModelController d)
+                    else if (n.Tag is RigidModelController d)
                     {
-                        File.WriteAllBytes(fname, Data.Parent.GetItem<TwinsSection>(2).GetItem<Mesh>(d.Data.MeshID).ToPLY());
+                        File.WriteAllBytes(fname, Data.Parent.GetItem<TwinsSection>(2).GetItem<Model>(d.Data.MeshID).ToPLY());
                     }
                 }
             }

@@ -2,7 +2,7 @@
 
 namespace Twinsanity
 {
-    public class ArmatureModel : TwinsItem
+    public class Skin : TwinsItem
     {
 
         public long ItemSize { get; set; }

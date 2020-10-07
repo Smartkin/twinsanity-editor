@@ -749,7 +749,7 @@ namespace TwinsaityEditor
 
                             if (file.Data.Type == TwinsFile.FileType.RM2)
                             {
-                                MeshController modelCont = null;
+                                ModelController modelCont = null;
                                 bool HasMesh = false;
                                 ushort TargetGI = 65535;
                                 List<uint> ModelList = new List<uint>();
@@ -865,12 +865,12 @@ namespace TwinsaityEditor
                                             if (TargetModel != 65535)
                                             {
                                                 SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(2);
-                                                foreach (Model model in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
+                                                foreach (RigidModel model in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
                                                 {
                                                     if (model.ID == TargetModel)
                                                     {
-                                                        uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<Model>(TargetModel).MeshID;
-                                                        modelCont = mesh_sec.GetItem<MeshController>(meshID);
+                                                        uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(TargetModel).MeshID;
+                                                        modelCont = mesh_sec.GetItem<ModelController>(meshID);
                                                         HasMesh = true;
                                                     }
                                                 }

@@ -33,7 +33,6 @@
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.button1 = new System.Windows.Forms.Button();
             this.SaveAsButton = new System.Windows.Forms.Button();
             this.RM2ViewerButton = new System.Windows.Forms.Button();
             this.SaveButtonMain = new System.Windows.Forms.Button();
@@ -98,7 +97,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.textBox1);
-            this.splitContainer1.Size = new System.Drawing.Size(771, 513);
+            this.splitContainer1.Size = new System.Drawing.Size(771, 471);
             this.splitContainer1.SplitterDistance = 312;
             this.splitContainer1.TabIndex = 1;
             this.splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer1_SplitterMoved);
@@ -109,7 +108,7 @@
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(312, 513);
+            this.treeView1.Size = new System.Drawing.Size(312, 471);
             this.treeView1.TabIndex = 0;
             // 
             // textBox1
@@ -120,14 +119,13 @@
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(455, 513);
+            this.textBox1.Size = new System.Drawing.Size(455, 471);
             this.textBox1.TabIndex = 0;
             // 
             // panel2
             // 
             this.panel2.AutoScroll = true;
             this.panel2.BackColor = System.Drawing.Color.Silver;
-            this.panel2.Controls.Add(this.button1);
             this.panel2.Controls.Add(this.SaveAsButton);
             this.panel2.Controls.Add(this.RM2ViewerButton);
             this.panel2.Controls.Add(this.SaveButtonMain);
@@ -143,21 +141,6 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(126, 9999);
             this.panel2.TabIndex = 1;
-            // 
-            // button1
-            // 
-            this.button1.BackColor = System.Drawing.Color.Silver;
-            this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button1.FlatAppearance.BorderSize = 0;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Font = new System.Drawing.Font("Twelve Ton Goldfish", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(7, 184);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(112, 38);
-            this.button1.TabIndex = 9;
-            this.button1.Text = "SM Viewer";
-            this.button1.UseVisualStyleBackColor = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // SaveAsButton
             // 
@@ -185,7 +168,7 @@
             this.RM2ViewerButton.Name = "RM2ViewerButton";
             this.RM2ViewerButton.Size = new System.Drawing.Size(112, 38);
             this.RM2ViewerButton.TabIndex = 2;
-            this.RM2ViewerButton.Text = "RM Viewer";
+            this.RM2ViewerButton.Text = "Viewer";
             this.RM2ViewerButton.UseVisualStyleBackColor = false;
             this.RM2ViewerButton.Click += new System.EventHandler(this.button3_Click);
             // 
@@ -226,7 +209,7 @@
             this.AboutButton.FlatAppearance.BorderSize = 0;
             this.AboutButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.AboutButton.Font = new System.Drawing.Font("Twelve Ton Goldfish", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AboutButton.Location = new System.Drawing.Point(7, 404);
+            this.AboutButton.Location = new System.Drawing.Point(7, 360);
             this.AboutButton.Name = "AboutButton";
             this.AboutButton.Size = new System.Drawing.Size(112, 38);
             this.AboutButton.TabIndex = 7;
@@ -241,7 +224,7 @@
             this.EXEPatcherButton.FlatAppearance.BorderSize = 0;
             this.EXEPatcherButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.EXEPatcherButton.Font = new System.Drawing.Font("Twelve Ton Goldfish", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EXEPatcherButton.Location = new System.Drawing.Point(7, 360);
+            this.EXEPatcherButton.Location = new System.Drawing.Point(7, 316);
             this.EXEPatcherButton.Name = "EXEPatcherButton";
             this.EXEPatcherButton.Size = new System.Drawing.Size(112, 38);
             this.EXEPatcherButton.TabIndex = 6;
@@ -256,7 +239,7 @@
             this.ImageMakerButton.FlatAppearance.BorderSize = 0;
             this.ImageMakerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ImageMakerButton.Font = new System.Drawing.Font("Twelve Ton Goldfish", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ImageMakerButton.Location = new System.Drawing.Point(7, 272);
+            this.ImageMakerButton.Location = new System.Drawing.Point(7, 228);
             this.ImageMakerButton.Name = "ImageMakerButton";
             this.ImageMakerButton.Size = new System.Drawing.Size(112, 38);
             this.ImageMakerButton.TabIndex = 5;
@@ -271,7 +254,7 @@
             this.BDBHButton.FlatAppearance.BorderSize = 0;
             this.BDBHButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.BDBHButton.Font = new System.Drawing.Font("Twelve Ton Goldfish", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BDBHButton.Location = new System.Drawing.Point(7, 228);
+            this.BDBHButton.Location = new System.Drawing.Point(7, 184);
             this.BDBHButton.Name = "BDBHButton";
             this.BDBHButton.Size = new System.Drawing.Size(112, 38);
             this.BDBHButton.TabIndex = 4;
@@ -286,7 +269,7 @@
             this.MHMBToolButton.FlatAppearance.BorderSize = 0;
             this.MHMBToolButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.MHMBToolButton.Font = new System.Drawing.Font("Twelve Ton Goldfish", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MHMBToolButton.Location = new System.Drawing.Point(7, 316);
+            this.MHMBToolButton.Location = new System.Drawing.Point(7, 272);
             this.MHMBToolButton.Name = "MHMBToolButton";
             this.MHMBToolButton.Size = new System.Drawing.Size(112, 38);
             this.MHMBToolButton.TabIndex = 3;
@@ -486,7 +469,7 @@
             this.thisIsFillerToFixLayoutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(124, 513);
+            this.menuStrip1.Size = new System.Drawing.Size(124, 471);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             this.menuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStrip1_ItemClicked);
@@ -573,14 +556,14 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.ClientSize = new System.Drawing.Size(895, 513);
+            this.ClientSize = new System.Drawing.Size(895, 471);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
-            this.MinimumSize = new System.Drawing.Size(126, 550);
+            this.MinimumSize = new System.Drawing.Size(126, 510);
             this.Name = "MainForm";
             this.Text = "Twinsaity Editor";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
@@ -643,7 +626,6 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.ToolStripMenuItem thisIsFillerToFixLayoutToolStripMenuItem;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button SaveAsButton;
     }
 }
