@@ -7,36 +7,20 @@ namespace Twinsanity
     public sealed class SceneryData : TwinsItem
     {
 
-        //Unfinished after lights
-
-        public ushort HeaderUnk1;
-        public ushort HeaderVersion;
+        public uint HeaderUnk1;
         public string ChunkName;
         public uint HeaderUnk2;
         public uint HeaderUnk3;
         public byte HeaderUnk4;
         public byte[] HeaderBuffer;
         public uint SkydomeID;
-        public uint[] HeaderUnkVars;
-        public List<byte> HeaderAfter;
-        public List<SceneryStruct> sceneryModels;
-        public List<UnkStruct1> unkStructs;
-        public List<UnkStruct2> unkTables;
-
-        public uint LightsNum;
-        public uint LightAmbientNum;
-        public uint LightDirectionalNum;
-        public uint LightPointNum;
-        public uint LightNegativeNum;
+        public SceneryStruct SceneryRoot;
         public List<LightAmbient> LightsAmbient;
         public List<LightDirectional> LightsDirectional;
         public List<LightPoint> LightsPoint;
         public List<LightNegative> LightsNegative;
 
         public uint unkVar5;
-
-        public byte[] Remain;
-        public int DataSize;
 
         public SceneryData()
         {
@@ -45,448 +29,563 @@ namespace Twinsanity
 
         protected override int GetSize()
         {
-            int count = 2 + 2 + 4 + ChunkName.Length + 4 + 4 + 1 + 4;
-            count += 4 * HeaderUnkVars.Length;
-            count += HeaderBuffer.Length;
-            count += 4 + 4 + 4 + 4 + 4;
 
-            if (LightsAmbient.Count > 0)
+            int count = 4 + 4 + ChunkName.Length + 4 + 4 + 1;
+            if ((HeaderUnk1 & 0x10000) != 0)
             {
-                count += LightsAmbient.Count * (4 + 4 + 4 + 4 + 4 + 4 + 16 + 32);
-            }
-            if (LightsDirectional.Count > 0)
-            {
-                count += LightsDirectional.Count * (4 + 4 + 4 + 4 + 4 + 4 + 16 + 48 + 2);
-            }
-            if (LightsPoint.Count > 0)
-            {
-                count += LightsPoint.Count * (4 + 4 + 4 + 4 + 4 + 4 + 16 + 32 + 2);
-            }
-            if (LightsNegative.Count > 0)
-            {
-                count += LightsNegative.Count * (4 + 4 + 4 + 4 + 4 + 4 + 16 + 48 + 20);
+                count += 4;
             }
 
-            count += Remain.Length;
+            if ((HeaderUnk1 & 0x20000) != 0)
+            {
+                count += HeaderBuffer.Length;
+                count += 4 + 4 + 4 + 4 + 4;
+                if (LightsAmbient.Count > 0)
+                {
+                    count += LightsAmbient.Count * (4 + 4 + 4 + 4 + 4 + 4 + 16 + 32);
+                }
+                if (LightsDirectional.Count > 0)
+                {
+                    count += LightsDirectional.Count * (4 + 4 + 4 + 4 + 4 + 4 + 16 + 32 + 16 + 2);
+                }
+                if (LightsPoint.Count > 0)
+                {
+                    count += LightsPoint.Count * (4 + 4 + 4 + 4 + 4 + 4 + 16 + 32 + 2);
+                }
+                if (LightsNegative.Count > 0)
+                {
+                    count += LightsNegative.Count * (4 + 4 + 4 + 4 + 4 + 4 + 16 + 32 + 16 + 4 + 4 + 4 + 4 + 2 + 2);
+                }
+            }
+
+            if (HeaderUnk3 == 0x160A)
+            {
+                count += 4;
+                CountScenery(SceneryRoot, ref count);
+            }
+
             return count;
+        }
+
+        private void CountScenery(SceneryStruct ptr, ref int count)
+        {
+            CountSceneryModel(ptr.Model, ref count);
+            for (int i = 0; i < ptr.Links.Length; i++)
+            {
+                count += 4;
+            }
+            for (int i = 0; i < ptr.Links.Length; i++)
+            {
+                if (ptr.Links[i] is SceneryModelStruct)
+                {
+                    CountSceneryModel((SceneryModelStruct)ptr.Links[i], ref count);
+                }
+                else if (ptr.Links[i] is SceneryStruct)
+                {
+                    CountScenery((SceneryStruct)ptr.Links[i], ref count);
+                }
+            }
+        }
+
+        private void CountSceneryModel(SceneryModelStruct ptr, ref int count)
+        {
+            count += 4;
+            if (ptr.Header == 0x1613)
+            {
+                count += 4;
+                if (ptr.Models.Count != 0)
+                {
+                    for (int i = 0; i < ptr.Models.Count; i++)
+                    {
+                        count += 32;
+                        count += 4;
+                        count += 16 * ptr.Models[i].ModelMatrix.Length;
+                    }
+                }
+            }
+            count += ptr.UnkPos.Length * 16;
         }
 
         public override void Save(BinaryWriter writer)
         {
-
             writer.Write(HeaderUnk1);
-            writer.Write(HeaderVersion);
             writer.Write((uint)ChunkName.Length);
             writer.Write(ChunkName.ToCharArray());
             writer.Write(HeaderUnk2);
             writer.Write(HeaderUnk3);
             writer.Write(HeaderUnk4);
-            writer.Write(SkydomeID);
-            for (int i = 0; i < HeaderUnkVars.Length; i++)
+            if ((HeaderUnk1 & 0x10000) != 0)
             {
-                writer.Write(HeaderUnkVars[i]);
+                writer.Write(SkydomeID);
             }
-            writer.Write(HeaderBuffer);
 
-            LightAmbientNum = (uint)LightsAmbient.Count;
-            LightDirectionalNum = (uint)LightsDirectional.Count;
-            LightPointNum = (uint)LightsPoint.Count;
-            LightNegativeNum = (uint)LightsNegative.Count;
-            LightsNum = LightAmbientNum + LightDirectionalNum + LightPointNum + LightNegativeNum;
-
-            writer.Write(LightsNum);
-            writer.Write(LightAmbientNum);
-            writer.Write(LightDirectionalNum);
-            writer.Write(LightPointNum);
-            writer.Write(LightNegativeNum);
-
-            if (LightAmbientNum > 0)
+            if ((HeaderUnk1 & 0x20000) != 0)
             {
-                for (int i = 0; i < LightAmbientNum; i++)
+                writer.Write(HeaderBuffer);
+
+                uint LightAmbientNum = (uint)LightsAmbient.Count;
+                uint LightDirectionalNum = (uint)LightsDirectional.Count;
+                uint LightPointNum = (uint)LightsPoint.Count;
+                uint LightNegativeNum = (uint)LightsNegative.Count;
+                uint LightsNum = LightAmbientNum + LightDirectionalNum + LightPointNum + LightNegativeNum;
+
+                writer.Write(LightsNum);
+                writer.Write(LightAmbientNum);
+                writer.Write(LightDirectionalNum);
+                writer.Write(LightPointNum);
+                writer.Write(LightNegativeNum);
+
+                if (LightAmbientNum > 0)
                 {
-                    writer.Write(LightsAmbient[i].Flags);
-                    writer.Write(LightsAmbient[i].Radius);
-                    writer.Write(LightsAmbient[i].Color_R);
-                    writer.Write(LightsAmbient[i].Color_G);
-                    writer.Write(LightsAmbient[i].Color_B);
-                    writer.Write(LightsAmbient[i].UnkFloat);
-                    writer.Write(LightsAmbient[i].Position.X); writer.Write(LightsAmbient[i].Position.Y); writer.Write(LightsAmbient[i].Position.Z); writer.Write(LightsAmbient[i].Position.W);
-                    for (int v = 0; v < LightsAmbient[i].Vectors.Length; v++)
+                    for (int i = 0; i < LightAmbientNum; i++)
                     {
-                        writer.Write(LightsAmbient[i].Vectors[v].X);
-                        writer.Write(LightsAmbient[i].Vectors[v].Y);
-                        writer.Write(LightsAmbient[i].Vectors[v].Z);
-                        writer.Write(LightsAmbient[i].Vectors[v].W);
+                        writer.Write(LightsAmbient[i].Flags);
+                        writer.Write(LightsAmbient[i].Radius);
+                        writer.Write(LightsAmbient[i].Color_R);
+                        writer.Write(LightsAmbient[i].Color_G);
+                        writer.Write(LightsAmbient[i].Color_B);
+                        writer.Write(LightsAmbient[i].Color_Unk);
+                        writer.Write(LightsAmbient[i].Position.X); writer.Write(LightsAmbient[i].Position.Y); writer.Write(LightsAmbient[i].Position.Z); writer.Write(LightsAmbient[i].Position.W);
+                        writer.Write(LightsAmbient[i].Vector1.X);
+                        writer.Write(LightsAmbient[i].Vector1.Y);
+                        writer.Write(LightsAmbient[i].Vector1.Z);
+                        writer.Write(LightsAmbient[i].Vector1.W);
+                        writer.Write(LightsAmbient[i].Vector2.X);
+                        writer.Write(LightsAmbient[i].Vector2.Y);
+                        writer.Write(LightsAmbient[i].Vector2.Z);
+                        writer.Write(LightsAmbient[i].Vector2.W);
+                    }
+                }
+                if (LightDirectionalNum > 0)
+                {
+                    for (int i = 0; i < LightDirectionalNum; i++)
+                    {
+                        writer.Write(LightsDirectional[i].Flags);
+                        writer.Write(LightsDirectional[i].Radius);
+                        writer.Write(LightsDirectional[i].Color_R);
+                        writer.Write(LightsDirectional[i].Color_G);
+                        writer.Write(LightsDirectional[i].Color_B);
+                        writer.Write(LightsDirectional[i].Color_Unk);
+                        writer.Write(LightsDirectional[i].Position.X); writer.Write(LightsDirectional[i].Position.Y); writer.Write(LightsDirectional[i].Position.Z); writer.Write(LightsDirectional[i].Position.W);
+                        writer.Write(LightsDirectional[i].Vector1.X);
+                        writer.Write(LightsDirectional[i].Vector1.Y);
+                        writer.Write(LightsDirectional[i].Vector1.Z);
+                        writer.Write(LightsDirectional[i].Vector1.W);
+                        writer.Write(LightsDirectional[i].Vector2.X);
+                        writer.Write(LightsDirectional[i].Vector2.Y);
+                        writer.Write(LightsDirectional[i].Vector2.Z);
+                        writer.Write(LightsDirectional[i].Vector2.W);
+                        writer.Write(LightsDirectional[i].Vector3.X);
+                        writer.Write(LightsDirectional[i].Vector3.Y);
+                        writer.Write(LightsDirectional[i].Vector3.Z);
+                        writer.Write(LightsDirectional[i].Vector3.W);
+                        writer.Write(LightsDirectional[i].unkShort);
+                    }
+                }
+                if (LightPointNum > 0)
+                {
+                    for (int i = 0; i < LightPointNum; i++)
+                    {
+                        writer.Write(LightsPoint[i].Flags);
+                        writer.Write(LightsPoint[i].Radius);
+                        writer.Write(LightsPoint[i].Color_R);
+                        writer.Write(LightsPoint[i].Color_G);
+                        writer.Write(LightsPoint[i].Color_B);
+                        writer.Write(LightsPoint[i].Color_Unk);
+                        writer.Write(LightsPoint[i].Position.X); writer.Write(LightsPoint[i].Position.Y); writer.Write(LightsPoint[i].Position.Z); writer.Write(LightsPoint[i].Position.W);
+                        writer.Write(LightsPoint[i].Vector1.X);
+                        writer.Write(LightsPoint[i].Vector1.Y);
+                        writer.Write(LightsPoint[i].Vector1.Z);
+                        writer.Write(LightsPoint[i].Vector1.W);
+                        writer.Write(LightsPoint[i].Vector2.X);
+                        writer.Write(LightsPoint[i].Vector2.Y);
+                        writer.Write(LightsPoint[i].Vector2.Z);
+                        writer.Write(LightsPoint[i].Vector2.W);
+                        writer.Write(LightsPoint[i].unkShort);
+                    }
+                }
+                if (LightNegativeNum > 0)
+                {
+                    for (int i = 0; i < LightNegativeNum; i++)
+                    {
+                        writer.Write(LightsNegative[i].Flags);
+                        writer.Write(LightsNegative[i].Radius);
+                        writer.Write(LightsNegative[i].Color_R);
+                        writer.Write(LightsNegative[i].Color_G);
+                        writer.Write(LightsNegative[i].Color_B);
+                        writer.Write(LightsNegative[i].Color_Unk);
+                        writer.Write(LightsNegative[i].Position.X); writer.Write(LightsNegative[i].Position.Y); writer.Write(LightsNegative[i].Position.Z); writer.Write(LightsNegative[i].Position.W);
+                        writer.Write(LightsNegative[i].Vector1.X);
+                        writer.Write(LightsNegative[i].Vector1.Y);
+                        writer.Write(LightsNegative[i].Vector1.Z);
+                        writer.Write(LightsNegative[i].Vector1.W);
+                        writer.Write(LightsNegative[i].Vector2.X);
+                        writer.Write(LightsNegative[i].Vector2.Y);
+                        writer.Write(LightsNegative[i].Vector2.Z);
+                        writer.Write(LightsNegative[i].Vector2.W);
+                        writer.Write(LightsNegative[i].Vector3.X);
+                        writer.Write(LightsNegative[i].Vector3.Y);
+                        writer.Write(LightsNegative[i].Vector3.Z);
+                        writer.Write(LightsNegative[i].Vector3.W);
+                        writer.Write(LightsNegative[i].unkFloat1);
+                        writer.Write(LightsNegative[i].unkFloat2);
+                        writer.Write(LightsNegative[i].unkUInt1);
+                        writer.Write(LightsNegative[i].unkUInt2);
+                        writer.Write(LightsNegative[i].unkUShort1);
+                        writer.Write(LightsNegative[i].unkUShort2);
                     }
                 }
             }
-            if (LightDirectionalNum > 0)
-            {
-                for (int i = 0; i < LightDirectionalNum; i++)
-                {
-                    writer.Write(LightsDirectional[i].Flags);
-                    writer.Write(LightsDirectional[i].Radius);
-                    writer.Write(LightsDirectional[i].Color_R);
-                    writer.Write(LightsDirectional[i].Color_G);
-                    writer.Write(LightsDirectional[i].Color_B);
-                    writer.Write(LightsDirectional[i].UnkFloat);
-                    writer.Write(LightsDirectional[i].Position.X); writer.Write(LightsDirectional[i].Position.Y); writer.Write(LightsDirectional[i].Position.Z); writer.Write(LightsDirectional[i].Position.W);
-                    for (int v = 0; v < LightsDirectional[i].Vectors.Length; v++)
-                    {
-                        writer.Write(LightsDirectional[i].Vectors[v].X);
-                        writer.Write(LightsDirectional[i].Vectors[v].Y);
-                        writer.Write(LightsDirectional[i].Vectors[v].Z);
-                        writer.Write(LightsDirectional[i].Vectors[v].W);
-                    }
-                    writer.Write(LightsDirectional[i].Flags2);
-                }
-            }
-            if (LightPointNum > 0)
-            {
-                for (int i = 0; i < LightPointNum; i++)
-                {
-                    writer.Write(LightsPoint[i].Flags);
-                    writer.Write(LightsPoint[i].Radius);
-                    writer.Write(LightsPoint[i].Color_R);
-                    writer.Write(LightsPoint[i].Color_G);
-                    writer.Write(LightsPoint[i].Color_B);
-                    writer.Write(LightsPoint[i].UnkFloat);
-                    writer.Write(LightsPoint[i].Position.X); writer.Write(LightsPoint[i].Position.Y); writer.Write(LightsPoint[i].Position.Z); writer.Write(LightsPoint[i].Position.W);
-                    for (int v = 0; v < LightsPoint[i].Vectors.Length; v++)
-                    {
-                        writer.Write(LightsPoint[i].Vectors[v].X);
-                        writer.Write(LightsPoint[i].Vectors[v].Y);
-                        writer.Write(LightsPoint[i].Vectors[v].Z);
-                        writer.Write(LightsPoint[i].Vectors[v].W);
-                    }
-                    writer.Write(LightsPoint[i].Flags2);
-                }
-            }
-            if (LightNegativeNum > 0)
-            {
-                for (int i = 0; i < LightNegativeNum; i++)
-                {
-                    writer.Write(LightsNegative[i].Flags);
-                    writer.Write(LightsNegative[i].Radius);
-                    writer.Write(LightsNegative[i].Color_R);
-                    writer.Write(LightsNegative[i].Color_G);
-                    writer.Write(LightsNegative[i].Color_B);
-                    writer.Write(LightsNegative[i].UnkFloat);
-                    writer.Write(LightsNegative[i].Position.X); writer.Write(LightsNegative[i].Position.Y); writer.Write(LightsNegative[i].Position.Z); writer.Write(LightsNegative[i].Position.W);
-                    for (int v = 0; v < LightsNegative[i].Vectors.Length; v++)
-                    {
-                        writer.Write(LightsNegative[i].Vectors[v].X);
-                        writer.Write(LightsNegative[i].Vectors[v].Y);
-                        writer.Write(LightsNegative[i].Vectors[v].Z);
-                        writer.Write(LightsNegative[i].Vectors[v].W);
-                    }
-                    for (int v = 0; v < LightsNegative[i].Floats.Length; v++)
-                    {
-                        writer.Write(LightsNegative[i].Floats[v]);
-                    }
-                }
-            }
 
-            writer.Write(Remain);
+            if (HeaderUnk3 == 0x160A)
+            {
+                writer.Write(unkVar5);
+                SaveScenery(SceneryRoot, writer);
+            }
 
         }
 
         public override void Load(BinaryReader reader, int size)
         {
-            long start_pos = reader.BaseStream.Position;
+            //long start_pos = reader.BaseStream.Position;
 
-            HeaderUnk1 = reader.ReadUInt16();
-            HeaderVersion = reader.ReadUInt16();
+            HeaderUnk1 = reader.ReadUInt32();
             uint chunkNameLength = reader.ReadUInt32();
             ChunkName = new string(reader.ReadChars((int)chunkNameLength));
             HeaderUnk2 = reader.ReadUInt32();
             HeaderUnk3 = reader.ReadUInt32();
             HeaderUnk4 = reader.ReadByte();
-            SkydomeID = reader.ReadUInt32();
-
-            HeaderUnkVars = new uint[6];
-            for (int i = 0; i < HeaderUnkVars.Length; i++)
+            if ((HeaderUnk1 & 0x10000) != 0)
             {
-                HeaderUnkVars[i] = reader.ReadUInt32();
+                SkydomeID = reader.ReadUInt32();
             }
-
-            //filled with 0xCD, but has numbers at the start sometimes (a list of some kind with a fixed limit?)
-            if (HeaderVersion == 2)
-            {
-                HeaderBuffer = reader.ReadBytes(0x3E4);
-            }
-            else
-            {
-                HeaderBuffer = reader.ReadBytes(0x3E8);
-            }
-
-            LightsNum = reader.ReadUInt32();
-
-            LightAmbientNum = reader.ReadUInt32();
-            LightDirectionalNum = reader.ReadUInt32();
-            LightPointNum = reader.ReadUInt32();
-            LightNegativeNum = reader.ReadUInt32();
 
             LightsAmbient = new List<LightAmbient>();
             LightsDirectional = new List<LightDirectional>();
             LightsPoint = new List<LightPoint>();
             LightsNegative = new List<LightNegative>();
 
-            if (LightAmbientNum > 0)
+            if ((HeaderUnk1 & 0x20000) != 0)
             {
-                for (int i = 0; i < LightAmbientNum; i++)
+                HeaderBuffer = reader.ReadBytes(0x400);
+
+                uint LightsNum = reader.ReadUInt32();
+
+                uint LightAmbientNum = reader.ReadUInt32();
+                uint LightDirectionalNum = reader.ReadUInt32();
+                uint LightPointNum = reader.ReadUInt32();
+                uint LightNegativeNum = reader.ReadUInt32();
+
+                if (LightAmbientNum > 0)
                 {
-                    LightAmbient light = new LightAmbient();
+                    for (int i = 0; i < LightAmbientNum; i++)
+                    {
+                        LightAmbient light = new LightAmbient();
 
-                    light.Flags = reader.ReadBytes(4);
-                    light.Radius = reader.ReadSingle();
-                    light.Color_R = reader.ReadSingle();
-                    light.Color_G = reader.ReadSingle();
-                    light.Color_B = reader.ReadSingle();
-                    light.UnkFloat = reader.ReadSingle();
-                    light.Position = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    light.Vectors = new Pos[2];
-                    light.Vectors[0] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    light.Vectors[1] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                        light.Flags = reader.ReadBytes(4);
+                        light.Radius = reader.ReadSingle();
+                        light.Color_R = reader.ReadSingle();
+                        light.Color_G = reader.ReadSingle();
+                        light.Color_B = reader.ReadSingle();
+                        light.Color_Unk = reader.ReadSingle();
+                        light.Position = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                        light.Vector1 = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                        light.Vector2 = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
 
-                    LightsAmbient.Add(light);
+                        LightsAmbient.Add(light);
+                    }
+                }
+                if (LightDirectionalNum > 0)
+                {
+                    for (int i = 0; i < LightDirectionalNum; i++)
+                    {
+                        LightDirectional light = new LightDirectional();
+
+                        light.Flags = reader.ReadBytes(4);
+                        light.Radius = reader.ReadSingle();
+                        light.Color_R = reader.ReadSingle();
+                        light.Color_G = reader.ReadSingle();
+                        light.Color_B = reader.ReadSingle();
+                        light.Color_Unk = reader.ReadSingle();
+                        light.Position = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                        light.Vector1 = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                        light.Vector2 = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+
+                        light.Vector3 = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                        light.unkShort = reader.ReadUInt16();
+
+                        LightsDirectional.Add(light);
+                    }
+                }
+                if (LightPointNum > 0)
+                {
+                    for (int i = 0; i < LightPointNum; i++)
+                    {
+                        LightPoint light = new LightPoint();
+
+                        light.Flags = reader.ReadBytes(4);
+                        light.Radius = reader.ReadSingle();
+                        light.Color_R = reader.ReadSingle();
+                        light.Color_G = reader.ReadSingle();
+                        light.Color_B = reader.ReadSingle();
+                        light.Color_Unk = reader.ReadSingle();
+                        light.Position = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                        light.Vector1 = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                        light.Vector2 = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+
+                        light.unkShort = reader.ReadUInt16();
+
+                        LightsPoint.Add(light);
+                    }
+                }
+                if (LightNegativeNum > 0)
+                {
+                    for (int i = 0; i < LightNegativeNum; i++)
+                    {
+                        LightNegative light = new LightNegative();
+
+                        light.Flags = reader.ReadBytes(4);
+                        light.Radius = reader.ReadSingle();
+                        light.Color_R = reader.ReadSingle();
+                        light.Color_G = reader.ReadSingle();
+                        light.Color_B = reader.ReadSingle();
+                        light.Color_Unk = reader.ReadSingle();
+                        light.Position = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                        light.Vector1 = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                        light.Vector2 = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+
+                        light.Vector3 = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                        light.unkFloat1 = reader.ReadSingle();
+                        light.unkFloat2 = reader.ReadSingle();
+                        light.unkUInt1 = reader.ReadUInt32();
+                        light.unkUInt2 = reader.ReadUInt32();
+                        light.unkUShort1 = reader.ReadUInt16();
+                        light.unkUShort2 = reader.ReadUInt16();
+
+                        LightsNegative.Add(light);
+                    }
                 }
             }
-            if (LightDirectionalNum > 0)
+
+            SceneryRoot = null;
+            if (HeaderUnk3 == 0x160A)
             {
-                for (int i = 0; i < LightDirectionalNum; i++)
-                {
-                    LightDirectional light = new LightDirectional();
-
-                    light.Flags = reader.ReadBytes(4);
-                    light.Radius = reader.ReadSingle();
-                    light.Color_R = reader.ReadSingle();
-                    light.Color_G = reader.ReadSingle();
-                    light.Color_B = reader.ReadSingle();
-                    light.UnkFloat = reader.ReadSingle();
-                    light.Position = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    light.Vectors = new Pos[3];
-                    light.Vectors[0] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    light.Vectors[1] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    light.Vectors[2] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    light.Flags2 = reader.ReadBytes(2);
-
-                    LightsDirectional.Add(light);
-                }
+                unkVar5 = reader.ReadUInt32();
+                SceneryRoot = LoadScenery(reader);
             }
-            if (LightPointNum > 0)
+            else
             {
-                for (int i = 0; i < LightPointNum; i++)
-                {
-                    LightPoint light = new LightPoint();
-
-                    light.Flags = reader.ReadBytes(4);
-                    light.Radius = reader.ReadSingle();
-                    light.Color_R = reader.ReadSingle();
-                    light.Color_G = reader.ReadSingle();
-                    light.Color_B = reader.ReadSingle();
-                    light.UnkFloat = reader.ReadSingle();
-                    light.Position = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    light.Vectors = new Pos[2];
-                    light.Vectors[0] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    light.Vectors[1] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    light.Flags2 = reader.ReadBytes(2);
-
-                    LightsPoint.Add(light);
-                }
-            }
-            if (LightNegativeNum > 0)
-            {
-                for (int i = 0; i < LightNegativeNum; i++)
-                {
-                    LightNegative light = new LightNegative();
-
-                    light.Flags = reader.ReadBytes(4);
-                    light.Radius = reader.ReadSingle();
-                    light.Color_R = reader.ReadSingle();
-                    light.Color_G = reader.ReadSingle();
-                    light.Color_B = reader.ReadSingle();
-                    light.UnkFloat = reader.ReadSingle();
-                    light.Position = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    light.Vectors = new Pos[3];
-                    light.Vectors[0] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    light.Vectors[1] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    light.Vectors[2] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    light.Floats = new float[5];
-                    light.Floats[0] = reader.ReadSingle();
-                    light.Floats[1] = reader.ReadSingle();
-                    light.Floats[2] = reader.ReadSingle();
-                    light.Floats[3] = reader.ReadSingle();
-                    light.Floats[4] = reader.ReadSingle();
-
-                    LightsNegative.Add(light);
-                }
+                //Console.WriteLine("no scenery!! bug?");
             }
 
-            // Unfinished at this point
-            long cur_pos = reader.BaseStream.Position;
-            Remain = reader.ReadBytes((int)((start_pos + size) - cur_pos));
-            reader.BaseStream.Position = cur_pos;
+            //reader.BaseStream.Position = start_pos;
+            //Data = reader.ReadBytes(size);
 
-            unkVar5 = reader.ReadUInt32();
+            //long cur_pos = reader.BaseStream.Position;
+            //Remain = reader.ReadBytes((int)((start_pos + size) - cur_pos));
+            //reader.BaseStream.Position = cur_pos;
 
+            //Console.WriteLine("end pos: " + (reader.BaseStream.Position - start_pos) + " target: " + size);
+        }
 
-            uint AftHeader = 0;
-            sceneryModels = new List<SceneryStruct>();
-            unkStructs = new List<UnkStruct1>();
-            unkTables = new List<UnkStruct2>();
-
-            int cur_mod = 0;
-            int off = 0;
-
-            while (reader.BaseStream.Position < start_pos + size)
+        private SceneryModelStruct LoadSceneryModel(BinaryReader reader)
+        {
+            SceneryModelStruct scenery = new SceneryModelStruct();
+            scenery.Header = reader.ReadUInt32();
+            scenery.Models = new List<ScenerySubModel>();
+            if (scenery.Header == 0x1613)
             {
-                AftHeader = reader.ReadUInt32();
-                if (reader.BaseStream.Position > start_pos + size)
-                {
-                    break;
-                }
-                if (AftHeader == 0x00001613)
-                {
-                    //Console.WriteLine("found model " + sceneryModels.Count);
-                    cur_mod++;
-                    off = 0;
-                    SceneryStruct newStruct = new SceneryStruct();
-                    ushort modelCount = reader.ReadUInt16();
-                    ushort specialModelCount = reader.ReadUInt16();
-                    newStruct.Header = AftHeader;
-                    newStruct.Models = new List<SceneryModel>();
+                ushort modelCount = reader.ReadUInt16();
+                ushort specialModelCount = reader.ReadUInt16();
 
+                if (modelCount + specialModelCount != 0)
+                {
                     for (int i = 0; i < modelCount + specialModelCount; i++)
                     {
-                        SceneryModel newModel = new SceneryModel();
+                        ScenerySubModel newModel = new ScenerySubModel();
                         newModel.ModelMatrix = new Pos[4];
                         newModel.ModelBoundingBoxVector1 = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                         newModel.ModelBoundingBoxVector2 = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                        newStruct.Models.Add(newModel);
+                        scenery.Models.Add(newModel);
                     }
                     for (int i = 0; i < modelCount + specialModelCount; i++)
                     {
                         if (i > modelCount - 1)
                         {
-                            newStruct.Models[i].ModelID = reader.ReadUInt32();
-                            newStruct.Models[i].isSpecial = true;
+                            scenery.Models[i].ModelID = reader.ReadUInt32();
+                            scenery.Models[i].isSpecial = true;
                         }
                         else
                         {
-                            newStruct.Models[i].ModelID = reader.ReadUInt32();
-                            newStruct.Models[i].isSpecial = false;
+                            scenery.Models[i].ModelID = reader.ReadUInt32();
+                            scenery.Models[i].isSpecial = false;
                         }
                     }
                     for (int i = 0; i < modelCount + specialModelCount; i++)
                     {
-                        newStruct.Models[i].ModelMatrix[0] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                        newStruct.Models[i].ModelMatrix[1] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                        newStruct.Models[i].ModelMatrix[2] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                        newStruct.Models[i].ModelMatrix[3] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                        scenery.Models[i].ModelMatrix[0] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                        scenery.Models[i].ModelMatrix[1] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                        scenery.Models[i].ModelMatrix[2] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                        scenery.Models[i].ModelMatrix[3] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                     }
-
-                    newStruct.UnkStruct = new UnkStruct0();
-                    newStruct.UnkStruct.UnkPos = new Pos[5];
-                    newStruct.UnkStruct.UnkPos[0] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    newStruct.UnkStruct.UnkPos[1] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    newStruct.UnkStruct.UnkPos[2] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    newStruct.UnkStruct.UnkPos[3] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    newStruct.UnkStruct.UnkPos[4] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-
-                    sceneryModels.Add(newStruct);
                 }
-                else
-                {
-                    off += 1;
-                }
-                /*
-                else if (AftHeader == 0x00000003)
-                {
-                    Console.WriteLine("found struct " + unkStructs.Count);
-                    cur_mod++;
-                    off = 0;
-                    UnkStruct1 newStruct = new UnkStruct1();
-                    newStruct.Header = AftHeader;
-                    newStruct.UnkPos = new Pos[4];
-                    newStruct.UnkPos[0] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    newStruct.UnkPos[1] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    newStruct.UnkPos[2] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    newStruct.UnkPos[3] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    //newStruct.UnkPos[4] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+            }
+            scenery.UnkPos = new Pos[5];
+            scenery.UnkPos[0] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+            scenery.UnkPos[1] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+            scenery.UnkPos[2] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+            scenery.UnkPos[3] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+            scenery.UnkPos[4] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
 
-                    unkStructs.Add(newStruct);
-                }
-                else
-                {
-                    Console.WriteLine("found table " + unkTables.Count);
-                    cur_mod++;
-                    off = 0;
-                    UnkStruct2 newStruct = new UnkStruct2();
-                    newStruct.Header = AftHeader;
+            return scenery;
+        }
 
-                    newStruct.UnkInt = new uint[11];
-                    newStruct.UnkInt[0] = reader.ReadUInt32();
-                    newStruct.UnkInt[1] = reader.ReadUInt32();
-                    newStruct.UnkInt[2] = reader.ReadUInt32();
-                    newStruct.UnkInt[3] = reader.ReadUInt32();
-                    newStruct.UnkInt[4] = reader.ReadUInt32();
-                    newStruct.UnkInt[5] = reader.ReadUInt32();
-                    newStruct.UnkInt[6] = reader.ReadUInt32();
-                    newStruct.UnkInt[7] = reader.ReadUInt32();
-                    newStruct.UnkInt[8] = reader.ReadUInt32();
-                    newStruct.UnkInt[9] = reader.ReadUInt32();
-                    newStruct.UnkInt[10] = reader.ReadUInt32();
+        private SceneryStruct LoadScenery(BinaryReader reader)
+        {
+            SceneryStruct scen = new SceneryStruct();
+            int[] sceneryTypes = new int[8];
 
-                    unkTables.Add(newStruct);
-                }
-                */
+            scen.Model = LoadSceneryModel(reader);
 
+            scen.Links = new object[8];
 
-                /*
-                else
-                {
-                    off += 1;
-                }
-                */
+            for (int i = 0; i < 8; i++)
+            {
+                sceneryTypes[i] = reader.ReadInt32();
             }
 
-            //Console.WriteLine("end pos: " + (reader.BaseStream.Position - start_pos) + " target: " + size);
+            for (int i = 0; i < 8; i++)
+            {
+                if (sceneryTypes[i] == 0x1600)
+                {
+                    scen.Links[i] = LoadScenery(reader);
+                }
+                else if (sceneryTypes[i] == 0x1605)
+                {
+                    scen.Links[i] = LoadSceneryModel(reader);
+                }
+                else
+                {
+                    // if type 3 - it's nothing
+                    scen.Links[i] = null;
+                }
+            }
+
+            //Console.WriteLine($"Adding scenery {sceneryModels.Count}");
+            //sceneryModels.Add(scen);
+            return scen;
+        }
+
+        private void SaveScenery(SceneryStruct ptr, BinaryWriter writer)
+        {
+            SaveSceneryModel(ptr.Model, writer);
+
+            for (int i = 0; i < ptr.Links.Length; i++)
+            {
+                if (ptr.Links[i] is SceneryModelStruct)
+                {
+                    writer.Write(0x1605);
+                }
+                else if (ptr.Links[i] is SceneryStruct)
+                {
+                    writer.Write(0x1600);
+                }
+                else
+                {
+                    writer.Write(3);
+                }
+            }
+
+            for (int i = 0; i < ptr.Links.Length; i++)
+            {
+                if (ptr.Links[i] is SceneryModelStruct)
+                {
+                    SaveSceneryModel((SceneryModelStruct)ptr.Links[i], writer);
+                }
+                else if (ptr.Links[i] is SceneryStruct)
+                {
+                    SaveScenery((SceneryStruct)ptr.Links[i], writer);
+                }
+            }
+
+        }
+
+        private void SaveSceneryModel(SceneryModelStruct ptr, BinaryWriter writer)
+        {
+            writer.Write(ptr.Header);
+
+            if (ptr.Header == 0x1613)
+            {
+
+                short modelCount = 0;
+                for (int i = 0; i < ptr.Models.Count; i++)
+                {
+                    if (ptr.Models[i].isSpecial)
+                    {
+                        break;
+                    }
+                    modelCount++;
+                }
+
+                short specialModelCount = (short)(ptr.Models.Count - modelCount);
+
+                writer.Write(modelCount);
+                writer.Write(specialModelCount);
+
+                if (1 != 0)
+                {
+                    for (int i = 0; i < ptr.Models.Count; i++)
+                    {
+                        writer.Write(ptr.Models[i].ModelBoundingBoxVector1.X);
+                        writer.Write(ptr.Models[i].ModelBoundingBoxVector1.Y);
+                        writer.Write(ptr.Models[i].ModelBoundingBoxVector1.Z);
+                        writer.Write(ptr.Models[i].ModelBoundingBoxVector1.W);
+                        writer.Write(ptr.Models[i].ModelBoundingBoxVector2.X);
+                        writer.Write(ptr.Models[i].ModelBoundingBoxVector2.Y);
+                        writer.Write(ptr.Models[i].ModelBoundingBoxVector2.Z);
+                        writer.Write(ptr.Models[i].ModelBoundingBoxVector2.W);
+                    }
+                    for (int i = 0; i < ptr.Models.Count; i++)
+                    {
+                        writer.Write(ptr.Models[i].ModelID);
+                    }
+                    for (int i = 0; i < ptr.Models.Count; i++)
+                    {
+                        for (int d = 0; d < ptr.Models[i].ModelMatrix.Length; d++)
+                        {
+                            writer.Write(ptr.Models[i].ModelMatrix[d].X);
+                            writer.Write(ptr.Models[i].ModelMatrix[d].Y);
+                            writer.Write(ptr.Models[i].ModelMatrix[d].Z);
+                            writer.Write(ptr.Models[i].ModelMatrix[d].W);
+                        }
+                    }
+                }
+            }
+
+            for (int i = 0; i < ptr.UnkPos.Length; i++)
+            {
+                writer.Write(ptr.UnkPos[i].X);
+                writer.Write(ptr.UnkPos[i].Y);
+                writer.Write(ptr.UnkPos[i].Z);
+                writer.Write(ptr.UnkPos[i].W);
+            }
+
+        }
+
+        public class SceneryModelStruct
+        {
+            public uint Header;
+            public List<ScenerySubModel> Models;
+            public Pos[] UnkPos; //4 
         }
 
         public class SceneryStruct
         {
-            public uint Header;
-            public List<SceneryModel> Models;
-            public byte[] Remain; // The rest of the data per struct
-            public UnkStruct0 UnkStruct;
+            public SceneryModelStruct Model;
+            public object[] Links; //8
         }
 
-        public class UnkStructRoot
-        {
-            public uint[] Zeros; //3
-            public uint UnkID;
-            public Pos[] UnkPos; //4
-            public uint Flag;
-            public uint[] RemainZeros; //3
-        }
-
-        public class UnkStruct0
-        {
-            public Pos[] UnkPos; //4
-        }
-        public class UnkStruct1
-        {
-            public uint Header;
-            public Pos[] UnkPos; //4
-        }
-        public class UnkStruct2
-        {
-            public uint Header;
-            public uint[] UnkInt; //9
-        }
-
-        public class SceneryModel
+        public class ScenerySubModel
         {
             public bool isSpecial;
             public uint ModelID;
@@ -495,58 +594,44 @@ namespace Twinsanity
             public Pos[] ModelMatrix; // 4
         }
 
-        public class LightAmbient
+        public class LightBase
         {
             public byte[] Flags; //4
             public float Radius;
             public float Color_R;
             public float Color_G;
             public float Color_B;
-            public float UnkFloat;
+            public float Color_Unk;
             public Pos Position;
-            public Pos[] Vectors; //2
+            public Pos Vector1;
+            public Pos Vector2;
         }
 
-        public class LightDirectional
+        public class LightAmbient : LightBase
         {
-            public byte[] Flags; //4
-            public float Radius;
-            public float Color_R;
-            public float Color_G;
-            public float Color_B;
-            public float UnkFloat;
-            public Pos Position;
-            public Pos[] Vectors; //3
 
-            public byte[] Flags2; //2
         }
 
-        public class LightPoint
+        public class LightDirectional : LightBase
         {
-            public byte[] Flags; //4
-            public float Radius;
-            public float Color_R;
-            public float Color_G;
-            public float Color_B;
-            public float UnkFloat;
-            public Pos Position;
-            public Pos[] Vectors; //2
-
-            public byte[] Flags2; //2
+            public Pos Vector3;
+            public ushort unkShort;
         }
 
-        public class LightNegative
+        public class LightPoint : LightBase
         {
-            public byte[] Flags; //4
-            public float Radius;
-            public float Color_R;
-            public float Color_G;
-            public float Color_B;
-            public float UnkFloat;
-            public Pos Position;
-            public Pos[] Vectors; //3
+            public ushort unkShort;
+        }
 
-            public float[] Floats; //5
+        public class LightNegative : LightBase
+        {
+            public Pos Vector3;
+            public float unkFloat1;
+            public float unkFloat2;
+            public uint unkUInt1;
+            public uint unkUInt2;
+            public ushort unkUShort1;
+            public ushort unkUShort2;
         }
 
     }

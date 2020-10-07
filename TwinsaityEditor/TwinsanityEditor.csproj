@@ -177,6 +177,9 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Controllers\AIPathController.cs" />
     <Compile Include="Controllers\AnimationController.cs" />
+    <Compile Include="Controllers\InstanceDemoController.cs" />
+    <Compile Include="Controllers\InstanceTemplateDemoController.cs" />
+    <Compile Include="Controllers\ObjectDemoController.cs" />
     <Compile Include="Controllers\SkinController.cs" />
     <Compile Include="Controllers\SkinXController.cs" />
     <Compile Include="Controllers\CameraController.cs" />

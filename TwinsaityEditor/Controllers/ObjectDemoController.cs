@@ -4,11 +4,11 @@ using Twinsanity;
 
 namespace TwinsaityEditor
 {
-    public class ObjectController : ItemController
+    public class ObjectDemoController : ItemController
     {
-        public new GameObject Data { get; set; }
+        public new GameObjectDemo Data { get; set; }
 
-        public ObjectController(MainForm topform, GameObject item) : base (topform, item)
+        public ObjectDemoController(MainForm topform, GameObjectDemo item) : base(topform, item)
         {
             Data = item;
             AddMenu("Open editor", Menu_OpenEditor);
@@ -33,7 +33,7 @@ namespace TwinsaityEditor
             {
                 var slotName = "Reserved";
                 var slotAmt = Data.ScriptSlots[i];
-                switch(i)
+                switch (i)
                 {
                     case 0:
                         {
@@ -116,6 +116,10 @@ namespace TwinsaityEditor
             text.Add($"SoundCount: {Data.Sounds.Count}");
             for (int i = 0; i < Data.Sounds.Count; ++i)
                 text.Add(Data.Sounds[i].ToString());
+
+            text.Add($"Instance Flags Count: {Data.instFlagsList.Count}");
+            text.Add($"Instance Floats Count: {Data.instFloatsList.Count}");
+            text.Add($"Instance Ints Count: {Data.instIntegerList.Count}");
 
             text.Add($"");
             text.Add($"Preload Data");

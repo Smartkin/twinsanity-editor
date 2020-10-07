@@ -324,7 +324,7 @@ namespace Twinsanity
                         LoadItem<GameObject>(reader, sub, Type);
                         break;
                     case SectionType.ObjectDemo: //PS2 DEMO objects
-                        LoadItem<TwinsItem>(reader, sub);
+                        LoadItem<GameObjectDemo>(reader, sub);
                         break;
                     case SectionType.CodeModel:
                         LoadItem<CodeModel>(reader, sub, Type);
@@ -376,7 +376,7 @@ namespace Twinsanity
                         LoadItem<Instance>(reader, sub);
                         break;
                     case SectionType.ObjectInstanceDemo: //PS2 DEMO instances
-                        LoadItem<TwinsItem>(reader, sub);
+                        LoadItem<InstanceDemo>(reader, sub);
                         break;
                     case SectionType.Trigger:
                         LoadItem<Trigger>(reader, sub);
@@ -407,6 +407,9 @@ namespace Twinsanity
                         break;
                     case SectionType.InstanceTemplate:
                         LoadItem<InstanceTemplate>(reader, sub);
+                        break;
+                    case SectionType.InstanceTemplateDemo:
+                        LoadItem<InstanceTemplateDemo>(reader, sub);
                         break;
                     default:
                         LoadItem<TwinsItem>(reader, sub);

@@ -63,11 +63,21 @@ namespace TwinsaityEditor
 
         private void LoadFileInfo()
         {
-            if ((Data.Type == TwinsFile.FileType.RM2 || Data.Type == TwinsFile.FileType.RMX) && Data.ContainsItem(10) && Data.GetItem<TwinsSection>(10).ContainsItem(0))
+            if ((Data.Type == TwinsFile.FileType.RM2 || Data.Type == TwinsFile.FileType.RMX || Data.Type == TwinsFile.FileType.DemoRM2) && Data.ContainsItem(10) && Data.GetItem<TwinsSection>(10).ContainsItem(0))
             {
-                foreach (GameObject obj in Data.GetItem<TwinsSection>(10).GetItem<TwinsSection>(0).Records)
+                if (Data.Type == TwinsFile.FileType.DemoRM2)
                 {
-                    ObjectNames.Add(obj.ID, obj.Name);
+                    foreach (GameObjectDemo obj in Data.GetItem<TwinsSection>(10).GetItem<TwinsSection>(0).Records)
+                    {
+                        ObjectNames.Add(obj.ID, obj.Name);
+                    }
+                }
+                else
+                {
+                    foreach (GameObject obj in Data.GetItem<TwinsSection>(10).GetItem<TwinsSection>(0).Records)
+                    {
+                        ObjectNames.Add(obj.ID, obj.Name);
+                    }
                 }
             }
             uint gfx_id = 11;

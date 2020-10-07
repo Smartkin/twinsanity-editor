@@ -129,6 +129,12 @@ namespace TwinsaityEditor
                 c = new CameraController(this, (Camera)a);
             else if (a is InstanceTemplate)
                 c = new InstaceTemplateController(this, (InstanceTemplate)a);
+            else if (a is InstanceTemplateDemo)
+                c = new InstaceTemplateDemoController(this, (InstanceTemplateDemo)a);
+            else if (a is InstanceDemo)
+                c = new InstanceDemoController(this, (InstanceDemo)a);
+            else if (a is GameObjectDemo)
+                c = new ObjectDemoController(this, (GameObjectDemo)a);
             else
                 c = new ItemController(this, a);
 
@@ -205,7 +211,15 @@ namespace TwinsaityEditor
                             {
                                 file.LoadFile(ofd.FileName, TwinsFile.FileType.DemoRM2);
                                 aux_file = new TwinsFile();
-                                aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".sm2", TwinsFile.FileType.DemoSM2);
+                                try
+                                {
+                                    aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".sm2", TwinsFile.FileType.DemoSM2);
+                                }
+                                catch
+                                {
+                                    // cavern numbers has some issues
+                                    aux_file = null;
+                                }
                             }
                             break;
                         case 7:

@@ -7,13 +7,8 @@ namespace Twinsanity
     public sealed class DynamicSceneryData : TwinsItem
     {
 
-        // Unfinished
-
         public uint Header1;
-        public ushort ModelCount;
-        public DynamicSceneryModel[] Models;
-
-        public int DataSize;
+        public List<DynamicSceneryModel> Models;
 
         public DynamicSceneryData()
         {
@@ -22,7 +17,26 @@ namespace Twinsanity
 
         protected override int GetSize()
         {
-            return DataSize;
+            int count = 4 + 2;
+
+            for (int i = 0; i < Models.Count; i++)
+            {
+                count += 4 + 4;
+                if (Models[i].GI_Types.Count > 0)
+                {
+                    for (int g = 0; g < Models[i].GI_Types.Count; g++)
+                    {
+                        count += 0x16;
+                        count += 4;
+                        count += Models[i].GI_Types[g].unkBlob.Length;
+                    }
+                }
+                count += 4 + 4 + 2 + 4 + 16;
+                count += Models[i].dynBlob.Length;
+                count += 1 + 4 + 32;
+            }
+
+            return count;
         }
 
         /// <summary>
@@ -30,228 +44,127 @@ namespace Twinsanity
         /// </summary>
         public override void Save(BinaryWriter writer)
         {
-            writer.Write(Data);
+            writer.Write(Header1);
+            writer.Write((ushort)Models.Count);
+
+            for (int i = 0; i < Models.Count; i++)
+            {
+                writer.Write(Models[i].UnkInt1);
+                writer.Write(Models[i].GI_Types.Count);
+                for (int g = 0; g < Models[i].GI_Types.Count; g++)
+                {
+                    writer.Write(Models[i].GI_Types[g].Header);
+                    writer.Write(Models[i].GI_Types[g].unkBlob.Length);
+                    writer.Write(Models[i].GI_Types[g].unkBlob);
+                }
+                writer.Write(Models[i].unkInt2);
+                writer.Write(Models[i].unkBlobSizePacked);
+                writer.Write(Models[i].unkBlobSizeHelper);
+                writer.Write(Models[i].BlobHeader);
+                writer.Write(Models[i].WorldPosition.X);
+                writer.Write(Models[i].WorldPosition.Y);
+                writer.Write(Models[i].WorldPosition.Z);
+                writer.Write(Models[i].WorldPosition.W);
+                writer.Write(Models[i].dynBlob);
+                writer.Write(Models[i].unkByte);
+                writer.Write(Models[i].ModelID);
+                writer.Write(Models[i].BoundingBoxVector1.X);
+                writer.Write(Models[i].BoundingBoxVector1.Y);
+                writer.Write(Models[i].BoundingBoxVector1.Z);
+                writer.Write(Models[i].BoundingBoxVector1.W);
+                writer.Write(Models[i].BoundingBoxVector2.X);
+                writer.Write(Models[i].BoundingBoxVector2.Y);
+                writer.Write(Models[i].BoundingBoxVector2.Z);
+                writer.Write(Models[i].BoundingBoxVector2.W);
+            }
+
         }
 
         public override void Load(BinaryReader reader, int size)
         {
-            long start_pos = reader.BaseStream.Position;
+            //long start_pos = reader.BaseStream.Position;
 
             Header1 = reader.ReadUInt32();
-            ModelCount = reader.ReadUInt16();
+            ushort ModelCount = reader.ReadUInt16();
+            Models = new List<DynamicSceneryModel>();
 
             if (ModelCount != 0)
             {
-                Models = new DynamicSceneryModel[ModelCount];
                 for (int i = 0; i < ModelCount; i++)
                 {
-                    Models[i] = new DynamicSceneryModel();
-                    char Name1 = Convert.ToChar(reader.ReadByte());
-                    char Name2 = Convert.ToChar(reader.ReadByte());
-                    char Name3 = Convert.ToChar(reader.ReadByte());
-                    char Name4 = Convert.ToChar(reader.ReadByte());
-                    string tempName = "" + Name1 + Name2 + Name3 + Name4;
-                    Models[i].Name = tempName.Replace('\0', ' ');
-                    Models[i].UnkOne = reader.ReadUInt32();
+                    DynamicSceneryModel Model = new DynamicSceneryModel();
+                    Model.GI_Types = new List<GI_Type3>();
 
-                    // Very similiar to the ones in GraphicsInfo and ChunkLink.Unknown - collision related?
-                    Models[i].UnkVars = new ushort[13];
-                    for (int a = 0; a < Models[i].UnkVars.Length; a++)
+                    Model.UnkInt1 = reader.ReadUInt32();
+                    uint GI_amount = reader.ReadUInt32();
+                    if (GI_amount != 0)
                     {
-                        Models[i].UnkVars[a] = reader.ReadUInt16();
-                    }
-
-                    Models[i].UnkVectors = new Pos[Models[i].UnkVars[0]];
-                    for (int a = 0; a < Models[i].UnkVectors.Length; a++)
-                    {
-                        Models[i].UnkVectors[a] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    }
-
-                    Models[i].UnkVectors2 = new Pos[Models[i].UnkVars[2]];
-                    for (int a = 0; a < Models[i].UnkVectors2.Length; a++)
-                    {
-                        Models[i].UnkVectors2[a] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    }
-
-                    Models[i].UnkVectors3 = new Pos[Models[i].UnkVars[3] + Models[i].UnkVars[4]];
-                    for (int a = 0; a < Models[i].UnkVectors3.Length; a++)
-                    {
-                        Models[i].UnkVectors3[a] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    }
-
-                    Models[i].UnkVars2 = new ushort[3];
-                    for (int a = 0; a < Models[i].UnkVars2.Length; a++)
-                    {
-                        // always 1280, 3850, 6420
-                        Models[i].UnkVars2[a] = reader.ReadUInt16();
-                    }
-
-                    /*
-                    reader.BaseStream.Position += 0x20;
-                    bool check = false;
-
-                    while (!check)
-                    {
-                        ushort test = reader.ReadByte();
-                        if (test >= 0x20)
+                        for (int g = 0; g < GI_amount; g++)
                         {
-                            check = true;
+                            GI_Type3 git = new GI_Type3();
+                            git.Header = reader.ReadBytes(0x16);
+                            int gblobSize = reader.ReadInt32();
+                            git.unkBlob = reader.ReadBytes(gblobSize);
+                            Model.GI_Types.Add(git);
                         }
                     }
-                    reader.BaseStream.Position -= 1;
-                    */
+                    Model.unkInt2 = reader.ReadInt32();
+                    Model.unkBlobSizePacked = reader.ReadInt32();
+                    Model.unkBlobSizeHelper = reader.ReadInt16();
 
-                    bool check = false;
-                    ushort test, test2;
+                    int blobSize = (Model.unkBlobSizePacked & 0x7F) * 0x8 +
+                        (Model.unkBlobSizePacked >> 0x9 & 0x1FFC) +
+                        (Model.unkBlobSizePacked >> 0x16) * Model.unkBlobSizeHelper * 0x4;
 
-                    while (!check)
-                    {
-                        test = reader.ReadUInt16();
-                        if (test == 0)
-                        {
-                            reader.BaseStream.Position += 4;
-                            test = reader.ReadUInt16();
-                            reader.BaseStream.Position -= 10;
-                            test2 = reader.ReadUInt16();
-                            if (test == test2)
-                            {
-                                check = true;
-                                reader.BaseStream.Position += 6;
-                            }
-                            else
-                            {
-                                reader.BaseStream.Position += 1;
-                            }
-                        }
-                        else
-                        {
-                            reader.BaseStream.Position -= 1;
-                        }
-                    }
+                    Model.BlobHeader = reader.ReadBytes(4);
+                    // This isn't correct for all cases
+                    Model.WorldPosition = new Pos(0, 0, 0, 0);
+                    Model.WorldPosition.W = reader.ReadSingle();
+                    Model.WorldPosition.X = reader.ReadSingle();
+                    Model.WorldPosition.Y = reader.ReadSingle();
+                    Model.WorldPosition.Z = reader.ReadSingle();
 
+                    Model.dynBlob = reader.ReadBytes(blobSize - 20);
 
-                    //uint ArrayCount1 = reader.ReadUInt32();
+                    Model.unkByte = reader.ReadByte();
 
-                    //Models[i].UnkVar1 = reader.ReadUInt32();
-
-                    ushort ArrayCount = reader.ReadUInt16(); // must be the same as ArrayCount1
-
-                    reader.BaseStream.Position += 8;
-
-                    Models[i].WorldPosition = new Pos(0, 0, 0, 1);
-                    Models[i].LocalRotation = new float[3];
-
-                    Models[i].WorldPosition.X = reader.ReadSingle();
-
-                    float PosTest = reader.ReadSingle();
-                    if (PosTest == 0f || PosTest == 1f)
-                    {
-                        /*
-                        while (PosTest == 0f || PosTest == 1f)
-                        {
-                            PosTest = reader.ReadSingle();
-                        }
-                        */
-                        reader.BaseStream.Position += 8;
-                        PosTest = reader.ReadSingle();
-                    }
-                    Models[i].WorldPosition.Y = PosTest;
-
-                    bool isElevator = false;
-                    PosTest = reader.ReadSingle();
-                    if (PosTest == 0f || PosTest == 1f)
-                    {
-                        isElevator = true;
-                        Models[i].WorldPosition.Z = Models[i].WorldPosition.Y;
-                        Models[i].WorldPosition.Y = PosTest;
-                        /*
-                        while (PosTest == 0f || PosTest == 1f)
-                        {
-                            PosTest = reader.ReadSingle();
-                        }
-                        */
-                        reader.BaseStream.Position += 8;
-                        //PosTest = reader.ReadSingle();
-                    }
-                    else
-                    {
-                        Models[i].WorldPosition.Z = PosTest;
-                    }
-
-
-                    Models[i].WorldPosition.W = reader.ReadSingle();
-                    // this may also have a 3 float prefix
-
-
-                    //Models[i].WorldPosition = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    Models[i].LocalRotation = new float[3] { reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle() };
-
-                    if (isElevator)
-                    {
-                        Models[i].WorldPosition.Y = Models[i].LocalRotation[0];
-                    }
-
-                    reader.ReadByte();
-
-                    check = false;
-                    bool altcheck = false;
-                    while (!check)
-                    {
-                        if (reader.ReadUInt32() == 0x0001)
-                        {
-                            check = true;
-                        }
-                        if (reader.BaseStream.Position >= start_pos + size)
-                        {
-                            check = true;
-                            altcheck = true;
-                        }
-                    }
-                    if (!altcheck)
-                    {
-                        reader.BaseStream.Position -= 44;
-                    }
-                    else
-                    {
-                        reader.BaseStream.Position = (start_pos + size) - 36;
-                    }
-
-                    Models[i].ModelID = reader.ReadUInt32();
-
-                    Models[i].BoundingBoxVector1 = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    Models[i].BoundingBoxVector2 = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-
+                    Model.ModelID = reader.ReadUInt32();
+                    Model.BoundingBoxVector1 = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                    Model.BoundingBoxVector2 = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                    Models.Add(Model);
                 }
             }
 
-            reader.BaseStream.Position = start_pos;
-            Data = reader.ReadBytes(size);
-            DataSize = size;
+            //reader.BaseStream.Position = start_pos;
+            //Data = reader.ReadBytes(size);
+            //DataSize = size;
+
+            //Console.WriteLine("DySc end pos: " + (reader.BaseStream.Position - start_pos) + " target: " + size);
         }
 
         public class DynamicSceneryModel
         {
-            public string Name;
+            public uint UnkInt1;
+            public List<GI_Type3> GI_Types;
+            public int unkInt2;
+
+            public int unkBlobSizePacked;
+            public short unkBlobSizeHelper;
+            public byte[] dynBlob;
+
+            public byte unkByte;
             public uint ModelID;
-            public uint UnkOne;
-            public ushort[] UnkVars; // 7
-            public Pos[] UnkVectors;
-            public Pos[] UnkVectors2;
-            public Pos[] UnkVectors3;
-
-            public uint UnkVar1;
-
-            public byte UnkFlag;
-
-            public byte[] UnkFlags;
-
-            public ushort[] UnkVars2; //30
-
-            public Pos WorldPosition;
-            public float[] LocalRotation;
-
             public Pos BoundingBoxVector1;
             public Pos BoundingBoxVector2;
+
+            public byte[] BlobHeader; // 5
+            public Pos WorldPosition;
+        }
+
+        public class GI_Type3
+        {
+            public byte[] Header; //0x16
+            public byte[] unkBlob; //blobSize
         }
 
     }
