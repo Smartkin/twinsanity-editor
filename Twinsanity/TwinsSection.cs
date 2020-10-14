@@ -13,14 +13,14 @@ namespace Twinsanity
     /// </summary>
     public enum SectionType {
         Null,
-        Graphics, GraphicsX, GraphicsD, GraphicsDS,
+        Graphics, GraphicsX, GraphicsD,
         Code, CodeDemo, CodeX,
         Instance, InstanceDemo,
         ParticleData,
 
         Texture, TextureX,
         Material, MaterialD,
-        Model, ModelX, ModelDS,
+        Model, ModelX,
         RigidModel,
         Skin, SkinX,
         BlendSkin,
@@ -111,7 +111,6 @@ namespace Twinsanity
                     case SectionType.Graphics:
                     case SectionType.GraphicsX:
                     case SectionType.GraphicsD:
-                    case SectionType.GraphicsDS:
                         switch (sub.ID)
                         {
                             case 0:
@@ -121,7 +120,7 @@ namespace Twinsanity
                                     LoadSection(reader, sub, SectionType.Texture);
                                 break;
                             case 1:
-                                if (Type == SectionType.GraphicsD || Type == SectionType.GraphicsDS)
+                                if (Type == SectionType.GraphicsD)
                                     LoadSection(reader, sub, SectionType.MaterialD);
                                 else
                                     LoadSection(reader, sub, SectionType.Material);
@@ -129,8 +128,6 @@ namespace Twinsanity
                             case 2:
                                 if (Type == SectionType.GraphicsX)
                                     LoadSection(reader, sub, SectionType.ModelX);
-                                else if (Type == SectionType.GraphicsDS)
-                                    LoadSection(reader, sub, SectionType.ModelDS);
                                 else
                                     LoadSection(reader, sub, SectionType.Model);
                                 break;
@@ -308,9 +305,6 @@ namespace Twinsanity
                         LoadItem<Model>(reader, sub);
                         break;
                     case SectionType.ModelX: //XBOX meshes
-                        LoadItem<TwinsItem>(reader, sub);
-                        break;
-                    case SectionType.ModelDS: //PS2 DEMO SM2 meshes
                         LoadItem<TwinsItem>(reader, sub);
                         break;
                     case SectionType.RigidModel:

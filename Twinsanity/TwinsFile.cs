@@ -151,7 +151,7 @@ namespace Twinsanity
                                         if (type == FileType.SMX)
                                             targetType = SectionType.GraphicsX;
                                         if (type == FileType.DemoSM2)
-                                            targetType = SectionType.GraphicsDS;
+                                            targetType = SectionType.GraphicsD;
                                         TwinsSection sec = new TwinsSection
                                         {
                                             ID = s_id,

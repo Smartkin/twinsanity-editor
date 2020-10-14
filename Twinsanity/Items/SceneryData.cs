@@ -378,13 +378,6 @@ namespace Twinsanity
                 //Console.WriteLine("no scenery!! bug?");
             }
 
-            //reader.BaseStream.Position = start_pos;
-            //Data = reader.ReadBytes(size);
-
-            //long cur_pos = reader.BaseStream.Position;
-            //Remain = reader.ReadBytes((int)((start_pos + size) - cur_pos));
-            //reader.BaseStream.Position = cur_pos;
-
             //Console.WriteLine("end pos: " + (reader.BaseStream.Position - start_pos) + " target: " + size);
         }
 
@@ -471,8 +464,6 @@ namespace Twinsanity
                 }
             }
 
-            //Console.WriteLine($"Adding scenery {sceneryModels.Count}");
-            //sceneryModels.Add(scen);
             return scen;
         }
 
@@ -532,7 +523,7 @@ namespace Twinsanity
                 writer.Write(modelCount);
                 writer.Write(specialModelCount);
 
-                if (1 != 0)
+                if (ptr.Models.Count != 0)
                 {
                     for (int i = 0; i < ptr.Models.Count; i++)
                     {
