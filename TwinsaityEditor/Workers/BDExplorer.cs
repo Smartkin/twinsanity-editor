@@ -397,5 +397,166 @@ namespace TwinsaityEditor
             PackArchive(sourcePath, dest, name, callback);
             return true;
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (OpenFileDialog ofd = new OpenFileDialog())
+                {
+                    ofd.InitialDirectory = Settings.Default.BDFilePath;
+                    ofd.Filter = "Bandicoot Header|*.BH";
+                    if (DialogResult.OK == ofd.ShowDialog())
+                    {
+                        var file = ofd.FileName;
+                        path = Path.GetDirectoryName(file);
+                        name = Path.GetFileNameWithoutExtension(file);
+                        Settings.Default.BDFilePath = file.Substring(0, file.LastIndexOf('\\'));
+                        LoadData(path, name);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex.Message);
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (BetterFolderBrowser ofd = new BetterFolderBrowser
+                {
+                    Title = "Select destination folder",
+                    RootFolder = Settings.Default.BDExtractPath
+                })
+                {
+                    if (null != data)
+                    {
+                        using (FileStream fileStream = new FileStream(String.Format("{0}\\{1}.BD", path, name), FileMode.Open, FileAccess.Read))
+                        using (BinaryReader reader = new BinaryReader(fileStream))
+                        {
+                            if (DialogResult.OK == ofd.ShowDialog(this))
+                            {
+                                Settings.Default.BDExtractPath = ofd.SelectedPath;
+                                ExtractRecursively(reader, archiveContentsTree.TopNode, ofd.SelectedPath);
+                            }
+                        }
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex.Message);
+            }
+            CallBack("Ready");
+        }
+
+        private void SaveButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                String sourcePath = null;
+                String destinationPath = null;
+                String name = "CRASH"; //Hardcoded name
+                using (BetterFolderBrowser ofd = new BetterFolderBrowser
+                {
+                    Title = "Select source folder",
+                    RootFolder = Settings.Default.BDSaveSrcPath
+                })
+                {
+                    if (DialogResult.OK == ofd.ShowDialog(this))
+                    {
+                        Settings.Default.BDSaveSrcPath = ofd.SelectedPath;
+                        sourcePath = ofd.SelectedPath;
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+                using (BetterFolderBrowser ofd = new BetterFolderBrowser
+                {
+                    Title = "Select source folder",
+                    RootFolder = Settings.Default.BDSaveSrcPath
+                })
+                {
+                    ofd.Title = "Select destination folder";
+                    ofd.RootFolder = Settings.Default.BDSaveDstPath;
+                    if (DialogResult.OK == ofd.ShowDialog(this))
+                    {
+                        Settings.Default.BDSaveDstPath = ofd.SelectedPath;
+                        destinationPath = ofd.SelectedPath;
+                        if (
+                            File.Exists(Path.Combine(destinationPath, String.Format("{0}.BH", name))) ||
+                            File.Exists(Path.Combine(destinationPath, String.Format("{0}.BD", name)))
+                            )
+                        {
+                            DialogResult result = MessageBox.Show(String.Format("Archive with name {0} already in destination folder. Overwrite?", name), "Attention",
+                                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                            if (DialogResult.Yes != result)
+                            {
+                                destinationPath = null;
+                            }
+                        }
+
+                    }
+                }
+                if (null != sourcePath && null != destinationPath)
+                {
+                    PackArchive(sourcePath, destinationPath, name);
+                    UpdateView();
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex.Message);
+            }
+            CallBack("Ready");
+        
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (BetterFolderBrowser ofd = new BetterFolderBrowser
+                {
+                    Title = "Select destination folder",
+                    RootFolder = Settings.Default.BDExtractPath
+                })
+                {
+                    if (null != data && null != archiveContentsTree.SelectedNode)
+                    {
+                        using (FileStream fileStream = new FileStream(String.Format("{0}\\{1}.BD", path, name), FileMode.Open, FileAccess.Read))
+                        using (BinaryReader reader = new BinaryReader(fileStream))
+                        {
+                            if (DialogResult.OK == ofd.ShowDialog(this))
+                            {
+                                Settings.Default.BDExtractPath = ofd.SelectedPath;
+                                ExtractRecursively(reader, archiveContentsTree.SelectedNode, ofd.SelectedPath);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex.Message);
+            }
+            CallBack("Ready");
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 }
