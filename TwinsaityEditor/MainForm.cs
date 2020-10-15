@@ -258,7 +258,7 @@ namespace TwinsaityEditor
 
         private void button8_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("TwinsaityEditor + Twinsanity API v0.30\nDeveloped by Neo_Kesha, Smartkin, ManDude, Marko, BetaM\nUI modifications by AtomicalSloths\nSource code available at: https://github.com/smartkin/twinsanity-editor", "About", MessageBoxButtons.OK);
+            MessageBox.Show("TwinsaityEditor + Twinsanity API v0.40\nDeveloped by Neo_Kesha, Smartkin, ManDude, Marko, BetaM\nUI modifications by AtomicalSloths\nSource code available at: https://github.com/smartkin/twinsanity-editor", "About", MessageBoxButtons.OK);
         }
 
         private void OpenFileButton_Click(object sender, EventArgs e)

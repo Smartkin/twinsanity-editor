@@ -508,7 +508,7 @@
             this.textBox4.Size = new System.Drawing.Size(48, 26);
             this.textBox4.TabIndex = 3;
             this.textBox4.TabStop = false;
-            this.textBox4.Text = "v0.30";
+            this.textBox4.Text = "v0.40";
             // 
             // pictureBox1
             // 
