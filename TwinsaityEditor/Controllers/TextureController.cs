@@ -1,4 +1,5 @@
-﻿using Twinsanity;
+﻿using System.Collections.Generic;
+using Twinsanity;
 
 namespace TwinsaityEditor
 {
@@ -18,10 +19,15 @@ namespace TwinsaityEditor
 
         protected override void GenText()
         {
-            TextPrev = new string[3];
-            TextPrev[0] = string.Format("ID: {0:X8}", Data.ID);
-            TextPrev[1] = $"Size: {Data.Size}";
-            TextPrev[2] = $"Image Size: {Data.Width}x{Data.Height}";
+            List<string> text = new List<string>();
+            text.Add(string.Format("ID: {0:X8}", Data.ID));
+            text.Add($"Size: {Data.Size}");
+            text.Add($"Image Size: {Data.Width}x{Data.Height}");
+            text.Add($"Mip levels: {Data.MipLevels}");
+            text.Add($"Texture format: {Data.PixelFormat}");
+            text.Add($"Texture function: {Data.TexFun}");
+            text.Add($"Color component : {Data.ColorComponent}");
+            TextPrev = text.ToArray();
         }
     }
 }
