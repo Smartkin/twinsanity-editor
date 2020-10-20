@@ -192,7 +192,18 @@ namespace TwinsaityEditor
 
         public void OpenEXETool()
         {
-           
+           if (exeForm == null || exeForm.IsDisposed)
+           {
+                exeForm = new EXEPatcher();
+                exeForm.FormClosed += delegate
+                {
+                    exeForm = null;
+                };
+           }
+           else
+           {
+                exeForm.Select();
+           }
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
