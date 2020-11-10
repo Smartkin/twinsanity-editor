@@ -117,7 +117,7 @@ namespace Twinsanity
                 case TexturePixelFormat.PSMT8: // End me, this cost me a tiny bit of my soul
                     imageData = reader.ReadBytes(texSize - 224);
                     EzSwizzle.cleanGs();
-                    EzSwizzle.writeTexPSMCT32_mod(0, 1, 0, 0, rrw, rrh, imageData);
+                    EzSwizzle.writeTexPSMCT32(0, 1, 0, 0, rrw, rrh, imageData);
                     var texData = new byte[Width * Height];
                     EzSwizzle.readTexPSMT8(0, textureBufferWidth, 0, 0, Width, Height, ref texData);
                     // TODO: Mips, use the TBP to find the data and divide by 2 width and height (bigger mips -> smaller resolution)

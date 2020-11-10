@@ -18,19 +18,6 @@ namespace Twinsanity
 			10, 11, 14, 15, 26, 27, 30, 31
 		};
 
-		static readonly int[][] blockTable32 = new int[4][]
-		{
-			new int[8] { 0,  1,  4,  5, 16, 17, 20, 21 },
-			new int[8] { 2,  3,  6,  7, 18, 19, 22, 23 },
-			new int[8] { 8,  9, 12, 13, 24, 25, 28, 29 },
-			new int[8] { 10, 11, 14, 15, 26, 27, 30, 31 }
-		};
-
-		static readonly int[] clut8 = new int[32] {
-			0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
-			0x8, 0x9, 0xA, 0xB, 0xC, 0xD, 0xE, 0xF, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F
-		};
-
 		static readonly int[] columnWord32 = new int[16] {
 			 0,  1,  4,  5,  8,  9, 12, 13,
 			 2,  3,  6,  7, 10, 11, 14, 15
@@ -128,76 +115,9 @@ namespace Twinsanity
 
 		#endregion
 
-		static uint BlockNumber32(int x, int y, uint dbp, uint dbw)
-        {
-			return (uint)(dbp + (y & ~0x1f) * dbw + ((x >> 1) & ~0x1f) + blockTable32[(y >> 3) & 3][(x >> 3) & 7]);
-        }
-
-		static void WriteImageBlock32(int l, int r, int y, int h, int dataIndex, int srcpitch, int dbp, int dbw, byte[] data)
-		{
-			var bsx = 8;
-			var bsy = 8;
-			var dataMemStr = new MemoryStream(data);
-			var dataBinReader = new BinaryReader(dataMemStr);
-
-			for (int offset = srcpitch * bsy; h >= bsy; h -= bsy, y += bsy, dataIndex += offset)
-			{
-				for (int x = l; x < r; x += bsx)
-                {
-					var gsMemIndex = BlockNumber32(x, y, (uint)dbp, (uint)dbw) << 8;
-					WriteBlock32((int)gsMemIndex, dataIndex + x * 4, data, ref gs, srcpitch);
-                }
-			}
-
-			dataBinReader.Close();
-		}
-
-		static void WriteBlock32(int dstIndex, int srcIndex, byte[] src, ref byte[] dst, int srcpitch)
-		{
-			WriteColumn32(0, dstIndex, srcIndex, srcpitch, src, ref dst);
-			srcIndex += srcpitch * 2;
-			WriteColumn32(1 << 1, dstIndex, srcIndex, srcpitch, src, ref dst);
-			srcIndex += srcpitch * 2;
-			WriteColumn32(2 << 1, dstIndex, srcIndex, srcpitch, src, ref dst);
-			srcIndex += srcpitch * 2;
-			WriteColumn32(3 << 1, dstIndex, srcIndex, srcpitch, src, ref dst);
-		}
-
-		static void WriteColumn32(int y, int dstIndex, int srcIndex, int srcpitch, byte[] src, ref byte[] dst)
-        {
-			var i = ((y >> 1) & 3);
-			var srcMemStr = new MemoryStream(src);
-			var dstMemStr = new MemoryStream(dst);
-			var srcBinRead = new BinaryReader(srcMemStr);
-			var dstBinWriter = new BinaryWriter(dstMemStr);
-			dstBinWriter.BaseStream.Position = i * 4 * 16 + dstIndex;
-			srcBinRead.BaseStream.Position = srcIndex;
-
-			Util.GSVector4i v0 = Util.GSVector4i.Read(srcBinRead);
-			Util.GSVector4i v1 = Util.GSVector4i.Read(srcBinRead);
-			srcBinRead.BaseStream.Position = srcIndex + srcpitch;
-			Util.GSVector4i v2 = Util.GSVector4i.Read(srcBinRead);
-			Util.GSVector4i v3 = Util.GSVector4i.Read(srcBinRead);
-
-			Util.GSVector4i.sw64(ref v0, ref v2, ref v1, ref v3);
-
-			v0.Write(dstBinWriter);
-			v1.Write(dstBinWriter);
-			v2.Write(dstBinWriter);
-			v3.Write(dstBinWriter);
-
-			srcBinRead.Close();
-			dstBinWriter.Close();
-		}
-
 		public static void cleanGs()
         {
 			gs = new byte[1024 * 1024 * 4];
-        }
-
-		public static void writeDirect(byte[] data)
-        {
-			data.CopyTo(gs, 0);
         }
 
 		public static void dumpMemory(string path, bool dumpImage = false, string imgPath = "")
@@ -614,55 +534,6 @@ namespace Twinsanity
 					}
 					src += 4;
 				}
-			}
-		}
-
-		public static void writeTexPSMCT32_mod(int dbp, int dbw, int dsax, int dsay, int rrw, int rrh, byte[] data)
-		{
-			// Most of this code is courtesy of PCSX2's source code and ported from C++ to C#, God please never make me do this ever again
-			// For PSMCT32 8, 8 and 32 values are used. For other formats look into more of PCSX2's code
-			// This is a very small part of the code as THANKFULLY at least Twins textures keep the same values for TRXPOS, TRXREG and TRXDIR
-			var bsx = 8;
-			var bsy = 8;
-			var trbpp = 32;
-			var ty = 0;
-
-			int l = dsax;
-			int r = l + rrw;
-
-			// What is even happening here?
-			int la = 0;
-			int ra = r & ~(bsx - 1);
-			int srcpitch = (r - l) * trbpp >> 3;
-			var len = data.Length;
-			int h = len / srcpitch;
-
-			if (ra - la >= bsx && h > 0)
-			{
-				// But wait what???
-				var dataIndex = -l * trbpp >> 3;
-				len -= srcpitch * h;
-
-				if (la < ra)
-                {
-					int h2 = h & ~(bsy - 1);
-
-					if (h2 > 0)
-                    {
-						WriteImageBlock32(la, ra, ty, h2, dataIndex, srcpitch, dbp, dbw, data);
-						h -= h2;
-                    }
-
-					if (h > 0)
-                    {
-						throw new Exception("Houston we got a problem! We need to write more code!");
-                    }
-				}
-			}
-
-			if (len > 0)
-            {
-				throw new Exception("Houston we got a problem! We need to write more code!");
 			}
 		}
 
