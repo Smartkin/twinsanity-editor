@@ -127,6 +127,7 @@ namespace TwinsaityEditor
             CloseSkydomeViewer();
             CloseAllMeshViewers();
             CloseAllModelViewers();
+            CloseTextureViewer();
             CloseEditor(Editors.ChunkLinks);
             CloseEditor(Editors.ColData);
             CloseEditor(Editors.Script);
@@ -249,7 +250,17 @@ namespace TwinsaityEditor
             if (texViewer == null || texViewer.IsDisposed)
             {
                 texViewer = new TextureViewer();
-                texViewer.Texture = c.Data;
+                texViewer.SelectedTexture = c.Data;
+                var textures = Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(0).Records;
+                for (var i = 0; i < textures.Count; ++i)
+                {
+                    texViewer.Textures.Add((Texture)textures[i]);
+                    if ((Texture)textures[i] == c.Data)
+                    {
+                        texViewer.TextureIndex = i;
+                    }
+                }
+                texViewer.UpdateTextureLabel();
                 texViewer.FormClosed += delegate
                 {
                     texViewer = null;
@@ -446,6 +457,13 @@ namespace TwinsaityEditor
         {
             if (smViewer == null) return;
             var f = smViewer.ParentForm;
+            CloseForm(ref f);
+        }
+
+        public void CloseTextureViewer()
+        {
+            if (texViewer == null) return;
+            var f = texViewer.ParentForm;
             CloseForm(ref f);
         }
 

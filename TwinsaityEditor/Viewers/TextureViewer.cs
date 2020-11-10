@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using System;
 using Twinsanity;
 using OpenTK.Graphics.OpenGL;
+using System.Collections.Generic;
 
 namespace TwinsaityEditor
 {
@@ -14,7 +15,22 @@ namespace TwinsaityEditor
             InitializeComponent();
         }
 
-        public Texture Texture;
+        private int texInd;
+
+        public Texture SelectedTexture;
+        public int TextureIndex
+        {
+            set
+            {
+                lblTextureIndex.Text = (value + 1).ToString() + "/" + Textures.Count;
+                texInd = value;
+            }
+            get
+            {
+                return texInd;
+            }
+        }
+        public List<Texture> Textures = new List<Texture>();
 
         public bool Mat = false;
         public uint CurTex = 0;
@@ -46,19 +62,19 @@ namespace TwinsaityEditor
             GL.ClearColor(Color.Black);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.Begin(PrimitiveType.Points);
-            for (int i = 0; i < Texture.RawData.Length; i++)
+            for (int i = 0; i < SelectedTexture.RawData.Length; i++)
             {
-                GL.Color4(Texture.RawData[i]);
-                GL.Vertex2(i % (Texture.Width), i / (Texture.Width));
+                GL.Color4(SelectedTexture.RawData[i]);
+                GL.Vertex2(i % (SelectedTexture.Width), i / (SelectedTexture.Width));
             }
             GL.End();
-            if (Texture.MipLevels > 0)
+            if (SelectedTexture.MipLevels > 0)
             {
-                var widthOffset = Texture.Width;
-                for (var i = 0; i < Texture.MipLevels; ++i)
+                var widthOffset = SelectedTexture.Width;
+                for (var i = 0; i < SelectedTexture.MipLevels; ++i)
                 {
-                    var mip = Texture.GetMips(i);
-                    var mipWidth = (Texture.Width / (1 << (i + 1)));
+                    var mip = SelectedTexture.GetMips(i);
+                    var mipWidth = (SelectedTexture.Width / (1 << (i + 1)));
                     GL.Begin(PrimitiveType.Points);
                     for (int j = 0; j < mip.Length; ++j)
                     {
@@ -75,14 +91,41 @@ namespace TwinsaityEditor
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            SavePNG.FileName = Texture.ID.ToString();
+            SavePNG.FileName = SelectedTexture.ID.ToString();
             if (SavePNG.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                Bitmap BMP = new Bitmap(System.Convert.ToInt32(Texture.Width), System.Convert.ToInt32(Texture.Height));
-                for (int i = 0; i < Texture.RawData.Length; i++)
-                    BMP.SetPixel((int)(i % Texture.Width), (int)(i / Texture.Width), Texture.RawData[i]);
+                Bitmap BMP = new Bitmap(System.Convert.ToInt32(SelectedTexture.Width), System.Convert.ToInt32(SelectedTexture.Height));
+                for (int i = 0; i < SelectedTexture.RawData.Length; i++)
+                    BMP.SetPixel((int)(i % SelectedTexture.Width), (int)(i / SelectedTexture.Width), SelectedTexture.RawData[i]);
                 BMP.Save(SavePNG.FileName, System.Drawing.Imaging.ImageFormat.Png);
             }
+        }
+
+        private void btnPrevTexture_Click(object sender, EventArgs e)
+        {
+            TextureIndex--;
+            if (TextureIndex < 0)
+            {
+                TextureIndex = Textures.Count - 1;
+            }
+            SelectedTexture = Textures[TextureIndex];
+            Refresh();
+        }
+
+        public void UpdateTextureLabel()
+        {
+            lblTextureIndex.Text = (TextureIndex + 1).ToString() + "/" + Textures.Count;
+        }
+
+        private void btnNextTexture_Click(object sender, EventArgs e)
+        {
+            TextureIndex++;
+            if (TextureIndex >= Textures.Count)
+            {
+                TextureIndex = 0;
+            }
+            SelectedTexture = Textures[TextureIndex];
+            Refresh();
         }
     }
 }
