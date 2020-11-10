@@ -307,6 +307,12 @@
     <Compile Include="Viewers\RMViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Viewers\TextureViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Viewers\TextureViewer.Designer.cs">
+      <DependentUpon>TextureViewer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Viewers\ThreeDViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -389,6 +395,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Viewers\TextureViewer.resx">
+      <DependentUpon>TextureViewer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Viewers\ThreeDViewer.resx">
       <DependentUpon>ThreeDViewer.cs</DependentUpon>
     </EmbeddedResource>
@@ -424,6 +433,7 @@
     <None Include="Fonts\arial.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Fonts\Twelve Ton Goldfish.ttf" />
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

@@ -34,6 +34,7 @@ namespace TwinsaityEditor
         private SkydomeViewer skyViewer;
         private RMViewer rmViewer;
         private SMViewer smViewer;
+        private TextureViewer texViewer;
         private Dictionary<uint, Form> MeshViewers { get; set; }
         private Dictionary<uint, Form> ModelViewers { get; set; }
 
@@ -126,6 +127,7 @@ namespace TwinsaityEditor
             CloseSkydomeViewer();
             CloseAllMeshViewers();
             CloseAllModelViewers();
+            CloseTextureViewer();
             CloseEditor(Editors.ChunkLinks);
             CloseEditor(Editors.ColData);
             CloseEditor(Editors.Script);
@@ -241,6 +243,34 @@ namespace TwinsaityEditor
             }
             else
                 MeshViewers[id].Select();
+        }
+
+        public void OpenTextureViewer(TextureController c)
+        {
+            if (texViewer == null || texViewer.IsDisposed)
+            {
+                texViewer = new TextureViewer();
+                texViewer.SelectedTexture = c.Data;
+                var textures = Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(0).Records;
+                for (var i = 0; i < textures.Count; ++i)
+                {
+                    texViewer.Textures.Add((Texture)textures[i]);
+                    if ((Texture)textures[i] == c.Data)
+                    {
+                        texViewer.TextureIndex = i;
+                    }
+                }
+                texViewer.UpdateTextureLabel();
+                texViewer.FormClosed += delegate
+                {
+                    texViewer = null;
+                };
+                texViewer.Show();
+            }
+            else
+            {
+                texViewer.Select();
+            }
         }
 
         public void CloseMeshViewer(uint mesh_id)
@@ -427,6 +457,13 @@ namespace TwinsaityEditor
         {
             if (smViewer == null) return;
             var f = smViewer.ParentForm;
+            CloseForm(ref f);
+        }
+
+        public void CloseTextureViewer()
+        {
+            if (texViewer == null) return;
+            var f = texViewer.ParentForm;
             CloseForm(ref f);
         }
 

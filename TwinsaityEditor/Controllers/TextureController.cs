@@ -1,4 +1,5 @@
-﻿using Twinsanity;
+﻿using System.Collections.Generic;
+using Twinsanity;
 
 namespace TwinsaityEditor
 {
@@ -9,6 +10,10 @@ namespace TwinsaityEditor
         public TextureController(MainForm topform, Texture item) : base (topform, item)
         {
             Data = item;
+            if (Data.RawData != null)
+            {
+                AddMenu("Open viewer", Menu_OpenViewer);
+            }
         }
 
         protected override string GetName()
@@ -18,10 +23,21 @@ namespace TwinsaityEditor
 
         protected override void GenText()
         {
-            TextPrev = new string[3];
-            TextPrev[0] = string.Format("ID: {0:X8}", Data.ID);
-            TextPrev[1] = $"Size: {Data.Size}";
-            TextPrev[2] = $"Image Size: {Data.Width}x{Data.Height}";
+            List<string> text = new List<string>();
+            text.Add(string.Format("ID: {0:X8}", Data.ID));
+            text.Add($"Size: {Data.Size}");
+            text.Add($"Resolution: {Data.Width}x{Data.Height}");
+            text.Add($"Mip levels: {Data.MipLevels}");
+            text.Add($"Texture format: {Data.PixelFormat}");
+            text.Add($"VRAM storage format: {Data.DestinationPixelFormat}");
+            text.Add($"Texture function: {Data.TexFun}");
+            text.Add($"Color component: {Data.ColorComponent}");
+            TextPrev = text.ToArray();
+        }
+
+        private void Menu_OpenViewer()
+        {
+            MainFile.OpenTextureViewer(this);
         }
     }
 }

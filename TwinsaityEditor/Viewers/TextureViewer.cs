@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using System;
 using Twinsanity;
 using OpenTK.Graphics.OpenGL;
+using System.Collections.Generic;
 
 namespace TwinsaityEditor
 {
@@ -14,9 +15,23 @@ namespace TwinsaityEditor
             InitializeComponent();
         }
 
-        public Twinsanity.Texture Texture;
-        public Twinsanity.Textures Textures;
-        public Twinsanity.Materials Materials;
+        private int texInd;
+
+        public Texture SelectedTexture;
+        public int TextureIndex
+        {
+            set
+            {
+                lblTextureIndex.Text = (value + 1).ToString() + "/" + Textures.Count;
+                texInd = value;
+            }
+            get
+            {
+                return texInd;
+            }
+        }
+        public List<Texture> Textures = new List<Texture>();
+
         public bool Mat = false;
         public uint CurTex = 0;
         public void Init()
@@ -40,7 +55,6 @@ namespace TwinsaityEditor
         private void TextureViewer_Load(object sender, EventArgs e)
         {
             Init();
-            UpdateTexture();
         }
 
         private void GlControl1_Paint(object sender, PaintEventArgs e)
@@ -48,92 +62,86 @@ namespace TwinsaityEditor
             GL.ClearColor(Color.Black);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.Begin(PrimitiveType.Points);
-            for (int i = 0; i <= Texture.RawData.Length - 1; i++)
+            for (int i = 0; i < SelectedTexture.RawData.Length; i++)
             {
-                if (CheckBox1.Checked == true)
-                    GL.Color4(Color.FromArgb(255, Texture.Index[i], Texture.Index[i], Texture.Index[i]));
-                else
-                    GL.Color4(Texture.RawData[i]);
-                GL.Vertex2(i % (Texture.Width), i / (Texture.Width));
+                GL.Color4(SelectedTexture.RawData[i]);
+                GL.Vertex2(i % (SelectedTexture.Width), i / (SelectedTexture.Width));
             }
             GL.End();
+            if (SelectedTexture.MipLevels > 0)
+            {
+                var widthOffset = SelectedTexture.Width;
+                for (var i = 0; i < SelectedTexture.MipLevels; ++i)
+                {
+                    var mip = SelectedTexture.GetMips(i);
+                    var mipWidth = (SelectedTexture.Width / (1 << (i + 1)));
+                    GL.Begin(PrimitiveType.Points);
+                    for (int j = 0; j < mip.Length; ++j)
+                    {
+                        GL.Color4(mip[j]);
+                        GL.Vertex2(widthOffset + j % mipWidth, j / mipWidth);
+                    }
+                    GL.End();
+                    widthOffset += mipWidth;
+                }
+            }
             GlControl1.SwapBuffers();
             Application.DoEvents();
         }
 
-        private void Button1_Click(object sender, EventArgs e)
+        private void btnSave_Click(object sender, EventArgs e)
         {
-            SavePNG.FileName = Texture.ID.ToString();
-            if (SavePNG.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            SavePNG.FileName = SelectedTexture.ID.ToString();
+            if (SavePNG.ShowDialog() == DialogResult.OK)
             {
-                Bitmap BMP = new Bitmap(System.Convert.ToInt32(Texture.Width), System.Convert.ToInt32(Texture.Height));
-                for (int i = 0; i <= Texture.RawData.Length - 1; i++)
-                    BMP.SetPixel((int)(i % Texture.Width), (int)(i / Texture.Width), Texture.RawData[i]);
+                Bitmap BMP = new Bitmap(Convert.ToInt32(SelectedTexture.Width), Convert.ToInt32(SelectedTexture.Height));
+                for (int i = 0; i < SelectedTexture.RawData.Length; i++)
+                    BMP.SetPixel((i % SelectedTexture.Width), (i / SelectedTexture.Width), SelectedTexture.RawData[i]);
                 BMP.Save(SavePNG.FileName, System.Drawing.Imaging.ImageFormat.Png);
-            }
-        }
-
-        private void CheckBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            GlControl1.Invalidate();
-        }
-
-        private void UpdateTexture()
-        {
-            if (Mat)
-            {
-                Twinsanity.Material Material = (Twinsanity.Material)Materials._Item[CurTex];
-                uint TexId = Material.Texture;
-                for (int i = 0; i <= Textures._Item.Length - 1; i++)
+                if (cbSaveMips.Checked)
                 {
-                    if (Textures._Item[i].ID == TexId)
+                    if (SelectedTexture.MipLevels > 0)
                     {
-                        Texture = (Twinsanity.Texture)Textures._Item[i];
-                        break;
+                        for (var i = 0; i < SelectedTexture.MipLevels; ++i)
+                        {
+                            var mip = SelectedTexture.GetMips(i);
+                            var mipWidth = (SelectedTexture.Width / (1 << (i + 1)));
+                            var mipHeight = (SelectedTexture.Height / (1 << (i + 1)));
+                            Bitmap mipBmp = new Bitmap(Convert.ToInt32(mipWidth), Convert.ToInt32(mipHeight));
+                            for (int j = 0; j < mip.Length; j++)
+                                mipBmp.SetPixel((j % mipWidth), (j / mipWidth), mip[j]);
+                            mipBmp.Save(SavePNG.FileName.Substring(0, SavePNG.FileName.Length - 4) + "_mip_" + (i + 1).ToString() + ".png", System.Drawing.Imaging.ImageFormat.Png);
+                        }
                     }
                 }
-                Label1.Text = (CurTex + 1).ToString() + @"\" + Materials._Item.Length.ToString();
-                this.Text = Material.Name + " Texture: " + Texture.ID.ToString();
             }
-            else
-            {
-                Texture = (Twinsanity.Texture)Textures._Item[CurTex];
-                Label1.Text = (CurTex + 1).ToString() + @"\" + Textures._Item.Length.ToString();
-                this.Text = "ID: " + Texture.ID.ToString();
-            }
-            GlControl1.Invalidate();
         }
 
-        private void Button3_Click(object sender, EventArgs e)
+        private void btnPrevTexture_Click(object sender, EventArgs e)
         {
-            if (Mat)
+            TextureIndex--;
+            if (TextureIndex < 0)
             {
-                if (CurTex < Materials._Item.Length - 1)
-                    CurTex += 1;
-                else
-                    CurTex = 0;
+                TextureIndex = Textures.Count - 1;
             }
-            else if (CurTex < Textures._Item.Length - 1)
-                CurTex += 1;
-            else
-                CurTex = 0;
-            UpdateTexture();
+            SelectedTexture = Textures[TextureIndex];
+            Refresh();
         }
 
-        private void Button2_Click(object sender, EventArgs e)
+        public void UpdateTextureLabel()
         {
-            if (Mat)
+            lblTextureIndex.Text = (TextureIndex + 1).ToString() + "/" + Textures.Count;
+        }
+
+        private void btnNextTexture_Click(object sender, EventArgs e)
+        {
+            TextureIndex++;
+            if (TextureIndex >= Textures.Count)
             {
-                if (CurTex > 0)
-                    CurTex -= 1;
-                else
-                    CurTex = (uint)Materials._Item.Length - 1;
+                TextureIndex = 0;
             }
-            else if (CurTex > 0)
-                CurTex -= 1;
-            else
-                CurTex = (uint)Textures._Item.Length - 1;
-            UpdateTexture();
+            SelectedTexture = Textures[TextureIndex];
+            Refresh();
         }
     }
 }

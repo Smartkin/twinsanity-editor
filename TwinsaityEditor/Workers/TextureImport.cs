@@ -124,7 +124,7 @@ namespace TwinsaityEditor.Workers
                         System.Runtime.InteropServices.Marshal.Copy(data.Scan0, rawData, 0, rawData.Length);
 
 
-                        Texture.BlockFormats bf = (Texture.BlockFormats)cbFormats.SelectedIndex;
+                        //Texture.BlockFormats bf = (Texture.BlockFormats)cbFormats.SelectedIndex;
 
                         /*BackgroundWorker worker = new BackgroundWorker();
                         worker.DoWork += (send,ev) => 
