@@ -58,7 +58,6 @@ namespace Twinsanity
         public override void Load(BinaryReader reader, int size)
         {
             texSize = reader.ReadInt32();
-            var allTexDataPos = reader.BaseStream.Position;
             // Texture header
             unkInt = reader.ReadInt32();
             w = reader.ReadInt16();
@@ -93,14 +92,13 @@ namespace Twinsanity
             // The rest of data
             unusedMetadata = reader.ReadBytes(32);
             vifBlock = reader.ReadBytes(96);
+            // Jumping stream a tiny bit to grab the RRW and RRH from the TRXREG :^)
             var afterVifPos = reader.BaseStream.Position;
             reader.BaseStream.Position -= 96;
             reader.ReadBytes(48);
             var rrw = reader.ReadInt32();
             var rrh = reader.ReadInt32();
             reader.BaseStream.Position = afterVifPos;
-            //imageData = reader.ReadBytes(texSize - 224);
-            // TODO: Implement proper formats readers
             switch(PixelFormat)
             {
                 case TexturePixelFormat.PSMCT32: // Easiest one, raw color data
@@ -116,38 +114,19 @@ namespace Twinsanity
                         RawData[pxInd++] = Color.FromArgb(a, r, g, b);
                     }
                     break;
-                case TexturePixelFormat.PSMT8: // End me
+                case TexturePixelFormat.PSMT8: // End me, this cost me a tiny bit of my soul
                     imageData = reader.ReadBytes(texSize - 224);
-                    var dumpPath = @"D:\Twinsanity Discs\ScriptModding_Tests\tex_raw_data_extract\";
-                    var texMeta = ID.ToString("X") + "_" + Width + "x" + Height;
-                    
-                    reader.BaseStream.Position = allTexDataPos;
-                    var rawTex = reader.ReadBytes(texSize);
-                    var rawTexDump = File.Create(dumpPath + "rawTex_" + texMeta, texSize);
-                    rawTexDump.Write(rawTex, 0, texSize);
-                    rawTexDump.Close();
-                    EzSwizzle.InitGs();
                     EzSwizzle.cleanGs();
                     EzSwizzle.writeTexPSMCT32_mod(0, 1, 0, 0, rrw, rrh, imageData);
-                    EzSwizzle.dumpMemory(dumpPath + "gsDump_ct32_" + texMeta, false, dumpPath + "gsDumpVisual_" + texMeta + ".bmp");
-                    //EzSwizzle.dumpMemoryRearranged(dumpPath + "gsDump_Rearranged_ct32_" + texMeta);
-                    /*EzSwizzle.cleanGs();
-                    EzSwizzle.writeTexPSMCT32(0, 1, 0, 0, rrw, rrh, imageData);*/
-                    // Main texture image data extraction (just indices)
                     var texData = new byte[Width * Height];
                     EzSwizzle.readTexPSMT8(0, textureBufferWidth, 0, 0, Width, Height, ref texData);
-                    /*if (MipLevels > 1)
-                    {
-                        var mipLevel1 = new byte[(Width / 2) * (Height / 2)];
-                        EzSwizzle.readTexPSMT8(mipLevel1TBP, mipLevel1TBW, 0, 0, rrw / 2, rrh / 2, ref mipLevel1);
-                        var mipDataDump = File.Create(@"D:\Twinsanity Discs\ScriptModding_Tests\tex_raw_data_extract\mip_1_" + ID.ToString("X") + "_" + Width / 2 + "x" + Height / 2, (Width / 2) * (Height / 2));
-                        mipDataDump.Write(mipLevel1, 0, (Width / 2) * (Height / 2));
-                        mipDataDump.Close();
-                    }*/
+                    // TODO: Mips, use the TBP to find the data and divide by 2 width and height (bigger mips -> smaller resolution)
+                    // to find out the data size. Use EZSwizzle to unswizzle the textures
+
                     // Palette extraction
                     var palette = new byte[256 * 4];
                     EzSwizzle.readTexPSMCT32(clutBufferBasePointer, 1, 0, 0, 16, 16, ref palette);
-                    this.palette = new Color[16 * 16];
+                    this.palette = new Color[256];
                     var palInd = 0;
                     for (var i = 0; i < 256 * 4; i += 4)
                     {
@@ -155,9 +134,13 @@ namespace Twinsanity
                         var g = palette[i + 1];
                         var b = palette[i + 2];
                         var a = (byte)(palette[i + 3] << 1);
-                        this.palette[palInd] = Color.FromArgb(a, r, g, b);
+                        this.palette[palInd++] = Color.FromArgb(a, r, g, b);
                     }
-
+                    RawData = new Color[Width * Height];
+                    for (var i = 0; i < Width * Height; ++i)
+                    {
+                        RawData[i] = this.palette[texData[i]];
+                    }
                     break;
                 default:
                     imageData = reader.ReadBytes(texSize - 224);

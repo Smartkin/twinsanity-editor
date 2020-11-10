@@ -15,7 +15,6 @@ namespace Twinsanity
 	public static class EzSwizzle
 	{
 		static byte[] gs = new byte[1024 * 1024 * 4];
-		static ushort[] clut = new ushort[4096];
 
 		#region Constants
 		static readonly int[] block32 = new int[32] {
@@ -133,89 +132,11 @@ namespace Twinsanity
 			1, 1, 1, 1, 1, 1, 1, 1,  3, 3, 3, 3, 3, 3, 3, 3,  5, 5, 5, 5, 5, 5, 5, 5,  7, 7, 7, 7, 7, 7, 7, 7
 		};
 
-		static readonly int[][] columnTable32 = new int[8][]
-		{
-			new int[8] {  0,  1,  4,  5,  8,  9, 12, 13 },
-			new int[8] {  2,  3,  6,  7, 10, 11, 14, 15 },
-			new int[8] { 16, 17, 20, 21, 24, 25, 28, 29 },
-			new int[8] { 18, 19, 22, 23, 26, 27, 30, 31 },
-			new int[8] { 32, 33, 36, 37, 40, 41, 44, 45 },
-			new int[8] { 34, 35, 38, 39, 42, 43, 46, 47 },
-			new int[8] { 48, 49, 52, 53, 56, 57, 60, 61 },
-			new int[8] { 50, 51, 54, 55, 58, 59, 62, 63 }
-		};
-
 		#endregion
-
-		static uint[][][] pageOffset32 = new uint[32][][];
-
-		static uint PixelAddressOrg32(int x, int y, uint dbp, uint dbw)
-        {
-			return (uint)((BlockNumber32(x, y, dbp, dbw) << 6) + columnTable32[y & 7][x & 7]);
-        }
 
 		static uint BlockNumber32(int x, int y, uint dbp, uint dbw)
         {
 			return (uint)(dbp + (y & ~0x1f) * dbw + ((x >> 1) & ~0x1f) + blockTable32[(y >> 3) & 3][(x >> 3) & 7]);
-        }
-
-		static uint PixelAddress32(int x, int y, uint dbp, uint dbw)
-        {
-			var page = ((dbp >> 5) + (y >> 5) * dbw + (x >> 6)) % 512;
-			var word = (page << 11) + pageOffset32[dbp & 0x1f][y & 0x1f][x & 0x3f];
-
-			return (uint)word;
-		}
-
-		static void WritePixel32(int x, int y, uint c, uint dbp, uint dbw)
-        {
-			var gsMemStream = new MemoryStream(gs);
-			var binWriter = new BinaryWriter(gsMemStream);
-			binWriter.BaseStream.Position = PixelAddress32(x, y, dbp, dbw) * 4;
-			binWriter.Write(c);
-			binWriter.BaseStream.Position = 0;
-			binWriter.Close();
-        }
-
-		static void WriteImageTopBottom32(int l, int r, int y, int h, int dataIndex, int srcpitch, uint dbp, uint dbw, byte[] data)
-        {
-			int bsx = 8;
-			int bsy = 8;
-			int trbpp = 32;
-			int csy = bsy / 4;
-
-			int y2 = y & (csy - 1);
-
-			if (y2 > 0)
-            {
-				int h2 = Math.Min(h, csy - y2);
-
-				for (var x = l; x < r; x += bsx)
-                {
-					var gsMemIndex = BlockNumber32(x, y, dbp, dbw) << 8;
-					var buff = new byte[64];
-					ReadColumn32(y, (int)gsMemIndex, gs, ref buff);
-					for (var i = 0; i < 32; ++i)
-                    {
-						buff[32 + i] = data[x * 4 + dataIndex];
-                    }
-					//WriteColumn32(y, (int)gsMemIndex, buff, ref gs);
-                }
-
-				dataIndex += srcpitch * h2;
-				y += h2;
-				h -= h2;
-            }
-
-            // Write whole columns
-            {
-				int h2 = h & ~(csy - 1);
-
-				if (h2 > 0)
-                {
-					var index = l * trbpp >> 3;
-                }
-            }
         }
 
 		static void WriteImageBlock32(int l, int r, int y, int h, int dataIndex, int srcpitch, int dbp, int dbw, byte[] data)
@@ -297,30 +218,6 @@ namespace Twinsanity
 			v3.Write(dstBinWriter);
 
 		}
-
-		static bool init = false;
-		public static void InitGs()
-        {
-			if (!init)
-			{
-				init = true;
-				for (var i = 0; i < 32; ++i)
-				{
-					pageOffset32[i] = new uint[32][];
-					for (var j = 0; j < 32; ++j)
-					{
-						pageOffset32[i][j] = new uint[64];
-					}
-				}
-				for (uint bp = 0; bp < 32; ++bp)
-				{
-					for (var y = 0; y < 32; ++y) for (var x = 0; x < 64; ++x)
-						{
-							pageOffset32[bp][y][x] = PixelAddressOrg32(x, y, bp, 0);
-						}
-				}
-			}
-        }
 
 		public static void cleanGs()
         {
@@ -793,6 +690,9 @@ namespace Twinsanity
 
 		public static void writeTexPSMCT32_mod(int dbp, int dbw, int dsax, int dsay, int rrw, int rrh, byte[] data)
 		{
+			// Most of this code is courtesy of PCSX2's source code and ported from C++ to C#, God please never make me do this ever again
+			// For PSMCT32 8, 8 and 32 values are used. For other formats look into more of PCSX2's code
+			// This is a very small part of the code as THANKFULLY at least Twins textures keep the same values for TRXPOS, TRXREG and TRXDIR
 			var bsx = 8;
 			var bsy = 8;
 			var trbpp = 32;
@@ -801,48 +701,39 @@ namespace Twinsanity
 			int l = dsax;
 			int r = l + rrw;
 
+			// What is even happening here?
 			int la = 0;
 			int ra = r & ~(bsx - 1);
 			int srcpitch = (r - l) * trbpp >> 3;
 			var len = data.Length;
 			int h = len / srcpitch;
 
-			if (ra - la >= bsx && h > 0) // "transfer width" >= "block width" && there is at least one full row
+			if (ra - la >= bsx && h > 0)
 			{
+				// But wait what???
 				var dataIndex = -l * trbpp >> 3;
 				len -= srcpitch * h;
 
-				// Horizontally aligned part
-
 				if (la < ra)
                 {
-                    // horizontally and vertically aligned part
+					int h2 = h & ~(bsy - 1);
 
+					if (h2 > 0)
                     {
-						int h2 = h & ~(bsy - 1);
-
-						if (h2 > 0)
-                        {
-							WriteImageBlock32(la, ra, ty, h2, dataIndex, srcpitch, dbp, dbw, data);
-
-							dataIndex += srcpitch * h2;
-							ty += h2;
-							h -= h2;
-                        }
+						WriteImageBlock32(la, ra, ty, h2, dataIndex, srcpitch, dbp, dbw, data);
+						h -= h2;
                     }
-
-					// bottom part
 
 					if (h > 0)
                     {
-						throw new Exception("Hueston we got a problem! We need to write more code!");
+						throw new Exception("Houston we got a problem! We need to write more code!");
                     }
 				}
 			}
 
 			if (len > 0)
             {
-				throw new Exception("Hueston we got a problem! We need to write more code!");
+				throw new Exception("Houston we got a problem! We need to write more code!");
 			}
 		}
 
