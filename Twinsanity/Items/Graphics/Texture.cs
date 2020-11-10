@@ -109,10 +109,18 @@ namespace Twinsanity
                     }
                     break;
                 case TexturePixelFormat.PSMT8: // End me, this cost me a tiny bit of my soul
+
+                    // The limit seems to be 128 in width textures. For bigger widths PSMCT32 is always used
+                    // when setting up import/export we need to take that into account
+
                     imageData = reader.ReadBytes(texSize - 224);
                     EzSwizzle.cleanGs();
-                    // Deinterleave texture data
+                    // Deinterleave texture data, even though texture buffer width
+                    // for the main texture can be bigger than 1, the BITBLTBUF register's DBW field
+                    // in Twins engine is always set to 1. Note: Unless the format is PSMCT32 but that doesn't matter since that is not swizzled
+                    // or interleaved in any way
                     EzSwizzle.writeTexPSMCT32(0, 1, 0, 0, rrw, rrh, imageData);
+
                     // Unswizzle main texture data
                     var texData = new byte[Width * Height];
                     EzSwizzle.readTexPSMT8(0, textureBufferWidth, 0, 0, Width, Height, ref texData);
@@ -135,13 +143,16 @@ namespace Twinsanity
                     SwapPalette(ref this.palette);
                     #endregion
 
-                    #region Mips
+                    // Mips
+                    #region Mips reading
                     mips = new Color[MipLevels][];
                     for (var i = 0; i < MipLevels; ++i)
                     {
+                        // Each mip becomes increasingly smaller. Minimum supported mip by PS2 is 8x8
                         var mipWidth = (Width / (1 << (i + 1)));
                         var mipHeight = (Height / (1 << (i + 1)));
                         var mipData = new byte[mipWidth * mipHeight];
+                        // Unswizzle mip data
                         EzSwizzle.readTexPSMT8(mipLevelsTBP[i], mipLevelsTBW[i], 0, 0, mipWidth, mipHeight, ref mipData);
                         Flip(ref mipData, mipWidth, mipHeight);
                         mips[i] = new Color[mipWidth * mipHeight];
