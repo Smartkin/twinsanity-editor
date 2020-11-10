@@ -34,11 +34,12 @@ namespace TwinsaityEditor
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TextureViewer));
             this.GlControl1 = new OpenTK.GLControl();
-            this.Button1 = new System.Windows.Forms.Button();
+            this.btnSave = new System.Windows.Forms.Button();
             this.SavePNG = new System.Windows.Forms.SaveFileDialog();
             this.btnPrevTexture = new System.Windows.Forms.Button();
             this.btnNextTexture = new System.Windows.Forms.Button();
             this.lblTextureIndex = new System.Windows.Forms.Label();
+            this.cbSaveMips = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // GlControl1
@@ -51,15 +52,15 @@ namespace TwinsaityEditor
             this.GlControl1.VSync = false;
             this.GlControl1.Paint += new System.Windows.Forms.PaintEventHandler(this.GlControl1_Paint);
             // 
-            // Button1
+            // btnSave
             // 
-            this.Button1.Location = new System.Drawing.Point(13, 275);
-            this.Button1.Name = "Button1";
-            this.Button1.Size = new System.Drawing.Size(75, 23);
-            this.Button1.TabIndex = 1;
-            this.Button1.Text = "Save";
-            this.Button1.UseVisualStyleBackColor = true;
-            this.Button1.Click += new System.EventHandler(this.Button1_Click);
+            this.btnSave.Location = new System.Drawing.Point(13, 275);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(75, 23);
+            this.btnSave.TabIndex = 1;
+            this.btnSave.Text = "Save";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // SavePNG
             // 
@@ -67,7 +68,7 @@ namespace TwinsaityEditor
             // 
             // btnPrevTexture
             // 
-            this.btnPrevTexture.Location = new System.Drawing.Point(133, 275);
+            this.btnPrevTexture.Location = new System.Drawing.Point(139, 275);
             this.btnPrevTexture.Name = "btnPrevTexture";
             this.btnPrevTexture.Size = new System.Drawing.Size(45, 23);
             this.btnPrevTexture.TabIndex = 2;
@@ -95,16 +96,28 @@ namespace TwinsaityEditor
             this.lblTextureIndex.Text = "0/0";
             this.lblTextureIndex.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // cbSaveMips
+            // 
+            this.cbSaveMips.AutoSize = true;
+            this.cbSaveMips.Location = new System.Drawing.Point(13, 304);
+            this.cbSaveMips.Name = "cbSaveMips";
+            this.cbSaveMips.Size = new System.Drawing.Size(75, 17);
+            this.cbSaveMips.TabIndex = 5;
+            this.cbSaveMips.Text = "Save mips";
+            this.cbSaveMips.UseVisualStyleBackColor = true;
+            // 
             // TextureViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(286, 306);
+            this.ClientSize = new System.Drawing.Size(286, 326);
+            this.Controls.Add(this.cbSaveMips);
             this.Controls.Add(this.lblTextureIndex);
             this.Controls.Add(this.btnNextTexture);
             this.Controls.Add(this.btnPrevTexture);
-            this.Controls.Add(this.Button1);
+            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.GlControl1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "TextureViewer";
             this.Text = "TextureViewer";
@@ -115,10 +128,11 @@ namespace TwinsaityEditor
         }
         private System.Windows.Forms.Panel Panel1;
         private OpenTK.GLControl GlControl1;
-        private System.Windows.Forms.Button Button1;
+        private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.SaveFileDialog SavePNG;
         private Button btnPrevTexture;
         private Button btnNextTexture;
         private Label lblTextureIndex;
+        private CheckBox cbSaveMips;
     }
 }

@@ -89,15 +89,31 @@ namespace TwinsaityEditor
             Application.DoEvents();
         }
 
-        private void Button1_Click(object sender, EventArgs e)
+        private void btnSave_Click(object sender, EventArgs e)
         {
             SavePNG.FileName = SelectedTexture.ID.ToString();
-            if (SavePNG.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (SavePNG.ShowDialog() == DialogResult.OK)
             {
-                Bitmap BMP = new Bitmap(System.Convert.ToInt32(SelectedTexture.Width), System.Convert.ToInt32(SelectedTexture.Height));
+                Bitmap BMP = new Bitmap(Convert.ToInt32(SelectedTexture.Width), Convert.ToInt32(SelectedTexture.Height));
                 for (int i = 0; i < SelectedTexture.RawData.Length; i++)
-                    BMP.SetPixel((int)(i % SelectedTexture.Width), (int)(i / SelectedTexture.Width), SelectedTexture.RawData[i]);
+                    BMP.SetPixel((i % SelectedTexture.Width), (i / SelectedTexture.Width), SelectedTexture.RawData[i]);
                 BMP.Save(SavePNG.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                if (cbSaveMips.Checked)
+                {
+                    if (SelectedTexture.MipLevels > 0)
+                    {
+                        for (var i = 0; i < SelectedTexture.MipLevels; ++i)
+                        {
+                            var mip = SelectedTexture.GetMips(i);
+                            var mipWidth = (SelectedTexture.Width / (1 << (i + 1)));
+                            var mipHeight = (SelectedTexture.Height / (1 << (i + 1)));
+                            Bitmap mipBmp = new Bitmap(Convert.ToInt32(mipWidth), Convert.ToInt32(mipHeight));
+                            for (int j = 0; j < mip.Length; j++)
+                                mipBmp.SetPixel((j % mipWidth), (j / mipWidth), mip[j]);
+                            mipBmp.Save(SavePNG.FileName.Substring(0, SavePNG.FileName.Length - 4) + "_mip_" + (i + 1).ToString() + ".png", System.Drawing.Imaging.ImageFormat.Png);
+                        }
+                    }
+                }
             }
         }
 
