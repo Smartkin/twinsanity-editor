@@ -14,9 +14,8 @@ namespace TwinsaityEditor
             InitializeComponent();
         }
 
-        public Twinsanity.Texture Texture;
-        public Twinsanity.Textures Textures;
-        public Twinsanity.Materials Materials;
+        public Texture Texture;
+
         public bool Mat = false;
         public uint CurTex = 0;
         public void Init()
@@ -40,7 +39,6 @@ namespace TwinsaityEditor
         private void TextureViewer_Load(object sender, EventArgs e)
         {
             Init();
-            UpdateTexture();
         }
 
         private void GlControl1_Paint(object sender, PaintEventArgs e)
@@ -48,12 +46,9 @@ namespace TwinsaityEditor
             GL.ClearColor(Color.Black);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.Begin(PrimitiveType.Points);
-            for (int i = 0; i <= Texture.RawData.Length - 1; i++)
+            for (int i = 0; i < Texture.RawData.Length; i++)
             {
-                if (CheckBox1.Checked == true)
-                    GL.Color4(Color.FromArgb(255, Texture.Index[i], Texture.Index[i], Texture.Index[i]));
-                else
-                    GL.Color4(Texture.RawData[i]);
+                GL.Color4(Texture.RawData[i]);
                 GL.Vertex2(i % (Texture.Width), i / (Texture.Width));
             }
             GL.End();
@@ -67,73 +62,10 @@ namespace TwinsaityEditor
             if (SavePNG.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 Bitmap BMP = new Bitmap(System.Convert.ToInt32(Texture.Width), System.Convert.ToInt32(Texture.Height));
-                for (int i = 0; i <= Texture.RawData.Length - 1; i++)
+                for (int i = 0; i < Texture.RawData.Length; i++)
                     BMP.SetPixel((int)(i % Texture.Width), (int)(i / Texture.Width), Texture.RawData[i]);
                 BMP.Save(SavePNG.FileName, System.Drawing.Imaging.ImageFormat.Png);
             }
-        }
-
-        private void CheckBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            GlControl1.Invalidate();
-        }
-
-        private void UpdateTexture()
-        {
-            if (Mat)
-            {
-                Twinsanity.Material Material = (Twinsanity.Material)Materials._Item[CurTex];
-                uint TexId = Material.Texture;
-                for (int i = 0; i <= Textures._Item.Length - 1; i++)
-                {
-                    if (Textures._Item[i].ID == TexId)
-                    {
-                        Texture = (Twinsanity.Texture)Textures._Item[i];
-                        break;
-                    }
-                }
-                Label1.Text = (CurTex + 1).ToString() + @"\" + Materials._Item.Length.ToString();
-                this.Text = Material.Name + " Texture: " + Texture.ID.ToString();
-            }
-            else
-            {
-                Texture = (Twinsanity.Texture)Textures._Item[CurTex];
-                Label1.Text = (CurTex + 1).ToString() + @"\" + Textures._Item.Length.ToString();
-                this.Text = "ID: " + Texture.ID.ToString();
-            }
-            GlControl1.Invalidate();
-        }
-
-        private void Button3_Click(object sender, EventArgs e)
-        {
-            if (Mat)
-            {
-                if (CurTex < Materials._Item.Length - 1)
-                    CurTex += 1;
-                else
-                    CurTex = 0;
-            }
-            else if (CurTex < Textures._Item.Length - 1)
-                CurTex += 1;
-            else
-                CurTex = 0;
-            UpdateTexture();
-        }
-
-        private void Button2_Click(object sender, EventArgs e)
-        {
-            if (Mat)
-            {
-                if (CurTex > 0)
-                    CurTex -= 1;
-                else
-                    CurTex = (uint)Materials._Item.Length - 1;
-            }
-            else if (CurTex > 0)
-                CurTex -= 1;
-            else
-                CurTex = (uint)Textures._Item.Length - 1;
-            UpdateTexture();
         }
     }
 }

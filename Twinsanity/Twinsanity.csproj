@@ -25,6 +25,7 @@
     <Prefer32Bit>false</Prefer32Bit>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DefineConstants>DEBUG</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -64,6 +65,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DefaultEnums.cs" />
+    <Compile Include="EzSwizzle.cs" />
+    <Compile Include="GSVector4i.cs" />
     <Compile Include="Items\Code\Animation.cs" />
     <Compile Include="Items\Code\CodeModel.cs" />
     <Compile Include="Items\Code\GameObjectDemo.cs" />

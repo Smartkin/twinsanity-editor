@@ -34,6 +34,7 @@ namespace TwinsaityEditor
         private SkydomeViewer skyViewer;
         private RMViewer rmViewer;
         private SMViewer smViewer;
+        private TextureViewer texViewer;
         private Dictionary<uint, Form> MeshViewers { get; set; }
         private Dictionary<uint, Form> ModelViewers { get; set; }
 
@@ -241,6 +242,24 @@ namespace TwinsaityEditor
             }
             else
                 MeshViewers[id].Select();
+        }
+
+        public void OpenTextureViewer(TextureController c)
+        {
+            if (texViewer == null || texViewer.IsDisposed)
+            {
+                texViewer = new TextureViewer();
+                texViewer.Texture = c.Data;
+                texViewer.FormClosed += delegate
+                {
+                    texViewer = null;
+                };
+                texViewer.Show();
+            }
+            else
+            {
+                texViewer.Select();
+            }
         }
 
         public void CloseMeshViewer(uint mesh_id)

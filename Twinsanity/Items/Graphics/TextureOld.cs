@@ -501,11 +501,11 @@ namespace Twinsanity
                             Index = BSReader.ReadBytes(16384);
                             if (Mip > 1)
                             {
-                                for (int i = 0; i <= 31; i++)
+                                for (int i = 0; i < 32; i++)
                                 {
-                                    for (int j = 0; j <= 191; j++)
+                                    for (int j = 0; j < 192; j++)
                                         MipIndex[j + i * 192] = BSReader.ReadByte();
-                                    for (int j = 0; j <= 15; j++)
+                                    for (int j = 0; j < 16; j++)
                                     {
                                         byte a, r, g, b;
                                         r = BSReader.ReadByte();
@@ -534,9 +534,9 @@ namespace Twinsanity
                         else if ((Width == 128) && (Height == 256))
                         {
                             Index = BSReader.ReadBytes(32768);
-                            for (int i = 0; i <= 31; i++)
+                            for (int i = 0; i < 32; i++)
                             {
-                                for (int j = 0; j <= 15; j++)
+                                for (int j = 0; j < 16; j++)
                                 {
                                     byte a, r, g, b;
                                     r = BSReader.ReadByte();
@@ -582,9 +582,9 @@ namespace Twinsanity
         {
             byte[] tmp = new byte[indexes.Length - 1 + 1];
             indexes.CopyTo(tmp, 0);
-            for (int y = 0; y <= height - 1; y++)
+            for (int y = 0; y < height; y++)
             {
-                for (int x = 0; x <= width - 1; x++)
+                for (int x = 0; x < width; x++)
                 {
                     int block_location = (y & (~0xF)) * width + (x & (~0xF)) * 2;
                     int swap_selector = (((y + 2) >> 2) & 0x1) * 4;

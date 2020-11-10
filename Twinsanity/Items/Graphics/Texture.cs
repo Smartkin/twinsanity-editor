@@ -2,6 +2,8 @@ using System.IO;
 using System;
 using System.Drawing;
 using Twinsanity.Properties;
+using System.Drawing.Imaging;
+using System.Collections.Generic;
 
 namespace Twinsanity
 {
@@ -16,7 +18,7 @@ namespace Twinsanity
         private byte m;
         private byte format;
         private int type;
-        private byte unkFlag;
+        private byte destinationFormat;
         private byte texColComponent; // 0 - RGB, 1 - RGBA
         private byte unkByte;
         private byte textureFun;
@@ -41,25 +43,29 @@ namespace Twinsanity
         private byte[] unusedMetadata = new byte[32]; // This metadata is read but discarded afterwards in game's code
         private byte[] vifBlock = new byte[96]; // This holds a VIF code block, which does some basic texture setup, we don't care about it
         private byte[] imageData;
-
+        private Color[] palette;
 
         public int Width { get => 1 << w; }
         public int Height { get => 1 << h; }
         public int MipLevels { get => m; }
         public TexturePixelFormat PixelFormat { get => (TexturePixelFormat)format; }
+        public TexturePixelFormat DestinationPixelFormat { get => (TexturePixelFormat)destinationFormat; }
         public TextureColorComponent ColorComponent { get => (TextureColorComponent)texColComponent; }
         public TextureFunction TexFun { get => (TextureFunction)textureFun; }
+        public Color[] RawData { get; private set; }
+        public int TextureBufferWidth { get => textureBufferWidth * 64; }
 
         public override void Load(BinaryReader reader, int size)
         {
             texSize = reader.ReadInt32();
+            var allTexDataPos = reader.BaseStream.Position;
             // Texture header
             unkInt = reader.ReadInt32();
             w = reader.ReadInt16();
             h = reader.ReadInt16();
             m = reader.ReadByte();
             format = reader.ReadByte();
-            unkFlag = reader.ReadByte();
+            destinationFormat = reader.ReadByte();
             texColComponent = reader.ReadByte();
             unkByte = reader.ReadByte();
             textureFun = reader.ReadByte();
@@ -87,8 +93,76 @@ namespace Twinsanity
             // The rest of data
             unusedMetadata = reader.ReadBytes(32);
             vifBlock = reader.ReadBytes(96);
-            imageData = reader.ReadBytes(texSize - 224);
+            var afterVifPos = reader.BaseStream.Position;
+            reader.BaseStream.Position -= 96;
+            reader.ReadBytes(48);
+            var rrw = reader.ReadInt32();
+            var rrh = reader.ReadInt32();
+            reader.BaseStream.Position = afterVifPos;
+            //imageData = reader.ReadBytes(texSize - 224);
             // TODO: Implement proper formats readers
+            switch(PixelFormat)
+            {
+                case TexturePixelFormat.PSMCT32: // Easiest one, raw color data
+                    imageData = reader.ReadBytes(texSize - 224);
+                    RawData = new Color[Width * Height];
+                    var pxInd = 0;
+                    for (var i = 0; i < texSize - 224; i += 4)
+                    {
+                        var r = imageData[i];
+                        var g = imageData[i + 1];
+                        var b = imageData[i + 2];
+                        var a = (byte)(imageData[i + 3] << 1);
+                        RawData[pxInd++] = Color.FromArgb(a, r, g, b);
+                    }
+                    break;
+                case TexturePixelFormat.PSMT8: // End me
+                    imageData = reader.ReadBytes(texSize - 224);
+                    var dumpPath = @"D:\Twinsanity Discs\ScriptModding_Tests\tex_raw_data_extract\";
+                    var texMeta = ID.ToString("X") + "_" + Width + "x" + Height;
+                    
+                    reader.BaseStream.Position = allTexDataPos;
+                    var rawTex = reader.ReadBytes(texSize);
+                    var rawTexDump = File.Create(dumpPath + "rawTex_" + texMeta, texSize);
+                    rawTexDump.Write(rawTex, 0, texSize);
+                    rawTexDump.Close();
+                    EzSwizzle.InitGs();
+                    EzSwizzle.cleanGs();
+                    EzSwizzle.writeTexPSMCT32_mod(0, 1, 0, 0, rrw, rrh, imageData);
+                    EzSwizzle.dumpMemory(dumpPath + "gsDump_ct32_" + texMeta, false, dumpPath + "gsDumpVisual_" + texMeta + ".bmp");
+                    //EzSwizzle.dumpMemoryRearranged(dumpPath + "gsDump_Rearranged_ct32_" + texMeta);
+                    /*EzSwizzle.cleanGs();
+                    EzSwizzle.writeTexPSMCT32(0, 1, 0, 0, rrw, rrh, imageData);*/
+                    // Main texture image data extraction (just indices)
+                    var texData = new byte[Width * Height];
+                    EzSwizzle.readTexPSMT8(0, textureBufferWidth, 0, 0, Width, Height, ref texData);
+                    /*if (MipLevels > 1)
+                    {
+                        var mipLevel1 = new byte[(Width / 2) * (Height / 2)];
+                        EzSwizzle.readTexPSMT8(mipLevel1TBP, mipLevel1TBW, 0, 0, rrw / 2, rrh / 2, ref mipLevel1);
+                        var mipDataDump = File.Create(@"D:\Twinsanity Discs\ScriptModding_Tests\tex_raw_data_extract\mip_1_" + ID.ToString("X") + "_" + Width / 2 + "x" + Height / 2, (Width / 2) * (Height / 2));
+                        mipDataDump.Write(mipLevel1, 0, (Width / 2) * (Height / 2));
+                        mipDataDump.Close();
+                    }*/
+                    // Palette extraction
+                    var palette = new byte[256 * 4];
+                    EzSwizzle.readTexPSMCT32(clutBufferBasePointer, 1, 0, 0, 16, 16, ref palette);
+                    this.palette = new Color[16 * 16];
+                    var palInd = 0;
+                    for (var i = 0; i < 256 * 4; i += 4)
+                    {
+                        var r = palette[i];
+                        var g = palette[i + 1];
+                        var b = palette[i + 2];
+                        var a = (byte)(palette[i + 3] << 1);
+                        this.palette[palInd] = Color.FromArgb(a, r, g, b);
+                    }
+
+                    break;
+                default:
+                    imageData = reader.ReadBytes(texSize - 224);
+                    break;
+            }
         }
 
         public override void Save(BinaryWriter writer)
@@ -99,7 +173,7 @@ namespace Twinsanity
             writer.Write(h);
             writer.Write(m);
             writer.Write(format);
-            writer.Write(unkFlag);
+            writer.Write(destinationFormat);
             writer.Write(texColComponent);
             writer.Write(unkByte);
             writer.Write(textureFun);
@@ -136,30 +210,26 @@ namespace Twinsanity
         }
 
         #region INTERNALS
-        internal void UnSwizzle(ref byte[] indexes, ushort width, ushort height)
+        private byte[] UnSwizzle(byte[] indexes, ushort width, ushort height)
         {
-            byte[] tmp = new byte[indexes.Length];
+            byte[] tmp = new byte[width * height];
             indexes.CopyTo(tmp, 0);
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
-                    int block_location = (y & ~0xF) * width + (x & ~0xF) * 2;
-                    int swap_selector = (((y + 2) >> 2) & 0x1) * 4;
-                    int posY = (((y & ~3) >> 1) + (y & 1)) & 0x7;
-                    int posX = posY * width * 2 + ((x + swap_selector) & 0x7) * 4;
-                    var byte_num = ((y >> 1) & 1) + ((x >> 2) & 2);
-                    indexes[Math.Min(y * width + x, indexes.Length - 1)] = tmp[Math.Min(block_location + posX + byte_num, tmp.Length - 1)];
+                    var block_location = (x + y) % 256;
                 }
             }
+            return tmp;
         }
         internal void Swizzle(ref byte[] indexes, ushort width, ushort height)
         {
             byte[] tmp = new byte[indexes.Length - 1 + 1];
             indexes.CopyTo(tmp, 0);
-            for (int y = 0; y <= height - 1; y++)
+            for (int y = 0; y < height; y++)
             {
-                for (int x = 0; x <= width - 1; x++)
+                for (int x = 0; x < width; x++)
                 {
                     int block_location = (y & (~0xF)) * width + (x & (~0xF)) * 2;
                     int swap_selector = (((y + 2) >> 2) & 0x1) * 4;
