@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 
 namespace Twinsanity
@@ -196,29 +190,6 @@ namespace Twinsanity
 			dstBinWriter.Close();
 		}
 
-		static void ReadColumn32(int y, int srcIndex, byte[] src, ref byte[] dst)
-        {
-			var i = ((y >> 1) & 3);
-			var srcMemStr = new MemoryStream(src);
-			var dstMemStr = new MemoryStream(dst);
-			var srcBinRead = new BinaryReader(srcMemStr);
-			var dstBinWriter = new BinaryWriter(dstMemStr);
-			srcBinRead.BaseStream.Position = i * 4 * 16 + srcIndex;
-
-			Util.GSVector4i v0 = Util.GSVector4i.Read(srcBinRead);
-			Util.GSVector4i v1 = Util.GSVector4i.Read(srcBinRead);
-			Util.GSVector4i v2 = Util.GSVector4i.Read(srcBinRead);
-			Util.GSVector4i v3 = Util.GSVector4i.Read(srcBinRead);
-
-			Util.GSVector4i.sw64(ref v0, ref v1, ref v2, ref v3);
-
-			v0.Write(dstBinWriter);
-			v1.Write(dstBinWriter);
-			v2.Write(dstBinWriter);
-			v3.Write(dstBinWriter);
-
-		}
-
 		public static void cleanGs()
         {
 			gs = new byte[1024 * 1024 * 4];
@@ -260,48 +231,6 @@ namespace Twinsanity
 				}
 			}
 		}
-
-		public static void dumpMemoryRearranged(string path)
-        {
-			// The purpose is to rearrange each page in GS memory where upper 8 bytes are first
-			// and lower 8 bytes come second, maybe some secret pattern can be found this way?
-			var gsDump = File.Create(path, gs.Length);
-			var gsRearrange = new byte[gs.Length];
-			var gsRearrMemStream = new MemoryStream(gsRearrange);
-			var gsLower = new byte[4096];
-			var gsUpper = new byte[4096];
-			var gsLowerIndex = 0;
-			var gsUpperIndex = 0;
-			var odd = false;
-			for (var i = 0; i < gs.Length; i += 8)
-            {
-				if (i != 0 && (i % 8192) == 0)
-				{
-					gsUpperIndex = 0;
-					gsLowerIndex = 0;
-					gsRearrMemStream.Write(gsUpper, 0, 4096);
-					gsRearrMemStream.Write(gsLower, 0, 4096);
-				}
-				if (!odd)
-                {
-					for (var j = 0; j < 8; ++j)
-					{
-						gsUpper[gsUpperIndex++] = gs[i + j];
-					}
-					odd = true;
-				}
-				else
-                {
-					for (var j = 0; j < 8; ++j)
-					{
-						gsLower[gsLowerIndex++] = gs[i + j];
-					}
-					odd = false;
-				}
-            }
-			gsDump.Write(gsRearrange, 0, gs.Length);
-			gsDump.Close();
-        }
 
 		public static void writeSelfPSMCT32(int dbp, int dbw, int dsax, int dsay, int rrw, int rrh)
 		{
@@ -776,45 +705,5 @@ namespace Twinsanity
 				}
 			}
 		}
-	
-		public static void writeCLUT_I8(int cbp)
-        {
-			var gs_offset = (cbp << 8);
-			for (var i = 0; i < 64; i += 16)
-            {
-
-            }
-        }
-
-		private unsafe class GSVector4i
-        {
-			[StructLayout(LayoutKind.Explicit)]
-			struct _
-            {
-				[FieldOffset(0)] int x;
-				[FieldOffset(4)] int y;
-				[FieldOffset(8)] int z;
-				[FieldOffset(12)] int w;
-				[FieldOffset(0)] int r;
-				[FieldOffset(4)] int g;
-				[FieldOffset(8)] int b;
-				[FieldOffset(12)] int a;
-				[FieldOffset(0)] int left;
-				[FieldOffset(4)] int top;
-				[FieldOffset(8)] int right;
-				[FieldOffset(12)] int bottom;
-				[FieldOffset(0)] fixed int v[4];
-				[FieldOffset(0)] fixed float f32[4];
-				[FieldOffset(0)] fixed sbyte i8[16];
-				[FieldOffset(0)] fixed short i16[8];
-				[FieldOffset(0)] fixed int i32[4];
-				[FieldOffset(0)] fixed long i64[2];
-				[FieldOffset(0)] fixed byte u8[16];
-				[FieldOffset(0)] fixed ushort u16[8];
-				[FieldOffset(0)] fixed uint u32[4];
-				[FieldOffset(0)] fixed ulong u64[2];
-				//[FieldOffset(0)] Vector128
-			}
-        }
 	}
 }
