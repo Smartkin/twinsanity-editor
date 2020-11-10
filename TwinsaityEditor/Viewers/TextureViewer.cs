@@ -52,6 +52,23 @@ namespace TwinsaityEditor
                 GL.Vertex2(i % (Texture.Width), i / (Texture.Width));
             }
             GL.End();
+            if (Texture.MipLevels > 0)
+            {
+                var widthOffset = Texture.Width;
+                for (var i = 0; i < Texture.MipLevels; ++i)
+                {
+                    var mip = Texture.GetMips(i);
+                    var mipWidth = (Texture.Width / (1 << (i + 1)));
+                    GL.Begin(PrimitiveType.Points);
+                    for (int j = 0; j < mip.Length; ++j)
+                    {
+                        GL.Color4(mip[j]);
+                        GL.Vertex2(widthOffset + j % mipWidth, j / mipWidth);
+                    }
+                    GL.End();
+                    widthOffset += mipWidth;
+                }
+            }
             GlControl1.SwapBuffers();
             Application.DoEvents();
         }

@@ -17,26 +17,15 @@ namespace Twinsanity
         private short w, h;
         private byte m;
         private byte format;
-        private int type;
         private byte destinationFormat;
         private byte texColComponent; // 0 - RGB, 1 - RGBA
         private byte unkByte;
         private byte textureFun;
         private byte[] unkBytes = new byte[2];
         private int textureBasePointer;
-        private int mipLevel1TBP;
-        private int mipLevel2TBP;
-        private int mipLevel3TBP;
-        private int mipLevel4TBP;
-        private int mipLevel5TBP;
-        private int mipLevel6TBP;
+        private int[] mipLevelsTBP;
         private int textureBufferWidth;
-        private int mipLevel1TBW;
-        private int mipLevel2TBW;
-        private int mipLevel3TBW;
-        private int mipLevel4TBW;
-        private int mipLevel5TBW;
-        private int mipLevel6TBW;
+        private int[] mipLevelsTBW;
         private int clutBufferBasePointer;
         private byte[] unkBytes2 = new byte[8];
         private byte[] unkBytes3 = new byte[2];
@@ -44,16 +33,23 @@ namespace Twinsanity
         private byte[] vifBlock = new byte[96]; // This holds a VIF code block, which does some basic texture setup, we don't care about it
         private byte[] imageData;
         private Color[] palette;
+        private Color[][] mips;
 
         public int Width { get => 1 << w; }
         public int Height { get => 1 << h; }
-        public int MipLevels { get => m; }
+        public int MipLevels { get => m - 1; }
         public TexturePixelFormat PixelFormat { get => (TexturePixelFormat)format; }
         public TexturePixelFormat DestinationPixelFormat { get => (TexturePixelFormat)destinationFormat; }
         public TextureColorComponent ColorComponent { get => (TextureColorComponent)texColComponent; }
         public TextureFunction TexFun { get => (TextureFunction)textureFun; }
         public Color[] RawData { get; private set; }
         public int TextureBufferWidth { get => textureBufferWidth * 64; }
+
+        public Color[] GetMips(int level)
+        {
+            var index = Math.Min(MipLevels - 1, level);
+            return mips[index];
+        }
 
         public override void Load(BinaryReader reader, int size)
         {
@@ -70,19 +66,17 @@ namespace Twinsanity
             textureFun = reader.ReadByte();
             unkBytes = reader.ReadBytes(2);
             textureBasePointer = reader.ReadInt32();
-            mipLevel1TBP = reader.ReadInt32();
-            mipLevel2TBP = reader.ReadInt32();
-            mipLevel3TBP = reader.ReadInt32();
-            mipLevel4TBP = reader.ReadInt32();
-            mipLevel5TBP = reader.ReadInt32();
-            mipLevel6TBP = reader.ReadInt32();
+            mipLevelsTBP = new int[6];
+            for (var i = 0; i < 6; ++i)
+            {
+                mipLevelsTBP[i] = reader.ReadInt32();
+            }
             textureBufferWidth = reader.ReadInt32();
-            mipLevel1TBW = reader.ReadInt32();
-            mipLevel2TBW = reader.ReadInt32();
-            mipLevel3TBW = reader.ReadInt32();
-            mipLevel4TBW = reader.ReadInt32();
-            mipLevel5TBW = reader.ReadInt32();
-            mipLevel6TBW = reader.ReadInt32();
+            mipLevelsTBW = new int[6];
+            for (var i = 0; i < 6; ++i)
+            {
+                mipLevelsTBW[i] = reader.ReadInt32();
+            }
             clutBufferBasePointer = reader.ReadInt32();
             unkBytes2 = reader.ReadBytes(8);
             reader.ReadInt32(); // Reserved, in game's code refers to an index of vifCodeBlock
@@ -117,13 +111,14 @@ namespace Twinsanity
                 case TexturePixelFormat.PSMT8: // End me, this cost me a tiny bit of my soul
                     imageData = reader.ReadBytes(texSize - 224);
                     EzSwizzle.cleanGs();
+                    // Deinterleave texture data
                     EzSwizzle.writeTexPSMCT32(0, 1, 0, 0, rrw, rrh, imageData);
+                    // Unswizzle main texture data
                     var texData = new byte[Width * Height];
                     EzSwizzle.readTexPSMT8(0, textureBufferWidth, 0, 0, Width, Height, ref texData);
-                    // TODO: Mips, use the TBP to find the data and divide by 2 width and height (bigger mips -> smaller resolution)
-                    // to find out the data size. Use EZSwizzle to unswizzle the textures
 
-                    // Palette extraction
+                    // Palette
+                    #region Palette reading
                     var palette = new byte[256 * 4];
                     EzSwizzle.readTexPSMCT32(clutBufferBasePointer, 1, 0, 0, 16, 16, ref palette);
                     this.palette = new Color[256];
@@ -136,6 +131,30 @@ namespace Twinsanity
                         var a = (byte)(palette[i + 3] << 1);
                         this.palette[palInd++] = Color.FromArgb(a, r, g, b);
                     }
+                    // Palette swapping
+                    SwapPalette(ref this.palette);
+                    #endregion
+
+                    #region Mips
+                    mips = new Color[MipLevels][];
+                    for (var i = 0; i < MipLevels; ++i)
+                    {
+                        var mipWidth = (Width / (1 << (i + 1)));
+                        var mipHeight = (Height / (1 << (i + 1)));
+                        var mipData = new byte[mipWidth * mipHeight];
+                        EzSwizzle.readTexPSMT8(mipLevelsTBP[i], mipLevelsTBW[i], 0, 0, mipWidth, mipHeight, ref mipData);
+                        Flip(ref mipData, mipWidth, mipHeight);
+                        mips[i] = new Color[mipWidth * mipHeight];
+                        for (var j = 0; j < mipWidth * mipHeight; ++j)
+                        {
+                            mips[i][j] = this.palette[mipData[j]];
+                        }
+                    }
+                    #endregion
+
+                    // Flip the image
+                    Flip(ref texData, Width, Height);
+
                     RawData = new Color[Width * Height];
                     for (var i = 0; i < Width * Height; ++i)
                     {
@@ -162,19 +181,15 @@ namespace Twinsanity
             writer.Write(textureFun);
             writer.Write(unkBytes);
             writer.Write(textureBasePointer);
-            writer.Write(mipLevel1TBP);
-            writer.Write(mipLevel2TBP);
-            writer.Write(mipLevel3TBP);
-            writer.Write(mipLevel4TBP);
-            writer.Write(mipLevel5TBP);
-            writer.Write(mipLevel6TBP);
+            for (var i = 0; i < 6; ++i)
+            {
+                writer.Write(mipLevelsTBP[i]);
+            }
             writer.Write(textureBufferWidth);
-            writer.Write(mipLevel1TBW);
-            writer.Write(mipLevel2TBW);
-            writer.Write(mipLevel3TBW);
-            writer.Write(mipLevel4TBW);
-            writer.Write(mipLevel5TBW);
-            writer.Write(mipLevel6TBW);
+            for (var i = 0; i < 6; ++i)
+            {
+                writer.Write(mipLevelsTBW[i]);
+            }
             writer.Write(clutBufferBasePointer);
             writer.Write(unkBytes2);
             writer.Write(0);
@@ -192,43 +207,13 @@ namespace Twinsanity
             return texSize + 4;
         }
 
-        #region INTERNALS
-        private byte[] UnSwizzle(byte[] indexes, ushort width, ushort height)
+        #region Util
+
+        private void Flip(ref byte[] Indexes, int width, int height)
         {
-            byte[] tmp = new byte[width * height];
-            indexes.CopyTo(tmp, 0);
-            for (int y = 0; y < height; y++)
+            for (uint y = 0; y < height / 2; y++)
             {
-                for (int x = 0; x < width; x++)
-                {
-                    var block_location = (x + y) % 256;
-                }
-            }
-            return tmp;
-        }
-        internal void Swizzle(ref byte[] indexes, ushort width, ushort height)
-        {
-            byte[] tmp = new byte[indexes.Length - 1 + 1];
-            indexes.CopyTo(tmp, 0);
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    int block_location = (y & (~0xF)) * width + (x & (~0xF)) * 2;
-                    int swap_selector = (((y + 2) >> 2) & 0x1) * 4;
-                    int posY = (((y & (~3)) >> 1) + (y & 1)) & 0x7;
-                    int posX = posY * width * 2 + ((x + swap_selector) & 0x7) * 4;
-                    var byte_num = ((y >> 1) & 1) + ((x >> 2) & 2);
-                    indexes[Math.Min(block_location + posX + byte_num, tmp.Length - 1)] = tmp[Math.Min((y * width) + x, indexes.Length - 1)];
-                }
-            }
-        }
-        internal void Flip(ref byte[] Indexes, ushort width, ushort height)
-        {
-            height = (ushort)(Indexes.Length / width);
-            for (uint y = 0; y <= height / (double)2 - 1; y++)
-            {
-                for (uint x = 0; x <= width - 1; x++)
+                for (uint x = 0; x < width; x++)
                 {
                     byte tmp = Indexes[y * width + x];
                     Indexes[y * width + x] = Indexes[(height - y - 1) * width + x];
@@ -236,13 +221,7 @@ namespace Twinsanity
                 }
             }
         }
-        internal byte SwapBit(byte num, byte b1, byte b2)
-        {
-            byte mask = (byte)(1 << b1 + 1 << b2);
-            byte new_num = (byte)(num & (~mask));
-            byte swap = (byte)(((num & (1 << b1)) >> b1) << b2 + ((num & (1 << b2)) >> b2) << b1);
-            return (byte)(swap + new_num);
-        }
+
         internal void SwapPalette(ref Color[] palette)
         {
             for (int i = 0; i < 8; i++)
@@ -256,207 +235,18 @@ namespace Twinsanity
             }
         }
         
-        internal void GenerateMips(byte[] pixels, uint Width, uint Height, ref byte[] mippixels)
+        private void GenerateMips(byte[] pixels, uint Width, uint Height, ref byte[] mippixels)
         {
-            byte mips = (byte)(Math.Log(Width, 2) - 2);
-            byte[][] tmp = new byte[pixels.Length][];
-            Array.Resize(ref tmp[0], pixels.Length);
-            pixels.CopyTo(tmp[0], 0);
-            Array.Resize(ref mippixels, (int)(Width * Height / 2));
-            ushort w, h, yoffset = 0;
-            w = (ushort)Width;
-            h = (ushort)Height;
-            for (int i = 0; i < mippixels.Length; i++)
-                mippixels[i] = 255;
-            for (int i = 1; i <= mips; i++)
-            {
-                w /= 2;
-                h /= 2;
-                MakeMip(tmp[i - 1], ref tmp[i]);
-                Swizzle(ref tmp[i], w, h);
-                Flip(ref tmp[i], w, h);
-                MergeSurfaces(Width / 2, Height, w, h, 0, yoffset, ref mippixels, ref tmp[i]);
-            }
+            throw new NotImplementedException();
         }
 
-        internal void MakeMip(byte[] pixels, ref byte[] mippixels)
+        private void MakeMip(byte[] pixels, ref byte[] mippixels)
         {
-            Array.Resize(ref mippixels, pixels.Length / 2);
-            for (int i = 0; i <= pixels.Length - 1; i += 4)
-                mippixels[i / 2] = pixels[i];
-        }
-
-        internal void MergeSurfaces(uint Width, uint Height, uint MWidth, uint MHeigth, uint x, uint y, ref byte[] pixels, ref byte[] mippixels)
-        {
-            for (int i = 0; i <= MHeigth - 1; i++)
-            {
-                for (int j = 0; j <= MWidth - 1; j++)
-                    pixels[i * Width + j] = mippixels[i * MWidth + j];
-            }
-        }
-
-        internal void InitFMT(ref BlockFormat[][] fmt)
-        {
-            Array.Resize(ref fmt, 19);
-            // fmt128x256 128I256 16P64S192 16S256
-            Array.Resize(ref fmt[0], 160);
-            for (int i = 0; i < 128; i++)
-                fmt[0][i] = new BlockFormat(256, 0, 0, 0);
-            for (int i = 128; i <= 143; i++)
-                fmt[0][i] = new BlockFormat(0, 0, 64, 192);
-            for (int i = 144; i <= 159; i++)
-                fmt[0][i] = new BlockFormat(0, 0, 0, 256);
-            // fmt128x128 64I256 16P64S192 16S256
-            Array.Resize(ref fmt[1], 96);
-            for (int i = 0; i < 64; i++)
-                fmt[1][i] = new BlockFormat(256, 0, 0, 0);
-            for (int i = 64; i <= 79; i++)
-                fmt[1][i] = new BlockFormat(0, 0, 64, 192);
-            for (int i = 80; i <= 95; i++)
-                fmt[1][i] = new BlockFormat(0, 0, 0, 256);
-            // fmt128x128mip 64I256 16M192P64 16S256 
-            Array.Resize(ref fmt[2], 96);
-            for (int i = 0; i < 64; i++)
-                fmt[2][i] = new BlockFormat(256, 0, 0, 0);
-            for (int i = 64; i <= 79; i++)
-                fmt[2][i] = new BlockFormat(0, 192, 64, 0);
-            for (int i = 80; i <= 95; i++)
-                fmt[2][i] = new BlockFormat(0, 0, 0, 256);
-            // fmt128x64 32I256 16P64S192 16S256
-            Array.Resize(ref fmt[3], 64);
-            for (int i = 0; i < 32; i++)
-                fmt[3][i] = new BlockFormat(256, 0, 0, 0);
-            for (int i = 32; i <= 47; i++)
-                fmt[3][i] = new BlockFormat(0, 0, 64, 192);
-            for (int i = 48; i < 64; i++)
-                fmt[3][i] = new BlockFormat(0, 0, 0, 256);
-            // fmt128x64mip 32I256 16M64S192 16M64P64S128
-            Array.Resize(ref fmt[4], 64);
-            for (int i = 0; i < 32; i++)
-                fmt[4][i] = new BlockFormat(256, 0, 0, 0);
-            for (int i = 32; i <= 47; i++)
-                fmt[4][i] = new BlockFormat(0, 64, 0, 192);
-            for (int i = 48; i < 64; i++)
-                fmt[4][i] = new BlockFormat(0, 64, 64, 128);
-            // fmt128x32 16I256 16P64S192 16S256
-            Array.Resize(ref fmt[5], 48);
-            for (int i = 0; i < 16; i++)
-                fmt[5][i] = new BlockFormat(256, 0, 0, 0);
-            for (int i = 16; i < 32; i++)
-                fmt[5][i] = new BlockFormat(0, 0, 64, 192);
-            for (int i = 32; i <= 47; i++)
-                fmt[5][i] = new BlockFormat(0, 0, 0, 256);
-            // fmt128x32mip 16I256 16M128P64S64 16S256
-            Array.Resize(ref fmt[6], 48);
-            for (int i = 0; i < 16; i++)
-                fmt[6][i] = new BlockFormat(256, 0, 0, 0);
-            for (int i = 16; i < 32; i++)
-                fmt[6][i] = new BlockFormat(0, 128, 64, 64);
-            for (int i = 32; i <= 47; i++)
-                fmt[6][i] = new BlockFormat(0, 0, 0, 256);
-            // fmt64x64 16I128P64S64 16I128S128
-            Array.Resize(ref fmt[7], 32);
-            for (int i = 0; i < 16; i++)
-                fmt[7][i] = new BlockFormat(128, 0, 64, 64);
-            for (int i = 16; i < 32; i++)
-                fmt[7][i] = new BlockFormat(128, 0, 0, 128);
-            // fmt64x64mip 16I128M64P64 16I128M64S64
-            Array.Resize(ref fmt[8], 32);
-            for (int i = 0; i < 16; i++)
-                fmt[8][i] = new BlockFormat(128, 0, 64, 64);
-            for (int i = 16; i < 32; i++)
-                fmt[8][i] = new BlockFormat(128, 64, 0, 64);
-            // fmt64x32 16I128S128 16P64S192
-            Array.Resize(ref fmt[9], 32);
-            for (int i = 0; i < 16; i++)
-                fmt[9][i] = new BlockFormat(128, 0, 0, 128);
-            for (int i = 16; i < 32; i++)
-                fmt[9][i] = new BlockFormat(0, 0, 64, 192);
-            // fmt64x32mip 16I128S128 16M64P64S128
-            Array.Resize(ref fmt[10], 32);
-            for (int i = 0; i < 16; i++)
-                fmt[10][i] = new BlockFormat(128, 0, 0, 128);
-            for (int i = 16; i < 32; i++)
-                fmt[10][i] = new BlockFormat(0, 64, 64, 128);
-            // fmt32x64 16I64P64S128 16I64S192
-            Array.Resize(ref fmt[11], 32);
-            for (int i = 0; i < 16; i++)
-                fmt[11][i] = new BlockFormat(64, 0, 64, 128);
-            for (int i = 16; i < 32; i++)
-                fmt[11][i] = new BlockFormat(64, 0, 0, 192);
-            // fmt32x64mip 16I64M64P64S64 16I64S192
-            Array.Resize(ref fmt[12], 32);
-            for (int i = 0; i < 16; i++)
-                fmt[12][i] = new BlockFormat(64, 64, 64, 64);
-            for (int i = 16; i < 32; i++)
-                fmt[12][i] = new BlockFormat(64, 0, 0, 192);
-            // fmt32x32 16I64S192 16P64S192
-            Array.Resize(ref fmt[13], 32);
-            for (int i = 0; i < 16; i++)
-                fmt[13][i] = new BlockFormat(64, 0, 0, 192);
-            for (int i = 16; i < 32; i++)
-                fmt[13][i] = new BlockFormat(0, 0, 64, 192);
-            // fmt32x32mip 16I64P64S128 16M32S224
-            Array.Resize(ref fmt[14], 32);
-            for (int i = 0; i < 16; i++)
-                fmt[14][i] = new BlockFormat(64, 0, 64, 128);
-            for (int i = 16; i < 32; i++)
-                fmt[14][i] = new BlockFormat(0, 32, 0, 224);
-            // fmt32x16 8I64S192 16P64S192 8S256 EXPEREMENTAL!
-            Array.Resize(ref fmt[15], 32);
-            for (int i = 0; i < 8; i++)
-                fmt[15][i] = new BlockFormat(64, 0, 0, 192);
-            for (int i = 8; i < 16; i++)
-                fmt[15][i] = new BlockFormat(0, 0, 64, 224);
-            for (int i = 16; i < 32; i++)
-                fmt[15][i] = new BlockFormat(0, 0, 0, 256);
-            // fmt32x16mip 8I64S192 4M32S224 4S256 16P64S192
-            Array.Resize(ref fmt[16], 32);
-            for (int i = 0; i < 8; i++)
-                fmt[16][i] = new BlockFormat(64, 0, 0, 192);
-            for (int i = 8; i <= 11; i++)
-                fmt[16][i] = new BlockFormat(0, 32, 0, 224);
-            for (int i = 12; i < 16; i++)
-                fmt[16][i] = new BlockFormat(0, 0, 0, 256);
-            for (int i = 16; i < 32; i++)
-                fmt[16][i] = new BlockFormat(0, 0, 64, 192);
-            // fmt32x8 4I64S192 12S256 16P64S192
-            Array.Resize(ref fmt[17], 32);
-            for (int i = 0; i < 4; i++)
-                fmt[17][i] = new BlockFormat(64, 0, 0, 192);
-            for (int i = 4; i < 16; i++)
-                fmt[17][i] = new BlockFormat(0, 0, 0, 256);
-            for (int i = 16; i < 32; i++)
-                fmt[17][i] = new BlockFormat(0, 0, 64, 192);
-            // fmt16x16mip 8I32S224 4M32S224 4S256 16P64
-            Array.Resize(ref fmt[18], 32);
-            for (int i = 0; i < 8; i++)
-                fmt[18][i] = new BlockFormat(32, 0, 0, 224);
-            for (int i = 8; i <= 11; i++)
-                fmt[18][i] = new BlockFormat(0, 32, 0, 224);
-            for (int i = 12; i < 16; i++)
-                fmt[18][i] = new BlockFormat(0, 0, 0, 256);
-            for (int i = 16; i < 32; i++)
-                fmt[18][i] = new BlockFormat(0, 0, 64, 192);
+            throw new NotImplementedException();
         }
         #endregion
 
-        #region STRUCTURES
-        public struct BlockFormat
-        {
-            public ushort pixels;
-            public ushort m;
-            public ushort palette;
-            public ushort Space;
-            public BlockFormat(ushort pIndex, ushort pMip, ushort pPalette, ushort pSpace)
-            {
-                pixels = pIndex;
-                m = pMip;
-                palette = pPalette;
-                Space = pSpace;
-            }
-        }
-        
+        #region Enums
         public enum TexturePixelFormat
         {
             PSMCT32     = 0b000000,
