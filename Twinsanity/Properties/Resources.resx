@@ -117,47 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="_128x128" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\128x128;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="_128x128mip" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\128x128mip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="_128x256" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\128x256;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="_128x32mip" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\128x32mip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="_128x64mip" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\128x64mip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="_16x16mip" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\16x16mip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="_32x16mip" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\32x16mip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="_32x32mip" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\32x32mip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="_32x64" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\32x64;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="_32x64mip" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\32x64mip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="_32x8" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\32x8;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="_64x32mip" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\64x32mip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="_64x64" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\64x64;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="_64x64mip" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\64x64mip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
 </root>
