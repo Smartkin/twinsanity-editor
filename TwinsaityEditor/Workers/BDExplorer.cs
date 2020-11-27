@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using TwinsaityEditor.Properties;
+using Twinsanity.Items;
 using WK.Libraries.BetterFolderBrowserNS;
 
 namespace TwinsaityEditor
@@ -12,6 +13,7 @@ namespace TwinsaityEditor
         private Data data = null;
         private string path;
         private string name;
+        private PTCViewer viewer;
 
         public BDExplorer()
         {
@@ -82,7 +84,43 @@ namespace TwinsaityEditor
 
         internal void PSViewer_OnClick(object sender, EventArgs e)
         {
-            Console.WriteLine(sender);
+            if (viewer != null && !viewer.IsDisposed)
+            {
+                viewer.Close();
+                viewer = null;
+                GC.Collect(); // Collect all created references instantly just in case to avoid more memory leaks than we already have
+            }
+            viewer = new PTCViewer();
+            var menu = (MenuItem)sender;
+            var record = (BH_Record)menu.Tag;
+            string name = Path.GetFileName(record.Path);
+            var bdPath = $"{path}\\{this.name}.BD";
+            using (FileStream fileStream = new FileStream(bdPath, FileMode.Open, FileAccess.Read))
+            using (BinaryReader reader = new BinaryReader(fileStream))
+            {
+                reader.BaseStream.Position = record.Offset;
+                if (name.EndsWith("psf"))
+                {
+                    TwinsPSF psf = new TwinsPSF();
+                    psf.Load(reader, record.Length);
+                    viewer.PTCs = psf.FontPages;
+                }
+                else if (name.EndsWith("ptc"))
+                {
+                    TwinsPTC ptc = new TwinsPTC();
+                    ptc.Load(reader, record.Length);
+                    viewer.PTCs.Add(ptc);
+                }
+                else if (name.EndsWith("psm"))
+                {
+                    TwinsPSM psm = new TwinsPSM();
+                    psm.Load(reader, record.Length);
+                    viewer.PTCs = psm.PTCs;
+                }
+            }
+            viewer.SelectedPTC = viewer.PTCs[0];
+            viewer.UpdateTextureLabel();
+            viewer.Show();
         }
 
         internal class Data

@@ -11,9 +11,10 @@ namespace Twinsanity.Items
     {
         public List<TwinsPTC> PTCs = new List<TwinsPTC>();
 
-        public void Load(BinaryReader reader)
+        public void Load(BinaryReader reader, int size)
         {
-            while (reader.BaseStream.Position < reader.BaseStream.Length)
+            var startPos = reader.BaseStream.Position;
+            while (reader.BaseStream.Position < startPos + size)
             {
                 var ptc = new TwinsPTC();
                 ptc.Load(reader, 0);
