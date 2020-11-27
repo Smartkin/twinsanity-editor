@@ -434,16 +434,15 @@ namespace TwinsaityEditor
                 {
                     if (null != data)
                     {
-                        using (FileStream fileStream = new FileStream(string.Format("{0}\\{1}.BD", path, name), FileMode.Open, FileAccess.Read))
-                        using (BinaryReader reader = new BinaryReader(fileStream))
+                        if (DialogResult.OK == ofd.ShowDialog(this))
                         {
-                            if (DialogResult.OK == ofd.ShowDialog(this))
+                            using (FileStream fileStream = new FileStream(string.Format("{0}\\{1}.BD", path, name), FileMode.Open, FileAccess.Read))
+                            using (BinaryReader reader = new BinaryReader(fileStream))
                             {
                                 Settings.Default.BDExtractPath = ofd.SelectedPath;
                                 ExtractRecursively(reader, archiveContentsTree.TopNode, ofd.SelectedPath);
                             }
                         }
-
                     }
                 }
             }
