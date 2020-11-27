@@ -16,6 +16,9 @@ namespace TwinsaityEditor
         public BDExplorer()
         {
             InitializeComponent();
+            buttonSave.Enabled = false;
+            buttonExtractAll.Enabled = false;
+            buttonExtractSelected.Enabled = false;
             Show();
         }
 
@@ -242,6 +245,16 @@ namespace TwinsaityEditor
             return true;
         }
 
+        internal void LockControls()
+        {
+            panel1.Enabled = false;
+        }
+
+        internal void UnlockControls()
+        {
+            panel1.Enabled = true;
+        }
+        
         private void buttonOpen_Click(object sender, EventArgs e)
         {
             try
@@ -257,6 +270,9 @@ namespace TwinsaityEditor
                         name = Path.GetFileNameWithoutExtension(file);
                         Settings.Default.BDFilePath = file.Substring(0, file.LastIndexOf(Path.DirectorySeparatorChar));
                         LoadData(path, name);
+                        buttonSave.Enabled = true;
+                        buttonExtractAll.Enabled = true;
+                        buttonExtractSelected.Enabled = true;
                     }
                 }
             }
@@ -284,6 +300,7 @@ namespace TwinsaityEditor
                             using (BinaryReader reader = new BinaryReader(fileStream))
                             {
                                 Settings.Default.BDExtractPath = ofd.SelectedPath;
+                                LockControls();
                                 ExtractRecursively(reader, archiveContentsTree.TopNode, ofd.SelectedPath);
                             }
                         }
@@ -292,8 +309,10 @@ namespace TwinsaityEditor
             }
             catch (Exception ex)
             {
+                UnlockControls();
                 ShowError(ex.Message);
             }
+            UnlockControls();
             CallBack("Ready");
         }
 
