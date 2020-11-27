@@ -46,7 +46,7 @@ namespace TwinsaityEditor
             }
         }
 
-        private void PopulateWithAnimData(IList list, IList data, Action<IList, String[], int> adder, params String[] namePattern)
+        private void PopulateWithAnimData(IList list, IList data, Action<IList, string[], int> adder, params string[] namePattern)
         {
             list.Clear();
             var index = 1;
@@ -91,20 +91,20 @@ namespace TwinsaityEditor
 
         private void UpdateLists()
         {
-            Action<IList, String[], int> listAdder = (list, name, index) =>
+            Action<IList, string[], int> listAdder = (list, name, index) =>
             {
                 list.Add($"{name[0]} {index}");
             };
-            Action<IList, String[], int> transformationAdder = (list, namePattern, index) =>
+            Action<IList, string[], int> transformationAdder = (list, namePattern, index) =>
             {
                 var ind = index - 1;
                 var nameFormat = namePattern[ind % namePattern.Length];
                 var param0 = (ind / 8) >= 1 ? "bone" : "model";
                 var param1 = (ind / 8) == 0 ? "" : (ind / 8).ToString();
 
-                list.Add(String.Format(nameFormat, param0, param1));
+                list.Add(string.Format(nameFormat, param0, param1));
             };
-            String[] tranformationPattern =
+            string[] tranformationPattern =
             {
                 "Translate {0} {1} X",
                 "Translate {0} {1} Z",

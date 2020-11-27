@@ -146,8 +146,8 @@ namespace TwinsaityEditor.Workers
                     }
                     if (cbRun.Checked)
                     { // Open output path on finish
-                        String PCSXFolder = Settings.Default.PCSX2Path;
-                        String[] files = System.IO.Directory.GetFiles(PCSXFolder, "pcsx2.exe");
+                        string PCSXFolder = Settings.Default.PCSX2Path;
+                        string[] files = System.IO.Directory.GetFiles(PCSXFolder, "pcsx2.exe");
                         if (files.Length > 0)
                         {
                             Process.Start(files[0], $"\"{Path.Combine(tbOutputPath.Text, $"{Settings.Default.ImageName}.iso")}\"");
@@ -208,7 +208,7 @@ namespace TwinsaityEditor.Workers
             {
                 if (bfb.ShowDialog() == DialogResult.OK)
                 {
-                    String[] files = System.IO.Directory.GetFiles(bfb.SelectedFolder, "pcsx2.exe");
+                    string[] files = System.IO.Directory.GetFiles(bfb.SelectedFolder, "pcsx2.exe");
                     if (files.Length == 0)
                     {
                         MessageBox.Show("PCSX2.EXE not found!", "PCSX2 not found", MessageBoxButtons.OK, MessageBoxIcon.Error);

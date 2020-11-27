@@ -52,7 +52,7 @@ namespace TwinsaityEditor.Utils
             }
             listBox.EndUpdate();
         }
-        private String GenerateText(int i, int e)
+        private string GenerateText(int i, int e)
         {
             return $"{i:000}: {e}";
         }

@@ -122,7 +122,7 @@ namespace Twinsanity
                 }
                 return headerSize + linkedSize + scriptStateBodySize;
             }
-            public String name { get; set; }
+            public string name { get; set; }
             public Int32 StatesAmount { get; set; }
             public Int32 unkInt2 { get; set; }
             public ScriptState scriptState1 { get; set; }

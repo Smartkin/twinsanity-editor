@@ -21,8 +21,8 @@ namespace TwinsaityEditor
     public partial class BDExplorer : Form
     {
         private Data data = null;
-        private String path;
-        private String name;
+        private string path;
+        private string name;
         public BDExplorer()
         {
             InitializeComponent();
@@ -57,10 +57,10 @@ namespace TwinsaityEditor
             }
 
         }
-        private void LoadData(String path, String name)
+        private void LoadData(string path, string name)
         {
             data = null;
-            using (FileStream fileStream = new FileStream(String.Format("{0}\\{1}.BH", path, name), FileMode.Open, FileAccess.Read))
+            using (FileStream fileStream = new FileStream(string.Format("{0}\\{1}.BH", path, name), FileMode.Open, FileAccess.Read))
             using (BinaryReader reader = new BinaryReader(fileStream))
             {
                 data = new Data(reader);
@@ -87,11 +87,11 @@ namespace TwinsaityEditor
         }
         private void AddNode(BH_Record record)
         {
-            String[] hierarchy = record.Path.Split('\\');
+            string[] hierarchy = record.Path.Split('\\');
             TreeNode node = archiveContentsTree.TopNode;
             for (int i = 0; i < hierarchy.Length; ++i)
             {
-                String nodeName = hierarchy[i];
+                string nodeName = hierarchy[i];
                 if (node.Nodes.ContainsKey(nodeName))
                 {
                     node = node.Nodes.Find(nodeName, false)[0];
@@ -118,13 +118,13 @@ namespace TwinsaityEditor
                     FileList.Add(new BH_Record(reader));
                 }
             }
-            public Data(String folderToPack)
+            public Data(string folderToPack)
             {
                 Header = 0x501;
                 FileList = new List<BH_Record>();
-                String[] files = Directory.GetFiles(folderToPack, "*.*", SearchOption.AllDirectories);
+                string[] files = Directory.GetFiles(folderToPack, "*.*", SearchOption.AllDirectories);
                 Int32 offset = 0;
-                foreach (String file in files)
+                foreach (string file in files)
                 {
                     BH_Record last = new BH_Record(folderToPack, file, offset);
                     offset += last.Length;
@@ -133,7 +133,7 @@ namespace TwinsaityEditor
             }
             public Int32 Header { get; private set; }
             public List<BH_Record> FileList { get; private set; }
-            public void WriteDataBH(BinaryWriter writer, Action<String> callback)
+            public void WriteDataBH(BinaryWriter writer, Action<string> callback)
             {
                 writer.Write(Header);
                 foreach (BH_Record record in FileList)
@@ -141,7 +141,7 @@ namespace TwinsaityEditor
                     record.WriteDataBH(writer, callback);
                 }
             }
-            public void WriteDataBD(String source, BinaryWriter writer, Action<String> callback)
+            public void WriteDataBD(string source, BinaryWriter writer, Action<string> callback)
             {
                 foreach (BH_Record record in FileList)
                 {
@@ -151,7 +151,7 @@ namespace TwinsaityEditor
         }
         private class BH_Record
         {
-            public BH_Record(String root, String fileName, Int32 offset)
+            public BH_Record(string root, string fileName, Int32 offset)
             {
                 if (!root.EndsWith("\\")) root += "\\";
                 Path = fileName.Replace(root, "");
@@ -166,21 +166,21 @@ namespace TwinsaityEditor
                 Offset = reader.ReadInt32();
                 Length = reader.ReadInt32();
             }
-            public String Path { get; private set; }
+            public string Path { get; private set; }
             public Int32 Offset { get; private set; }
             public Int32 Length { get; private set; }
-            public void WriteDataBH(BinaryWriter writer, Action<String> callback)
+            public void WriteDataBH(BinaryWriter writer, Action<string> callback)
             {
-                callback.Invoke(String.Format("Writing Header: {0}", Path));
+                callback.Invoke(string.Format("Writing Header: {0}", Path));
                 writer.Write((Int32)Path.Length);
                 writer.Write(Path.ToCharArray());
                 writer.Write(Offset);
                 writer.Write(Length);
 
             }
-            public void WriteDataBD(String source, BinaryWriter writer, Action<String> callback)
+            public void WriteDataBD(string source, BinaryWriter writer, Action<string> callback)
             {
-                callback.Invoke(String.Format("Writing Data: {0}", Path));
+                callback.Invoke(string.Format("Writing Data: {0}", Path));
                 using (FileStream fileStream = new FileStream(System.IO.Path.Combine(source,Path), FileMode.Open, FileAccess.Read))
                 using (BinaryReader reader = new BinaryReader(fileStream))
                 {
@@ -202,7 +202,7 @@ namespace TwinsaityEditor
                 {
                     if (null != data)
                     {
-                        using (FileStream fileStream = new FileStream(String.Format("{0}\\{1}.BD", path, name), FileMode.Open, FileAccess.Read))
+                        using (FileStream fileStream = new FileStream(string.Format("{0}\\{1}.BD", path, name), FileMode.Open, FileAccess.Read))
                         using (BinaryReader reader = new BinaryReader(fileStream))
                         {
                             if (DialogResult.OK == ofd.ShowDialog(this))
@@ -233,7 +233,7 @@ namespace TwinsaityEditor
                 {
                     if (null != data && null != archiveContentsTree.SelectedNode)
                     {
-                        using (FileStream fileStream = new FileStream(String.Format("{0}\\{1}.BD", path, name), FileMode.Open, FileAccess.Read))
+                        using (FileStream fileStream = new FileStream(string.Format("{0}\\{1}.BD", path, name), FileMode.Open, FileAccess.Read))
                         using (BinaryReader reader = new BinaryReader(fileStream))
                         {
                             if (DialogResult.OK == ofd.ShowDialog(this))
@@ -251,7 +251,7 @@ namespace TwinsaityEditor
             }
             CallBack("Ready");
         }
-        private void ExtractRecursively(BinaryReader source, TreeNode node, String extractionPath)
+        private void ExtractRecursively(BinaryReader source, TreeNode node, string extractionPath)
         {
             BH_Record record = (BH_Record)node.Tag;
             if (null != record)
@@ -267,31 +267,31 @@ namespace TwinsaityEditor
             }
         }
 
-        private void ExtractRecord(BinaryReader source, BH_Record record, String extractionPath)
+        private void ExtractRecord(BinaryReader source, BH_Record record, string extractionPath)
         {
-            String fullPath = Path.Combine(extractionPath, record.Path);
+            string fullPath = Path.Combine(extractionPath, record.Path);
             Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
             using (FileStream fileStream = new FileStream(fullPath, FileMode.Create, FileAccess.Write))
             using (BinaryWriter writer = new BinaryWriter(fileStream))
             {
-                CallBack(String.Format("Extracting: {0}", record.Path));
+                CallBack(string.Format("Extracting: {0}", record.Path));
                 source.BaseStream.Position = record.Offset;
                 writer.Write(source.ReadBytes(record.Length));
             }
         }
 
-        private void ShowError(String msg)
+        private void ShowError(string msg)
         {
-            MessageBox.Show(String.Format("Unexpected exception happened\nMessage: {0}", msg), "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(string.Format("Unexpected exception happened\nMessage: {0}", msg), "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         private void saveBHBDToolStripMenuItem_Click(object sender, EventArgs e)
         {
             try
             {
-                String sourcePath = null;
-                String destinationPath = null;
-                String name = "CRASH"; //Hardcoded name
+                string sourcePath = null;
+                string destinationPath = null;
+                string name = "CRASH"; //Hardcoded name
                 using (BetterFolderBrowser ofd = new BetterFolderBrowser
                 {
                     Title = "Select source folder",
@@ -321,11 +321,11 @@ namespace TwinsaityEditor
                         Settings.Default.BDSaveDstPath = ofd.SelectedPath;
                         destinationPath = ofd.SelectedPath;
                         if (
-                            File.Exists(Path.Combine(destinationPath, String.Format("{0}.BH", name))) ||
-                            File.Exists(Path.Combine(destinationPath, String.Format("{0}.BD", name)))
+                            File.Exists(Path.Combine(destinationPath, string.Format("{0}.BH", name))) ||
+                            File.Exists(Path.Combine(destinationPath, string.Format("{0}.BD", name)))
                             )
                         {
-                            DialogResult result = MessageBox.Show(String.Format("Archive with name {0} already in destination folder. Overwrite?", name), "Attention",
+                            DialogResult result = MessageBox.Show(string.Format("Archive with name {0} already in destination folder. Overwrite?", name), "Attention",
                                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                             if (DialogResult.Yes != result)
                             {
@@ -347,11 +347,11 @@ namespace TwinsaityEditor
             }
             CallBack("Ready");
         }
-        private void PackArchive(String source, String destination, String name, Action callback = null)
+        private void PackArchive(string source, string destination, string name, Action callback = null)
         {
             data = new Data(source);
-            String fullPathBH = Path.Combine(destination, String.Format("{0}.BH", name));
-            String fullPathBD = Path.Combine(destination, String.Format("{0}.BD", name));
+            string fullPathBH = Path.Combine(destination, string.Format("{0}.BH", name));
+            string fullPathBD = Path.Combine(destination, string.Format("{0}.BD", name));
             using (FileStream fileStream = new FileStream(fullPathBH, FileMode.Create, FileAccess.Write))
             using (BinaryWriter writer = new BinaryWriter(fileStream))
             {
@@ -368,7 +368,7 @@ namespace TwinsaityEditor
             }
         }
 
-        private void CallBack(String message)
+        private void CallBack(string message)
         {
             statusBar.Text = message;
             Application.DoEvents();
@@ -376,8 +376,8 @@ namespace TwinsaityEditor
 
         public bool PackBDArchives(string dest, Action callback = null)
         {
-            String sourcePath = null;
-            String name = "CRASH";
+            string sourcePath = null;
+            string name = "CRASH";
             using (BetterFolderBrowser ofd = new BetterFolderBrowser
             {
                 Title = "Select BD/BD source folder",
@@ -434,7 +434,7 @@ namespace TwinsaityEditor
                 {
                     if (null != data)
                     {
-                        using (FileStream fileStream = new FileStream(String.Format("{0}\\{1}.BD", path, name), FileMode.Open, FileAccess.Read))
+                        using (FileStream fileStream = new FileStream(string.Format("{0}\\{1}.BD", path, name), FileMode.Open, FileAccess.Read))
                         using (BinaryReader reader = new BinaryReader(fileStream))
                         {
                             if (DialogResult.OK == ofd.ShowDialog(this))
@@ -458,9 +458,9 @@ namespace TwinsaityEditor
         {
             try
             {
-                String sourcePath = null;
-                String destinationPath = null;
-                String name = "CRASH"; //Hardcoded name
+                string sourcePath = null;
+                string destinationPath = null;
+                string name = "CRASH"; //Hardcoded name
                 using (BetterFolderBrowser ofd = new BetterFolderBrowser
                 {
                     Title = "Select source folder",
@@ -490,11 +490,11 @@ namespace TwinsaityEditor
                         Settings.Default.BDSaveDstPath = ofd.SelectedPath;
                         destinationPath = ofd.SelectedPath;
                         if (
-                            File.Exists(Path.Combine(destinationPath, String.Format("{0}.BH", name))) ||
-                            File.Exists(Path.Combine(destinationPath, String.Format("{0}.BD", name)))
+                            File.Exists(Path.Combine(destinationPath, string.Format("{0}.BH", name))) ||
+                            File.Exists(Path.Combine(destinationPath, string.Format("{0}.BD", name)))
                             )
                         {
-                            DialogResult result = MessageBox.Show(String.Format("Archive with name {0} already in destination folder. Overwrite?", name), "Attention",
+                            DialogResult result = MessageBox.Show(string.Format("Archive with name {0} already in destination folder. Overwrite?", name), "Attention",
                                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                             if (DialogResult.Yes != result)
                             {
@@ -530,7 +530,7 @@ namespace TwinsaityEditor
                 {
                     if (null != data && null != archiveContentsTree.SelectedNode)
                     {
-                        using (FileStream fileStream = new FileStream(String.Format("{0}\\{1}.BD", path, name), FileMode.Open, FileAccess.Read))
+                        using (FileStream fileStream = new FileStream(string.Format("{0}\\{1}.BD", path, name), FileMode.Open, FileAccess.Read))
                         using (BinaryReader reader = new BinaryReader(fileStream))
                         {
                             if (DialogResult.OK == ofd.ShowDialog(this))

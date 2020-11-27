@@ -336,7 +336,7 @@ namespace TwinsaityEditor
         }
         private struct ScriptArgumentParser
         {
-            public Func<String, ArgParseResult> parser;
+            public Func<string, ArgParseResult> parser;
             public uint mask;
             public int shiftAmount;
         }
@@ -344,7 +344,7 @@ namespace TwinsaityEditor
         {
             tbHEXRepres.Tag = new ScriptArgumentParser
             {
-                parser = new Func<String, ArgParseResult>(str =>
+                parser = new Func<string, ArgParseResult>(str =>
                 {
                     var result = new ArgParseResult();
                     result.success = UInt32.TryParse(str, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out result.val);
@@ -355,7 +355,7 @@ namespace TwinsaityEditor
             };
             tbInt32Repres.Tag = new ScriptArgumentParser
             {
-                parser = new Func<String, ArgParseResult>(str =>
+                parser = new Func<string, ArgParseResult>(str =>
                 {
                     var result = new ArgParseResult();
                     var value = (Int32)result.val;
@@ -368,7 +368,7 @@ namespace TwinsaityEditor
             };
             tbUInt32Repres.Tag = new ScriptArgumentParser
             {
-                parser = new Func<String, ArgParseResult>(str =>
+                parser = new Func<string, ArgParseResult>(str =>
                 {
                     var result = new ArgParseResult();
                     result.success = UInt32.TryParse(str, out result.val);
@@ -379,7 +379,7 @@ namespace TwinsaityEditor
             };
             tbFloatRepres.Tag = new ScriptArgumentParser
             {
-                parser = new Func<String, ArgParseResult>(str =>
+                parser = new Func<string, ArgParseResult>(str =>
                 {
                     var result = new ArgParseResult();
                     var value = (Single)result.val;
@@ -390,7 +390,7 @@ namespace TwinsaityEditor
                 mask = 0xFFFFFFFF,
                 shiftAmount = 0
             };
-            var int16_parser = new Func<String, ArgParseResult>(str =>
+            var int16_parser = new Func<string, ArgParseResult>(str =>
             {
                 var result = new ArgParseResult();
                 var value = (Int16)result.val;
@@ -410,7 +410,7 @@ namespace TwinsaityEditor
                 mask = 0x0000FFFF,
                 shiftAmount = 16
             };
-            var uint16_parser = new Func<String, ArgParseResult>(str =>
+            var uint16_parser = new Func<string, ArgParseResult>(str =>
             {
                 var result = new ArgParseResult();
                 var value = (UInt16)result.val;
@@ -430,7 +430,7 @@ namespace TwinsaityEditor
                 mask = 0x0000FFFF,
                 shiftAmount = 16
             };
-            var byteParser = new Func<String, ArgParseResult>(str =>
+            var byteParser = new Func<string, ArgParseResult>(str =>
             {
                 var result = new ArgParseResult();
                 var value = (Byte)result.val;
@@ -464,7 +464,7 @@ namespace TwinsaityEditor
             };
             tbBinaryRepres.Tag = new ScriptArgumentParser
             {
-                parser = new Func<String, ArgParseResult>(str =>
+                parser = new Func<string, ArgParseResult>(str =>
                 {
                     var result = new ArgParseResult
                     {

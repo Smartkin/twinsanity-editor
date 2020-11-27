@@ -511,7 +511,7 @@ namespace TwinsaityEditor
             }
             type1Floats.EndUpdate();
         }
-        private String GetTextFromArray(Byte[] array)
+        private string GetTextFromArray(Byte[] array)
         {
             StringBuilder builder = new StringBuilder();
             foreach (Byte b in array)
@@ -888,7 +888,7 @@ namespace TwinsaityEditor
         {
             if (type1Bytes.SelectedIndex >= 0 && !stopChanged)
             {
-                String text = ((TextBox)sender).Text;
+                string text = ((TextBox)sender).Text;
                 Byte val = 0;
                 if (Byte.TryParse(text, out val))
                 {
@@ -923,7 +923,7 @@ namespace TwinsaityEditor
         {
             if (type1Floats.SelectedIndex >= 0 && !stopChanged)
             {
-                String text = ((TextBox)sender).Text;
+                string text = ((TextBox)sender).Text;
                 Single val = 0;
                 if (Single.TryParse(text, out val))
                 {
@@ -993,12 +993,12 @@ namespace TwinsaityEditor
 
         private void type4Array_TextChanged(object sender, EventArgs e)
         {
-            if (!String.IsNullOrWhiteSpace(((TextBox)sender).Text))
+            if (!string.IsNullOrWhiteSpace(((TextBox)sender).Text))
             {
-                String[] strs = ((TextBox)sender).Text.Trim(' ').Split(' ');
+                string[] strs = ((TextBox)sender).Text.Trim(' ').Split(' ');
                 Byte[] byteArray = new Byte[strs.Length];
                 Int32 i = 0;
-                foreach (String str in strs)
+                foreach (string str in strs)
                 {
                     Byte val = 0;
                     if (Byte.TryParse(str, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out val))
@@ -1069,7 +1069,7 @@ namespace TwinsaityEditor
         {
             if (type4Arguments.SelectedIndex >= 0 && !stopChanged)
             {
-                String text = ((TextBox)sender).Text;
+                string text = ((TextBox)sender).Text;
                 UInt32 val = 0;
                 if (UInt32.TryParse(text, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out val))
                 {
@@ -1091,7 +1091,7 @@ namespace TwinsaityEditor
         {
             if (type4Arguments.SelectedIndex >= 0 && !stopChanged)
             {
-                String text = ((TextBox)sender).Text;
+                string text = ((TextBox)sender).Text;
                 UInt32 val = 0;
                 if (UInt32.TryParse(text, out val))
                 {
@@ -1114,7 +1114,7 @@ namespace TwinsaityEditor
         {
             if (type4Arguments.SelectedIndex >= 0 && !stopChanged)
             {
-                String text = ((TextBox)sender).Text;
+                string text = ((TextBox)sender).Text;
                 Single val = 0;
                 if (Single.TryParse(text, out val))
                 {
@@ -1137,7 +1137,7 @@ namespace TwinsaityEditor
         {
             if (type4Arguments.SelectedIndex >= 0 && !stopChanged)
             {
-                String text = ((TextBox)sender).Text;
+                string text = ((TextBox)sender).Text;
                 UInt16 val = 0;
                 if (UInt16.TryParse(text, out val))
                 {
@@ -1160,7 +1160,7 @@ namespace TwinsaityEditor
         {
             if (type4Arguments.SelectedIndex >= 0 && !stopChanged)
             {
-                String text = ((TextBox)sender).Text;
+                string text = ((TextBox)sender).Text;
                 UInt16 val = 0;
                 if (UInt16.TryParse(text, out val))
                 {
@@ -1183,7 +1183,7 @@ namespace TwinsaityEditor
         {
             if (type4Arguments.SelectedIndex >= 0 && !stopChanged)
             {
-                String text = ((TextBox)sender).Text;
+                string text = ((TextBox)sender).Text;
                 Byte val = 0;
                 if (Byte.TryParse(text, out val))
                 {
@@ -1206,7 +1206,7 @@ namespace TwinsaityEditor
         {
             if (type4Arguments.SelectedIndex >= 0 && !stopChanged)
             {
-                String text = ((TextBox)sender).Text;
+                string text = ((TextBox)sender).Text;
                 Byte val = 0;
                 if (Byte.TryParse(text, out val))
                 {
@@ -1229,7 +1229,7 @@ namespace TwinsaityEditor
         {
             if (type4Arguments.SelectedIndex >= 0 && !stopChanged)
             {
-                String text = ((TextBox)sender).Text;
+                string text = ((TextBox)sender).Text;
                 Byte val = 0;
                 if (Byte.TryParse(text, out val))
                 {
@@ -1252,7 +1252,7 @@ namespace TwinsaityEditor
         {
             if (type4Arguments.SelectedIndex >= 0 && !stopChanged)
             {
-                String text = ((TextBox)sender).Text;
+                string text = ((TextBox)sender).Text;
                 Byte val = 0;
                 if (Byte.TryParse(text, out val))
                 {
@@ -1274,7 +1274,7 @@ namespace TwinsaityEditor
         {
             if (type4Arguments.SelectedIndex >= 0 && !stopChanged)
             {
-                String text = ((TextBox)sender).Text;
+                string text = ((TextBox)sender).Text;
                 Int32 val = 0;
                 if (Int32.TryParse(text, out val))
                 {
@@ -1297,7 +1297,7 @@ namespace TwinsaityEditor
         {
             if (type4Arguments.SelectedIndex >= 0 && !stopChanged)
             {
-                String text = ((TextBox)sender).Text;
+                string text = ((TextBox)sender).Text;
                 Int16 val = 0;
                 if (Int16.TryParse(text, out val))
                 {
@@ -1320,7 +1320,7 @@ namespace TwinsaityEditor
         {
             if (type4Arguments.SelectedIndex >= 0 && !stopChanged)
             {
-                String text = ((TextBox)sender).Text;
+                string text = ((TextBox)sender).Text;
                 Int16 val = 0;
                 if (Int16.TryParse(text, out val))
                 {
@@ -1344,7 +1344,7 @@ namespace TwinsaityEditor
             {
                 try
                 {
-                    String text = ((TextBox)sender).Text;
+                    string text = ((TextBox)sender).Text;
                     UInt32 val = Convert.ToUInt32(text, 2);
                     selectedType4.arguments[type4Arguments.SelectedIndex] = val;
                     ((TextBox)sender).BackColor = Color.White;
@@ -1508,12 +1508,12 @@ namespace TwinsaityEditor
         }
         private void generalArray_TextChanged(object sender, EventArgs e)
         {
-            if (!String.IsNullOrWhiteSpace(((TextBox)sender).Text))
+            if (!string.IsNullOrWhiteSpace(((TextBox)sender).Text))
             {
-                String[] strs = ((TextBox)sender).Text.Trim(' ').Split(' ');
+                string[] strs = ((TextBox)sender).Text.Trim(' ').Split(' ');
                 Byte[] byteArray = new Byte[strs.Length];
                 Int32 i = 0;
-                foreach (String str in strs)
+                foreach (string str in strs)
                 {
                     Byte val = 0;
                     if (Byte.TryParse(str, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out val))
