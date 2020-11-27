@@ -85,7 +85,7 @@ namespace TwinsaityEditor
                 Header = 0x501;
                 FileList = new List<BH_Record>();
                 string[] files = Directory.GetFiles(folderToPack, "*.*", SearchOption.AllDirectories);
-                Int32 offset = 0;
+                int offset = 0;
                 foreach (string file in files)
                 {
                     BH_Record last = new BH_Record(folderToPack, file, offset);
@@ -94,7 +94,7 @@ namespace TwinsaityEditor
                 }
             }
 
-            public Int32 Header { get; private set; }
+            public int Header { get; private set; }
             public List<BH_Record> FileList { get; private set; }
 
             public void WriteDataBH(BinaryWriter writer, Action<string> callback)
@@ -116,25 +116,25 @@ namespace TwinsaityEditor
 
         internal class BH_Record
         {
-            public BH_Record(string root, string fileName, Int32 offset)
+            public BH_Record(string root, string fileName, int offset)
             {
                 if (!root.EndsWith("\\")) root += "\\";
                 Path = fileName.Replace(root, "");
                 FileInfo info = new FileInfo(fileName);
-                Length = (Int32)info.Length;
+                Length = (int)info.Length;
                 Offset = offset;
             }
             public BH_Record(BinaryReader reader)
             {
-                Int32 nameLength = reader.ReadInt32();
+                int nameLength = reader.ReadInt32();
                 Path = new string(reader.ReadChars(nameLength));
                 Offset = reader.ReadInt32();
                 Length = reader.ReadInt32();
             }
             
             public string Path { get; private set; }
-            public Int32 Offset { get; private set; }
-            public Int32 Length { get; private set; }
+            public int Offset { get; private set; }
+            public int Length { get; private set; }
             
             public void WriteDataBH(BinaryWriter writer, Action<string> callback)
             {
