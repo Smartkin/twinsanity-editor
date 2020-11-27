@@ -45,17 +45,17 @@ namespace Twinsanity
         // For LOD level calculation the following formula is used: LOD = (log2(1/Q)<<L)+K, applicable only to STQ TextureCoordinatesSpecification
         public UInt16 LodParamK { get; set; }
         public UInt16 LodParamL { get; set; }
-        public TwinVector4 UnkVector1 { get; private set; }
-        public TwinVector4 UnkVector2 { get; private set; }
-        public TwinVector4 UnkVector3 { get; private set; }
+        public TwinsVector4 UnkVector1 { get; private set; }
+        public TwinsVector4 UnkVector2 { get; private set; }
+        public TwinsVector4 UnkVector3 { get; private set; }
         public UInt32 TextureId { get; set; }
         
         public TwinsShader()
         {
             FloatParam = new float[4];
-            UnkVector1 = new TwinVector4();
-            UnkVector2 = new TwinVector4();
-            UnkVector3 = new TwinVector4();
+            UnkVector1 = new TwinsVector4();
+            UnkVector2 = new TwinsVector4();
+            UnkVector3 = new TwinsVector4();
         }
         public int GetLength()
         {
@@ -122,9 +122,9 @@ namespace Twinsanity
             BlobFlag = reader.ReadBoolean();
             LodParamK = reader.ReadUInt16();
             LodParamL = reader.ReadUInt16();
-            UnkVector1.Read(reader, 16);
-            UnkVector2.Read(reader, 16);
-            UnkVector3.Read(reader, 16);
+            UnkVector1.Load(reader, 16);
+            UnkVector2.Load(reader, 16);
+            UnkVector3.Load(reader, 16);
             TextureId = reader.ReadUInt32();
             reader.ReadUInt32(); // Shader type
         }
@@ -185,9 +185,9 @@ namespace Twinsanity
             writer.Write(BlobFlag);
             writer.Write(LodParamK);
             writer.Write(LodParamL);
-            UnkVector1.Write(writer);
-            UnkVector2.Write(writer);
-            UnkVector3.Write(writer);
+            UnkVector1.Save(writer);
+            UnkVector2.Save(writer);
+            UnkVector3.Save(writer);
             writer.Write(TextureId);
             writer.Write(ShaderType);
         }

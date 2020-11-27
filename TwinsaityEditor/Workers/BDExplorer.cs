@@ -69,7 +69,20 @@ namespace TwinsaityEditor
                 }
             }
             node = node.Nodes.Add(name);
+            if (name.EndsWith("psm") || name.EndsWith("ptc") || name.EndsWith("psf"))
+            {
+                var viewMenu = new MenuItem("View");
+                viewMenu.Click += PSViewer_OnClick;
+                viewMenu.Tag = record;
+                node.ContextMenu = new ContextMenu();
+                node.ContextMenu.MenuItems.Add(viewMenu);
+            }
             node.Tag = record;
+        }
+
+        internal void PSViewer_OnClick(object sender, EventArgs e)
+        {
+            Console.WriteLine(sender);
         }
 
         internal class Data
