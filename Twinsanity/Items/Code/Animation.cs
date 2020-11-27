@@ -173,12 +173,12 @@ namespace Twinsanity
         {
             public List<Int16> UnknownInt16s;
 
-            public Int16 GetOffset(Int32 index)
+            public Int16 GetOffset(int index)
             {
                 return UnknownInt16s[index];
             }
 
-            public void SetOffset(Int32 index, Int16 value)
+            public void SetOffset(int index, Int16 value)
             {
                 UnknownInt16s[index] = value;
             }

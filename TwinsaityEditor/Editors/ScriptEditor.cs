@@ -351,8 +351,8 @@ namespace TwinsaityEditor
             {
                 Script.HeaderScript.UnkIntPairs pair = selectedHeaderScript.pairs[headerSubScripts.SelectedIndex];
                 TextBox textBox = (TextBox)sender;
-                Int32 val = pair.mainScriptIndex;
-                if (Int32.TryParse(textBox.Text, out val))
+                int val = pair.mainScriptIndex;
+                if (int.TryParse(textBox.Text, out val))
                 {
                     textBox.BackColor = Color.White;
                     pair.mainScriptIndex = val + 1;
@@ -405,8 +405,8 @@ namespace TwinsaityEditor
 
         private void mainUnk_TextChanged(object sender, EventArgs e)
         {
-            Int32 val = selectedMainScript.unkInt2;
-            if (Int32.TryParse(((TextBox)sender).Text, out val))
+            int val = selectedMainScript.unkInt2;
+            if (int.TryParse(((TextBox)sender).Text, out val))
             {
                 ((TextBox)sender).BackColor = Color.White;
                 selectedMainScript.unkInt2 = val;
@@ -425,8 +425,8 @@ namespace TwinsaityEditor
 
         private void mainAddLinked_Click(object sender, EventArgs e)
         {
-            Int32 val = 0;
-            if (Int32.TryParse(mainLinkedPos.Text, out val))
+            int val = 0;
+            if (int.TryParse(mainLinkedPos.Text, out val))
             {
                 if (selectedMainScript.AddLinkedScript(val))
                 {
@@ -445,8 +445,8 @@ namespace TwinsaityEditor
 
         private void mainDelLinked_Click(object sender, EventArgs e)
         {
-            Int32 val = 0;
-            if (Int32.TryParse(mainLinkedPos.Text, out val))
+            int val = 0;
+            if (int.TryParse(mainLinkedPos.Text, out val))
             {
                 if (selectedMainScript.DeleteLinkedScript(val))
                 {
@@ -588,8 +588,8 @@ namespace TwinsaityEditor
 
         private void type1UnkInt_TextChanged(object sender, EventArgs e)
         {
-            Int32 val = selectedType1.unkInt1;
-            if (Int32.TryParse(((TextBox)sender).Text, out val))
+            int val = selectedType1.unkInt1;
+            if (int.TryParse(((TextBox)sender).Text, out val))
             {
                 ((TextBox)sender).BackColor = Color.White;
                 selectedType1.unkInt1 = val;
@@ -637,8 +637,8 @@ namespace TwinsaityEditor
         }
         private void type2Bitfield_TextChanged(object sender, EventArgs e)
         {
-            Int32 val = selectedType2.bitfield;
-            if (Int32.TryParse(((TextBox)sender).Text, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out val))
+            int val = selectedType2.bitfield;
+            if (int.TryParse(((TextBox)sender).Text, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out val))
             {
                 ((TextBox)sender).BackColor = Color.White;
                 selectedType2.bitfield = val;
@@ -660,8 +660,8 @@ namespace TwinsaityEditor
 
         private void type2Slot_TextChanged(object sender, EventArgs e)
         {
-            Int32 val = selectedType2.scriptStateListIndex;
-            if (Int32.TryParse(((TextBox)sender).Text, out val))
+            int val = selectedType2.scriptStateListIndex;
+            if (int.TryParse(((TextBox)sender).Text, out val))
             {
                 ((TextBox)sender).BackColor = Color.White;
                 selectedType2.scriptStateListIndex = val;
@@ -734,8 +734,8 @@ namespace TwinsaityEditor
 
         private void type2AddType4_Click(object sender, EventArgs e)
         {
-            Int32 val = 0;
-            if (Int32.TryParse(type2SelectedType4Pos.Text, out val))
+            int val = 0;
+            if (int.TryParse(type2SelectedType4Pos.Text, out val))
             {
                 if (selectedType2.AddCommand(val))
                 {
@@ -758,8 +758,8 @@ namespace TwinsaityEditor
 
         private void type2DeleteType4_Click(object sender, EventArgs e)
         {
-            Int32 val = 0;
-            if (Int32.TryParse(type2SelectedType4Pos.Text, out val))
+            int val = 0;
+            if (int.TryParse(type2SelectedType4Pos.Text, out val))
             {
                 if (selectedType2.DeleteCommand(val))
                 {
@@ -997,7 +997,7 @@ namespace TwinsaityEditor
             {
                 string[] strs = ((TextBox)sender).Text.Trim(' ').Split(' ');
                 Byte[] byteArray = new Byte[strs.Length];
-                Int32 i = 0;
+                int i = 0;
                 foreach (string str in strs)
                 {
                     Byte val = 0;
@@ -1058,7 +1058,7 @@ namespace TwinsaityEditor
             if (ignoreUpdate != 7) type4ArgByte2.Text = ((val & 0xFF00) >> 8).ToString();
             if (ignoreUpdate != 8) type4ArgByte3.Text = ((val & 0xFF0000) >> 16).ToString();
             if (ignoreUpdate != 9) type4ArgByte4.Text = ((val & 0xFF000000) >> 24).ToString();
-            if (ignoreUpdate != 10) type4ArgSignedInt32.Text = ((Int32)val).ToString();
+            if (ignoreUpdate != 10) type4ArgSignedInt32.Text = ((int)val).ToString();
             if (ignoreUpdate != 11) type4ArgSignedInt16_1.Text = ((Int16)(val & 0xFFFF)).ToString();
             if (ignoreUpdate != 12) type4ArgSignedInt16_2.Text = ((Int16)((val & 0xFFFF0000) >> 16)).ToString();
             if (ignoreUpdate != 13) type4ArgBinary.Text = Convert.ToString(val,2).PadLeft(32,'0');
@@ -1275,8 +1275,8 @@ namespace TwinsaityEditor
             if (type4Arguments.SelectedIndex >= 0 && !stopChanged)
             {
                 string text = ((TextBox)sender).Text;
-                Int32 val = 0;
-                if (Int32.TryParse(text, out val))
+                int val = 0;
+                if (int.TryParse(text, out val))
                 {
                     selectedType4.arguments[type4Arguments.SelectedIndex] = (UInt32)val;
                     ((TextBox)sender).BackColor = Color.White;
@@ -1448,8 +1448,8 @@ namespace TwinsaityEditor
 
         private void linkedCreateType2_Click(object sender, EventArgs e)
         {
-            Int32 val = 0;
-            if (Int32.TryParse(linkedType2Pos.Text, out val))
+            int val = 0;
+            if (int.TryParse(linkedType2Pos.Text, out val))
             {
                 if (selectedLinked.AddScriptStateBody(val))
                 {
@@ -1472,8 +1472,8 @@ namespace TwinsaityEditor
 
         private void linkedDeleteType2_Click(object sender, EventArgs e)
         {
-            Int32 val = 0;
-            if (Int32.TryParse(linkedType2Pos.Text, out val))
+            int val = 0;
+            if (int.TryParse(linkedType2Pos.Text, out val))
             {
                 if (selectedLinked.DeleteScriptStateBody(val))
                 {
@@ -1512,7 +1512,7 @@ namespace TwinsaityEditor
             {
                 string[] strs = ((TextBox)sender).Text.Trim(' ').Split(' ');
                 Byte[] byteArray = new Byte[strs.Length];
-                Int32 i = 0;
+                int i = 0;
                 foreach (string str in strs)
                 {
                     Byte val = 0;

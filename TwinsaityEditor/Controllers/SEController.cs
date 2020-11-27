@@ -66,7 +66,7 @@ namespace TwinsaityEditor
                     UInt16 channels = reader.ReadUInt16();
                     UInt32 frequency = reader.ReadUInt32();
                     file.Position = 0x28;
-                    Int32 len = reader.ReadInt32();
+                    int len = reader.ReadInt32();
                     Byte[] PCM = reader.ReadBytes(len);
                     if (channels == 1)
                     {

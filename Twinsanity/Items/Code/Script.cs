@@ -13,7 +13,7 @@ namespace Twinsanity
         }
         public class HeaderScript
         {
-            public HeaderScript(Int32 id)
+            public HeaderScript(int id)
             {
                 unkIntPairs = 1;
                 pairs = new UnkIntPairs[1];
@@ -42,9 +42,9 @@ namespace Twinsanity
                     writer.Write(pairs[i].unkInt2);
                 }
             }
-            public Int32 GetLength()
+            public int GetLength()
             {
-                return (Int32)(4 + unkIntPairs * 8);
+                return (int)(4 + unkIntPairs * 8);
             }
             public class UnkIntPairs
             {
@@ -106,11 +106,11 @@ namespace Twinsanity
                     }
                 }
             }
-            public Int32 GetLength()
+            public int GetLength()
             {
-                Int32 headerSize = 4 + name.Length + 4 + 4;
-                Int32 linkedSize = ((scriptState1 != null)?scriptState1.GetLength():0);
-                Int32 scriptStateBodySize = 0;
+                int headerSize = 4 + name.Length + 4 + 4;
+                int linkedSize = ((scriptState1 != null)?scriptState1.GetLength():0);
+                int scriptStateBodySize = 0;
                 ScriptState ptr = scriptState1;
                 while (ptr != null)
                 {
@@ -123,8 +123,8 @@ namespace Twinsanity
                 return headerSize + linkedSize + scriptStateBodySize;
             }
             public string name { get; set; }
-            public Int32 StatesAmount { get; set; }
-            public Int32 unkInt2 { get; set; }
+            public int StatesAmount { get; set; }
+            public int unkInt2 { get; set; }
             public ScriptState scriptState1 { get; set; }
             public ScriptState scriptState2 { get; set; }
             public int scriptGameVersion { get; set; }
@@ -148,7 +148,7 @@ namespace Twinsanity
                     _unkByte2 = reader.ReadByte();
                     unkUShort1 = reader.ReadUInt16();
                     unkInt1 = reader.ReadInt32();
-                    Int32 byteArrayLen = unkByte1 + unkByte2 * 4;
+                    int byteArrayLen = unkByte1 + unkByte2 * 4;
                     for (int i = 0; i < unkByte2; ++i)
                     {
                         floats.Add(reader.ReadSingle());
@@ -173,7 +173,7 @@ namespace Twinsanity
                         writer.Write(b);
                     }
                 }
-                public Int32 GetLength()
+                public int GetLength()
                 {
                     return 8 + floats.Count * 4 + bytes.Count;
                 }
@@ -217,7 +217,7 @@ namespace Twinsanity
                     }
                 }
                 public UInt16 unkUShort1 { get; set; }
-                public Int32 unkInt1 { get; set; }
+                public int unkInt1 { get; set; }
                 public List<Byte> bytes { get; set; }
                 public List<Single> floats { get; set; }
                 public bool isValidArraySize()
@@ -277,15 +277,15 @@ namespace Twinsanity
                         nextScriptStateBody.Write(writer);
                     }
                 }
-                public Int32 GetLength()
+                public int GetLength()
                 {
                     return 4 + (((bitfield & 0x400) != 0) ? 4 : 0)
                         + (((bitfield & 0x200) != 0) ? condition.GetLength() : 0)
                         + (((bitfield & 0xFF) != 0) ? command.GetLength() : 0)
                         + (((bitfield & 0x800) != 0) ? nextScriptStateBody.GetLength() : 0);
                 }
-                public Int32 bitfield { get; set; }
-                public Int32 scriptStateListIndex { get; set; }
+                public int bitfield { get; set; }
+                public int scriptStateListIndex { get; set; }
                 public ScriptCondition condition { get; set; }
                 public ScriptCommand command { get; set; }
                 public ScriptStateBody nextScriptStateBody { get; set; }
@@ -344,7 +344,7 @@ namespace Twinsanity
                     }
                     set
                     {
-                        bitfield = (Int32)(bitfield & 0xFFFFFF00) | (value & 0xFF);
+                        bitfield = (int)(bitfield & 0xFFFFFF00) | (value & 0xFF);
                     }
                 }
                 public bool CreateCondition()
@@ -374,7 +374,7 @@ namespace Twinsanity
                         return false;
                     }
                 }
-                public bool AddCommand(Int32 position)
+                public bool AddCommand(int position)
                 {
                     if (position > commandCount || position < 0)
                     {
@@ -419,13 +419,13 @@ namespace Twinsanity
 
                         if (newCommand.nextCommand != null)
                         {
-                            newCommand.internalIndex = (Int32)(newCommand.internalIndex | 0x1000000);
+                            newCommand.internalIndex = (int)(newCommand.internalIndex | 0x1000000);
                         }
                     }
                     ++commandCount;
                     return true;
                 }
-                public bool DeleteCommand(Int32 position)
+                public bool DeleteCommand(int position)
                 {
                     if (position >= commandCount || position < 0)
                     {
@@ -449,7 +449,7 @@ namespace Twinsanity
                         prevPtr.nextCommand = ptr.nextCommand;
                         if (prevPtr.nextCommand == null)
                         {
-                            prevPtr.internalIndex = (Int32)(prevPtr.internalIndex & ~0x1000000);
+                            prevPtr.internalIndex = (int)(prevPtr.internalIndex & ~0x1000000);
                         }
                     }
                     --commandCount;
@@ -480,12 +480,12 @@ namespace Twinsanity
                     writer.Write(Y);
                     writer.Write(Z);
                 }
-                public Int32 GetLength()
+                public int GetLength()
                 {
                     return 16;
                 }
-                public Int32 unkInt1 { get; set; }
-                public Int32 vTableAddress { get; set; }
+                public int unkInt1 { get; set; }
+                public int vTableAddress { get; set; }
                 public float X { get; set; }
                 public float Y { get; set; }
                 public float Z { get; set; }
@@ -497,7 +497,7 @@ namespace Twinsanity
                     }
                     set
                     {
-                        unkInt1 = (Int32)(unkInt1 & 0xffff0000) | (value & 0xffff);
+                        unkInt1 = (int)(unkInt1 & 0xffff0000) | (value & 0xffff);
                     }
                 }
                 public UInt16 UnkData
@@ -508,7 +508,7 @@ namespace Twinsanity
                     }
                     set
                     {
-                        unkInt1 = (unkInt1 & 0x1ffff) | (Int32)((value << 17) & 0xfffe0000);
+                        unkInt1 = (unkInt1 & 0x1ffff) | (int)((value << 17) & 0xfffe0000);
                     }
                 }
                 public bool NotGate
@@ -519,7 +519,7 @@ namespace Twinsanity
                     }
                     set
                     {
-                        unkInt1 = (Int32)(unkInt1 & 0xfffeffff) | (Convert.ToInt32(value) << 16);
+                        unkInt1 = (int)(unkInt1 & 0xfffeffff) | (Convert.ToInt32(value) << 16);
                     }
                 }
             }
@@ -575,12 +575,12 @@ namespace Twinsanity
                         nextCommand.Write(writer);
                     }
                 }
-                public Int32 GetLength()
+                public int GetLength()
                 {
                     return 4 + ((arguments != null) ? arguments.Count * 4 : 0) + (((internalIndex & 0x1000000) != 0) ? nextCommand.GetLength() : 0);
                 }
                 public UInt32 unkUInt { get; set; }
-                public Int32 vTableAddress;
+                public int vTableAddress;
                 private void UpdateArguments()
                 {
                     int sz = GetExpectedSize() / 4;
@@ -593,8 +593,8 @@ namespace Twinsanity
                         arguments.RemoveAt(arguments.Count - 1);
                     }
                 }
-                public Int32 internalIndex { get; set; }
-                public Int32 length { get; set; }
+                public int internalIndex { get; set; }
+                public int length { get; set; }
                 public List<UInt32> arguments { get; set; }
                 public ScriptCommand nextCommand { get; set; }
                 public int scriptGameVersion { get; set; }
@@ -614,7 +614,7 @@ namespace Twinsanity
                     }
                     set
                     {
-                        internalIndex = (Int32)(internalIndex & 0xffff0000) | (value & 0xffff);
+                        internalIndex = (int)(internalIndex & 0xffff0000) | (value & 0xffff);
                         UpdateArguments();
                     }
                 }
@@ -626,7 +626,7 @@ namespace Twinsanity
                     }
                     set
                     {
-                        internalIndex = (internalIndex & 0xffff) | (Int32)((value << 16) & 0xffff0000);
+                        internalIndex = (internalIndex & 0xffff) | (int)((value << 16) & 0xffff0000);
                     }
                 }
 
@@ -654,9 +654,9 @@ namespace Twinsanity
                     }
                     return true;
                 }
-                public Int32 GetExpectedSize()
+                public int GetExpectedSize()
                 {
-                    Int32 sz = GetCommandSize(internalIndex & 0xffff, scriptGameVersion);
+                    int sz = GetCommandSize(internalIndex & 0xffff, scriptGameVersion);
                     if (sz - 0xC > 0)
                     {
                         return sz - 0xC;
@@ -666,7 +666,7 @@ namespace Twinsanity
                         return 0;
                     }
                 }
-                public static Int32 GetCommandSize(Int32 index, int ver)
+                public static int GetCommandSize(int index, int ver)
                 {
                     if (index < 0 || index >= CommandSizeMapper_PS2.Length)
                     {
@@ -683,7 +683,7 @@ namespace Twinsanity
                             return CommandSizeMapper_Demo[index];
                     }
                 }
-                static Int32[] CommandSizeMapper_PS2 = {
+                static int[] CommandSizeMapper_PS2 = {
                         0x00, 0x80, 0x0C, 0x20, 0x10, 0x0C, 0x00, 0x0C, 0x30, 0x24, 0x30, 0x48, 0x94, 0x0C, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x00, 0x00, 0x00, 0x10, 0x10, 0x00, 0x00, 0x10, 0x10, 0x20, 0x00, 0x10,
                         0x00, 0x10, 0x10, 0x0C, 0x0C, 0x00, 0x00, 0x0C, 0x14, 0x00, 0x10, 0x00, 0x50, 0x10, 0x00, 0x30, 0x30, 0x30, 0x0C, 0x20, 0x0C, 0x0C, 0x1C, 0x40, 0x14, 0x10, 0x00, 0x10, 0x60, 0x0C, 0x20, 0x0C,
                         0x30, 0x1C, 0x0C, 0x10, 0x14, 0x18, 0x00, 0x0C, 0x50, 0x00, 0x10, 0x10, 0x30, 0x0C, 0x14, 0x10, 0x50, 0x0C, 0x94, 0x94, 0x0C, 0x10, 0x28, 0x1C, 0x20, 0x10, 0x10, 0x10, 0x10, 0x10, 0x30, 0x10,
@@ -717,7 +717,7 @@ namespace Twinsanity
                         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, };
 
-                static Int32[] CommandSizeMapper_Xbox = {
+                static int[] CommandSizeMapper_Xbox = {
                         0x00, 0x80, 0x0C, 0x20, 0x10, 0x0C, 0x00, 0x0C, 0x40, 0x24, 0x30, 0x48, 0x94, 0x0C, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x00, 0x00, 0x00, 0x10, 0x10, 0x00, 0x00, 0x10, 0x10, 0x20, 0x00, 0x10,
                         0x00, 0x10, 0x10, 0x0C, 0x0C, 0x00, 0x00, 0x0C, 0x14, 0x00, 0x10, 0x00, 0x50, 0x10, 0x00, 0x30, 0x40, 0x30, 0x0C, 0x20, 0x0C, 0x0C, 0x20, 0x40, 0x14, 0x10, 0x00, 0x10, 0x60, 0x0C, 0x20, 0x0C,
                         0x30, 0x20, 0x0C, 0x10, 0x14, 0x18, 0x00, 0x0C, 0x50, 0x00, 0x10, 0x10, 0x30, 0x0C, 0x14, 0x10, 0x50, 0x0C, 0x94, 0x94, 0x0C, 0x10, 0x28, 0x1C, 0x20, 0x10, 0x10, 0x10, 0x10, 0x10, 0x30, 0x10,
@@ -751,7 +751,7 @@ namespace Twinsanity
                         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, };
 
-                static Int32[] CommandSizeMapper_Demo = {
+                static int[] CommandSizeMapper_Demo = {
                         0x00, 0x80, 0x0C, 0x20, 0x10, 0x0C, 0x00, 0x0C, 0x30, 0x24, 0x30, 0x44, 0x94, 0x0C, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x00, 0x00, 0x00, 0x10, 0x10, 0x00, 0x00, 0x10, 0x10, 0x20, 0x00, 0x10,
                         0x00, 0x10, 0x10, 0x0C, 0x0C, 0x00, 0x00, 0x0C, 0x14, 0x00, 0x10, 0x00, 0x50, 0x10, 0x00, 0x30, 0x30, 0x30, 0x0C, 0x20, 0x0C, 0x0C, 0x1C, 0x40, 0x14, 0x10, 0x00, 0x10, 0x50, 0x0C, 0x20, 0x0C,
                         0x30, 0x1C, 0x0C, 0x10, 0x14, 0x14, 0x00, 0x0C, 0x50, 0x00, 0x10, 0x10, 0x30, 0x0C, 0x14, 0x10, 0x50, 0x0C, 0x94, 0x94, 0x0C, 0x10, 0x28, 0x1C, 0x18, 0x10, 0x10, 0x10, 0x10, 0x10, 0x30, 0x10,
@@ -824,7 +824,7 @@ namespace Twinsanity
                         nextState.Write(writer);
                     }
                 }
-                public Int32 GetLength()
+                public int GetLength()
                 {
                     return 4 + (((bitfield & 0x4000) != 0) ? type1.GetLength() : 0) + (((bitfield & 0x8000) != 0) ? nextState.GetLength() : 0);
                 }
@@ -917,7 +917,7 @@ namespace Twinsanity
                         return false;
                     }
                 }
-                public bool AddScriptStateBody(Int32 position)
+                public bool AddScriptStateBody(int position)
                 {
                     if (position > scriptStateBodyCount || position < 0)
                     {
@@ -962,13 +962,13 @@ namespace Twinsanity
 
                         if (newType2.nextScriptStateBody != null)
                         {
-                            newType2.bitfield = (Int32)(newType2.bitfield | 0x800);
+                            newType2.bitfield = (int)(newType2.bitfield | 0x800);
                         }
                     }
                     ++scriptStateBodyCount;
                     return true;
                 }
-                public bool DeleteScriptStateBody(Int32 position)
+                public bool DeleteScriptStateBody(int position)
                 {
                     if (position >= scriptStateBodyCount || position < 0)
                     {
@@ -992,7 +992,7 @@ namespace Twinsanity
                         prevPtr.nextScriptStateBody = ptr.nextScriptStateBody;
                         if (prevPtr.nextScriptStateBody == null)
                         {
-                            prevPtr.bitfield = (Int32)(prevPtr.bitfield & ~0x800);
+                            prevPtr.bitfield = (int)(prevPtr.bitfield & ~0x800);
                         }
                     }
                     --scriptStateBodyCount;
@@ -1000,7 +1000,7 @@ namespace Twinsanity
                 }
             }
 
-            public bool DeleteLinkedScript(Int32 position)
+            public bool DeleteLinkedScript(int position)
             {
                 if (position >= StatesAmount || position < 0)
                 {
@@ -1030,7 +1030,7 @@ namespace Twinsanity
                 --StatesAmount;
                 return true;
             }
-            public bool AddLinkedScript(Int32 position)
+            public bool AddLinkedScript(int position)
             {
                 if (position > StatesAmount || position < 0)
                 {

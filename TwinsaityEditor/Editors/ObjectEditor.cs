@@ -314,7 +314,7 @@ namespace TwinsaityEditor
             if (tbByte2Repres != sender)  tbByte2Repres.Text = ((val & 0xFF00) >> 8).ToString();
             if (tbByte3Repres != sender)  tbByte3Repres.Text = ((val & 0xFF0000) >> 16).ToString();
             if (tbByte4Repres != sender)  tbByte4Repres.Text = ((val & 0xFF000000) >> 24).ToString();
-            if (tbInt32Repres != sender)  tbInt32Repres.Text = ((Int32)val).ToString();
+            if (tbInt32Repres != sender)  tbInt32Repres.Text = ((int)val).ToString();
             if (tbInt16_1Repres != sender)  tbInt16_1Repres.Text = ((Int16)(val & 0xFFFF)).ToString();
             if (tbInt16_2Repres != sender)  tbInt16_2Repres.Text = ((Int16)((val & 0xFFFF0000) >> 16)).ToString();
             if (tbBinaryRepres != sender)  tbBinaryRepres.Text = Convert.ToString(val, 2).PadLeft(32, '0');
@@ -358,8 +358,8 @@ namespace TwinsaityEditor
                 parser = new Func<string, ArgParseResult>(str =>
                 {
                     var result = new ArgParseResult();
-                    var value = (Int32)result.val;
-                    result.success = Int32.TryParse(str, out value);
+                    var value = (int)result.val;
+                    result.success = int.TryParse(str, out value);
                     result.val = (UInt32)value;
                     return result;
                 }),
@@ -571,25 +571,25 @@ namespace TwinsaityEditor
             {
                 if (gameObject.scriptCommandsAmount > 1)
                 {
-                    newCom.nextCommand = gameObject.scriptCommands[(Int32)position];
+                    newCom.nextCommand = gameObject.scriptCommands[(int)position];
                     newCom.internalIndex |= 0x1000000;
                 }
                 gameObject.scriptCommand = newCom;
             }
             else if (position != (UInt32)gameObject.scriptCommandsAmount)
             {
-                var prevCom = gameObject.scriptCommands[(Int32)(position - 1)];
+                var prevCom = gameObject.scriptCommands[(int)(position - 1)];
                 newCom.nextCommand = prevCom.nextCommand;
                 prevCom.nextCommand = newCom;
                 newCom.internalIndex |= 0x1000000;
             }
             else
             {
-                var prevCom = gameObject.scriptCommands[(Int32)(position - 1)];
+                var prevCom = gameObject.scriptCommands[(int)(position - 1)];
                 prevCom.nextCommand = newCom;
                 prevCom.internalIndex |= 0x1000000;
             }
-            gameObject.scriptCommands.Insert((Int32)position, newCom);
+            gameObject.scriptCommands.Insert((int)position, newCom);
             gameObject.scriptCommandsAmount++;
             PopulateObjectCommandList();
         }
