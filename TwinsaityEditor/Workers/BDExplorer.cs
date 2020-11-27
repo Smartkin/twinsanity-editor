@@ -280,7 +280,7 @@ namespace TwinsaityEditor
                     {
                         if (DialogResult.OK == ofd.ShowDialog(this))
                         {
-                            using (FileStream fileStream = new FileStream(string.Format("{0}\\{1}.BD", path, name), FileMode.Open, FileAccess.Read))
+                            using (FileStream fileStream = new FileStream(Path.Combine(path, name) + ".BD", FileMode.Open, FileAccess.Read))
                             using (BinaryReader reader = new BinaryReader(fileStream))
                             {
                                 Settings.Default.BDExtractPath = ofd.SelectedPath;
