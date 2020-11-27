@@ -31,11 +31,11 @@
             this.archiveContentsTree = new System.Windows.Forms.TreeView();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.statusBar = new System.Windows.Forms.ToolStripStatusLabel();
-            this.OpenBDBH = new System.Windows.Forms.Button();
-            this.SaveButton = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
+            this.buttonOpen = new System.Windows.Forms.Button();
+            this.buttonSave = new System.Windows.Forms.Button();
+            this.buttonExtractAll = new System.Windows.Forms.Button();
+            this.buttonExtractSelected = new System.Windows.Forms.Button();
+            this.buttonExit = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -65,78 +65,78 @@
             this.statusBar.Size = new System.Drawing.Size(39, 17);
             this.statusBar.Text = "Ready";
             // 
-            // OpenBDBH
+            // buttonOpen
             // 
-            this.OpenBDBH.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            this.OpenBDBH.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.OpenBDBH.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OpenBDBH.Location = new System.Drawing.Point(10, 12);
-            this.OpenBDBH.Name = "OpenBDBH";
-            this.OpenBDBH.Size = new System.Drawing.Size(199, 85);
-            this.OpenBDBH.TabIndex = 3;
-            this.OpenBDBH.Text = "Open BD/BH";
-            this.OpenBDBH.UseVisualStyleBackColor = false;
-            this.OpenBDBH.Click += new System.EventHandler(this.button1_Click);
+            this.buttonOpen.BackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.buttonOpen.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.buttonOpen.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonOpen.Location = new System.Drawing.Point(10, 12);
+            this.buttonOpen.Name = "buttonOpen";
+            this.buttonOpen.Size = new System.Drawing.Size(199, 85);
+            this.buttonOpen.TabIndex = 3;
+            this.buttonOpen.Text = "Open BD/BH";
+            this.buttonOpen.UseVisualStyleBackColor = false;
+            this.buttonOpen.Click += new System.EventHandler(this.buttonOpen_Click);
             // 
-            // SaveButton
+            // buttonSave
             // 
-            this.SaveButton.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            this.SaveButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.SaveButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SaveButton.Location = new System.Drawing.Point(10, 103);
-            this.SaveButton.Name = "SaveButton";
-            this.SaveButton.Size = new System.Drawing.Size(199, 85);
-            this.SaveButton.TabIndex = 4;
-            this.SaveButton.Text = "Save BD/BH";
-            this.SaveButton.UseVisualStyleBackColor = false;
-            this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
+            this.buttonSave.BackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.buttonSave.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.buttonSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonSave.Location = new System.Drawing.Point(10, 103);
+            this.buttonSave.Name = "buttonSave";
+            this.buttonSave.Size = new System.Drawing.Size(199, 85);
+            this.buttonSave.TabIndex = 4;
+            this.buttonSave.Text = "Save BD/BH";
+            this.buttonSave.UseVisualStyleBackColor = false;
+            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
             // 
-            // button2
+            // buttonExtractAll
             // 
-            this.button2.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.Location = new System.Drawing.Point(10, 194);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(199, 85);
-            this.button2.TabIndex = 5;
-            this.button2.Text = "Extract All";
-            this.button2.UseVisualStyleBackColor = false;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.buttonExtractAll.BackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.buttonExtractAll.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.buttonExtractAll.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonExtractAll.Location = new System.Drawing.Point(10, 194);
+            this.buttonExtractAll.Name = "buttonExtractAll";
+            this.buttonExtractAll.Size = new System.Drawing.Size(199, 85);
+            this.buttonExtractAll.TabIndex = 5;
+            this.buttonExtractAll.Text = "Extract All";
+            this.buttonExtractAll.UseVisualStyleBackColor = false;
+            this.buttonExtractAll.Click += new System.EventHandler(this.buttonExtractAll_Click);
             // 
-            // button3
+            // buttonExtractSelected
             // 
-            this.button3.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.Location = new System.Drawing.Point(10, 285);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(199, 85);
-            this.button3.TabIndex = 6;
-            this.button3.Text = "Extract Selected";
-            this.button3.UseVisualStyleBackColor = false;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.buttonExtractSelected.BackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.buttonExtractSelected.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.buttonExtractSelected.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonExtractSelected.Location = new System.Drawing.Point(10, 285);
+            this.buttonExtractSelected.Name = "buttonExtractSelected";
+            this.buttonExtractSelected.Size = new System.Drawing.Size(199, 85);
+            this.buttonExtractSelected.TabIndex = 6;
+            this.buttonExtractSelected.Text = "Extract Selected";
+            this.buttonExtractSelected.UseVisualStyleBackColor = false;
+            this.buttonExtractSelected.Click += new System.EventHandler(this.buttonExtractSelected_Click);
             // 
-            // button4
+            // buttonExit
             // 
-            this.button4.BackColor = System.Drawing.Color.Firebrick;
-            this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button4.Location = new System.Drawing.Point(10, 376);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(199, 85);
-            this.button4.TabIndex = 7;
-            this.button4.Text = "EXIT";
-            this.button4.UseVisualStyleBackColor = false;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.buttonExit.BackColor = System.Drawing.Color.Firebrick;
+            this.buttonExit.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.buttonExit.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonExit.Location = new System.Drawing.Point(10, 376);
+            this.buttonExit.Name = "buttonExit";
+            this.buttonExit.Size = new System.Drawing.Size(199, 85);
+            this.buttonExit.TabIndex = 7;
+            this.buttonExit.Text = "EXIT";
+            this.buttonExit.UseVisualStyleBackColor = false;
+            this.buttonExit.Click += new System.EventHandler(this.buttonExit_Click);
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.button4);
-            this.panel1.Controls.Add(this.OpenBDBH);
-            this.panel1.Controls.Add(this.button3);
-            this.panel1.Controls.Add(this.SaveButton);
-            this.panel1.Controls.Add(this.button2);
+            this.panel1.Controls.Add(this.buttonExit);
+            this.panel1.Controls.Add(this.buttonOpen);
+            this.panel1.Controls.Add(this.buttonExtractSelected);
+            this.panel1.Controls.Add(this.buttonSave);
+            this.panel1.Controls.Add(this.buttonExtractAll);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
             this.panel1.Location = new System.Drawing.Point(329, 0);
             this.panel1.Name = "panel1";
@@ -154,7 +154,6 @@
             this.MinimumSize = new System.Drawing.Size(566, 529);
             this.Name = "BDExplorer";
             this.Text = "BDExplorer";
-            this.Load += new System.EventHandler(this.BDExplorer_Load);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.panel1.ResumeLayout(false);
@@ -168,11 +167,11 @@
         private System.Windows.Forms.TreeView archiveContentsTree;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel statusBar;
-        private System.Windows.Forms.Button OpenBDBH;
-        private System.Windows.Forms.Button SaveButton;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button buttonOpen;
+        private System.Windows.Forms.Button buttonSave;
+        private System.Windows.Forms.Button buttonExtractAll;
+        private System.Windows.Forms.Button buttonExtractSelected;
+        private System.Windows.Forms.Button buttonExit;
         private System.Windows.Forms.Panel panel1;
     }
 }
