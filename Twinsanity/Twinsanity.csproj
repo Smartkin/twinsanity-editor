@@ -84,6 +84,9 @@
     <Compile Include="Items\Instances\InstanceTemplateDemo.cs" />
     <Compile Include="Items\ParticleData.cs" />
     <Compile Include="Items\SceneryData.cs" />
+    <Compile Include="Items\TwinsPSF.cs" />
+    <Compile Include="Items\TwinsPSM.cs" />
+    <Compile Include="Items\TwinsPTC.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
