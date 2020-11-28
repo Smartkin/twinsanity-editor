@@ -284,7 +284,19 @@ namespace TwinsaityEditor
 
         private void buttonRM2Viewer_Click(object sender, EventArgs e)
         {
-            CurCont.OpenRMViewer();
+            switch (CurFile.Type)
+            {
+                case TwinsFile.FileType.SM2:
+                case TwinsFile.FileType.SMX:
+                case TwinsFile.FileType.DemoSM2:
+                    CurCont.OpenSMViewer();
+                    break;
+                case TwinsFile.FileType.RM2:
+                case TwinsFile.FileType.RMX:
+                case TwinsFile.FileType.DemoRM2:
+                    CurCont.OpenRMViewer();
+                    break;
+            }
         }
 
         private void buttonBHTool_Click(object sender, EventArgs e)
