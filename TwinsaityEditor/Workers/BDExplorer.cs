@@ -116,6 +116,7 @@ namespace TwinsaityEditor
                     TwinsPSM psm = new TwinsPSM();
                     psm.Load(reader, record.Length);
                     viewer.PTCs = psm.PTCs;
+                    viewer.EnablePSMCheckbox();
                 }
             }
             viewer.SelectedPTC = viewer.PTCs[0];

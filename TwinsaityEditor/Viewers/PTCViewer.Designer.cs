@@ -39,6 +39,7 @@ namespace TwinsaityEditor
             this.btnPrevTexture = new System.Windows.Forms.Button();
             this.btnNextTexture = new System.Windows.Forms.Button();
             this.lblTextureIndex = new System.Windows.Forms.Label();
+            this.cbViewFullPSM = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // GlControl1
@@ -46,7 +47,7 @@ namespace TwinsaityEditor
             this.GlControl1.BackColor = System.Drawing.Color.Black;
             this.GlControl1.Location = new System.Drawing.Point(13, 13);
             this.GlControl1.Name = "GlControl1";
-            this.GlControl1.Size = new System.Drawing.Size(636, 500);
+            this.GlControl1.Size = new System.Drawing.Size(636, 640);
             this.GlControl1.TabIndex = 0;
             this.GlControl1.VSync = false;
             this.GlControl1.Paint += new System.Windows.Forms.PaintEventHandler(this.GlControl1_Paint);
@@ -55,7 +56,7 @@ namespace TwinsaityEditor
             // 
             this.btnSave.Location = new System.Drawing.Point(655, 83);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(43, 23);
+            this.btnSave.Size = new System.Drawing.Size(79, 23);
             this.btnSave.TabIndex = 1;
             this.btnSave.Text = "Save";
             this.btnSave.UseVisualStyleBackColor = true;
@@ -67,9 +68,9 @@ namespace TwinsaityEditor
             // 
             // btnPrevTexture
             // 
-            this.btnPrevTexture.Location = new System.Drawing.Point(655, 54);
+            this.btnPrevTexture.Location = new System.Drawing.Point(655, 12);
             this.btnPrevTexture.Name = "btnPrevTexture";
-            this.btnPrevTexture.Size = new System.Drawing.Size(43, 23);
+            this.btnPrevTexture.Size = new System.Drawing.Size(79, 23);
             this.btnPrevTexture.TabIndex = 2;
             this.btnPrevTexture.Text = "Prev";
             this.btnPrevTexture.UseVisualStyleBackColor = true;
@@ -77,9 +78,9 @@ namespace TwinsaityEditor
             // 
             // btnNextTexture
             // 
-            this.btnNextTexture.Location = new System.Drawing.Point(655, 12);
+            this.btnNextTexture.Location = new System.Drawing.Point(655, 54);
             this.btnNextTexture.Name = "btnNextTexture";
-            this.btnNextTexture.Size = new System.Drawing.Size(43, 23);
+            this.btnNextTexture.Size = new System.Drawing.Size(79, 23);
             this.btnNextTexture.TabIndex = 3;
             this.btnNextTexture.Text = "Next";
             this.btnNextTexture.UseVisualStyleBackColor = true;
@@ -88,18 +89,31 @@ namespace TwinsaityEditor
             // lblTextureIndex
             // 
             this.lblTextureIndex.AutoSize = true;
-            this.lblTextureIndex.Location = new System.Drawing.Point(664, 38);
+            this.lblTextureIndex.Location = new System.Drawing.Point(683, 38);
             this.lblTextureIndex.Name = "lblTextureIndex";
             this.lblTextureIndex.Size = new System.Drawing.Size(24, 13);
             this.lblTextureIndex.TabIndex = 4;
             this.lblTextureIndex.Text = "0/0";
             this.lblTextureIndex.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // cbViewFullPSM
+            // 
+            this.cbViewFullPSM.AutoSize = true;
+            this.cbViewFullPSM.Enabled = false;
+            this.cbViewFullPSM.Location = new System.Drawing.Point(655, 113);
+            this.cbViewFullPSM.Name = "cbViewFullPSM";
+            this.cbViewFullPSM.Size = new System.Drawing.Size(91, 17);
+            this.cbViewFullPSM.TabIndex = 5;
+            this.cbViewFullPSM.Text = "View full PSM";
+            this.cbViewFullPSM.UseVisualStyleBackColor = true;
+            this.cbViewFullPSM.CheckedChanged += new System.EventHandler(this.cbViewFullPSM_CheckedChanged);
+            // 
             // PTCViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(710, 525);
+            this.ClientSize = new System.Drawing.Size(746, 665);
+            this.Controls.Add(this.cbViewFullPSM);
             this.Controls.Add(this.lblTextureIndex);
             this.Controls.Add(this.btnNextTexture);
             this.Controls.Add(this.btnPrevTexture);
@@ -121,5 +135,6 @@ namespace TwinsaityEditor
         private Button btnPrevTexture;
         private Button btnNextTexture;
         private Label lblTextureIndex;
+        private CheckBox cbViewFullPSM;
     }
 }
