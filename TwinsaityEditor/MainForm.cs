@@ -150,46 +150,6 @@ namespace TwinsaityEditor
                 CurCont.OpenEditor(c);
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        private void openRM2ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-           
-        }
-
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-         
-        }
-
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-           
-        }
-
-        private void rMViewerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void eLFPatcherToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-          
-        }
-
-        private void sMViewerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-           
-        }
-
-        private void mHMBToolToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-        
-        }
-
         public void OpenEXETool()
         {
            if (exeForm == null || exeForm.IsDisposed)
@@ -206,11 +166,6 @@ namespace TwinsaityEditor
            }
         }
 
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("Menu strip last used in build 0.30\nIt's left behind because I was too lazy to fix a bug and this would work\nSource code available at: https://github.com/smartkin/twinsanity-editor", "About", MessageBoxButtons.OK);
-        }
-
         public void OpenMHTool()
         {
             if (mhForm == null)
@@ -225,54 +180,23 @@ namespace TwinsaityEditor
                 mhForm.Select();
         }
 
-        public void Pref_TruncateNames_Click(object sender, EventArgs e)
-        {
-            Utils.TextUtils.Pref_TruncateObjectNames = !Utils.TextUtils.Pref_TruncateObjectNames;
-            Pref_TruncateNames_toolStripMenuItem.Checked = Utils.TextUtils.Pref_TruncateObjectNames;
-        }
-
-        private void bHBDToolToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            OpenBDTool();
-        }
-
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Settings.Default.Save();
         }
 
-        private void imageMakerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            OpenImageMaker();
-        }
-
-        private void splitContainer2_SplitterMoved(object sender, SplitterEventArgs e)
-        {
-
-        }
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button2_Click(object sender, EventArgs e)
+        private void buttonSave_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Overwrite original file?", "Save", MessageBoxButtons.OKCancel) == DialogResult.OK)
                 CurFile.SaveFile(CurCont.FileName);
         }
 
-        private void button8_Click(object sender, EventArgs e)
+        private void buttonAbout_Click(object sender, EventArgs e)
         {
             MessageBox.Show("TwinsaityEditor + Twinsanity API v0.40\nDeveloped by Neo_Kesha, Smartkin, ManDude, Marko, BetaM\nUI modifications by AtomicalSloths\nSource code available at: https://github.com/smartkin/twinsanity-editor", "About", MessageBoxButtons.OK);
         }
 
-        private void OpenFileButton_Click(object sender, EventArgs e)
+        private void buttonOpen_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog ofd = new OpenFileDialog
             {
@@ -340,16 +264,6 @@ namespace TwinsaityEditor
                             }
                             break;
                     }
-                    if (IsScenery)
-                    {
-                        sMViewerToolStripMenuItem.Enabled = true;
-                        rMViewerToolStripMenuItem.Enabled = false;
-                    }
-                    else
-                    {
-                        rMViewerToolStripMenuItem.Enabled = true;
-                        sMViewerToolStripMenuItem.Enabled = false;
-                    }
                     file.SafeFileName = ofd.SafeFileName;
                     Tag = new FileController(this, file);
                     ((FileController)Tag).DataAux = aux_file;
@@ -368,58 +282,27 @@ namespace TwinsaityEditor
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void buttonRM2Viewer_Click(object sender, EventArgs e)
         {
-            if (rMViewerToolStripMenuItem.Enabled == true)
-            {
-                CurCont.OpenRMViewer();
-            }
-            else if(sMViewerToolStripMenuItem.Enabled == true)
-            {
-                CurCont.OpenSMViewer();
-            }
-            else
-            {
-
-            }
+            CurCont.OpenRMViewer();
         }
 
-        private void button5_Click(object sender, EventArgs e)
+        private void buttonBHTool_Click(object sender, EventArgs e)
         {
             OpenBDTool();
         }
 
-        private void button6_Click(object sender, EventArgs e)
+        private void buttonISOTool_Click(object sender, EventArgs e)
         {
             OpenImageMaker();
         }
 
-        private void MHMBToolButton_Click(object sender, EventArgs e)
+        private void buttonMHTool_Click(object sender, EventArgs e)
         {
             OpenMHTool();
         }
 
-        private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
-        {
-
-        }
-
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            CurCont.OpenSMViewer();
-        }
-
-        private void SaveAsButton_Click(object sender, EventArgs e)
+        private void buttonSaveAs_Click(object sender, EventArgs e)
         {
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "RM2/RMX files|*.rm*|SM2/SMX files|*.sm*";
@@ -431,7 +314,7 @@ namespace TwinsaityEditor
             }
         }
 
-        private void EXEPatcherButton_Click(object sender, EventArgs e)
+        private void buttonEXETool_Click(object sender, EventArgs e)
         {
             OpenEXETool();
         }
@@ -467,12 +350,5 @@ namespace TwinsaityEditor
                 imageMakerForm.Select();
             }
         }
-
-        public void Pref_EnableAllNames_Click(object sender, EventArgs e)
-        {
-            Utils.TextUtils.Pref_EnableAnyObjectNames = !Utils.TextUtils.Pref_EnableAnyObjectNames;
-            Pref_EnableAllNames_toolStripMenuItem.Checked = Utils.TextUtils.Pref_EnableAnyObjectNames;
-        }
-
     }
 }
