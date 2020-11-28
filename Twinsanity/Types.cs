@@ -23,7 +23,7 @@ namespace Twinsanity
         public float W { get; set; }
     }
 
-    public class TwinVector4
+    public class TwinsVector4
     {
         public float X { get; set; }
         public float Y { get; set; }
@@ -34,7 +34,7 @@ namespace Twinsanity
             return 16;
         }
 
-        public void Read(BinaryReader reader, int length)
+        public void Load(BinaryReader reader, int length)
         {
             X = reader.ReadSingle();
             Y = reader.ReadSingle();
@@ -42,7 +42,7 @@ namespace Twinsanity
             W = reader.ReadSingle();
         }
 
-        public void Write(BinaryWriter writer)
+        public void Save(BinaryWriter writer)
         {
             writer.Write(X);
             writer.Write(Y);
