@@ -18,7 +18,6 @@ namespace TwinsaityEditor
         public BDExplorer()
         {
             InitializeComponent();
-            buttonSave.Enabled = false;
             buttonExtractAll.Enabled = false;
             buttonExtractSelected.Enabled = false;
             Show();
@@ -322,7 +321,6 @@ namespace TwinsaityEditor
                         name = Path.GetFileNameWithoutExtension(file);
                         Settings.Default.BDFilePath = file.Substring(0, file.LastIndexOf(Path.DirectorySeparatorChar));
                         LoadData(path, name);
-                        buttonSave.Enabled = true;
                         buttonExtractAll.Enabled = true;
                         buttonExtractSelected.Enabled = true;
                     }
