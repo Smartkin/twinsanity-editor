@@ -15,7 +15,7 @@ namespace TwinsaityEditor
 
         protected override string GetName()
         {
-            return string.Format("{1} [ID {0:X8}]", Data.ID, Data.Name);
+            return string.Format("{1} [ID {0:X8}]", Data.ID, Data.Name.Substring(0, Data.Name.Length - 1));
         }
 
         protected override void GenText()

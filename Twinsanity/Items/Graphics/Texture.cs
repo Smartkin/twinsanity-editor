@@ -210,7 +210,29 @@ namespace Twinsanity
             writer.Write((byte)0);
             writer.Write(unusedMetadata);
             writer.Write(vifBlock);
-            writer.Write(imageData);
+            switch (PixelFormat)
+            {
+                case TexturePixelFormat.PSMCT32:
+
+                    imageData = new byte[texSize - 224];
+                    for (int i = 0; i < RawData.Length; i++)
+                    {
+                        imageData[(i * 4) + 0] = RawData[i].R;
+                        imageData[(i * 4) + 1] = RawData[i].G;
+                        imageData[(i * 4) + 2] = RawData[i].B;
+                        imageData[(i * 4) + 3] = (byte)(RawData[i].A >> 1);
+                    }
+
+                    writer.Write(imageData);
+                    break;
+                case TexturePixelFormat.PSMT8:
+                    writer.Write(imageData);
+                    break;
+                default:
+                    writer.Write(imageData);
+                    break;
+            }
+            
         }
 
         protected override int GetSize()

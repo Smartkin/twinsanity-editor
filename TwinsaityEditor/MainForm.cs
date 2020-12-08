@@ -135,6 +135,8 @@ namespace TwinsaityEditor
                 c = new InstanceDemoController(this, (InstanceDemo)a);
             else if (a is GameObjectDemo)
                 c = new ObjectDemoController(this, (GameObjectDemo)a);
+            else if (a is BlendSkin)
+                c = new BlendSkinController(this, (BlendSkin)a);
             else
                 c = new ItemController(this, a);
 

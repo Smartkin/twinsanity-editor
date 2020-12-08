@@ -23,7 +23,7 @@ namespace Twinsanity
         Model, ModelX,
         RigidModel,
         Skin, SkinX,
-        BlendSkin,
+        BlendSkin, BlendSkinX,
         Mesh,
         LodModel,
         Skydome,
@@ -141,7 +141,10 @@ namespace Twinsanity
                                     LoadSection(reader, sub, SectionType.Skin);
                                 break;
                             case 5:
-                                LoadSection(reader, sub, SectionType.BlendSkin);
+                                if (Type == SectionType.GraphicsX)
+                                    LoadSection(reader, sub, SectionType.BlendSkinX);
+                                else
+                                    LoadSection(reader, sub, SectionType.BlendSkin);
                                 break;
                             case 6:
                                 LoadSection(reader, sub, SectionType.Mesh);
@@ -404,6 +407,9 @@ namespace Twinsanity
                         break;
                     case SectionType.InstanceTemplateDemo:
                         LoadItem<InstanceTemplateDemo>(reader, sub);
+                        break;
+                    case SectionType.BlendSkin:
+                        LoadItem<BlendSkin>(reader, sub);
                         break;
                     default:
                         LoadItem<TwinsItem>(reader, sub);
