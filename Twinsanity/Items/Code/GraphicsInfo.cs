@@ -6,40 +6,22 @@ namespace Twinsanity
     public class GraphicsInfo : TwinsItem
     {
 
-        public long ItemSize { get; set; }
-
         public GI_Type0[] ModelIDs { get; set; }
         public uint ArmatureModelID { get; set; }
         public uint ActorModelID { get; set; }
         public Pos Coord1 { get; set; } // Bounding box?
         public Pos Coord2 { get; set; } // Bounding box?
-        public uint[] Variables { get; set; } //13
         public GI_Type1[] Type1 { get; set; }
         public GI_Type2[] Type2 { get; set; }
         public GI_Type3[] Type3 { get; set; }
-        public byte[] Remain { get; set; }
+        public GI_Type4[] Type4 { get; set; }
 
-        public ushort Var1;
-        public byte Var2;
-        public ushort Var3;
-        public ushort Var4;
-        public ushort Var5;
-        public uint Var6;
+        public byte[] HeaderVars;
+        public byte[] Type4Related;
 
         public override void Save(BinaryWriter writer)
         {
-            writer.Write(Data);
-
-            /*
-            writer.Write((byte)Type1.Length);
-            writer.Write((byte)Type2.Length);
-            writer.Write(Var1);
-            writer.Write(Var2);
-            writer.Write((byte)ModelIDs.Length);
-            writer.Write(Var3);
-            writer.Write(Var4);
-            writer.Write(Var5);
-            writer.Write(Var6);
+            writer.Write(HeaderVars);
             writer.Write(Coord1.X);
             writer.Write(Coord1.Y);
             writer.Write(Coord1.Z);
@@ -48,30 +30,103 @@ namespace Twinsanity
             writer.Write(Coord2.Y);
             writer.Write(Coord2.Z);
             writer.Write(Coord2.W);
-            */
+
+            if (Type1.Length > 0)
+            {
+                for (int i = 0; i < Type1.Length; i++)
+                {
+                    for (int a = 0; a < Type1[i].Numbers.Length; a++)
+                    {
+                        writer.Write(Type1[i].Numbers[a]);
+                    }
+                    for (int a = 0; a < Type1[i].Matrix.Length; a++)
+                    {
+                        writer.Write(Type1[i].Matrix[a].X);
+                        writer.Write(Type1[i].Matrix[a].Y);
+                        writer.Write(Type1[i].Matrix[a].Z);
+                        writer.Write(Type1[i].Matrix[a].W);
+                    }
+                }
+            }
+
+            if (Type2.Length > 0)
+            {
+                for (int i = 0; i < Type2.Length; i++)
+                {
+                    for (int a = 0; a < Type2[i].Numbers.Length; a++)
+                    {
+                        writer.Write(Type2[i].Numbers[a]);
+                    }
+                    for (int a = 0; a < Type2[i].Matrix.Length; a++)
+                    {
+                        writer.Write(Type2[i].Matrix[a].X);
+                        writer.Write(Type2[i].Matrix[a].Y);
+                        writer.Write(Type2[i].Matrix[a].Z);
+                        writer.Write(Type2[i].Matrix[a].W);
+                    }
+                }
+            }
+
+            if (ModelIDs.Length > 0)
+            {
+                for (int i = 0; i < ModelIDs.Length; i++)
+                {
+                    writer.Write((byte)ModelIDs[i].ID);
+                }
+                for (int i = 0; i < ModelIDs.Length; i++)
+                {
+                    writer.Write(ModelIDs[i].ModelID);
+                }
+            }
+
+            if (Type1.Length > 0)
+            {
+                for (int a = 0; a < Type3.Length; a++)
+                {
+                    for (int i = 0; i < Type3[a].Matrix.Length; i++)
+                    {
+                        writer.Write(Type3[a].Matrix[i].X);
+                        writer.Write(Type3[a].Matrix[i].Y);
+                        writer.Write(Type3[a].Matrix[i].Z);
+                        writer.Write(Type3[a].Matrix[i].W);
+                    }
+                }
+            }
+
+            writer.Write(ArmatureModelID);
+            writer.Write(ActorModelID);
+
+            if (Type4.Length > 0)
+            {
+                for (int a = 0; a < Type4.Length; a++)
+                {
+                    writer.Write(Type4[a].Header);
+                    writer.Write(Type4[a].unkBlob.Length);
+                    writer.Write(Type4[a].unkBlob);
+                }
+            }
+
+            writer.Write(Type4Related);
+
         }
 
         public override void Load(BinaryReader reader, int size)
         {
             long pre_pos = reader.BaseStream.Position;
 
-            uint Type1_Size = reader.ReadByte();
+            HeaderVars = new byte[0x10];
+            HeaderVars = reader.ReadBytes(0x10);
 
-            uint Type2_Size = reader.ReadByte();
-
-            Var1 = reader.ReadUInt16();
-            Var2 = reader.ReadByte();
-
-            uint Model_Size = reader.ReadByte();
-
-            Var3 = reader.ReadUInt16();
-            Var4 = reader.ReadUInt16();
-            Var5 = reader.ReadUInt16();
-            Var6 = reader.ReadUInt32();
+            uint Type1_Size = HeaderVars[0];
+            uint Type2_Size = HeaderVars[1];
+            uint Model_Size = HeaderVars[5];
+            uint SkinFlag = HeaderVars[6];
+            uint BlendSkinFlag = HeaderVars[7];
+            int Type4_Size = HeaderVars[8];
 
             Coord1 = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
             Coord2 = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-            
+
             if (Type1_Size > 0)
             {
                 Type1 = new GI_Type1[Type1_Size];
@@ -166,28 +221,70 @@ namespace Twinsanity
 
             ActorModelID = reader.ReadUInt32();
 
-            Variables = new uint[13];
-            for (int i = 0; i < Variables.Length; i++)
+            if (Type4_Size > 0)
             {
-                Variables[i] = reader.ReadUInt16();
+                Type4 = new GI_Type4[Type4_Size];
+                for (int a = 0; a < Type4_Size; a++)
+                {
+                    byte[] Head = reader.ReadBytes(0x16);
+                    int blobSize = reader.ReadInt32();
+                    byte[] Blob = reader.ReadBytes(blobSize);
+                    Type4[a] = new GI_Type4() { Header = Head, unkBlob = Blob };
+                }
+            }
+            else
+            {
+                Type4 = new GI_Type4[0];
             }
 
-            long headersize = reader.BaseStream.Position;
-            Remain = reader.ReadBytes(size - (int)(headersize - pre_pos));
+            Type4Related = reader.ReadBytes(Type4_Size);
 
-            //ItemSize = reader.BaseStream.Position - pre_pos;
-            //Console.WriteLine("Target Size: " + size);
-            //Console.WriteLine("End Size: " + ItemSize);
-            //Console.WriteLine("\n");
-
-            ItemSize = size;
-            reader.BaseStream.Position = pre_pos;
-            Data = reader.ReadBytes(size);
         }
 
         protected override int GetSize()
         {
-            return (int)ItemSize;
+            int count = 0x10 + 16 + 16 + 4 + 4 + Type4Related.Length;
+
+            if (Type1.Length > 0)
+            {
+                for (int i = 0; i < Type1.Length; i++)
+                {
+                    count += Type1[i].Numbers.Length * 4;
+                    count += Type1[i].Matrix.Length * 16;
+                }
+            }
+
+            if (Type2.Length > 0)
+            {
+                for (int i = 0; i < Type2.Length; i++)
+                {
+                    count += Type2[i].Numbers.Length * 4;
+                    count += Type2[i].Matrix.Length * 16;
+                }
+            }
+
+            if (ModelIDs.Length > 0)
+            {
+                count += ModelIDs.Length * 5;
+            }
+
+            if (Type3.Length > 0)
+            {
+                for (int i = 0; i < Type3.Length; i++)
+                {
+                    count += Type3[i].Matrix.Length * 16;
+                }
+            }
+
+            if (Type4.Length > 0)
+            {
+                for (int i = 0; i < Type4.Length; i++)
+                {
+                    count += Type4[i].unkBlob.Length + 4 + 0x16;
+                }
+            }
+
+            return count;
         }
 
         public struct GI_Type0
@@ -211,6 +308,12 @@ namespace Twinsanity
         public struct GI_Type3
         {
             public Pos[] Matrix; // 4
+        }
+
+        public struct GI_Type4
+        {
+            public byte[] Header; //0x16
+            public byte[] unkBlob; //blobSize
         }
     }
 }

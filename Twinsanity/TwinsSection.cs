@@ -296,10 +296,10 @@ namespace Twinsanity
                         LoadItem<TwinsItem>(reader, sub);
                         break;
                     case SectionType.Material:
-                        LoadItem<Material>(reader, sub);
+                        LoadItem<Material>(reader, sub, Type);
                         break;
                     case SectionType.MaterialD: //PS2 DEMO Materials
-                        LoadItem<MaterialDemo>(reader, sub);
+                        LoadItem<MaterialDemo>(reader, sub, Type);
                         break;
                     case SectionType.Model:
                         LoadItem<Model>(reader, sub);
@@ -376,10 +376,10 @@ namespace Twinsanity
                         LoadItem<Trigger>(reader, sub);
                         break;
                     case SectionType.Camera:
-                        LoadItem<Camera>(reader, sub);
+                        LoadItem<Camera>(reader, sub, Type);
                         break;
                     case SectionType.CameraDemo:
-                        LoadItem<TwinsItem>(reader, sub);
+                        LoadItem<Camera>(reader, sub, Type);
                         break;
                     case SectionType.OGI:
                         LoadItem<GraphicsInfo>(reader, sub);

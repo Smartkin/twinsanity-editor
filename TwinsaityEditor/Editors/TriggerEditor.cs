@@ -52,15 +52,15 @@ namespace TwinsaityEditor
 
             ignore_value_change = true;
 
-            numericUpDown1.Value = trigger.SomeUInt32;
-            numericUpDown2.Value = trigger.SomeNumber;
+            numericUpDown1.Value = trigger.Header;
+            numericUpDown2.Value = trigger.Enabled;
             numericUpDown3.Value = (decimal)trigger.SomeFloat;
             numericUpDown4.Value = trigger.SectionHead;
             numericUpDown5.Value = trigger.ID;
-            numericUpDown6.Value = trigger.SomeUInt161;
-            numericUpDown7.Value = trigger.SomeUInt162;
-            numericUpDown8.Value = trigger.SomeUInt163;
-            numericUpDown9.Value = trigger.SomeUInt164;
+            numericUpDown6.Value = trigger.Arg1;
+            numericUpDown7.Value = trigger.Arg2;
+            numericUpDown8.Value = trigger.Arg3;
+            numericUpDown9.Value = trigger.Arg4;
             numericUpDown10.Value = (decimal)trigger.Coords[1].X;
             numericUpDown11.Value = (decimal)trigger.Coords[1].Y;
             numericUpDown12.Value = (decimal)trigger.Coords[1].Z;
@@ -145,13 +145,13 @@ namespace TwinsaityEditor
         private void numericUpDown1_ValueChanged(object sender, System.EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.SomeUInt32 = (uint)numericUpDown1.Value;
+            trigger.Header = (uint)numericUpDown1.Value;
         }
 
         private void numericUpDown2_ValueChanged(object sender, System.EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.SomeNumber = (uint)numericUpDown2.Value;
+            trigger.Enabled = (uint)numericUpDown2.Value;
         }
 
         private void numericUpDown3_ValueChanged(object sender, System.EventArgs e)
@@ -170,28 +170,28 @@ namespace TwinsaityEditor
         private void numericUpDown6_ValueChanged(object sender, System.EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.SomeUInt161 = (ushort)numericUpDown6.Value;
+            trigger.Arg1 = (ushort)numericUpDown6.Value;
             CurCont.UpdateTextBox();
         }
 
         private void numericUpDown7_ValueChanged(object sender, System.EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.SomeUInt162 = (ushort)numericUpDown7.Value;
+            trigger.Arg2 = (ushort)numericUpDown7.Value;
             CurCont.UpdateTextBox();
         }
 
         private void numericUpDown8_ValueChanged(object sender, System.EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.SomeUInt163 = (ushort)numericUpDown8.Value;
+            trigger.Arg3 = (ushort)numericUpDown8.Value;
             CurCont.UpdateTextBox();
         }
 
         private void numericUpDown9_ValueChanged(object sender, System.EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.SomeUInt164 = (ushort)numericUpDown9.Value;
+            trigger.Arg4 = (ushort)numericUpDown9.Value;
             CurCont.UpdateTextBox();
         }
 
@@ -203,7 +203,7 @@ namespace TwinsaityEditor
             {
                 if (ushort.TryParse(textBox1.Lines[i], out ushort v))
                 {
-                    if (File.GetInstance(controller.Data.Parent.ID, v) != null)
+                    if (File.GetInstanceID(controller.Data.Parent.ID, v) != null)
                         trigger.Instances.Add(v);
                 }
             }

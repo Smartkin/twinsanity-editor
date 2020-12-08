@@ -101,7 +101,7 @@ namespace TwinsaityEditor
                 c = new PathController(this, (Path)a);
             else if (a is Instance)
                 c = new InstanceController(this, (Instance)a);
-            else if (a is Trigger && CurFile.Type != TwinsFile.FileType.DemoRM2) //trigger controller assumes final instance format
+            else if (a is Trigger)
                 c = new TriggerController(this, (Trigger)a);
             else if (a is ColData)
                 c = new ColDataController(this, (ColData)a);

@@ -5,21 +5,22 @@ namespace Twinsanity
 {
     public class Trigger : TwinsItem
     {
-        public uint SomeUInt32 { get; set; }
-        public uint SomeNumber { get; set; }
+        public uint Header { get; set; }
+        public uint Enabled { get; set; }
         public float SomeFloat { get; set; }
-        public Pos[] Coords { get; set; } = new Pos[3];
+        public Pos[] Coords { get; set; } = new Pos[3]; // rot/pos/size
         public uint SectionHead { get; set; }
         public List<ushort> Instances { get; set; }
-        public ushort SomeUInt161 { get; set; }
-        public ushort SomeUInt162 { get; set; }
-        public ushort SomeUInt163 { get; set; }
-        public ushort SomeUInt164 { get; set; }
+
+        public ushort Arg1 { get; set; }
+        public ushort Arg2 { get; set; }
+        public ushort Arg3 { get; set; }
+        public ushort Arg4 { get; set; }
 
         public override void Save(BinaryWriter writer)
         {
-            writer.Write(SomeUInt32);
-            writer.Write(SomeNumber);
+            writer.Write(Header);
+            writer.Write(Enabled);
             writer.Write(SomeFloat);
             for (int i = 0; i < 3; ++i)
             {
@@ -33,31 +34,33 @@ namespace Twinsanity
             writer.Write(SectionHead);
             for (int i = 0; i < Instances.Count; ++i)
                 writer.Write(Instances[i]);
-            writer.Write(SomeUInt161);
-            writer.Write(SomeUInt162);
-            writer.Write(SomeUInt163);
-            writer.Write(SomeUInt164);
+
+            writer.Write(Arg1);
+            writer.Write(Arg2);
+            writer.Write(Arg3);
+            writer.Write(Arg4);
         }
 
         public override void Load(BinaryReader reader, int size)
         {
-            SomeUInt32 = reader.ReadUInt32();
-            SomeNumber = reader.ReadUInt32();
+            Header = reader.ReadUInt32();
+            Enabled = reader.ReadUInt32();
             SomeFloat = reader.ReadSingle();
             for (int i = 0; i < 3; ++i)
             {
                 Coords[i] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
             }
             var n = reader.ReadInt32();
-            n  = reader.ReadInt32();
+            n = reader.ReadInt32();
             SectionHead = reader.ReadUInt32();
             Instances = new List<ushort>(n);
             for (int i = 0; i < n; ++i)
                 Instances.Add(reader.ReadUInt16());
-            SomeUInt161 = reader.ReadUInt16();
-            SomeUInt162 = reader.ReadUInt16();
-            SomeUInt163 = reader.ReadUInt16();
-            SomeUInt164 = reader.ReadUInt16();
+
+            Arg1 = reader.ReadUInt16();
+            Arg2 = reader.ReadUInt16();
+            Arg3 = reader.ReadUInt16();
+            Arg4 = reader.ReadUInt16();
         }
 
         protected override int GetSize()

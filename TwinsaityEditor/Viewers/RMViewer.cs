@@ -321,9 +321,9 @@ namespace TwinsaityEditor
                             GL.Begin(PrimitiveType.Lines);
                             foreach (var id in trg.Instances)
                             {
-                                Instance inst = file.GetInstance(trg.Parent.Parent.ID, id);
+                                Pos inst = file.GetInstancePos(trg.Parent.Parent.ID, id);
                                 GL.Vertex3(-trg.Coords[1].X, trg.Coords[1].Y, trg.Coords[1].Z);
-                                GL.Vertex3(-inst.Pos.X, inst.Pos.Y, inst.Pos.Z);
+                                GL.Vertex3(-inst.X, inst.Y, inst.Z);
                             }
                             GL.End();
                             GL.LineWidth(1);
@@ -335,13 +335,13 @@ namespace TwinsaityEditor
 
                     if (show_cams && file.Data.GetItem<TwinsSection>(i).ContainsItem(8))
                     {
-                        if (file.Data.Type != TwinsFile.FileType.DemoRM2)
+                        if (file.Data.Type != TwinsFile.FileType.DemoSM2)
                         {
                             foreach (Camera cam in file.Data.GetItem<TwinsSection>(i).GetItem<TwinsSection>(8).Records)
                             {
                                 GL.PushMatrix();
-                                GL.Translate(-cam.TriggerPos.X, cam.TriggerPos.Y, cam.TriggerPos.Z);
-                                Quaternion quat = new Quaternion(cam.TriggerRot.X, -cam.TriggerRot.Y, -cam.TriggerRot.Z, cam.TriggerRot.W);
+                                GL.Translate(-cam.Coords[1].X, cam.Coords[1].Y, cam.Coords[1].Z);
+                                Quaternion quat = new Quaternion(cam.Coords[0].X, -cam.Coords[0].Y, -cam.Coords[0].Z, cam.Coords[0].W);
                                 Matrix4 new_mat = Matrix4.CreateFromQuaternion(quat);
                                 GL.MultMatrix(ref new_mat);
 
@@ -350,28 +350,28 @@ namespace TwinsaityEditor
                                 GL.Enable(EnableCap.Lighting);
                                 GL.Color4(cur_color.R, cur_color.G, cur_color.B, (byte)95);
                                 GL.Begin(PrimitiveType.QuadStrip);
-                                GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
-                                GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
-                                GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
-                                GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
-                                GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
-                                GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
-                                GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
-                                GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
-                                GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
-                                GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                                GL.Vertex3(-cam.Coords[2].X, -cam.Coords[2].Y, -cam.Coords[2].Z);
+                                GL.Vertex3(cam.Coords[2].X, -cam.Coords[2].Y, -cam.Coords[2].Z);
+                                GL.Vertex3(-cam.Coords[2].X, cam.Coords[2].Y, -cam.Coords[2].Z);
+                                GL.Vertex3(cam.Coords[2].X, cam.Coords[2].Y, -cam.Coords[2].Z);
+                                GL.Vertex3(-cam.Coords[2].X, cam.Coords[2].Y, cam.Coords[2].Z);
+                                GL.Vertex3(cam.Coords[2].X, cam.Coords[2].Y, cam.Coords[2].Z);
+                                GL.Vertex3(-cam.Coords[2].X, -cam.Coords[2].Y, cam.Coords[2].Z);
+                                GL.Vertex3(cam.Coords[2].X, -cam.Coords[2].Y, cam.Coords[2].Z);
+                                GL.Vertex3(-cam.Coords[2].X, -cam.Coords[2].Y, -cam.Coords[2].Z);
+                                GL.Vertex3(cam.Coords[2].X, -cam.Coords[2].Y, -cam.Coords[2].Z);
                                 GL.End();
                                 GL.Begin(PrimitiveType.Quads);
 
-                                GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
-                                GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
-                                GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
-                                GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                                GL.Vertex3(-cam.Coords[2].X, -cam.Coords[2].Y, -cam.Coords[2].Z);
+                                GL.Vertex3(-cam.Coords[2].X, -cam.Coords[2].Y, cam.Coords[2].Z);
+                                GL.Vertex3(-cam.Coords[2].X, cam.Coords[2].Y, cam.Coords[2].Z);
+                                GL.Vertex3(-cam.Coords[2].X, cam.Coords[2].Y, -cam.Coords[2].Z);
 
-                                GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
-                                GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
-                                GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
-                                GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                                GL.Vertex3(cam.Coords[2].X, -cam.Coords[2].Y, -cam.Coords[2].Z);
+                                GL.Vertex3(cam.Coords[2].X, -cam.Coords[2].Y, cam.Coords[2].Z);
+                                GL.Vertex3(cam.Coords[2].X, cam.Coords[2].Y, cam.Coords[2].Z);
+                                GL.Vertex3(cam.Coords[2].X, cam.Coords[2].Y, -cam.Coords[2].Z);
 
                                 GL.End();
                                 GL.DepthMask(true);
@@ -381,30 +381,155 @@ namespace TwinsaityEditor
                                 GL.LineWidth(1);
 
                                 GL.Begin(PrimitiveType.LineStrip);
-                                GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
-                                GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
-                                GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
-                                GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
-                                GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
-                                GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
-                                GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
-                                GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
-                                GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
-                                GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
+                                GL.Vertex3(-cam.Coords[2].X, cam.Coords[2].Y, -cam.Coords[2].Z);
+                                GL.Vertex3(cam.Coords[2].X, cam.Coords[2].Y, -cam.Coords[2].Z);
+                                GL.Vertex3(cam.Coords[2].X, cam.Coords[2].Y, cam.Coords[2].Z);
+                                GL.Vertex3(-cam.Coords[2].X, cam.Coords[2].Y, cam.Coords[2].Z);
+                                GL.Vertex3(-cam.Coords[2].X, cam.Coords[2].Y, -cam.Coords[2].Z);
+                                GL.Vertex3(-cam.Coords[2].X, -cam.Coords[2].Y, -cam.Coords[2].Z);
+                                GL.Vertex3(cam.Coords[2].X, -cam.Coords[2].Y, -cam.Coords[2].Z);
+                                GL.Vertex3(cam.Coords[2].X, -cam.Coords[2].Y, cam.Coords[2].Z);
+                                GL.Vertex3(-cam.Coords[2].X, -cam.Coords[2].Y, cam.Coords[2].Z);
+                                GL.Vertex3(-cam.Coords[2].X, -cam.Coords[2].Y, -cam.Coords[2].Z);
                                 GL.End();
                                 GL.Begin(PrimitiveType.Lines);
-                                GL.Vertex3(-cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
-                                GL.Vertex3(-cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
-                                GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, -cam.TriggerSize.Z);
-                                GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, -cam.TriggerSize.Z);
-                                GL.Vertex3(cam.TriggerSize.X, -cam.TriggerSize.Y, cam.TriggerSize.Z);
-                                GL.Vertex3(cam.TriggerSize.X, cam.TriggerSize.Y, cam.TriggerSize.Z);
+                                GL.Vertex3(-cam.Coords[2].X, -cam.Coords[2].Y, cam.Coords[2].Z);
+                                GL.Vertex3(-cam.Coords[2].X, cam.Coords[2].Y, cam.Coords[2].Z);
+                                GL.Vertex3(cam.Coords[2].X, -cam.Coords[2].Y, -cam.Coords[2].Z);
+                                GL.Vertex3(cam.Coords[2].X, cam.Coords[2].Y, -cam.Coords[2].Z);
+                                GL.Vertex3(cam.Coords[2].X, -cam.Coords[2].Y, cam.Coords[2].Z);
+                                GL.Vertex3(cam.Coords[2].X, cam.Coords[2].Y, cam.Coords[2].Z);
                                 GL.End();
 
                                 GL.PopMatrix();
-                                DrawAxes(-cam.TriggerPos.X, cam.TriggerPos.Y, cam.TriggerPos.Z, Math.Min(cam.TriggerSize.X, Math.Min(cam.TriggerSize.Y, cam.TriggerSize.Z)) / 2);
+                                //DrawAxes(-cam.Coords[1].X, cam.Coords[1].Y, cam.Coords[1].Z, Math.Min(cam.Coords[2].X, Math.Min(cam.Coords[2].Y, cam.Coords[2].Z)) / 2);
                                 Matrix3 rot_mat = Matrix3.CreateFromQuaternion(quat);
-                                RenderString3D(cam.ID.ToString(), cur_color, -cam.TriggerPos.X, cam.TriggerPos.Y, cam.TriggerPos.Z, ref rot_mat);
+                                RenderString3D(cam.ID.ToString(), cur_color, -cam.Coords[1].X, cam.Coords[1].Y, cam.Coords[1].Z, ref rot_mat);
+
+                                GL.PushMatrix();
+                                GL.Translate(0, 0, 0);
+                                Matrix4 resetMat = Matrix4.Identity;
+                                GL.MultMatrix(ref resetMat);
+                                foreach (object camera in cam.Cameras)
+                                {
+
+                                    GL.LineWidth(1);
+                                    cur_color = colors[colors.Length - i * 2 - 2];
+                                    GL.Color3(cur_color);
+                                    if (camera is Camera.Camera_Path CameraPolyline)
+                                    {
+                                        GL.PointSize(5);
+                                        for (int p = 0; p < CameraPolyline.unkVectors.Length - 1; p++)
+                                        {
+                                            Pos Point1 = CameraPolyline.unkVectors[p];
+                                            Pos Point2 = CameraPolyline.unkVectors[p + 1];
+                                            GL.Begin(PrimitiveType.Lines);
+                                            GL.Vertex3(-Point1.X, Point1.Y, Point1.Z);
+                                            GL.Vertex3(-Point2.X, Point2.Y, Point2.Z);
+                                            GL.End();
+                                            GL.Begin(PrimitiveType.Points);
+                                            GL.Vertex3(-Point1.X, Point1.Y, Point1.Z);
+                                            if (p == CameraPolyline.unkVectors.Length - 1)
+                                            {
+                                                GL.Vertex3(-Point2.X, Point2.Y, Point2.Z);
+                                            }
+                                            GL.End();
+                                        }
+                                    }
+                                    else if (camera is Camera.Camera_Point CameraPoint)
+                                    {
+                                        GL.PointSize(10);
+                                        Pos Point = CameraPoint.unkVector;
+                                        Pos Source = new Pos(-cam.Coords[1].X, cam.Coords[1].Y, cam.Coords[1].Z, cam.Coords[1].W);
+                                        GL.Begin(PrimitiveType.Points);
+                                        GL.Vertex3(-Point.X, Point.Y, Point.Z);
+                                        GL.End();
+                                        GL.Begin(PrimitiveType.Lines);
+                                        GL.Vertex3(-Point.X, Point.Y, Point.Z);
+                                        GL.Vertex3(Source.X, Source.Y, Source.Z);
+                                        GL.End();
+                                    }
+                                    else if (camera is Camera.Camera_Spline CameraSpline)
+                                    {
+                                        GL.PointSize(5);
+                                        for (int p = 0; p < CameraSpline.unkVectors.Length - 3; p++)
+                                        {
+                                            Pos Point1 = CameraSpline.unkVectors[p];
+                                            Pos Point2 = CameraSpline.unkVectors[p + 2];
+                                            GL.Begin(PrimitiveType.Lines);
+                                            GL.Vertex3(-Point1.X, Point1.Y, Point1.Z);
+                                            GL.Vertex3(-Point2.X, Point2.Y, Point2.Z);
+                                            GL.End();
+                                            GL.Begin(PrimitiveType.Points);
+                                            GL.Vertex3(-Point1.X, Point1.Y, Point1.Z);
+                                            if (p == CameraSpline.unkVectors.Length - 2)
+                                            {
+                                                GL.Vertex3(-Point2.X, Point2.Y, Point2.Z);
+                                            }
+                                            GL.End();
+                                            p++;
+                                        }
+                                    }
+                                    else if (camera is Camera.Camera_Point2 CameraPoint2)
+                                    {
+                                        GL.PointSize(10);
+                                        Pos Point = CameraPoint2.unkVector;
+                                        Pos Source = new Pos(-cam.Coords[1].X, cam.Coords[1].Y, cam.Coords[1].Z, cam.Coords[1].W);
+                                        GL.Begin(PrimitiveType.Points);
+                                        GL.Vertex3(-Point.X, Point.Y, Point.Z);
+                                        GL.End();
+                                        GL.Begin(PrimitiveType.Lines);
+                                        GL.Vertex3(-Point.X, Point.Y, Point.Z);
+                                        GL.Vertex3(Source.X, Source.Y, Source.Z);
+                                        GL.End();
+                                    }
+                                    else if (camera is Camera.Camera_Line CameraLine)
+                                    {
+                                        GL.PointSize(10);
+                                        Pos Point1 = CameraLine.unkBoundingBoxVector1;
+                                        Pos Point2 = CameraLine.unkBoundingBoxVector2;
+                                        GL.Begin(PrimitiveType.Points);
+                                        GL.Vertex3(-Point1.X, Point1.Y, Point1.Z);
+                                        GL.Vertex3(-Point2.X, Point2.Y, Point2.Z);
+                                        GL.End();
+                                        GL.Begin(PrimitiveType.Lines);
+                                        GL.Vertex3(-Point1.X, Point1.Y, Point1.Z);
+                                        GL.Vertex3(-Point2.X, Point2.Y, Point2.Z);
+                                        GL.End();
+                                    }
+                                    else if (camera is Camera.Camera_Line2 CameraLine2)
+                                    {
+                                        GL.PointSize(10);
+                                        Pos Point1 = CameraLine2.unkBoundingBoxVector1;
+                                        Pos Point2 = CameraLine2.unkBoundingBoxVector2;
+                                        GL.Begin(PrimitiveType.Points);
+                                        GL.Vertex3(-Point1.X, Point1.Y, Point1.Z);
+                                        GL.Vertex3(-Point2.X, Point2.Y, Point2.Z);
+                                        GL.End();
+                                        GL.Begin(PrimitiveType.Lines);
+                                        GL.Vertex3(-Point1.X, Point1.Y, Point1.Z);
+                                        GL.Vertex3(-Point2.X, Point2.Y, Point2.Z);
+                                        GL.End();
+                                    }
+                                    else if (camera is Camera.Camera_Zone CameraZone)
+                                    {
+                                        // May be wrong?
+                                        GL.PointSize(10);
+                                        Pos Point1 = CameraZone.Data1_Vectors[3];
+                                        Pos Point2 = CameraZone.Data2_Vectors[3];
+                                        GL.Begin(PrimitiveType.Points);
+                                        GL.Vertex3(-Point1.X, Point1.Y, Point1.Z);
+                                        GL.Vertex3(-Point2.X, Point2.Y, Point2.Z);
+                                        GL.End();
+                                        GL.Begin(PrimitiveType.Lines);
+                                        GL.Vertex3(-Point1.X, Point1.Y, Point1.Z);
+                                        GL.Vertex3(-Point2.X, Point2.Y, Point2.Z);
+                                        GL.End();
+                                    }
+
+                                }
+                                GL.PopMatrix();
+
                             }
                         }
                     }
@@ -453,111 +578,125 @@ namespace TwinsaityEditor
                             (l.LoadWall[0].Z + l.LoadWall[1].Z + l.LoadWall[2].Z + l.LoadWall[3].Z) / 4,
                             ref rot_mat);
                     }
-                    if (l.Type == 1 || l.Type == 3)
+                    if (l.HasTree())
                     {
-                        GL.Begin(PrimitiveType.Lines);
-                        for (int i = 0; i < 6; ++i)
+                        ChunkLinks.ChunkLink.LinkTree? Ptr = l.TreeRoot;
+                        while (Ptr != null)
                         {
-                            switch (i)
+                            ChunkLinks.ChunkLink.LinkTree zone = Ptr.Value;
+                            GL.Begin(PrimitiveType.Lines);
+                            for (int i = 0; i < 6; ++i)
                             {
-                                case 0: GL.Color4(Color.Red); break;
-                                case 1: GL.Color4(Color.Green); break;
-                                case 2: GL.Color4(Color.Blue); break;
-                                case 3: GL.Color4(Color.Yellow); break;
-                                case 4: GL.Color4(Color.Magenta); break;
-                                case 5: GL.Color4(Color.Cyan); break;
+                                switch (i)
+                                {
+                                    case 0: GL.Color4(Color.Red); break;
+                                    case 1: GL.Color4(Color.Green); break;
+                                    case 2: GL.Color4(Color.Blue); break;
+                                    case 3: GL.Color4(Color.Yellow); break;
+                                    case 4: GL.Color4(Color.Magenta); break;
+                                    case 5: GL.Color4(Color.Cyan); break;
+                                }
+                                int i1 = i >= 4 ? 1 - (i - 4) : (0 + 2 * i) % 8;
+                                int i2 = i >= 4 ? i1 + 2 : (1 + 2 * i) % 8;
+                                int i3 = i >= 4 ? i2 + 2 : (2 + 2 * i) % 8;
+                                int i4 = i >= 4 ? i3 + 2 : (3 + 2 * i) % 8;
+                                Vector3 mid_vec = new Vector3(zone.LoadArea[i1].X + zone.LoadArea[i2].X + zone.LoadArea[i3].X + zone.LoadArea[i4].X,
+                                    zone.LoadArea[i1].Y + zone.LoadArea[i2].Y + zone.LoadArea[i3].Y + zone.LoadArea[i4].Y,
+                                    zone.LoadArea[i1].Z + zone.LoadArea[i2].Z + zone.LoadArea[i3].Z + zone.LoadArea[i4].Z) / 4;
+                                Vector3 nor_vec = new Vector3(zone.AreaMatrix[i].X, zone.AreaMatrix[i].Y, zone.AreaMatrix[i].Z);
+                                Vector3 unk_vec = new Vector3(zone.UnknownMatrix[i].X, zone.UnknownMatrix[i].Y, zone.UnknownMatrix[i].Z);
+                                GL.Vertex3(mid_vec);
+                                GL.Vertex3(mid_vec + nor_vec);
+                                GL.Vertex3(mid_vec);
+                                GL.Vertex3(mid_vec + unk_vec);
                             }
-                            int i1 = i >= 4 ? 1 - (i - 4) : (0 + 2 * i) % 8;
-                            int i2 = i >= 4 ? i1 + 2 : (1 + 2 * i) % 8;
-                            int i3 = i >= 4 ? i2 + 2 : (2 + 2 * i) % 8;
-                            int i4 = i >= 4 ? i3 + 2 : (3 + 2 * i) % 8;
-                            Vector3 mid_vec = new Vector3(l.LoadArea[i1].X + l.LoadArea[i2].X + l.LoadArea[i3].X + l.LoadArea[i4].X,
-                                l.LoadArea[i1].Y + l.LoadArea[i2].Y + l.LoadArea[i3].Y + l.LoadArea[i4].Y,
-                                l.LoadArea[i1].Z + l.LoadArea[i2].Z + l.LoadArea[i3].Z + l.LoadArea[i4].Z) / 4;
-                            Vector3 nor_vec = new Vector3(l.AreaMatrix[i].X, l.AreaMatrix[i].Y, l.AreaMatrix[i].Z);
-                            Vector3 unk_vec = new Vector3(l.UnknownMatrix[i].X, l.UnknownMatrix[i].Y, l.UnknownMatrix[i].Z);
-                            GL.Vertex3(mid_vec);
-                            GL.Vertex3(mid_vec + nor_vec);
-                            GL.Vertex3(mid_vec);
-                            GL.Vertex3(mid_vec + unk_vec);
+                            GL.End();
+                            GL.Enable(EnableCap.Lighting);
+                            GL.Color4(Color.FromArgb(95, cur_color));
+                            GL.Begin(PrimitiveType.QuadStrip);
+                            GL.Vertex4(zone.LoadArea[0].ToArray());
+                            GL.Vertex4(zone.LoadArea[1].ToArray());
+                            GL.Vertex4(zone.LoadArea[2].ToArray());
+                            GL.Vertex4(zone.LoadArea[3].ToArray());
+                            GL.Vertex4(zone.LoadArea[4].ToArray());
+                            GL.Vertex4(zone.LoadArea[5].ToArray());
+                            GL.Vertex4(zone.LoadArea[6].ToArray());
+                            GL.Vertex4(zone.LoadArea[7].ToArray());
+                            GL.Vertex4(zone.LoadArea[0].ToArray());
+                            GL.Vertex4(zone.LoadArea[1].ToArray());
+                            GL.End();
+                            GL.Begin(PrimitiveType.Quads);
+                            GL.Vertex4(zone.LoadArea[1].ToArray());
+                            GL.Vertex4(zone.LoadArea[3].ToArray());
+                            GL.Vertex4(zone.LoadArea[5].ToArray());
+                            GL.Vertex4(zone.LoadArea[7].ToArray());
+                            GL.Vertex4(zone.LoadArea[0].ToArray());
+                            GL.Vertex4(zone.LoadArea[2].ToArray());
+                            GL.Vertex4(zone.LoadArea[4].ToArray());
+                            GL.Vertex4(zone.LoadArea[6].ToArray());
+                            GL.End();
+                            GL.Disable(EnableCap.Lighting);
+                            GL.Color4(cur_color);
+                            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
+                            GL.Begin(PrimitiveType.QuadStrip);
+                            GL.Vertex4(zone.LoadArea[0].ToArray());
+                            GL.Vertex4(zone.LoadArea[1].ToArray());
+                            GL.Vertex4(zone.LoadArea[2].ToArray());
+                            GL.Vertex4(zone.LoadArea[3].ToArray());
+                            GL.Vertex4(zone.LoadArea[4].ToArray());
+                            GL.Vertex4(zone.LoadArea[5].ToArray());
+                            GL.Vertex4(zone.LoadArea[6].ToArray());
+                            GL.Vertex4(zone.LoadArea[7].ToArray());
+                            GL.Vertex4(zone.LoadArea[0].ToArray());
+                            GL.Vertex4(zone.LoadArea[1].ToArray());
+                            GL.End();
+                            GL.Begin(PrimitiveType.Quads);
+                            GL.Vertex4(zone.LoadArea[1].ToArray());
+                            GL.Vertex4(zone.LoadArea[3].ToArray());
+                            GL.Vertex4(zone.LoadArea[5].ToArray());
+                            GL.Vertex4(zone.LoadArea[7].ToArray());
+                            GL.Vertex4(zone.LoadArea[0].ToArray());
+                            GL.Vertex4(zone.LoadArea[2].ToArray());
+                            GL.Vertex4(zone.LoadArea[4].ToArray());
+                            GL.Vertex4(zone.LoadArea[6].ToArray());
+                            GL.End();
+                            GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
+                            GL.Begin(PrimitiveType.Lines);
+                            GL.Vertex4(zone.LoadArea[0].ToArray());
+                            GL.Vertex4(zone.LoadArea[3].ToArray());
+                            GL.Vertex4(zone.LoadArea[1].ToArray());
+                            GL.Vertex4(zone.LoadArea[2].ToArray());
+                            GL.Vertex4(zone.LoadArea[2].ToArray());
+                            GL.Vertex4(zone.LoadArea[5].ToArray());
+                            GL.Vertex4(zone.LoadArea[3].ToArray());
+                            GL.Vertex4(zone.LoadArea[4].ToArray());
+                            GL.Vertex4(zone.LoadArea[4].ToArray());
+                            GL.Vertex4(zone.LoadArea[7].ToArray());
+                            GL.Vertex4(zone.LoadArea[5].ToArray());
+                            GL.Vertex4(zone.LoadArea[6].ToArray());
+                            GL.Vertex4(zone.LoadArea[6].ToArray());
+                            GL.Vertex4(zone.LoadArea[1].ToArray());
+                            GL.Vertex4(zone.LoadArea[7].ToArray());
+                            GL.Vertex4(zone.LoadArea[0].ToArray());
+                            GL.Vertex4(zone.LoadArea[0].ToArray());
+                            GL.Vertex4(zone.LoadArea[4].ToArray());
+                            GL.Vertex4(zone.LoadArea[2].ToArray());
+                            GL.Vertex4(zone.LoadArea[6].ToArray());
+                            GL.Vertex4(zone.LoadArea[1].ToArray());
+                            GL.Vertex4(zone.LoadArea[5].ToArray());
+                            GL.Vertex4(zone.LoadArea[3].ToArray());
+                            GL.Vertex4(zone.LoadArea[7].ToArray());
+                            GL.End();
+
+                            if (Ptr.Value.Ptr != null)
+                            {
+                                Ptr = (ChunkLinks.ChunkLink.LinkTree)Ptr.Value.Ptr;
+                            }
+                            else
+                            {
+                                Ptr = null;
+                            }
                         }
-                        GL.End();
-                        GL.Enable(EnableCap.Lighting);
-                        GL.Color4(Color.FromArgb(95, cur_color));
-                        GL.Begin(PrimitiveType.QuadStrip);
-                        GL.Vertex4(l.LoadArea[0].ToArray());
-                        GL.Vertex4(l.LoadArea[1].ToArray());
-                        GL.Vertex4(l.LoadArea[2].ToArray());
-                        GL.Vertex4(l.LoadArea[3].ToArray());
-                        GL.Vertex4(l.LoadArea[4].ToArray());
-                        GL.Vertex4(l.LoadArea[5].ToArray());
-                        GL.Vertex4(l.LoadArea[6].ToArray());
-                        GL.Vertex4(l.LoadArea[7].ToArray());
-                        GL.Vertex4(l.LoadArea[0].ToArray());
-                        GL.Vertex4(l.LoadArea[1].ToArray());
-                        GL.End();
-                        GL.Begin(PrimitiveType.Quads);
-                        GL.Vertex4(l.LoadArea[1].ToArray());
-                        GL.Vertex4(l.LoadArea[3].ToArray());
-                        GL.Vertex4(l.LoadArea[5].ToArray());
-                        GL.Vertex4(l.LoadArea[7].ToArray());
-                        GL.Vertex4(l.LoadArea[0].ToArray());
-                        GL.Vertex4(l.LoadArea[2].ToArray());
-                        GL.Vertex4(l.LoadArea[4].ToArray());
-                        GL.Vertex4(l.LoadArea[6].ToArray());
-                        GL.End();
-                        GL.Disable(EnableCap.Lighting);
-                        GL.Color4(cur_color);
-                        GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
-                        GL.Begin(PrimitiveType.QuadStrip);
-                        GL.Vertex4(l.LoadArea[0].ToArray());
-                        GL.Vertex4(l.LoadArea[1].ToArray());
-                        GL.Vertex4(l.LoadArea[2].ToArray());
-                        GL.Vertex4(l.LoadArea[3].ToArray());
-                        GL.Vertex4(l.LoadArea[4].ToArray());
-                        GL.Vertex4(l.LoadArea[5].ToArray());
-                        GL.Vertex4(l.LoadArea[6].ToArray());
-                        GL.Vertex4(l.LoadArea[7].ToArray());
-                        GL.Vertex4(l.LoadArea[0].ToArray());
-                        GL.Vertex4(l.LoadArea[1].ToArray());
-                        GL.End();
-                        GL.Begin(PrimitiveType.Quads);
-                        GL.Vertex4(l.LoadArea[1].ToArray());
-                        GL.Vertex4(l.LoadArea[3].ToArray());
-                        GL.Vertex4(l.LoadArea[5].ToArray());
-                        GL.Vertex4(l.LoadArea[7].ToArray());
-                        GL.Vertex4(l.LoadArea[0].ToArray());
-                        GL.Vertex4(l.LoadArea[2].ToArray());
-                        GL.Vertex4(l.LoadArea[4].ToArray());
-                        GL.Vertex4(l.LoadArea[6].ToArray());
-                        GL.End();
-                        GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
-                        GL.Begin(PrimitiveType.Lines);
-                        GL.Vertex4(l.LoadArea[0].ToArray());
-                        GL.Vertex4(l.LoadArea[3].ToArray());
-                        GL.Vertex4(l.LoadArea[1].ToArray());
-                        GL.Vertex4(l.LoadArea[2].ToArray());
-                        GL.Vertex4(l.LoadArea[2].ToArray());
-                        GL.Vertex4(l.LoadArea[5].ToArray());
-                        GL.Vertex4(l.LoadArea[3].ToArray());
-                        GL.Vertex4(l.LoadArea[4].ToArray());
-                        GL.Vertex4(l.LoadArea[4].ToArray());
-                        GL.Vertex4(l.LoadArea[7].ToArray());
-                        GL.Vertex4(l.LoadArea[5].ToArray());
-                        GL.Vertex4(l.LoadArea[6].ToArray());
-                        GL.Vertex4(l.LoadArea[6].ToArray());
-                        GL.Vertex4(l.LoadArea[1].ToArray());
-                        GL.Vertex4(l.LoadArea[7].ToArray());
-                        GL.Vertex4(l.LoadArea[0].ToArray());
-                        GL.Vertex4(l.LoadArea[0].ToArray());
-                        GL.Vertex4(l.LoadArea[4].ToArray());
-                        GL.Vertex4(l.LoadArea[2].ToArray());
-                        GL.Vertex4(l.LoadArea[6].ToArray());
-                        GL.Vertex4(l.LoadArea[1].ToArray());
-                        GL.Vertex4(l.LoadArea[5].ToArray());
-                        GL.Vertex4(l.LoadArea[3].ToArray());
-                        GL.Vertex4(l.LoadArea[7].ToArray());
-                        GL.End();
                     }
                     GL.PopMatrix();
                 }

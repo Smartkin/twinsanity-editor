@@ -49,6 +49,7 @@ namespace Twinsanity
         public TwinsVector4 UnkVector2 { get; private set; }
         public TwinsVector4 UnkVector3 { get; private set; }
         public UInt32 TextureId { get; set; }
+        public bool isDemo { get; set; }
         
         public TwinsShader()
         {
@@ -63,10 +64,14 @@ namespace Twinsanity
                             (ShaderType == 26) ? 20 :
                             (ShaderType == 16 || ShaderType == 17) ? 4 :
                             0;
+            if (isDemo)
+            {
+                paramLen -= 2;
+            }
             return 4 + paramLen + 30 + 4 + 16 * 3 + 8;
         }
 
-        public void Read(BinaryReader reader, int length)
+        public void Read(BinaryReader reader, int length, bool Demo = false)
         {
             ShaderType = reader.ReadUInt32();
             switch (ShaderType)
@@ -118,8 +123,18 @@ namespace Twinsanity
             UnkFlag1 = reader.ReadBoolean();
             UnkFlag2 = reader.ReadBoolean();
             ZValueDrawingMask = (ZValueDrawMask)reader.ReadByte();
-            UnkFlag3 = reader.ReadBoolean();
-            BlobFlag = reader.ReadBoolean();
+            if (!Demo)
+            {
+                UnkFlag3 = reader.ReadBoolean();
+                BlobFlag = reader.ReadBoolean();
+                isDemo = false;
+            }
+            else
+            {
+                UnkFlag3 = false;
+                BlobFlag = false;
+                isDemo = true;
+            }
             LodParamK = reader.ReadUInt16();
             LodParamL = reader.ReadUInt16();
             UnkVector1.Load(reader, 16);
@@ -181,8 +196,11 @@ namespace Twinsanity
             writer.Write(UnkFlag1);
             writer.Write(UnkFlag2);
             writer.Write((byte)ZValueDrawingMask);
-            writer.Write(UnkFlag3);
-            writer.Write(BlobFlag);
+            if (!isDemo)
+            {
+                writer.Write(UnkFlag3);
+                writer.Write(BlobFlag);
+            }
             writer.Write(LodParamK);
             writer.Write(LodParamL);
             UnkVector1.Save(writer);
