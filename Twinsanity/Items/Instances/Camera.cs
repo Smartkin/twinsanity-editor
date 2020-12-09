@@ -768,7 +768,7 @@ namespace Twinsanity
             public ushort unkShort;
         }
 
-        public class Camera_0x1C09
+        public class Camera_0x1C09 // Unused, spits errors, zooms out to a certain angle and stays in place while in the trigger
         {
             public uint unkInt;
             public float unkFloat1;
@@ -785,7 +785,7 @@ namespace Twinsanity
             public byte unkByte;
         }
 
-        public class Camera_0x1C0C
+        public class Camera_0x1C0C // Unused, fixed angle or distance from player?
         {
             public byte unkByte1;
             public byte unkByte2;

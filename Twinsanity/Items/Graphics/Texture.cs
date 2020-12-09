@@ -255,17 +255,36 @@ namespace Twinsanity
                 mipLevelsTBW[i] = 0;
             }
 
-            imageData = new byte[RawData.Length * 4];
-            for (int i = 0; i < RawData.Length; i++)
+            UpdateImageData();
+
+        }
+
+        public void UpdateImageData()
+        {
+            switch (PixelFormat)
             {
-                imageData[(i * 4) + 0] = RawData[i].R;
-                imageData[(i * 4) + 1] = RawData[i].G;
-                imageData[(i * 4) + 2] = RawData[i].B;
-                imageData[(i * 4) + 3] = (byte)(RawData[i].A >> 1);
+                case TexturePixelFormat.PSMCT32:
+
+                    imageData = new byte[RawData.Length * 4];
+                    for (int i = 0; i < RawData.Length; i++)
+                    {
+                        imageData[(i * 4) + 0] = RawData[i].R;
+                        imageData[(i * 4) + 1] = RawData[i].G;
+                        imageData[(i * 4) + 2] = RawData[i].B;
+                        imageData[(i * 4) + 3] = (byte)(RawData[i].A >> 1);
+                    }
+
+                    texSize = imageData.Length + 224;
+                    break;
+                case TexturePixelFormat.PSMT8:
+
+
+
+                    break;
+                default:
+                    break;
             }
-
-            texSize = imageData.Length + 224;
-
+            
         }
 
         #region Util
