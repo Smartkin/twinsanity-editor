@@ -31,7 +31,7 @@ namespace Twinsanity
                         count += Models[i].GI_Types[g].unkBlob.Length;
                     }
                 }
-                count += 4 + 4 + 2 + 4 + 16;
+                count += 4 + 4 + 2;
                 count += Models[i].dynBlob.Length;
                 count += 1 + 4 + 32;
             }
@@ -60,11 +60,6 @@ namespace Twinsanity
                 writer.Write(Models[i].unkInt2);
                 writer.Write(Models[i].unkBlobSizePacked);
                 writer.Write(Models[i].unkBlobSizeHelper);
-                writer.Write(Models[i].BlobHeader);
-                writer.Write(Models[i].WorldPosition.X);
-                writer.Write(Models[i].WorldPosition.Y);
-                writer.Write(Models[i].WorldPosition.Z);
-                writer.Write(Models[i].WorldPosition.W);
                 writer.Write(Models[i].dynBlob);
                 writer.Write(Models[i].unkByte);
                 writer.Write(Models[i].ModelID);
@@ -116,15 +111,7 @@ namespace Twinsanity
                         (Model.unkBlobSizePacked >> 0x9 & 0x1FFC) +
                         (Model.unkBlobSizePacked >> 0x16) * Model.unkBlobSizeHelper * 0x4;
 
-                    Model.BlobHeader = reader.ReadBytes(4);
-                    // This isn't correct for all cases
-                    Model.WorldPosition = new Pos(0, 0, 0, 0);
-                    Model.WorldPosition.W = reader.ReadSingle();
-                    Model.WorldPosition.X = reader.ReadSingle();
-                    Model.WorldPosition.Y = reader.ReadSingle();
-                    Model.WorldPosition.Z = reader.ReadSingle();
-
-                    Model.dynBlob = reader.ReadBytes(blobSize - 20);
+                    Model.dynBlob = reader.ReadBytes(blobSize);
 
                     Model.unkByte = reader.ReadByte();
 
@@ -157,8 +144,8 @@ namespace Twinsanity
             public Pos BoundingBoxVector1;
             public Pos BoundingBoxVector2;
 
-            public byte[] BlobHeader; // 5
-            public Pos WorldPosition;
+            //public byte[] BlobHeader; // 5
+            //public Pos WorldPosition;
         }
 
         public class GI_Type3

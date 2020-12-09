@@ -23,7 +23,7 @@ namespace Twinsanity
         Model, ModelX,
         RigidModel,
         Skin, SkinX,
-        BlendSkin,
+        BlendSkin, BlendSkinX,
         Mesh,
         LodModel,
         Skydome,
@@ -141,7 +141,10 @@ namespace Twinsanity
                                     LoadSection(reader, sub, SectionType.Skin);
                                 break;
                             case 5:
-                                LoadSection(reader, sub, SectionType.BlendSkin);
+                                if (Type == SectionType.GraphicsX)
+                                    LoadSection(reader, sub, SectionType.BlendSkinX);
+                                else
+                                    LoadSection(reader, sub, SectionType.BlendSkin);
                                 break;
                             case 6:
                                 LoadSection(reader, sub, SectionType.Mesh);
@@ -296,10 +299,10 @@ namespace Twinsanity
                         LoadItem<TwinsItem>(reader, sub);
                         break;
                     case SectionType.Material:
-                        LoadItem<Material>(reader, sub);
+                        LoadItem<Material>(reader, sub, Type);
                         break;
                     case SectionType.MaterialD: //PS2 DEMO Materials
-                        LoadItem<MaterialDemo>(reader, sub);
+                        LoadItem<MaterialDemo>(reader, sub, Type);
                         break;
                     case SectionType.Model:
                         LoadItem<Model>(reader, sub);
@@ -376,10 +379,10 @@ namespace Twinsanity
                         LoadItem<Trigger>(reader, sub);
                         break;
                     case SectionType.Camera:
-                        LoadItem<Camera>(reader, sub);
+                        LoadItem<Camera>(reader, sub, Type);
                         break;
                     case SectionType.CameraDemo:
-                        LoadItem<TwinsItem>(reader, sub);
+                        LoadItem<Camera>(reader, sub, Type);
                         break;
                     case SectionType.OGI:
                         LoadItem<GraphicsInfo>(reader, sub);
@@ -404,6 +407,9 @@ namespace Twinsanity
                         break;
                     case SectionType.InstanceTemplateDemo:
                         LoadItem<InstanceTemplateDemo>(reader, sub);
+                        break;
+                    case SectionType.BlendSkin:
+                        LoadItem<BlendSkin>(reader, sub);
                         break;
                     default:
                         LoadItem<TwinsItem>(reader, sub);

@@ -67,7 +67,7 @@ namespace TwinsaityEditor
                     text.Add($"DynBlob: {DynBlob}");
                     */
 
-                    text.Add($"Model {i} Position: {Data.Models[i].WorldPosition.X}; {Data.Models[i].WorldPosition.Y}; {Data.Models[i].WorldPosition.Z}; {Data.Models[i].WorldPosition.W}; ");
+                    //text.Add($"Model {i} Position: {Data.Models[i].WorldPosition.X}; {Data.Models[i].WorldPosition.Y}; {Data.Models[i].WorldPosition.Z}; {Data.Models[i].WorldPosition.W}; ");
                     //text.Add($"Model {i} Rotation?: {Data.Models[i].LocalRotation[0]}; {Data.Models[i].LocalRotation[1]}; {Data.Models[i].LocalRotation[2]}; ");
                     //text.Add($"Bounding Box Vector 1: {Data.Models[i].BoundingBoxVector1.X}; {Data.Models[i].BoundingBoxVector1.Y}; {Data.Models[i].BoundingBoxVector1.Z}; {Data.Models[i].BoundingBoxVector1.W}; ");
                     //text.Add($"Bounding Box Vector 2: {Data.Models[i].BoundingBoxVector2.X}; {Data.Models[i].BoundingBoxVector2.Y}; {Data.Models[i].BoundingBoxVector2.Z}; {Data.Models[i].BoundingBoxVector2.W}; ");

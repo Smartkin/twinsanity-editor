@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Twinsanity;
 
 namespace TwinsaityEditor
@@ -7,7 +8,7 @@ namespace TwinsaityEditor
     {
         public new ChunkLinks Data { get; set; }
 
-        public ChunkLinksController(MainForm topform, ChunkLinks item) : base (topform, item)
+        public ChunkLinksController(MainForm topform, ChunkLinks item) : base(topform, item)
         {
             Data = item;
             AddMenu("Open editor", Menu_OpenEditor);
@@ -20,17 +21,37 @@ namespace TwinsaityEditor
 
         protected override void GenText()
         {
-            TextPrev = new string[3 + Data.Links.Count * 4];
-            TextPrev[0] = $"ID: {Data.ID}";
-            TextPrev[1] = $"Size: {Data.Size}";
-            TextPrev[2] = $"LinkCount: {Data.Links.Count}";
+            List<string> text = new List<string>();
+            text.Add($"ID: {Data.ID}");
+            text.Add($"Size: {Data.Size}");
+            text.Add($"LinkCount: {Data.Links.Count}");
             for (int i = 0; i < Data.Links.Count; ++i)
             {
-                TextPrev[3 + i * 4] = $"Link{i}";
-                TextPrev[4 + i * 4] = $"Type: {Data.Links[i].Type}";
-                TextPrev[5 + i * 4] = $"Directory: {new string(Data.Links[i].Path)}";
-                TextPrev[6 + i * 4] = $"Flags: {Convert.ToString(Data.Links[i].Flags, 16).ToUpper()}";
+                text.Add($"Link{i}");
+                text.Add($"Type: {Data.Links[i].Type}");
+                text.Add($"Directory: {new string(Data.Links[i].Path)}");
+                text.Add($"Flags: {Convert.ToString(Data.Links[i].Flags, 16).ToUpper()}");
+                ChunkLinks.ChunkLink.LinkTree? Ptr = Data.Links[i].TreeRoot;
+                string add = "";
+                int depth = 0;
+                while (Ptr != null)
+                {
+                    text.Add(add + $"Load Zone {depth}");
+                    add += "     ";
+                    depth++;
+                    if (Ptr.Value.Ptr != null)
+                    {
+                        Ptr = (ChunkLinks.ChunkLink.LinkTree)Ptr.Value.Ptr;
+                    }
+                    else
+                    {
+                        Ptr = null;
+                    }
+                }
+                text.Add("");
             }
+
+            TextPrev = text.ToArray();
         }
 
         private void Menu_OpenEditor()

@@ -506,19 +506,43 @@ namespace TwinsaityEditor
             catch { return string.Empty; }
         }
 
-        public Instance GetInstance(uint sector, uint id)
+        public ushort? GetInstanceID(uint sector, uint id)
         {
             if (Data.ContainsItem(sector) && Data.GetItem<TwinsSection>(sector).ContainsItem(6))
             {
-                //int i = 0;
-                //foreach (Instance j in ((TwinsSection)((TwinsSection)Data.GetItem(sector)).GetItem(6)).Records)
-                //{
-                //    if (i++ == id)
-                //        return j;
-                //}
-                //throw new System.ArgumentException("The requested section does not have an instance in the specified position.");
                 if (id < Data.GetItem<TwinsSection>(sector).GetItem<TwinsSection>(6).Records.Count)
-                    return (Instance)Data.GetItem<TwinsSection>(sector).GetItem<TwinsSection>(6).Records[(int)id];
+                {
+                    if (Data.GetItem<TwinsSection>(sector).GetItem<TwinsSection>(6).Records[(int)id] is Instance inst)
+                    {
+                        return inst.ObjectID;
+                    }
+                    else if (Data.GetItem<TwinsSection>(sector).GetItem<TwinsSection>(6).Records[(int)id] is InstanceDemo instdemo)
+                    {
+                        return instdemo.ObjectID;
+                    }
+                    return null;
+                }
+                else
+                    return null;
+            }
+            else throw new System.ArgumentException("The requested section does not have an object instance section.");
+        }
+        public Pos GetInstancePos(uint sector, uint id)
+        {
+            if (Data.ContainsItem(sector) && Data.GetItem<TwinsSection>(sector).ContainsItem(6))
+            {
+                if (id < Data.GetItem<TwinsSection>(sector).GetItem<TwinsSection>(6).Records.Count)
+                {
+                    if (Data.GetItem<TwinsSection>(sector).GetItem<TwinsSection>(6).Records[(int)id] is Instance inst)
+                    {
+                        return new Pos(inst.Pos.X, inst.Pos.Y, inst.Pos.Z, inst.Pos.W);
+                    }
+                    else if (Data.GetItem<TwinsSection>(sector).GetItem<TwinsSection>(6).Records[(int)id] is InstanceDemo instdemo)
+                    {
+                        return new Pos(instdemo.Pos.X, instdemo.Pos.Y, instdemo.Pos.Z, instdemo.Pos.W);
+                    }
+                    return null;
+                }
                 else
                     return null;
             }

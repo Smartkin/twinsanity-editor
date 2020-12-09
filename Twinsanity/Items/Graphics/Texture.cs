@@ -42,7 +42,7 @@ namespace Twinsanity
         public TexturePixelFormat DestinationPixelFormat { get => (TexturePixelFormat)destinationFormat; }
         public TextureColorComponent ColorComponent { get => (TextureColorComponent)texColComponent; }
         public TextureFunction TexFun { get => (TextureFunction)textureFun; }
-        public Color[] RawData { get; private set; }
+        public Color[] RawData { get; set; }
         public int TextureBufferWidth { get => textureBufferWidth * 64; }
 
         public Color[] GetMips(int level)
@@ -180,6 +180,27 @@ namespace Twinsanity
 
         public override void Save(BinaryWriter writer)
         {
+            // Raw colors to texture data
+            switch (PixelFormat)
+            {
+                case TexturePixelFormat.PSMCT32:
+
+                    imageData = new byte[RawData.Length * 4];
+                    for (int i = 0; i < RawData.Length; i++)
+                    {
+                        imageData[(i * 4) + 0] = RawData[i].R;
+                        imageData[(i * 4) + 1] = RawData[i].G;
+                        imageData[(i * 4) + 2] = RawData[i].B;
+                        imageData[(i * 4) + 3] = (byte)(RawData[i].A >> 1);
+                    }
+
+                    break;
+                case TexturePixelFormat.PSMT8:
+                    break;
+                default:
+                    break;
+            }
+
             writer.Write(texSize);
             writer.Write(unkInt);
             writer.Write(w);
@@ -211,11 +232,59 @@ namespace Twinsanity
             writer.Write(unusedMetadata);
             writer.Write(vifBlock);
             writer.Write(imageData);
+
         }
 
         protected override int GetSize()
         {
             return texSize + 4;
+        }
+
+        public void ConvertToPSMCT32()
+        {
+            // an attempt was made...
+            format = (byte)TexturePixelFormat.PSMCT32;
+            m = 1;
+            textureBufferWidth = 4;
+            for (var i = 0; i < 6; ++i)
+            {
+                mipLevelsTBP[i] = 0;
+            }
+            for (var i = 0; i < 6; ++i)
+            {
+                mipLevelsTBW[i] = 0;
+            }
+
+            UpdateImageData();
+
+        }
+
+        public void UpdateImageData()
+        {
+            switch (PixelFormat)
+            {
+                case TexturePixelFormat.PSMCT32:
+
+                    imageData = new byte[RawData.Length * 4];
+                    for (int i = 0; i < RawData.Length; i++)
+                    {
+                        imageData[(i * 4) + 0] = RawData[i].R;
+                        imageData[(i * 4) + 1] = RawData[i].G;
+                        imageData[(i * 4) + 2] = RawData[i].B;
+                        imageData[(i * 4) + 3] = (byte)(RawData[i].A >> 1);
+                    }
+
+                    texSize = imageData.Length + 224;
+                    break;
+                case TexturePixelFormat.PSMT8:
+
+
+
+                    break;
+                default:
+                    break;
+            }
+            
         }
 
         #region Util

@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.IO;
+using System;
 
 namespace Twinsanity
 {
     public class ChunkLinks : TwinsItem
     {
         public List<ChunkLink> Links { get; set; } = new List<ChunkLink>();
-        public byte[] Remain; //labext has some post-data
 
         /////////PARENTS FUNCTION//////////
         public override void Save(BinaryWriter writer)
@@ -42,39 +42,10 @@ namespace Twinsanity
                         writer.Write(i.LoadWall[j].W);
                     }
                 }
-                if (i.Type == 1 || i.Type == 3) //type 1/3 continue here
+                if (i.TreeRoot != null)
                 {
-                    for (int j = 0; j < 15; ++j)
-                    {
-                        writer.Write(i.Unknown[j]);
-                    }
-                    for (int j = 0; j < 8; ++j)
-                    {
-                        writer.Write(i.LoadArea[j].X);
-                        writer.Write(i.LoadArea[j].Y);
-                        writer.Write(i.LoadArea[j].Z);
-                        writer.Write(i.LoadArea[j].W);
-                    }
-                    for (int j = 0; j < 6; ++j)
-                    {
-                        writer.Write(i.AreaMatrix[j].X);
-                        writer.Write(i.AreaMatrix[j].Y);
-                        writer.Write(i.AreaMatrix[j].Z);
-                        writer.Write(i.AreaMatrix[j].W);
-                    }
-                    for (int j = 0; j < 6; ++j)
-                    {
-                        writer.Write(i.UnknownMatrix[j].X);
-                        writer.Write(i.UnknownMatrix[j].Y);
-                        writer.Write(i.UnknownMatrix[j].Z);
-                        writer.Write(i.UnknownMatrix[j].W);
-                    }
-                    writer.Write(i.Bytes);
+                    SaveTree(writer, (ChunkLink.LinkTree)i.TreeRoot);
                 }
-            }
-            if (Remain != null && Remain.Length > 0)
-            {
-                writer.Write(Remain);
             }
         }
 
@@ -86,7 +57,7 @@ namespace Twinsanity
             var count = reader.ReadInt32();
             for (int i = 0; i < count; ++i)
             {
-                ChunkLink link = new ChunkLink() { Unknown = new short[15] { 0, 0, 8, 12, 6, 3, 3, 128, 224, 272, 320, 326, 356, 380, 0 }, Bytes = new byte[60] { 0, 5, 10, 15, 20, 25, 4, 2, 3, 1, 0, 4, 4, 5, 3, 2, 4, 6, 7, 5, 4, 4, 0, 1, 7, 6, 4, 3, 5, 7, 1, 4, 4, 2, 0, 6, 0, 1, 1, 3, 3, 2, 2, 0, 3, 5, 5, 4, 4, 2, 5, 7, 7, 6, 6, 4, 7, 1, 0, 6, } };
+                ChunkLink link = new ChunkLink() { };
                 link.Type = reader.ReadInt32();
                 link.Path = reader.ReadChars(reader.ReadInt32());
                 link.Flags = reader.ReadUInt32();
@@ -108,53 +79,85 @@ namespace Twinsanity
                         link.LoadWall[j] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                     }
                 }
-                //link.Unknown = new short[15];
-                link.LoadArea = new Pos[8];
-                link.AreaMatrix = new Pos[6];
-                link.UnknownMatrix = new Pos[6];
-                //link.Bytes = new byte[60];
-                if (link.Type == 1 || link.Type == 3) //type 1/3 continue here
-                {
-                    for (int j = 0; j < 15; ++j)
-                    {
-                        link.Unknown[j] = reader.ReadInt16();
-                    }
-                    for (int j = 0; j < 8; ++j)
-                    {
-                        link.LoadArea[j] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    }
-                    for (int j = 0; j < 6; ++j)
-                    {
-                        link.AreaMatrix[j] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    }
-                    for (int j = 0; j < 6; ++j)
-                    {
-                        link.UnknownMatrix[j] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    }
-                    link.Bytes = reader.ReadBytes(60);
-                }
-                else
-                {
-                    for (int j = 0; j < 8; ++j)
-                    {
-                        link.LoadArea[j] = new Pos(0, 0, 0, 0);
-                    }
-                    for (int j = 0; j < 6; ++j)
-                    {
-                        link.AreaMatrix[j] = new Pos(0, 0, 0, 0);
-                    }
-                    for (int j = 0; j < 6; ++j)
-                    {
-                        link.UnknownMatrix[j] = new Pos(0, 0, 0, 0);
-                    }
-                }
+
+                link.TreeRoot = ReadTree(reader, link.Type);
+
                 Links.Add(link);
             }
 
-            Remain = new byte[0];
-            if (reader.BaseStream.Position != start_pos + size)
+            //Console.WriteLine("end pos: " + (reader.BaseStream.Position - start_pos) + " target: " + size);
+
+        }
+
+        private ChunkLink.LinkTree? ReadTree(BinaryReader reader, int Head)
+        {
+            if ((Head & 0x1) == 0)
             {
-                Remain = reader.ReadBytes((int)((start_pos + size) - reader.BaseStream.Position));
+                return null;
+            }
+
+            ChunkLink.LinkTree Node = new ChunkLink.LinkTree();
+            Node.Header = reader.ReadInt32();
+
+            byte[] Header = reader.ReadBytes(0x16);
+            int blobSize = reader.ReadInt32();
+
+            Node.LoadArea = new Pos[8];
+            Node.AreaMatrix = new Pos[6];
+            Node.UnknownMatrix = new Pos[6];
+            for (int j = 0; j < 8; ++j)
+            {
+                Node.LoadArea[j] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+            }
+            for (int j = 0; j < 6; ++j)
+            {
+                Node.AreaMatrix[j] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+            }
+            for (int j = 0; j < 6; ++j)
+            {
+                Node.UnknownMatrix[j] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+            }
+            byte[] Blob = reader.ReadBytes(blobSize - 320);
+            Node.GI_Type = new GraphicsInfo.GI_Type4() { Header = Header, unkBlob = Blob };
+
+            Node.Ptr = ReadTree(reader, Node.Header);
+
+            return Node;
+        }
+
+        private void SaveTree(BinaryWriter writer, ChunkLink.LinkTree node)
+        {
+            writer.Write(node.Header);
+            writer.Write(node.GI_Type.Header);
+            writer.Write(node.GI_Type.unkBlob.Length + 320);
+
+            for (int j = 0; j < node.LoadArea.Length; ++j)
+            {
+                writer.Write(node.LoadArea[j].X);
+                writer.Write(node.LoadArea[j].Y);
+                writer.Write(node.LoadArea[j].Z);
+                writer.Write(node.LoadArea[j].W);
+            }
+            for (int j = 0; j < node.AreaMatrix.Length; ++j)
+            {
+                writer.Write(node.AreaMatrix[j].X);
+                writer.Write(node.AreaMatrix[j].Y);
+                writer.Write(node.AreaMatrix[j].Z);
+                writer.Write(node.AreaMatrix[j].W);
+            }
+            for (int j = 0; j < node.UnknownMatrix.Length; ++j)
+            {
+                writer.Write(node.UnknownMatrix[j].X);
+                writer.Write(node.UnknownMatrix[j].Y);
+                writer.Write(node.UnknownMatrix[j].Z);
+                writer.Write(node.UnknownMatrix[j].W);
+            }
+
+            writer.Write(node.GI_Type.unkBlob);
+
+            if (node.Ptr != null)
+            {
+                SaveTree(writer, (ChunkLink.LinkTree)node.Ptr);
             }
         }
 
@@ -166,14 +169,21 @@ namespace Twinsanity
                 size += i.Path.Length + 8 + 132;
                 if ((i.Flags & 0x80000) != 0)
                     size += 64;
-                if (i.Type == 1 || i.Type == 3)
-                    size += 410;
-            }
-            if (Remain != null && Remain.Length > 0)
-            {
-                size += Remain.Length;
+                if (i.TreeRoot != null)
+                {
+                    CountTree((ChunkLink.LinkTree)i.TreeRoot, ref size);
+                }
             }
             return size;
+        }
+
+        private void CountTree(ChunkLink.LinkTree ptr, ref int size)
+        {
+            size += 350 + ptr.GI_Type.unkBlob.Length;
+            if (ptr.Ptr != null)
+            {
+                CountTree((ChunkLink.LinkTree)ptr.Ptr, ref size);
+            }
         }
 
         #region STRUCTURES
@@ -185,16 +195,27 @@ namespace Twinsanity
             public Pos[] ObjectMatrix; // 4
             public Pos[] ChunkMatrix; // 4
             public Pos[] LoadWall; // 4
-            // Type 1 stuff
-            public short[] Unknown; // 15
-            public Pos[] LoadArea; // 8
-            public Pos[] AreaMatrix; // 6
-            public Pos[] UnknownMatrix; // 6
-            public byte[] Bytes; // 60
+            public LinkTree? TreeRoot;
 
             public bool HasWall()
             {
                 return (Flags & 0x80000) != 0;
+            }
+
+            public bool HasTree()
+            {
+                return (Type & 0x1) != 0;
+            }
+
+            public struct LinkTree
+            {
+                public int Header;
+                public GraphicsInfo.GI_Type4 GI_Type;
+                public Pos[] LoadArea; // 8
+                public Pos[] AreaMatrix; // 6
+                public Pos[] UnknownMatrix; // 6
+
+                public object Ptr;
             }
         }
         #endregion

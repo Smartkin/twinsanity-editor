@@ -71,6 +71,7 @@
     <Compile Include="Items\Code\GameObjectDemo.cs" />
     <Compile Include="Items\Code\GraphicsInfo.cs" />
     <Compile Include="Items\DynamicSceneryData.cs" />
+    <Compile Include="Items\Graphics\BlendSkin.cs" />
     <Compile Include="Items\Graphics\Skin.cs" />
     <Compile Include="Items\Graphics\SkinX.cs" />
     <Compile Include="Items\Graphics\MaterialDemo.cs" />

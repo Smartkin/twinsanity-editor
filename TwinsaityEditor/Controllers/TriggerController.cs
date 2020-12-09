@@ -1,5 +1,6 @@
 ﻿using Twinsanity;
 using System;
+using System.Collections.Generic;
 
 namespace TwinsaityEditor
 {
@@ -20,24 +21,28 @@ namespace TwinsaityEditor
 
         protected override void GenText()
         {
-            TextPrev = new string[8 + Data.Instances.Count];
-            TextPrev[0] = $"ID: {Data.ID}";
-            TextPrev[1] = $"Size: {Data.Size}";
-            TextPrev[2] = $"Other ({Data.Coords[0].X}, {Data.Coords[0].Y}, {Data.Coords[0].Z}, {Data.Coords[0].W})";
-            TextPrev[3] = $"Position ({Data.Coords[1].X}, {Data.Coords[1].Y}, {Data.Coords[1].Z}, {Data.Coords[1].W})";
-            TextPrev[4] = $"Size ({Data.Coords[2].X}, {Data.Coords[2].Y}, {Data.Coords[2].Z}, {Data.Coords[2].W})";
-            TextPrev[5] = $"SomeFloat: {Data.SomeFloat}";
+            List<string> text = new List<string>();
+            text.Add($"ID: {Data.ID}");
+            text.Add($"Size: {Data.Size}");
+            text.Add($"Other ({Data.Coords[0].X}, {Data.Coords[0].Y}, {Data.Coords[0].Z}, {Data.Coords[0].W})");
+            text.Add($"Position ({Data.Coords[1].X}, {Data.Coords[1].Y}, {Data.Coords[1].Z}, {Data.Coords[1].W})");
+            text.Add($"Size ({Data.Coords[2].X}, {Data.Coords[2].Y}, {Data.Coords[2].Z}, {Data.Coords[2].W})");
+            text.Add($"Emabled: {Data.Enabled} SomeFloat: {Data.SomeFloat} SectionHead: {Data.SectionHead}");
+            text.Add($"Argument 1: {Data.Arg1}");
+            text.Add($"Argument 2: {Data.Arg2}");
+            text.Add($"Argument 3: {Data.Arg3}");
+            text.Add($"Argument 4: {Data.Arg4}");
 
-            TextPrev[6] = $"Instances: {Data.Instances.Count}";
+            text.Add($"Instances: {Data.Instances.Count}");
             for (int i = 0; i < Data.Instances.Count; ++i)
             {
-                string obj_name = MainFile.GetObjectName(MainFile.GetInstance(Data.Parent.Parent.ID, Data.Instances[i]).ObjectID);
-                obj_name = Utils.TextUtils.TruncateObjectName(obj_name, MainFile.GetInstance(Data.Parent.Parent.ID, Data.Instances[i]).ObjectID, "", " (Not in Objects)");
+                string obj_name = MainFile.GetObjectName((ushort)MainFile.GetInstanceID(Data.Parent.Parent.ID, Data.Instances[i]));
+                obj_name = Utils.TextUtils.TruncateObjectName(obj_name, (ushort)MainFile.GetInstanceID(Data.Parent.Parent.ID, Data.Instances[i]), "", " (Not in Objects)");
 
-                TextPrev[7 + i] = $"Instance {Data.Instances[i]} {(obj_name != string.Empty ? $" - {obj_name}" : string.Empty)}";
+                text.Add($"Instance {Data.Instances[i]} {(obj_name != string.Empty ? $" - {obj_name}" : string.Empty)}");
             }
 
-            TextPrev[7 + Data.Instances.Count] = $"Arguments: {Data.SomeUInt161} {Data.SomeUInt162} {Data.SomeUInt163} {Data.SomeUInt164}";
+            TextPrev = text.ToArray();
         }
 
         private void Menu_OpenEditor()
