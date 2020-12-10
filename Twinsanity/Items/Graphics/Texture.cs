@@ -34,6 +34,8 @@ namespace Twinsanity
         private byte[] imageData;
         private Color[] palette;
         private Color[][] mips;
+        private int rrw;
+        private int rrh;
 
         public int Width { get => 1 << w; }
         public int Height { get => 1 << h; }
@@ -90,8 +92,9 @@ namespace Twinsanity
             var afterVifPos = reader.BaseStream.Position;
             reader.BaseStream.Position -= 96;
             reader.ReadBytes(48);
-            var rrw = reader.ReadInt32();
-            var rrh = reader.ReadInt32();
+            rrw = reader.ReadInt32();
+            rrh = reader.ReadInt32();
+
             reader.BaseStream.Position = afterVifPos;
             switch(PixelFormat)
             {
@@ -342,7 +345,7 @@ namespace Twinsanity
                     EzSwizzle.writeTexPSMT8(0, textureBufferWidth, 0, 0, Width, Height, texData);
 
                     // Interleave texture data?
-                    EzSwizzle.readTexPSMCT32(0, 1, 0, 0, Width, Height, ref imageData);
+                    EzSwizzle.readTexPSMCT32(0, 1, 0, 0, rrw, rrh, ref imageData);
 
 
                     break;
