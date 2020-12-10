@@ -259,8 +259,16 @@ namespace Twinsanity
 
         }
 
-        public void UpdateImageData()
+        /// <summary>
+        /// Convert RawData or input colors to image data that will be saved when the Texture is saved.
+        /// </summary>
+        public void UpdateImageData(Color[] inputColors = null)
         {
+            if (inputColors != null)
+            {
+                RawData = inputColors;
+            }
+
             switch (PixelFormat)
             {
                 case TexturePixelFormat.PSMCT32:
@@ -278,6 +286,63 @@ namespace Twinsanity
                     break;
                 case TexturePixelFormat.PSMT8:
 
+                    m = 1; // no mips!!!!!!
+                    for (var i = 0; i < 6; ++i)
+                    {
+                        mipLevelsTBP[i] = 0;
+                    }
+                    for (var i = 0; i < 6; ++i)
+                    {
+                        mipLevelsTBW[i] = 0;
+                    }
+
+                    EzSwizzle.cleanGs();
+
+                    var texData = new byte[Width * Height];
+                    var palette = new byte[256 * 4];
+                    this.palette = new Color[256];
+                    var palInd = 0;
+                    imageData = new byte[texSize - 224];
+
+                    //Create palette, texData
+                    List<Color> UniqueColors = GetUniqueColors(RawData);
+                    if (UniqueColors.Count < 257)
+                    {
+                        // All good, less than 257 colors
+                        for (int i = 0; i < UniqueColors.Count; i++)
+                        {
+                            this.palette[i] = UniqueColors[i];
+                        }
+                    }
+                    else
+                    {
+                        // todo: Gotta guess the most accurate colors
+                        return;
+                    }
+                    for (int i = 0; i < Width * Height; i++)
+                    {
+                        texData[i] = (byte)GetClosestColorPos(RawData[i], UniqueColors);
+                    }
+
+                    Flip(ref texData, Width, Height);
+
+                    SwapPalette(ref this.palette);
+                    for (var i = 0; i < 256 * 4; i += 4)
+                    {
+                        palette[i] = this.palette[palInd].R;
+                        palette[i + 1] = this.palette[palInd].G;
+                        palette[i + 2] = this.palette[palInd].B;
+                        palette[i + 3] = (byte)(this.palette[palInd].A >> 1);
+                        palInd++;
+                    }
+
+                    EzSwizzle.writeTexPSMCT32(clutBufferBasePointer, 1, 0, 0, 16, 16, palette);
+
+                    // Swizzle main texture data?
+                    EzSwizzle.writeTexPSMT8(0, textureBufferWidth, 0, 0, Width, Height, texData);
+
+                    // Interleave texture data?
+                    EzSwizzle.readTexPSMCT32(0, 1, 0, 0, Width, Height, ref imageData);
 
 
                     break;
@@ -324,6 +389,68 @@ namespace Twinsanity
         {
             throw new NotImplementedException();
         }
+
+        private List<Color> GetUniqueColors(Color[] Data)
+        {
+            List<Color> unique = new List<Color>();
+            for (int i = 0; i < Data.Length; i++)
+            {
+                if (!unique.Contains(Data[i]))
+                {
+                    unique.Add(Data[i]);
+                    
+                }
+            }
+            return unique;
+        }
+
+        private Color GetClosestColor(Color Source, List<Color> Palette)
+        {
+            List<int> Distances = new List<int>();
+            for (int i = 0; i < Palette.Count; i++)
+            {
+                int Dist_R = Math.Abs(Palette[i].R - Source.R);
+                int Dist_G = Math.Abs(Palette[i].G - Source.G);
+                int Dist_B = Math.Abs(Palette[i].B - Source.B);
+                int Dist_A = Math.Abs(Palette[i].A - Source.A);
+                Distances.Add(Dist_R + Dist_G + Dist_B + Dist_A);
+            }
+            int minDist = 3000;
+            int minDistPos = 0;
+            for (int i = 0; i < Distances.Count; i++)
+            {
+                if (Distances[i] < minDist)
+                {
+                    minDist = Distances[i];
+                    minDistPos = i;
+                }
+            }
+            return Palette[minDistPos];
+        }
+        private int GetClosestColorPos(Color Source, List<Color> Palette)
+        {
+            List<int> Distances = new List<int>();
+            for (int i = 0; i < Palette.Count; i++)
+            {
+                int Dist_R = Math.Abs(Palette[i].R - Source.R);
+                int Dist_G = Math.Abs(Palette[i].G - Source.G);
+                int Dist_B = Math.Abs(Palette[i].B - Source.B);
+                int Dist_A = Math.Abs(Palette[i].A - Source.A);
+                Distances.Add(Dist_R + Dist_G + Dist_B + Dist_A);
+            }
+            int minDist = 3000;
+            int minDistPos = 0;
+            for (int i = 0; i < Distances.Count; i++)
+            {
+                if (Distances[i] < minDist)
+                {
+                    minDist = Distances[i];
+                    minDistPos = i;
+                }
+            }
+            return minDistPos;
+        }
+
         #endregion
 
         #region Enums
