@@ -34,6 +34,8 @@ namespace Twinsanity
         private byte[] imageData;
         private Color[] palette;
         private Color[][] mips;
+        private int rrw;
+        private int rrh;
 
         public int Width { get => 1 << w; }
         public int Height { get => 1 << h; }
@@ -90,8 +92,9 @@ namespace Twinsanity
             var afterVifPos = reader.BaseStream.Position;
             reader.BaseStream.Position -= 96;
             reader.ReadBytes(48);
-            var rrw = reader.ReadInt32();
-            var rrh = reader.ReadInt32();
+            rrw = reader.ReadInt32();
+            rrh = reader.ReadInt32();
+
             reader.BaseStream.Position = afterVifPos;
             switch(PixelFormat)
             {
@@ -286,7 +289,7 @@ namespace Twinsanity
                     break;
                 case TexturePixelFormat.PSMT8:
 
-                    m = 1; // no mips!!!!!!
+                    m = 1; // no mips!!!!!
                     for (var i = 0; i < 6; ++i)
                     {
                         mipLevelsTBP[i] = 0;
@@ -306,18 +309,14 @@ namespace Twinsanity
 
                     //Create palette, texData
                     List<Color> UniqueColors = GetUniqueColors(RawData);
-                    if (UniqueColors.Count < 257)
+                    if (UniqueColors.Count > 256)
                     {
-                        // All good, less than 257 colors
-                        for (int i = 0; i < UniqueColors.Count; i++)
-                        {
-                            this.palette[i] = UniqueColors[i];
-                        }
+                        // Only use the most used colors
+                        TruncatePalette(ref UniqueColors);
                     }
-                    else
+                    for (int i = 0; i < UniqueColors.Count; i++)
                     {
-                        // todo: Gotta guess the most accurate colors
-                        return;
+                        this.palette[i] = UniqueColors[i];
                     }
                     for (int i = 0; i < Width * Height; i++)
                     {
@@ -342,7 +341,7 @@ namespace Twinsanity
                     EzSwizzle.writeTexPSMT8(0, textureBufferWidth, 0, 0, Width, Height, texData);
 
                     // Interleave texture data?
-                    EzSwizzle.readTexPSMCT32(0, 1, 0, 0, Width, Height, ref imageData);
+                    EzSwizzle.readTexPSMCT32(0, 1, 0, 0, rrw, rrh, ref imageData);
 
 
                     break;
@@ -449,6 +448,47 @@ namespace Twinsanity
                 }
             }
             return minDistPos;
+        }
+
+        private void TruncatePalette(ref List<Color> Palette)
+        {
+            SortedDictionary<Color, int> ColorUse = new SortedDictionary<Color, int>();
+            int maxVal = 0;
+            foreach (Color col in Palette)
+            {
+                int use = 0;
+                for (int i = 0; i < RawData.Length; i++)
+                {
+                    if (RawData[i] == col)
+                    {
+                        use++;
+                    }
+                }
+                if (use > maxVal)
+                {
+                    maxVal = use;
+                }
+                ColorUse.Add(col, use);
+            }
+
+            Palette = new List<Color>();
+
+            while (Palette.Count < 256)
+            {
+                foreach (KeyValuePair<Color, int> pair in ColorUse)
+                {
+                    if (pair.Value == maxVal && Palette.Count < 256)
+                    {
+                        Palette.Add(pair.Key);
+                    }
+                }
+                maxVal--;
+                if (maxVal < 0)
+                {
+                    break;
+                }
+            }
+
         }
 
         #endregion
