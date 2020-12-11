@@ -251,7 +251,15 @@ namespace TwinsaityEditor
             {
                 texViewer = new TextureViewer();
                 texViewer.SelectedTexture = c.Data;
-                var textures = Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(0).Records;
+                List<TwinsItem> textures = null;
+                if (c.MainFile.FileName.EndsWith(".sm2"))
+                {
+                    textures = Data.GetItem<TwinsSection>(6).GetItem<TwinsSection>(0).Records;
+                }
+                else
+                {
+                    textures = Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(0).Records;
+                }
                 for (var i = 0; i < textures.Count; ++i)
                 {
                     texViewer.Textures.Add((Texture)textures[i]);
