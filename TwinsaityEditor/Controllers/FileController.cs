@@ -497,7 +497,7 @@ namespace TwinsaityEditor
         public string GetMaterialName(uint id)
         {
             if (MaterialNames.ContainsKey(id))
-                return MaterialNames[id];
+                return MaterialNames[id].Replace('\0', ' ');
             else return string.Empty;
         }
 

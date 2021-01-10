@@ -1,6 +1,7 @@
 ﻿using Twinsanity;
 using System.IO;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace TwinsaityEditor
 {
@@ -22,13 +23,14 @@ namespace TwinsaityEditor
 
         protected override void GenText()
         {
-            TextPrev = new string[4 + Data.MaterialIDs.Length];
-            TextPrev[0] = string.Format("ID: {0:X8}", Data.ID);
-            TextPrev[1] = $"Size: {Data.Size}";
-            TextPrev[2] = $"Header: {Data.Header} MaterialCount: {Data.MaterialIDs.Length}";
+            var text = new List<string>();
+            text.Add(string.Format("ID: {0:X8}", Data.ID));
+            text.Add($"Size: {Data.Size}");
+            text.Add($"Header: {Data.Header} MaterialCount: {Data.MaterialIDs.Length}");
             for (int i = 0; i < Data.MaterialIDs.Length; ++i)
-                TextPrev[3 + i] = MainFile.GetMaterialName(Data.MaterialIDs[i]);
-            TextPrev[3 + Data.MaterialIDs.Length] = string.Format("Model: {0:X8}", Data.MeshID);
+                text.Add(MainFile.GetMaterialName(Data.MaterialIDs[i]));
+            text.Add(string.Format("Model: {0:X8}", Data.MeshID));
+            TextPrev = text.ToArray();
         }
 
         private void Menu_ExportPLY()

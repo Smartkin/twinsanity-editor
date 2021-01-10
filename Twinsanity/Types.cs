@@ -49,6 +49,11 @@ namespace Twinsanity
             writer.Write(Z);
             writer.Write(W);
         }
+
+        public override string ToString()
+        {
+            return $"{X} {Y} {Z} {W}";
+        }
     }
 
     public class CamRot

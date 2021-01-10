@@ -44,6 +44,7 @@ namespace TwinsaityEditor
             // 
             // GlControl1
             // 
+            this.GlControl1.AllowDrop = true;
             this.GlControl1.BackColor = System.Drawing.Color.Black;
             this.GlControl1.Location = new System.Drawing.Point(13, 13);
             this.GlControl1.Name = "GlControl1";
@@ -54,6 +55,7 @@ namespace TwinsaityEditor
             // 
             // btnSave
             // 
+            this.btnSave.AllowDrop = true;
             this.btnSave.Location = new System.Drawing.Point(13, 275);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
@@ -98,6 +100,7 @@ namespace TwinsaityEditor
             // 
             // cbSaveMips
             // 
+            this.cbSaveMips.AllowDrop = true;
             this.cbSaveMips.AutoSize = true;
             this.cbSaveMips.Location = new System.Drawing.Point(13, 304);
             this.cbSaveMips.Name = "cbSaveMips";
@@ -108,6 +111,7 @@ namespace TwinsaityEditor
             // 
             // TextureViewer
             // 
+            this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(286, 326);

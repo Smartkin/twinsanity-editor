@@ -99,7 +99,11 @@ namespace Twinsanity
             ChunkLink.LinkTree Node = new ChunkLink.LinkTree();
             Node.Header = reader.ReadInt32();
 
-            byte[] Header = reader.ReadBytes(0x16);
+            ushort[] header = new ushort[11];
+            for (var i = 0; i < 11; ++i)
+            {
+                header[i] = reader.ReadUInt16();
+            }
             int blobSize = reader.ReadInt32();
 
             Node.LoadArea = new Pos[8];
@@ -118,7 +122,7 @@ namespace Twinsanity
                 Node.UnknownMatrix[j] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
             }
             byte[] Blob = reader.ReadBytes(blobSize - 320);
-            Node.GI_Type = new GraphicsInfo.GI_Type4() { Header = Header, unkBlob = Blob };
+            Node.GI_Type = new GraphicsInfo.GI_CollisionData() { Header = header, collisionDataBlob = Blob };
 
             Node.Ptr = ReadTree(reader, Node.Header);
 
@@ -128,8 +132,11 @@ namespace Twinsanity
         private void SaveTree(BinaryWriter writer, ChunkLink.LinkTree node)
         {
             writer.Write(node.Header);
-            writer.Write(node.GI_Type.Header);
-            writer.Write(node.GI_Type.unkBlob.Length + 320);
+            for (var i = 0; i < 11; ++i)
+            {
+                writer.Write(node.GI_Type.Header[i]);
+            }
+            writer.Write(node.GI_Type.collisionDataBlob.Length + 320);
 
             for (int j = 0; j < node.LoadArea.Length; ++j)
             {
@@ -153,7 +160,7 @@ namespace Twinsanity
                 writer.Write(node.UnknownMatrix[j].W);
             }
 
-            writer.Write(node.GI_Type.unkBlob);
+            writer.Write(node.GI_Type.collisionDataBlob);
 
             if (node.Ptr != null)
             {
@@ -179,7 +186,7 @@ namespace Twinsanity
 
         private void CountTree(ChunkLink.LinkTree ptr, ref int size)
         {
-            size += 350 + ptr.GI_Type.unkBlob.Length;
+            size += 350 + ptr.GI_Type.collisionDataBlob.Length;
             if (ptr.Ptr != null)
             {
                 CountTree((ChunkLink.LinkTree)ptr.Ptr, ref size);
@@ -210,7 +217,7 @@ namespace Twinsanity
             public struct LinkTree
             {
                 public int Header;
-                public GraphicsInfo.GI_Type4 GI_Type;
+                public GraphicsInfo.GI_CollisionData GI_Type;
                 public Pos[] LoadArea; // 8
                 public Pos[] AreaMatrix; // 6
                 public Pos[] UnknownMatrix; // 6

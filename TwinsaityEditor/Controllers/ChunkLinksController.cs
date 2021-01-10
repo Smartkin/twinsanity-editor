@@ -37,6 +37,11 @@ namespace TwinsaityEditor
                 while (Ptr != null)
                 {
                     text.Add(add + $"Load Zone {depth}");
+                    var gi_header = Ptr.Value.GI_Type.Header;
+                    for (var j = 0; j < 11; ++j)
+                    {
+                        text.Add(add + $"GI header {j}: {gi_header[j]}");
+                    }
                     add += "     ";
                     depth++;
                     if (Ptr.Value.Ptr != null)
