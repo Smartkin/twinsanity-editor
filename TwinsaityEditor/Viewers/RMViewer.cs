@@ -205,7 +205,7 @@ namespace TwinsaityEditor
                                     cur_color = colors[colors.Length - i * 2 - 1];
                                 else
                                     cur_color = Color.White;
-                                RenderString3D($"{pth.ID.ToString()}:{k}", cur_color, -pth.Positions[k].X, pth.Positions[k].Y, pth.Positions[k].Z, ref identity_mat, 0.5F);
+                                RenderString3D($"{pth.ID}:{k}", cur_color, -pth.Positions[k].X, pth.Positions[k].Y, pth.Positions[k].Z, ref identity_mat, 0.5F);
                             }
                             if (file.SelectedItem != pth)
                             {
