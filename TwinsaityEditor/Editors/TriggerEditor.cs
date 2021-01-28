@@ -107,7 +107,7 @@ namespace TwinsaityEditor
                 if (!controller.Data.ContainsItem(id))
                     break;
             }
-            Trigger new_trigger = new Trigger { ID = id, Instances = new List<ushort>(), Coords = new Pos[] { new Pos(0, 0, 0, 1), new Pos(0, 0, 0, 1), new Pos(0, 0, 0, 1) } };
+            Trigger new_trigger = new Trigger { ID = id, Parent = controller.Data, Instances = new List<ushort>(), Coords = new Pos[] { new Pos(0, 0, 0, 1), new Pos(0, 0, 0, 1), new Pos(0, 0, 0, 1) } };
             controller.Data.AddItem(id, new_trigger);
             ((MainForm)Tag).GenTreeNode(new_trigger, controller);
             trigger = new_trigger;
