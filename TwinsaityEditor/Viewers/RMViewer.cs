@@ -16,7 +16,7 @@ namespace TwinsaityEditor
         private FileController file;
         private ChunkLinks links;
 
-        public RMViewer(FileController file, ref Form pform)
+        public RMViewer(FileController file, Form pform)
         {
             //initialize variables here
             show_col_nodes = show_triggers = wire_col = show_cams = false;

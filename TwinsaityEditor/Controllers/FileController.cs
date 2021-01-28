@@ -394,7 +394,7 @@ namespace TwinsaityEditor
                     rmViewer = null;
                 };
                 f.Show();
-                rmViewer = new RMViewer(this, ref f) { Dock = DockStyle.Fill };
+                rmViewer = new RMViewer(this, f) { Dock = DockStyle.Fill };
                 f.Controls.Add(rmViewer);
                 f.Text = "RMViewer";
             }
