@@ -7,7 +7,7 @@ namespace TwinsaityEditor
         private RigidModelController model;
         private FileController file;
 
-        public ModelViewer(RigidModelController model, Form pform) : base(model.MainFile.MeshSection.GetItem<ModelController>(model.Data.MeshID), ref pform)
+        public ModelViewer(RigidModelController model, Form pform) : base(model.MainFile.MeshSection.GetItem<ModelController>(model.Data.MeshID), pform)
         {
             //initialize variables here
             this.model = model;

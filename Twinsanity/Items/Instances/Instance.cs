@@ -19,7 +19,8 @@ namespace Twinsanity
         public int SomeNum2 { get; set; }
         public int SomeNum3 { get; set; }
         public ushort ObjectID { get; set; }
-        public uint AfterOID { get; set; }
+        public short RefList { get; set; }
+        public short ScriptID { get; set; }
         public uint PHeader { get; set; }
         public uint Flags { get; set; }
         public List<uint> UnkI321 { get; set; } = new List<uint>();
@@ -54,7 +55,8 @@ namespace Twinsanity
             for (int i = 0; i < PathIDs.Count; ++i)
                 writer.Write(PathIDs[i]);
             writer.Write(ObjectID);
-            writer.Write(AfterOID);
+            writer.Write(RefList);
+            writer.Write(ScriptID);
             PHeader = (uint)((byte)UnkI321.Count
                 | (UnkI322.Count << 8)
                 | (UnkI323.Count << 16));
@@ -73,6 +75,14 @@ namespace Twinsanity
 
         public override void Load(BinaryReader reader, int size)
         {
+            int n;
+            InstanceIDs.Clear();
+            PositionIDs.Clear();
+            PathIDs.Clear();
+            UnkI321.Clear();
+            UnkI322.Clear();
+            UnkI323.Clear();
+
             Pos = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
             RotX = reader.ReadUInt16();
             COMRotX = reader.ReadUInt16();
@@ -81,38 +91,33 @@ namespace Twinsanity
             RotZ = reader.ReadUInt16();
             COMRotZ = reader.ReadUInt16();
 
-            var n = reader.ReadInt32();
+            n = reader.ReadInt32();
             n = reader.ReadInt32();
             SomeNum1 = reader.ReadInt32();
-            InstanceIDs.Clear();
             for (int i = 0; i < n; ++i)
                 InstanceIDs.Add(reader.ReadUInt16());
             n = reader.ReadInt32();
             n = reader.ReadInt32();
             SomeNum2 = reader.ReadInt32();
-            PositionIDs.Clear();
             for (int i = 0; i < n; ++i)
                 PositionIDs.Add(reader.ReadUInt16());
             n = reader.ReadInt32();
             n = reader.ReadInt32();
             SomeNum3 = reader.ReadInt32();
-            PathIDs.Clear();
             for (int i = 0; i < n; ++i)
                 PathIDs.Add(reader.ReadUInt16());
             ObjectID = reader.ReadUInt16();
-            AfterOID = reader.ReadUInt32();
+            RefList = reader.ReadInt16();
+            ScriptID = reader.ReadInt16();
             PHeader = reader.ReadUInt32();
             Flags = reader.ReadUInt32();
             n = reader.ReadInt32();
-            UnkI321.Clear();
             for (int i = 0; i < n; ++i)
                 UnkI321.Add(reader.ReadUInt32());
             n = reader.ReadInt32();
-            UnkI322.Clear();
             for (int i = 0; i < n; ++i)
                 UnkI322.Add(reader.ReadSingle());
             n = reader.ReadInt32();
-            UnkI323.Clear();
             for (int i = 0; i < n; ++i)
                 UnkI323.Add(reader.ReadUInt32());
         }

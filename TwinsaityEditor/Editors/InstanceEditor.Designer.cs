@@ -70,6 +70,10 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.numRefList = new System.Windows.Forms.NumericUpDown();
+            this.label12 = new System.Windows.Forms.Label();
+            this.numScript = new System.Windows.Forms.NumericUpDown();
+            this.label11 = new System.Windows.Forms.Label();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
@@ -112,6 +116,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numRefList)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numScript)).BeginInit();
             this.groupBox9.SuspendLayout();
             this.groupBox8.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown11)).BeginInit();
@@ -213,6 +219,7 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Main Properties";
             this.tabPage1.UseVisualStyleBackColor = true;
+            this.tabPage1.Enter += new System.EventHandler(this.tabPage1_Enter);
             // 
             // button_PosFromCam
             // 
@@ -652,6 +659,10 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.numRefList);
+            this.tabPage2.Controls.Add(this.label12);
+            this.tabPage2.Controls.Add(this.numScript);
+            this.tabPage2.Controls.Add(this.label11);
             this.tabPage2.Controls.Add(this.groupBox9);
             this.tabPage2.Controls.Add(this.groupBox8);
             this.tabPage2.Controls.Add(this.groupBox10);
@@ -663,15 +674,75 @@
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(502, 330);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Extra Properties";
+            this.tabPage2.Text = "Advanced Properties";
             this.tabPage2.UseVisualStyleBackColor = true;
+            this.tabPage2.Enter += new System.EventHandler(this.tabPage2_Enter);
+            // 
+            // numRefList
+            // 
+            this.numRefList.Location = new System.Drawing.Point(253, 6);
+            this.numRefList.Maximum = new decimal(new int[] {
+            32767,
+            0,
+            0,
+            0});
+            this.numRefList.Minimum = new decimal(new int[] {
+            32768,
+            0,
+            0,
+            -2147483648});
+            this.numRefList.Name = "numRefList";
+            this.numRefList.Size = new System.Drawing.Size(75, 20);
+            this.numRefList.TabIndex = 9;
+            this.numRefList.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.numRefList.ValueChanged += new System.EventHandler(this.numRefList_ValueChanged);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(171, 8);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(76, 13);
+            this.label12.TabIndex = 8;
+            this.label12.Text = "Reference List";
+            // 
+            // numScript
+            // 
+            this.numScript.Location = new System.Drawing.Point(90, 6);
+            this.numScript.Maximum = new decimal(new int[] {
+            32767,
+            0,
+            0,
+            0});
+            this.numScript.Minimum = new decimal(new int[] {
+            32768,
+            0,
+            0,
+            -2147483648});
+            this.numScript.Name = "numScript";
+            this.numScript.Size = new System.Drawing.Size(75, 20);
+            this.numScript.TabIndex = 7;
+            this.numScript.ValueChanged += new System.EventHandler(this.numScript_ValueChanged);
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(6, 8);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(78, 13);
+            this.label11.TabIndex = 6;
+            this.label11.Text = "Instance Script";
             // 
             // groupBox9
             // 
             this.groupBox9.AutoSize = true;
             this.groupBox9.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox9.Controls.Add(this.textBox5);
-            this.groupBox9.Location = new System.Drawing.Point(338, 160);
+            this.groupBox9.Location = new System.Drawing.Point(337, 186);
             this.groupBox9.Name = "groupBox9";
             this.groupBox9.Size = new System.Drawing.Size(160, 122);
             this.groupBox9.TabIndex = 5;
@@ -694,7 +765,7 @@
             this.groupBox8.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox8.Controls.Add(this.numericUpDown11);
             this.groupBox8.Controls.Add(this.textBox4);
-            this.groupBox8.Location = new System.Drawing.Point(338, 6);
+            this.groupBox8.Location = new System.Drawing.Point(337, 32);
             this.groupBox8.Name = "groupBox8";
             this.groupBox8.Size = new System.Drawing.Size(160, 148);
             this.groupBox8.TabIndex = 2;
@@ -734,7 +805,7 @@
             this.groupBox10.AutoSize = true;
             this.groupBox10.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox10.Controls.Add(this.textBox6);
-            this.groupBox10.Location = new System.Drawing.Point(172, 160);
+            this.groupBox10.Location = new System.Drawing.Point(171, 186);
             this.groupBox10.Name = "groupBox10";
             this.groupBox10.Size = new System.Drawing.Size(160, 122);
             this.groupBox10.TabIndex = 4;
@@ -757,7 +828,7 @@
             this.groupBox7.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox7.Controls.Add(this.numericUpDown10);
             this.groupBox7.Controls.Add(this.textBox3);
-            this.groupBox7.Location = new System.Drawing.Point(172, 6);
+            this.groupBox7.Location = new System.Drawing.Point(171, 32);
             this.groupBox7.Name = "groupBox7";
             this.groupBox7.Size = new System.Drawing.Size(160, 148);
             this.groupBox7.TabIndex = 1;
@@ -797,7 +868,7 @@
             this.groupBox11.AutoSize = true;
             this.groupBox11.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox11.Controls.Add(this.textBox7);
-            this.groupBox11.Location = new System.Drawing.Point(6, 160);
+            this.groupBox11.Location = new System.Drawing.Point(5, 186);
             this.groupBox11.Name = "groupBox11";
             this.groupBox11.Size = new System.Drawing.Size(160, 122);
             this.groupBox11.TabIndex = 3;
@@ -821,7 +892,7 @@
             this.groupBox6.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox6.Controls.Add(this.numericUpDown9);
             this.groupBox6.Controls.Add(this.textBox2);
-            this.groupBox6.Location = new System.Drawing.Point(6, 6);
+            this.groupBox6.Location = new System.Drawing.Point(5, 32);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(160, 148);
             this.groupBox6.TabIndex = 0;
@@ -898,6 +969,8 @@
             this.groupBox1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numRefList)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numScript)).EndInit();
             this.groupBox9.ResumeLayout(false);
             this.groupBox9.PerformLayout();
             this.groupBox8.ResumeLayout(false);
@@ -976,5 +1049,9 @@
         private System.Windows.Forms.Button button_PosFromCam;
         private System.Windows.Forms.ToolStripMenuItem duplicateToolStripMenuItem;
         private System.Windows.Forms.Button btnEditInstanceFlags;
+        private System.Windows.Forms.NumericUpDown numRefList;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.NumericUpDown numScript;
+        private System.Windows.Forms.Label label11;
     }
 }
