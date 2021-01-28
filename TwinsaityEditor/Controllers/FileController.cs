@@ -181,31 +181,31 @@ namespace TwinsaityEditor
             }
         }
 
-        private void OpenEditor(ref Form editor_var, Editors editor, Controller cont)
+        private void OpenEditor(ref Form editor_var_ptr, Editors editor, Controller cont)
         {
-            if (editor_var == null || editor_var.IsDisposed)
+            if (editor_var_ptr == null || editor_var_ptr.IsDisposed)
             {
                 switch (editor)
                 {
                     case Editors.ColData:
                         {
-                            if (Data.ContainsItem(9)) editor_var = new ColDataEditor(Data.GetItem<ColData>(9)) { Tag = TopForm };
+                            if (Data.ContainsItem(9)) editor_var_ptr = new ColDataEditor(Data.GetItem<ColData>(9)) { Tag = TopForm };
                             else return;
                         }
                         break;
-                    case Editors.ChunkLinks: editor_var = new ChunkLinksEditor((ChunkLinksController)cont) { Tag = TopForm }; break;
-                    case Editors.Position: editor_var = new PositionEditor((SectionController)cont) { Tag = TopForm }; break;
-                    case Editors.Path: editor_var = new PathEditor((SectionController)cont) { Tag = TopForm }; break;
-                    case Editors.Instance: editor_var = new InstanceEditor((SectionController)cont) { Tag = TopForm }; break;
-                    case Editors.Trigger: editor_var = new TriggerEditor((SectionController)cont) { Tag = TopForm }; break;
-                    case Editors.Script: editor_var = new ScriptEditor((SectionController)cont) { Tag = TopForm }; break;
-                    case Editors.Object: editor_var = new ObjectEditor((SectionController)cont) { Tag = TopForm }; break;
-                    case Editors.Animation: editor_var = new AnimationEditor((SectionController)cont) { Tag = TopForm }; break;
+                    case Editors.ChunkLinks: editor_var_ptr = new ChunkLinksEditor((ChunkLinksController)cont) { Tag = TopForm }; break;
+                    case Editors.Position: editor_var_ptr = new PositionEditor((SectionController)cont) { Tag = TopForm }; break;
+                    case Editors.Path: editor_var_ptr = new PathEditor((SectionController)cont) { Tag = TopForm }; break;
+                    case Editors.Instance: editor_var_ptr = new InstanceEditor((SectionController)cont) { Tag = TopForm }; break;
+                    case Editors.Trigger: editor_var_ptr = new TriggerEditor((SectionController)cont) { Tag = TopForm }; break;
+                    case Editors.Script: editor_var_ptr = new ScriptEditor((SectionController)cont) { Tag = TopForm }; break;
+                    case Editors.Object: editor_var_ptr = new ObjectEditor((SectionController)cont) { Tag = TopForm }; break;
+                    case Editors.Animation: editor_var_ptr = new AnimationEditor((SectionController)cont) { Tag = TopForm }; break;
                 }
-                editor_var.Show();
+                editor_var_ptr.Show();
             }
             else
-                editor_var.Select();
+                editor_var_ptr.Select();
         }
 
         public void CloseEditor(Editors editor, int arg = -1)
@@ -222,7 +222,7 @@ namespace TwinsaityEditor
                 case Editors.Script: editorForm = editScripts; break;
                 case Editors.Animation: editorForm = editAnimations; break;
             }
-            CloseForm(ref editorForm);
+            CloseForm(editorForm);
         }
 
         public void OpenMeshViewer(ModelController c)
@@ -236,7 +236,7 @@ namespace TwinsaityEditor
                     MeshViewers.Remove(id);
                 };
                 f.Show();
-                MeshViewer v = new MeshViewer(c, ref f) { Dock = DockStyle.Fill };
+                MeshViewer v = new MeshViewer(c, f) { Dock = DockStyle.Fill };
                 f.Controls.Add(v);
                 f.Text = "MeshViewer";
                 MeshViewers.Add(id, f);
@@ -284,7 +284,7 @@ namespace TwinsaityEditor
         public void CloseMeshViewer(uint mesh_id)
         {
             var f = MeshViewers[mesh_id];
-            CloseForm(ref f);
+            CloseForm(f);
             MeshViewers.Remove(mesh_id);
         }
 
@@ -309,7 +309,7 @@ namespace TwinsaityEditor
                     ModelViewers.Remove(id);
                 };
                 f.Show();
-                ModelViewer v = new ModelViewer(c, ref f) { Dock = DockStyle.Fill };
+                ModelViewer v = new ModelViewer(c, f) { Dock = DockStyle.Fill };
                 f.Controls.Add(v);
                 f.Text = "ModelViewer";
                 ModelViewers.Add(id, f);
@@ -332,7 +332,7 @@ namespace TwinsaityEditor
                     ModelViewers.Remove(id);
                 };
                 f.Show();
-                ModelViewer v = new ModelViewer(c, ref f) { Dock = DockStyle.Fill };
+                ModelViewer v = new ModelViewer(c, f) { Dock = DockStyle.Fill };
                 f.Controls.Add(v);
                 f.Text = "ModelViewer";
                 ModelViewers.Add(id, f);
@@ -344,7 +344,7 @@ namespace TwinsaityEditor
         public void CloseModelViewer(uint id)
         {
             var f = ModelViewers[id];
-            CloseForm(ref f);
+            CloseForm(f);
             ModelViewers.Remove(id);
         }
 
@@ -359,7 +359,7 @@ namespace TwinsaityEditor
                     skyViewer = null;
                 };
                 f.Show();
-                skyViewer = new SkydomeViewer(c, ref f) { Dock = DockStyle.Fill };
+                skyViewer = new SkydomeViewer(c, f) { Dock = DockStyle.Fill };
                 f.Controls.Add(skyViewer);
                 f.Text = "SkydomeViewer";
             }
@@ -371,7 +371,7 @@ namespace TwinsaityEditor
         {
             if (skyViewer == null) return;
             var f = skyViewer.ParentForm;
-            CloseForm(ref f);
+            CloseForm(f);
         }
 
         public void CloseAllModelViewers()
@@ -412,7 +412,7 @@ namespace TwinsaityEditor
                     smViewer = null;
                 };
                 f.Show();
-                smViewer = new SMViewer(this, ref f) { Dock = DockStyle.Fill };
+                smViewer = new SMViewer(this, f) { Dock = DockStyle.Fill };
                 f.Controls.Add(smViewer);
                 f.Text = "SMViewer";
             }
@@ -445,7 +445,7 @@ namespace TwinsaityEditor
             return pos;
         }
 
-        public void CloseForm(ref Form form)
+        public void CloseForm(Form form)
         {
             if (form != null && !form.IsDisposed)
             {
@@ -458,21 +458,21 @@ namespace TwinsaityEditor
         {
             if (rmViewer == null) return;
             var f = rmViewer.ParentForm;
-            CloseForm(ref f);
+            CloseForm(f);
         }
 
         public void CloseSMViewer()
         {
             if (smViewer == null) return;
             var f = smViewer.ParentForm;
-            CloseForm(ref f);
+            CloseForm(f);
         }
 
         public void CloseTextureViewer()
         {
             if (texViewer == null) return;
             var f = texViewer.ParentForm;
-            CloseForm(ref f);
+            CloseForm(f);
         }
 
         public void SelectItem(TwinsItem item, int arg = -1)

@@ -12,7 +12,7 @@ namespace TwinsaityEditor
         private FileController file;
         private ChunkLinks links;
 
-        public SMViewer(FileController file, ref Form pform)
+        public SMViewer(FileController file, Form pform)
         {
             this.file = file;
             if (file.Data.ContainsItem(5))

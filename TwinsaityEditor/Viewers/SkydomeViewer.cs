@@ -13,7 +13,7 @@ namespace TwinsaityEditor
 
         public SkydomeController Sky { get => sky; }
 
-        public SkydomeViewer(SkydomeController sky, ref Form pform)
+        public SkydomeViewer(SkydomeController sky, Form pform)
         {
             //initialize variables here
             this.sky = sky;
