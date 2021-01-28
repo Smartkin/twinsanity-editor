@@ -26,6 +26,9 @@ namespace TwinsaityEditor
             PopulateList();
             comboBox1.TextChanged += comboBox1_TextChanged;
             FormClosed += InstanceEditor_FormClosed;
+
+            numFlags.Controls.RemoveAt(0);
+            numFlags.Controls[0].Width = numFlags.Width - 4;
         }
 
         private void InstanceEditor_FormClosed(object sender, FormClosedEventArgs e)
@@ -483,7 +486,7 @@ namespace TwinsaityEditor
         {
             if (flagsEditor == null || flagsEditor.IsDisposed)
             {
-                flagsEditor = new InstanceFlagsEditor(ins, tbInstanceFlags);
+                flagsEditor = new InstanceFlagsEditor(ins, numFlags);
             }
             flagsEditor.Show();
         }
@@ -508,7 +511,7 @@ namespace TwinsaityEditor
             numericUpDown3.Value = (decimal)ins.Pos.Y;
             numericUpDown4.Value = (decimal)ins.Pos.Z;
             numericUpDown5.Value = (decimal)ins.Pos.W;
-            tbInstanceFlags.Text = Convert.ToString(ins.Flags, 16);
+            numFlags.Value = ins.Flags;
             numericUpDown13.Value = ins.COMRotX;
             numericUpDown14.Value = ins.COMRotY;
             numericUpDown15.Value = ins.COMRotZ;
@@ -549,6 +552,12 @@ namespace TwinsaityEditor
             for (int i = 0; i < ins.UnkI323.Count; ++i)
                 lines[i] = ins.UnkI323[i].ToString();
             textBox5.Lines = lines;
+        }
+
+        private void numFlags_ValueChanged(object sender, EventArgs e)
+        {
+            ins.Flags = (uint)numFlags.Value;
+            flagsEditor?.UpdateCheckBoxes();
         }
     }
 }
