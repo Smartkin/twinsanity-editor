@@ -68,7 +68,6 @@ namespace TwinsaityEditor
             File.SelectItem((Instance)controller.Data.Records[listBox1.SelectedIndex]);
             ins = (Instance)File.SelectedItem;
             tabControl1.Enabled = true;
-            tabControl1.Tag = 0x00;
             ignore_value_change = true;
             tabControl1.SelectedIndex = -1;
             tabControl1.SelectedIndex = 0; // yes, this is intentional! don't judge me
