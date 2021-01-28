@@ -728,24 +728,12 @@ namespace TwinsaityEditor
             base.OnKeyDown(e);
             switch (e.KeyCode)
             {
-                case Keys.C:
-                    show_col_nodes = !show_col_nodes;
-                    break;
-                case Keys.L:
-                    sm2_links = !sm2_links;
-                    break;
-                case Keys.T:
-                    show_triggers = !show_triggers;
-                    break;
-                case Keys.X:
-                    wire_col = !wire_col;
-                    break;
-                case Keys.V:
-                    obj_models = !obj_models;
-                    break;
-                case Keys.Y:
-                    show_cams = !show_cams;
-                    break;
+                case Keys.C: show_col_nodes = !show_col_nodes; break;
+                case Keys.L: sm2_links = !sm2_links; break;
+                case Keys.T: show_triggers = !show_triggers; break;
+                case Keys.X: wire_col = !wire_col; break;
+                case Keys.V: obj_models = !obj_models; break;
+                case Keys.Y: show_cams = !show_cams; break;
             }
         }
 
