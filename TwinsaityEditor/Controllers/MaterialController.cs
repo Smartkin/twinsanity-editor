@@ -24,6 +24,7 @@ namespace TwinsaityEditor
                 string.Format("ID: {0:X8}", Data.ID),
                 $"Size: {Data.Size}",
                 $"Name: {Data.Name.Substring(0, Data.Name.Length - 1)}",
+                $"DMA Slot?: {Data.Unknown}",
                 $"Shaders: {Data.Shaders.Count}"
             };
             foreach (var shd in Data.Shaders)

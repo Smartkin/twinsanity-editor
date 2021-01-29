@@ -10,7 +10,7 @@ namespace Twinsanity
         public float SomeFloat { get; set; }
         public Pos[] Coords { get; set; } = new Pos[3]; // rot/pos/size
         public uint SectionHead { get; set; }
-        public List<ushort> Instances { get; set; }
+        public List<ushort> Instances { get; set; } = new List<ushort>();
 
         public ushort Arg1 { get; set; }
         public ushort Arg2 { get; set; }
@@ -53,7 +53,6 @@ namespace Twinsanity
             var n = reader.ReadInt32();
             n = reader.ReadInt32();
             SectionHead = reader.ReadUInt32();
-            Instances = new List<ushort>(n);
             for (int i = 0; i < n; ++i)
                 Instances.Add(reader.ReadUInt16());
 
