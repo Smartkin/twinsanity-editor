@@ -15,7 +15,8 @@ namespace TwinsaityEditor
         private FileController File { get; set; }
         private TwinsFile FileData => File.Data;
 
-        private bool ignore_value_change;
+        internal Stack<bool> dirty = new Stack<bool>();
+        internal bool Dirty => dirty.Count > 0 && dirty.Peek();
 
         public InstanceEditor(SectionController c)
         {
@@ -68,7 +69,7 @@ namespace TwinsaityEditor
             File.SelectItem((Instance)controller.Data.Records[listBox1.SelectedIndex]);
             ins = (Instance)File.SelectedItem;
             tabControl1.Enabled = true;
-            ignore_value_change = true;
+            dirty.Push(true);
             Control cur = splitContainer1.ActiveControl;
             var tabIndex = tabControl1.SelectedIndex;
             tabControl1.SelectedIndex = -1;
@@ -79,42 +80,42 @@ namespace TwinsaityEditor
                 flagsEditor.Instance = ins;
             }
 
-            ignore_value_change = false;
+            dirty.Push(false);
 
             this.ResumeDrawing();
         }
 
         private void GetXRot(bool slider, bool num)
         {
-            ignore_value_change = true;
+            dirty.Push(true);
             if (slider)
                 trackBar1.Value = ins.RotX;
             if (num)
                 numericUpDown6.Value = ins.RotX;
             label6.Text = string.Format(angleFormat, ins.RotX / (float)(ushort.MaxValue + 1) * 360f);
-            ignore_value_change = false;
+            dirty.Push(false);
         }
 
         private void GetYRot(bool slider, bool num)
         {
-            ignore_value_change = true;
+            dirty.Push(true);
             if (slider)
                 trackBar2.Value = ins.RotY;
             if (num)
                 numericUpDown7.Value = ins.RotY;
             label7.Text = string.Format(angleFormat, ins.RotY / (float)(ushort.MaxValue + 1) * 360f);
-            ignore_value_change = false;
+            dirty.Push(false);
         }
 
         private void GetZRot(bool slider, bool num)
         {
-            ignore_value_change = true;
+            dirty.Push(true);
             if (slider)
                 trackBar3.Value = ins.RotZ;
             if (num)
                 numericUpDown8.Value = ins.RotZ;
             label9.Text = string.Format(angleFormat, ins.RotZ / (float)(ushort.MaxValue + 1) * 360f);
-            ignore_value_change = false;
+            dirty.Push(false);
         }
 
         private string GenTextForList(Instance instance)
@@ -126,7 +127,7 @@ namespace TwinsaityEditor
 
         private void comboBox1_TextChanged(object sender, EventArgs e)
         {
-            if (ignore_value_change) return;
+            if (Dirty) return;
             if (ushort.TryParse(comboBox1.Text.Split(new char[] { ' ' }, 2)[0], out ushort oid))
             {
                 ins.ObjectID = oid;
@@ -137,7 +138,7 @@ namespace TwinsaityEditor
 
         private void numericUpDown2_ValueChanged(object sender, EventArgs e)
         {
-            if (ignore_value_change) return;
+            if (Dirty) return;
             ins.Pos.X = (float)numericUpDown2.Value;
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateTextBox();
             File.RMViewer_LoadInstances();
@@ -145,7 +146,7 @@ namespace TwinsaityEditor
 
         private void numericUpDown3_ValueChanged(object sender, EventArgs e)
         {
-            if (ignore_value_change) return;
+            if (Dirty) return;
             ins.Pos.Y = (float)numericUpDown3.Value;
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateTextBox();
             File.RMViewer_LoadInstances();
@@ -153,7 +154,7 @@ namespace TwinsaityEditor
 
         private void numericUpDown4_ValueChanged(object sender, EventArgs e)
         {
-            if (ignore_value_change) return;
+            if (Dirty) return;
             ins.Pos.Z = (float)numericUpDown4.Value;
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateTextBox();
             File.RMViewer_LoadInstances();
@@ -161,7 +162,7 @@ namespace TwinsaityEditor
 
         private void numericUpDown5_ValueChanged(object sender, EventArgs e)
         {
-            if (ignore_value_change) return;
+            if (Dirty) return;
             ins.Pos.W = (float)numericUpDown5.Value;
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateTextBox();
         }
@@ -192,7 +193,7 @@ namespace TwinsaityEditor
 
         private void numericUpDown6_ValueChanged(object sender, EventArgs e)
         {
-            if (ignore_value_change) return;
+            if (Dirty) return;
             ins.RotX = (ushort)numericUpDown6.Value;
             GetXRot(true, false);
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
@@ -201,14 +202,14 @@ namespace TwinsaityEditor
 
         private void numericUpDown13_ValueChanged(object sender, EventArgs e)
         {
-            if (ignore_value_change) return;
+            if (Dirty) return;
             ins.COMRotX = (ushort)numericUpDown13.Value;
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
         }
 
         private void numericUpDown7_ValueChanged(object sender, EventArgs e)
         {
-            if (ignore_value_change) return;
+            if (Dirty) return;
             ins.RotY = (ushort)numericUpDown7.Value;
             GetYRot(true, false);
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
@@ -217,35 +218,35 @@ namespace TwinsaityEditor
 
         private void numericUpDown14_ValueChanged(object sender, EventArgs e)
         {
-            if (ignore_value_change) return;
+            if (Dirty) return;
             ins.COMRotY = (ushort)numericUpDown14.Value;
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
         }
 
         private void numericUpDown9_ValueChanged(object sender, EventArgs e)
         {
-            if (ignore_value_change) return;
+            if (Dirty) return;
             ins.SomeNum1 = (int)numericUpDown9.Value;
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
         }
 
         private void numericUpDown10_ValueChanged(object sender, EventArgs e)
         {
-            if (ignore_value_change) return;
+            if (Dirty) return;
             ins.SomeNum2 = (int)numericUpDown10.Value;
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
         }
 
         private void numericUpDown11_ValueChanged(object sender, EventArgs e)
         {
-            if (ignore_value_change) return;
+            if (Dirty) return;
             ins.SomeNum3 = (int)numericUpDown11.Value;
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
-            if (ignore_value_change) return;
+            if (Dirty) return;
             ins.InstanceIDs.Clear();
             for (int i = 0; i < textBox2.Lines.Length; ++i)
             {
@@ -257,7 +258,7 @@ namespace TwinsaityEditor
 
         private void textBox3_TextChanged(object sender, EventArgs e)
         {
-            if (ignore_value_change) return;
+            if (Dirty) return;
             ins.PositionIDs.Clear();
             for (int i = 0; i < textBox3.Lines.Length; ++i)
             {
@@ -269,7 +270,7 @@ namespace TwinsaityEditor
 
         private void textBox4_TextChanged(object sender, EventArgs e)
         {
-            if (ignore_value_change) return;
+            if (Dirty) return;
             ins.PathIDs.Clear();
             for (int i = 0; i < textBox4.Lines.Length; ++i)
             {
@@ -281,7 +282,7 @@ namespace TwinsaityEditor
 
         private void textBox7_TextChanged(object sender, EventArgs e)
         {
-            if (ignore_value_change) return;
+            if (Dirty) return;
             ins.UnkI321.Clear();
             for (int i = 0; i < textBox7.Lines.Length; ++i)
             {
@@ -293,7 +294,7 @@ namespace TwinsaityEditor
 
         private void textBox6_TextChanged(object sender, EventArgs e)
         {
-            if (ignore_value_change) return;
+            if (Dirty) return;
             ins.UnkI322.Clear();
             for (int i = 0; i < textBox6.Lines.Length; ++i)
             {
@@ -305,7 +306,7 @@ namespace TwinsaityEditor
 
         private void textBox5_TextChanged(object sender, EventArgs e)
         {
-            if (ignore_value_change) return;
+            if (Dirty) return;
             ins.UnkI323.Clear();
             for (int i = 0; i < textBox5.Lines.Length; ++i)
             {
@@ -409,7 +410,7 @@ namespace TwinsaityEditor
 
         private void numericUpDown8_ValueChanged(object sender, EventArgs e)
         {
-            if (ignore_value_change) return;
+            if (Dirty) return;
             ins.RotZ = (ushort)numericUpDown8.Value;
             GetZRot(true, false);
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
@@ -418,7 +419,7 @@ namespace TwinsaityEditor
 
         private void numericUpDown15_ValueChanged(object sender, EventArgs e)
         {
-            if (ignore_value_change) return;
+            if (Dirty) return;
             ins.COMRotZ = (ushort)numericUpDown15.Value;
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
         }
@@ -495,11 +496,13 @@ namespace TwinsaityEditor
 
         private void numScript_ValueChanged(object sender, EventArgs e)
         {
+            if (Dirty) return;
             ins.ScriptID = (short)numScript.Value;
         }
 
         private void numRefList_ValueChanged(object sender, EventArgs e)
         {
+            if (Dirty) return;
             ins.RefList = (short)numRefList.Value;
         }
 
@@ -558,6 +561,7 @@ namespace TwinsaityEditor
 
         private void numFlags_ValueChanged(object sender, EventArgs e)
         {
+            if (Dirty) return;
             ins.Flags = (uint)numFlags.Value;
             flagsEditor?.UpdateCheckBoxes();
         }
