@@ -282,7 +282,7 @@ namespace TwinsaityEditor
             ins.UnkI321.Clear();
             for (int i = 0; i < textBox7.Lines.Length; ++i)
             {
-                if (uint.TryParse(textBox7.Lines[i], out uint v))
+                if (uint.TryParse(textBox7.Lines[i], System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out uint v))
                     ins.UnkI321.Add(v);
             }
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
