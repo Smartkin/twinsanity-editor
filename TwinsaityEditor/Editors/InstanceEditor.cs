@@ -69,8 +69,11 @@ namespace TwinsaityEditor
             ins = (Instance)File.SelectedItem;
             tabControl1.Enabled = true;
             ignore_value_change = true;
+            Control cur = splitContainer1.ActiveControl;
+            var tabIndex = tabControl1.SelectedIndex;
             tabControl1.SelectedIndex = -1;
-            tabControl1.SelectedIndex = 0; // yes, this is intentional! don't judge me
+            tabControl1.SelectedIndex = tabIndex; // yes, this is intentional! don't judge me
+            splitContainer1.ActiveControl = cur;
             if (flagsEditor != null)
             {
                 flagsEditor.Instance = ins;
