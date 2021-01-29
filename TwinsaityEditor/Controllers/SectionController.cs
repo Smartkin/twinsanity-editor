@@ -23,7 +23,6 @@ namespace TwinsaityEditor
                 && item.Type != SectionType.Mesh && item.Type != SectionType.LodModel
                 && item.Type != SectionType.Skydome && !(item is TwinsFile))
             {
-                AddMenu("Re-order by ID (asc.)", Menu_ReOrderByID_Asc);
                 
                 if (item.Type == SectionType.ObjectInstance
                     || item.Type == SectionType.AIPosition
@@ -36,9 +35,9 @@ namespace TwinsaityEditor
                     || item.Type == SectionType.ScriptX
                     || item.Type == SectionType.Object)
                 {
-                    AddMenu("Re-ID by order", Menu_ReIDByOrder);
                     AddMenu("Open editor", Menu_OpenEditor);
                     AddMenu("Add new item", Menu_AddNew);
+                    AddMenu("Re-ID by order", Menu_ReIDByOrder);
                 }
                 else if (item.Type == SectionType.Instance)
                 {
@@ -50,6 +49,7 @@ namespace TwinsaityEditor
                     AddMenu("Extract extra data", Menu_ExtractExtraData);
                     AddMenu("Add new item", Menu_AddNew);
                 }
+                AddMenu("Re-order by ID (asc.)", Menu_ReOrderByID_Asc);
             }
             else if (item is TwinsFile f && f.Type == TwinsFile.FileType.RM2)
             {
@@ -57,8 +57,8 @@ namespace TwinsaityEditor
             }
             else
             {
-                AddMenu("Re-order by ID (desc.)", Menu_ReOrderByID_Desc);
                 AddMenu("Add new item", Menu_AddNew);
+                AddMenu("Re-order by ID (desc.)", Menu_ReOrderByID_Desc);
             }
             if (item.Type == SectionType.Model || item.Type == SectionType.ModelX || item.Type == SectionType.RigidModel || item.Type == SectionType.Mesh)
             {

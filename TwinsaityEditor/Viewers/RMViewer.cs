@@ -16,7 +16,7 @@ namespace TwinsaityEditor
         private FileController file;
         private ChunkLinks links;
 
-        public RMViewer(FileController file, ref Form pform)
+        public RMViewer(FileController file, Form pform)
         {
             //initialize variables here
             show_col_nodes = show_triggers = wire_col = show_cams = false;
@@ -205,7 +205,7 @@ namespace TwinsaityEditor
                                     cur_color = colors[colors.Length - i * 2 - 1];
                                 else
                                     cur_color = Color.White;
-                                RenderString3D($"{pth.ID.ToString()}:{k}", cur_color, -pth.Positions[k].X, pth.Positions[k].Y, pth.Positions[k].Z, ref identity_mat, 0.5F);
+                                RenderString3D($"{pth.ID}:{k}", cur_color, -pth.Positions[k].X, pth.Positions[k].Y, pth.Positions[k].Z, ref identity_mat, 0.5F);
                             }
                             if (file.SelectedItem != pth)
                             {
@@ -728,24 +728,12 @@ namespace TwinsaityEditor
             base.OnKeyDown(e);
             switch (e.KeyCode)
             {
-                case Keys.C:
-                    show_col_nodes = !show_col_nodes;
-                    break;
-                case Keys.L:
-                    sm2_links = !sm2_links;
-                    break;
-                case Keys.T:
-                    show_triggers = !show_triggers;
-                    break;
-                case Keys.X:
-                    wire_col = !wire_col;
-                    break;
-                case Keys.V:
-                    obj_models = !obj_models;
-                    break;
-                case Keys.Y:
-                    show_cams = !show_cams;
-                    break;
+                case Keys.C: show_col_nodes = !show_col_nodes; break;
+                case Keys.L: sm2_links = !sm2_links; break;
+                case Keys.T: show_triggers = !show_triggers; break;
+                case Keys.X: wire_col = !wire_col; break;
+                case Keys.V: obj_models = !obj_models; break;
+                case Keys.Y: show_cams = !show_cams; break;
             }
         }
 

@@ -452,7 +452,7 @@ namespace Twinsanity
 
         private void TruncatePalette(ref List<Color> Palette)
         {
-            SortedDictionary<Color, int> ColorUse = new SortedDictionary<Color, int>();
+            Dictionary<Color, int> ColorUse = new Dictionary<Color, int>();
             int maxVal = 0;
             foreach (Color col in Palette)
             {

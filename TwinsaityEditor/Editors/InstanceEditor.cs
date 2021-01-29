@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Controls;
 using System.Windows.Forms;
 using Twinsanity;
 
@@ -9,12 +8,12 @@ namespace TwinsaityEditor
     public partial class InstanceEditor : Form
     {
         private const string angleFormat = "{0:0.000}º";
-        private SectionController controller;
+        private readonly SectionController controller;
         private Instance ins;
         private InstanceFlagsEditor flagsEditor;
         
         private FileController File { get; set; }
-        private TwinsFile FileData { get => File.Data; }
+        private TwinsFile FileData => File.Data;
 
         private bool ignore_value_change;
 
@@ -26,8 +25,10 @@ namespace TwinsaityEditor
             Text = $"Instance Editor (Section {c.Data.Parent.ID})";
             PopulateList();
             comboBox1.TextChanged += comboBox1_TextChanged;
-            tabControl1.SelectedIndexChanged += tabControl1_SelectedIndexChanged;
             FormClosed += InstanceEditor_FormClosed;
+
+            numFlags.Controls.RemoveAt(0);
+            numFlags.Controls[0].Width = numFlags.Width - 4;
         }
 
         private void InstanceEditor_FormClosed(object sender, FormClosedEventArgs e)
@@ -58,7 +59,7 @@ namespace TwinsaityEditor
             }
         }
 
-        private void listBox1_SelectedIndexChanged(object sender, System.EventArgs e)
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (listBox1.SelectedIndex == -1) return;
 
@@ -67,16 +68,9 @@ namespace TwinsaityEditor
             File.SelectItem((Instance)controller.Data.Records[listBox1.SelectedIndex]);
             ins = (Instance)File.SelectedItem;
             tabControl1.Enabled = true;
-            tabControl1.Tag = 0x00;
             ignore_value_change = true;
-            if (tabControl1.SelectedIndex == 0)
-            {
-                UpdateTab1();
-            }
-            else if (tabControl1.SelectedIndex == 1)
-            {
-                UpdateTab2();
-            }
+            tabControl1.SelectedIndex = -1;
+            tabControl1.SelectedIndex = 0; // yes, this is intentional! don't judge me
             if (flagsEditor != null)
             {
                 flagsEditor.Instance = ins;
@@ -85,70 +79,6 @@ namespace TwinsaityEditor
             ignore_value_change = false;
 
             this.ResumeDrawing();
-        }
-
-        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (tabControl1.SelectedIndex == 0 && ((int)tabControl1.Tag & 0x01) == 0)
-            {
-                UpdateTab1();
-            }
-            else if (tabControl1.SelectedIndex == 1 && ((int)tabControl1.Tag & 0x02) == 0)
-            {
-                UpdateTab2();
-            }
-        }
-
-        private void UpdateTab1()
-        {
-            string obj_name = File.GetObjectName(ins.ObjectID);
-            obj_name = Utils.TextUtils.TruncateObjectName(obj_name, ins.ObjectID, "*", "");
-            comboBox1.Text = ins.ObjectID.ToString() + ((obj_name == string.Empty) ? string.Empty : $" - {obj_name}");
-            numericUpDown12.Value = ins.ID;
-            numericUpDown2.Value = (decimal)ins.Pos.X;
-            numericUpDown3.Value = (decimal)ins.Pos.Y;
-            numericUpDown4.Value = (decimal)ins.Pos.Z;
-            numericUpDown5.Value = (decimal)ins.Pos.W;
-            tbInstanceFlags.Text = Convert.ToString(ins.Flags, 16);
-            tabControl1.Tag = (int)tabControl1.Tag | 0x01;
-            numericUpDown13.Value = ins.COMRotX;
-            numericUpDown14.Value = ins.COMRotY;
-            numericUpDown15.Value = ins.COMRotZ;
-            GetXRot(true, true); GetYRot(true, true); GetZRot(true, true);
-        }
-
-        private void UpdateTab2()
-        {
-            numericUpDown9.Value = ins.SomeNum1;
-            numericUpDown10.Value = ins.SomeNum2;
-            numericUpDown11.Value = ins.SomeNum3;
-
-            string[] lines = new string[ins.InstanceIDs.Count];
-            for (int i = 0; i < ins.InstanceIDs.Count; ++i)
-                lines[i] = ins.InstanceIDs[i].ToString();
-            textBox2.Lines = lines;
-            lines = new string[ins.PositionIDs.Count];
-            for (int i = 0; i < ins.PositionIDs.Count; ++i)
-                lines[i] = ins.PositionIDs[i].ToString();
-            textBox3.Lines = lines;
-            lines = new string[ins.PathIDs.Count];
-            for (int i = 0; i < ins.PathIDs.Count; ++i)
-                lines[i] = ins.PathIDs[i].ToString();
-            textBox4.Lines = lines;
-
-            lines = new string[ins.UnkI321.Count];
-            for (int i = 0; i < ins.UnkI321.Count; ++i)
-                lines[i] = ins.UnkI321[i].ToString("X");
-            textBox7.Lines = lines;
-            lines = new string[ins.UnkI322.Count];
-            for (int i = 0; i < ins.UnkI322.Count; ++i)
-                lines[i] = ins.UnkI322[i].ToString();
-            textBox6.Lines = lines;
-            lines = new string[ins.UnkI323.Count];
-            for (int i = 0; i < ins.UnkI323.Count; ++i)
-                lines[i] = ins.UnkI323[i].ToString();
-            textBox5.Lines = lines;
-            tabControl1.Tag = (int)tabControl1.Tag | 0x02;
         }
 
         private void GetXRot(bool slider, bool num)
@@ -352,7 +282,7 @@ namespace TwinsaityEditor
             ins.UnkI321.Clear();
             for (int i = 0; i < textBox7.Lines.Length; ++i)
             {
-                if (uint.TryParse(textBox7.Lines[i], out uint v))
+                if (uint.TryParse(textBox7.Lines[i], System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out uint v))
                     ins.UnkI321.Add(v);
             }
             ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[ins.ID]].Tag).UpdateText();
@@ -391,7 +321,7 @@ namespace TwinsaityEditor
                 if (!controller.Data.ContainsItem(id))
                     break;
             }
-            Instance new_ins = new Instance { ID = id, AfterOID = 0xFFFFFFFF, Pos = new Pos(0, 0, 0, 1), SomeNum1 = 10, SomeNum2 = 10, SomeNum3 = 10, Flags = 0x1CE,
+            Instance new_ins = new Instance { ID = id, RefList = -1, ScriptID = -1, Pos = new Pos(0, 0, 0, 1), SomeNum1 = 10, SomeNum2 = 10, SomeNum3 = 10, Flags = 0x1CE,
                 UnkI322 = new List<float>() { 1 },
                 UnkI323 = new List<uint>() { 0, 0 } };
             controller.Data.AddItem(id, new_ins);
@@ -522,7 +452,8 @@ namespace TwinsaityEditor
             Instance new_ins = new Instance
             {
                 ID = id,
-                AfterOID = 0xFFFFFFFF,
+                RefList = -1,
+                ScriptID = -1,
                 Pos = new Pos(last_inst.Pos.X,last_inst.Pos.Y + 1f,last_inst.Pos.Z, 1),
                 RotX = last_inst.RotX,
                 RotY = last_inst.RotY,
@@ -554,9 +485,78 @@ namespace TwinsaityEditor
         {
             if (flagsEditor == null || flagsEditor.IsDisposed)
             {
-                flagsEditor = new InstanceFlagsEditor(ins, tbInstanceFlags);
+                flagsEditor = new InstanceFlagsEditor(ins, numFlags);
             }
             flagsEditor.Show();
+        }
+
+        private void numScript_ValueChanged(object sender, EventArgs e)
+        {
+            ins.ScriptID = (short)numScript.Value;
+        }
+
+        private void numRefList_ValueChanged(object sender, EventArgs e)
+        {
+            ins.RefList = (short)numRefList.Value;
+        }
+
+        private void tabPage1_Enter(object sender, EventArgs e)
+        {
+            string obj_name = File.GetObjectName(ins.ObjectID);
+            obj_name = Utils.TextUtils.TruncateObjectName(obj_name, ins.ObjectID, "*", "");
+            comboBox1.Text = ins.ObjectID.ToString() + ((obj_name == string.Empty) ? string.Empty : $" - {obj_name}");
+            numericUpDown12.Value = ins.ID;
+            numericUpDown2.Value = (decimal)ins.Pos.X;
+            numericUpDown3.Value = (decimal)ins.Pos.Y;
+            numericUpDown4.Value = (decimal)ins.Pos.Z;
+            numericUpDown5.Value = (decimal)ins.Pos.W;
+            numFlags.Value = ins.Flags;
+            numericUpDown13.Value = ins.COMRotX;
+            numericUpDown14.Value = ins.COMRotY;
+            numericUpDown15.Value = ins.COMRotZ;
+            GetXRot(true, true); GetYRot(true, true); GetZRot(true, true);
+        }
+
+        private void tabPage2_Enter(object sender, EventArgs e)
+        {
+            numScript.Value = ins.ScriptID;
+            numRefList.Value = ins.RefList;
+
+            numericUpDown9.Value = ins.SomeNum1;
+            numericUpDown10.Value = ins.SomeNum2;
+            numericUpDown11.Value = ins.SomeNum3;
+
+            string[] lines = new string[ins.InstanceIDs.Count];
+            for (int i = 0; i < ins.InstanceIDs.Count; ++i)
+                lines[i] = ins.InstanceIDs[i].ToString();
+            textBox2.Lines = lines;
+            lines = new string[ins.PositionIDs.Count];
+            for (int i = 0; i < ins.PositionIDs.Count; ++i)
+                lines[i] = ins.PositionIDs[i].ToString();
+            textBox3.Lines = lines;
+            lines = new string[ins.PathIDs.Count];
+            for (int i = 0; i < ins.PathIDs.Count; ++i)
+                lines[i] = ins.PathIDs[i].ToString();
+            textBox4.Lines = lines;
+
+            lines = new string[ins.UnkI321.Count];
+            for (int i = 0; i < ins.UnkI321.Count; ++i)
+                lines[i] = ins.UnkI321[i].ToString("X");
+            textBox7.Lines = lines;
+            lines = new string[ins.UnkI322.Count];
+            for (int i = 0; i < ins.UnkI322.Count; ++i)
+                lines[i] = ins.UnkI322[i].ToString();
+            textBox6.Lines = lines;
+            lines = new string[ins.UnkI323.Count];
+            for (int i = 0; i < ins.UnkI323.Count; ++i)
+                lines[i] = ins.UnkI323[i].ToString();
+            textBox5.Lines = lines;
+        }
+
+        private void numFlags_ValueChanged(object sender, EventArgs e)
+        {
+            ins.Flags = (uint)numFlags.Value;
+            flagsEditor?.UpdateCheckBoxes();
         }
     }
 }

@@ -11,7 +11,7 @@ namespace TwinsaityEditor
 
         private bool lighting, wire;
 
-        public MeshViewer(ModelController mesh, ref Form pform)
+        public MeshViewer(ModelController mesh, Form pform)
         {
             //initialize variables here
             this.mesh = mesh;
