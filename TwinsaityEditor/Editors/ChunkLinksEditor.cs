@@ -20,30 +20,6 @@ namespace TwinsaityEditor
             InitializeComponent();
             PopulateList();
             comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
-            numericUpDown2.ValueChanged += numericUpDown1_ValueChanged;
-            numericUpDown3.ValueChanged += numericUpDown1_ValueChanged;
-            numericUpDown4.ValueChanged += numericUpDown1_ValueChanged;
-            numericUpDown5.ValueChanged += numericUpDown1_ValueChanged;
-            numericUpDown6.ValueChanged += numericUpDown1_ValueChanged;
-            numericUpDown7.ValueChanged += numericUpDown1_ValueChanged;
-            numericUpDown8.ValueChanged += numericUpDown1_ValueChanged;
-            numericUpDown9.ValueChanged += numericUpDown1_ValueChanged;
-            numericUpDown10.ValueChanged += numericUpDown1_ValueChanged;
-            numericUpDown39.ValueChanged += numericUpDown1_ValueChanged;
-            numericUpDown38.ValueChanged += numericUpDown1_ValueChanged;
-            numericUpDown37.ValueChanged += numericUpDown1_ValueChanged;
-            numericUpDown11.ValueChanged += numericUpDown20_ValueChanged;
-            numericUpDown12.ValueChanged += numericUpDown20_ValueChanged;
-            numericUpDown13.ValueChanged += numericUpDown20_ValueChanged;
-            numericUpDown14.ValueChanged += numericUpDown20_ValueChanged;
-            numericUpDown15.ValueChanged += numericUpDown20_ValueChanged;
-            numericUpDown16.ValueChanged += numericUpDown20_ValueChanged;
-            numericUpDown17.ValueChanged += numericUpDown20_ValueChanged;
-            numericUpDown18.ValueChanged += numericUpDown20_ValueChanged;
-            numericUpDown19.ValueChanged += numericUpDown20_ValueChanged;
-            numericUpDown40.ValueChanged += numericUpDown20_ValueChanged;
-            numericUpDown41.ValueChanged += numericUpDown20_ValueChanged;
-            numericUpDown42.ValueChanged += numericUpDown20_ValueChanged;
         }
 
         private void PopulateList()
@@ -70,42 +46,6 @@ namespace TwinsaityEditor
 
             textBox2.Text = Convert.ToString(link.Flags, 16).ToUpper();
 
-            numericUpDown4.Value = (decimal)link.ObjectMatrix[3].W;
-
-            numericUpDown1.Value = (decimal)link.ObjectMatrix[3].X;
-            numericUpDown2.Value = (decimal)link.ObjectMatrix[3].Y;
-            numericUpDown3.Value = (decimal)link.ObjectMatrix[3].Z;
-
-            numericUpDown7.Value = (decimal)link.ObjectMatrix[0].X;
-            numericUpDown6.Value = (decimal)link.ObjectMatrix[0].Y;
-            numericUpDown5.Value = (decimal)link.ObjectMatrix[0].Z;
-
-            numericUpDown10.Value = (decimal)link.ObjectMatrix[1].X;
-            numericUpDown9.Value = (decimal)link.ObjectMatrix[1].Y;
-            numericUpDown8.Value = (decimal)link.ObjectMatrix[1].Z;
-
-            numericUpDown39.Value = (decimal)link.ObjectMatrix[2].X;
-            numericUpDown38.Value = (decimal)link.ObjectMatrix[2].Y;
-            numericUpDown37.Value = (decimal)link.ObjectMatrix[2].Z;
-
-            numericUpDown20.Value = (decimal)link.ChunkMatrix[3].W;
-
-            numericUpDown42.Value = (decimal)link.ChunkMatrix[3].X;
-            numericUpDown41.Value = (decimal)link.ChunkMatrix[3].Y;
-            numericUpDown40.Value = (decimal)link.ChunkMatrix[3].Z;
-
-            numericUpDown19.Value = (decimal)link.ChunkMatrix[0].X;
-            numericUpDown18.Value = (decimal)link.ChunkMatrix[0].Y;
-            numericUpDown17.Value = (decimal)link.ChunkMatrix[0].Z;
-
-            numericUpDown16.Value = (decimal)link.ChunkMatrix[1].X;
-            numericUpDown15.Value = (decimal)link.ChunkMatrix[1].Y;
-            numericUpDown14.Value = (decimal)link.ChunkMatrix[1].Z;
-
-            numericUpDown13.Value = (decimal)link.ChunkMatrix[2].X;
-            numericUpDown12.Value = (decimal)link.ChunkMatrix[2].Y;
-            numericUpDown11.Value = (decimal)link.ChunkMatrix[2].Z;
-
             if (groupBox6.Enabled = (link.Flags & 0x80000) != 0)
             {
                 GetLoadWallPos();
@@ -117,60 +57,33 @@ namespace TwinsaityEditor
                 GetAreaMatrix1Pos();
                 GetAreaMatrix2Pos();
             }
+            Vector3 chunk_position = ExtractPosition(link.ChunkMatrix);
+            Vector3 chunk_scale = ExtractScale(link.ChunkMatrix);
+            Vector3 chunk_rotation = ExtractEulerRotation(link.ChunkMatrix, chunk_scale);
+            ChunkPosX.Text = chunk_position.X.ToString();
+            ChunkPosY.Text = chunk_position.Y.ToString();
+            ChunkPosZ.Text = chunk_position.Z.ToString();
+            ChunkScaleX.Text = chunk_scale.X.ToString();
+            ChunkScaleY.Text = chunk_scale.Y.ToString();
+            ChunkScaleZ.Text = chunk_scale.Z.ToString();
+            ChunkRotationX.Text = chunk_rotation.X.ToString();
+            ChunkRotationY.Text = chunk_rotation.Y.ToString();
+            ChunkRotationZ.Text = chunk_rotation.Z.ToString();
 
+            Vector3 object_position = ExtractPosition(link.ObjectMatrix);
+            Vector3 object_scale = ExtractScale(link.ObjectMatrix);
+            Vector3 object_rotation = ExtractEulerRotation(link.ObjectMatrix, object_scale);
+            ObjectPosX.Text = object_position.X.ToString();
+            ObjectPosY.Text = object_position.Y.ToString();
+            ObjectPosZ.Text = object_position.Z.ToString();
+            ObjectScaleX.Text = object_scale.X.ToString();
+            ObjectScaleY.Text = object_scale.Y.ToString();
+            ObjectScaleZ.Text = object_scale.Z.ToString();
+            ObjectRotationX.Text = object_rotation.X.ToString();
+            ObjectRotationY.Text = object_rotation.Y.ToString();
+            ObjectRotationZ.Text = object_rotation.Z.ToString();
             ignore_value_change = false;
             return;
-            //broken
-            //Vector3 pos = new Vector3(), rot = new Vector3(), sca = new Vector3();
-            //float w = 1;
-            //Matrix4 m = new Matrix4(
-            //    link.ObjectMatrix[0].X, link.ObjectMatrix[1].X, link.ObjectMatrix[2].X, link.ObjectMatrix[3].X,
-            //    link.ObjectMatrix[0].Y, link.ObjectMatrix[1].Y, link.ObjectMatrix[2].Y, link.ObjectMatrix[3].Y,
-            //    link.ObjectMatrix[0].Z, link.ObjectMatrix[1].Z, link.ObjectMatrix[2].Z, link.ObjectMatrix[3].Z,
-            //    link.ObjectMatrix[0].W, link.ObjectMatrix[1].W, link.ObjectMatrix[2].W, link.ObjectMatrix[3].W
-            //    );
-            //MatrixWrapper.DecomposeMatrix(ref m, ref pos, ref rot, ref sca, ref w);
-            ////no touchy
-            //numericUpDown4.Value = (decimal)w;
-
-            ////position
-            //numericUpDown1.Value = (decimal)pos.X;
-            //numericUpDown2.Value = (decimal)pos.Y;
-            //numericUpDown3.Value = (decimal)pos.Z;
-
-            ////scale
-            //numericUpDown10.Value = (decimal)sca.X;
-            //numericUpDown9.Value = (decimal)sca.Y;
-            //numericUpDown8.Value = (decimal)sca.Z;
-
-            ////rotation
-            //numericUpDown7.Value = (decimal)rot.X;
-            //numericUpDown6.Value = (decimal)rot.Y;
-            //numericUpDown5.Value = (decimal)rot.Z;
-
-            //m = new Matrix4(link.ChunkMatrix[0].X, link.ChunkMatrix[1].X, link.ChunkMatrix[2].X, link.ChunkMatrix[3].X,
-            //    link.ChunkMatrix[0].Y, link.ChunkMatrix[1].Y, link.ChunkMatrix[2].Y, link.ChunkMatrix[3].Y,
-            //    link.ChunkMatrix[0].Z, link.ChunkMatrix[1].Z, link.ChunkMatrix[2].Z, link.ChunkMatrix[3].Z,
-            //    link.ChunkMatrix[0].W, link.ChunkMatrix[1].W, link.ChunkMatrix[2].W, link.ChunkMatrix[3].W
-            //    );
-            //MatrixWrapper.DecomposeMatrix(ref m, ref pos, ref rot, ref sca, ref w);
-            ////no touchy
-            //numericUpDown17.Value = (decimal)w;
-
-            ////position
-            //numericUpDown20.Value = (decimal)pos.X;
-            //numericUpDown19.Value = (decimal)pos.Y;
-            //numericUpDown18.Value = (decimal)pos.Z;
-
-            ////scale
-            //numericUpDown13.Value = (decimal)sca.X;
-            //numericUpDown12.Value = (decimal)sca.Y;
-            //numericUpDown11.Value = (decimal)sca.Z;
-
-            ////rotation
-            //numericUpDown16.Value = (decimal)rot.X;
-            //numericUpDown15.Value = (decimal)rot.Y;
-            //numericUpDown14.Value = (decimal)rot.Z;
         }
 
         private void GetLoadWallPos()
@@ -506,6 +419,11 @@ namespace TwinsaityEditor
             }
         }
 
+        private void ChunkLinksEditor_Load(object sender, EventArgs e)
+        {
+
+        }
+
         private void GetAreaMatrix2Pos()
         {
             if (link.TreeRoot != null)
@@ -521,65 +439,266 @@ namespace TwinsaityEditor
         private void UpdateObjectMatrix()
         {
             if (ignore_value_change) return;
-            
-            link.ObjectMatrix[3].W = (float)numericUpDown4.Value;
+            Vector3 ObjectPosition = new Vector3(float.Parse(ObjectPosX.Text), float.Parse(ObjectPosY.Text), float.Parse(ObjectPosZ.Text));
+            Vector3 ObjectScale = new Vector3(float.Parse(ObjectScaleX.Text), float.Parse(ObjectScaleY.Text), float.Parse(ObjectScaleZ.Text));
+            Vector3 ObjectEulerRotation = new Vector3(float.Parse(ObjectRotationX.Text), float.Parse(ObjectRotationY.Text), float.Parse(ObjectRotationZ.Text));
 
-            link.ObjectMatrix[3].X = (float)numericUpDown1.Value;
-            link.ObjectMatrix[3].Y = (float)numericUpDown2.Value;
-            link.ObjectMatrix[3].Z = (float)numericUpDown3.Value;
-
-            link.ObjectMatrix[0].X = (float)numericUpDown7.Value;
-            link.ObjectMatrix[0].Y = (float)numericUpDown6.Value;
-            link.ObjectMatrix[0].Z = (float)numericUpDown5.Value;
-
-            link.ObjectMatrix[1].X = (float)numericUpDown10.Value;
-            link.ObjectMatrix[1].Y = (float)numericUpDown9.Value;
-            link.ObjectMatrix[1].Z = (float)numericUpDown8.Value;
-
-            link.ObjectMatrix[2].X = (float)numericUpDown39.Value;
-            link.ObjectMatrix[2].Y = (float)numericUpDown38.Value;
-            link.ObjectMatrix[2].Z = (float)numericUpDown37.Value;
+            link.ObjectMatrix = ComposeMatrix(ObjectPosition, ObjectScale, ObjectEulerRotation);
 
             controller.Data.Links[listBox1.SelectedIndex] = link;
             return;
-            //broken
-            //Matrix4 rot_mat = MatrixWrapper.RotateMatrix4((float)numericUpDown7.Value, (float)numericUpDown6.Value, (float)numericUpDown5.Value);
-            //Matrix4 sca_mat = Matrix4.CreateScale((float)numericUpDown10.Value, (float)numericUpDown9.Value, (float)numericUpDown8.Value);
-            //Matrix4 pos_mat = Matrix4.CreateTranslation((float)numericUpDown1.Value, (float)numericUpDown2.Value, (float)numericUpDown3.Value);
-            //Matrix4 new_mat = pos_mat * sca_mat * rot_mat;
-
-            //link.ObjectMatrix[0] = new_mat.Row0.ToPos();
-            //link.ObjectMatrix[1] = new_mat.Row1.ToPos();
-            //link.ObjectMatrix[2] = new_mat.Row2.ToPos();
-            //link.ObjectMatrix[3] = new_mat.Row3.ToPos();
-
-            //listBox1_SelectedIndexChanged(null, null);
         }
 
         private void UpdateChunkMatrix()
         {
             if (ignore_value_change) return;
-            
-            link.ChunkMatrix[3].W = (float)numericUpDown20.Value;
+            Vector3 ChunkPosition = new Vector3(float.Parse(ChunkPosX.Text), float.Parse(ChunkPosY.Text), float.Parse(ChunkPosZ.Text));
+            Vector3 ChunkScale = new Vector3(float.Parse(ChunkScaleX.Text), float.Parse(ChunkScaleY.Text), float.Parse(ChunkScaleZ.Text));
+            Vector3 ChunkEulerRotation = new Vector3(float.Parse(ChunkRotationX.Text), float.Parse(ChunkRotationY.Text), float.Parse(ChunkRotationZ.Text));
 
-            link.ChunkMatrix[3].X = (float)numericUpDown42.Value;
-            link.ChunkMatrix[3].Y = (float)numericUpDown41.Value;
-            link.ChunkMatrix[3].Z = (float)numericUpDown40.Value;
-
-            link.ChunkMatrix[0].X = (float)numericUpDown19.Value;
-            link.ChunkMatrix[0].Y = (float)numericUpDown18.Value;
-            link.ChunkMatrix[0].Z = (float)numericUpDown17.Value;
-
-            link.ChunkMatrix[1].X = (float)numericUpDown16.Value;
-            link.ChunkMatrix[1].Y = (float)numericUpDown15.Value;
-            link.ChunkMatrix[1].Z = (float)numericUpDown14.Value;
-
-            link.ChunkMatrix[2].X = (float)numericUpDown13.Value;
-            link.ChunkMatrix[2].Y = (float)numericUpDown12.Value;
-            link.ChunkMatrix[2].Z = (float)numericUpDown11.Value;
-
+            link.ObjectMatrix = ComposeMatrix(ChunkPosition, ChunkScale, ChunkEulerRotation);
             controller.Data.Links[listBox1.SelectedIndex] = link;
             return;
+        }
+
+        private Vector3 ExtractPosition(Pos[] matrix)
+        {
+            Vector3 pos = new Vector3();
+            pos.X = matrix[0].W;
+            pos.Y = matrix[1].W;
+            pos.Z = matrix[2].W;
+            return pos;
+        }
+        private Vector3 ExtractScale(Pos[] matrix)
+        {
+            Vector3 scale = new Vector3();
+            Vector3 scaleX = new Vector3();
+            Vector3 scaleY = new Vector3();
+            Vector3 scaleZ = new Vector3();
+            scaleX.X = matrix[0].X;
+            scaleX.Y = matrix[1].X;
+            scaleX.Z = matrix[2].X;
+            scaleY.X = matrix[0].Y;
+            scaleY.Y = matrix[1].Y;
+            scaleY.Z = matrix[2].Y;
+            scaleZ.X = matrix[0].Z;
+            scaleZ.Y = matrix[1].Z;
+            scaleZ.Z = matrix[2].Z;
+            scale.X = scaleX.Length;
+            scale.Y = scaleY.Length;
+            scale.Z = scaleZ.Length;
+            return scale;
+        }
+
+        private const float EPSILON = 0.000001f;
+        private Vector3 ExtractEulerRotation(Pos[] matrix, Vector3 scale)
+        {
+            Vector3[] rotationMatrix = new Vector3[3] { new Vector3(), new Vector3(), new Vector3()};
+            Vector3 eulerAngles = new Vector3();
+            float psi, etha, phi;
+            rotationMatrix[0].X = matrix[0].X / scale.X;
+            rotationMatrix[1].X = matrix[1].X / scale.X;
+            rotationMatrix[2].X = matrix[2].X / scale.X;
+
+            rotationMatrix[0].Y = matrix[0].Y / scale.Y;
+            rotationMatrix[1].Y = matrix[1].Y / scale.Y;
+            rotationMatrix[2].Y = matrix[2].Y / scale.Y;
+
+            rotationMatrix[0].Z = matrix[0].Z / scale.Z;
+            rotationMatrix[1].Z = matrix[1].Z / scale.Z;
+            rotationMatrix[2].Z = matrix[2].Z / scale.Z;
+
+            if (Math.Abs(1.0 - rotationMatrix[2].X) > EPSILON)
+            {
+                float etha1 = -(float)Math.Asin(rotationMatrix[2].X);
+                float etha2 = (float)Math.PI - etha1;
+                float psi1 = (float)Math.Atan2(rotationMatrix[2].Y / Math.Cos(etha1), rotationMatrix[2].Z / Math.Cos(etha1));
+                float psi2 = (float)Math.Atan2(rotationMatrix[2].Y / Math.Cos(etha2), rotationMatrix[2].Z / Math.Cos(etha2));
+                float phi1 = (float)Math.Atan2(rotationMatrix[1].X / Math.Cos(etha1), rotationMatrix[0].X / Math.Cos(etha1));
+                float phi2 = (float)Math.Atan2(rotationMatrix[1].X / Math.Cos(etha2), rotationMatrix[0].X / Math.Cos(etha2));
+                etha = etha1;
+                phi = phi1;
+                psi = psi1;
+            }
+            else
+            {
+                phi = 0;
+                if (rotationMatrix[2].X + 1.0f < EPSILON)
+                {
+                    etha = (float)Math.PI / 2.0f;
+                    psi = phi + (float)Math.Atan2(rotationMatrix[0].Y, rotationMatrix[0].Z);
+                }
+                else
+                {
+                    etha = -(float)Math.PI / 2.0f;
+                    psi = -phi + (float)Math.Atan2(-rotationMatrix[0].Y, -rotationMatrix[0].Z);
+                }
+            }
+            if (psi < EPSILON) psi = 0.0f;
+            if (etha < EPSILON) etha = 0.0f;
+            if (phi < EPSILON) phi = 0.0f;
+            eulerAngles.X = psi * 180.0f / (float)Math.PI;
+            eulerAngles.Y = etha * 180.0f / (float)Math.PI;
+            eulerAngles.Z = phi * 180.0f / (float)Math.PI;
+
+            return eulerAngles;
+        }
+
+        private Pos[] ComposeMatrix(Vector3 Position, Vector3 Scale, Vector3 EulerRotation)
+        {
+            Matrix4 translation = CreateTranslationMatrix(Position);
+            Matrix4 scale = CreateTranslationMatrix(Scale);
+            Matrix4 rotation = CreateTranslationMatrix(new Vector3(EulerRotation.X * (float)Math.PI / 180.0f, 
+                                                                   EulerRotation.Y * (float)Math.PI / 180.0f,
+                                                                   EulerRotation.Z * (float)Math.PI / 180.0f));
+            Matrix4 transform = translation * rotation * scale;
+            return new Pos[4]
+            {
+                new Pos(transform.Row0.X, transform.Row0.Y, transform.Row0.Z, transform.Row0.W),
+                new Pos(transform.Row1.X, transform.Row1.Y, transform.Row1.Z, transform.Row1.W),
+                new Pos(transform.Row2.X, transform.Row2.Y, transform.Row2.Z, transform.Row2.W),
+                new Pos(transform.Row3.X, transform.Row3.Y, transform.Row3.Z, transform.Row3.W)
+            };
+        }
+
+
+
+        private void ProcessMatrixChange(TextBox sender,  Action updateAction)
+        {
+            if (!ignore_value_change)
+            {
+                try
+                {
+                    float.Parse(sender.Text, System.Globalization.CultureInfo.InvariantCulture);
+                    sender.BackColor = System.Drawing.Color.White;
+                    updateAction.Invoke();
+                }
+                catch
+                {
+                    sender.BackColor = System.Drawing.Color.Red;
+                }
+            }
+        }
+        private void ObjectPosX_TextChanged(object sender, EventArgs e)
+        {
+            ProcessMatrixChange((TextBox)sender, UpdateObjectMatrix);
+        }
+        private void ObjectPosY_TextChanged(object sender, EventArgs e)
+        {
+            ProcessMatrixChange((TextBox)sender, UpdateObjectMatrix);
+        }
+
+        private void ObjectPosZ_TextChanged(object sender, EventArgs e)
+        {
+            ProcessMatrixChange((TextBox)sender, UpdateObjectMatrix);
+        }
+
+        private void ObjectScaleX_TextChanged(object sender, EventArgs e)
+        {
+            ProcessMatrixChange((TextBox)sender, UpdateObjectMatrix);
+        }
+
+        private void ObjectScaleY_TextChanged(object sender, EventArgs e)
+        {
+            ProcessMatrixChange((TextBox)sender, UpdateObjectMatrix);
+        }
+
+        private void ObjectScaleZ_TextChanged(object sender, EventArgs e)
+        {
+            ProcessMatrixChange((TextBox)sender, UpdateObjectMatrix);
+        }
+
+        private void ObjectRotationX_TextChanged(object sender, EventArgs e)
+        {
+            ProcessMatrixChange((TextBox)sender, UpdateObjectMatrix);
+        }
+
+        private void ObjectRotationY_TextChanged(object sender, EventArgs e)
+        {
+            ProcessMatrixChange((TextBox)sender, UpdateObjectMatrix);
+        }
+
+        private void ObjectRotationZ_TextChanged(object sender, EventArgs e)
+        {
+            ProcessMatrixChange((TextBox)sender, UpdateObjectMatrix);
+        }
+
+        private void ChunkPosX_TextChanged(object sender, EventArgs e)
+        {
+            ProcessMatrixChange((TextBox)sender, UpdateChunkMatrix);
+        }
+
+        private void ChunkPosY_TextChanged(object sender, EventArgs e)
+        {
+            ProcessMatrixChange((TextBox)sender, UpdateChunkMatrix);
+        }
+
+        private void ChunkPosZ_TextChanged(object sender, EventArgs e)
+        {
+            ProcessMatrixChange((TextBox)sender, UpdateChunkMatrix);
+        }
+
+        private void ChunkScaleX_TextChanged(object sender, EventArgs e)
+        {
+            ProcessMatrixChange((TextBox)sender, UpdateChunkMatrix);
+        }
+
+        private void ChunkScaleY_TextChanged(object sender, EventArgs e)
+        {
+            ProcessMatrixChange((TextBox)sender, UpdateChunkMatrix);
+        }
+
+        private void ChunkScaleZ_TextChanged(object sender, EventArgs e)
+        {
+            ProcessMatrixChange((TextBox)sender, UpdateChunkMatrix);
+        }
+
+        private void ChunkRotationX_TextChanged(object sender, EventArgs e)
+        {
+            ProcessMatrixChange((TextBox)sender, UpdateChunkMatrix);
+        }
+
+        private void ChunkRotationY_TextChanged(object sender, EventArgs e)
+        {
+            ProcessMatrixChange((TextBox)sender, UpdateChunkMatrix);
+        }
+
+        private void ChunkRotationZ_TextChanged(object sender, EventArgs e)
+        {
+            ProcessMatrixChange((TextBox)sender, UpdateChunkMatrix);
+        }
+
+        private Matrix4 CreateTranslationMatrix(Vector3 Position)
+        {
+            Matrix4 matrix = new Matrix4(1.0f, 0.0f, 0.0f, Position.X,
+                                         0.0f, 1.0f, 0.0f, Position.Y,
+                                         0.0f, 0.0f, 1.0f, Position.Z,
+                                         0.0f, 0.0f, 0.0f, 1.0f);
+            return matrix;
+        }
+        private Matrix4 CreateScaleMatrix(Vector3 Scale)
+        {
+            Matrix4 matrix = new Matrix4(Scale.X, 0.0f, 0.0f, 0.0f,
+                                         0.0f, Scale.Y, 0.0f, 0.0f,
+                                         0.0f, 0.0f, Scale.Z, 0.0f,
+                                         0.0f, 0.0f, 0.0f, 1.0f);
+            return matrix;
+        }
+        private Matrix4 CreateRotationMatrix(Vector3 Rotation)
+        {
+            Matrix4 matrix1 = new Matrix4(1.0f, 0.0f,                       0.0f,                         0.0f,
+                                         0.0f, (float)Math.Cos(Rotation.X), -(float)Math.Sin(Rotation.X), 0.0f,
+                                         0.0f, (float)Math.Sin(Rotation.X), (float)Math.Cos(Rotation.X),  0.0f,
+                                         0.0f, 0.0f,                        0.0f,                         1.0f);
+            Matrix4 matrix2 = new Matrix4((float)Math.Cos(Rotation.Y), 0.0f, (float)Math.Sin(Rotation.Y), 0.0f,
+                                         0.0f,                         1.0f, 0.0f,                        0.0f,
+                                         -(float)Math.Sin(Rotation.Y), 0.0f, (float)Math.Cos(Rotation.Y), 0.0f,
+                                         0.0f,                         0.0f, 0.0f,                        1.0f);
+            Matrix4 matrix3 = new Matrix4((float)Math.Cos(Rotation.Z), -(float)Math.Sin(Rotation.Z), 0.0f, 0.0f,
+                                         (float)Math.Sin(Rotation.Z), (float)Math.Cos(Rotation.Z),   0.0f, 0.0f,
+                                         0.0f,                        0.0f,                          1.0f, 0.0f,
+                                         0.0f,                        0.0f,                          0.0f, 1.0f);
+            return matrix1 * matrix2 * matrix3;
         }
     }
 }
