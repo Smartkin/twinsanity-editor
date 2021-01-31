@@ -456,7 +456,7 @@ namespace TwinsaityEditor
             Vector3 ChunkScale = new Vector3(float.Parse(ChunkScaleX.Text), float.Parse(ChunkScaleY.Text), float.Parse(ChunkScaleZ.Text));
             Vector3 ChunkEulerRotation = new Vector3(float.Parse(ChunkRotationX.Text), float.Parse(ChunkRotationY.Text), float.Parse(ChunkRotationZ.Text));
 
-            link.ObjectMatrix = ComposeMatrix(ChunkPosition, ChunkScale, ChunkEulerRotation);
+            link.ChunkMatrix = ComposeMatrix(ChunkPosition, ChunkScale, ChunkEulerRotation);
             controller.Data.Links[listBox1.SelectedIndex] = link;
             return;
         }
@@ -490,12 +490,12 @@ namespace TwinsaityEditor
             return scale;
         }
 
-        private const float EPSILON = 0.000001f;
+        private const float EPSILON = 0.000000001f;
         private Vector3 ExtractEulerRotation(Pos[] matrix, Vector3 scale)
         {
             Vector3[] rotationMatrix = new Vector3[3] { new Vector3(), new Vector3(), new Vector3()};
             Vector3 eulerAngles = new Vector3();
-            float psi, etha, phi;
+            double psi, etha, phi;
             rotationMatrix[0].X = matrix[0].X / scale.X;
             rotationMatrix[1].X = matrix[1].X / scale.X;
             rotationMatrix[2].X = matrix[2].X / scale.X;
@@ -508,38 +508,15 @@ namespace TwinsaityEditor
             rotationMatrix[1].Z = matrix[1].Z / scale.Z;
             rotationMatrix[2].Z = matrix[2].Z / scale.Z;
 
-            if (Math.Abs(1.0 - rotationMatrix[2].X) > EPSILON)
-            {
-                float etha1 = -(float)Math.Asin(rotationMatrix[2].X);
-                float etha2 = (float)Math.PI - etha1;
-                float psi1 = (float)Math.Atan2(rotationMatrix[2].Y / Math.Cos(etha1), rotationMatrix[2].Z / Math.Cos(etha1));
-                float psi2 = (float)Math.Atan2(rotationMatrix[2].Y / Math.Cos(etha2), rotationMatrix[2].Z / Math.Cos(etha2));
-                float phi1 = (float)Math.Atan2(rotationMatrix[1].X / Math.Cos(etha1), rotationMatrix[0].X / Math.Cos(etha1));
-                float phi2 = (float)Math.Atan2(rotationMatrix[1].X / Math.Cos(etha2), rotationMatrix[0].X / Math.Cos(etha2));
-                etha = etha1;
-                phi = phi1;
-                psi = psi1;
-            }
-            else
-            {
-                phi = 0;
-                if (rotationMatrix[2].X + 1.0f < EPSILON)
-                {
-                    etha = (float)Math.PI / 2.0f;
-                    psi = phi + (float)Math.Atan2(rotationMatrix[0].Y, rotationMatrix[0].Z);
-                }
-                else
-                {
-                    etha = -(float)Math.PI / 2.0f;
-                    psi = -phi + (float)Math.Atan2(-rotationMatrix[0].Y, -rotationMatrix[0].Z);
-                }
-            }
+            phi = Math.Atan2(rotationMatrix[2].X, rotationMatrix[2].Y);
+            etha = Math.Acos(rotationMatrix[2].Z);
+            psi = -Math.Atan2(rotationMatrix[0].Z, rotationMatrix[1].Z);
             if (psi < EPSILON) psi = 0.0f;
             if (etha < EPSILON) etha = 0.0f;
             if (phi < EPSILON) phi = 0.0f;
-            eulerAngles.X = psi * 180.0f / (float)Math.PI;
-            eulerAngles.Y = etha * 180.0f / (float)Math.PI;
-            eulerAngles.Z = phi * 180.0f / (float)Math.PI;
+            eulerAngles.X = (float)(etha * 180.0f / Math.PI);
+            eulerAngles.Y = (float)(psi * 180.0f / Math.PI);
+            eulerAngles.Z = (float)(phi * 180.0f / Math.PI);
 
             return eulerAngles;
         }
@@ -547,8 +524,8 @@ namespace TwinsaityEditor
         private Pos[] ComposeMatrix(Vector3 Position, Vector3 Scale, Vector3 EulerRotation)
         {
             Matrix4 translation = CreateTranslationMatrix(Position);
-            Matrix4 scale = CreateTranslationMatrix(Scale);
-            Matrix4 rotation = CreateTranslationMatrix(new Vector3(EulerRotation.X * (float)Math.PI / 180.0f, 
+            Matrix4 scale = CreateScaleMatrix(Scale);
+            Matrix4 rotation = CreateRotationMatrix(new Vector3(EulerRotation.X * (float)Math.PI / 180.0f, 
                                                                    EulerRotation.Y * (float)Math.PI / 180.0f,
                                                                    EulerRotation.Z * (float)Math.PI / 180.0f));
             Matrix4 transform = translation * rotation * scale;
