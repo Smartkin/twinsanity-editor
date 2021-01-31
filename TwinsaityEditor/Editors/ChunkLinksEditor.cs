@@ -493,32 +493,31 @@ namespace TwinsaityEditor
         private const float EPSILON = 0.000000001f;
         private Vector3 ExtractEulerRotation(Pos[] matrix, Vector3 scale)
         {
-            Vector3[] rotationMatrix = new Vector3[3] { new Vector3(), new Vector3(), new Vector3()};
-            Vector3 eulerAngles = new Vector3();
-            double psi, etha, phi;
-            rotationMatrix[0].X = matrix[0].X / scale.X;
-            rotationMatrix[1].X = matrix[1].X / scale.X;
-            rotationMatrix[2].X = matrix[2].X / scale.X;
+            
+            Matrix3 rotationMatrix = new Matrix3();
 
-            rotationMatrix[0].Y = matrix[0].Y / scale.Y;
-            rotationMatrix[1].Y = matrix[1].Y / scale.Y;
-            rotationMatrix[2].Y = matrix[2].Y / scale.Y;
+            rotationMatrix.Row0.X = matrix[0].X / scale.X;
+            rotationMatrix.Row1.X = matrix[1].X / scale.X;
+            rotationMatrix.Row2.X = matrix[2].X / scale.X;
 
-            rotationMatrix[0].Z = matrix[0].Z / scale.Z;
-            rotationMatrix[1].Z = matrix[1].Z / scale.Z;
-            rotationMatrix[2].Z = matrix[2].Z / scale.Z;
+            rotationMatrix.Row0.Y = matrix[0].Y / scale.Y;
+            rotationMatrix.Row1.Y = matrix[1].Y / scale.Y;
+            rotationMatrix.Row2.Y = matrix[2].Y / scale.Y;
 
-            phi = Math.Atan2(rotationMatrix[2].X, rotationMatrix[2].Y);
-            etha = Math.Acos(rotationMatrix[2].Z);
-            psi = -Math.Atan2(rotationMatrix[0].Z, rotationMatrix[1].Z);
-            if (psi < EPSILON) psi = 0.0f;
-            if (etha < EPSILON) etha = 0.0f;
-            if (phi < EPSILON) phi = 0.0f;
-            eulerAngles.X = (float)(etha * 180.0f / Math.PI);
-            eulerAngles.Y = (float)(psi * 180.0f / Math.PI);
-            eulerAngles.Z = (float)(phi * 180.0f / Math.PI);
+            rotationMatrix.Row0.Z = matrix[0].Z / scale.Z;
+            rotationMatrix.Row1.Z = matrix[1].Z / scale.Z;
+            rotationMatrix.Row2.Z = matrix[2].Z / scale.Z;
 
-            return eulerAngles;
+            Quaternion rotation = Quaternion.FromMatrix(rotationMatrix);
+            Vector3 angles = new Vector3();
+            /*
+             * TODO get angles
+            angles.X = (float)Math.Atan2(2.0f * (rotation.X * rotation.Y + rotation.Z * rotation.W), 1.0f - 2.0f * (rotation.Y * rotation.Y + rotation.Z * rotation.Z));
+            angles.Y = (float)Math.Asin(2.0f * (rotation.X * rotation.Z - rotation.W * rotation.Y));
+            angles.Z = (float)Math.Atan2(2.0f * (rotation.X * rotation.W + rotation.Y * rotation.Z), 1.0f - 2.0f * (rotation.Z * rotation.Z + rotation.W * rotation.W));
+            */
+
+            return new Vector3(angles.X * 180f / (float)Math.PI, angles.Y * 180f / (float)Math.PI, angles.Z * 180f / (float)Math.PI);
         }
 
         private Pos[] ComposeMatrix(Vector3 Position, Vector3 Scale, Vector3 EulerRotation)
@@ -647,35 +646,17 @@ namespace TwinsaityEditor
 
         private Matrix4 CreateTranslationMatrix(Vector3 Position)
         {
-            Matrix4 matrix = new Matrix4(1.0f, 0.0f, 0.0f, Position.X,
-                                         0.0f, 1.0f, 0.0f, Position.Y,
-                                         0.0f, 0.0f, 1.0f, Position.Z,
-                                         0.0f, 0.0f, 0.0f, 1.0f);
+            Matrix4 matrix = Matrix4.CreateTranslation(Position);
             return matrix;
         }
         private Matrix4 CreateScaleMatrix(Vector3 Scale)
         {
-            Matrix4 matrix = new Matrix4(Scale.X, 0.0f, 0.0f, 0.0f,
-                                         0.0f, Scale.Y, 0.0f, 0.0f,
-                                         0.0f, 0.0f, Scale.Z, 0.0f,
-                                         0.0f, 0.0f, 0.0f, 1.0f);
+            Matrix4 matrix = Matrix4.CreateScale(Scale);
             return matrix;
         }
         private Matrix4 CreateRotationMatrix(Vector3 Rotation)
         {
-            Matrix4 matrix1 = new Matrix4(1.0f, 0.0f,                       0.0f,                         0.0f,
-                                         0.0f, (float)Math.Cos(Rotation.X), -(float)Math.Sin(Rotation.X), 0.0f,
-                                         0.0f, (float)Math.Sin(Rotation.X), (float)Math.Cos(Rotation.X),  0.0f,
-                                         0.0f, 0.0f,                        0.0f,                         1.0f);
-            Matrix4 matrix2 = new Matrix4((float)Math.Cos(Rotation.Y), 0.0f, (float)Math.Sin(Rotation.Y), 0.0f,
-                                         0.0f,                         1.0f, 0.0f,                        0.0f,
-                                         -(float)Math.Sin(Rotation.Y), 0.0f, (float)Math.Cos(Rotation.Y), 0.0f,
-                                         0.0f,                         0.0f, 0.0f,                        1.0f);
-            Matrix4 matrix3 = new Matrix4((float)Math.Cos(Rotation.Z), -(float)Math.Sin(Rotation.Z), 0.0f, 0.0f,
-                                         (float)Math.Sin(Rotation.Z), (float)Math.Cos(Rotation.Z),   0.0f, 0.0f,
-                                         0.0f,                        0.0f,                          1.0f, 0.0f,
-                                         0.0f,                        0.0f,                          0.0f, 1.0f);
-            return matrix1 * matrix2 * matrix3;
+            return Matrix4.CreateFromQuaternion(Quaternion.FromEulerAngles(Rotation));
         }
     }
 }
