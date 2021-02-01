@@ -342,7 +342,7 @@ namespace Twinsanity
             public Pos[] Matrix; // 4
         }
 
-        public struct GI_CollisionData
+        public class GI_CollisionData
         {
             public ushort[] Header; //0x16
             public byte[] collisionDataBlob; //blobSize
