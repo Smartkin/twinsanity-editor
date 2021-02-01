@@ -16,7 +16,7 @@ namespace Twinsanity
             {
                 writer.Write(i.Type);
                 writer.Write(i.Path.Length);
-                writer.Write(i.Path);
+                writer.Write(i.Path.ToCharArray());
                 writer.Write(i.Flags);
                 for (int j = 0; j < 4; ++j)
                 {
@@ -44,34 +44,26 @@ namespace Twinsanity
                 }
                 if (i.TreeRoot != null)
                 {
-                    SaveTree(writer, (ChunkLink.LinkTree)i.TreeRoot);
+                    SaveTree(writer, i.TreeRoot);
                 }
             }
         }
 
         public override void Load(BinaryReader reader, int size)
         {
-            long start_pos = reader.BaseStream.Position;
-
             Links.Clear();
             var count = reader.ReadInt32();
             for (int i = 0; i < count; ++i)
             {
-                ChunkLink link = new ChunkLink() { };
-                link.Type = reader.ReadInt32();
-                link.Path = reader.ReadChars(reader.ReadInt32());
-                link.Flags = reader.ReadUInt32();
-                link.ObjectMatrix = new Pos[4];
+                ChunkLink link = new ChunkLink(reader.ReadInt32(), new string(reader.ReadChars(reader.ReadInt32())), reader.ReadUInt32());
                 for (int j = 0; j < 4; ++j)
                 {
                     link.ObjectMatrix[j] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                 }
-                link.ChunkMatrix = new Pos[4];
                 for (int j = 0; j < 4; ++j)
                 {
                     link.ChunkMatrix[j] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                 }
-                link.LoadWall = new Pos[4];
                 if ((link.Flags & 0x80000) != 0)
                 {
                     for (int j = 0; j < 4; ++j)
@@ -89,15 +81,16 @@ namespace Twinsanity
 
         }
 
-        private ChunkLink.LinkTree? ReadTree(BinaryReader reader, int Head)
+        private ChunkLink.LinkTree ReadTree(BinaryReader reader, int Head)
         {
             if ((Head & 0x1) == 0)
             {
                 return null;
             }
 
-            ChunkLink.LinkTree Node = new ChunkLink.LinkTree();
-            Node.Header = reader.ReadInt32();
+            ChunkLink.LinkTree Node = new ChunkLink.LinkTree {
+                Header = reader.ReadInt32()
+            };
 
             ushort[] header = new ushort[11];
             for (var i = 0; i < 11; ++i)
@@ -106,9 +99,6 @@ namespace Twinsanity
             }
             int blobSize = reader.ReadInt32();
 
-            Node.LoadArea = new Pos[8];
-            Node.AreaMatrix = new Pos[6];
-            Node.UnknownMatrix = new Pos[6];
             for (int j = 0; j < 8; ++j)
             {
                 Node.LoadArea[j] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
@@ -124,7 +114,7 @@ namespace Twinsanity
             byte[] Blob = reader.ReadBytes(blobSize - 320);
             Node.GI_Type = new GraphicsInfo.GI_CollisionData() { Header = header, collisionDataBlob = Blob };
 
-            Node.Ptr = ReadTree(reader, Node.Header);
+            Node.Next = ReadTree(reader, Node.Header);
 
             return Node;
         }
@@ -162,9 +152,9 @@ namespace Twinsanity
 
             writer.Write(node.GI_Type.collisionDataBlob);
 
-            if (node.Ptr != null)
+            if (node.Next != null)
             {
-                SaveTree(writer, (ChunkLink.LinkTree)node.Ptr);
+                SaveTree(writer, node.Next);
             }
         }
 
@@ -178,7 +168,7 @@ namespace Twinsanity
                     size += 64;
                 if (i.TreeRoot != null)
                 {
-                    CountTree((ChunkLink.LinkTree)i.TreeRoot, ref size);
+                    CountTree(i.TreeRoot, ref size);
                 }
             }
             return size;
@@ -187,42 +177,68 @@ namespace Twinsanity
         private void CountTree(ChunkLink.LinkTree ptr, ref int size)
         {
             size += 350 + ptr.GI_Type.collisionDataBlob.Length;
-            if (ptr.Ptr != null)
+            if (ptr.Next != null)
             {
-                CountTree((ChunkLink.LinkTree)ptr.Ptr, ref size);
+                CountTree(ptr.Next, ref size);
             }
         }
 
         #region STRUCTURES
-        public struct ChunkLink
+        public class ChunkLink
         {
+            public ChunkLink(int type, string path, uint flags)
+            {
+                Type = type;
+                Path = path;
+                Flags = flags;
+                ObjectMatrix = new Pos[4];
+                ChunkMatrix = new Pos[4];
+                LoadWall = new Pos[4];
+                for (int i = 0; i < 4; ++i)
+                {
+                    ObjectMatrix[i] = new Pos(0, 0, 0, 1);
+                    ChunkMatrix[i] = new Pos(0, 0, 0, 1);
+                    LoadWall[i] = new Pos(0, 0, 0, 1);
+                }
+            }
+
             public int Type;
-            public char[] Path;
+            public string Path;
             public uint Flags;
             public Pos[] ObjectMatrix; // 4
             public Pos[] ChunkMatrix; // 4
             public Pos[] LoadWall; // 4
-            public LinkTree? TreeRoot;
+            public LinkTree TreeRoot;
 
-            public bool HasWall()
-            {
-                return (Flags & 0x80000) != 0;
-            }
+            public bool HasWall => (Flags & 0x80000) != 0;
+            public bool HasTree => (Type & 0x1) != 0;
 
-            public bool HasTree()
+            public class LinkTree
             {
-                return (Type & 0x1) != 0;
-            }
+                public LinkTree()
+                {
+                    LoadArea = new Pos[8];
+                    AreaMatrix = new Pos[6];
+                    UnknownMatrix = new Pos[6];
+                    for (int i = 0; i < 8; ++i)
+                    {
+                        LoadArea[i] = new Pos(0, 0, 0, 1);
+                    }
+                    for (int i = 0; i < 6; ++i)
+                    {
+                        AreaMatrix[i] = new Pos(0, 0, 0, 1);
+                        UnknownMatrix[i] = new Pos(0, 0, 0, 1);
+                    }
+                    GI_Type = new GraphicsInfo.GI_CollisionData() { Header = new ushort[11] { 8, 12, 6, 3, 3, 128, 224, 272, 320, 326, 356 }, collisionDataBlob = new byte[60] { 0, 5, 10, 15, 20, 25, 4, 2, 3, 1, 0, 4, 4, 5, 3, 2, 4, 6, 7, 5, 4, 4, 0, 1, 7, 6, 4, 3, 5, 7, 1, 4, 4, 2, 0, 6, 0, 1, 1, 3, 3, 2, 2, 0, 3, 5, 5, 4, 4, 2, 5, 7, 7, 6, 6, 4, 7, 1, 0, 6, } };
+                }
 
-            public struct LinkTree
-            {
                 public int Header;
                 public GraphicsInfo.GI_CollisionData GI_Type;
                 public Pos[] LoadArea; // 8
                 public Pos[] AreaMatrix; // 6
                 public Pos[] UnknownMatrix; // 6
 
-                public object Ptr;
+                public LinkTree Next;
             }
         }
         #endregion

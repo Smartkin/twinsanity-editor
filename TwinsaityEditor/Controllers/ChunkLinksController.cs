@@ -29,29 +29,27 @@ namespace TwinsaityEditor
             {
                 text.Add($"Link{i}");
                 text.Add($"Type: {Data.Links[i].Type}");
-                text.Add($"Directory: {new string(Data.Links[i].Path)}");
+                text.Add($"Directory: {Data.Links[i].Path}");
                 text.Add($"Flags: {Convert.ToString(Data.Links[i].Flags, 16).ToUpper()}");
-                ChunkLinks.ChunkLink.LinkTree? Ptr = Data.Links[i].TreeRoot;
+                ChunkLinks.ChunkLink.LinkTree tree = Data.Links[i].TreeRoot;
                 string add = "";
                 int depth = 0;
-                while (Ptr != null)
+                while (tree != null)
                 {
                     text.Add(add + $"Load Zone {depth}");
-                    var gi_header = Ptr.Value.GI_Type.Header;
+                    var gi_header = tree.GI_Type.Header;
                     for (var j = 0; j < 11; ++j)
                     {
                         text.Add(add + $"GI header {j}: {gi_header[j]}");
                     }
                     add += "     ";
                     depth++;
-                    if (Ptr.Value.Ptr != null)
+                    if (tree.Next != null)
                     {
-                        Ptr = (ChunkLinks.ChunkLink.LinkTree)Ptr.Value.Ptr;
+                        tree = tree.Next;
                     }
                     else
-                    {
-                        Ptr = null;
-                    }
+                        break;
                 }
                 text.Add("");
             }
