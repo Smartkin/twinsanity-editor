@@ -25,6 +25,7 @@ namespace TwinsaityEditor
             InitializeComponent();
             treeView1.AfterSelect += treeView1_AfterSelect;
             treeView1.KeyDown += treeView1_KeyDown;
+            label3.Text = "v" + Program.EditorVersion;
         }
 
         private void GenTree()
@@ -195,7 +196,7 @@ namespace TwinsaityEditor
 
         private void buttonAbout_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("TwinsaityEditor + Twinsanity API v0.60\nDeveloped by Neo_Kesha, Smartkin, ManDude, BetaM\nUI modifications by AtomicalSloths\nSpecial thanks to Marko and SuperMoe\nSource code available at: https://github.com/smartkin/twinsanity-editor", "About", MessageBoxButtons.OK);
+            MessageBox.Show("TwinsaityEditor + Twinsanity API " + Program.EditorVersion + "\nDeveloped by Neo_Kesha, Smartkin, ManDude, BetaM\nUI modifications by AtomicalSloths\nSpecial thanks to Marko and SuperMoe\nSource code available at: https://github.com/smartkin/twinsanity-editor", "About", MessageBoxButtons.OK);
         }
 
         private void buttonOpen_Click(object sender, EventArgs e)
