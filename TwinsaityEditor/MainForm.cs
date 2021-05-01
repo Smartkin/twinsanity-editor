@@ -102,6 +102,8 @@ namespace TwinsaityEditor
                 c = new PathController(this, (Path)a);
             else if (a is Instance)
                 c = new InstanceController(this, (Instance)a);
+            else if (a is InstanceMB)
+                c = new InstanceMBController(this, (InstanceMB)a);
             else if (a is Trigger)
                 c = new TriggerController(this, (Trigger)a);
             else if (a is ColData)
@@ -124,6 +126,8 @@ namespace TwinsaityEditor
                 c = new ParticleDataController(this, (ParticleData)a);
             else if (a is DynamicSceneryData)
                 c = new DynamicSceneryDataController(this, (DynamicSceneryData)a);
+            else if (a is DynamicSceneryDataMB)
+                c = new DynamicSceneryDataMBController(this, (DynamicSceneryDataMB)a);
             else if (a is CollisionSurface)
                 c = new CollisionSurfaceController(this, (CollisionSurface)a);
             else if (a is Camera)
@@ -204,7 +208,7 @@ namespace TwinsaityEditor
             using (OpenFileDialog ofd = new OpenFileDialog
             {
                 InitialDirectory = Settings.Default.ChunkFilePath,
-                Filter = "RM2 files|*.rm2|SM2 files|*.sm2|RMX files|*.rmx|SMX files|*.smx|Demo RM2 files|*.rm2|Demo SM2 files|*.sm2"
+                Filter = "RM2 files|*.rm2|SM2 files|*.sm2|RMX files|*.rmx|SMX files|*.smx|Demo RM2 files|*.rm2|Demo SM2 files|*.sm2|SMBA RM files|*.rm|SMBA SM files|*.sm"
                 //Filter = "PS2 files (.rm2; .sm2)|*.rm2;*.sm2|XBOX files (.rmx; .smx)|*.rmx;*.smx|Demo files (.rm2; .sm2)|*.rm2; *.sm2";
             })
             {
@@ -266,6 +270,14 @@ namespace TwinsaityEditor
                                 }
                             }
                             break;
+                        case 7:
+                            file.LoadFile(ofd.FileName, TwinsFile.FileType.MonkeyBallRM);
+                            aux_file = new TwinsFile();
+                            aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".sm", TwinsFile.FileType.MonkeyBallSM);
+                            break;
+                        case 8:
+                            file.LoadFile(ofd.FileName, TwinsFile.FileType.MonkeyBallSM);
+                            break;
                     }
                     file.SafeFileName = ofd.SafeFileName;
                     Tag = new FileController(this, file);
@@ -292,11 +304,13 @@ namespace TwinsaityEditor
                 case TwinsFile.FileType.SM2:
                 case TwinsFile.FileType.SMX:
                 case TwinsFile.FileType.DemoSM2:
+                case TwinsFile.FileType.MonkeyBallSM:
                     CurCont.OpenSMViewer();
                     break;
                 case TwinsFile.FileType.RM2:
                 case TwinsFile.FileType.RMX:
                 case TwinsFile.FileType.DemoRM2:
+                case TwinsFile.FileType.MonkeyBallRM:
                     CurCont.OpenRMViewer();
                     break;
             }

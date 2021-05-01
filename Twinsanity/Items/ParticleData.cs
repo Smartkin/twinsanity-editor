@@ -129,6 +129,13 @@ namespace Twinsanity
             }
         }
 
+        private bool isMonkeyBall = false;
+        public void Load(BinaryReader reader, int size, bool isMB)
+        {
+            isMonkeyBall = isMB;
+            Load(reader, size);
+        }
+
         public override void Load(BinaryReader reader, int size)
         {
             long start_pos = reader.BaseStream.Position;
@@ -157,6 +164,21 @@ namespace Twinsanity
                 ParticleTextureID_3 = reader.ReadUInt32();
                 ParticleMaterialID_3 = reader.ReadUInt32();
                 Header1 = reader.ReadUInt32();
+
+                if (isMonkeyBall)
+                {
+                    // todo
+                    int RemainBytes1 = (int)((start_pos + size) - reader.BaseStream.Position);
+                    if (RemainBytes1 > 0)
+                    {
+                        Remain = reader.ReadBytes(RemainBytes1);
+                    }
+                    else
+                    {
+                        Remain = new byte[0];
+                    }
+                    return;
+                }
             }
 
             ParticleTypeCount = reader.ReadUInt32();

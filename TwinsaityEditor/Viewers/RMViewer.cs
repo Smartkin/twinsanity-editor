@@ -33,13 +33,17 @@ namespace TwinsaityEditor
             {
                 InitVBO(6);
             }
-            if (file.DataAux != null && file.DataAux.ContainsItem(5))
+            uint link_section = 5;
+            if (file.DataAux.Type == TwinsFile.FileType.MonkeyBallSM) link_section = 6;
+            if (file.DataAux != null && file.DataAux.ContainsItem(link_section))
             {
-                links = file.DataAux.GetItem<ChunkLinks>(5);
+                links = file.DataAux.GetItem<ChunkLinks>(link_section);
             }
-            if (file.Data.ContainsItem(9))
+            uint col_section = 9;
+            if (file.Data.Type == TwinsFile.FileType.MonkeyBallRM) col_section = 10;
+            if (file.Data.ContainsItem(col_section))
             {
-                if (file.Data.GetItem<ColData>(9).Size >= 12)
+                if (file.Data.GetItem<ColData>(col_section).Size >= 12)
                 {
                     pform.Text = "Loading collision tree...";
                     LoadColTree();
@@ -116,8 +120,10 @@ namespace TwinsaityEditor
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
 
             GL.PushMatrix();
-            
-            for (uint i = 0; i <= 7; ++i)
+
+            uint mb_add = 0;
+            if (file.Data.Type == TwinsFile.FileType.MonkeyBallRM) mb_add = 1;
+            for (uint i = mb_add; i <= mb_add + 7; ++i)
             {
                 if (file.Data.ContainsItem(i))
                 {
@@ -230,9 +236,24 @@ namespace TwinsaityEditor
                         }
                     }
 
-                    if (file.Data.GetItem<TwinsSection>(i).ContainsItem(6)) //instances
+                    if (file.Data.Type != TwinsFile.FileType.DemoRM2 && file.Data.GetItem<TwinsSection>(i).ContainsItem(6)) //instances
                     {
-                        if (file.Data.Type != TwinsFile.FileType.DemoRM2)
+                        if (file.Data.Type == TwinsFile.FileType.MonkeyBallRM)
+                        {
+                            foreach (InstanceMB ins in file.Data.GetItem<TwinsSection>(i).GetItem<TwinsSection>(6).Records)
+                            {
+                                Matrix3 rot_ins = Matrix3.Identity;
+                                rot_ins *= Matrix3.CreateRotationX(ins.RotX / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
+                                rot_ins *= Matrix3.CreateRotationY(-ins.RotY / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
+                                rot_ins *= Matrix3.CreateRotationZ(-ins.RotZ / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
+                                if (file.SelectedItem == ins)
+                                    cur_color = Color.White;
+                                else
+                                    cur_color = colors[colors.Length - i * 2 - 1];
+                                RenderString3D(ins.ID.ToString(), cur_color, -ins.Pos.X, ins.Pos.Y, ins.Pos.Z, ref rot_ins);
+                            }
+                        }
+                        else
                         {
                             foreach (Instance ins in file.Data.GetItem<TwinsSection>(i).GetItem<TwinsSection>(6).Records)
                             {
@@ -319,11 +340,14 @@ namespace TwinsaityEditor
                             GL.PopMatrix();
                             GL.LineWidth(2);
                             GL.Begin(PrimitiveType.Lines);
-                            foreach (var id in trg.Instances)
+                            if (file.Data.Type != TwinsFile.FileType.MonkeyBallRM)
                             {
-                                Pos inst = file.GetInstancePos(trg.Parent.Parent.ID, id);
-                                GL.Vertex3(-trg.Coords[1].X, trg.Coords[1].Y, trg.Coords[1].Z);
-                                GL.Vertex3(-inst.X, inst.Y, inst.Z);
+                                foreach (var id in trg.Instances)
+                                {
+                                    Pos inst = file.GetInstancePos(trg.Parent.Parent.ID, id);
+                                    GL.Vertex3(-trg.Coords[1].X, trg.Coords[1].Y, trg.Coords[1].Z);
+                                    GL.Vertex3(-inst.X, inst.Y, inst.Z);
+                                }
                             }
                             GL.End();
                             GL.LineWidth(1);
@@ -736,7 +760,9 @@ namespace TwinsaityEditor
 
         public void LoadColTree()
         {
-            ColData data = file.Data.GetItem<ColData>(9);
+            uint col_section = 9;
+            if (file.Data.Type == TwinsFile.FileType.MonkeyBallRM) col_section = 10;
+            ColData data = file.Data.GetItem<ColData>(col_section);
             List<Vertex> vertices = new List<Vertex>(data.Vertices.Count);
             vtx[0].VtxInd = new uint[data.Tris.Count * 3];
             for (int i = 0; i < data.Vertices.Count; ++i)
@@ -790,9 +816,11 @@ namespace TwinsaityEditor
         public void LoadInstances()
         {
             float min_x = float.MaxValue, min_y = float.MaxValue, min_z = float.MaxValue, max_x = float.MinValue, max_y = float.MinValue, max_z = float.MinValue;
-            bool[] record_exists = new bool[8];
+            bool[] record_exists = new bool[9];
             int inst_count = 0;
-            for (uint i = 0; i <= 7; ++i)
+            uint mb_add = 0;
+            if (file.Data.Type == TwinsFile.FileType.MonkeyBallRM) mb_add = 1;
+            for (uint i = mb_add; i <= mb_add + 7; ++i)
             {
                 record_exists[i] = file.Data.ContainsItem(i);
                 if (record_exists[i])
@@ -819,12 +847,61 @@ namespace TwinsaityEditor
                 }
             }
             int l = 0, m = 0, cur_instance = 0;
-            for (uint i = 0; i <= 7; ++i)
+            for (uint i = mb_add; i <= mb_add + 7; ++i)
             {
                 if (!record_exists[i]) continue;
                 if (file.Data.GetItem<TwinsSection>(i).ContainsItem(6))
                 {
-                    if (file.Data.Type != TwinsFile.FileType.DemoRM2)
+                    if (file.Data.Type == TwinsFile.FileType.MonkeyBallRM)
+                    {
+                        foreach (InstanceMB ins in file.Data.GetItem<TwinsSection>(i).GetItem<TwinsSection>(6).Records)
+                        {
+                            Matrix3 rot_ins = Matrix3.Identity;
+                            rot_ins *= Matrix3.CreateRotationX(ins.RotX / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
+                            rot_ins *= Matrix3.CreateRotationY(-ins.RotY / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
+                            rot_ins *= Matrix3.CreateRotationZ(-ins.RotZ / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
+                            Vector3 pos_ins = ins.Pos.ToVec3();
+                            pos_ins.X = -pos_ins.X;
+                            vtx[1].VtxOffs[l++] = m;
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size * 0.75f, 0, 0) + pos_ins, Color.Red);
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size * 0.375f, 0, 0) + pos_ins, Color.Red);
+                            vtx[1].VtxOffs[l++] = m;
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(0, indicator_size * 0.75f, 0) + pos_ins, Color.Green);
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(0, -indicator_size * 0.375f, 0) + pos_ins, Color.Green);
+                            vtx[1].VtxOffs[l++] = m;
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(0, 0, indicator_size * 0.75f) + pos_ins, Color.Blue);
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(0, 0, -indicator_size * 0.375f) + pos_ins, Color.Blue);
+                            vtx[1].VtxOffs[l++] = m;
+                            Color cur_color = (file.SelectedItem == ins) ? Color.White : colors[colors.Length - i * 2 - 1];
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, -indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, -indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, +indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, +indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, -indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, -indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, -indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, -indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
+                            vtx[1].VtxOffs[l++] = m;
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, -indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, +indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, +indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, -indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
+                            vtx[1].VtxOffs[l++] = m;
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, +indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(-indicator_size, +indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
+                            vtx[1].VtxOffs[l++] = m;
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, +indicator_size + 0.5f, +indicator_size) * rot_ins + pos_ins, cur_color);
+                            vtx[1].Vtx[m++] = new Vertex(new Vector3(+indicator_size, +indicator_size + 0.5f, -indicator_size) * rot_ins + pos_ins, cur_color);
+                            min_x = Math.Min(min_x, pos_ins.X);
+                            min_y = Math.Min(min_y, pos_ins.Y);
+                            min_z = Math.Min(min_z, pos_ins.Z);
+                            max_x = Math.Max(max_x, pos_ins.X);
+                            max_y = Math.Max(max_y, pos_ins.Y);
+                            max_z = Math.Max(max_z, pos_ins.Z);
+                            
+                        }
+                    }
+                    else if (file.Data.Type != TwinsFile.FileType.DemoRM2)
                     {
                         foreach (Instance ins in file.Data.GetItem<TwinsSection>(i).GetItem<TwinsSection>(6).Records)
                         {
@@ -1043,7 +1120,9 @@ namespace TwinsaityEditor
         public void LoadColNodes()
         {
             float min_x = float.MaxValue, min_y = float.MaxValue, min_z = float.MaxValue, max_x = float.MinValue, max_y = float.MinValue, max_z = float.MinValue;
-            ColData data = file.Data.GetItem<ColData>(9);
+            uint col_section = 9;
+            if (file.Data.Type == TwinsFile.FileType.MonkeyBallRM) col_section = 10;
+            ColData data = file.Data.GetItem<ColData>(col_section);
             vtx[2].Vtx = new Vertex[data.Triggers.Count * 16];
             vtx[2].VtxCounts = new int[4 * data.Triggers.Count];
             vtx[2].VtxOffs = new int[4 * data.Triggers.Count];
@@ -1092,9 +1171,11 @@ namespace TwinsaityEditor
         public void LoadPositions()
         {
             float min_x = float.MaxValue, min_y = float.MaxValue, min_z = float.MaxValue, max_x = float.MinValue, max_y = float.MinValue, max_z = float.MinValue;
-            bool[] record_exists = new bool[8];
+            bool[] record_exists = new bool[9];
             int posi_count = 0;
-            for (uint i = 0; i <= 7; ++i)
+            uint mb_add = 0;
+            if (file.Data.Type == TwinsFile.FileType.MonkeyBallRM) mb_add = 1;
+            for (uint i = mb_add; i <= mb_add + 7; ++i)
             {
                 record_exists[i] = file.Data.ContainsItem(i);
                 if (record_exists[i])
@@ -1124,7 +1205,7 @@ namespace TwinsaityEditor
                 }
             }
             int l = 0, m = 0;
-            for (uint i = 0; i <= 7; ++i)
+            for (uint i = mb_add; i <= mb_add + 7; ++i)
             {
                 if (!record_exists[i]) continue;
                 if (file.Data.GetItem<TwinsSection>(i).ContainsItem(3))
@@ -1180,9 +1261,11 @@ namespace TwinsaityEditor
         public void LoadAIPositions()
         {
             float min_x = float.MaxValue, min_y = float.MaxValue, min_z = float.MaxValue, max_x = float.MinValue, max_y = float.MinValue, max_z = float.MinValue;
-            bool[] record_exists = new bool[8];
+            bool[] record_exists = new bool[9];
             int posi_count = 0;
-            for (uint i = 0; i <= 7; ++i)
+            uint mb_add = 0;
+            if (file.Data.Type == TwinsFile.FileType.MonkeyBallRM) mb_add = 1;
+            for (uint i = mb_add; i <= mb_add + 7; ++i)
             {
                 record_exists[i] = file.Data.ContainsItem(i);
                 if (record_exists[i])
@@ -1212,7 +1295,7 @@ namespace TwinsaityEditor
                 }
             }
             int l = 0, m = 0;
-            for (uint i = 0; i <= 7; ++i)
+            for (uint i = mb_add; i <= mb_add + 7; ++i)
             {
                 if (!record_exists[i]) continue;
                 if (file.Data.GetItem<TwinsSection>(i).ContainsItem(1))
@@ -1271,6 +1354,11 @@ namespace TwinsaityEditor
             if (file.SelectedItem is Instance ins)
             {
                 SetPosition(new Vector3(-ins.Pos.X, ins.Pos.Y, ins.Pos.Z));
+                LoadInstances();
+            }
+            else if (file.SelectedItem is InstanceMB insm)
+            {
+                SetPosition(new Vector3(-insm.Pos.X, insm.Pos.Y, insm.Pos.Z));
                 LoadInstances();
             }
             else if (file.SelectedItem is Position pos)

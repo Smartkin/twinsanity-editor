@@ -79,6 +79,7 @@ namespace TwinsaityEditor
         Trigger,
         Script,
         Object,
-        Animation
+        Animation,
+        InstanceMB,
     };
 }

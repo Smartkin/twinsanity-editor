@@ -3,11 +3,11 @@ using System;
 
 namespace TwinsaityEditor
 {
-    public class InstanceController : ItemController
+    public class InstanceMBController : ItemController
     {
-        public new Instance Data { get; set; }
+        public new InstanceMB Data { get; set; }
 
-        public InstanceController(MainForm topform, Instance item) : base (topform, item)
+        public InstanceMBController(MainForm topform, InstanceMB item) : base(topform, item)
         {
             Data = item;
             AddMenu("Open editor", Menu_OpenEditor);
@@ -15,8 +15,12 @@ namespace TwinsaityEditor
 
         protected override string GetName()
         {
-            string obj_name = MainFile.GetObjectName(Data.ObjectID);
-            obj_name = Utils.TextUtils.TruncateObjectName(obj_name, Data.ObjectID, "*", "");
+            string obj_name = string.Empty; //MainFile.GetObjectName(Data.ObjectID);
+            //obj_name = Utils.TextUtils.TruncateObjectName(obj_name, Data.ObjectID, "*", "");
+            if (Enum.IsDefined(typeof(DefaultEnums.ObjectID_MB), Data.ObjectID))
+            {
+                obj_name = (DefaultEnums.ObjectID_MB)Data.ObjectID + "";
+            }
 
             if (obj_name != string.Empty)
                 return $"{obj_name} Instance [ID {Data.ID}]";
@@ -26,8 +30,16 @@ namespace TwinsaityEditor
 
         protected override void GenText()
         {
-            string obj_name = MainFile.GetObjectName(Data.ObjectID);
-            obj_name = Utils.TextUtils.TruncateObjectName(obj_name, Data.ObjectID, "", " (Not in Objects)");
+            string obj_name = string.Empty; //MainFile.GetObjectName(Data.ObjectID);
+            //obj_name = Utils.TextUtils.TruncateObjectName(obj_name, Data.ObjectID, "", " (Not in Objects)");
+            if (Enum.IsDefined(typeof(DefaultEnums.ObjectID_MB), Data.ObjectID))
+            {
+                obj_name = (DefaultEnums.ObjectID_MB)Data.ObjectID + "";
+            }
+            else
+            {
+                obj_name = "Unknown";
+            }
 
             TextPrev = new string[6];//12 + Data.InstanceIDs.Count + Data.PositionIDs.Count + Data.PathIDs.Count + Data.UnkI321.Count + Data.UnkI322.Count + Data.UnkI323.Count];
             TextPrev[0] = $"ID: {Data.ID}";

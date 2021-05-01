@@ -71,6 +71,7 @@
     <Compile Include="Items\Code\GameObjectDemo.cs" />
     <Compile Include="Items\Code\GraphicsInfo.cs" />
     <Compile Include="Items\DynamicSceneryData.cs" />
+    <Compile Include="Items\DynamicSceneryDataMB.cs" />
     <Compile Include="Items\Graphics\BlendSkin.cs" />
     <Compile Include="Items\Graphics\Skin.cs" />
     <Compile Include="Items\Graphics\SkinX.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Items\Instances\AIPosition.cs" />
     <Compile Include="Items\Instances\CollisionSurface.cs" />
     <Compile Include="Items\Instances\InstanceDemo.cs" />
+    <Compile Include="Items\Instances\InstanceMB.cs" />
     <Compile Include="Items\Instances\InstanceTemplate.cs" />
     <Compile Include="Items\Instances\InstanceTemplateDemo.cs" />
     <Compile Include="Items\ParticleData.cs" />

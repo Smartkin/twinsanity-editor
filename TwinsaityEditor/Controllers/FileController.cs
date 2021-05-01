@@ -27,7 +27,7 @@ namespace TwinsaityEditor
         private Form editScripts;
         private Form editObjects;
         private Form editAnimations;
-        private readonly Form[] editInstances = new Form[8], editPositions = new Form[8], editPaths = new Form[8], editTriggers = new Form[8];
+        private readonly Form[] editInstances = new Form[9], editPositions = new Form[9], editPaths = new Form[9], editTriggers = new Form[9];
 
         //Viewers
         private Form colForm;
@@ -52,6 +52,13 @@ namespace TwinsaityEditor
 
         protected override string GetName()
         {
+            if (Data.Type == TwinsFile.FileType.MonkeyBallRM || Data.Type == TwinsFile.FileType.MonkeyBallSM)
+            {
+                if (Data.Console == TwinsFile.ConsoleType.PS2)
+                {
+                    return "Compressed File";
+                }
+            }
             return "File";
         }
 
@@ -85,6 +92,10 @@ namespace TwinsaityEditor
             if (Data.Type == TwinsFile.FileType.SM2 || Data.Type == TwinsFile.FileType.SMX || Data.Type == TwinsFile.FileType.DemoSM2)
             {
                 gfx_id = 6;
+            }
+            if (Data.Type == TwinsFile.FileType.MonkeyBallRM || Data.Type == TwinsFile.FileType.MonkeyBallSM)
+            {
+                gfx_id = 99;
             }
             if (Data.ContainsItem(gfx_id) && Data.GetItem<TwinsSection>(gfx_id).ContainsItem(1))
             {
@@ -154,6 +165,8 @@ namespace TwinsaityEditor
                 OpenEditor(ref editPaths[((PathController)c).Data.Parent.Parent.ID], Editors.Path, (Controller)c.Node.Parent.Tag);
             else if (c is InstanceController)
                 OpenEditor(ref editInstances[((InstanceController)c).Data.Parent.Parent.ID], Editors.Instance, (Controller)c.Node.Parent.Tag);
+            else if (c is InstanceMBController)
+                OpenEditor(ref editInstances[((InstanceMBController)c).Data.Parent.Parent.ID], Editors.InstanceMB, (Controller)c.Node.Parent.Tag);
             else if (c is TriggerController)
                 OpenEditor(ref editTriggers[((TriggerController)c).Data.Parent.Parent.ID], Editors.Trigger, (Controller)c.Node.Parent.Tag);
             else if (c is ScriptController)
@@ -166,6 +179,8 @@ namespace TwinsaityEditor
             {
                 if (s.Data.Type == SectionType.ObjectInstance)
                     OpenEditor(ref editInstances[s.Data.Parent.ID], Editors.Instance, c);
+                else if (s.Data.Type == SectionType.ObjectInstanceMB)
+                    OpenEditor(ref editInstances[s.Data.Parent.ID], Editors.InstanceMB, c);
                 else if (s.Data.Type == SectionType.Position)
                     OpenEditor(ref editPositions[s.Data.Parent.ID], Editors.Position, c);
                 else if (s.Data.Type == SectionType.Path)
@@ -197,6 +212,7 @@ namespace TwinsaityEditor
                     case Editors.Position: editor_var_ptr = new PositionEditor((SectionController)cont) { Tag = TopForm }; break;
                     case Editors.Path: editor_var_ptr = new PathEditor((SectionController)cont) { Tag = TopForm }; break;
                     case Editors.Instance: editor_var_ptr = new InstanceEditor((SectionController)cont) { Tag = TopForm }; break;
+                    case Editors.InstanceMB: editor_var_ptr = new InstanceMBEditor((SectionController)cont) { Tag = TopForm }; break;
                     case Editors.Trigger: editor_var_ptr = new TriggerEditor((SectionController)cont) { Tag = TopForm }; break;
                     case Editors.Script: editor_var_ptr = new ScriptEditor((SectionController)cont) { Tag = TopForm }; break;
                     case Editors.Object: editor_var_ptr = new ObjectEditor((SectionController)cont) { Tag = TopForm }; break;
@@ -485,6 +501,8 @@ namespace TwinsaityEditor
                 if (item == null && prev_item != null)
                 {
                     if (prev_item is Instance)
+                        rmViewer.LoadInstances();
+                    else if (prev_item is InstanceMB)
                         rmViewer.LoadInstances();
                     else if (prev_item is Position)
                         rmViewer.LoadPositions();

@@ -13,6 +13,7 @@ namespace Twinsanity
         public string SafeFileName { get; set; }
 
         public new FileType Type { get; set; }
+        public ConsoleType Console { get; set; }
 
         /// <summary>
         /// Load an RM/SM file.
@@ -28,6 +29,8 @@ namespace Twinsanity
             var file = new FileStream(path, FileMode.Open, FileAccess.Read);
             BinaryReader reader = new BinaryReader(file);
             Type = type;
+            Console = ConsoleType.PS2;
+            if (type == FileType.RMX || type == FileType.SMX) Console = ConsoleType.XBOX;
             if (type == FileType.Frontend)
             {
                 TwinsSection sec = new TwinsSection
@@ -46,8 +49,36 @@ namespace Twinsanity
             if ((Magic = reader.ReadUInt32()) != magic)
                 throw new Exception("LoadFile: Magic number is wrong.");
             FileName = path;
-            var count = reader.ReadInt32();
+            int count = 0;
+            bool miniFix = false;
+            if (type == FileType.MonkeyBallRM || type == FileType.MonkeyBallSM) 
+            {
+                var sk = reader.BaseStream.Position;
+                count = reader.ReadInt16();
+                uint test = reader.ReadUInt16();
+                if (test != 0) // PS2 starts off weird
+                {
+                    reader.BaseStream.Position = sk;
+                    count = reader.ReadInt16();
+                    reader.ReadByte();
+                    miniFix = true;
+                }
+                else
+                {
+                    Console = ConsoleType.PSP;
+                    reader.BaseStream.Position = sk;
+                    count = reader.ReadInt32();
+                }
+            }
+            else
+            {
+                count = reader.ReadInt32();
+            }
             var sec_size = reader.ReadUInt32();
+            if (miniFix)
+            {
+                reader.ReadByte();
+            }
             uint s_off = 0, s_id = 0;
             int s_size = 0;
             for (int i = 0; i < count; i++)
@@ -213,6 +244,184 @@ namespace Twinsanity
                             }
                         }
                         break;
+                    case FileType.MonkeyBallRM:
+                        {
+                            switch (s_id)
+                            {
+                                case 1:
+                                case 2:
+                                case 3:
+                                case 4:
+                                case 5:
+                                case 6:
+                                case 7:
+                                case 8:
+                                case 11:
+                                case 12:
+                                    {
+                                        TwinsSection sec = new TwinsSection() { ID = s_id };
+                                        if (s_id == 12)
+                                        {
+                                            sec.Type = SectionType.GraphicsMB;
+                                        }
+                                        else if (s_id == 11)
+                                        {
+                                            sec.Type = SectionType.CodeMB;
+                                        }
+                                        else
+                                        {
+                                            sec.Type = SectionType.InstanceMB;
+                                        }
+                                        var sk = reader.BaseStream.Position;
+                                        reader.BaseStream.Position = s_off;
+                                        sec.Level = 1;
+                                        sec.Load(reader, s_size, miniFix);
+                                        reader.BaseStream.Position = sk;
+                                        RecordIDs.Add(s_id, Records.Count);
+                                        Records.Add(sec);
+                                        break;
+                                    }
+                                case 9:
+                                    {
+                                        ParticleData rec = new ParticleData() { ID = s_id };
+                                        var sk = reader.BaseStream.Position;
+                                        reader.BaseStream.Position = s_off;
+                                        rec.Load(reader, s_size, true);
+                                        reader.BaseStream.Position = sk;
+                                        RecordIDs.Add(s_id, Records.Count);
+                                        Records.Add(rec);
+                                        break;
+                                    }
+                                case 10:
+                                    {
+                                        if (!miniFix)
+                                        {
+                                            ColData rec = new ColData() { ID = s_id };
+                                            var sk = reader.BaseStream.Position;
+                                            reader.BaseStream.Position = s_off;
+                                            rec.Load(reader, s_size);
+                                            reader.BaseStream.Position = sk;
+                                            RecordIDs.Add(s_id, Records.Count);
+                                            Records.Add(rec);
+                                        }
+                                        else
+                                        {
+                                            TwinsItem rec = new TwinsItem { ID = s_id };
+                                            var sk = reader.BaseStream.Position;
+                                            reader.BaseStream.Position = s_off;
+                                            rec.Load(reader, s_size);
+                                            reader.BaseStream.Position = sk;
+                                            RecordIDs.Add(s_id, Records.Count);
+                                            Records.Add(rec);
+                                        }
+                                        break;
+                                    }
+                                default:
+                                    {
+                                        TwinsItem rec = new TwinsItem { ID = s_id };
+                                        var sk = reader.BaseStream.Position;
+                                        reader.BaseStream.Position = s_off;
+                                        rec.Load(reader, s_size);
+                                        reader.BaseStream.Position = sk;
+                                        RecordIDs.Add(s_id, Records.Count);
+                                        Records.Add(rec);
+                                        break;
+                                    }
+                            }
+                        }
+                        break;
+                    case FileType.MonkeyBallSM:
+                        {
+                            switch (s_id)
+                            {
+                                //5: Dynamic Scenery Data, but different
+                                //0: Scenery Data, but different
+                                default:
+                                    {
+                                        TwinsItem rec = new TwinsItem { ID = s_id };
+                                        var sk = reader.BaseStream.Position;
+                                        reader.BaseStream.Position = s_off;
+                                        rec.Load(reader, s_size);
+                                        reader.BaseStream.Position = sk;
+                                        RecordIDs.Add(s_id, Records.Count);
+                                        Records.Add(rec);
+                                        break;
+                                    }
+                                case 8:
+                                    {
+                                        SectionType targetType = SectionType.SceneryMB;
+                                        TwinsSection sec = new TwinsSection
+                                        {
+                                            ID = s_id,
+                                            Type = targetType,
+                                            Level = 1
+                                        };
+                                        var sk = reader.BaseStream.Position;
+                                        reader.BaseStream.Position = s_off;
+                                        sec.Load(reader, s_size);
+                                        reader.BaseStream.Position = sk;
+                                        RecordIDs.Add(s_id, Records.Count);
+                                        Records.Add(sec);
+                                        break;
+                                    }
+                                case 5:
+                                    {
+                                        DynamicSceneryDataMB rec = new DynamicSceneryDataMB { ID = s_id };
+                                        var sk = reader.BaseStream.Position;
+                                        reader.BaseStream.Position = s_off;
+                                        rec.Load(reader, s_size);
+                                        reader.BaseStream.Position = sk;
+                                        RecordIDs.Add(s_id, Records.Count);
+                                        Records.Add(rec);
+                                        break;
+                                    }
+                                case 7:
+                                    {
+                                        // usually all empty
+                                        SectionType targetType = SectionType.GraphicsMB;
+                                        TwinsSection sec = new TwinsSection
+                                        {
+                                            ID = s_id,
+                                            Type = targetType,
+                                            Level = 1
+                                        };
+                                        var sk = reader.BaseStream.Position;
+                                        reader.BaseStream.Position = s_off;
+                                        sec.Load(reader, s_size);
+                                        reader.BaseStream.Position = sk;
+                                        RecordIDs.Add(s_id, Records.Count);
+                                        Records.Add(sec);
+                                        break;
+                                    }
+                                case 6:
+                                    {
+                                        if (!miniFix)
+                                        {
+                                            ChunkLinks rec = new ChunkLinks { ID = s_id };
+                                            var sk = reader.BaseStream.Position;
+                                            reader.BaseStream.Position = s_off;
+                                            rec.Load(reader, s_size);
+                                            reader.BaseStream.Position = sk;
+                                            RecordIDs.Add(s_id, Records.Count);
+                                            Records.Add(rec);
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            TwinsItem rec = new TwinsItem { ID = s_id };
+                                            var sk = reader.BaseStream.Position;
+                                            reader.BaseStream.Position = s_off;
+                                            rec.Load(reader, s_size);
+                                            reader.BaseStream.Position = sk;
+                                            RecordIDs.Add(s_id, Records.Count);
+                                            Records.Add(rec);
+                                            break;
+                                        }
+                                        
+                                    }
+                            }
+                        }
+                        break;
                 }
             }
             reader.Close();
@@ -261,6 +470,8 @@ namespace Twinsanity
         }
 
         //NOTE: Do NOT use "First"
-        public enum FileType { First = SectionType.Last, RM2, SM2, DemoRM2, DemoSM2, RMX, SMX, Frontend };
+        public enum FileType { First = SectionType.Last, RM2, SM2, DemoRM2, DemoSM2, RMX, SMX, Frontend, MonkeyBallRM, MonkeyBallSM };
+
+        public enum ConsoleType { First = SectionType.Last, PS2, PSP, XBOX }
     }
 }

@@ -1090,6 +1090,14 @@ namespace Twinsanity
                 {
                     return Main.name;
                 }
+                else if (scriptGameVersion == 3 && Header == null)
+                {
+                    if (Enum.IsDefined(typeof(DefaultEnums.ScriptID_MB), id))
+                    {
+                        return (DefaultEnums.ScriptID_MB)id + "";
+                    }
+                    return "MonkeyBall script";
+                }
                 else
                 {
                     return "Header script";
@@ -1144,6 +1152,10 @@ namespace Twinsanity
             {
                 scriptGameVersion = 2;
             }
+            else if (ParentType == SectionType.ScriptMB)
+            {
+                scriptGameVersion = 3;
+            }
             else
             {
                 scriptGameVersion = 0;
@@ -1153,6 +1165,13 @@ namespace Twinsanity
             mask = reader.ReadByte();
             flag = reader.ReadByte();
             var datapos = reader.BaseStream.Position;
+            if (scriptGameVersion == 3 && flag == 0)
+            {
+                script = null;
+                reader.BaseStream.Position = datapos;
+                data = reader.ReadBytes(size - 4);
+                return;
+            }
             if (flag == 0)
             {
                 Main = new MainScript(reader, scriptGameVersion);

@@ -33,12 +33,22 @@ namespace TwinsaityEditor
             text.Add($"Argument 4: {Data.Arg4}");
 
             text.Add($"Instances: {Data.Instances.Count}");
-            for (int i = 0; i < Data.Instances.Count; ++i)
+            if (MainFile.Data.Type != TwinsFile.FileType.MonkeyBallRM)
             {
-                string obj_name = MainFile.GetObjectName((ushort)MainFile.GetInstanceID(Data.Parent.Parent.ID, Data.Instances[i]));
-                obj_name = Utils.TextUtils.TruncateObjectName(obj_name, (ushort)MainFile.GetInstanceID(Data.Parent.Parent.ID, Data.Instances[i]), "", " (Not in Objects)");
+                for (int i = 0; i < Data.Instances.Count; ++i)
+                {
+                    string obj_name = MainFile.GetObjectName((ushort)MainFile.GetInstanceID(Data.Parent.Parent.ID, Data.Instances[i]));
+                    obj_name = Utils.TextUtils.TruncateObjectName(obj_name, (ushort)MainFile.GetInstanceID(Data.Parent.Parent.ID, Data.Instances[i]), "", " (Not in Objects)");
 
-                text.Add($"Instance {Data.Instances[i]} {(obj_name != string.Empty ? $" - {obj_name}" : string.Empty)}");
+                    text.Add($"Instance {Data.Instances[i]} {(obj_name != string.Empty ? $" - {obj_name}" : string.Empty)}");
+                }
+            }
+            else
+            {
+                for (int i = 0; i < Data.Instances.Count; ++i)
+                {
+                    text.Add($"Instance {Data.Instances[i]}");
+                }
             }
 
             TextPrev = text.ToArray();

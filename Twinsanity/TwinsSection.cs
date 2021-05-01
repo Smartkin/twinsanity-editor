@@ -13,14 +13,16 @@ namespace Twinsanity
     /// </summary>
     public enum SectionType {
         Null,
-        Graphics, GraphicsX, GraphicsD,
-        Code, CodeDemo, CodeX,
-        Instance, InstanceDemo,
+        Graphics, GraphicsX, GraphicsD, GraphicsMB,
+        Code, CodeDemo, CodeX, CodeMB,
+        Instance, InstanceDemo, InstanceMB,
+        SceneryMB,
         ParticleData,
+        Unknown,
 
-        Texture, TextureX,
+        Texture, TextureX, TextureMB,
         Material, MaterialD,
-        Model, ModelX,
+        Model, ModelX, ModelMB,
         RigidModel,
         Skin, SkinX,
         BlendSkin, BlendSkinX,
@@ -28,12 +30,12 @@ namespace Twinsanity
         LodModel,
         Skydome,
 
-        Object, ObjectDemo,
-        Script, ScriptX, ScriptDemo,
+        Object, ObjectDemo, ObjectMB,
+        Script, ScriptX, ScriptDemo, ScriptMB,
         Animation,
-        OGI, GraphicsInfo,
+        OGI, GraphicsInfo, GraphicsInfoMB,
         CodeModel, CodeModelX, CodeModelDemo,
-        SE, Xbox_SE,
+        SE, Xbox_SE, MB_SE,
         SE_Eng, Xbox_SE_Eng,
         SE_Fre, Xbox_SE_Fre,
         SE_Ger, Xbox_SE_Ger,
@@ -41,13 +43,13 @@ namespace Twinsanity
         SE_Ita, Xbox_SE_Ita,
         SE_Jpn, Xbox_SE_Jpn,
 
-        InstanceTemplate, InstanceTemplateDemo,
+        InstanceTemplate, InstanceTemplateDemo, InstanceTemplateMB,
         AIPosition,
         AIPath,
         Position,
         Path,
         CollisionSurface,
-        ObjectInstance, ObjectInstanceDemo,
+        ObjectInstance, ObjectInstanceDemo, ObjectInstanceMB,
         Trigger,
         Camera, CameraDemo,
 
@@ -77,6 +79,14 @@ namespace Twinsanity
 
         public byte[] ExtraData { get; set; }
 
+        private bool isMonkeyBallPS2 { get; set; }
+
+        public void Load(BinaryReader reader, int size, bool isMB)
+        {
+            isMonkeyBallPS2 = isMB;
+            Load(reader, size);
+        }
+
         /// <summary>
         /// Loads the section from a file.
         /// </summary>
@@ -89,8 +99,21 @@ namespace Twinsanity
             RecordIDs = new Dictionary<uint, int>();
             if (size < 0xC || ((Magic = reader.ReadUInt32()) != magic && Magic != magicV2))
                 return;
-            var count = reader.ReadInt32();
+            int count = 0;
+            if (isMonkeyBallPS2)
+            {
+                count = reader.ReadInt16();
+                reader.ReadByte();
+            }
+            else
+            {
+                count = reader.ReadInt32();
+            }
             var sec_size = reader.ReadUInt32();
+            if (isMonkeyBallPS2)
+            {
+                reader.ReadByte();
+            }
             var start_sk = reader.BaseStream.Position - 12;
             long extra_begin = 12;
             for (int i = 0; i < count; i++)
@@ -111,11 +134,14 @@ namespace Twinsanity
                     case SectionType.Graphics:
                     case SectionType.GraphicsX:
                     case SectionType.GraphicsD:
+                    case SectionType.GraphicsMB:
                         switch (sub.ID)
                         {
                             case 0:
                                 if (Type == SectionType.GraphicsX)
                                     LoadSection(reader, sub, SectionType.TextureX);
+                                else if (Type == SectionType.GraphicsMB)
+                                    LoadSection(reader, sub, SectionType.TextureMB);
                                 else
                                     LoadSection(reader, sub, SectionType.Texture);
                                 break;
@@ -128,6 +154,8 @@ namespace Twinsanity
                             case 2:
                                 if (Type == SectionType.GraphicsX)
                                     LoadSection(reader, sub, SectionType.ModelX);
+                                else if (Type == SectionType.GraphicsMB)
+                                    LoadSection(reader, sub, SectionType.ModelMB);
                                 else
                                     LoadSection(reader, sub, SectionType.Model);
                                 break;
@@ -199,6 +227,41 @@ namespace Twinsanity
                                     LoadSection(reader, sub, SectionType.CameraDemo);
                                 else
                                     LoadSection(reader, sub, SectionType.Camera);
+                                break;
+                            default:
+                                LoadItem<TwinsItem>(reader, sub);
+                                break;
+                        }
+                        break;
+                    case SectionType.InstanceMB:
+                        switch (sub.ID)
+                        {
+                            case 0:
+                                LoadSection(reader, sub, SectionType.InstanceTemplateMB);
+                                break;
+                            case 1:
+                                LoadSection(reader, sub, SectionType.AIPosition);
+                                break;
+                            case 2:
+                                LoadSection(reader, sub, SectionType.AIPath);
+                                break;
+                            case 3:
+                                LoadSection(reader, sub, SectionType.Position);
+                                break;
+                            case 4:
+                                LoadSection(reader, sub, SectionType.Path);
+                                break;
+                            case 5:
+                                LoadSection(reader, sub, SectionType.CollisionSurface);
+                                break;
+                            case 6:
+                                LoadSection(reader, sub, SectionType.ObjectInstanceMB);
+                                break;
+                            case 7:
+                                LoadSection(reader, sub, SectionType.Trigger);
+                                break;
+                            case 8:
+                                LoadSection(reader, sub, SectionType.Camera);
                                 break;
                             default:
                                 LoadItem<TwinsItem>(reader, sub);
@@ -292,6 +355,54 @@ namespace Twinsanity
                                 break;
                         }
                         break;
+                    case SectionType.CodeMB:
+                        switch (sub.ID)
+                        {
+                            case 0:
+                                LoadSection(reader, sub, SectionType.ObjectMB);
+                                break;
+                            case 1:
+                                LoadSection(reader, sub, SectionType.ScriptMB);
+                                break;
+                            case 2:
+                                LoadSection(reader, sub, SectionType.Animation);
+                                break;
+                            case 3:
+                                LoadSection(reader, sub, SectionType.GraphicsInfoMB);
+                                break;
+                            case 4:
+                                LoadSection(reader, sub, SectionType.CodeModel);
+                                break;
+                            case 5:
+                                LoadSection(reader, sub, SectionType.Unknown);
+                                break;
+                            //case 6:
+                                //loads forever
+                                //LoadSection(reader, sub, SectionType.MB_SE);
+                                //break;
+                            case 7:
+                                LoadSection(reader, sub, SectionType.SE_Eng);
+                                break;
+                            case 8:
+                                LoadSection(reader, sub, SectionType.SE_Fre);
+                                break;
+                            case 9:
+                                LoadSection(reader, sub, SectionType.SE_Ger);
+                                break;
+                            case 10:
+                                LoadSection(reader, sub, SectionType.SE_Spa);
+                                break;
+                            case 11:
+                                LoadSection(reader, sub, SectionType.SE_Ita);
+                                break;
+                            case 12:
+                                LoadSection(reader, sub, SectionType.SE_Jpn);
+                                break;
+                            default:
+                                LoadItem<TwinsItem>(reader, sub);
+                                break;
+                        }
+                        break;
                     case SectionType.Texture:
                         LoadItem<Texture>(reader, sub);
                         break;
@@ -341,6 +452,9 @@ namespace Twinsanity
                     case SectionType.ScriptDemo:
                         LoadItem<Script>(reader, sub, Type);
                         break;
+                    case SectionType.ScriptMB:
+                        LoadItem<Script>(reader, sub, Type);
+                        break;
                     case SectionType.Animation:
                         LoadItem<Animation>(reader, sub);
                         break;
@@ -358,25 +472,28 @@ namespace Twinsanity
                             LoadItem<SoundEffect>(reader, sub);
                         break;
                     case SectionType.AIPosition:
-                        LoadItem<AIPosition>(reader, sub);
+                        LoadItem<AIPosition>(reader, sub, Type);
                         break;
                     case SectionType.AIPath:
-                        LoadItem<AIPath>(reader, sub);
+                        LoadItem<AIPath>(reader, sub, Type);
                         break;
                     case SectionType.Position:
-                        LoadItem<Position>(reader, sub);
+                        LoadItem<Position>(reader, sub, Type);
                         break;
                     case SectionType.Path:
-                        LoadItem<Path>(reader, sub);
+                        LoadItem<Path>(reader, sub, Type);
                         break;
                     case SectionType.ObjectInstance:
-                        LoadItem<Instance>(reader, sub);
+                        LoadItem<Instance>(reader, sub, Type);
                         break;
                     case SectionType.ObjectInstanceDemo: //PS2 DEMO instances
-                        LoadItem<InstanceDemo>(reader, sub);
+                        LoadItem<InstanceDemo>(reader, sub, Type);
+                        break;
+                    case SectionType.ObjectInstanceMB:
+                        LoadItem<InstanceMB>(reader, sub, Type);
                         break;
                     case SectionType.Trigger:
-                        LoadItem<Trigger>(reader, sub);
+                        LoadItem<Trigger>(reader, sub, Type);
                         break;
                     case SectionType.Camera:
                         LoadItem<Camera>(reader, sub, Type);
@@ -397,16 +514,16 @@ namespace Twinsanity
                         LoadItem<LodModel>(reader, sub);
                         break;
                     case SectionType.ParticleData:
-                        LoadItem<ParticleData>(reader, sub);
+                        LoadItem<ParticleData>(reader, sub, Type);
                         break;
                     case SectionType.CollisionSurface:
-                        LoadItem<CollisionSurface>(reader, sub);
+                        LoadItem<CollisionSurface>(reader, sub, Type);
                         break;
                     case SectionType.InstanceTemplate:
-                        LoadItem<InstanceTemplate>(reader, sub);
+                        LoadItem<InstanceTemplate>(reader, sub, Type);
                         break;
                     case SectionType.InstanceTemplateDemo:
-                        LoadItem<InstanceTemplateDemo>(reader, sub);
+                        LoadItem<InstanceTemplateDemo>(reader, sub, Type);
                         break;
                     case SectionType.BlendSkin:
                         LoadItem<BlendSkin>(reader, sub);
@@ -451,7 +568,8 @@ namespace Twinsanity
                 ID = sub.ID,
                 Level = Level + 1,
                 Type = type,
-                Parent = this
+                Parent = this,
+                //isMonkeyBallPS2 = this.isMonkeyBallPS2,
             };
             sec.Load(reader, sub.Size);
             RecordIDs.Add(sub.ID, Records.Count);

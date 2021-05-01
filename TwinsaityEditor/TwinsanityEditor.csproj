@@ -178,7 +178,9 @@
     <Compile Include="Controllers\AIPathController.cs" />
     <Compile Include="Controllers\AnimationController.cs" />
     <Compile Include="Controllers\BlendSkinController.cs" />
+    <Compile Include="Controllers\DynamicSceneryDataMBController.cs" />
     <Compile Include="Controllers\InstanceDemoController.cs" />
+    <Compile Include="Controllers\InstanceMBController.cs" />
     <Compile Include="Controllers\InstanceTemplateDemoController.cs" />
     <Compile Include="Controllers\ObjectDemoController.cs" />
     <Compile Include="Controllers\SkinController.cs" />
@@ -235,6 +237,12 @@
     </Compile>
     <Compile Include="Editors\InstanceFlagsEditor.Designer.cs">
       <DependentUpon>InstanceFlagsEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\InstanceMBEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\InstanceMBEditor.Designer.cs">
+      <DependentUpon>InstanceMBEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Editors\ObjectEditor.cs">
       <SubType>Form</SubType>
@@ -380,6 +388,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\InstanceFlagsEditor.resx">
       <DependentUpon>InstanceFlagsEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\InstanceMBEditor.resx">
+      <DependentUpon>InstanceMBEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\ObjectEditor.resx">
       <DependentUpon>ObjectEditor.cs</DependentUpon>

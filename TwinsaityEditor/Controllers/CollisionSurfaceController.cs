@@ -16,7 +16,11 @@ namespace TwinsaityEditor
         protected override string GetName()
         {
             uint surf = Data.SurfaceID;
-            if (Enum.IsDefined(typeof(DefaultEnums.SurfaceTypes), surf))
+            if (MainFile.Data.Type == TwinsFile.FileType.MonkeyBallRM && Enum.IsDefined(typeof(DefaultEnums.SurfaceTypes_MonkeyBall), surf))
+            {
+                return (DefaultEnums.SurfaceTypes_MonkeyBall)surf + " [ID " + Data.ID.ToString() + "]";
+            }
+            else if (Enum.IsDefined(typeof(DefaultEnums.SurfaceTypes), surf))
             {
                 return (DefaultEnums.SurfaceTypes)surf + " [ID " + Data.ID.ToString() + "]";
             }
