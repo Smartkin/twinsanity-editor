@@ -115,23 +115,23 @@ namespace Twinsanity
 
                     // The limit seems to be 128 in width textures. For bigger widths PSMCT32 is always used
                     // when setting up import/export we need to take that into account
-
+                    EzSwizzle ez = new EzSwizzle();
                     imageData = reader.ReadBytes(texSize - 224);
-                    EzSwizzle.cleanGs();
+                    ez.cleanGs();
                     // Deinterleave texture data, even though texture buffer width
                     // for the main texture can be bigger than 1, the BITBLTBUF register's DBW field
                     // in Twins engine is always set to 1. Note: Unless the format is PSMCT32 but that doesn't matter since that is not swizzled
                     // or interleaved in any way
-                    EzSwizzle.writeTexPSMCT32(0, 1, 0, 0, rrw, rrh, imageData);
+                    ez.writeTexPSMCT32(0, 1, 0, 0, rrw, rrh, imageData);
 
                     // Unswizzle main texture data
                     var texData = new byte[Width * Height];
-                    EzSwizzle.readTexPSMT8(0, textureBufferWidth, 0, 0, Width, Height, ref texData);
+                    ez.readTexPSMT8(0, textureBufferWidth, 0, 0, Width, Height, ref texData);
 
                     // Palette
                     #region Palette reading
                     var palette = new byte[256 * 4];
-                    EzSwizzle.readTexPSMCT32(clutBufferBasePointer, 1, 0, 0, 16, 16, ref palette);
+                    ez.readTexPSMCT32(clutBufferBasePointer, 1, 0, 0, 16, 16, ref palette);
                     this.palette = new Color[256];
                     var palInd = 0;
                     for (var i = 0; i < 256 * 4; i += 4)
@@ -156,7 +156,7 @@ namespace Twinsanity
                         var mipHeight = (Height / (1 << (i + 1)));
                         var mipData = new byte[mipWidth * mipHeight];
                         // Unswizzle mip data
-                        EzSwizzle.readTexPSMT8(mipLevelsTBP[i], mipLevelsTBW[i], 0, 0, mipWidth, mipHeight, ref mipData);
+                        ez.readTexPSMT8(mipLevelsTBP[i], mipLevelsTBW[i], 0, 0, mipWidth, mipHeight, ref mipData);
                         Flip(ref mipData, mipWidth, mipHeight);
                         mips[i] = new Color[mipWidth * mipHeight];
                         for (var j = 0; j < mipWidth * mipHeight; ++j)
@@ -299,7 +299,8 @@ namespace Twinsanity
                         mipLevelsTBW[i] = 0;
                     }
 
-                    EzSwizzle.cleanGs();
+                    EzSwizzle ez = new EzSwizzle();
+                    ez.cleanGs();
 
                     var texData = new byte[Width * Height];
                     var palette = new byte[256 * 4];
@@ -335,13 +336,13 @@ namespace Twinsanity
                         palInd++;
                     }
 
-                    EzSwizzle.writeTexPSMCT32(clutBufferBasePointer, 1, 0, 0, 16, 16, palette);
+                    ez.writeTexPSMCT32(clutBufferBasePointer, 1, 0, 0, 16, 16, palette);
 
                     // Swizzle main texture data?
-                    EzSwizzle.writeTexPSMT8(0, textureBufferWidth, 0, 0, Width, Height, texData);
+                    ez.writeTexPSMT8(0, textureBufferWidth, 0, 0, Width, Height, texData);
 
                     // Interleave texture data?
-                    EzSwizzle.readTexPSMCT32(0, 1, 0, 0, rrw, rrh, ref imageData);
+                    ez.readTexPSMCT32(0, 1, 0, 0, rrw, rrh, ref imageData);
 
 
                     break;

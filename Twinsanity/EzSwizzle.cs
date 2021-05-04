@@ -6,9 +6,9 @@ using System.IO;
 
 namespace Twinsanity
 {
-	public static class EzSwizzle
+	public class EzSwizzle
 	{
-		static byte[] gs = new byte[1024 * 1024 * 4];
+		private byte[] gs = new byte[1024 * 1024 * 4];
 
 		#region Constants
 		static readonly int[] block32 = new int[32] {
@@ -115,12 +115,12 @@ namespace Twinsanity
 
 		#endregion
 
-		public static void cleanGs()
+		public void cleanGs()
         {
 			gs = new byte[1024 * 1024 * 4];
         }
 
-		public static void dumpMemory(string path, bool dumpImage = false, string imgPath = "")
+		public void dumpMemory(string path, bool dumpImage = false, string imgPath = "")
         {
 			var gsDump = File.Create(path, gs.Length);
 			gsDump.Write(gs, 0, gs.Length);
@@ -152,21 +152,21 @@ namespace Twinsanity
 			}
 		}
 
-		public static void writeSelfPSMCT32(int dbp, int dbw, int dsax, int dsay, int rrw, int rrh)
+		public void writeSelfPSMCT32(int dbp, int dbw, int dsax, int dsay, int rrw, int rrh)
 		{
 			var gsCopy = (byte[])gs.Clone();
 			cleanGs();
 			writeTexPSMCT32(dbp, dbw, dsax, dsay, rrw, rrh, gsCopy);
 		}
 
-		public static void writeSelfPSMCT16(int dbp, int dbw, int dsax, int dsay, int rrw, int rrh)
+		public void writeSelfPSMCT16(int dbp, int dbw, int dsax, int dsay, int rrw, int rrh)
 		{
 			var gsCopy = (byte[])gs.Clone();
 			cleanGs();
 			writeTexPSMCT16(dbp, dbw, dsax, dsay, rrw * 2, rrh * 2, gsCopy);
 		}
 
-		public static void writeTexPSMT4(int dbp, int dbw, int dsax, int dsay, int rrw, int rrh, byte[] data)
+		public void writeTexPSMT4(int dbp, int dbw, int dsax, int dsay, int rrw, int rrh, byte[] data)
 		{
 			dbw >>= 1;
 			int src = 0;
@@ -224,7 +224,7 @@ namespace Twinsanity
 			}
 		}
 
-		public static void readTexPSMT4(int dbp, int dbw, int dsax, int dsay, int rrw, int rrh, ref byte[] data)
+		public void readTexPSMT4(int dbp, int dbw, int dsax, int dsay, int rrw, int rrh, ref byte[] data)
 		{
 			dbw >>= 1;
 			int src = 0;
@@ -283,7 +283,7 @@ namespace Twinsanity
 			}
 		}
 
-		public static void readTexPSMT4_mod(int dbp, int dbw, int dsax, int dsay, int rrw, int rrh, ref byte[] data)
+		public void readTexPSMT4_mod(int dbp, int dbw, int dsax, int dsay, int rrw, int rrh, ref byte[] data)
 		{
 			dbw >>= 1;
 			int src = 0;
@@ -340,7 +340,7 @@ namespace Twinsanity
 			}
 		}
 
-		public static void readTexPSMT8(int dbp, int dbw, int dsax, int dsay, int rrw, int rrh, ref byte[] data)
+		public void readTexPSMT8(int dbp, int dbw, int dsax, int dsay, int rrw, int rrh, ref byte[] data)
 		{
 			dbw >>= 1;
 			int src = 0;
@@ -378,7 +378,7 @@ namespace Twinsanity
 			}
 		}
 
-		public static void writeTexPSMT8(int dbp, int dbw, int dsax, int dsay, int rrw, int rrh, byte[] data)
+		public void writeTexPSMT8(int dbp, int dbw, int dsax, int dsay, int rrw, int rrh, byte[] data)
 		{
 			dbw >>= 1;
 			int src = 0;
@@ -416,7 +416,7 @@ namespace Twinsanity
 			}
 		}
 
-		public static void writeTexPSMCT16(int dbp, int dbw, int dsax, int dsay, int rrw, int rrh, byte[] data)
+		public void writeTexPSMCT16(int dbp, int dbw, int dsax, int dsay, int rrw, int rrh, byte[] data)
 		{
 			//dbw >>= 1;
 			int src = 0;
@@ -457,7 +457,7 @@ namespace Twinsanity
 			}
 		}
 
-		public static void readTexPSMCT16(int dbp, int dbw, int dsax, int dsay, int rrw, int rrh, ref byte[] data)
+		public void readTexPSMCT16(int dbp, int dbw, int dsax, int dsay, int rrw, int rrh, ref byte[] data)
 		{
 			//dbw >>= 1;
 			int src = 0;
@@ -498,7 +498,7 @@ namespace Twinsanity
 			}
 		}
 
-		public static void writeTexPSMCT32(int dbp, int dbw, int dsax, int dsay, int rrw, int rrh, byte[] data)
+		public void writeTexPSMCT32(int dbp, int dbw, int dsax, int dsay, int rrw, int rrh, byte[] data)
 		{
 			int src = 0;
 			int startBlockPos = dbp * 64;
@@ -537,7 +537,7 @@ namespace Twinsanity
 			}
 		}
 
-		public static void readTexPSMCT32(int dbp, int dbw, int dsax, int dsay, int rrw, int rrh, ref byte[] data)
+		public void readTexPSMCT32(int dbp, int dbw, int dsax, int dsay, int rrw, int rrh, ref byte[] data)
 		{
 			int src = 0;
 			int startBlockPos = dbp * 64;
