@@ -143,5 +143,40 @@ namespace TwinsaityEditor
             SelectedTexture = Textures[TextureIndex];
             Refresh();
         }
+
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            if (LoadPNG.ShowDialog() == DialogResult.OK)
+            {
+                Bitmap temp = new Bitmap(LoadPNG.FileName);
+                Bitmap map = new Bitmap(temp);
+                temp.Dispose();
+
+                int ogHeight = SelectedTexture.Height;
+                int ogWidth = SelectedTexture.Width;
+                int col = 0;
+                int row = 0;
+                int c = 0;
+                for (int y = row * ogHeight; y < ogHeight + (row * ogHeight); y++)
+                {
+                    for (int x = col * ogWidth; x < ogWidth + (col * ogWidth); x++)
+                    {
+                        if (c < SelectedTexture.RawData.Length)
+                        {
+                            SelectedTexture.RawData[c] = map.GetPixel(x, y);
+                        }
+                        c++;
+                    }
+                }
+                col++;
+                if (col == 4)
+                {
+                    col = 0;
+                    row++;
+                }
+                SelectedTexture.UpdateImageData();
+                Refresh();
+            }
+        }
     }
 }

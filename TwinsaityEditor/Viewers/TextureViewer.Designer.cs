@@ -40,6 +40,8 @@ namespace TwinsaityEditor
             this.btnNextTexture = new System.Windows.Forms.Button();
             this.lblTextureIndex = new System.Windows.Forms.Label();
             this.cbSaveMips = new System.Windows.Forms.CheckBox();
+            this.btnImport = new System.Windows.Forms.Button();
+            this.LoadPNG = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
             // 
             // GlControl1
@@ -109,12 +111,23 @@ namespace TwinsaityEditor
             this.cbSaveMips.Text = "Save mips";
             this.cbSaveMips.UseVisualStyleBackColor = true;
             // 
+            // btnImport
+            // 
+            this.btnImport.Location = new System.Drawing.Point(192, 304);
+            this.btnImport.Name = "btnImport";
+            this.btnImport.Size = new System.Drawing.Size(75, 23);
+            this.btnImport.TabIndex = 6;
+            this.btnImport.Text = "Import";
+            this.btnImport.UseVisualStyleBackColor = true;
+            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
+            // 
             // TextureViewer
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(286, 326);
+            this.ClientSize = new System.Drawing.Size(286, 338);
+            this.Controls.Add(this.btnImport);
             this.Controls.Add(this.cbSaveMips);
             this.Controls.Add(this.lblTextureIndex);
             this.Controls.Add(this.btnNextTexture);
@@ -138,5 +151,7 @@ namespace TwinsaityEditor
         private Button btnNextTexture;
         private Label lblTextureIndex;
         private CheckBox cbSaveMips;
+        private Button btnImport;
+        private OpenFileDialog LoadPNG;
     }
 }
