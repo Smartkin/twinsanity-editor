@@ -116,5 +116,21 @@ namespace Twinsanity
             public byte[] Blob; //blobSize << 4
         }
 
+        public void FillPackage(TwinsFile source, TwinsFile destination)
+        {
+            var sourceMaterials = source.GetItem<TwinsSection>(11).GetItem<TwinsSection>(1);
+            var destinationMaterials = destination.GetItem<TwinsSection>(11).GetItem<TwinsSection>(1);
+            foreach (var model in Models)
+            {
+                var materialId = model.MaterialID;
+                if (destinationMaterials.HasItem(materialId))
+                {
+                    continue;
+                }
+                var linkedMaterial = sourceMaterials.GetItem<Material>(materialId);
+                destinationMaterials.AddItem(materialId, linkedMaterial);
+                linkedMaterial.FillPackage(source, destination);
+            }
+        }
     }
 }

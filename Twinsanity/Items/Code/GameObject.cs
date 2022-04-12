@@ -325,6 +325,105 @@ namespace Twinsanity
             this.size = size;
         }
 
+        public void FillPackage(TwinsFile source, TwinsFile destination)
+        {
+            var sourceObjects = source.GetItem<TwinsSection>(10).GetItem<TwinsSection>(0);
+            var destinationObjects = destination.GetItem<TwinsSection>(10).GetItem<TwinsSection>(0);
+            var sourceScripts = source.GetItem<TwinsSection>(10).GetItem<TwinsSection>(1);
+            var destinationScripts = destination.GetItem<TwinsSection>(10).GetItem<TwinsSection>(1);
+            var sourceAnimations = source.GetItem<TwinsSection>(10).GetItem<TwinsSection>(2);
+            var destinationAnimations = destination.GetItem<TwinsSection>(10).GetItem<TwinsSection>(2);
+            var sourceOGIs = source.GetItem<TwinsSection>(10).GetItem<TwinsSection>(3);
+            var destinationOGIs = destination.GetItem<TwinsSection>(10).GetItem<TwinsSection>(3);
+            var sourceCMs = source.GetItem<TwinsSection>(10).GetItem<TwinsSection>(4);
+            var destinationCMs = destination.GetItem<TwinsSection>(10).GetItem<TwinsSection>(4);
+            var sourceSounds = source.GetItem<TwinsSection>(10).GetItem<TwinsSection>(6);
+            var destinationSounds = destination.GetItem<TwinsSection>(10).GetItem<TwinsSection>(6);
+            var sourceEngSounds = source.GetItem<TwinsSection>(10).GetItem<TwinsSection>(7);
+            var destinationEngSounds = destination.GetItem<TwinsSection>(10).GetItem<TwinsSection>(7);
+            foreach (ushort animId in cAnims)
+            {
+                if (destinationAnimations.HasItem(animId))
+                {
+                    continue;
+                }
+                var linkedAnimation = sourceAnimations.GetItem<Animation>(animId);
+                destinationAnimations.AddItem(animId, linkedAnimation);
+            }
+            foreach (ushort cmID in cCM)
+            {
+                if (destinationCMs.HasItem(cmID))
+                {
+                    continue;
+                }
+                var linkedCM = sourceCMs.GetItem<CodeModel>(cmID);
+                destinationCMs.AddItem(cmID, linkedCM);
+            }
+            foreach (ushort ogiID in cOGIs)
+            {
+                if (destinationOGIs.HasItem(ogiID))
+                {
+                    continue;
+                }
+                var linkedOGI = sourceOGIs.GetItem<GraphicsInfo>(ogiID);
+                destinationOGIs.AddItem(ogiID, linkedOGI);
+                linkedOGI.FillPackage(source, destination);
+            }
+            foreach (ushort scriptID in cScripts)
+            {
+                if (destinationScripts.HasItem(scriptID) || !sourceScripts.HasItem(scriptID))
+                {
+                    continue;
+                }
+                var linkedScript = sourceScripts.GetItem<Script>(scriptID);
+                destinationScripts.AddItem(scriptID, linkedScript);
+            }
+            using (var soundStream = new MemoryStream())
+            using (var soundEngStream = new MemoryStream())
+            {
+                BinaryWriter writerSound = new BinaryWriter(soundStream);
+                writerSound.Write(destinationSounds.ExtraData);
+                BinaryWriter writerEngSound = new BinaryWriter(soundEngStream);
+                writerEngSound.Write(destinationEngSounds.ExtraData);
+                foreach (ushort soundID in cSounds)
+                {
+                    var isSfx = sourceSounds.HasItem(soundID) && !sourceEngSounds.HasItem(soundID);
+                    var selectedDestination = (isSfx) ? destinationSounds : destinationEngSounds;
+                    var selectedSource = (isSfx) ? sourceSounds : sourceEngSounds;
+                    var selectedWriter = (isSfx) ? writerSound : writerEngSound;
+                    if (selectedDestination.HasItem(soundID))
+                    {
+                        continue;
+                    }
+                    var linkedSound = selectedSource.GetItem<SoundEffect>(soundID);
+                    var newSound = new SoundEffect();
+                    newSound.ID = linkedSound.ID;
+                    newSound.Freq = linkedSound.Freq;
+                    newSound.FreqFac = linkedSound.FreqFac;
+                    newSound.SoundSize = linkedSound.SoundSize;
+                    newSound.SoundOffset = (uint)selectedWriter.BaseStream.Length;
+                    selectedDestination.AddItem(soundID, newSound);
+
+                    var soundArray = new byte[linkedSound.SoundSize];
+                    Array.Copy(selectedSource.ExtraData, linkedSound.SoundOffset, soundArray, 0, linkedSound.SoundSize);
+                    selectedWriter.Write(soundArray);
+                }
+                destinationSounds.ExtraData = soundStream.ToArray();
+                destinationEngSounds.ExtraData = soundEngStream.ToArray();
+            }
+            foreach (ushort objectId in cObjects)
+            {
+                if (destinationObjects.HasItem(objectId) || ID == objectId)
+                {
+                    continue;
+                }
+                var linkedObject = sourceObjects.GetItem<GameObject>(objectId);
+                linkedObject.FillPackage(source, destination);
+                
+            }
+            destinationObjects.AddItem(ID, this);
+        }
+
         protected override int GetSize()
         {
             int oldSize = size;

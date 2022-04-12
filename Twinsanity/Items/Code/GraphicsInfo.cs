@@ -348,5 +348,37 @@ namespace Twinsanity
             public byte[] collisionDataBlob; //blobSize
             public TwinsVector4[] UnkVectors1;
         }
+
+        public void FillPackage(TwinsFile source, TwinsFile destination)
+        {
+            var sourceModels = source.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3);
+            var destinationModels = destination.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3);
+            var sourceSkins = source.GetItem<TwinsSection>(11).GetItem<TwinsSection>(4);
+            var destinationSkins = destination.GetItem<TwinsSection>(11).GetItem<TwinsSection>(4);
+            var sourceBlend = source.GetItem<TwinsSection>(11).GetItem<TwinsSection>(5);
+            var destinationBlend = destination.GetItem<TwinsSection>(11).GetItem<TwinsSection>(5);
+            foreach (GI_Type0 modelID in ModelIDs)
+            {
+                if (destinationModels.HasItem(modelID.ModelID))
+                {
+                    continue;
+                }
+                var linkedModel = sourceModels.GetItem<RigidModel>(modelID.ModelID);
+                destinationModels.AddItem(modelID.ModelID, linkedModel);
+                linkedModel.FillPackage(source, destination);
+            }
+            if (sourceSkins.HasItem(SkinID))
+            {
+                var linkedSkin = sourceSkins.GetItem<Skin>(SkinID);
+                destinationSkins.AddItem(SkinID, linkedSkin);
+                linkedSkin.FillPackage(source, destination);
+            }
+            if (sourceBlend.HasItem(BlendSkinID))
+            {
+                var linkedBlend = sourceBlend.GetItem<BlendSkin>(BlendSkinID);
+                destinationBlend.AddItem(BlendSkinID, linkedBlend);
+                linkedBlend.FillPackage(source, destination);
+            }
+        }
     }
 }

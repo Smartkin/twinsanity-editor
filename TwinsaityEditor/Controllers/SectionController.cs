@@ -54,6 +54,7 @@ namespace TwinsaityEditor
             else if (item is TwinsFile f && f.Type == TwinsFile.FileType.RM2)
             {
                 AddMenu("Add remaining instance sections", Menu_FileFillInstanceSections);
+                AddMenu("Import object package (RM2)", Menu_ImportPackage);
             }
             else
             {
@@ -248,6 +249,27 @@ namespace TwinsaityEditor
                         Parent = Data
                     };
                     AddItem(i, sec);
+                }
+            }
+        }
+
+        public void Menu_ImportPackage()
+        {
+            using (var ofd = new OpenFileDialog())
+            {
+                ofd.Filter = "RM2 file|*.rm2";
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    var package = new TwinsFile();
+                    package.LoadFile(ofd.FileName, TwinsFile.FileType.RM2);
+                    TopForm.CurCont.Data.Merge(package);
+                    Node.TreeView.BeginUpdate();
+                    Node.Nodes.Clear();
+                    foreach (var i in Data.RecordIDs)
+                    {
+                        TopForm.GenTreeNode(Data.Records[i.Value], this);
+                    }
+                    Node.TreeView.EndUpdate();
                 }
             }
         }
