@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace Twinsanity
 {
@@ -42,6 +43,22 @@ namespace Twinsanity
         protected override int GetSize()
         {
             return (int)ItemSize;
+        }
+
+        internal void FillPackage(TwinsFile source, TwinsFile destination)
+        {
+            var sourceMaterials = source.GetItem<TwinsSection>(11).GetItem<TwinsSection>(1);
+            var destinationMaterials = destination.GetItem<TwinsSection>(11).GetItem<TwinsSection>(1);
+            foreach (var materialId in MaterialIDs)
+            {
+                if (destinationMaterials.HasItem(materialId))
+                {
+                    continue;
+                }
+                var linkedMaterial = sourceMaterials.GetItem<Material>(materialId);
+                destinationMaterials.AddItem(materialId, linkedMaterial);
+                linkedMaterial.FillPackage(source, destination);
+            }
         }
     }
 }

@@ -343,6 +343,11 @@ namespace TwinsaityEditor
             }
         }
 
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
         private void buttonEXETool_Click(object sender, EventArgs e)
         {
             OpenEXETool();

@@ -48,5 +48,21 @@ namespace Twinsanity
             }
             return 20 + Name.Length + shdLen;
         }
+
+        internal void FillPackage(TwinsFile source, TwinsFile destination)
+        {
+            var sourceTextures = source.GetItem<TwinsSection>(11).GetItem<TwinsSection>(0);
+            var destinationTextures = destination.GetItem<TwinsSection>(11).GetItem<TwinsSection>(0);
+            foreach (var shader in Shaders)
+            {
+                var textureId = shader.TextureId;
+                if (destinationTextures.HasItem(textureId))
+                {
+                    continue;
+                }
+                var linkedTexture = sourceTextures.GetItem<Texture>(textureId);
+                destinationTextures.AddItem(textureId, linkedTexture);
+            }
+        }
     }
 }

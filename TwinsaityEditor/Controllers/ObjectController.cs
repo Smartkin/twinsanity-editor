@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using Twinsanity;
 
 namespace TwinsaityEditor
@@ -12,6 +13,7 @@ namespace TwinsaityEditor
         {
             Data = item;
             AddMenu("Open editor", Menu_OpenEditor);
+            AddMenu("Export with dependencies", Menu_OpenExportWithDependencies);
         }
 
         protected override string GetName()
@@ -183,6 +185,21 @@ namespace TwinsaityEditor
         private void Menu_OpenEditor()
         {
             MainFile.OpenEditor(this);
+        }
+
+        private void Menu_OpenExportWithDependencies()
+        {
+            using (SaveFileDialog sfd = new SaveFileDialog())
+            {
+                sfd.Filter = "RM2 file|*.rm2";
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    var package = new TwinsFile();
+                    package.FillExportPackageStructure();
+                    Data.FillPackage(MainFile.Data, package);
+                    package.SaveFile(sfd.FileName);
+                }
+            }
         }
     }
 }

@@ -66,8 +66,8 @@ namespace Twinsanity
 
     public class TwinsSection : TwinsItem
     {
-        protected readonly uint magic = 0x00010001;
-        protected readonly uint magicV2 = 0x00010003;
+        protected static readonly uint magic = 0x00010001;
+        protected static readonly uint magicV2 = 0x00010003;
         protected int size;
 
         public uint Magic { get; set; }
@@ -77,7 +77,7 @@ namespace Twinsanity
         public int Level { get; set; }
         public int ContentSize { get => GetContentSize(); }
 
-        public byte[] ExtraData { get; set; }
+        public byte[] ExtraData { get; set; } = new byte[0];
 
         private bool isMonkeyBallPS2 { get; set; }
 
@@ -576,6 +576,21 @@ namespace Twinsanity
             Records.Add(sec);
         }
 
+        private void CreateSection(SectionType type, uint id)
+        {
+            TwinsSection sec = new TwinsSection
+            {
+                ID = id,
+                Level = Level + 1,
+                Type = type,
+                Parent = this,
+                size = 12,
+                Magic = magic
+            };
+            RecordIDs.Add(id, Records.Count);
+            Records.Add(sec);
+        }
+
         public override void Save(BinaryWriter writer)
         {
             if (size == 0)
@@ -622,8 +637,14 @@ namespace Twinsanity
             return Records[RecordIDs[id]] as T;
         }
 
+        public bool HasItem(uint id)
+        {
+            return RecordIDs.ContainsKey(id);
+        }
+
         public void AddItem(uint id, TwinsItem item)
         {
+            item.Parent = this;
             RecordIDs.Add(id, Records.Count);
             Records.Add(item);
         }
@@ -656,6 +677,44 @@ namespace Twinsanity
         public bool ContainsItem(uint id)
         {
             return RecordIDs.ContainsKey(id);
+        }
+
+        public static TwinsSection CreateGraphicsSection()
+        {
+            TwinsSection section = new TwinsSection() { ID = 11, Magic = magic, size = 12 };
+            section.Type = SectionType.Graphics;
+            section.CreateSection(SectionType.Texture, 0);
+            section.CreateSection(SectionType.Material, 1);
+            section.CreateSection(SectionType.Model, 2);
+            section.CreateSection(SectionType.RigidModel, 3);
+            section.CreateSection(SectionType.Skin, 4);
+            section.CreateSection(SectionType.BlendSkin, 5);
+            section.CreateSection(SectionType.Mesh, 6);
+            section.CreateSection(SectionType.LodModel, 7);
+            section.CreateSection(SectionType.Skydome, 8);
+            section.size = section.GetSize();
+            return section;
+        }
+
+        public static TwinsSection CreateCodeSection()
+        {
+            TwinsSection section = new TwinsSection() { ID = 10, Magic = magic, size = 12 };
+            section.Type = SectionType.Graphics;
+            section.CreateSection(SectionType.Object, 0);
+            section.CreateSection(SectionType.Script, 1);
+            section.CreateSection(SectionType.Animation, 2);
+            section.CreateSection(SectionType.OGI, 3);
+            section.CreateSection(SectionType.CodeModel, 4);
+            section.CreateSection(SectionType.Unknown, 5);
+            section.CreateSection(SectionType.SE, 6);
+            section.CreateSection(SectionType.SE_Eng, 7);
+            section.CreateSection(SectionType.SE_Fre, 8);
+            section.CreateSection(SectionType.SE_Ger, 9);
+            section.CreateSection(SectionType.SE_Spa, 10);
+            section.CreateSection(SectionType.SE_Ita, 11);
+            section.CreateSection(SectionType.SE_Jpn, 12);
+            section.size = section.GetSize();
+            return section;
         }
     }
 }
