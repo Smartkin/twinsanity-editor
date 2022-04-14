@@ -205,7 +205,28 @@ namespace TwinsaityEditor
         private void buttonSave_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show("Overwrite original file?", "Save", MessageBoxButtons.OKCancel) == DialogResult.OK)
+            {
+                var originalFileName = CurCont.FileName;
+                var backups = 5;
+                for (var i = backups; i >= 1; --i)
+                {
+                    var backupPath = $"{originalFileName}.back{i}";
+                    var newBackupPath = $"{originalFileName}.back{i + 1}";
+                    if (System.IO.File.Exists(backupPath))
+                    {
+                        if (i == backups)
+                        {
+                            System.IO.File.Delete(backupPath);
+                        }
+                        else
+                        {
+                            System.IO.File.Move(backupPath, newBackupPath);
+                        }
+                    }
+                }
+                System.IO.File.Move(originalFileName, originalFileName + ".back1");
                 CurFile.SaveFile(CurCont.FileName);
+            } 
         }
 
         private void buttonAbout_Click(object sender, EventArgs e)

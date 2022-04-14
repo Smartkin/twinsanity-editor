@@ -341,6 +341,16 @@ namespace Twinsanity
             var destinationSounds = destination.GetItem<TwinsSection>(10).GetItem<TwinsSection>(6);
             var sourceEngSounds = source.GetItem<TwinsSection>(10).GetItem<TwinsSection>(7);
             var destinationEngSounds = destination.GetItem<TwinsSection>(10).GetItem<TwinsSection>(7);
+            var sourceFreSounds = source.GetItem<TwinsSection>(10).GetItem<TwinsSection>(8);
+            var destinationFreSounds = destination.GetItem<TwinsSection>(10).GetItem<TwinsSection>(8);
+            var sourceGerSounds = source.GetItem<TwinsSection>(10).GetItem<TwinsSection>(9);
+            var destinationGerSounds = destination.GetItem<TwinsSection>(10).GetItem<TwinsSection>(9);
+            var sourceSpaSounds = source.GetItem<TwinsSection>(10).GetItem<TwinsSection>(10);
+            var destinationSpaSounds = destination.GetItem<TwinsSection>(10).GetItem<TwinsSection>(10);
+            var sourceItaSounds = source.GetItem<TwinsSection>(10).GetItem<TwinsSection>(11);
+            var destinationItaSounds = destination.GetItem<TwinsSection>(10).GetItem<TwinsSection>(11);
+            var sourceJpnSounds = source.GetItem<TwinsSection>(10).GetItem<TwinsSection>(12);
+            var destinationJpnSounds = destination.GetItem<TwinsSection>(10).GetItem<TwinsSection>(12);
             foreach (ushort animId in cAnims)
             {
                 if (destinationAnimations.HasItem(animId))
@@ -380,36 +390,93 @@ namespace Twinsanity
             }
             using (var soundStream = new MemoryStream())
             using (var soundEngStream = new MemoryStream())
+            using (var soundFreStream = new MemoryStream())
+            using (var soundGerStream = new MemoryStream())
+            using (var soundSpaStream = new MemoryStream())
+            using (var soundItaStream = new MemoryStream())
+            using (var soundJpnStream = new MemoryStream())
             {
                 BinaryWriter writerSound = new BinaryWriter(soundStream);
                 writerSound.Write(destinationSounds.ExtraData);
                 BinaryWriter writerEngSound = new BinaryWriter(soundEngStream);
                 writerEngSound.Write(destinationEngSounds.ExtraData);
+                BinaryWriter writerFreSound = new BinaryWriter(soundFreStream);
+                writerFreSound.Write(destinationFreSounds.ExtraData);
+                BinaryWriter writerGerSound = new BinaryWriter(soundGerStream);
+                writerGerSound.Write(destinationGerSounds.ExtraData);
+                BinaryWriter writerSpaSound = new BinaryWriter(soundSpaStream);
+                writerSpaSound.Write(destinationSpaSounds.ExtraData);
+                BinaryWriter writerItaSound = new BinaryWriter(soundItaStream);
+                writerItaSound.Write(destinationItaSounds.ExtraData);
+                BinaryWriter writerJpnSound = new BinaryWriter(soundJpnStream);
+                writerJpnSound.Write(destinationJpnSounds.ExtraData);
                 foreach (ushort soundID in cSounds)
                 {
-                    var isSfx = sourceSounds.HasItem(soundID) && !sourceEngSounds.HasItem(soundID);
-                    var selectedDestination = (isSfx) ? destinationSounds : destinationEngSounds;
-                    var selectedSource = (isSfx) ? sourceSounds : sourceEngSounds;
-                    var selectedWriter = (isSfx) ? writerSound : writerEngSound;
-                    if (selectedDestination.HasItem(soundID))
+                    var isSfx = sourceSounds.HasItem(soundID);
+                    var isVoJpn = sourceJpnSounds.HasItem(soundID);
+                    var isVoEng = sourceEngSounds.HasItem(soundID);
+                    var isVoFre = sourceFreSounds.HasItem(soundID);
+                    var isVoGer = sourceGerSounds.HasItem(soundID);
+                    var isVoSpa = sourceSpaSounds.HasItem(soundID);
+                    var isVoIta = sourceItaSounds.HasItem(soundID);
+                    if (isSfx && !destinationSounds.HasItem(soundID))
                     {
-                        continue;
+                        var linkedSound = sourceSounds.GetItem<SoundEffect>(soundID);
+                        var newSound = new SoundEffect();
+                        SoundEffect.CopySoundTo(linkedSound, sourceSounds.ExtraData, newSound, writerSound);
+                        destinationSounds.AddItem(soundID, newSound);
                     }
-                    var linkedSound = selectedSource.GetItem<SoundEffect>(soundID);
-                    var newSound = new SoundEffect();
-                    newSound.ID = linkedSound.ID;
-                    newSound.Freq = linkedSound.Freq;
-                    newSound.FreqFac = linkedSound.FreqFac;
-                    newSound.SoundSize = linkedSound.SoundSize;
-                    newSound.SoundOffset = (uint)selectedWriter.BaseStream.Length;
-                    selectedDestination.AddItem(soundID, newSound);
+                    if (isVoEng && !destinationEngSounds.HasItem(soundID))
+                    {
+                        var linkedSound = sourceEngSounds.GetItem<SoundEffect>(soundID);
+                        var newSound = new SoundEffect();
+                        SoundEffect.CopySoundTo(linkedSound, sourceEngSounds.ExtraData, newSound, writerEngSound);
+                        destinationEngSounds.AddItem(soundID, newSound);
+                    }
+                    if (isVoFre && !destinationFreSounds.HasItem(soundID))
+                    {
+                        var linkedSound = sourceFreSounds.GetItem<SoundEffect>(soundID);
+                        var newSound = new SoundEffect();
+                        SoundEffect.CopySoundTo(linkedSound, sourceFreSounds.ExtraData, newSound, writerFreSound);
+                        destinationFreSounds.AddItem(soundID, newSound);
+                    }
+                    if (isVoGer && !destinationGerSounds.HasItem(soundID))
+                    {
+                        var linkedSound = sourceGerSounds.GetItem<SoundEffect>(soundID);
+                        var newSound = new SoundEffect();
+                        SoundEffect.CopySoundTo(linkedSound, sourceGerSounds.ExtraData, newSound, writerGerSound);
+                        destinationGerSounds.AddItem(soundID, newSound);
+                    }
+                    if(isVoSpa && !destinationSpaSounds.HasItem(soundID))
+                    {
+                        var linkedSound = sourceSpaSounds.GetItem<SoundEffect>(soundID);
+                        var newSound = new SoundEffect();
+                        SoundEffect.CopySoundTo(linkedSound, sourceSpaSounds.ExtraData, newSound, writerSpaSound);
+                        destinationSpaSounds.AddItem(soundID, newSound);
+                    }
+                    if(isVoIta && !destinationItaSounds.HasItem(soundID))
+                    {
+                        var linkedSound = sourceItaSounds.GetItem<SoundEffect>(soundID);
+                        var newSound = new SoundEffect();
+                        SoundEffect.CopySoundTo(linkedSound, sourceItaSounds.ExtraData, newSound, writerItaSound);
+                        destinationItaSounds.AddItem(soundID, newSound);
+                    }
+                    if(isVoJpn && !destinationJpnSounds.HasItem(soundID))
+                    {
+                        var linkedSound = sourceJpnSounds.GetItem<SoundEffect>(soundID);
+                        var newSound = new SoundEffect();
+                        SoundEffect.CopySoundTo(linkedSound, sourceJpnSounds.ExtraData, newSound, writerJpnSound);
+                        destinationJpnSounds.AddItem(soundID, newSound);
+                    }
 
-                    var soundArray = new byte[linkedSound.SoundSize];
-                    Array.Copy(selectedSource.ExtraData, linkedSound.SoundOffset, soundArray, 0, linkedSound.SoundSize);
-                    selectedWriter.Write(soundArray);
                 }
                 destinationSounds.ExtraData = soundStream.ToArray();
                 destinationEngSounds.ExtraData = soundEngStream.ToArray();
+                destinationFreSounds.ExtraData = soundFreStream.ToArray();
+                destinationGerSounds.ExtraData = soundGerStream.ToArray();
+                destinationSpaSounds.ExtraData = soundSpaStream.ToArray();
+                destinationItaSounds.ExtraData = soundItaStream.ToArray();
+                destinationJpnSounds.ExtraData = soundJpnStream.ToArray();
             }
             foreach (ushort objectId in cObjects)
             {
