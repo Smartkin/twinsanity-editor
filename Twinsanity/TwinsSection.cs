@@ -400,7 +400,7 @@ namespace Twinsanity
                         LoadItem<Texture>(reader, sub);
                         break;
                     case SectionType.TextureX: //XBOX textures
-                        LoadItem<TwinsItem>(reader, sub);
+                        LoadItem<TextureX>(reader, sub);
                         break;
                     case SectionType.Material:
                         LoadItem<Material>(reader, sub, Type);

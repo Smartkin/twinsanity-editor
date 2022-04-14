@@ -208,6 +208,7 @@
     <Compile Include="Controllers\SEController.cs" />
     <Compile Include="Controllers\LodModelController.cs" />
     <Compile Include="Controllers\SoundXboxController.cs" />
+    <Compile Include="Controllers\TextureXController.cs" />
     <Compile Include="Controllers\TriggerController.cs" />
     <Compile Include="Controllers\InstanceController.cs" />
     <Compile Include="Controllers\ScriptController.cs" />

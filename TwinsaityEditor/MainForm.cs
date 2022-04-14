@@ -74,6 +74,8 @@ namespace TwinsaityEditor
             }
             else if (a is Texture)
                 c = new TextureController(this, (Texture)a);
+            else if (a is TextureX)
+                c = new TextureXController(this, (TextureX)a);
             else if (a is Material)
                 c = new MaterialController(this, (Material)a);
             else if (a is Model)
