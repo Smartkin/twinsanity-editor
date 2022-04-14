@@ -1,16 +1,18 @@
-﻿using System.IO;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Twinsanity
 {
-    public class SkinX : TwinsItem
+    public class BlendSkinX : TwinsItem
     {
-
-        public List<SubModel> SubModels { get; set; } = new List<SubModel>();
+        public List<SubModel> SubModels = new List<SubModel>();
+        public uint BlendShapeCount { get; set; }
 
         public override void Save(BinaryWriter writer)
         {
             writer.Write((uint)SubModels.Count);
+            writer.Write(BlendShapeCount);
             for (int i = 0; i < SubModels.Count; i++)
             {
                 SubModel Sub = SubModels[i];
@@ -56,17 +58,30 @@ namespace Twinsanity
                     writer.Write(v.UV_X);
                     writer.Write(v.UV_Y);
                 }
+
+                for (int b = 0; b < BlendShapeCount; b++)
+                {
+                    for (int c = 0; c < Sub.VertexCount; c++)
+                    {
+                        VertexData v = Sub.VData[c];
+                        writer.Write(v.BlendShapes[b].X);
+                        writer.Write(v.BlendShapes[b].Y);
+                        writer.Write(v.BlendShapes[b].Z);
+                    }
+                }
             }
         }
 
         public override void Load(BinaryReader reader, int size)
         {
             var count = reader.ReadInt32();
+            BlendShapeCount = reader.ReadUInt32();
 
             SubModels.Clear();
             for (int i = 0; i < count; i++)
             {
                 SubModel sub = new SubModel();
+               
                 sub.MaterialID = reader.ReadUInt32();
                 sub.DataSize = reader.ReadUInt32(); // vertex count * 0x30
                 sub.VertexCount = reader.ReadInt32();
@@ -113,16 +128,29 @@ namespace Twinsanity
                     v.A = reader.ReadByte();
                     v.UV_X = reader.ReadSingle();
                     v.UV_Y = reader.ReadSingle();
+                    v.BlendShapes = new List<Pos>();
                     sub.VData.Add(v);
+                }
+                // load blend shapes (vertice based animations/facial expressions)
+                for (int b = 0; b < BlendShapeCount; b++)
+                {
+                    for (int c = 0; c < sub.VertexCount; c++)
+                    {
+                        VertexData v = sub.VData[c];
+                        Pos shape = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), 1);
+                        v.BlendShapes.Add(shape);
+                        sub.VData[c] = v;
+                    }
                 }
                 //sub.Zero = reader.ReadUInt32();
                 SubModels.Add(sub);
             }
+
         }
 
         protected override int GetSize()
         {
-            int Size = 4;
+            int Size = 8;
             for (int i = 0; i < SubModels.Count; i++)
             {
                 Size += 20;
@@ -132,6 +160,7 @@ namespace Twinsanity
                     Size += SubModels[i].GroupJoints[c].Count * 4;
                 }
                 Size += SubModels[i].VData.Count * 0x30;
+                Size += (int)BlendShapeCount * SubModels[i].VertexCount * 3 * 4;
             }
             return Size;
         }
@@ -147,20 +176,22 @@ namespace Twinsanity
             //public uint Zero;
             public List<VertexData> VData;
 
-            public uint UnkCount; // total number of group joints
+            public uint UnkCount;  // total number of group joints
             public List<List<uint>> GroupJoints; // Contains joint indexes per group
         }
         public struct VertexData
         {
             public float X, Y, Z;
-            public float UnkFloat; // Vertex weight?
-            public float UnkFloat2; // 1 - vertex weight?
+            public float UnkFloat;
+            public float UnkFloat2;
             public uint UnkInt2; // Zero?
             public uint UnkInt3;
             public uint UnkInt4;
             public uint UnkInt5;
             public byte R, G, B, A;
             public float UV_X, UV_Y;
+
+            public List<Pos> BlendShapes;
         }
         #endregion
 

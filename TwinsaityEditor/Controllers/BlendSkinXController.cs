@@ -8,15 +8,15 @@ using Twinsanity;
 
 namespace TwinsaityEditor
 {
-    public class SkinXController : ItemController
+    public class BlendSkinXController : ItemController
     {
-        public new SkinX Data { get; set; }
+        public new BlendSkinX Data { get; set; }
 
         public Vertex[] Vertices { get; set; }
         public uint[] Indices { get; set; }
         public bool IsLoaded { get; private set; }
 
-        public SkinXController(MainForm topform, SkinX item) : base(topform, item)
+        public BlendSkinXController(MainForm topform, BlendSkinX item) : base(topform, item)
         {
             Data = item;
             AddMenu("Open mesh viewer", Menu_OpenViewer);
@@ -24,14 +24,14 @@ namespace TwinsaityEditor
             //AddMenu("Export as COLLADA", Menu_ExportDAE);
             //AddMenu("Export as COLLADA + Textures", Menu_ExportDAE_Tex);
             //AddMenu("Export as COLLADA (Split Meshes)", Menu_ExportDAE_Split);
-            //AddMenu("Export as OBJ", Menu_ExportOBJ);
+            AddMenu("Export as OBJ", Menu_ExportOBJ);
             IsLoaded = false;
             //LoadMeshData(); TODO preferences
         }
 
         protected override string GetName()
         {
-            return string.Format("Skinned Model X [ID {0:X8}]", Data.ID);
+            return string.Format("Blend Skinned Model X [ID {0:X8}]", Data.ID);
         }
 
         protected override void GenText()
@@ -39,6 +39,7 @@ namespace TwinsaityEditor
             List<string> Text = new List<string>();
             Text.Add(string.Format("ID: {0:X8}", Data.ID));
             Text.Add($"Size: {Data.Size}");
+            Text.Add($"Blend Shape Count: {Data.BlendShapeCount}");
             Text.Add($"SubMesh Count: {Data.SubModels.Count}");
             for (int i = 0; i < Data.SubModels.Count; i++)
             {
@@ -48,19 +49,11 @@ namespace TwinsaityEditor
                 for (int a = 0; a < Data.SubModels[i].GroupJoints.Count; a++)
                 {
                     Text.Add($"Group #{a}: {Data.SubModels[i].GroupJoints[a].Count} joints");
-                    for (int b = 0; b < Data.SubModels[i].GroupJoints[a].Count; b++)
+                    for (int b = 0; b < Data.SubModels[i].GroupJoints[a].Count ; b++)
                     {
                         Text.Add($"#{b}: {Data.SubModels[i].GroupJoints[a][b]}");
                     }
                 }
-
-                /*
-                for (int a = 0; a < Data.SubModels[i].VData.Count; a++)
-                {
-                    Text.Add($"#{a}: {Data.SubModels[i].VData[a].UnkFloat}; {Data.SubModels[i].VData[a].UnkFloat2};{Data.SubModels[i].VData[a].UnkInt2}; {Data.SubModels[i].VData[a].UnkInt3};{Data.SubModels[i].VData[a].UnkInt4};{Data.SubModels[i].VData[a].UnkInt5}; ");
-                }
-                */
-
             }
 
 
@@ -69,7 +62,6 @@ namespace TwinsaityEditor
 
         public void LoadMeshData()
         {
-            if (IsLoaded) return;
             List<Vertex> vtx = new List<Vertex>();
             List<uint> idx = new List<uint>();
             int off = 0;
@@ -107,7 +99,47 @@ namespace TwinsaityEditor
             }
             Vertices = vtx.ToArray();
             Indices = idx.ToArray();
-            IsLoaded = true;
+        }
+        public void LoadMeshData_BlendShape(int id)
+        {
+            List<Vertex> vtx = new List<Vertex>();
+            List<uint> idx = new List<uint>();
+            int off = 0;
+            int gvert = 0;
+            foreach (var s in Data.SubModels)
+            {
+                gvert = 0;
+                for (int g = 0; g < s.GroupList.Count; g++)
+                {
+                    vtx.Add(new Vertex(new Vector3(-s.VData[gvert + 0].BlendShapes[id].X, s.VData[gvert + 0].BlendShapes[id].Y, s.VData[gvert + 0].BlendShapes[id].Z), Color.FromArgb(s.VData[gvert + 0].R, s.VData[gvert + 0].G, s.VData[gvert + 0].B)));
+                    vtx.Add(new Vertex(new Vector3(-s.VData[gvert + 1].BlendShapes[id].X, s.VData[gvert + 1].BlendShapes[id].Y, s.VData[gvert + 1].BlendShapes[id].Z), Color.FromArgb(s.VData[gvert + 1].R, s.VData[gvert + 1].G, s.VData[gvert + 1].B)));
+                    for (int i = 2; i < s.GroupList[g]; ++i)
+                    {
+                        vtx.Add(new Vertex(new Vector3(-s.VData[gvert + i].BlendShapes[id].X, s.VData[gvert + i].BlendShapes[id].Y, s.VData[gvert + i].BlendShapes[id].Z), Color.FromArgb(s.VData[gvert + i].R, s.VData[gvert + i].G, s.VData[gvert + i].B)));
+                        int v1 = off + i - 2 + (i & 1);
+                        int v2 = off + i - 1 - (i & 1);
+                        int v3 = off + i;
+                        Vector3 normal = VectorFuncs.CalcNormal(vtx[v1].Pos, vtx[v2].Pos, vtx[v3].Pos);
+                        var v = vtx[v1];
+                        v.Nor += normal;
+                        vtx[v1] = v;
+                        v = vtx[v2];
+                        v.Nor += normal;
+                        vtx[v2] = v;
+                        v = vtx[v3];
+                        v.Nor += normal;
+                        vtx[v3] = v;
+                        idx.Add((uint)v1);
+                        idx.Add((uint)v2);
+                        idx.Add((uint)v3);
+                    }
+                    gvert += (int)s.GroupList[g];
+                    off += (int)s.GroupList[g];
+                }
+            }
+
+            Vertices = vtx.ToArray();
+            Indices = idx.ToArray();
         }
 
         private void Menu_OpenViewer()
@@ -135,6 +167,6 @@ namespace TwinsaityEditor
                 File.WriteAllBytes(sfd.FileName, Data.ToOBJ());
             }
         }
-        
+
     }
 }

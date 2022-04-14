@@ -78,6 +78,8 @@ namespace TwinsaityEditor
                 c = new MaterialController(this, (Material)a);
             else if (a is Model)
                 c = new ModelController(this, (Model)a);
+            else if (a is ModelX)
+                c = new ModelXController(this, (ModelX)a);
             else if (a is RigidModel)
                 c = new RigidModelController(this, (RigidModel)a);
             else if (a is Skydome)
@@ -92,6 +94,8 @@ namespace TwinsaityEditor
                 c = new AnimationController(this, (Animation)a);
             else if (a is SoundEffect)
                 c = new SEController(this, (SoundEffect)a);
+            else if (a is SoundEffectX)
+                c = new SoundXboxController(this, (SoundEffectX)a);
             else if (a is AIPosition)
                 c = new AIPositionController(this, (AIPosition)a);
             else if (a is AIPath)
@@ -142,6 +146,10 @@ namespace TwinsaityEditor
                 c = new ObjectDemoController(this, (GameObjectDemo)a);
             else if (a is BlendSkin)
                 c = new BlendSkinController(this, (BlendSkin)a);
+            else if (a is BlendSkinX)
+                c = new BlendSkinXController(this, (BlendSkinX)a);
+            else if (a is GraphicsInfoMB)
+                c = new GraphicsInfoMBController(this, (GraphicsInfoMB)a);
             else
                 c = new ItemController(this, a);
 

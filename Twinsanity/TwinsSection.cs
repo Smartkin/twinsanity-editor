@@ -302,49 +302,42 @@ namespace Twinsanity
                                     LoadSection(reader, sub, SectionType.CodeModelDemo);
                                 break;
                             case 6:
-                                //Temporary workaround for XBOX chunks to work until someone figures this out
                                 if (Type == SectionType.CodeX)
                                     LoadSection(reader, sub, SectionType.Xbox_SE);
                                 else
                                     LoadSection(reader, sub, SectionType.SE);
                                 break;
                             case 7:
-                                //Temporary workaround for XBOX chunks to work until someone figures this out
                                 if (Type == SectionType.CodeX)
                                     LoadSection(reader, sub, SectionType.Xbox_SE_Eng);
                                 else
                                     LoadSection(reader, sub, SectionType.SE_Eng);
                                 break;
                             case 8:
-                                //Temporary workaround for XBOX chunks to work until someone figures this out
                                 if (Type == SectionType.CodeX)
                                     LoadSection(reader, sub, SectionType.Xbox_SE_Fre);
                                 else
                                     LoadSection(reader, sub, SectionType.SE_Fre);
                                 break;
                             case 9:
-                                //Temporary workaround for XBOX chunks to work until someone figures this out
                                 if (Type == SectionType.CodeX)
                                     LoadSection(reader, sub, SectionType.Xbox_SE_Ger);
                                 else
                                     LoadSection(reader, sub, SectionType.SE_Ger);
                                 break;
                             case 10:
-                                //Temporary workaround for XBOX chunks to work until someone figures this out
                                 if (Type == SectionType.CodeX)
                                     LoadSection(reader, sub, SectionType.Xbox_SE_Spa);
                                 else
                                     LoadSection(reader, sub, SectionType.SE_Spa);
                                 break;
                             case 11:
-                                //Temporary workaround for XBOX chunks to work until someone figures this out
                                 if (Type == SectionType.CodeX)
                                     LoadSection(reader, sub, SectionType.Xbox_SE_Ita);
                                 else
                                     LoadSection(reader, sub, SectionType.SE_Ita);
                                 break;
                             case 12:
-                                //Temporary workaround for XBOX chunks to work until someone figures this out
                                 if (Type == SectionType.CodeX)
                                     LoadSection(reader, sub, SectionType.Xbox_SE_Jpn);
                                 else
@@ -418,8 +411,8 @@ namespace Twinsanity
                     case SectionType.Model:
                         LoadItem<Model>(reader, sub);
                         break;
-                    case SectionType.ModelX: //XBOX meshes
-                        LoadItem<TwinsItem>(reader, sub);
+                    case SectionType.ModelX:
+                        LoadItem<ModelX>(reader, sub);
                         break;
                     case SectionType.RigidModel:
                     case SectionType.Mesh:
@@ -465,11 +458,16 @@ namespace Twinsanity
                     case SectionType.SE_Ita:
                     case SectionType.SE_Spa:
                     case SectionType.SE_Jpn:
-                        //Temporary workaround for XBOX chunks to work until someone figures this out
-                        if (Type == SectionType.CodeX)
-                            LoadItem<TwinsItem>(reader, sub);
-                        else
-                            LoadItem<SoundEffect>(reader, sub);
+                        LoadItem<SoundEffect>(reader, sub);
+                        break;
+                    case SectionType.Xbox_SE:
+                    case SectionType.Xbox_SE_Eng:
+                    case SectionType.Xbox_SE_Fre:
+                    case SectionType.Xbox_SE_Ger:
+                    case SectionType.Xbox_SE_Ita:
+                    case SectionType.Xbox_SE_Jpn:
+                    case SectionType.Xbox_SE_Spa:
+                        LoadItem<SoundEffectX>(reader, sub);
                         break;
                     case SectionType.AIPosition:
                         LoadItem<AIPosition>(reader, sub, Type);
@@ -504,6 +502,9 @@ namespace Twinsanity
                     case SectionType.OGI:
                         LoadItem<GraphicsInfo>(reader, sub);
                         break;
+                    case SectionType.GraphicsInfoMB:
+                        LoadItem<GraphicsInfoMB>(reader, sub);
+                        break;
                     case SectionType.Skin:
                         LoadItem<Skin>(reader, sub);
                         break;
@@ -527,6 +528,9 @@ namespace Twinsanity
                         break;
                     case SectionType.BlendSkin:
                         LoadItem<BlendSkin>(reader, sub);
+                        break;
+                    case SectionType.BlendSkinX:
+                        LoadItem<BlendSkinX>(reader, sub);
                         break;
                     default:
                         LoadItem<TwinsItem>(reader, sub);

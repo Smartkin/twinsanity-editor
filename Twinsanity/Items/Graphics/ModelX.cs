@@ -3,97 +3,26 @@ using System.Collections.Generic;
 
 namespace Twinsanity
 {
-    public class SkinX : TwinsItem
+    public class ModelX : TwinsItem
     {
-
         public List<SubModel> SubModels { get; set; } = new List<SubModel>();
-
-        public override void Save(BinaryWriter writer)
-        {
-            writer.Write((uint)SubModels.Count);
-            for (int i = 0; i < SubModels.Count; i++)
-            {
-                SubModel Sub = SubModels[i];
-
-                writer.Write(Sub.MaterialID);
-                writer.Write(Sub.DataSize);
-                writer.Write(Sub.VertexCount);
-
-                writer.Write(Sub.UnkCount);
-                writer.Write(Sub.GroupList.Count);
-                for (int c = 0; c < Sub.GroupList.Count; c++)
-                {
-                    writer.Write(Sub.GroupList[c]);
-                }
-                for (int c = 0; c < Sub.GroupList.Count; c++)
-                {
-                    writer.Write(Sub.GroupJoints[c].Count);
-                }
-                for (int c = 0; c < Sub.GroupList.Count; c++)
-                {
-                    for (int a = 0; a < Sub.GroupJoints[c].Count; a++)
-                    {
-                        writer.Write(Sub.GroupJoints[c][a]);
-                    }
-                }
-
-                for (int c = 0; c < Sub.VData.Count; c++)
-                {
-                    VertexData v = Sub.VData[c];
-                    writer.Write(v.X);
-                    writer.Write(v.Y);
-                    writer.Write(v.Z);
-                    writer.Write(v.UnkFloat);
-                    writer.Write(v.UnkFloat2);
-                    writer.Write(v.UnkInt2);
-                    writer.Write(v.UnkInt3);
-                    writer.Write(v.UnkInt4);
-                    writer.Write(v.UnkInt5);
-                    writer.Write(v.R);
-                    writer.Write(v.G);
-                    writer.Write(v.B);
-                    writer.Write(v.A);
-                    writer.Write(v.UV_X);
-                    writer.Write(v.UV_Y);
-                }
-            }
-        }
 
         public override void Load(BinaryReader reader, int size)
         {
             var count = reader.ReadInt32();
-
             SubModels.Clear();
             for (int i = 0; i < count; i++)
             {
                 SubModel sub = new SubModel();
-                sub.MaterialID = reader.ReadUInt32();
-                sub.DataSize = reader.ReadUInt32(); // vertex count * 0x30
                 sub.VertexCount = reader.ReadInt32();
-
-                sub.UnkCount = reader.ReadUInt32();
+                sub.DataSize = reader.ReadUInt32(); // vertex count * 0x1C
                 uint GroupCount = reader.ReadUInt32();
                 sub.GroupList = new List<uint>();
                 for (int c = 0; c < GroupCount; c++)
                 {
-                    sub.GroupList.Add(reader.ReadUInt32());
+                    sub.GroupList.Add(reader.ReadUInt32()); // list of vertex counts for each group
                 }
-                List<uint> JointCountList = new List<uint>();
-                for (int c = 0; c < GroupCount; c++)
-                {
-                    JointCountList.Add(reader.ReadUInt32());
-                }
-                sub.GroupJoints = new List<List<uint>>();
-                for (int c = 0; c < GroupCount; c++)
-                {
-                    List<uint> GroupJoints = new List<uint>();
-                    for (int a = 0; a < JointCountList[c]; a++)
-                    {
-                        GroupJoints.Add(reader.ReadUInt32());
-                    }
-                    sub.GroupJoints.Add(GroupJoints);
-                }
-                // load model (0x30 data per vertex)
+                // load model (0x1C data per vertex)
                 sub.VData = new List<VertexData>();
                 for (int c = 0; c < sub.VertexCount; c++)
                 {
@@ -101,12 +30,7 @@ namespace Twinsanity
                     v.X = reader.ReadSingle();
                     v.Y = reader.ReadSingle();
                     v.Z = reader.ReadSingle();
-                    v.UnkFloat = reader.ReadSingle();
-                    v.UnkFloat2 = reader.ReadSingle();
-                    v.UnkInt2 = reader.ReadUInt32();
-                    v.UnkInt3 = reader.ReadUInt32();
-                    v.UnkInt4 = reader.ReadUInt32();
-                    v.UnkInt5 = reader.ReadUInt32();
+                    v.UnkVal = reader.ReadUInt32();
                     v.R = reader.ReadByte();
                     v.G = reader.ReadByte();
                     v.B = reader.ReadByte();
@@ -115,8 +39,39 @@ namespace Twinsanity
                     v.UV_Y = reader.ReadSingle();
                     sub.VData.Add(v);
                 }
-                //sub.Zero = reader.ReadUInt32();
+                sub.Zero = reader.ReadUInt32();
                 SubModels.Add(sub);
+            }
+        }
+
+        public override void Save(BinaryWriter writer)
+        {
+            writer.Write((uint)SubModels.Count);
+            for (int i = 0; i < SubModels.Count; i++)
+            {
+                SubModel Sub = SubModels[i];
+                writer.Write(Sub.VertexCount);
+                writer.Write(Sub.DataSize);
+                writer.Write(Sub.GroupList.Count);
+                for (int c = 0; c < Sub.GroupList.Count; c++)
+                {
+                    writer.Write(Sub.GroupList[c]);
+                }
+                for (int c = 0; c < Sub.VData.Count; c++)
+                {
+                    VertexData v = Sub.VData[c];
+                    writer.Write(v.X);
+                    writer.Write(v.Y);
+                    writer.Write(v.Z);
+                    writer.Write(v.UnkVal);
+                    writer.Write(v.R);
+                    writer.Write(v.G);
+                    writer.Write(v.B);
+                    writer.Write(v.A);
+                    writer.Write(v.UV_X);
+                    writer.Write(v.UV_Y);
+                }
+                writer.Write(Sub.Zero);
             }
         }
 
@@ -125,13 +80,9 @@ namespace Twinsanity
             int Size = 4;
             for (int i = 0; i < SubModels.Count; i++)
             {
-                Size += 20;
-                Size += SubModels[i].GroupList.Count * 8;
-                for (int c = 0; c < SubModels[i].GroupList.Count; c++)
-                {
-                    Size += SubModels[i].GroupJoints[c].Count * 4;
-                }
-                Size += SubModels[i].VData.Count * 0x30;
+                Size += 16;
+                Size += SubModels[i].GroupList.Count * 4;
+                Size += SubModels[i].VData.Count * 0x1C;
             }
             return Size;
         }
@@ -142,23 +93,14 @@ namespace Twinsanity
             // Primary Header
             public int VertexCount;
             public uint DataSize;
-            public uint MaterialID;
             public List<uint> GroupList;
-            //public uint Zero;
+            public uint Zero;
             public List<VertexData> VData;
-
-            public uint UnkCount; // total number of group joints
-            public List<List<uint>> GroupJoints; // Contains joint indexes per group
         }
         public struct VertexData
         {
             public float X, Y, Z;
-            public float UnkFloat; // Vertex weight?
-            public float UnkFloat2; // 1 - vertex weight?
-            public uint UnkInt2; // Zero?
-            public uint UnkInt3;
-            public uint UnkInt4;
-            public uint UnkInt5;
+            public uint UnkVal;
             public byte R, G, B, A;
             public float UV_X, UV_Y;
         }
@@ -248,6 +190,8 @@ namespace Twinsanity
                     ply.WriteLine("property float x");
                     ply.WriteLine("property float y");
                     ply.WriteLine("property float z");
+                    ply.WriteLine("property float s");
+                    ply.WriteLine("property float t");
                     ply.WriteLine("property uchar red");
                     ply.WriteLine("property uchar green");
                     ply.WriteLine("property uchar blue");
@@ -269,7 +213,7 @@ namespace Twinsanity
                             red = s.VData[i].R;
                             green = s.VData[i].G;
                             blue = s.VData[i].B;
-                            string Line = string.Format("{0} {1} {2} {3} {4} {5}", -s.VData[i].X, s.VData[i].Y, s.VData[i].Z, red, green, blue);
+                            string Line = string.Format("{0} {1} {2} {3} {4} {5} {6} {7}", -s.VData[i].X, s.VData[i].Y, s.VData[i].Z, s.VData[i].UV_X, s.VData[i].UV_Y, red, green, blue);
                             Line = Line.Replace(',', '.');
                             ply.WriteLine(Line);
                         }
@@ -336,11 +280,12 @@ namespace Twinsanity
                             vertexcount += (int)SubModels[a].GroupList[g];
                         }
                     }
-
+                    
                 }
                 return stream.ToArray();
             }
         }
+
 
     }
 }
