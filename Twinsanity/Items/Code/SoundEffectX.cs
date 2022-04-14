@@ -14,7 +14,7 @@ namespace Twinsanity
         public override void Save(BinaryWriter writer)
         {
             writer.Write(Head);
-            writer.Write(Freq);
+            writer.Write((uint)Freq);
             writer.Write(Header);
             writer.Write(SoundData.Length);
             writer.Write(UnkInt);

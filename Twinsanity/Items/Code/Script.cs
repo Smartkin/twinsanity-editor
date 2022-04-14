@@ -223,6 +223,56 @@ namespace Twinsanity
                 {
                     return true;
                 }
+
+                public ushort UnkVal1
+                {
+                    get
+                    {
+                        return (ushort)(unkInt1 & 0x7);
+                    }
+                }
+                public ushort UnkVal2
+                {
+                    get
+                    {
+                        return (ushort)(unkInt1 >> 0x3 & 0xF);
+                    }
+                }
+                public int UnkVal3
+                {
+                    get
+                    {
+                        return (unkInt1 & 0xFF);
+                    }
+                }
+                public ushort UnkVal4
+                {
+                    get
+                    {
+                        return (ushort)(unkInt1 >> 0xB & 0x2);
+                    }
+                }
+                public bool UnkFlag1
+                {
+                    get
+                    {
+                        return (unkInt1 >> 0xD & 0x1) != 0;
+                    }
+                }
+                public bool UnkFlag2
+                {
+                    get
+                    {
+                        return (unkInt1 >> 0xE & 0x1) != 0;
+                    }
+                }
+                public bool UnkFlag3
+                {
+                    get
+                    {
+                        return (unkInt1 >> 0x12 & 0x1) != 0;
+                    }
+                }
             }
             public class ScriptStateBody
             {
@@ -390,7 +440,7 @@ namespace Twinsanity
                         {
                             ptr = ptr.nextCommand;
                         }
-                        ptr.internalIndex = (Int16)(ptr.internalIndex | 0x1000000);
+                        ptr.internalIndex = (int)(ptr.internalIndex | 0x1000000);
                         ptr.nextCommand = new ScriptCommand(scriptGameVersion);
                     }
                     else

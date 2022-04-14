@@ -31,6 +31,17 @@
             this.scriptListBox = new System.Windows.Forms.ListBox();
             this.scriptTree = new System.Windows.Forms.TreeView();
             this.panelType1 = new System.Windows.Forms.Panel();
+            this.type1Flag3 = new System.Windows.Forms.CheckBox();
+            this.type1Flag2 = new System.Windows.Forms.CheckBox();
+            this.type1Flag1 = new System.Windows.Forms.CheckBox();
+            this.label52 = new System.Windows.Forms.Label();
+            this.label51 = new System.Windows.Forms.Label();
+            this.label50 = new System.Windows.Forms.Label();
+            this.label49 = new System.Windows.Forms.Label();
+            this.type1Val4 = new System.Windows.Forms.TextBox();
+            this.type1Val2 = new System.Windows.Forms.TextBox();
+            this.type1Val3 = new System.Windows.Forms.TextBox();
+            this.type1Val1 = new System.Windows.Forms.TextBox();
             this.label46 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.type1Float = new System.Windows.Forms.TextBox();
@@ -45,14 +56,11 @@
             this.type1UnkByte1 = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
             this.panelMain = new System.Windows.Forms.Panel();
+            this.comboBox_StartUnit = new System.Windows.Forms.ComboBox();
+            this.listBox_UnitList = new System.Windows.Forms.ListBox();
             this.mainDelLinked = new System.Windows.Forms.Button();
-            this.mainLinkedPos = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
             this.mainAddLinked = new System.Windows.Forms.Button();
-            this.mainUnk = new System.Windows.Forms.TextBox();
             this.mainLinkedCnt = new System.Windows.Forms.TextBox();
             this.mainName = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -108,49 +116,50 @@
             this.label21 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
             this.panelLinked = new System.Windows.Forms.Panel();
+            this.listBox_LinkList = new System.Windows.Forms.ListBox();
             this.checkBox_state_header_toggle = new System.Windows.Forms.CheckBox();
             this.checkBox_localScriptSlot = new System.Windows.Forms.CheckBox();
             this.label30 = new System.Windows.Forms.Label();
-            this.linkedType2Pos = new System.Windows.Forms.TextBox();
-            this.label25 = new System.Windows.Forms.Label();
             this.linkedWarning = new System.Windows.Forms.Label();
             this.linkedDeleteType2 = new System.Windows.Forms.Button();
             this.linkedCreateType2 = new System.Windows.Forms.Button();
-            this.linkedDeleteType1 = new System.Windows.Forms.Button();
-            this.linkedCreateType1 = new System.Windows.Forms.Button();
             this.linkedSlotIndex = new System.Windows.Forms.TextBox();
             this.linkedBitField = new System.Windows.Forms.TextBox();
             this.label24 = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
             this.panelType3 = new System.Windows.Forms.Panel();
+            this.comboBox_perceptID = new System.Windows.Forms.ComboBox();
             this.label48 = new System.Windows.Forms.Label();
             this.label47 = new System.Windows.Forms.Label();
             this.type3CbNotGate = new System.Windows.Forms.CheckBox();
             this.label28 = new System.Windows.Forms.Label();
-            this.type3Z = new System.Windows.Forms.TextBox();
-            this.type3Y = new System.Windows.Forms.TextBox();
-            this.type3X = new System.Windows.Forms.TextBox();
-            this.type3UnkShort = new System.Windows.Forms.TextBox();
+            this.type3ThresholdInverse = new System.Windows.Forms.TextBox();
+            this.type3Threshold = new System.Windows.Forms.TextBox();
+            this.type3Interval = new System.Windows.Forms.TextBox();
+            this.type3Parameter = new System.Windows.Forms.TextBox();
             this.type3VTable = new System.Windows.Forms.TextBox();
             this.label19 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
-            this.panelType2 = new System.Windows.Forms.Panel();
-            this.checkBox_type2_cond_toggle = new System.Windows.Forms.CheckBox();
-            this.type2TransitionEnabled = new System.Windows.Forms.CheckBox();
+            this.panel_LinkEditor = new System.Windows.Forms.Panel();
+            this.panel_LinkEditorHolder = new System.Windows.Forms.Panel();
+            this.comboBox_LinkedUnit = new System.Windows.Forms.ComboBox();
+            this.listBox_LinkActions = new System.Windows.Forms.ListBox();
             this.label27 = new System.Windows.Forms.Label();
-            this.type2BitfieldWarning = new System.Windows.Forms.Label();
+            this.checkBox_type2_cond_toggle = new System.Windows.Forms.CheckBox();
             this.type2DeleteType4 = new System.Windows.Forms.Button();
+            this.type2BitfieldWarning = new System.Windows.Forms.Label();
             this.type2AddType4 = new System.Windows.Forms.Button();
-            this.type2SelectedType4Pos = new System.Windows.Forms.TextBox();
-            this.label16 = new System.Windows.Forms.Label();
-            this.type2DeleteType3 = new System.Windows.Forms.Button();
-            this.type2CreateType3 = new System.Windows.Forms.Button();
-            this.type2Slot = new System.Windows.Forms.TextBox();
-            this.type2Bitfield = new System.Windows.Forms.TextBox();
-            this.label15 = new System.Windows.Forms.Label();
+            this.type2TransitionEnabled = new System.Windows.Forms.CheckBox();
             this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.type2Bitfield = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.panel_propGrid = new System.Windows.Forms.Panel();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.comboBox_propGrid_ActionID = new System.Windows.Forms.ComboBox();
+            this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
+            this.button_propGrid_apply = new System.Windows.Forms.Button();
             this.scriptNameFilter = new System.Windows.Forms.TextBox();
             this.label32 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
@@ -170,8 +179,11 @@
             this.panelType4.SuspendLayout();
             this.panelLinked.SuspendLayout();
             this.panelType3.SuspendLayout();
-            this.panelType2.SuspendLayout();
+            this.panel_LinkEditor.SuspendLayout();
+            this.panel_LinkEditorHolder.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.panel_propGrid.SuspendLayout();
+            this.tableLayoutPanel3.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -191,7 +203,7 @@
             this.scriptListBox.FormattingEnabled = true;
             this.scriptListBox.Location = new System.Drawing.Point(0, 24);
             this.scriptListBox.Name = "scriptListBox";
-            this.scriptListBox.Size = new System.Drawing.Size(321, 567);
+            this.scriptListBox.Size = new System.Drawing.Size(300, 567);
             this.scriptListBox.TabIndex = 0;
             this.scriptListBox.SelectedIndexChanged += new System.EventHandler(this.scriptListBox_SelectedIndexChanged);
             // 
@@ -201,12 +213,23 @@
             this.scriptTree.Indent = 11;
             this.scriptTree.Location = new System.Drawing.Point(0, 0);
             this.scriptTree.Name = "scriptTree";
-            this.scriptTree.Size = new System.Drawing.Size(254, 591);
+            this.scriptTree.Size = new System.Drawing.Size(275, 591);
             this.scriptTree.TabIndex = 1;
             this.scriptTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.scriptTree_AfterSelect);
             // 
             // panelType1
             // 
+            this.panelType1.Controls.Add(this.type1Flag3);
+            this.panelType1.Controls.Add(this.type1Flag2);
+            this.panelType1.Controls.Add(this.type1Flag1);
+            this.panelType1.Controls.Add(this.label52);
+            this.panelType1.Controls.Add(this.label51);
+            this.panelType1.Controls.Add(this.label50);
+            this.panelType1.Controls.Add(this.label49);
+            this.panelType1.Controls.Add(this.type1Val4);
+            this.panelType1.Controls.Add(this.type1Val2);
+            this.panelType1.Controls.Add(this.type1Val3);
+            this.panelType1.Controls.Add(this.type1Val1);
             this.panelType1.Controls.Add(this.label46);
             this.panelType1.Controls.Add(this.label13);
             this.panelType1.Controls.Add(this.type1Float);
@@ -221,18 +244,117 @@
             this.panelType1.Controls.Add(this.type1UnkByte1);
             this.panelType1.Controls.Add(this.label12);
             this.panelType1.Controls.Add(this.label11);
-            this.panelType1.Controls.Add(this.label10);
-            this.panelType1.Controls.Add(this.label9);
             this.panelType1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelType1.Location = new System.Drawing.Point(0, 132);
+            this.panelType1.Location = new System.Drawing.Point(0, 309);
             this.panelType1.Name = "panelType1";
-            this.panelType1.Size = new System.Drawing.Size(302, 477);
+            this.panelType1.Size = new System.Drawing.Size(302, 300);
             this.panelType1.TabIndex = 0;
+            // 
+            // type1Flag3
+            // 
+            this.type1Flag3.AutoSize = true;
+            this.type1Flag3.Location = new System.Drawing.Point(93, 27);
+            this.type1Flag3.Name = "type1Flag3";
+            this.type1Flag3.Size = new System.Drawing.Size(38, 17);
+            this.type1Flag3.TabIndex = 28;
+            this.type1Flag3.Text = "F3";
+            this.type1Flag3.UseVisualStyleBackColor = true;
+            this.type1Flag3.Enabled = false;
+            // 
+            // type1Flag2
+            // 
+            this.type1Flag2.AutoSize = true;
+            this.type1Flag2.Location = new System.Drawing.Point(49, 27);
+            this.type1Flag2.Name = "type1Flag2";
+            this.type1Flag2.Size = new System.Drawing.Size(38, 17);
+            this.type1Flag2.TabIndex = 27;
+            this.type1Flag2.Text = "F2";
+            this.type1Flag2.UseVisualStyleBackColor = true;
+            this.type1Flag2.Enabled = false;
+            // 
+            // type1Flag1
+            // 
+            this.type1Flag1.AutoSize = true;
+            this.type1Flag1.Location = new System.Drawing.Point(7, 27);
+            this.type1Flag1.Name = "type1Flag1";
+            this.type1Flag1.Size = new System.Drawing.Size(38, 17);
+            this.type1Flag1.TabIndex = 26;
+            this.type1Flag1.Text = "F1";
+            this.type1Flag1.UseVisualStyleBackColor = true;
+            this.type1Flag1.Enabled = false;
+            // 
+            // label52
+            // 
+            this.label52.AutoSize = true;
+            this.label52.Location = new System.Drawing.Point(155, 78);
+            this.label52.Name = "label52";
+            this.label52.Size = new System.Drawing.Size(31, 13);
+            this.label52.TabIndex = 25;
+            this.label52.Text = "Val4:";
+            // 
+            // label51
+            // 
+            this.label51.AutoSize = true;
+            this.label51.Location = new System.Drawing.Point(154, 55);
+            this.label51.Name = "label51";
+            this.label51.Size = new System.Drawing.Size(31, 13);
+            this.label51.TabIndex = 24;
+            this.label51.Text = "Val2:";
+            // 
+            // label50
+            // 
+            this.label50.AutoSize = true;
+            this.label50.Location = new System.Drawing.Point(6, 78);
+            this.label50.Name = "label50";
+            this.label50.Size = new System.Drawing.Size(31, 13);
+            this.label50.TabIndex = 23;
+            this.label50.Text = "Val3:";
+            // 
+            // label49
+            // 
+            this.label49.AutoSize = true;
+            this.label49.Location = new System.Drawing.Point(7, 56);
+            this.label49.Name = "label49";
+            this.label49.Size = new System.Drawing.Size(31, 13);
+            this.label49.TabIndex = 22;
+            this.label49.Text = "Val1:";
+            // 
+            // type1Val4
+            // 
+            this.type1Val4.Location = new System.Drawing.Point(190, 75);
+            this.type1Val4.Name = "type1Val4";
+            this.type1Val4.Size = new System.Drawing.Size(109, 20);
+            this.type1Val4.TabIndex = 21;
+            this.type1Val4.Enabled = false;
+            // 
+            // type1Val2
+            // 
+            this.type1Val2.Location = new System.Drawing.Point(190, 52);
+            this.type1Val2.Name = "type1Val2";
+            this.type1Val2.Size = new System.Drawing.Size(109, 20);
+            this.type1Val2.TabIndex = 20;
+            this.type1Val2.Enabled = false;
+            // 
+            // type1Val3
+            // 
+            this.type1Val3.Location = new System.Drawing.Point(43, 75);
+            this.type1Val3.Name = "type1Val3";
+            this.type1Val3.Size = new System.Drawing.Size(103, 20);
+            this.type1Val3.TabIndex = 19;
+            this.type1Val3.Enabled = false;
+            // 
+            // type1Val1
+            // 
+            this.type1Val1.Location = new System.Drawing.Point(43, 52);
+            this.type1Val1.Name = "type1Val1";
+            this.type1Val1.Size = new System.Drawing.Size(103, 20);
+            this.type1Val1.TabIndex = 18;
+            this.type1Val1.Enabled = false;
             // 
             // label46
             // 
             this.label46.AutoSize = true;
-            this.label46.Location = new System.Drawing.Point(158, 81);
+            this.label46.Location = new System.Drawing.Point(150, 104);
             this.label46.Name = "label46";
             this.label46.Size = new System.Drawing.Size(38, 13);
             this.label46.TabIndex = 17;
@@ -241,7 +363,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(7, 81);
+            this.label13.Location = new System.Drawing.Point(3, 104);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(36, 13);
             this.label13.TabIndex = 16;
@@ -249,7 +371,7 @@
             // 
             // type1Float
             // 
-            this.type1Float.Location = new System.Drawing.Point(154, 416);
+            this.type1Float.Location = new System.Drawing.Point(154, 247);
             this.type1Float.Name = "type1Float";
             this.type1Float.Size = new System.Drawing.Size(145, 20);
             this.type1Float.TabIndex = 15;
@@ -257,7 +379,7 @@
             // 
             // type1Byte
             // 
-            this.type1Byte.Location = new System.Drawing.Point(3, 416);
+            this.type1Byte.Location = new System.Drawing.Point(3, 247);
             this.type1Byte.Name = "type1Byte";
             this.type1Byte.Size = new System.Drawing.Size(145, 20);
             this.type1Byte.TabIndex = 14;
@@ -265,36 +387,39 @@
             // 
             // type1Floats
             // 
+            this.type1Floats.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
             this.type1Floats.FormattingEnabled = true;
-            this.type1Floats.Location = new System.Drawing.Point(155, 107);
+            this.type1Floats.Location = new System.Drawing.Point(155, 133);
             this.type1Floats.Name = "type1Floats";
-            this.type1Floats.Size = new System.Drawing.Size(144, 303);
+            this.type1Floats.Size = new System.Drawing.Size(144, 108);
             this.type1Floats.TabIndex = 13;
             this.type1Floats.SelectedIndexChanged += new System.EventHandler(this.type1Floats_SelectedIndexChanged);
             // 
             // type1Bytes
             // 
+            this.type1Bytes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.type1Bytes.FormattingEnabled = true;
-            this.type1Bytes.Location = new System.Drawing.Point(3, 107);
+            this.type1Bytes.Location = new System.Drawing.Point(3, 133);
             this.type1Bytes.Name = "type1Bytes";
-            this.type1Bytes.Size = new System.Drawing.Size(145, 303);
+            this.type1Bytes.Size = new System.Drawing.Size(145, 108);
             this.type1Bytes.TabIndex = 12;
             this.type1Bytes.SelectedIndexChanged += new System.EventHandler(this.type1Bytes_SelectedIndexChanged);
             // 
             // label26
             // 
             this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(10, 8);
+            this.label26.Location = new System.Drawing.Point(7, 8);
             this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(111, 13);
+            this.label26.Size = new System.Drawing.Size(107, 13);
             this.label26.TabIndex = 11;
-            this.label26.Text = "Header (Type1) Editor";
+            this.label26.Text = "Control Packet Editor";
             // 
             // type1Warning
             // 
             this.type1Warning.AutoSize = true;
             this.type1Warning.ForeColor = System.Drawing.Color.Red;
-            this.type1Warning.Location = new System.Drawing.Point(7, 445);
+            this.type1Warning.Location = new System.Drawing.Point(3, 270);
             this.type1Warning.Name = "type1Warning";
             this.type1Warning.Size = new System.Drawing.Size(254, 26);
             this.type1Warning.TabIndex = 10;
@@ -302,81 +427,60 @@
             // 
             // type1UnkInt
             // 
-            this.type1UnkInt.Location = new System.Drawing.Point(63, 33);
+            this.type1UnkInt.Location = new System.Drawing.Point(191, 29);
             this.type1UnkInt.Name = "type1UnkInt";
-            this.type1UnkInt.Size = new System.Drawing.Size(228, 20);
+            this.type1UnkInt.Size = new System.Drawing.Size(108, 20);
             this.type1UnkInt.TabIndex = 9;
             this.type1UnkInt.TextChanged += new System.EventHandler(this.type1UnkInt_TextChanged);
             // 
             // type1UnkShort
             // 
-            this.type1UnkShort.Location = new System.Drawing.Point(202, 6);
+            this.type1UnkShort.Location = new System.Drawing.Point(190, 5);
             this.type1UnkShort.Name = "type1UnkShort";
-            this.type1UnkShort.Size = new System.Drawing.Size(89, 20);
+            this.type1UnkShort.Size = new System.Drawing.Size(109, 20);
             this.type1UnkShort.TabIndex = 8;
             this.type1UnkShort.TextChanged += new System.EventHandler(this.type1UnkShort_TextChanged);
             // 
             // type1UnkByte2
             // 
-            this.type1UnkByte2.Location = new System.Drawing.Point(202, 78);
+            this.type1UnkByte2.Location = new System.Drawing.Point(190, 101);
             this.type1UnkByte2.Name = "type1UnkByte2";
-            this.type1UnkByte2.Size = new System.Drawing.Size(97, 20);
+            this.type1UnkByte2.Size = new System.Drawing.Size(109, 20);
             this.type1UnkByte2.TabIndex = 7;
             this.type1UnkByte2.TextChanged += new System.EventHandler(this.type1UnkByte2_TextChanged);
             // 
             // type1UnkByte1
             // 
-            this.type1UnkByte1.Location = new System.Drawing.Point(49, 78);
+            this.type1UnkByte1.Location = new System.Drawing.Point(43, 101);
             this.type1UnkByte1.Name = "type1UnkByte1";
-            this.type1UnkByte1.Size = new System.Drawing.Size(100, 20);
+            this.type1UnkByte1.Size = new System.Drawing.Size(103, 20);
             this.type1UnkByte1.TabIndex = 6;
             this.type1UnkByte1.TextChanged += new System.EventHandler(this.type1UnkByte1_TextChanged);
             // 
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(14, 36);
+            this.label12.Location = new System.Drawing.Point(141, 32);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(42, 13);
+            this.label12.Size = new System.Drawing.Size(41, 13);
             this.label12.TabIndex = 3;
-            this.label12.Text = "UnkInt:";
+            this.label12.Text = "Bitfield:";
             // 
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(133, 10);
+            this.label11.Location = new System.Drawing.Point(130, 8);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(63, 13);
+            this.label11.Size = new System.Drawing.Size(51, 13);
             this.label11.TabIndex = 2;
-            this.label11.Text = "UnkUShort:";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(227, 15);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(69, 13);
-            this.label10.TabIndex = 1;
-            this.label10.Text = "FloatAmount:";
-            this.label10.Visible = false;
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(227, 10);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(67, 13);
-            this.label9.TabIndex = 0;
-            this.label9.Text = "ByteAmount:";
-            this.label9.Visible = false;
+            this.label11.Text = "Version?:";
             // 
             // panelMain
             // 
+            this.panelMain.Controls.Add(this.comboBox_StartUnit);
+            this.panelMain.Controls.Add(this.listBox_UnitList);
             this.panelMain.Controls.Add(this.mainDelLinked);
-            this.panelMain.Controls.Add(this.mainLinkedPos);
-            this.panelMain.Controls.Add(this.label8);
             this.panelMain.Controls.Add(this.mainAddLinked);
-            this.panelMain.Controls.Add(this.mainUnk);
             this.panelMain.Controls.Add(this.mainLinkedCnt);
             this.panelMain.Controls.Add(this.mainName);
             this.panelMain.Controls.Add(this.label7);
@@ -389,54 +493,57 @@
             this.panelMain.Size = new System.Drawing.Size(302, 609);
             this.panelMain.TabIndex = 0;
             // 
+            // comboBox_StartUnit
+            // 
+            this.comboBox_StartUnit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBox_StartUnit.FormattingEnabled = true;
+            this.comboBox_StartUnit.Location = new System.Drawing.Point(55, 47);
+            this.comboBox_StartUnit.Name = "comboBox_StartUnit";
+            this.comboBox_StartUnit.Size = new System.Drawing.Size(239, 21);
+            this.comboBox_StartUnit.TabIndex = 12;
+            this.comboBox_StartUnit.SelectedIndexChanged += new System.EventHandler(this.comboBox_StartUnit_SelectedIndexChanged);
+            // 
+            // listBox_UnitList
+            // 
+            this.listBox_UnitList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listBox_UnitList.FormattingEnabled = true;
+            this.listBox_UnitList.Location = new System.Drawing.Point(6, 100);
+            this.listBox_UnitList.Name = "listBox_UnitList";
+            this.listBox_UnitList.Size = new System.Drawing.Size(293, 498);
+            this.listBox_UnitList.TabIndex = 11;
+            // 
             // mainDelLinked
             // 
-            this.mainDelLinked.Location = new System.Drawing.Point(88, 125);
+            this.mainDelLinked.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.mainDelLinked.Location = new System.Drawing.Point(179, 72);
             this.mainDelLinked.Name = "mainDelLinked";
-            this.mainDelLinked.Size = new System.Drawing.Size(75, 23);
+            this.mainDelLinked.Size = new System.Drawing.Size(120, 23);
             this.mainDelLinked.TabIndex = 10;
-            this.mainDelLinked.Text = "Delete";
+            this.mainDelLinked.Text = "Delete Unit";
             this.mainDelLinked.UseVisualStyleBackColor = true;
             this.mainDelLinked.Click += new System.EventHandler(this.mainDelLinked_Click);
             // 
-            // mainLinkedPos
-            // 
-            this.mainLinkedPos.Location = new System.Drawing.Point(116, 88);
-            this.mainLinkedPos.Name = "mainLinkedPos";
-            this.mainLinkedPos.Size = new System.Drawing.Size(100, 20);
-            this.mainLinkedPos.TabIndex = 9;
-            this.mainLinkedPos.TextChanged += new System.EventHandler(this.mainLinkedPos_TextChanged);
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(7, 91);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(112, 13);
-            this.label8.TabIndex = 8;
-            this.label8.Text = "Linked Script Position:";
-            // 
             // mainAddLinked
             // 
-            this.mainAddLinked.Location = new System.Drawing.Point(7, 125);
+            this.mainAddLinked.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.mainAddLinked.Location = new System.Drawing.Point(3, 72);
             this.mainAddLinked.Name = "mainAddLinked";
-            this.mainAddLinked.Size = new System.Drawing.Size(75, 23);
+            this.mainAddLinked.Size = new System.Drawing.Size(120, 23);
             this.mainAddLinked.TabIndex = 7;
-            this.mainAddLinked.Text = "Add";
+            this.mainAddLinked.Text = "Add Unit";
             this.mainAddLinked.UseVisualStyleBackColor = true;
             this.mainAddLinked.Click += new System.EventHandler(this.mainAddLinked_Click);
             // 
-            // mainUnk
-            // 
-            this.mainUnk.Location = new System.Drawing.Point(104, 64);
-            this.mainUnk.Name = "mainUnk";
-            this.mainUnk.Size = new System.Drawing.Size(100, 20);
-            this.mainUnk.TabIndex = 6;
-            this.mainUnk.TextChanged += new System.EventHandler(this.mainUnk_TextChanged);
-            // 
             // mainLinkedCnt
             // 
-            this.mainLinkedCnt.Location = new System.Drawing.Point(104, 43);
+            this.mainLinkedCnt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.mainLinkedCnt.Location = new System.Drawing.Point(194, 2);
             this.mainLinkedCnt.Name = "mainLinkedCnt";
             this.mainLinkedCnt.ReadOnly = true;
             this.mainLinkedCnt.Size = new System.Drawing.Size(100, 20);
@@ -444,34 +551,36 @@
             // 
             // mainName
             // 
-            this.mainName.Location = new System.Drawing.Point(104, 21);
+            this.mainName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.mainName.Location = new System.Drawing.Point(54, 24);
             this.mainName.Name = "mainName";
-            this.mainName.Size = new System.Drawing.Size(100, 20);
+            this.mainName.Size = new System.Drawing.Size(241, 20);
             this.mainName.TabIndex = 4;
             this.mainName.TextChanged += new System.EventHandler(this.mainName_TextChanged);
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(4, 67);
+            this.label7.Location = new System.Drawing.Point(4, 50);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(72, 13);
+            this.label7.Size = new System.Drawing.Size(54, 13);
             this.label7.TabIndex = 3;
-            this.label7.Text = "Default State:";
+            this.label7.Text = "Start Unit:";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(4, 45);
+            this.label6.Location = new System.Drawing.Point(131, 5);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(71, 13);
+            this.label6.Size = new System.Drawing.Size(57, 13);
             this.label6.TabIndex = 2;
-            this.label6.Text = "LinkedScripts";
+            this.label6.Text = "Unit Count";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(4, 24);
+            this.label5.Location = new System.Drawing.Point(7, 26);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(38, 13);
             this.label5.TabIndex = 1;
@@ -482,9 +591,9 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(4, 4);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(90, 13);
+            this.label4.Size = new System.Drawing.Size(93, 13);
             this.label4.TabIndex = 0;
-            this.label4.Text = "Main Script Editor";
+            this.label4.Text = "Layer Script Editor";
             // 
             // panelHeader
             // 
@@ -503,7 +612,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(143, 50);
+            this.label3.Location = new System.Drawing.Point(4, 84);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(50, 13);
             this.label3.TabIndex = 5;
@@ -512,7 +621,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(143, 24);
+            this.label2.Location = new System.Drawing.Point(4, 53);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(45, 13);
             this.label2.TabIndex = 4;
@@ -520,17 +629,17 @@
             // 
             // headerSubscriptArg
             // 
-            this.headerSubscriptArg.Location = new System.Drawing.Point(194, 47);
+            this.headerSubscriptArg.Location = new System.Drawing.Point(68, 81);
             this.headerSubscriptArg.Name = "headerSubscriptArg";
-            this.headerSubscriptArg.Size = new System.Drawing.Size(100, 20);
+            this.headerSubscriptArg.Size = new System.Drawing.Size(223, 20);
             this.headerSubscriptArg.TabIndex = 3;
             this.headerSubscriptArg.TextChanged += new System.EventHandler(this.headerSubscriptArg_TextChanged);
             // 
             // headerSubscriptID
             // 
-            this.headerSubscriptID.Location = new System.Drawing.Point(194, 21);
+            this.headerSubscriptID.Location = new System.Drawing.Point(68, 50);
             this.headerSubscriptID.Name = "headerSubscriptID";
-            this.headerSubscriptID.Size = new System.Drawing.Size(100, 20);
+            this.headerSubscriptID.Size = new System.Drawing.Size(223, 20);
             this.headerSubscriptID.TabIndex = 2;
             this.headerSubscriptID.TextChanged += new System.EventHandler(this.headerSubscriptID_TextChanged);
             // 
@@ -539,7 +648,7 @@
             this.headerSubScripts.FormattingEnabled = true;
             this.headerSubScripts.Location = new System.Drawing.Point(7, 21);
             this.headerSubScripts.Name = "headerSubScripts";
-            this.headerSubScripts.Size = new System.Drawing.Size(121, 21);
+            this.headerSubScripts.Size = new System.Drawing.Size(284, 21);
             this.headerSubScripts.TabIndex = 1;
             this.headerSubScripts.SelectedIndexChanged += new System.EventHandler(this.headerSubScripts_SelectedIndexChanged);
             // 
@@ -548,9 +657,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(4, 4);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(102, 13);
+            this.label1.Size = new System.Drawing.Size(119, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Header Script Editor";
+            this.label1.Text = "Behaviour Starter Editor";
             // 
             // panelGeneral
             // 
@@ -894,11 +1003,11 @@
             // label29
             // 
             this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(14, 8);
+            this.label29.Location = new System.Drawing.Point(14, 6);
             this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(70, 13);
+            this.label29.Size = new System.Drawing.Size(155, 13);
             this.label29.TabIndex = 8;
-            this.label29.Text = "Type 4 Editor";
+            this.label29.Text = "Action Editor (Unknown Action)";
             // 
             // type4Warning
             // 
@@ -940,25 +1049,22 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(14, 27);
+            this.label20.Location = new System.Drawing.Point(48, 26);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(73, 13);
+            this.label20.Size = new System.Drawing.Size(34, 13);
             this.label20.TabIndex = 0;
-            this.label20.Text = "VTable Index:";
+            this.label20.Text = "Type:";
             // 
             // panelLinked
             // 
+            this.panelLinked.Controls.Add(this.listBox_LinkList);
             this.panelLinked.Controls.Add(this.checkBox_state_header_toggle);
             this.panelLinked.Controls.Add(this.checkBox_localScriptSlot);
             this.panelLinked.Controls.Add(this.label30);
             this.panelLinked.Controls.Add(this.panelType1);
-            this.panelLinked.Controls.Add(this.linkedType2Pos);
-            this.panelLinked.Controls.Add(this.label25);
             this.panelLinked.Controls.Add(this.linkedWarning);
             this.panelLinked.Controls.Add(this.linkedDeleteType2);
             this.panelLinked.Controls.Add(this.linkedCreateType2);
-            this.panelLinked.Controls.Add(this.linkedDeleteType1);
-            this.panelLinked.Controls.Add(this.linkedCreateType1);
             this.panelLinked.Controls.Add(this.linkedSlotIndex);
             this.panelLinked.Controls.Add(this.linkedBitField);
             this.panelLinked.Controls.Add(this.label24);
@@ -970,21 +1076,33 @@
             this.panelLinked.TabIndex = 0;
             this.panelLinked.Paint += new System.Windows.Forms.PaintEventHandler(this.panelLinked_Paint);
             // 
+            // listBox_LinkList
+            // 
+            this.listBox_LinkList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listBox_LinkList.FormattingEnabled = true;
+            this.listBox_LinkList.Location = new System.Drawing.Point(3, 105);
+            this.listBox_LinkList.Name = "listBox_LinkList";
+            this.listBox_LinkList.Size = new System.Drawing.Size(296, 199);
+            this.listBox_LinkList.TabIndex = 16;
+            this.listBox_LinkList.SelectedIndexChanged += new System.EventHandler(this.listBox_LinkList_SelectedIndexChanged);
+            // 
             // checkBox_state_header_toggle
             // 
             this.checkBox_state_header_toggle.AutoSize = true;
-            this.checkBox_state_header_toggle.Location = new System.Drawing.Point(88, 7);
+            this.checkBox_state_header_toggle.Location = new System.Drawing.Point(71, 7);
             this.checkBox_state_header_toggle.Name = "checkBox_state_header_toggle";
-            this.checkBox_state_header_toggle.Size = new System.Drawing.Size(61, 17);
+            this.checkBox_state_header_toggle.Size = new System.Drawing.Size(96, 17);
             this.checkBox_state_header_toggle.TabIndex = 15;
-            this.checkBox_state_header_toggle.Text = "Header";
+            this.checkBox_state_header_toggle.Text = "Control Packet";
             this.checkBox_state_header_toggle.UseVisualStyleBackColor = true;
             this.checkBox_state_header_toggle.CheckedChanged += new System.EventHandler(this.checkBox_state_header_toggle_CheckedChanged);
             // 
             // checkBox_localScriptSlot
             // 
             this.checkBox_localScriptSlot.AutoSize = true;
-            this.checkBox_localScriptSlot.Location = new System.Drawing.Point(158, 7);
+            this.checkBox_localScriptSlot.Location = new System.Drawing.Point(173, 7);
             this.checkBox_localScriptSlot.Name = "checkBox_localScriptSlot";
             this.checkBox_localScriptSlot.Size = new System.Drawing.Size(103, 17);
             this.checkBox_localScriptSlot.TabIndex = 14;
@@ -997,25 +1115,9 @@
             this.label30.AutoSize = true;
             this.label30.Location = new System.Drawing.Point(9, 8);
             this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(62, 13);
+            this.label30.Size = new System.Drawing.Size(56, 13);
             this.label30.TabIndex = 13;
-            this.label30.Text = "State Editor";
-            // 
-            // linkedType2Pos
-            // 
-            this.linkedType2Pos.Location = new System.Drawing.Point(88, 78);
-            this.linkedType2Pos.Name = "linkedType2Pos";
-            this.linkedType2Pos.Size = new System.Drawing.Size(100, 20);
-            this.linkedType2Pos.TabIndex = 12;
-            // 
-            // label25
-            // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(4, 80);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(83, 13);
-            this.label25.TabIndex = 11;
-            this.label25.Text = "Type 2 Position:";
+            this.label30.Text = "Unit Editor";
             // 
             // linkedWarning
             // 
@@ -1031,47 +1133,24 @@
             // 
             // linkedDeleteType2
             // 
-            this.linkedDeleteType2.Location = new System.Drawing.Point(97, 103);
+            this.linkedDeleteType2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkedDeleteType2.Location = new System.Drawing.Point(179, 77);
             this.linkedDeleteType2.Name = "linkedDeleteType2";
-            this.linkedDeleteType2.Size = new System.Drawing.Size(94, 23);
+            this.linkedDeleteType2.Size = new System.Drawing.Size(120, 23);
             this.linkedDeleteType2.TabIndex = 9;
-            this.linkedDeleteType2.Text = "Delete Type 2";
+            this.linkedDeleteType2.Text = "Delete Link";
             this.linkedDeleteType2.UseVisualStyleBackColor = true;
             this.linkedDeleteType2.Click += new System.EventHandler(this.linkedDeleteType2_Click);
             // 
             // linkedCreateType2
             // 
-            this.linkedCreateType2.Location = new System.Drawing.Point(7, 103);
+            this.linkedCreateType2.Location = new System.Drawing.Point(3, 77);
             this.linkedCreateType2.Name = "linkedCreateType2";
-            this.linkedCreateType2.Size = new System.Drawing.Size(84, 23);
+            this.linkedCreateType2.Size = new System.Drawing.Size(120, 23);
             this.linkedCreateType2.TabIndex = 8;
-            this.linkedCreateType2.Text = "Add Type 2";
+            this.linkedCreateType2.Text = "Add Link";
             this.linkedCreateType2.UseVisualStyleBackColor = true;
             this.linkedCreateType2.Click += new System.EventHandler(this.linkedCreateType2_Click);
-            // 
-            // linkedDeleteType1
-            // 
-            this.linkedDeleteType1.Enabled = false;
-            this.linkedDeleteType1.Location = new System.Drawing.Point(203, 86);
-            this.linkedDeleteType1.Name = "linkedDeleteType1";
-            this.linkedDeleteType1.Size = new System.Drawing.Size(91, 23);
-            this.linkedDeleteType1.TabIndex = 5;
-            this.linkedDeleteType1.Text = "Delete Header";
-            this.linkedDeleteType1.UseVisualStyleBackColor = true;
-            this.linkedDeleteType1.Visible = false;
-            this.linkedDeleteType1.Click += new System.EventHandler(this.linkedDeleteType1_Click);
-            // 
-            // linkedCreateType1
-            // 
-            this.linkedCreateType1.Enabled = false;
-            this.linkedCreateType1.Location = new System.Drawing.Point(202, 98);
-            this.linkedCreateType1.Name = "linkedCreateType1";
-            this.linkedCreateType1.Size = new System.Drawing.Size(97, 23);
-            this.linkedCreateType1.TabIndex = 4;
-            this.linkedCreateType1.Text = "Create Header";
-            this.linkedCreateType1.UseVisualStyleBackColor = true;
-            this.linkedCreateType1.Visible = false;
-            this.linkedCreateType1.Click += new System.EventHandler(this.linkedCreateType1_Click);
             // 
             // linkedSlotIndex
             // 
@@ -1109,46 +1188,56 @@
             // 
             // panelType3
             // 
+            this.panelType3.Controls.Add(this.comboBox_perceptID);
             this.panelType3.Controls.Add(this.label48);
             this.panelType3.Controls.Add(this.label47);
             this.panelType3.Controls.Add(this.type3CbNotGate);
             this.panelType3.Controls.Add(this.label28);
-            this.panelType3.Controls.Add(this.type3Z);
-            this.panelType3.Controls.Add(this.type3Y);
-            this.panelType3.Controls.Add(this.type3X);
-            this.panelType3.Controls.Add(this.type3UnkShort);
+            this.panelType3.Controls.Add(this.type3ThresholdInverse);
+            this.panelType3.Controls.Add(this.type3Threshold);
+            this.panelType3.Controls.Add(this.type3Interval);
+            this.panelType3.Controls.Add(this.type3Parameter);
             this.panelType3.Controls.Add(this.type3VTable);
             this.panelType3.Controls.Add(this.label19);
             this.panelType3.Controls.Add(this.label18);
             this.panelType3.Controls.Add(this.label17);
-            this.panelType3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelType3.Location = new System.Drawing.Point(0, 139);
+            this.panelType3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelType3.Location = new System.Drawing.Point(0, 0);
             this.panelType3.Name = "panelType3";
-            this.panelType3.Size = new System.Drawing.Size(302, 470);
+            this.panelType3.Size = new System.Drawing.Size(302, 160);
             this.panelType3.TabIndex = 0;
+            // 
+            // comboBox_perceptID
+            // 
+            this.comboBox_perceptID.FormattingEnabled = true;
+            this.comboBox_perceptID.Location = new System.Drawing.Point(49, 27);
+            this.comboBox_perceptID.Name = "comboBox_perceptID";
+            this.comboBox_perceptID.Size = new System.Drawing.Size(245, 21);
+            this.comboBox_perceptID.TabIndex = 12;
+            this.comboBox_perceptID.SelectedIndexChanged += new System.EventHandler(this.comboBox_perceptID_SelectedIndexChanged);
             // 
             // label48
             // 
             this.label48.AutoSize = true;
-            this.label48.Location = new System.Drawing.Point(17, 136);
+            this.label48.Location = new System.Drawing.Point(15, 136);
             this.label48.Name = "label48";
-            this.label48.Size = new System.Drawing.Size(80, 13);
+            this.label48.Size = new System.Drawing.Size(67, 13);
             this.label48.TabIndex = 11;
-            this.label48.Text = "Return Inverse:";
+            this.label48.Text = "Thr. Inverse:";
             // 
             // label47
             // 
             this.label47.AutoSize = true;
             this.label47.Location = new System.Drawing.Point(21, 110);
             this.label47.Name = "label47";
-            this.label47.Size = new System.Drawing.Size(76, 13);
+            this.label47.Size = new System.Drawing.Size(57, 13);
             this.label47.TabIndex = 10;
-            this.label47.Text = "Return Check:";
+            this.label47.Text = "Threshold:";
             // 
             // type3CbNotGate
             // 
             this.type3CbNotGate.AutoSize = true;
-            this.type3CbNotGate.Location = new System.Drawing.Point(211, 56);
+            this.type3CbNotGate.Location = new System.Drawing.Point(90, 7);
             this.type3CbNotGate.Name = "type3CbNotGate";
             this.type3CbNotGate.Size = new System.Drawing.Size(73, 17);
             this.type3CbNotGate.TabIndex = 9;
@@ -1161,63 +1250,65 @@
             this.label28.AutoSize = true;
             this.label28.Location = new System.Drawing.Point(10, 8);
             this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(120, 13);
+            this.label28.Size = new System.Drawing.Size(74, 13);
             this.label28.TabIndex = 8;
-            this.label28.Text = "Condition (Type3) Editor";
+            this.label28.Text = "Percept Editor";
             // 
-            // type3Z
+            // type3ThresholdInverse
             // 
-            this.type3Z.Location = new System.Drawing.Point(104, 133);
-            this.type3Z.Name = "type3Z";
-            this.type3Z.Size = new System.Drawing.Size(100, 20);
-            this.type3Z.TabIndex = 7;
-            this.type3Z.TextChanged += new System.EventHandler(this.type3Z_TextChanged);
+            this.type3ThresholdInverse.Location = new System.Drawing.Point(84, 133);
+            this.type3ThresholdInverse.Name = "type3ThresholdInverse";
+            this.type3ThresholdInverse.Size = new System.Drawing.Size(210, 20);
+            this.type3ThresholdInverse.TabIndex = 7;
+            this.type3ThresholdInverse.TextChanged += new System.EventHandler(this.type3Z_TextChanged);
             // 
-            // type3Y
+            // type3Threshold
             // 
-            this.type3Y.Location = new System.Drawing.Point(104, 107);
-            this.type3Y.Name = "type3Y";
-            this.type3Y.Size = new System.Drawing.Size(100, 20);
-            this.type3Y.TabIndex = 6;
-            this.type3Y.TextChanged += new System.EventHandler(this.type3Y_TextChanged);
+            this.type3Threshold.Location = new System.Drawing.Point(84, 107);
+            this.type3Threshold.Name = "type3Threshold";
+            this.type3Threshold.Size = new System.Drawing.Size(210, 20);
+            this.type3Threshold.TabIndex = 6;
+            this.type3Threshold.TextChanged += new System.EventHandler(this.type3Y_TextChanged);
             // 
-            // type3X
+            // type3Interval
             // 
-            this.type3X.Location = new System.Drawing.Point(104, 81);
-            this.type3X.Name = "type3X";
-            this.type3X.Size = new System.Drawing.Size(100, 20);
-            this.type3X.TabIndex = 5;
-            this.type3X.TextChanged += new System.EventHandler(this.type3X_TextChanged);
+            this.type3Interval.Location = new System.Drawing.Point(84, 81);
+            this.type3Interval.Name = "type3Interval";
+            this.type3Interval.Size = new System.Drawing.Size(210, 20);
+            this.type3Interval.TabIndex = 5;
+            this.type3Interval.TextChanged += new System.EventHandler(this.type3X_TextChanged);
             // 
-            // type3UnkShort
+            // type3Parameter
             // 
-            this.type3UnkShort.Location = new System.Drawing.Point(104, 54);
-            this.type3UnkShort.Name = "type3UnkShort";
-            this.type3UnkShort.Size = new System.Drawing.Size(100, 20);
-            this.type3UnkShort.TabIndex = 4;
-            this.type3UnkShort.TextChanged += new System.EventHandler(this.type3UnkShort_TextChanged);
+            this.type3Parameter.Location = new System.Drawing.Point(84, 54);
+            this.type3Parameter.Name = "type3Parameter";
+            this.type3Parameter.Size = new System.Drawing.Size(210, 20);
+            this.type3Parameter.TabIndex = 4;
+            this.type3Parameter.TextChanged += new System.EventHandler(this.type3UnkShort_TextChanged);
             // 
             // type3VTable
             // 
-            this.type3VTable.Location = new System.Drawing.Point(104, 27);
+            this.type3VTable.Enabled = false;
+            this.type3VTable.Location = new System.Drawing.Point(104, 159);
             this.type3VTable.Name = "type3VTable";
             this.type3VTable.Size = new System.Drawing.Size(100, 20);
             this.type3VTable.TabIndex = 3;
+            this.type3VTable.Visible = false;
             this.type3VTable.TextChanged += new System.EventHandler(this.type3VTable_TextChanged);
             // 
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(50, 84);
+            this.label19.Location = new System.Drawing.Point(7, 84);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(47, 13);
+            this.label19.Size = new System.Drawing.Size(71, 13);
             this.label19.TabIndex = 2;
-            this.label19.Text = "Modifier:";
+            this.label19.Text = "Interval (sec):";
             // 
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(39, 57);
+            this.label18.Location = new System.Drawing.Point(20, 57);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(58, 13);
             this.label18.TabIndex = 1;
@@ -1226,71 +1317,98 @@
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(28, 30);
+            this.label17.Location = new System.Drawing.Point(10, 30);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(70, 13);
+            this.label17.Size = new System.Drawing.Size(34, 13);
             this.label17.TabIndex = 0;
-            this.label17.Text = "VTableIndex:";
+            this.label17.Text = "Type:";
             // 
-            // panelType2
+            // panel_LinkEditor
             // 
-            this.panelType2.Controls.Add(this.checkBox_type2_cond_toggle);
-            this.panelType2.Controls.Add(this.panelType3);
-            this.panelType2.Controls.Add(this.type2TransitionEnabled);
-            this.panelType2.Controls.Add(this.label27);
-            this.panelType2.Controls.Add(this.type2BitfieldWarning);
-            this.panelType2.Controls.Add(this.type2DeleteType4);
-            this.panelType2.Controls.Add(this.type2AddType4);
-            this.panelType2.Controls.Add(this.type2SelectedType4Pos);
-            this.panelType2.Controls.Add(this.label16);
-            this.panelType2.Controls.Add(this.type2DeleteType3);
-            this.panelType2.Controls.Add(this.type2CreateType3);
-            this.panelType2.Controls.Add(this.type2Slot);
-            this.panelType2.Controls.Add(this.type2Bitfield);
-            this.panelType2.Controls.Add(this.label15);
-            this.panelType2.Controls.Add(this.label14);
-            this.panelType2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelType2.Location = new System.Drawing.Point(3, 16);
-            this.panelType2.Name = "panelType2";
-            this.panelType2.Size = new System.Drawing.Size(302, 609);
-            this.panelType2.TabIndex = 0;
+            this.panel_LinkEditor.Controls.Add(this.panel_LinkEditorHolder);
+            this.panel_LinkEditor.Controls.Add(this.panelType3);
+            this.panel_LinkEditor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel_LinkEditor.Location = new System.Drawing.Point(3, 16);
+            this.panel_LinkEditor.Name = "panel_LinkEditor";
+            this.panel_LinkEditor.Size = new System.Drawing.Size(302, 609);
+            this.panel_LinkEditor.TabIndex = 0;
             // 
-            // checkBox_type2_cond_toggle
+            // panel_LinkEditorHolder
             // 
-            this.checkBox_type2_cond_toggle.AutoSize = true;
-            this.checkBox_type2_cond_toggle.Location = new System.Drawing.Point(142, 8);
-            this.checkBox_type2_cond_toggle.Name = "checkBox_type2_cond_toggle";
-            this.checkBox_type2_cond_toggle.Size = new System.Drawing.Size(70, 17);
-            this.checkBox_type2_cond_toggle.TabIndex = 13;
-            this.checkBox_type2_cond_toggle.Text = "Condition";
-            this.checkBox_type2_cond_toggle.UseVisualStyleBackColor = true;
-            this.checkBox_type2_cond_toggle.CheckedChanged += new System.EventHandler(this.checkBox_type2_cond_toggle_CheckedChanged);
+            this.panel_LinkEditorHolder.Controls.Add(this.comboBox_LinkedUnit);
+            this.panel_LinkEditorHolder.Controls.Add(this.listBox_LinkActions);
+            this.panel_LinkEditorHolder.Controls.Add(this.label27);
+            this.panel_LinkEditorHolder.Controls.Add(this.checkBox_type2_cond_toggle);
+            this.panel_LinkEditorHolder.Controls.Add(this.type2DeleteType4);
+            this.panel_LinkEditorHolder.Controls.Add(this.type2BitfieldWarning);
+            this.panel_LinkEditorHolder.Controls.Add(this.type2AddType4);
+            this.panel_LinkEditorHolder.Controls.Add(this.type2TransitionEnabled);
+            this.panel_LinkEditorHolder.Controls.Add(this.label14);
+            this.panel_LinkEditorHolder.Controls.Add(this.label15);
+            this.panel_LinkEditorHolder.Controls.Add(this.type2Bitfield);
+            this.panel_LinkEditorHolder.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel_LinkEditorHolder.Location = new System.Drawing.Point(0, 160);
+            this.panel_LinkEditorHolder.Name = "panel_LinkEditorHolder";
+            this.panel_LinkEditorHolder.Size = new System.Drawing.Size(302, 449);
+            this.panel_LinkEditorHolder.TabIndex = 2;
             // 
-            // type2TransitionEnabled
+            // comboBox_LinkedUnit
             // 
-            this.type2TransitionEnabled.AutoSize = true;
-            this.type2TransitionEnabled.Location = new System.Drawing.Point(228, 8);
-            this.type2TransitionEnabled.Name = "type2TransitionEnabled";
-            this.type2TransitionEnabled.Size = new System.Drawing.Size(65, 17);
-            this.type2TransitionEnabled.TabIndex = 12;
-            this.type2TransitionEnabled.Text = "Enabled";
-            this.type2TransitionEnabled.UseVisualStyleBackColor = true;
-            this.type2TransitionEnabled.CheckedChanged += new System.EventHandler(this.type2TransitionEnabled_CheckedChanged);
+            this.comboBox_LinkedUnit.FormattingEnabled = true;
+            this.comboBox_LinkedUnit.Location = new System.Drawing.Point(68, 58);
+            this.comboBox_LinkedUnit.Name = "comboBox_LinkedUnit";
+            this.comboBox_LinkedUnit.Size = new System.Drawing.Size(226, 21);
+            this.comboBox_LinkedUnit.TabIndex = 15;
+            this.comboBox_LinkedUnit.SelectedIndexChanged += new System.EventHandler(this.comboBox_LinkedUnit_SelectedIndexChanged);
+            // 
+            // listBox_LinkActions
+            // 
+            this.listBox_LinkActions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listBox_LinkActions.FormattingEnabled = true;
+            this.listBox_LinkActions.Location = new System.Drawing.Point(3, 115);
+            this.listBox_LinkActions.Name = "listBox_LinkActions";
+            this.listBox_LinkActions.Size = new System.Drawing.Size(296, 329);
+            this.listBox_LinkActions.TabIndex = 14;
+            this.listBox_LinkActions.SelectedIndexChanged += new System.EventHandler(this.listBox_LinkActions_SelectedIndexChanged);
             // 
             // label27
             // 
             this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(13, 12);
+            this.label27.Location = new System.Drawing.Point(9, 9);
             this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(121, 13);
+            this.label27.Size = new System.Drawing.Size(57, 13);
             this.label27.TabIndex = 11;
-            this.label27.Text = "Coroutine (Type2) Editor";
+            this.label27.Text = "Link Editor";
+            // 
+            // checkBox_type2_cond_toggle
+            // 
+            this.checkBox_type2_cond_toggle.AutoSize = true;
+            this.checkBox_type2_cond_toggle.Location = new System.Drawing.Point(68, 8);
+            this.checkBox_type2_cond_toggle.Name = "checkBox_type2_cond_toggle";
+            this.checkBox_type2_cond_toggle.Size = new System.Drawing.Size(63, 17);
+            this.checkBox_type2_cond_toggle.TabIndex = 13;
+            this.checkBox_type2_cond_toggle.Text = "Percept";
+            this.checkBox_type2_cond_toggle.UseVisualStyleBackColor = true;
+            this.checkBox_type2_cond_toggle.CheckedChanged += new System.EventHandler(this.checkBox_type2_cond_toggle_CheckedChanged);
+            // 
+            // type2DeleteType4
+            // 
+            this.type2DeleteType4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.type2DeleteType4.Location = new System.Drawing.Point(179, 86);
+            this.type2DeleteType4.Name = "type2DeleteType4";
+            this.type2DeleteType4.Size = new System.Drawing.Size(120, 23);
+            this.type2DeleteType4.TabIndex = 9;
+            this.type2DeleteType4.Text = "Delete Action";
+            this.type2DeleteType4.UseVisualStyleBackColor = true;
+            this.type2DeleteType4.Click += new System.EventHandler(this.type2DeleteType4_Click);
             // 
             // type2BitfieldWarning
             // 
             this.type2BitfieldWarning.AutoSize = true;
             this.type2BitfieldWarning.ForeColor = System.Drawing.Color.Red;
-            this.type2BitfieldWarning.Location = new System.Drawing.Point(222, 41);
+            this.type2BitfieldWarning.Location = new System.Drawing.Point(217, 3);
             this.type2BitfieldWarning.Name = "type2BitfieldWarning";
             this.type2BitfieldWarning.Size = new System.Drawing.Size(279, 52);
             this.type2BitfieldWarning.TabIndex = 10;
@@ -1298,109 +1416,62 @@
     " not zero - has type3\r\n0x800 not zero - has next type2 (edit Linked Script paren" +
     "t)";
             // 
-            // type2DeleteType4
-            // 
-            this.type2DeleteType4.Location = new System.Drawing.Point(116, 110);
-            this.type2DeleteType4.Name = "type2DeleteType4";
-            this.type2DeleteType4.Size = new System.Drawing.Size(111, 23);
-            this.type2DeleteType4.TabIndex = 9;
-            this.type2DeleteType4.Text = "Delete Command";
-            this.type2DeleteType4.UseVisualStyleBackColor = true;
-            this.type2DeleteType4.Click += new System.EventHandler(this.type2DeleteType4_Click);
-            // 
             // type2AddType4
             // 
-            this.type2AddType4.Location = new System.Drawing.Point(20, 110);
+            this.type2AddType4.Location = new System.Drawing.Point(3, 86);
             this.type2AddType4.Name = "type2AddType4";
-            this.type2AddType4.Size = new System.Drawing.Size(88, 23);
+            this.type2AddType4.Size = new System.Drawing.Size(120, 23);
             this.type2AddType4.TabIndex = 8;
-            this.type2AddType4.Text = "Add Command";
+            this.type2AddType4.Text = "Add Action";
             this.type2AddType4.UseVisualStyleBackColor = true;
             this.type2AddType4.Click += new System.EventHandler(this.type2AddType4_Click);
             // 
-            // type2SelectedType4Pos
+            // type2TransitionEnabled
             // 
-            this.type2SelectedType4Pos.Location = new System.Drawing.Point(116, 84);
-            this.type2SelectedType4Pos.Name = "type2SelectedType4Pos";
-            this.type2SelectedType4Pos.Size = new System.Drawing.Size(100, 20);
-            this.type2SelectedType4Pos.TabIndex = 7;
-            this.type2SelectedType4Pos.TextChanged += new System.EventHandler(this.type2SelectedType4Pos_TextChanged);
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(26, 87);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(86, 13);
-            this.label16.TabIndex = 6;
-            this.label16.Text = "Command Index:";
-            // 
-            // type2DeleteType3
-            // 
-            this.type2DeleteType3.Enabled = false;
-            this.type2DeleteType3.Location = new System.Drawing.Point(228, 96);
-            this.type2DeleteType3.Name = "type2DeleteType3";
-            this.type2DeleteType3.Size = new System.Drawing.Size(104, 23);
-            this.type2DeleteType3.TabIndex = 5;
-            this.type2DeleteType3.Text = "Delete Cond.";
-            this.type2DeleteType3.UseVisualStyleBackColor = true;
-            this.type2DeleteType3.Visible = false;
-            this.type2DeleteType3.Click += new System.EventHandler(this.type2DeleteType3_Click);
-            // 
-            // type2CreateType3
-            // 
-            this.type2CreateType3.Enabled = false;
-            this.type2CreateType3.Location = new System.Drawing.Point(228, 105);
-            this.type2CreateType3.Name = "type2CreateType3";
-            this.type2CreateType3.Size = new System.Drawing.Size(94, 23);
-            this.type2CreateType3.TabIndex = 4;
-            this.type2CreateType3.Text = "Create Cond.";
-            this.type2CreateType3.UseVisualStyleBackColor = true;
-            this.type2CreateType3.Visible = false;
-            this.type2CreateType3.Click += new System.EventHandler(this.type2CreateType3_Click);
-            // 
-            // type2Slot
-            // 
-            this.type2Slot.Location = new System.Drawing.Point(116, 58);
-            this.type2Slot.Name = "type2Slot";
-            this.type2Slot.Size = new System.Drawing.Size(100, 20);
-            this.type2Slot.TabIndex = 3;
-            this.type2Slot.TextChanged += new System.EventHandler(this.type2Slot_TextChanged);
-            // 
-            // type2Bitfield
-            // 
-            this.type2Bitfield.Location = new System.Drawing.Point(116, 33);
-            this.type2Bitfield.Name = "type2Bitfield";
-            this.type2Bitfield.Size = new System.Drawing.Size(100, 20);
-            this.type2Bitfield.TabIndex = 2;
-            this.type2Bitfield.TextChanged += new System.EventHandler(this.type2Bitfield_TextChanged);
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(40, 60);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(70, 13);
-            this.label15.TabIndex = 1;
-            this.label15.Text = "Linked State:";
+            this.type2TransitionEnabled.AutoSize = true;
+            this.type2TransitionEnabled.Location = new System.Drawing.Point(137, 8);
+            this.type2TransitionEnabled.Name = "type2TransitionEnabled";
+            this.type2TransitionEnabled.Size = new System.Drawing.Size(65, 17);
+            this.type2TransitionEnabled.TabIndex = 12;
+            this.type2TransitionEnabled.Text = "Enabled";
+            this.type2TransitionEnabled.UseVisualStyleBackColor = true;
+            this.type2TransitionEnabled.CheckedChanged += new System.EventHandler(this.type2TransitionEnabled_CheckedChanged);
             // 
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(63, 36);
+            this.label14.Location = new System.Drawing.Point(13, 36);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(47, 13);
             this.label14.TabIndex = 0;
             this.label14.Text = "Bit Field:";
             // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(3, 61);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(64, 13);
+            this.label15.TabIndex = 1;
+            this.label15.Text = "Linked Unit:";
+            // 
+            // type2Bitfield
+            // 
+            this.type2Bitfield.Location = new System.Drawing.Point(68, 32);
+            this.type2Bitfield.Name = "type2Bitfield";
+            this.type2Bitfield.Size = new System.Drawing.Size(143, 20);
+            this.type2Bitfield.TabIndex = 2;
+            this.type2Bitfield.TextChanged += new System.EventHandler(this.type2Bitfield_TextChanged);
+            // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.panelType2);
+            this.groupBox1.Controls.Add(this.panel_LinkEditor);
+            this.groupBox1.Controls.Add(this.panelGeneral);
             this.groupBox1.Controls.Add(this.panelLinked);
+            this.groupBox1.Controls.Add(this.panelMain);
             this.groupBox1.Controls.Add(this.panelHeader);
             this.groupBox1.Controls.Add(this.panelType4);
-            this.groupBox1.Controls.Add(this.panelGeneral);
-            this.groupBox1.Controls.Add(this.panelMain);
+            this.groupBox1.Controls.Add(this.panel_propGrid);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
             this.groupBox1.Name = "groupBox1";
@@ -1409,12 +1480,69 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Parameters";
             // 
+            // panel_propGrid
+            // 
+            this.panel_propGrid.Controls.Add(this.tableLayoutPanel3);
+            this.panel_propGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel_propGrid.Location = new System.Drawing.Point(3, 16);
+            this.panel_propGrid.Name = "panel_propGrid";
+            this.panel_propGrid.Size = new System.Drawing.Size(302, 609);
+            this.panel_propGrid.TabIndex = 1;
+            this.panel_propGrid.Visible = false;
+            // 
+            // tableLayoutPanel3
+            // 
+            this.tableLayoutPanel3.ColumnCount = 2;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.tableLayoutPanel3.Controls.Add(this.comboBox_propGrid_ActionID, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.propertyGrid1, 0, 1);
+            this.tableLayoutPanel3.Controls.Add(this.button_propGrid_apply, 1, 0);
+            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 2;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(302, 609);
+            this.tableLayoutPanel3.TabIndex = 2;
+            // 
+            // comboBox_propGrid_ActionID
+            // 
+            this.comboBox_propGrid_ActionID.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.comboBox_propGrid_ActionID.FormattingEnabled = true;
+            this.comboBox_propGrid_ActionID.Location = new System.Drawing.Point(3, 3);
+            this.comboBox_propGrid_ActionID.Name = "comboBox_propGrid_ActionID";
+            this.comboBox_propGrid_ActionID.Size = new System.Drawing.Size(196, 21);
+            this.comboBox_propGrid_ActionID.TabIndex = 1;
+            this.comboBox_propGrid_ActionID.SelectedIndexChanged += new System.EventHandler(this.comboBox_propGrid_ActionID_SelectedIndexChanged);
+            // 
+            // propertyGrid1
+            // 
+            this.tableLayoutPanel3.SetColumnSpan(this.propertyGrid1, 2);
+            this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.propertyGrid1.Location = new System.Drawing.Point(3, 32);
+            this.propertyGrid1.Name = "propertyGrid1";
+            this.propertyGrid1.Size = new System.Drawing.Size(296, 574);
+            this.propertyGrid1.TabIndex = 0;
+            // 
+            // button_propGrid_apply
+            // 
+            this.button_propGrid_apply.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.button_propGrid_apply.Location = new System.Drawing.Point(205, 3);
+            this.button_propGrid_apply.Name = "button_propGrid_apply";
+            this.button_propGrid_apply.Size = new System.Drawing.Size(94, 23);
+            this.button_propGrid_apply.TabIndex = 2;
+            this.button_propGrid_apply.Text = "Apply";
+            this.button_propGrid_apply.UseVisualStyleBackColor = true;
+            this.button_propGrid_apply.Click += new System.EventHandler(this.button_propGrid_apply_Click);
+            // 
             // scriptNameFilter
             // 
             this.scriptNameFilter.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.scriptNameFilter.Location = new System.Drawing.Point(86, 3);
+            this.scriptNameFilter.Location = new System.Drawing.Point(153, 3);
             this.scriptNameFilter.Name = "scriptNameFilter";
-            this.scriptNameFilter.Size = new System.Drawing.Size(294, 20);
+            this.scriptNameFilter.Size = new System.Drawing.Size(291, 20);
             this.scriptNameFilter.TabIndex = 3;
             this.scriptNameFilter.TextChanged += new System.EventHandler(this.scriptNameFilter_TextChanged);
             // 
@@ -1424,7 +1552,7 @@
             this.label32.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label32.Location = new System.Drawing.Point(3, 0);
             this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(26, 25);
+            this.label32.Size = new System.Drawing.Size(44, 25);
             this.label32.TabIndex = 4;
             this.label32.Text = "Filter:";
             this.label32.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1447,10 +1575,10 @@
             // tableLayoutPanel2
             // 
             this.tableLayoutPanel2.ColumnCount = 4;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 38.88889F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 61.11111F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 300F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 195F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 50F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel2.Controls.Add(this.label32, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.scriptNameFilter, 2, 0);
             this.tableLayoutPanel2.Controls.Add(this.filterSelection, 1, 0);
@@ -1465,14 +1593,14 @@
             // 
             // filterSelection
             // 
-            this.filterSelection.Dock = System.Windows.Forms.DockStyle.Left;
+            this.filterSelection.Dock = System.Windows.Forms.DockStyle.Fill;
             this.filterSelection.FormattingEnabled = true;
             this.filterSelection.Items.AddRange(new object[] {
             "Name",
             "ID"});
-            this.filterSelection.Location = new System.Drawing.Point(35, 3);
+            this.filterSelection.Location = new System.Drawing.Point(53, 3);
             this.filterSelection.Name = "filterSelection";
-            this.filterSelection.Size = new System.Drawing.Size(45, 21);
+            this.filterSelection.Size = new System.Drawing.Size(94, 21);
             this.filterSelection.TabIndex = 5;
             this.filterSelection.SelectedIndexChanged += new System.EventHandler(this.filterSelection_SelectedIndexChanged);
             // 
@@ -1480,9 +1608,9 @@
             // 
             this.checkBox_showHeaderScripts.AutoSize = true;
             this.checkBox_showHeaderScripts.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.checkBox_showHeaderScripts.Location = new System.Drawing.Point(386, 3);
+            this.checkBox_showHeaderScripts.Location = new System.Drawing.Point(450, 3);
             this.checkBox_showHeaderScripts.Name = "checkBox_showHeaderScripts";
-            this.checkBox_showHeaderScripts.Size = new System.Drawing.Size(190, 19);
+            this.checkBox_showHeaderScripts.Size = new System.Drawing.Size(126, 19);
             this.checkBox_showHeaderScripts.TabIndex = 6;
             this.checkBox_showHeaderScripts.Text = "Show Header Scripts";
             this.checkBox_showHeaderScripts.UseVisualStyleBackColor = true;
@@ -1503,7 +1631,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.scriptTree);
             this.splitContainer1.Size = new System.Drawing.Size(579, 591);
-            this.splitContainer1.SplitterDistance = 321;
+            this.splitContainer1.SplitterDistance = 300;
             this.splitContainer1.TabIndex = 7;
             // 
             // menuStrip1
@@ -1512,7 +1640,7 @@
             this.scriptsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(321, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(300, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -1580,9 +1708,12 @@
             this.panelLinked.PerformLayout();
             this.panelType3.ResumeLayout(false);
             this.panelType3.PerformLayout();
-            this.panelType2.ResumeLayout(false);
-            this.panelType2.PerformLayout();
+            this.panel_LinkEditor.ResumeLayout(false);
+            this.panel_LinkEditorHolder.ResumeLayout(false);
+            this.panel_LinkEditorHolder.PerformLayout();
             this.groupBox1.ResumeLayout(false);
+            this.panel_propGrid.ResumeLayout(false);
+            this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
@@ -1614,14 +1745,9 @@
         private System.Windows.Forms.TextBox type1UnkByte1;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Panel panelMain;
         private System.Windows.Forms.Button mainDelLinked;
-        private System.Windows.Forms.TextBox mainLinkedPos;
-        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Button mainAddLinked;
-        private System.Windows.Forms.TextBox mainUnk;
         private System.Windows.Forms.TextBox mainLinkedCnt;
         private System.Windows.Forms.TextBox mainName;
         private System.Windows.Forms.Label label7;
@@ -1637,13 +1763,9 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Panel panelLinked;
         private System.Windows.Forms.Label label30;
-        private System.Windows.Forms.TextBox linkedType2Pos;
-        private System.Windows.Forms.Label label25;
         private System.Windows.Forms.Label linkedWarning;
         private System.Windows.Forms.Button linkedDeleteType2;
         private System.Windows.Forms.Button linkedCreateType2;
-        private System.Windows.Forms.Button linkedDeleteType1;
-        private System.Windows.Forms.Button linkedCreateType1;
         private System.Windows.Forms.TextBox linkedSlotIndex;
         private System.Windows.Forms.TextBox linkedBitField;
         private System.Windows.Forms.Label label24;
@@ -1661,24 +1783,19 @@
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Panel panelType3;
         private System.Windows.Forms.Label label28;
-        private System.Windows.Forms.TextBox type3Z;
-        private System.Windows.Forms.TextBox type3Y;
-        private System.Windows.Forms.TextBox type3X;
-        private System.Windows.Forms.TextBox type3UnkShort;
+        private System.Windows.Forms.TextBox type3ThresholdInverse;
+        private System.Windows.Forms.TextBox type3Threshold;
+        private System.Windows.Forms.TextBox type3Interval;
+        private System.Windows.Forms.TextBox type3Parameter;
         private System.Windows.Forms.TextBox type3VTable;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.Panel panelType2;
+        private System.Windows.Forms.Panel panel_LinkEditor;
         private System.Windows.Forms.Label label27;
         private System.Windows.Forms.Label type2BitfieldWarning;
         private System.Windows.Forms.Button type2DeleteType4;
         private System.Windows.Forms.Button type2AddType4;
-        private System.Windows.Forms.TextBox type2SelectedType4Pos;
-        private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.Button type2DeleteType3;
-        private System.Windows.Forms.Button type2CreateType3;
-        private System.Windows.Forms.TextBox type2Slot;
         private System.Windows.Forms.TextBox type2Bitfield;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label14;
@@ -1738,5 +1855,28 @@
         private System.Windows.Forms.CheckBox type3CbNotGate;
         private System.Windows.Forms.Label label48;
         private System.Windows.Forms.Label label47;
+        private System.Windows.Forms.CheckBox type1Flag3;
+        private System.Windows.Forms.CheckBox type1Flag2;
+        private System.Windows.Forms.CheckBox type1Flag1;
+        private System.Windows.Forms.Label label52;
+        private System.Windows.Forms.Label label51;
+        private System.Windows.Forms.Label label50;
+        private System.Windows.Forms.Label label49;
+        private System.Windows.Forms.TextBox type1Val4;
+        private System.Windows.Forms.TextBox type1Val2;
+        private System.Windows.Forms.TextBox type1Val3;
+        private System.Windows.Forms.TextBox type1Val1;
+        private System.Windows.Forms.Panel panel_propGrid;
+        private System.Windows.Forms.PropertyGrid propertyGrid1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
+        private System.Windows.Forms.ComboBox comboBox_propGrid_ActionID;
+        private System.Windows.Forms.Button button_propGrid_apply;
+        private System.Windows.Forms.ComboBox comboBox_perceptID;
+        private System.Windows.Forms.ListBox listBox_LinkActions;
+        private System.Windows.Forms.Panel panel_LinkEditorHolder;
+        private System.Windows.Forms.ListBox listBox_UnitList;
+        private System.Windows.Forms.ComboBox comboBox_StartUnit;
+        private System.Windows.Forms.ListBox listBox_LinkList;
+        private System.Windows.Forms.ComboBox comboBox_LinkedUnit;
     }
 }
