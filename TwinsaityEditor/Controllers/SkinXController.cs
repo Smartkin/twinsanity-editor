@@ -42,25 +42,18 @@ namespace TwinsaityEditor
             Text.Add($"SubMesh Count: {Data.SubModels.Count}");
             for (int i = 0; i < Data.SubModels.Count; i++)
             {
-                Text.Add($"SubMesh {i}: Material {Data.SubModels[i].MaterialID.ToString("X8")} UnkCount {Data.SubModels[i].UnkCount}");
-                Text.Add($"SubMesh {i}: Vertex Count {Data.SubModels[i].VertexCount} Groups {Data.SubModels[i].GroupList.Count}");
+                Text.Add($"SubMesh {i}: Material {Data.SubModels[i].MaterialID.ToString("X8")} Vertex Count {Data.SubModels[i].VData.Count} Groups {Data.SubModels[i].GroupList.Count}");
 
                 for (int a = 0; a < Data.SubModels[i].GroupJoints.Count; a++)
                 {
-                    Text.Add($"Group #{a}: {Data.SubModels[i].GroupJoints[a].Count} joints");
+                    Text.Add($"Group #{a}: Vertex Count {Data.SubModels[i].GroupList[a]} Joints {Data.SubModels[i].GroupJoints[a].Count}");
+                    /*
                     for (int b = 0; b < Data.SubModels[i].GroupJoints[a].Count; b++)
                     {
                         Text.Add($"#{b}: {Data.SubModels[i].GroupJoints[a][b]}");
                     }
+                    */
                 }
-
-                /*
-                for (int a = 0; a < Data.SubModels[i].VData.Count; a++)
-                {
-                    Text.Add($"#{a}: {Data.SubModels[i].VData[a].UnkFloat}; {Data.SubModels[i].VData[a].UnkFloat2};{Data.SubModels[i].VData[a].UnkInt2}; {Data.SubModels[i].VData[a].UnkInt3};{Data.SubModels[i].VData[a].UnkInt4};{Data.SubModels[i].VData[a].UnkInt5}; ");
-                }
-                */
-
             }
 
 

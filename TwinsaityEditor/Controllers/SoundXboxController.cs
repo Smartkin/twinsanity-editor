@@ -10,16 +10,18 @@ namespace TwinsaityEditor
     {
         public new SoundEffectX Data { get; set; }
         public byte[] SoundData { get; set; }
+        private bool Loaded;
 
         private static SoundPlayer player = new SoundPlayer();
 
         public SoundXboxController(MainForm topform, SoundEffectX item) : base(topform, item)
         {
             Data = item;
-            LoadSoundData();
+            //LoadSoundData();
             AddMenu("Play sound", Menu_PlaySound);
             AddMenu("Export to .WAV", Menu_ExportWAV);
             AddMenu("Export to .VAG", Menu_ExportVAG);
+            AddMenu("Replace sound from .WAV", Menu_ReplaceSoundWav);
         }
 
         protected override string GetName()
@@ -37,6 +39,8 @@ namespace TwinsaityEditor
 
         public void LoadSoundData()
         {
+            if (Loaded) return;
+            Loaded = true;
             try
             {
                 SoundData = RIFF.SaveRiff(Data.SoundData, 1, Data.Freq);
@@ -49,6 +53,7 @@ namespace TwinsaityEditor
 
         private void Menu_PlaySound()
         {
+            LoadSoundData();
             player.Stop();
             player.Stream = new MemoryStream(SoundData);
             player.Play();
@@ -56,6 +61,7 @@ namespace TwinsaityEditor
 
         private void Menu_ExportWAV()
         {
+            LoadSoundData();
             SaveFileDialog sfd = new SaveFileDialog();
             sfd.Filter = "WAV|*.wav";
             sfd.FileName = Data.ID.ToString();
@@ -90,6 +96,41 @@ namespace TwinsaityEditor
                 //writer.Write(0); writer.Write(0); writer.Write(0); writer.Write(0);
                 writer.Write(Data.SoundData);
                 writer.Close();
+            }
+        }
+
+        private void Menu_ReplaceSoundWav()
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "WAV|*.wav";
+            ofd.FileName = Data.ID.ToString();
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                using (FileStream file = new FileStream(ofd.FileName, FileMode.Open, FileAccess.Read))
+                using (BinaryReader reader = new BinaryReader(file))
+                {
+                    file.Position = 0x16;
+                    UInt16 channels = reader.ReadUInt16();
+                    UInt32 frequency = reader.ReadUInt32();
+                    file.Position = 0x28;
+                    int len = reader.ReadInt32();
+                    Byte[] PCM = reader.ReadBytes(len);
+                    if (channels == 1)
+                    {
+                        Data.Freq = (ushort)frequency;
+                        //Byte[] newData = ADPCM.FromPCMMono(PCM);
+                        UInt32 newSize = (uint)PCM.Length;
+                        Data.SoundData = PCM;
+                        Data.UnkInt = (int)newSize;
+                    }
+                    else
+                    {
+                        throw new ArgumentException("ATM only mono, sorry fam");
+                    }
+                    Loaded = false;
+                    LoadSoundData();
+                    GenText();
+                }
             }
         }
     }

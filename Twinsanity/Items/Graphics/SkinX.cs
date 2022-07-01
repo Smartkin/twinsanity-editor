@@ -16,10 +16,16 @@ namespace Twinsanity
                 SubModel Sub = SubModels[i];
 
                 writer.Write(Sub.MaterialID);
-                writer.Write(Sub.DataSize);
-                writer.Write(Sub.VertexCount);
+                writer.Write(Sub.VData.Count * 0x30);
+                writer.Write(Sub.VData.Count);
 
-                writer.Write(Sub.UnkCount);
+                int GJointCount = 0;
+                for (int c = 0; c < Sub.GroupList.Count; c++)
+                {
+                    GJointCount += Sub.GroupJoints[c].Count;
+                }
+
+                writer.Write(GJointCount);
                 writer.Write(Sub.GroupList.Count);
                 for (int c = 0; c < Sub.GroupList.Count; c++)
                 {
@@ -43,12 +49,14 @@ namespace Twinsanity
                     writer.Write(v.X);
                     writer.Write(v.Y);
                     writer.Write(v.Z);
-                    writer.Write(v.UnkFloat);
-                    writer.Write(v.UnkFloat2);
-                    writer.Write(v.UnkInt2);
-                    writer.Write(v.UnkInt3);
-                    writer.Write(v.UnkInt4);
-                    writer.Write(v.UnkInt5);
+                    writer.Write(v.Weight1);
+                    writer.Write(v.Weight2);
+                    writer.Write(v.Weight3);
+                    writer.Write(v.UnkShort1);
+                    writer.Write(v.UnkShort2);
+                    writer.Write(v.UnkShort3);
+                    writer.Write(v.UnkShort4);
+                    writer.Write(v.PackedNormals);
                     writer.Write(v.R);
                     writer.Write(v.G);
                     writer.Write(v.B);
@@ -68,10 +76,10 @@ namespace Twinsanity
             {
                 SubModel sub = new SubModel();
                 sub.MaterialID = reader.ReadUInt32();
-                sub.DataSize = reader.ReadUInt32(); // vertex count * 0x30
-                sub.VertexCount = reader.ReadInt32();
+                uint DataSize = reader.ReadUInt32(); // vertex count * 0x30
+                int VertexCount = reader.ReadInt32();
 
-                sub.UnkCount = reader.ReadUInt32();
+                uint GroupJointCount = reader.ReadUInt32(); // Total number of group joints
                 uint GroupCount = reader.ReadUInt32();
                 sub.GroupList = new List<uint>();
                 for (int c = 0; c < GroupCount; c++)
@@ -95,18 +103,20 @@ namespace Twinsanity
                 }
                 // load model (0x30 data per vertex)
                 sub.VData = new List<VertexData>();
-                for (int c = 0; c < sub.VertexCount; c++)
+                for (int c = 0; c < VertexCount; c++)
                 {
                     VertexData v = new VertexData();
                     v.X = reader.ReadSingle();
                     v.Y = reader.ReadSingle();
                     v.Z = reader.ReadSingle();
-                    v.UnkFloat = reader.ReadSingle();
-                    v.UnkFloat2 = reader.ReadSingle();
-                    v.UnkInt2 = reader.ReadUInt32();
-                    v.UnkInt3 = reader.ReadUInt32();
-                    v.UnkInt4 = reader.ReadUInt32();
-                    v.UnkInt5 = reader.ReadUInt32();
+                    v.Weight1 = reader.ReadSingle();
+                    v.Weight2 = reader.ReadSingle();
+                    v.Weight3 = reader.ReadSingle();
+                    v.UnkShort1 = reader.ReadUInt16();
+                    v.UnkShort2 = reader.ReadUInt16();
+                    v.UnkShort3 = reader.ReadUInt16();
+                    v.UnkShort4 = reader.ReadUInt16();
+                    v.PackedNormals = reader.ReadUInt32();
                     v.R = reader.ReadByte();
                     v.G = reader.ReadByte();
                     v.B = reader.ReadByte();
@@ -115,7 +125,6 @@ namespace Twinsanity
                     v.UV_Y = reader.ReadSingle();
                     sub.VData.Add(v);
                 }
-                //sub.Zero = reader.ReadUInt32();
                 SubModels.Add(sub);
             }
         }
@@ -139,31 +148,29 @@ namespace Twinsanity
         #region STRUCTURES
         public struct SubModel
         {
-            // Primary Header
-            public int VertexCount;
-            public uint DataSize;
-            public uint MaterialID;
-            public List<uint> GroupList;
-            //public uint Zero;
+            public List<uint> GroupList; // Amount of Vertexes per group
             public List<VertexData> VData;
-
-            public uint UnkCount; // total number of group joints
+            public uint MaterialID;
             public List<List<uint>> GroupJoints; // Contains joint indexes per group
         }
         public struct VertexData
         {
             public float X, Y, Z;
-            public float UnkFloat; // Vertex weight?
-            public float UnkFloat2; // 1 - vertex weight?
-            public uint UnkInt2; // Zero?
-            public uint UnkInt3;
-            public uint UnkInt4;
-            public uint UnkInt5;
+            // Weight 1 + Weight 2 + Weight 3 = 1 always
+            public float Weight1; // Vertex weight 1?
+            public float Weight2; // Vertex weight 2?
+            public float Weight3; // Vertex weight 3?
+            public ushort UnkShort1;
+            public ushort UnkShort2;
+            public ushort UnkShort3;
+            public ushort UnkShort4; // Confirmed always zero
+            public uint PackedNormals; // Packed normals? (into 10-bit x3 + 2?)
             public byte R, G, B, A;
             public float UV_X, UV_Y;
         }
         #endregion
 
+        #region Export
         public byte[] ToPLY(int ModelID, bool blender = false)
         {
             using (MemoryStream stream = new MemoryStream())
@@ -171,7 +178,7 @@ namespace Twinsanity
                 using (StreamWriter ply = new StreamWriter(stream) { AutoFlush = true })
                 {
                     int vertexcount = 0, polycount = 0;
-                    vertexcount += SubModels[ModelID].VertexCount;
+                    vertexcount += SubModels[ModelID].VData.Count;
                     for (int g = 0; g < SubModels[ModelID].GroupList.Count; g++)
                     {
                         for (int f = 0; f < SubModels[ModelID].GroupList[g] - 2; ++f)
@@ -233,7 +240,7 @@ namespace Twinsanity
                     int vertexcount = 0, polycount = 0;
                     for (int i = 0; i < SubModels.Count; i++)
                     {
-                        vertexcount += SubModels[i].VertexCount;
+                        vertexcount += SubModels[i].VData.Count;
                         for (int g = 0; g < SubModels[i].GroupList.Count; g++)
                         {
                             for (int f = 0; f < SubModels[i].GroupList[g] - 2; ++f)
@@ -341,6 +348,6 @@ namespace Twinsanity
                 return stream.ToArray();
             }
         }
-
+        #endregion
     }
 }

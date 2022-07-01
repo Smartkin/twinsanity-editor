@@ -23,27 +23,27 @@ namespace TwinsaityEditor
             text.Add($"ID: {Data.ID}");
             text.Add($"Bounding Box Vector 1: {Data.Coord1.X}; {Data.Coord1.Y}; {Data.Coord1.Z}; {Data.Coord1.W}");
             text.Add($"Bounding Box Vector 2: {Data.Coord2.X}; {Data.Coord2.Y}; {Data.Coord2.Z}; {Data.Coord2.W}");
-            text.Add($"Skin ID: {Data.SkinID}");
-            text.Add($"Blend Skin Model ID: {Data.BlendSkinID}");
-            text.Add($"Type 1 Size: {Data.Type1.Length}");
-            text.Add($"Type 2 Size: {Data.Type2.Length}");
+            text.Add($"Skin ID: {Data.SkinID.ToString("X8")}");
+            text.Add($"Blend Skin Model ID: {Data.BlendSkinID.ToString("X8")}");
+            text.Add($"Joint Count: {Data.Type1.Length}");
+            text.Add($"Exit Point Count: {Data.Type2.Length}");
             text.Add($"Collision Datas Size: {Data.CollisionData.Length}");
             text.Add($"Rigid Model Count: {Data.ModelIDs.Length}");
             if (Data.ModelIDs.Length > 0)
             {
-                text.Add($"Rigid Models Linked:");
                 for (int i = 0; i < Data.ModelIDs.Length; i++)
                 {
-                    text.Add(string.Format("Rigid Model #{0} ID: {1:X8}", Data.ModelIDs[i].ID, Data.ModelIDs[i].ModelID));
+                    text.Add(string.Format("Rigid Model ID: {1:X8} Attached to Joint #{0}", Data.ModelIDs[i].ID, Data.ModelIDs[i].ModelID));
                 }
             }
 
             if (Data.Type1.Length > 0)
             {
-                text.Add($"Type 1 Structs:");
+                text.Add($"Joints:");
                 for (int i = 0; i < Data.Type1.Length; i++)
                 {
-                    text.Add($"#{ i } Numbers: { Data.Type1[i].Numbers[0] }; { Data.Type1[i].Numbers[1] }; { Data.Type1[i].Numbers[2] }; { Data.Type1[i].Numbers[3] }; { Data.Type1[i].Numbers[4] }");
+                    text.Add($"#{ i } Joint-ID: { Data.Type1[i].Numbers[0] }; Joint index: { Data.Type1[i].Numbers[1] }; Parent Joint: { Data.Type1[i].Numbers[2] }; Child joints: { Data.Type1[i].Numbers[3] }; { Data.Type1[i].Numbers[4] }");
+                    //text.Add($"#{ i } Numbers: { Data.Type1[i].Numbers[0] }; { Data.Type1[i].Numbers[1] }; { Data.Type1[i].Numbers[2] }; { Data.Type1[i].Numbers[3] }; { Data.Type1[i].Numbers[4] }");
                     text.Add($"#{ i } Vector 1: { Data.Type1[i].Matrix[0].X }; { Data.Type1[i].Matrix[0].Y }; { Data.Type1[i].Matrix[0].Z }; { Data.Type1[i].Matrix[0].W }");
                     text.Add($"#{ i } Vector 2: { Data.Type1[i].Matrix[1].X }; { Data.Type1[i].Matrix[1].Y }; { Data.Type1[i].Matrix[1].Z }; { Data.Type1[i].Matrix[1].W }");
                     text.Add($"#{ i } Vector 3: { Data.Type1[i].Matrix[2].X }; { Data.Type1[i].Matrix[2].Y }; { Data.Type1[i].Matrix[2].Z }; { Data.Type1[i].Matrix[2].W }");
@@ -57,10 +57,11 @@ namespace TwinsaityEditor
             }
             if (Data.Type2.Length > 0)
             {
-                text.Add($"Type 2 Structs:");
+                text.Add($"Exit Points:");
                 for (int i = 0; i < Data.Type2.Length; i++)
                 {
-                    text.Add($"#{ i } Numbers: { Data.Type2[i].Numbers[0] }; { Data.Type2[i].Numbers[1] }");
+                    text.Add($"#{ i } Parent Joint: { Data.Type2[i].Numbers[0] }; ID: { Data.Type2[i].Numbers[1] }");
+                    //text.Add($"#{ i } Numbers: { Data.Type2[i].Numbers[0] }; { Data.Type2[i].Numbers[1] }");
                     text.Add($"#{ i } Matrix 1: { Data.Type2[i].Matrix[0].X }; { Data.Type2[i].Matrix[0].Y }; { Data.Type2[i].Matrix[0].Z }; { Data.Type2[i].Matrix[0].W }");
                     text.Add($"#{ i } Matrix 2: { Data.Type2[i].Matrix[1].X }; { Data.Type2[i].Matrix[1].Y }; { Data.Type2[i].Matrix[1].Z }; { Data.Type2[i].Matrix[1].W }");
                     text.Add($"#{ i } Matrix 3: { Data.Type2[i].Matrix[2].X }; { Data.Type2[i].Matrix[2].Y }; { Data.Type2[i].Matrix[2].Z }; { Data.Type2[i].Matrix[2].W }");
@@ -80,7 +81,7 @@ namespace TwinsaityEditor
                     }
                     for (var j = 0; j < 7; ++j)
                     {
-                        text.Add($"Blob block {j+1}");
+                        text.Add($"Blob block {j + 1}");
                         switch (j)
                         {
                             case 0:

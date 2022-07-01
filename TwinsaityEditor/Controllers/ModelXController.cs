@@ -40,7 +40,7 @@ namespace TwinsaityEditor
             Text.Add($"SubMesh Count: {Data.SubModels.Count}");
             for (int i = 0; i < Data.SubModels.Count; i++)
             {
-                Text.Add($"SubMesh {i}: Vertex Count {Data.SubModels[i].VertexCount} Groups {Data.SubModels[i].GroupList.Count} Zero {Data.SubModels[i].Zero}");
+                Text.Add($"SubMesh {i}: Vertex Count {Data.SubModels[i].VData.Count} Groups {Data.SubModels[i].GroupList.Count}");
                 for (int g = 0; g < Data.SubModels[i].GroupList.Count; g++)
                 {
                     Text.Add($"Group {g}: Vertex Count {Data.SubModels[i].GroupList[g]}");
@@ -59,7 +59,7 @@ namespace TwinsaityEditor
             int off = 0;
             foreach (var s in Data.SubModels)
             {
-                for (int v = 0; v < s.VertexCount; v++)
+                for (int v = 0; v < s.VData.Count; v++)
                 {
                     vtx.Add(new Vertex(new Vector3(-s.VData[v].X, s.VData[v].Y, s.VData[v].Z), Color.FromArgb(s.VData[v].R, s.VData[v].G, s.VData[v].B)));
                 }
