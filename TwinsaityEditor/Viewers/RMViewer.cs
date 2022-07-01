@@ -16,6 +16,12 @@ namespace TwinsaityEditor
         private FileController file;
         private ChunkLinks links;
 
+        private List<DefaultEnums.ObjectID> WoodCrates = new List<DefaultEnums.ObjectID>()
+        {
+            DefaultEnums.ObjectID.AKUAKUCRATE, DefaultEnums.ObjectID.AMMOCRATESMALL, DefaultEnums.ObjectID.BASICCRATE, DefaultEnums.ObjectID.CHECKPOINTCRATE, DefaultEnums.ObjectID.EXTRALIFECRATE, DefaultEnums.ObjectID.EXTRALIFECRATECORTEX, DefaultEnums.ObjectID.EXTRALIFECRATENINA,
+            DefaultEnums.ObjectID.LEVELCRATE, DefaultEnums.ObjectID.MULTIPLEHITCRATE, DefaultEnums.ObjectID.SURPRISECRATE, DefaultEnums.ObjectID.WOODENSPRINGCRATE
+        };
+
         public RMViewer(FileController file, Form pform)
         {
             //initialize variables here
@@ -24,7 +30,7 @@ namespace TwinsaityEditor
             obj_models = true;
             this.file = file;
             Tag = pform;
-            if (file.Data.Type == TwinsFile.FileType.RM2)
+            if (file.Data.Type == TwinsFile.FileType.RM2 || file.Data.Type == TwinsFile.FileType.RMX)
             {
                 int ObjectModelPool = 2000; // model limit
                 InitVBO(ObjectModelPool);
@@ -97,7 +103,7 @@ namespace TwinsaityEditor
             }
 
             //object visuals
-            if (file.Data.Type == TwinsFile.FileType.RM2 && obj_models)
+            if ((file.Data.Type == TwinsFile.FileType.RM2 || file.Data.Type == TwinsFile.FileType.RMX) && obj_models)
             {
                 GL.Enable(EnableCap.Lighting);
                 for (int i = 5; i < vtx.Length; i++)
@@ -948,14 +954,17 @@ namespace TwinsaityEditor
                             max_y = Math.Max(max_y, pos_ins.Y);
                             max_z = Math.Max(max_z, pos_ins.Z);
 
-                            if (file.Data.Type == TwinsFile.FileType.RM2)
+                            if (file.Data.Type == TwinsFile.FileType.RM2 || file.Data.Type == TwinsFile.FileType.RMX)
                             {
-                                ModelController modelCont = null;
                                 bool HasMesh = false;
                                 ushort TargetGI = 65535;
                                 List<uint> ModelList = new List<uint>();
                                 List<Matrix4> LocalRotList = new List<Matrix4>();
                                 uint TargetModel = 65535;
+                                uint TargetSkin = 0;
+                                uint TargetBSkin = 0;
+                                bool HasSkin = false;
+                                bool HasBlendSkin = false;
                                 Matrix4 LocalRot = Matrix4.Identity;
                                 FileController targetFile = file;
                                 Vector4 pos_ins_4 = ins.Pos.ToVec4();
@@ -1014,43 +1023,50 @@ namespace TwinsaityEditor
                                     {
                                         if (GI.ID == TargetGI)
                                         {
+                                            if (GI.BlendSkinID != 0)
+                                            {
+                                                HasBlendSkin = true;
+                                                TargetBSkin = GI.BlendSkinID;
+                                            }
+                                            if (GI.SkinID != 0)
+                                            {
+                                                HasSkin = true;
+                                                TargetSkin = GI.SkinID;
+                                            }
                                             if (GI.ModelIDs.Length > 0)
                                             {
                                                 for (int gi_model = 0; gi_model < GI.ModelIDs.Length; gi_model++)
                                                 {
-                                                    if (GI.ModelIDs[gi_model].ModelID != 65535)
-                                                    {
-                                                        ModelList.Add(GI.ModelIDs[gi_model].ModelID);
-                                                        Matrix4 tempRot = Matrix4.Identity;
+                                                    ModelList.Add(GI.ModelIDs[gi_model].ModelID);
+                                                    Matrix4 tempRot = Matrix4.Identity;
 
-                                                        // Rotation
-                                                        tempRot.M11 = -GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[0].X;
-                                                        tempRot.M12 = -GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[1].X;
-                                                        tempRot.M13 = -GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[2].X;
+                                                    // Rotation
+                                                    tempRot.M11 = -GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[0].X;
+                                                    tempRot.M12 = -GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[1].X;
+                                                    tempRot.M13 = -GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[2].X;
 
-                                                        tempRot.M21 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[0].Y;
-                                                        tempRot.M22 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[1].Y;
-                                                        tempRot.M23 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[2].Y;
+                                                    tempRot.M21 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[0].Y;
+                                                    tempRot.M22 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[1].Y;
+                                                    tempRot.M23 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[2].Y;
 
-                                                        tempRot.M31 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[0].Z;
-                                                        tempRot.M32 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[1].Z;
-                                                        tempRot.M33 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[2].Z;
+                                                    tempRot.M31 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[0].Z;
+                                                    tempRot.M32 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[1].Z;
+                                                    tempRot.M33 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[2].Z;
 
-                                                        tempRot.M14 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[0].W;
-                                                        tempRot.M24 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[1].W;
-                                                        tempRot.M34 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[2].W;
+                                                    tempRot.M14 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[0].W;
+                                                    tempRot.M24 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[1].W;
+                                                    tempRot.M34 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[2].W;
 
-                                                        // Position
-                                                        tempRot.M41 = GI.Type1[GI.ModelIDs[gi_model].ID].Matrix[1].X;
-                                                        tempRot.M42 = GI.Type1[GI.ModelIDs[gi_model].ID].Matrix[1].Y;
-                                                        tempRot.M43 = GI.Type1[GI.ModelIDs[gi_model].ID].Matrix[1].Z;
-                                                        tempRot.M44 = GI.Type1[GI.ModelIDs[gi_model].ID].Matrix[1].W;
+                                                    // Position
+                                                    tempRot.M41 = GI.Type1[GI.ModelIDs[gi_model].ID].Matrix[1].X;
+                                                    tempRot.M42 = GI.Type1[GI.ModelIDs[gi_model].ID].Matrix[1].Y;
+                                                    tempRot.M43 = GI.Type1[GI.ModelIDs[gi_model].ID].Matrix[1].Z;
+                                                    tempRot.M44 = GI.Type1[GI.ModelIDs[gi_model].ID].Matrix[1].W;
 
-                                                        // Adjusted for OpenTK
-                                                        tempRot *= Matrix4.CreateScale(-1, 1, 1);
+                                                    // Adjusted for OpenTK
+                                                    tempRot *= Matrix4.CreateScale(-1, 1, 1);
 
-                                                        LocalRotList.Add(tempRot);
-                                                    }
+                                                    LocalRotList.Add(tempRot);
                                                 }
                                             }
                                         }
@@ -1063,8 +1079,10 @@ namespace TwinsaityEditor
                                             HasMesh = false;
                                             TargetModel = ModelList[modelID];
                                             LocalRot = LocalRotList[modelID];
-                                            if (TargetModel != 65535)
+
+                                            if (file.Data.Type == TwinsFile.FileType.RM2)
                                             {
+                                                ModelController modelCont = null;
                                                 SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(2);
                                                 foreach (RigidModel model in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
                                                 {
@@ -1075,37 +1093,204 @@ namespace TwinsaityEditor
                                                         HasMesh = true;
                                                     }
                                                 }
-                                            }
 
-                                            if (HasMesh)
-                                            {
-                                                modelCont.LoadMeshData();
-                                                Vertex[] vbuffer = new Vertex[modelCont.Vertices.Length];
-
-                                                for (int v = 0; v < modelCont.Vertices.Length; v++)
+                                                if (HasMesh)
                                                 {
-                                                    vbuffer[v] = modelCont.Vertices[v];
+                                                    modelCont.LoadMeshData();
+                                                    Vertex[] vbuffer = new Vertex[modelCont.Vertices.Length];
 
-                                                    Vector4 targetPos = new Vector4(modelCont.Vertices[v].Pos.X, modelCont.Vertices[v].Pos.Y, modelCont.Vertices[v].Pos.Z, 1);
+                                                    for (int v = 0; v < modelCont.Vertices.Length; v++)
+                                                    {
+                                                        vbuffer[v] = modelCont.Vertices[v];
+                                                        Vector4 targetPos = new Vector4(modelCont.Vertices[v].Pos.X, modelCont.Vertices[v].Pos.Y, modelCont.Vertices[v].Pos.Z, 1);
 
-                                                    targetPos *= LocalRot;
-                                                    targetPos *= rot_ins_4;
-                                                    targetPos += pos_ins_4;
-                                                    modelCont.Vertices[v].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+                                                        targetPos *= LocalRot;
 
+                                                        bool rotationOverride = false;
+
+                                                        if (!rotationOverride)
+                                                        {
+                                                            targetPos *= rot_ins_4;
+                                                        }
+
+                                                        targetPos += pos_ins_4;
+                                                        modelCont.Vertices[v].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+                                                        if (ins.ObjectID == (ushort)DefaultEnums.ObjectID.TNTCRATE)
+                                                        {
+                                                            modelCont.Vertices[v].Col = Vertex.ColorToABGR(Color.Red);
+                                                        }
+                                                        else if (ins.ObjectID == (ushort)DefaultEnums.ObjectID.NITROCRATE)
+                                                        {
+                                                            modelCont.Vertices[v].Col = Vertex.ColorToABGR(Color.Green);
+                                                        }
+                                                        else if (WoodCrates.Contains((DefaultEnums.ObjectID)ins.ObjectID))
+                                                        {
+                                                            modelCont.Vertices[v].Col = Vertex.ColorToABGR(Color.SandyBrown);
+                                                        }
+                                                    }
+                                                    vtx[5 + cur_instance] = new VertexBufferData();
+                                                    vtx[5 + cur_instance].Vtx = modelCont.Vertices;
+                                                    vtx[5 + cur_instance].VtxInd = modelCont.Indices;
+                                                    modelCont.Vertices = vbuffer;
+                                                    UpdateVBO(5 + cur_instance);
                                                 }
-                                                vtx[5 + cur_instance] = new VertexBufferData();
-                                                vtx[5 + cur_instance].Vtx = modelCont.Vertices;
-                                                vtx[5 + cur_instance].VtxInd = modelCont.Indices;
-                                                modelCont.Vertices = vbuffer;
-                                                UpdateVBO(5 + cur_instance);
+                                                else
+                                                {
+                                                    vtx[5 + cur_instance] = null;
+                                                }
                                             }
-                                            else
+                                            else if (file.Data.Type == TwinsFile.FileType.RMX)
                                             {
-                                                vtx[5 + cur_instance] = null;
+                                                ModelXController modelCont = null;
+                                                SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(2);
+                                                foreach (RigidModel model in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
+                                                {
+                                                    if (model.ID == TargetModel)
+                                                    {
+                                                        uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(TargetModel).MeshID;
+                                                        modelCont = mesh_sec.GetItem<ModelXController>(meshID);
+                                                        HasMesh = true;
+                                                    }
+                                                }
+
+                                                if (HasMesh)
+                                                {
+                                                    modelCont.LoadMeshData();
+                                                    Vertex[] vbuffer = new Vertex[modelCont.Vertices.Length];
+
+                                                    for (int v = 0; v < modelCont.Vertices.Length; v++)
+                                                    {
+                                                        vbuffer[v] = modelCont.Vertices[v];
+                                                        Vector4 targetPos = new Vector4(modelCont.Vertices[v].Pos.X, modelCont.Vertices[v].Pos.Y, modelCont.Vertices[v].Pos.Z, 1);
+
+                                                        targetPos *= LocalRot;
+
+                                                        bool rotationOverride = false;
+                                                        if (ins.ObjectID == (ushort)DefaultEnums.ObjectID.ICICLE)
+                                                        {
+                                                            if (ins.UnkI323[0] == 1)
+                                                            {
+                                                                Matrix4 rot_ins_fix = Matrix4.Identity;
+                                                                rot_ins_fix *= Matrix4.CreateRotationZ((32768) / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
+                                                                targetPos *= rot_ins_fix;
+                                                                rotationOverride = true;
+                                                            }
+                                                        }
+
+                                                        if (!rotationOverride)
+                                                        {
+                                                            targetPos *= rot_ins_4;
+                                                        }
+
+                                                        targetPos += pos_ins_4;
+                                                        modelCont.Vertices[v].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+                                                        if (ins.ObjectID == (ushort)DefaultEnums.ObjectID.TNTCRATE)
+                                                        {
+                                                            modelCont.Vertices[v].Col = Vertex.ColorToABGR(Color.Red);
+                                                        }
+                                                        else if (ins.ObjectID == (ushort)DefaultEnums.ObjectID.NITROCRATE)
+                                                        {
+                                                            modelCont.Vertices[v].Col = Vertex.ColorToABGR(Color.Green);
+                                                        }
+                                                        else if (WoodCrates.Contains((DefaultEnums.ObjectID)ins.ObjectID))
+                                                        {
+                                                            modelCont.Vertices[v].Col = Vertex.ColorToABGR(Color.SandyBrown);
+                                                        }
+                                                    }
+                                                    vtx[5 + cur_instance] = new VertexBufferData();
+                                                    vtx[5 + cur_instance].Vtx = modelCont.Vertices;
+                                                    vtx[5 + cur_instance].VtxInd = modelCont.Indices;
+                                                    modelCont.Vertices = vbuffer;
+                                                    UpdateVBO(5 + cur_instance);
+                                                }
+                                                else
+                                                {
+                                                    vtx[5 + cur_instance] = null;
+                                                }
                                             }
+
                                             cur_instance++;
                                         }
+                                    }
+
+                                    if (HasSkin && file.Data.Type == TwinsFile.FileType.RMX)
+                                    {
+                                        SkinXController modelCont = null;
+                                        SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(4);
+                                        foreach (SkinX mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(4).Records)
+                                        {
+                                            if (mod.ID == TargetSkin)
+                                            {
+                                                modelCont = mesh_sec.GetItem<SkinXController>(mod.ID);
+                                            }
+                                        }
+
+                                        modelCont.LoadMeshData();
+                                        Vertex[] vbuffer = new Vertex[modelCont.Vertices.Length];
+
+                                        for (int v = 0; v < modelCont.Vertices.Length; v++)
+                                        {
+                                            vbuffer[v] = modelCont.Vertices[v];
+                                            Vector4 targetPos = new Vector4(modelCont.Vertices[v].Pos.X, modelCont.Vertices[v].Pos.Y, modelCont.Vertices[v].Pos.Z, 1);
+
+                                            //targetPos *= LocalRot;
+
+                                            bool rotationOverride = false;
+                                            if (!rotationOverride)
+                                            {
+                                                targetPos *= rot_ins_4;
+                                            }
+
+                                            targetPos += pos_ins_4;
+                                            modelCont.Vertices[v].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+                                        }
+                                        vtx[5 + cur_instance] = new VertexBufferData();
+                                        vtx[5 + cur_instance].Vtx = modelCont.Vertices;
+                                        vtx[5 + cur_instance].VtxInd = modelCont.Indices;
+                                        modelCont.Vertices = vbuffer;
+                                        UpdateVBO(5 + cur_instance);
+
+                                        cur_instance++;
+                                    }
+
+                                    if (HasBlendSkin && file.Data.Type == TwinsFile.FileType.RMX)
+                                    {
+                                        BlendSkinXController modelCont = null;
+                                        SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(5);
+                                        foreach (BlendSkinX mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(5).Records)
+                                        {
+                                            if (mod.ID == TargetBSkin)
+                                            {
+                                                modelCont = mesh_sec.GetItem<BlendSkinXController>(mod.ID);
+                                            }
+                                        }
+
+                                        modelCont.LoadMeshData();
+                                        Vertex[] vbuffer = new Vertex[modelCont.Vertices.Length];
+
+                                        for (int v = 0; v < modelCont.Vertices.Length; v++)
+                                        {
+                                            vbuffer[v] = modelCont.Vertices[v];
+                                            Vector4 targetPos = new Vector4(modelCont.Vertices[v].Pos.X, modelCont.Vertices[v].Pos.Y, modelCont.Vertices[v].Pos.Z, 1);
+
+                                            //targetPos *= LocalRot;
+
+                                            bool rotationOverride = false;
+                                            if (!rotationOverride)
+                                            {
+                                                targetPos *= rot_ins_4;
+                                            }
+
+                                            targetPos += pos_ins_4;
+                                            modelCont.Vertices[v].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+                                        }
+                                        vtx[5 + cur_instance] = new VertexBufferData();
+                                        vtx[5 + cur_instance].Vtx = modelCont.Vertices;
+                                        vtx[5 + cur_instance].VtxInd = modelCont.Indices;
+                                        modelCont.Vertices = vbuffer;
+                                        UpdateVBO(5 + cur_instance);
+
+                                        cur_instance++;
                                     }
                                 }
                             }

@@ -375,13 +375,13 @@ namespace TwinsaityEditor
             base.OnLoad(e);
         }
 
-        protected void InitVBO(int count)
+        protected void InitVBO(int count, bool ForceCreate = false)
         {
             MakeCurrent();
             vtx = new VertexBufferData[count];
             for (int i = 0; i < count; ++i)
             {
-                if (i > 4)
+                if (i > 4 && !ForceCreate)
                 {
                     vtx[i] = null;
                 }

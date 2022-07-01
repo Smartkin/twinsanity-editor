@@ -10,6 +10,10 @@ namespace TwinsaityEditor
         public GraphicsInfoController(MainForm topform, GraphicsInfo item) : base(topform, item)
         {
             Data = item;
+            if (MainFile.Data.Type == TwinsFile.FileType.RMX)
+            {
+                AddMenu("Open mesh viewer", Menu_OpenViewer);
+            }
         }
 
         protected override string GetName()
@@ -115,6 +119,11 @@ namespace TwinsaityEditor
             }
 
             TextPrev = text.ToArray();
+        }
+
+        private void Menu_OpenViewer()
+        {
+            MainFile.OpenMeshViewer(this, MainFile);
         }
     }
 }

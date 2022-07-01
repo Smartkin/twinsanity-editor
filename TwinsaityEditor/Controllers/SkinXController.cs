@@ -105,7 +105,7 @@ namespace TwinsaityEditor
 
         private void Menu_OpenViewer()
         {
-            //MainFile.OpenMeshViewer(this);
+            MainFile.OpenMeshViewer(this);
         }
 
         private void Menu_ExportPLY()
