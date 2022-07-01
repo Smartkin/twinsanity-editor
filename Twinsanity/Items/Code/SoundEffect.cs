@@ -120,5 +120,18 @@ namespace Twinsanity
                     throw new ArgumentException($"Unhandled sfx frequency. Value was: {freq}", "freq");
             }
         }
+
+        public static void CopySoundTo(SoundEffect source, byte[] sourceExtraData, SoundEffect destination, BinaryWriter destinationWriter)
+        {
+            destination.ID = source.ID;
+            destination.Freq = source.Freq;
+            destination.FreqFac = source.FreqFac;
+            destination.SoundSize = source.SoundSize;
+            destination.SoundOffset = (uint)destinationWriter.BaseStream.Length;
+
+            var soundArray = new byte[source.SoundSize];
+            Array.Copy(sourceExtraData, source.SoundOffset, soundArray, 0, source.SoundSize);
+            destinationWriter.Write(soundArray);
+        }
     }
 }
