@@ -18,11 +18,11 @@ namespace Twinsanity.Actions
         }
     }
 
-    public abstract class ScriptPercept
+    public abstract class ScriptPerceptAbstract
     {
         public enum PerceptArgument
         {
-            ExitPoint = 0, // Point of interest defined in GameObject
+            ExitPoint = 0,
             Actor,
             Subtype,
             Message,
@@ -71,7 +71,7 @@ namespace Twinsanity.Actions
             Assembly assembly = Assembly.GetAssembly(typeof(PerceptID));
             foreach (Type type in assembly.GetTypes())
             {
-                if (type.IsAbstract || !typeof(ScriptPercept).IsAssignableFrom(type)) // only get non-abstract modders
+                if (type.IsAbstract || !typeof(ScriptPerceptAbstract).IsAssignableFrom(type)) // only get non-abstract modders
                     continue;
 
                 PerceptID tName = (PerceptID)type.GetCustomAttribute(typeof(PerceptID), false);

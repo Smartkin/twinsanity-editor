@@ -22,5 +22,10 @@ namespace Twinsanity.Actions
         {
             output.arguments = new List<uint>() { 0xCDCDCD00 + Priority };
         }
+
+        public override string ToString()
+        {
+            return $"SetBehaviourPriority {Priority}";
+        }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Twinsanity.Actions
 {
-    [ActionID(DefaultEnums.CommandID.NowMoveForwards)]
+    //[ActionID(DefaultEnums.CommandID.NowMoveForwards)]
     public class NowMoveForwardsAction : ScriptAction
     {
         public float Distance { get; set; } = 1f;
@@ -18,6 +18,11 @@ namespace Twinsanity.Actions
         {
             byte[] bytes = BitConverter.GetBytes(Distance);
             output.arguments = new List<uint>() { BitConverter.ToUInt32(bytes, 0) };
+        }
+
+        public override string ToString()
+        {
+            return $"NowMoveForwards {Distance}";
         }
     }
 }

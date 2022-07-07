@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Twinsanity.Actions
 {
-    //[ActionID(DefaultEnums.CommandID.PlayMovie)]
+    [ActionID(DefaultEnums.CommandID.PlayMovie)]
     public class PlayMovieAction : ScriptAction
     {
         public uint Movie { get; set; } = 1; // change to enum
@@ -20,6 +20,11 @@ namespace Twinsanity.Actions
         {
             byte[] bytes = BitConverter.GetBytes(FadeDuration);
             output.arguments = new List<uint>() { Movie, BitConverter.ToUInt32(bytes, 0) };
+        }
+
+        public override string ToString()
+        {
+            return $"PlayMovie {Movie}, Fade {FadeDuration}";
         }
     }
 }

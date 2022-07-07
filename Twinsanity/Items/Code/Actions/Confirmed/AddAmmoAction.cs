@@ -17,5 +17,10 @@ namespace Twinsanity.Actions
         {
             output.arguments = new List<uint>() { (uint)AmmoToAdd };
         }
+
+        public override string ToString()
+        {
+            return $"AddAmmo {AmmoToAdd}";
+        }
     }
 }

@@ -17,5 +17,10 @@ namespace Twinsanity.Actions
         {
             output.arguments = new List<uint>() { (uint)DamageAdd };
         }
+
+        public override string ToString()
+        {
+            return $"DamageBoss {DamageAdd}";
+        }
     }
 }

@@ -17,5 +17,10 @@ namespace Twinsanity.Actions
         {
             output.arguments = new List<uint>() { (uint)WumpaToAdd };
         }
+
+        public override string ToString()
+        {
+            return $"AddWumpa {WumpaToAdd}";
+        }
     }
 }

@@ -19,5 +19,10 @@ namespace Twinsanity.Actions
             byte[] bytes = BitConverter.GetBytes(Distance);
             output.arguments = new List<uint>() { BitConverter.ToUInt32(bytes, 0) };
         }
+
+        public override string ToString()
+        {
+            return $"NowGoBackCollidable {Distance}";
+        }
     }
 }

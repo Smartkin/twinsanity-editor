@@ -336,6 +336,25 @@ namespace TwinsaityEditor
             Node.TreeView.EndUpdate();
         }
 
+        public void RefreshSection()
+        {
+            if (Data.Type == SectionType.ObjectInstance)
+            {
+                MainFile.CloseEditor(Editors.Instance, (int)Data.Parent.ID);
+            }
+            else if (Data.Type == SectionType.Position)
+            {
+                MainFile.CloseEditor(Editors.Position, (int)Data.Parent.ID);
+            }
+            Node.TreeView.BeginUpdate();
+            Node.Nodes.Clear();
+            for (int i = 0; i < Data.Records.Count; ++i)
+            {
+                TopForm.GenTreeNode(Data.Records[i], this);
+            }
+            Node.TreeView.EndUpdate();
+        }
+
         private void Menu_OpenEditor()
         {
             MainFile.OpenEditor(this);

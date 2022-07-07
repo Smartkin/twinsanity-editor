@@ -27,5 +27,10 @@ namespace Twinsanity.Actions
         {
             output.arguments = new List<uint>() { (uint)Gem };
         }
+
+        public override string ToString()
+        {
+            return $"AddGem {Gem}";
+        }
     }
 }

@@ -19,5 +19,10 @@ namespace Twinsanity.Actions
             byte[] bytes = BitConverter.GetBytes(FadeDuration);
             output.arguments = new List<uint>() { BitConverter.ToUInt32(bytes, 0) };
         }
+
+        public override string ToString()
+        {
+            return $"ShowBottomText {FadeDuration}";
+        }
     }
 }

@@ -25,10 +25,10 @@ namespace TwinsaityEditor
             text.Add($"Size: {Data.Size}");
             if (Data?.Header != null)
             {
-                text.Add($"Pairs(LinkedScriptIndex/UnkInt): {Data.Header.unkIntPairs}");
-                for (int i = 0; i < Data.Header.unkIntPairs; i++)
+                text.Add($"Participants: {Data.Header.pairs.Count}");
+                for (int i = 0; i < Data.Header.pairs.Count; i++)
                 {
-                    text.Add($"Pair: {Data.Header.pairs[i].mainScriptIndex - 1} / {Data.Header.pairs[i].unkInt2}");
+                    text.Add($"{i}: {Data.Header.pairs[i].unkInt2} - Script ID {Data.Header.pairs[i].mainScriptIndex - 1}");
                 }
             }
             TextPrev = text.ToArray();

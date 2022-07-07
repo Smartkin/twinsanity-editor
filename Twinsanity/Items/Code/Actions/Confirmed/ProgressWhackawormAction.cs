@@ -17,5 +17,10 @@ namespace Twinsanity.Actions
         {
             output.arguments = new List<uint>() { (uint)WormCounterAdd };
         }
+
+        public override string ToString()
+        {
+            return $"ProgressWhackaworm {WormCounterAdd}";
+        }
     }
 }

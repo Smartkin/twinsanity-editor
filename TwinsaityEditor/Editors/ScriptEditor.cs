@@ -32,10 +32,13 @@ namespace TwinsaityEditor
         private Func<Script, bool> scriptPredicate;
         private List<int> scriptIndices = new List<int>();
         private bool ignoreChange = false;
+        private int scriptGameVersion = 0;
         public ScriptEditor(SectionController c)
         {
             File = c.MainFile;
             controller = c;
+            if (controller.MainFile.Data.Type == TwinsFile.FileType.RMX) scriptGameVersion = 1;
+            if (controller.MainFile.Data.Type == TwinsFile.FileType.DemoRM2) scriptGameVersion = 2;
             Text = $"Instance Editor (Section {c.Data.Parent.ID})";
             scriptPredicate = s => { return s.Name.Contains(scriptNameFilter.Text) && s.Main != null; };
             ScriptAction.GetSupported();
@@ -44,6 +47,11 @@ namespace TwinsaityEditor
             UpdatePanels();
             PopulateCommandList();
             PopulatePerceptList();
+            cbCommandIndex.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox_perceptID.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox_propGrid_ActionID.DropDownStyle = ComboBoxStyle.DropDownList;
+            filterSelection.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox_StartUnit.DropDownStyle = ComboBoxStyle.DropDownList;
         }
 
         private void ScriptEditor_Load(object sender, EventArgs e)
@@ -55,21 +63,39 @@ namespace TwinsaityEditor
             // Populate with current script command knowledge
             for (ushort i = 0; i < 663; ++i) //Script.MainScript.ScriptCommand.ScriptCommandTableSize
             {
-                if (Enum.IsDefined(typeof(DefaultEnums.CommandID), i))
+                string Label = string.Empty;
+                if (Script.MainScript.ScriptCommand.GetCommandSize(i, scriptGameVersion) == 0x00)
                 {
-                    cbCommandIndex.Items.Add(((DefaultEnums.CommandID)i).ToString());
-                    comboBox_propGrid_ActionID.Items.Add(((DefaultEnums.CommandID)i).ToString());
+                    if (Enum.IsDefined(typeof(DefaultEnums.CommandID), i))
+                    {
+                        Label = $"-DELETED {i} ({((DefaultEnums.CommandID)i).ToString()})";
+                    }
+                    else
+                    {
+                        Label = $"-DELETED {i}";
+                    }  
                 }
-                else if (i >= 216 && i <= 511)
+                else if (Script.MainScript.ScriptCommand.GetCommandSize(i, scriptGameVersion) == 0x0C)
                 {
-                    cbCommandIndex.Items.Add("------------");
-                    comboBox_propGrid_ActionID.Items.Add("------------");
+                    if (Enum.IsDefined(typeof(DefaultEnums.CommandID), i))
+                    {
+                        Label = $"{((DefaultEnums.CommandID)i).ToString()} (No args)";
+                    }
+                    else
+                    {
+                        Label = $"Unknown {i.ToString()} (No args)";
+                    }
+                }
+                else if (Enum.IsDefined(typeof(DefaultEnums.CommandID), i))
+                {
+                    Label = ((DefaultEnums.CommandID)i).ToString();
                 }
                 else
                 {
-                    cbCommandIndex.Items.Add("Unknown " + i.ToString());
-                    comboBox_propGrid_ActionID.Items.Add("Unknown " + i.ToString());
+                    Label = "Unknown " + i.ToString();
                 }
+                cbCommandIndex.Items.Add(Label);
+                comboBox_propGrid_ActionID.Items.Add(Label);
             }
         }
         private void PopulatePerceptList()
@@ -82,7 +108,7 @@ namespace TwinsaityEditor
                 }
                 else if (i >= 177 && i <= 511)
                 {
-                    comboBox_perceptID.Items.Add("------------");
+                    comboBox_perceptID.Items.Add($"----- {i}");
                 }
                 else
                 {
@@ -113,14 +139,17 @@ namespace TwinsaityEditor
         }
         private string GenTextForList(Script script)
         {
+            return $"{script.ID:0000}{(script.Name == string.Empty ? string.Empty : $": {script.Name}")}";
+            /*
             if (script.script != null && script.script.Length > 0) // warn if there are leftovers
             {
                 return $"(!)ID {script.ID} {(script.Name == string.Empty ? string.Empty : $" - {script.Name}")}";
             }
             else
             {
-                return $"ID {script.ID} {(script.Name == string.Empty ? string.Empty : $" - {script.Name}")}";
+                
             }
+            */
         }
         private void BuildTree()
         {
@@ -128,14 +157,14 @@ namespace TwinsaityEditor
             scriptTree.Nodes.Clear();
             if (null != script)
             {
-                scriptTree.Nodes.Add(script.Name);
+                scriptTree.Nodes.Add($"Priority {script.mask} - {script.Name}").Tag = script;
                 if (script.Header != null)
                 {
-                    scriptTree.TopNode.Nodes.Add("Behaviour Starter").Tag = script.Header;
+                    scriptTree.TopNode.Nodes.Add($"Participants: {script.Header.pairs.Count}").Tag = script.Header;
                 }
                 if (script.Main != null)
                 {
-                    TreeNode mainScriptNode = scriptTree.TopNode.Nodes.Add("Layer Script - Unit " + script.Main.unkInt2);
+                    TreeNode mainScriptNode = scriptTree.TopNode.Nodes.Add("Layer Script - Unit " + script.Main.StartUnit);
                     mainScriptNode.Tag = script.Main;
                     Script.MainScript mainScript = script.Main;
                     selectedMainScript = mainScript;
@@ -148,6 +177,7 @@ namespace TwinsaityEditor
                 }
                 scriptTree.Nodes[0].ExpandAll();
                 scriptTree.Nodes[0].EnsureVisible();
+                scriptTree.SelectedNode = scriptTree.Nodes[0];
                 scriptTree.EndUpdate();
             }
         }
@@ -221,11 +251,12 @@ namespace TwinsaityEditor
             {
                 Name = ((DefaultEnums.ConditionID)ptr.VTableIndex).ToString();
                 //IsDefined = true;
-                if (ScriptPercept.Args.ContainsKey((DefaultEnums.ConditionID)ptr.VTableIndex))
-                {
-                    Name += " " + ptr.UnkData;
-                }
+                //if (ScriptPercept.Args.ContainsKey((DefaultEnums.ConditionID)ptr.VTableIndex))
+                //{
+                //    Name += " " + ptr.UnkData;
+                //}
             }
+            Name += $" {ptr.Parameter}/{ptr.Interval}/{ptr.Threshold}";
             if (ptr.NotGate)
             {
                 Name = "NOT " + Name;
@@ -246,10 +277,34 @@ namespace TwinsaityEditor
         {
             string Name = $"Action {ptr.VTableIndex}";
             bool IsDefined = false;
+            bool IsNamed = false;
             if (Enum.IsDefined(typeof(DefaultEnums.CommandID), ptr.VTableIndex))
             {
                 Name = ((DefaultEnums.CommandID)ptr.VTableIndex).ToString();
                 IsDefined = true;
+                DefaultEnums.CommandID ActID = (DefaultEnums.CommandID)ptr.VTableIndex;
+                if (ScriptAction.SupportedTypes.ContainsKey(ActID))
+                {
+                    ScriptAction CacheAction = (ScriptAction)Activator.CreateInstance(ScriptAction.SupportedTypes[ActID]);
+                    CacheAction.Load(ptr);
+                    Name = CacheAction.ToString();
+                    IsNamed = true;
+                }
+            }
+            if (!IsNamed)
+            {
+                if (ptr.arguments.Count == 1)
+                {
+                    Name += $" 0x{ptr.arguments[0].ToString("X8")}";
+                }
+                else if (ptr.arguments.Count == 2)
+                {
+                    Name += $" 0x{ptr.arguments[0].ToString("X8")}, 0x{ptr.arguments[1].ToString("X8")}";
+                }
+                else if (ptr.arguments.Count > 2)
+                {
+                    Name += $" ... ({ptr.arguments.Count} args)";
+                }
             }
 
             TreeNode node = parent.Nodes.Add(Name);
@@ -277,7 +332,7 @@ namespace TwinsaityEditor
             if (null != scriptTree.SelectedNode)
             {
                 Object tag = scriptTree.SelectedNode.Tag;
-                if (tag == null)
+                if (tag == null || tag is Script)
                 {
                     panelGeneral.Visible = true;
                     UpdateGeneralPanel();
@@ -332,6 +387,7 @@ namespace TwinsaityEditor
                 if (tag is Script.MainScript.ScriptCommand)
                 {
                     selectedType4 = (Script.MainScript.ScriptCommand)tag;
+                    selectedAction = null;
 
                     if (ScriptAction.ArglessTypes.Contains((int)selectedType4.VTableIndex))
                     {
@@ -393,6 +449,7 @@ namespace TwinsaityEditor
 
         private void UpdateHeaderPanel()
         {
+            /*
             headerSubScripts.Items.Clear();
             foreach (Script.HeaderScript.UnkIntPairs pair in selectedHeaderScript.pairs)
             {
@@ -402,29 +459,29 @@ namespace TwinsaityEditor
             {
                 headerSubScripts.SelectedIndex = 0;
             }
-        }
-        private void headerSubScripts_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (headerSubScripts.SelectedItem != null)
+            */
+            listBox_header_participants.Items.Clear();
+            foreach (Script.HeaderScript.UnkIntPairs pair in selectedHeaderScript.pairs)
             {
-                Script.HeaderScript.UnkIntPairs pair = selectedHeaderScript.pairs[headerSubScripts.SelectedIndex];
-                headerSubscriptID.Text = (pair.mainScriptIndex - 1).ToString();
-                headerSubscriptArg.Text = pair.unkInt2.ToString();
+                listBox_header_participants.Items.Add(pair);
+            }
+            if (listBox_header_participants.Items.Count > 0)
+            {
+                listBox_header_participants.SelectedIndex = 0;
             }
         }
         private void headerSubscriptID_TextChanged(object sender, EventArgs e)
         {
-            if (headerSubScripts.SelectedItem != null)
+            if (listBox_header_participants.SelectedItem != null)
             {
-                Script.HeaderScript.UnkIntPairs pair = selectedHeaderScript.pairs[headerSubScripts.SelectedIndex];
+                Script.HeaderScript.UnkIntPairs pair = selectedHeaderScript.pairs[listBox_header_participants.SelectedIndex];
                 TextBox textBox = (TextBox)sender;
                 Int32 val = pair.mainScriptIndex;
                 if (Int32.TryParse(textBox.Text, out val))
                 {
                     textBox.BackColor = Color.White;
                     pair.mainScriptIndex = val + 1;
-                    headerSubScripts.SelectedItem = pair;
-                    headerSubScripts.Text = headerSubScripts.SelectedItem.ToString();
+                    listBox_header_participants.Items[listBox_header_participants.SelectedIndex] = listBox_header_participants.Items[listBox_header_participants.SelectedIndex];
                 }
                 else
                 {
@@ -436,17 +493,16 @@ namespace TwinsaityEditor
 
         private void headerSubscriptArg_TextChanged(object sender, EventArgs e)
         {
-            if (headerSubScripts.SelectedItem != null)
+            if (listBox_header_participants.SelectedItem != null)
             {
-                Script.HeaderScript.UnkIntPairs pair = selectedHeaderScript.pairs[headerSubScripts.SelectedIndex];
+                Script.HeaderScript.UnkIntPairs pair = selectedHeaderScript.pairs[listBox_header_participants.SelectedIndex];
                 TextBox textBox = (TextBox)sender;
                 UInt32 val = pair.unkInt2;
                 if (UInt32.TryParse(textBox.Text, out val))
                 {
                     textBox.BackColor = Color.White;
                     pair.unkInt2 = val;
-                    headerSubScripts.SelectedItem = pair;
-                    headerSubScripts.Text = headerSubScripts.SelectedItem.ToString();
+                    listBox_header_participants.Items[listBox_header_participants.SelectedIndex] = listBox_header_participants.Items[listBox_header_participants.SelectedIndex];
                 }
                 else
                 {
@@ -458,16 +514,18 @@ namespace TwinsaityEditor
         private void UpdateMainPanel()
         {
             mainName.Text = selectedMainScript.name;
-            mainLinkedCnt.Text = selectedMainScript.StatesAmount.ToString();
+            mainLinkedCnt.Visible = false;
+            label6.Visible = false;
+            //mainLinkedCnt.Text = selectedMainScript.StatesAmount.ToString();
             //mainUnk.Text = selectedMainScript.unkInt2.ToString();
             //mainLinkedPos.Text = "0";
             listBox_UnitList.Items.Clear();
             comboBox_StartUnit.Items.Clear();
-            if (selectedMainScript.StatesAmount > 0)
+            if (selectedMainScript.scriptState1 != null)
             {
                 int i = 0;
                 Script.MainScript.ScriptState com = selectedMainScript.scriptState1;
-                while (i < selectedMainScript.StatesAmount && com != null)
+                while (com != null)
                 {
                     string Name = $"Unit {i}"; // add link count?
                     i++;
@@ -476,9 +534,9 @@ namespace TwinsaityEditor
                     com = com.nextState;
                 }
             }
-            if (selectedMainScript.unkInt2 < comboBox_StartUnit.Items.Count)
+            if (selectedMainScript.StartUnit < comboBox_StartUnit.Items.Count)
             {
-                comboBox_StartUnit.SelectedIndex = selectedMainScript.unkInt2;
+                comboBox_StartUnit.SelectedIndex = selectedMainScript.StartUnit;
             }
             else
             {
@@ -495,11 +553,11 @@ namespace TwinsaityEditor
 
         private void mainUnk_TextChanged(object sender, EventArgs e)
         {
-            Int32 val = selectedMainScript.unkInt2;
+            Int32 val = selectedMainScript.StartUnit;
             if (Int32.TryParse(((TextBox)sender).Text, out val))
             {
                 ((TextBox)sender).BackColor = Color.White;
-                selectedMainScript.unkInt2 = val;
+                selectedMainScript.StartUnit = val;
             }
             else
             {
@@ -521,7 +579,7 @@ namespace TwinsaityEditor
             //    
             //}
             int val = listBox_UnitList.SelectedIndex + 1;
-            if (val == -1) val = selectedMainScript.StatesAmount;
+            if (val == -1) val = selectedMainScript.GetStatesAmount();
 
             if (selectedMainScript.AddLinkedScript(val))
             {
@@ -569,8 +627,8 @@ namespace TwinsaityEditor
         {
             type1UnkByte1.Text = selectedType1.unkByte1.ToString();
             type1UnkByte2.Text = selectedType1.unkByte2.ToString();
-            type1UnkShort.Text = selectedType1.unkUShort1.ToString();
-            type1UnkInt.Text = selectedType1.unkInt1.ToString();
+            //type1UnkShort.Text = selectedType1.unkUShort1.ToString();
+            type1UnkInt.Text = selectedType1.unkInt1.ToString(); //Convert.ToString(selectedType1.unkInt1, 2).PadLeft(32, '0');
             type1Val1.Text = selectedType1.UnkVal1.ToString();
             type1Val2.Text = selectedType1.UnkVal2.ToString();
             type1Val3.Text = selectedType1.UnkVal3.ToString();
@@ -583,6 +641,34 @@ namespace TwinsaityEditor
             blockType1IndexChanged = false;
             UpdateNodeName();
         }
+
+        List<string> ByteOrderVariables = new List<string>()
+        {
+            "int SELECTOR/SYNC_INDEX",
+            "int KEY_INDEX/FOCUS_DATA",
+            "f   MOVE_SPEED/RISE_HEIGHT",
+            "ang TURN_SPEED",
+            "f   RAWPOS_X",
+            "f   RAWPOS_Y",
+            "f   RAWPOS_Z",
+            "ang RAWANGS_X/PITCH",
+            "ang RAWANGS_Y/YAW",
+            "ang RAWANGS_Z/ROLL",
+            "f   DELAY",
+            "f   DURATION/CURVY/HOMEPOWER",
+            "f   TUMBLE_DATA",
+            "f   SPIN_DATA",
+            "f   TWIST_DATA",
+            "f   SQR_TOLERANCE/RANDRANGE",
+            "f   POWER/GRAVITY/BANKING",
+            "f   DAMPING/SPEEDLIM/BRAKING",
+            "f   AC_DIST/RT_OPT/SHIFT FREQ",
+            "f   DEC_DIST/PHYS_OPT/SHIFT",
+            "f   BOUNCE/BANK_LIMIT",
+            "ptr SYNC_UNIT",
+            "int JOINT_INDEX",
+        };
+
         private void UpdateType1Bytes()
         {
             type1Bytes.BeginUpdate();
@@ -590,50 +676,11 @@ namespace TwinsaityEditor
             int i = 0;
             foreach (Byte b in selectedType1.bytes)
             {
-                string byteID = $"{i:000}";
+                string byteID = string.Empty; //$"{i:000}";
 
-                switch (i)
+                if (i < ByteOrderVariables.Count)
                 {
-                    default:
-                        break;
-                    case 0:
-                        byteID += " Context";
-                        break;
-                    case 3:
-                        byteID += " Flag";
-                        break;
-                    case 4:
-                        byteID += " X";
-                        break;
-                    case 7:
-                        byteID += " W/X";
-                        break;
-                    case 5:
-                    case 8:
-                        byteID += " Y";
-                        break;
-                    case 6:
-                    case 9:
-                        byteID += " Z";
-                        break;
-                    case 10:
-                        byteID += " Time";
-                        break;
-                    case 0x16:
-                        byteID += " Int";
-                        break;
-                    case 0x2:
-                    case 0xB:
-                    case 0xF:
-                    case 0x10:
-                    case 0x11:
-                    case 0x13:
-                    case 0x14:
-                        byteID += " Float";
-                        break;
-                    case 0x15:
-                        byteID += " Unk";
-                        break;
+                    byteID = ByteOrderVariables[i]; //+= $"{ByteOrderVariables[i]}";
                 }
 
                 if (b == 255)
@@ -652,6 +699,7 @@ namespace TwinsaityEditor
                 ++i;
             }
             type1Bytes.EndUpdate();
+            comboBox_controlPacketByteType.SelectedIndex = 0;
         }
         private void UpdateType1Floats()
         {
@@ -689,15 +737,6 @@ namespace TwinsaityEditor
             {
                 ((TextBox)sender).BackColor = Color.Red;
             }
-            if (selectedType1.isValidArraySize())
-            {
-                type1Warning.Visible = false;
-            }
-            else
-            {
-                type1Warning.Visible = true;
-
-            }
         }
 
         private void type1UnkByte2_TextChanged(object sender, EventArgs e)
@@ -715,33 +754,11 @@ namespace TwinsaityEditor
             {
                 ((TextBox)sender).BackColor = Color.Red;
             }
-            if (selectedType1.isValidArraySize())
-            {
-                type1Warning.Visible = false;
-            }
-            else
-            {
-                type1Warning.Visible = true;
-
-            }
-        }
-
-        private void type1UnkShort_TextChanged(object sender, EventArgs e)
-        {
-            UInt16 val = selectedType1.unkUShort1;
-            if (UInt16.TryParse(((TextBox)sender).Text, out val))
-            {
-                ((TextBox)sender).BackColor = Color.White;
-                selectedType1.unkUShort1 = val;
-            }
-            else
-            {
-                ((TextBox)sender).BackColor = Color.Red;
-            }
         }
 
         private void type1UnkInt_TextChanged(object sender, EventArgs e)
         {
+            
             Int32 val = selectedType1.unkInt1;
             if (Int32.TryParse(((TextBox)sender).Text, out val))
             {
@@ -752,6 +769,7 @@ namespace TwinsaityEditor
             {
                 ((TextBox)sender).BackColor = Color.Red;
             }
+            
         }
 
         private void type1Array_TextChanged(object sender, EventArgs e)
@@ -766,7 +784,25 @@ namespace TwinsaityEditor
                 ListBox list = (ListBox)sender;
                 if (list.SelectedItem != null)
                 {
+                    ignoreChange = true;
                     type1Byte.Text = selectedType1.bytes[list.SelectedIndex].ToString();
+                    if (selectedType1.bytes[list.SelectedIndex] == 255)
+                    {
+                        type1Byte.Enabled = false;
+                        comboBox_controlPacketByteType.SelectedIndex = 0;
+                    }
+                    else if (selectedType1.bytes[list.SelectedIndex] > 127)
+                    {
+                        type1Byte.Enabled = true;
+                        comboBox_controlPacketByteType.SelectedIndex = 2;
+                        type1Byte.Text = (selectedType1.bytes[list.SelectedIndex] - 128).ToString();
+                    }
+                    else
+                    {
+                        type1Byte.Enabled = true;
+                        comboBox_controlPacketByteType.SelectedIndex = 1;
+                    }
+                    ignoreChange = false;
                 }
             }
         }
@@ -795,9 +831,33 @@ namespace TwinsaityEditor
                 while (i < selectedType2.commandCount && com != null)
                 {
                     string Name = $"Action {com.VTableIndex}";
+                    bool IsNamed = false;
                     if (Enum.IsDefined(typeof(DefaultEnums.CommandID), com.VTableIndex))
                     {
                         Name = ((DefaultEnums.CommandID)com.VTableIndex).ToString();
+                        DefaultEnums.CommandID ActID = (DefaultEnums.CommandID)com.VTableIndex;
+                        if (ScriptAction.SupportedTypes.ContainsKey(ActID))
+                        {
+                            ScriptAction CacheAction = (ScriptAction)Activator.CreateInstance(ScriptAction.SupportedTypes[ActID]);
+                            CacheAction.Load(com);
+                            Name = CacheAction.ToString();
+                            IsNamed = true;
+                        }
+                    }
+                    if (!IsNamed)
+                    {
+                        if (com.arguments.Count == 1)
+                        {
+                            Name += $" 0x{com.arguments[0].ToString("X8")}";
+                        }
+                        else if (com.arguments.Count == 2)
+                        {
+                            Name += $" 0x{com.arguments[0].ToString("X8")}, 0x{com.arguments[1].ToString("X8")}";
+                        }
+                        else if (com.arguments.Count > 2)
+                        {
+                            Name += $" ... ({com.arguments.Count} args)";
+                        }
                     }
                     i++;
                     listBox_LinkActions.Items.Add(Name);
@@ -805,10 +865,14 @@ namespace TwinsaityEditor
                 }
             }
             comboBox_LinkedUnit.Items.Clear();
-            for (int i = 0; i < selectedMainScript.StatesAmount; i++)
+            Script.MainScript.ScriptState state = selectedMainScript.scriptState1;
+            int iter = 0;
+            while (state != null)
             {
-                string Name = $"Unit {i}";
+                string Name = $"Unit {iter}";
                 comboBox_LinkedUnit.Items.Add(Name);
+                iter++;
+                state = state.nextState;
             }
             if (selectedType2.scriptStateListIndex < comboBox_LinkedUnit.Items.Count)
             {
@@ -975,11 +1039,11 @@ namespace TwinsaityEditor
         private void UpdateType3Panel()
         {
             type3VTable.Text = selectedType3.VTableIndex.ToString();
-            type3Parameter.Text = selectedType3.UnkData.ToString();
+            type3Parameter.Text = selectedType3.Parameter.ToString();
             type3CbNotGate.Checked = selectedType3.NotGate;
-            type3Interval.Text = selectedType3.X.ToString(CultureInfo.InvariantCulture);
-            type3Threshold.Text = selectedType3.Y.ToString(CultureInfo.InvariantCulture);
-            type3ThresholdInverse.Text = selectedType3.Z.ToString(CultureInfo.InvariantCulture);
+            type3Interval.Text = selectedType3.Interval.ToString(CultureInfo.InvariantCulture);
+            type3Threshold.Text = selectedType3.Threshold.ToString(CultureInfo.InvariantCulture);
+            type3ThresholdInverse.Text = selectedType3.ThresholdInverse.ToString(CultureInfo.InvariantCulture);
             comboBox_perceptID.SelectedIndex = selectedType3.VTableIndex;
             //type3ThresholdInverse.Enabled = false;
             UpdateNodeName();
@@ -991,22 +1055,23 @@ namespace TwinsaityEditor
             {
                 ((TextBox)sender).BackColor = Color.White;
                 selectedType3.VTableIndex = val;
+                UpdateNodeName();
             }
             else
             {
                 ((TextBox)sender).BackColor = Color.Red;
                 return;
             }
-            UpdateNodeName();
         }
 
         private void type3UnkShort_TextChanged(object sender, EventArgs e)
         {
-            UInt16 val = selectedType3.UnkData;
+            UInt16 val = selectedType3.Parameter;
             if (UInt16.TryParse(((TextBox)sender).Text, out val))
             {
                 ((TextBox)sender).BackColor = Color.White;
-                selectedType3.UnkData = val;
+                selectedType3.Parameter = val;
+                UpdateNodeName();
             }
             else
             {
@@ -1017,11 +1082,12 @@ namespace TwinsaityEditor
 
         private void type3X_TextChanged(object sender, EventArgs e)
         {
-            Single val = selectedType3.X;
+            Single val = selectedType3.Interval;
             if (Single.TryParse(((TextBox)sender).Text, NumberStyles.Float, CultureInfo.InvariantCulture, out val))
             {
                 ((TextBox)sender).BackColor = Color.White;
-                selectedType3.X = val;
+                selectedType3.Interval = val;
+                UpdateNodeName();
             }
             else
             {
@@ -1032,24 +1098,25 @@ namespace TwinsaityEditor
 
         private void type3Y_TextChanged(object sender, EventArgs e)
         {
-            Single val = selectedType3.Y;
+            Single val = selectedType3.Threshold;
             if (Single.TryParse(((TextBox)sender).Text, NumberStyles.Float, CultureInfo.InvariantCulture, out val))
             {
                 ((TextBox)sender).BackColor = Color.White;
-                selectedType3.Y = val;
+                selectedType3.Threshold = val;
                 if (val == 0f)
                 {
                     // see: COM_CORTEX_GAME_SPAWNER_ACTIVATED
                     // editor would otherwise interpret it as infinity, but the game wants NaN, probably because the PS2 interprets NaN as zero?
-                    selectedType3.Z = Single.NaN;
+                    selectedType3.ThresholdInverse = Single.NaN;
                 }
                 else
                 {
-                    selectedType3.Z = 1f / val;
+                    selectedType3.ThresholdInverse = 1f / val;
                 }
                 ignoreChange = true;
-                type3ThresholdInverse.Text = selectedType3.Z.ToString(CultureInfo.InvariantCulture);
+                type3ThresholdInverse.Text = selectedType3.ThresholdInverse.ToString(CultureInfo.InvariantCulture);
                 ignoreChange = false;
+                UpdateNodeName();
             }
             else
             {
@@ -1061,11 +1128,12 @@ namespace TwinsaityEditor
         private void type3Z_TextChanged(object sender, EventArgs e)
         {
             if (ignoreChange) return;
-            Single val = selectedType3.Z;
+            Single val = selectedType3.ThresholdInverse;
             if (Single.TryParse(((TextBox)sender).Text, NumberStyles.Float, CultureInfo.InvariantCulture, out val))
             {
                 ((TextBox)sender).BackColor = Color.White;
-                selectedType3.Z = val;
+                selectedType3.ThresholdInverse = val;
+                UpdateNodeName();
             }
             else
             {
@@ -1105,27 +1173,40 @@ namespace TwinsaityEditor
         }
         private void type1Byte_TextChanged(object sender, EventArgs e)
         {
-            if (type1Bytes.SelectedIndex >= 0 && !stopChanged)
+            if (type1Bytes.SelectedIndex >= 0 && !stopChanged && !ignoreChange)
             {
                 String text = ((TextBox)sender).Text;
                 Byte val = 0;
-                if (Byte.TryParse(text, out val))
+                if (Byte.TryParse(text, out val) && val < 128)
                 {
-                    selectedType1.bytes[type1Bytes.SelectedIndex] = val;
-                    ((TextBox)sender).BackColor = Color.White;
-                    int index = type1Bytes.SelectedIndex;
-                    blockType1IndexChanged = true;
-                    if (val == 255)
+                    if (comboBox_controlPacketByteType.SelectedIndex == 1)
                     {
-                        type1Bytes.Items[index] = $"{index:000}: N/A";
-                    }
-                    else if (val > 127)
-                    {
-                        type1Bytes.Items[index] = $"{index:000}: Inst. Float #{selectedType1.bytes[index] - 128}";
+                        selectedType1.bytes[type1Bytes.SelectedIndex] = val;
                     }
                     else
                     {
-                        type1Bytes.Items[index] = $"{index:000}: {selectedType1.bytes[index]}";
+                        selectedType1.bytes[type1Bytes.SelectedIndex] = (byte)(val + 128);
+                    }
+                    ((TextBox)sender).BackColor = Color.White;
+                    int index = type1Bytes.SelectedIndex;
+                    blockType1IndexChanged = true;
+                    string byteName = $"{index:000}";
+                    if (index < ByteOrderVariables.Count)
+                    {
+                        byteName = ByteOrderVariables[index];
+                    }
+
+                    if (selectedType1.bytes[type1Bytes.SelectedIndex] == 255)
+                    {
+                        type1Bytes.Items[index] = $"{byteName}: N/A";
+                    }
+                    else if (selectedType1.bytes[type1Bytes.SelectedIndex] > 127)
+                    {
+                        type1Bytes.Items[index] = $"{byteName}: Inst. Float #{selectedType1.bytes[index] - 128}";
+                    }
+                    else
+                    {
+                        type1Bytes.Items[index] = $"{byteName}: {selectedType1.bytes[index]}";
                     }
                     
                     type1Bytes.SelectedIndex = index;
@@ -1595,38 +1676,24 @@ namespace TwinsaityEditor
                 {
                     if (Enum.IsDefined(typeof(DefaultEnums.ConditionID), com.condition.VTableIndex))
                     {
-                        if (ScriptPercept.Args.ContainsKey((DefaultEnums.ConditionID)com.condition.VTableIndex))
+                        if (com.condition.NotGate)
                         {
-                            if (com.condition.NotGate)
-                            {
-                                Name = string.Format("NOT {2} {1} - {0}", Name, com.condition.UnkData, ((DefaultEnums.ConditionID)com.condition.VTableIndex).ToString());
-                            }
-                            else
-                            {
-                                Name = string.Format("{2} {1} - {0}", Name, com.condition.UnkData, ((DefaultEnums.ConditionID)com.condition.VTableIndex).ToString());
-                            }
+                            Name = string.Format("NOT {1} {2}/{3}/{4} - {0}", Name, ((DefaultEnums.ConditionID)com.condition.VTableIndex).ToString(), com.condition.Parameter, com.condition.Interval, com.condition.Threshold);
                         }
                         else
                         {
-                            if (com.condition.NotGate)
-                            {
-                                Name = string.Format("NOT {1} - {0}", Name, ((DefaultEnums.ConditionID)com.condition.VTableIndex).ToString());
-                            }
-                            else
-                            {
-                                Name = string.Format("{1} - {0}", Name, ((DefaultEnums.ConditionID)com.condition.VTableIndex).ToString());
-                            }
+                            Name = string.Format("{1} {2}/{3}/{4} - {0}", Name, ((DefaultEnums.ConditionID)com.condition.VTableIndex).ToString(), com.condition.Parameter, com.condition.Interval, com.condition.Threshold);
                         }
                     }
                     else
                     {
                         if (com.condition.NotGate)
                         {
-                            Name = string.Format("NOT {1} - {0}", Name, $"Percept {com.condition.VTableIndex}");
+                            Name = string.Format("NOT {1} {2}/{3}/{4} - {0}", Name, $"Percept {com.condition.VTableIndex}", com.condition.Parameter, com.condition.Interval, com.condition.Threshold);
                         }
                         else
                         {
-                            Name = string.Format("{1} - {0}", Name, $"Percept {com.condition.VTableIndex}");
+                            Name = string.Format("{1} {2}/{3}/{4} - {0}", Name, $"Percept {com.condition.VTableIndex}", com.condition.Parameter, com.condition.Interval, com.condition.Threshold);
                         }
                     }
                 }
@@ -1727,7 +1794,7 @@ namespace TwinsaityEditor
             //    
             //}
             int val = listBox_LinkList.SelectedIndex + 1;
-            if (val == -1) val = selectedMainScript.StatesAmount;
+            if (val == -1) val = selectedMainScript.GetStatesAmount();
 
             if (selectedLinked.AddScriptStateBody(val))
             {
@@ -1782,6 +1849,7 @@ namespace TwinsaityEditor
         {
             generalId.Text = script.ID.ToString();
             generalArray.Text = GetTextFromArray(script.script);
+            textBox_scriptMask.Text = script.mask.ToString();
             if (script.script.Length == 0)
             {
                 generalWarning.Visible = false;
@@ -1953,7 +2021,7 @@ namespace TwinsaityEditor
             script = newScriptHeader;
             scriptListBox.Items.Add(GenTextForList(newScriptHeader));
             controller.UpdateText();
-            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[newScriptHeader.ID]].Tag).UpdateText();
+            //((Controller)controller.Node.Nodes[controller.Data.RecordIDs[newScriptHeader.ID]].Tag).UpdateText();
             
 
             Script newScriptMain = new Script();
@@ -1967,9 +2035,11 @@ namespace TwinsaityEditor
             scriptListBox.Items.Add(GenTextForList(newScriptMain));
             
             controller.UpdateText();
-            ((Controller)controller.Node.Nodes[controller.Data.RecordIDs[newScriptMain.ID]].Tag).UpdateText();
+            //((Controller)controller.Node.Nodes[controller.Data.RecordIDs[newScriptMain.ID]].Tag).UpdateText();
             PopulateList();
             scriptListBox.SelectedIndex = scriptListBox.Items.Count - 1;
+
+            controller.RefreshSection();
         }
 
         private void panelType4_Paint(object sender, PaintEventArgs e)
@@ -2077,7 +2147,7 @@ namespace TwinsaityEditor
                 TreeNode node = scriptTree.SelectedNode;
                 if (tag is Script.MainScript)
                 {
-                    scriptTree.SelectedNode.Text = "Layer Script - Unit " + script.Main.unkInt2;
+                    scriptTree.SelectedNode.Text = "Layer Script - Unit " + script.Main.StartUnit;
                 }
                 if (tag is Script.MainScript.ScriptStateBody)
                 {
@@ -2085,40 +2155,27 @@ namespace TwinsaityEditor
 
                     if (null != selectedType2.condition)
                     {
-                        if (Enum.IsDefined(typeof(DefaultEnums.ConditionID), selectedType2.condition.VTableIndex))
+                        Script.MainScript.ScriptCondition condition = selectedType2.condition;
+                        if (Enum.IsDefined(typeof(DefaultEnums.ConditionID), condition.VTableIndex))
                         {
-                            if (ScriptPercept.Args.ContainsKey((DefaultEnums.ConditionID)selectedType2.condition.VTableIndex))
+                            if (condition.NotGate)
                             {
-                                if (selectedType2.condition.NotGate)
-                                {
-                                    Name = string.Format("NOT {2} {1} - {0}", Name, selectedType2.condition.UnkData, ((DefaultEnums.ConditionID)selectedType2.condition.VTableIndex).ToString());
-                                }
-                                else
-                                {
-                                    Name = string.Format("{2} {1} - {0}", Name, selectedType2.condition.UnkData, ((DefaultEnums.ConditionID)selectedType2.condition.VTableIndex).ToString());
-                                }
+                                Name = string.Format("NOT {1} {2}/{3}/{4} - {0}", Name, ((DefaultEnums.ConditionID)condition.VTableIndex).ToString(), condition.Parameter, condition.Interval, condition.Threshold);
                             }
                             else
                             {
-                                if (selectedType2.condition.NotGate)
-                                {
-                                    Name = string.Format("NOT {1} - {0}", Name, ((DefaultEnums.ConditionID)selectedType2.condition.VTableIndex).ToString());
-                                }
-                                else
-                                {
-                                    Name = string.Format("{1} - {0}", Name, ((DefaultEnums.ConditionID)selectedType2.condition.VTableIndex).ToString());
-                                }
+                                Name = string.Format("{1} {2}/{3}/{4} - {0}", Name, ((DefaultEnums.ConditionID)condition.VTableIndex).ToString(), condition.Parameter, condition.Interval, condition.Threshold);
                             }
                         }
                         else
                         {
-                            if (selectedType2.condition.NotGate)
+                            if (condition.NotGate)
                             {
-                                Name = string.Format("NOT {1} - {0}", Name, $"Percept {selectedType2.condition.VTableIndex}");
+                                Name = string.Format("NOT {1} {2}/{3}/{4} - {0}", Name, $"Percept {condition.VTableIndex}", condition.Parameter, condition.Interval, condition.Threshold);
                             }
                             else
                             {
-                                Name = string.Format("{1} - {0}", Name, $"Percept {selectedType2.condition.VTableIndex}");
+                                Name = string.Format("{1} {2}/{3}/{4} - {0}", Name, $"Percept {condition.VTableIndex}", condition.Parameter, condition.Interval, condition.Threshold);
                             }
                         }
                     }
@@ -2137,6 +2194,22 @@ namespace TwinsaityEditor
                     {
                         Name = ((DefaultEnums.CommandID)selectedType4.VTableIndex).ToString();
                         IsDefined = true;
+                    }
+                    if (selectedAction != null)
+                    {
+                        Name = selectedAction.ToString();
+                    }
+                    else if (selectedType4.arguments.Count == 1)
+                    {
+                        Name += $" 0x{selectedType4.arguments[0].ToString("X8")}";
+                    }
+                    else if (selectedType4.arguments.Count == 2)
+                    {
+                        Name += $" 0x{selectedType4.arguments[0].ToString("X8")}, 0x{selectedType4.arguments[1].ToString("X8")}";
+                    }
+                    else if (selectedType4.arguments.Count > 2)
+                    {
+                        Name += $" ... ({selectedType4.arguments.Count} args)";
                     }
 
                     if (!selectedType4.isValidBits())
@@ -2190,6 +2263,14 @@ namespace TwinsaityEditor
                     }
 
                     node.Text = Name;
+                }
+                if (tag is Script.HeaderScript header)
+                {
+                    node.Text = $"Participants: {header.pairs.Count}";
+                }
+                if (tag is Script general)
+                {
+                    node.Text = $"Priority {general.mask} - {general.Name}";
                 }
             }
         }
@@ -2246,6 +2327,7 @@ namespace TwinsaityEditor
                     {
                         selectedType4.arguments.Add(0);
                     }
+                    UpdateNodeName();
                 }
             }
             else
@@ -2255,6 +2337,7 @@ namespace TwinsaityEditor
                 {
                     selectedType4.arguments.Add(0);
                 }
+                UpdateNodeName();
             }
 
             type4ExpectedLength.Text = $"Arguments: {selectedType4.GetExpectedSize() / 4}";
@@ -2292,6 +2375,7 @@ namespace TwinsaityEditor
             panel_propGrid.Visible = false;
             if (ScriptAction.ArglessTypes.Contains((int)selectedType4.VTableIndex))
             {
+                selectedAction = null;
                 propertyGrid1.Enabled = false;
                 propertyGrid1.Visible = false;
                 panel_propGrid.Visible = true;
@@ -2314,15 +2398,18 @@ namespace TwinsaityEditor
                 }
                 else
                 {
+                    selectedAction = null;
                     panelType4.Visible = true;
                     UpdateType4Panel();
                 }
             }
             else
             {
+                selectedAction = null;
                 panelType4.Visible = true;
                 UpdateType4Panel();
             }
+            UpdateNodeName();
         }
 
         private void button_propGrid_apply_Click(object sender, EventArgs e)
@@ -2345,7 +2432,8 @@ namespace TwinsaityEditor
 
         private void comboBox_StartUnit_SelectedIndexChanged(object sender, EventArgs e)
         {
-            selectedMainScript.unkInt2 = comboBox_StartUnit.SelectedIndex;
+            selectedMainScript.StartUnit = comboBox_StartUnit.SelectedIndex;
+            UpdateNodeName();
         }
 
         private void listBox_LinkList_SelectedIndexChanged(object sender, EventArgs e)
@@ -2356,6 +2444,87 @@ namespace TwinsaityEditor
         private void comboBox_LinkedUnit_SelectedIndexChanged(object sender, EventArgs e)
         {
             selectedType2.scriptStateListIndex = comboBox_LinkedUnit.SelectedIndex;
+            UpdateNodeName();
+        }
+
+        private void comboBox_controlPacketByteType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (type1Bytes.SelectedIndex < 0) return;
+            if (ignoreChange) return;
+            int index = type1Bytes.SelectedIndex;
+            string byteName = $"{index:000}";
+            if (index < ByteOrderVariables.Count)
+            {
+                byteName = ByteOrderVariables[index];
+            }
+            ignoreChange = true;
+            if (comboBox_controlPacketByteType.SelectedIndex == 0)
+            {
+                selectedType1.bytes[index] = 255;
+                type1Byte.Enabled = false;
+                type1Byte.Text = "255";
+                type1Bytes.Items[index] = $"{byteName}: N/A";
+            }
+            else if (comboBox_controlPacketByteType.SelectedIndex == 2)
+            {
+                selectedType1.bytes[index] = 128;
+                type1Byte.Enabled = true;
+                type1Byte.Text = "128";
+                type1Bytes.Items[index] = $"{byteName}: Inst. Float #{selectedType1.bytes[index] - 128}";
+            }
+            else
+            {
+                selectedType1.bytes[index] = 0;
+                type1Byte.Enabled = true;
+                type1Byte.Text = "0";
+                type1Bytes.Items[index] = $"{byteName}: {selectedType1.bytes[index]}";
+            }
+            ignoreChange = false;
+        }
+
+        private void textBox_scriptMask_TextChanged(object sender, EventArgs e)
+        {
+            byte val = 0;
+            if (byte.TryParse(((TextBox)sender).Text, out val))
+            {
+                ((TextBox)sender).BackColor = Color.White;
+                script.mask = val;
+                UpdateNodeName();
+            }
+            else
+            {
+                ((TextBox)sender).BackColor = Color.Red;
+                return;
+            }
+        }
+
+        private void listBox_header_participants_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listBox_header_participants.SelectedItem != null)
+            {
+                Script.HeaderScript.UnkIntPairs pair = selectedHeaderScript.pairs[listBox_header_participants.SelectedIndex];
+                headerSubscriptID.Text = (pair.mainScriptIndex - 1).ToString();
+                headerSubscriptArg.Text = pair.unkInt2.ToString();  //Convert.ToString(pair.unkInt2, 2).PadLeft(32, '0');
+                UpdateNodeName();
+            }
+        }
+
+        private void button_header_participant_add_Click(object sender, EventArgs e)
+        {
+            Script.HeaderScript.UnkIntPairs pair = new Script.HeaderScript.UnkIntPairs();
+            pair.mainScriptIndex = (int)script.ID + 1;
+            pair.unkInt2 = 4294922800;
+            selectedHeaderScript.pairs.Add(pair);
+            listBox_header_participants.Items.Add(selectedHeaderScript.pairs[selectedHeaderScript.pairs.Count - 1]);
+            UpdateNodeName();
+        }
+
+        private void button_header_participant_remove_Click(object sender, EventArgs e)
+        {
+            int index = listBox_header_participants.SelectedIndex;
+            if (index < 0) return;
+            listBox_header_participants.Items.RemoveAt(index);
+            selectedHeaderScript.pairs.RemoveAt(index);
             UpdateNodeName();
         }
     }
