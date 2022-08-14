@@ -1,22 +1,29 @@
-## Crash Twinsanity Editor
->Original version made by Neo_Kesha
+## Crash TwinSanity Editor
 
 ## Description
-This is a rewrite of the Crash Twinsanity Editor, simply called TwinsanityEditor (TE). The original version was written in VB (Visual Basic), and this is a repo of the version that was converted to C#.
-
-## Current issues
-The state of the editor right now is unusable for editing (please use the old version for actual proper editing for now). The only working features right now are loading RM/SM files, viewing certain parameters, and collision and object instance placement and that's pretty much it.
-
-Here's the list of what needs to be fixed:
-- [ ] Model viewing
+This is an editor of game files for the games Crash TwinSanity (PS2/XBOX) and Super Monkey Ball Adventure (PSP). (Originally created by NeoKesha)  
+The following formats are supported:  
+- .BD/.BH (PS2 file archives) extraction and rebuilding  
+- .MG/.MH (PS2 music archives) extraction and rebuilding  
+- .RM2 (PS2 level resources) editing  
+- .SM2 (PS2 scenery resources) editing  
+- .RMX (XBOX level resources) editing  
+- .SMX (XBOX scenery resources) editing  
+- .RM2/.SM2 editing support of the Crash TwinSanity demo  
+- .RM (PSP level resources) limited editing  
+- .SM (PSP level resources) limited editing  
+  
+## Current roadmap
+Here's the list of what needs to be implemented:
+- [x] Model viewing
 - [x] Collision viewing
 - [ ] Scenery viewing
-- [ ] Sound playback
-- [ ] Fully functional editing GUI
+- [x] Sound playback
+- [x] Fully functional editing GUI
 - [ ] Ditch any unnecessery dependencies (OpenTK should suffice for sounds and graphics)
 - [ ] General code refactoring and rewriting (having 6k lines of code doesn't seem practical)
 - [ ] More API optimizations?
 - [ ] A lot of other smaller stuff
 
 ## Compiling
-Just open your project in VisualStudio 2017 (2015 might work, untested) and compile it.
+Just open your project in Visual Studio 2017 and compile it. (requires .NET Framework 4.7)
