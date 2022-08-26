@@ -138,7 +138,7 @@ namespace Twinsanity
                     unkByte1 = 0;
                     unkByte2 = 0;
                     unkUShort1 = 6;
-                    unkInt1 = 0;
+                    unkInt1 = 0x200000; // HasValidData true
                 }
                 public SupportType1(BinaryReader reader)
                 {
@@ -147,7 +147,7 @@ namespace Twinsanity
                     _unkByte1 = reader.ReadByte();
                     _unkByte2 = reader.ReadByte();
                     unkUShort1 = reader.ReadUInt16();
-                    unkInt1 = reader.ReadInt32();
+                    unkInt1 = reader.ReadUInt32();
                     long BeforeFloats, AfterBytes;
                     BeforeFloats = reader.BaseStream.Position;
                     for (int i = 0; i < unkByte2; ++i)
@@ -264,66 +264,247 @@ namespace Twinsanity
                     }
                 }
                 public UInt16 unkUShort1 { get; set; } // Version, always 6
-                public Int32 unkInt1 { get; set; }
+                private uint unkInt1 { get; set; }
                 public List<Byte> bytes { get; set; }
                 public List<Single> floats { get; set; }
 
-                public ushort UnkVal1
+
+                public SpaceType Space
                 {
                     get
                     {
-                        return (ushort)(unkInt1 & 0x7);
+                        return (SpaceType)(unkInt1 & 7);
+                    }
+                    set
+                    {
+                        unkInt1 = unkInt1 & 0xfffffff8 | (uint)(value) & 7;
                     }
                 }
-                public ushort UnkVal2
+                public MotionType Motion
                 {
                     get
                     {
-                        return (ushort)(unkInt1 >> 0x3 & 0xF);
+                        return (MotionType)(unkInt1 >> 3 & 0xf);
+                    }
+                    set
+                    {
+                        unkInt1 = unkInt1 & 0xffffff87 | ((uint)(value) & 0xf) << 3;
                     }
                 }
-                public int UnkVal3
+                public ContinuousRotate ContRotate
                 {
                     get
                     {
-                        return (unkInt1 & 0xFF);
+                        return (ContinuousRotate)(unkInt1 >> 7 & 0xf);
+                    }
+                    set
+                    {
+                        unkInt1 = unkInt1 & 0xfffff87f | ((uint)(value) & 0xf) << 7;
                     }
                 }
-                public ushort UnkVal4
+                public AccelFunction AccelFunc
                 {
                     get
                     {
-                        return (ushort)(unkInt1 >> 0xB & 0x2);
+                        return (AccelFunction)(unkInt1 >> 0xb & 3);
+                    }
+                    set
+                    {
+                        unkInt1 = unkInt1 & 0xffffe7ff | ((uint)(value) & 3) << 0xb;
                     }
                 }
-                public bool UnkFlag1
+                public bool Translates
                 {
                     get
                     {
-                        return (unkInt1 >> 0xD & 0x1) != 0;
+                        return ((byte)(unkInt1 >> 0xd & 1)) != 0;
+                    }
+                    set
+                    {
+                        unkInt1 = unkInt1 & 0xffffdfff | (uint)(value ? 1 : 0) << 0xd;
                     }
                 }
-                public bool UnkFlag2
+                public bool Rotates
                 {
                     get
                     {
-                        return (unkInt1 >> 0xE & 0x1) != 0;
+                        return ((byte)(unkInt1 >> 0xe & 1)) != 0;
+                    }
+                    set
+                    {
+                        unkInt1 = unkInt1 & 0xffffbfff | (uint)(value ? 1 : 0) << 0xe;
                     }
                 }
-                public bool UnkFlag3
+                public bool TranslationContinues
                 {
                     get
                     {
-                        return (unkInt1 >> 0x12 & 0x1) != 0;
+                        return ((byte)(unkInt1 >> 0xf & 1)) != 0;
+                    }
+                    set
+                    {
+                        //
+                    }
+                }
+                public bool TracksDestination
+                {
+                    get
+                    {
+                        return ((byte)(unkInt1 >> 0x10 & 1)) != 0;
+                    }
+                    set
+                    {
+                        unkInt1 = unkInt1 & 0xfffeffff | (uint)(value ? 1 : 0) << 0x10;
+                    }
+                }
+                public bool InterpolatesAngles
+                {
+                    get
+                    {
+                        return ((byte)(unkInt1 >> 0x11 & 1)) != 0;
+                    }
+                    set
+                    {
+                        unkInt1 = unkInt1 & 0xfffdffff | (uint)(value ? 1 : 0) << 0x11;
+                    }
+                }
+                public bool YawFaces
+                {
+                    get
+                    {
+                        return ((byte)(unkInt1 >> 0x12 & 1)) != 0;
+                    }
+                    set
+                    {
+                        unkInt1 = unkInt1 & 0xfffbffff | (uint)(value ? 1 : 0) << 0x12;
+                    }
+                }
+                public bool PitchFaces
+                {
+                    get
+                    {
+                        return ((byte)(unkInt1 >> 0x13 & 1)) != 0;
+                    }
+                    set
+                    {
+                        unkInt1 = unkInt1 & 0xfff7ffff | (uint)(value ? 1 : 0) << 0x13;
+                    }
+                }
+                public bool OrientsPredicts
+                {
+                    get
+                    {
+                        return ((byte)(unkInt1 >> 0x14 & 1)) != 0;
+                    }
+                    set
+                    {
+                        unkInt1 = unkInt1 & 0xffefffff | (uint)(value ? 1 : 0) << 0x14;
+                    }
+                }
+                public bool HasValidData // should always be true
+                {
+                    get
+                    {
+                        return ((byte)(unkInt1 >> 0x15 & 1)) != 0;
+                    }
+                    set
+                    {
+                        unkInt1 = unkInt1 & 0xffdfffff | (uint)(value ? 1 : 0) << 0x15;
+                    }
+                }
+                public bool KeyIsLocal
+                {
+                    get
+                    {
+                        return ((byte)(unkInt1 >> 0x16 & 1)) != 0;
+                    }
+                    set
+                    {
+                        unkInt1 = unkInt1 & 0xffbfffff | (uint)(value ? 1 : 0) << 0x16;
+                    }
+                }
+                public bool UsesRotator
+                {
+                    get
+                    {
+                        return ((byte)(unkInt1 >> 0x17 & 1)) != 0;
+                    }
+                    set
+                    {
+                        unkInt1 = unkInt1 & 0xff7fffff | (uint)(value ? 1 : 0) << 0x17;
+                    }
+                }
+                public bool UsesInterpolator
+                {
+                    get
+                    {
+                        return ((byte)(unkInt1 >> 0x18 & 1)) != 0;
+                    }
+                    set
+                    {
+                        unkInt1 = unkInt1 & 0xfeffffff | (uint)(value ? 1 : 0) << 0x18;
+                    }
+                }
+                public bool UsesPhysics
+                {
+                    get
+                    {
+                        return ((byte)(unkInt1 >> 0x19 & 1)) != 0;
+                    }
+                    set
+                    {
+                        unkInt1 = unkInt1 & 0xfdffffff | (uint)(value ? 1 : 0) << 0x19;
+                    }
+                }
+                public bool ContRotatesInWorldSpace
+                {
+                    get
+                    {
+                        return ((byte)(unkInt1 >> 0x1a & 1)) != 0;
+                    }
+                    set
+                    {
+                        unkInt1 = unkInt1 & 0xfbffffff | (uint)(value ? 1 : 0) << 0x1a;
+                    }
+                }
+                public NaturalAxes Axes
+                {
+                    get
+                    {
+                        return (NaturalAxes)(unkInt1 >> 0x1b & 7);
+                    }
+                    set
+                    {
+                        unkInt1 = unkInt1 & 0xc7ffffff | ((uint)(value) & 0x7) << 0x1b;
+                    }
+                }
+                public bool Stalls
+                {
+                    get
+                    {
+                        return ((byte)(unkInt1 >> 0x1f & 1)) != 0;
+                    }
+                    set
+                    {
+                        unkInt1 = unkInt1 & 0x7fffffff | (uint)(value ? 1 : 0) << 0x1f;
                     }
                 }
 
                 public enum SpaceType
                 {
                     WORLD_SPACE = 0,
+                    /*
                     INITIAL_SPACE,
                     CURRENT_SPACE,
                     INITIAL_SPACE2,
+                    INITIAL_POS,
+                    CURRENT_POS,
+                    STORED_SPACE,
+                    */
+                    INITIAL_SPACE,
+                    CURRENT_SPACE,
+                    TARGET_SPACE,
+                    PARENT_SPACE, // or CHASE_SPACE
                     INITIAL_POS,
                     CURRENT_POS,
                     STORED_SPACE,
@@ -346,7 +527,7 @@ namespace Twinsanity
                 {
                     NO_CONT_ROTATION = 0,
                     NUM_FULL_ROTS,
-                    RADS_PER_SECOND,
+                    RADS_PER_SECOND, // Or degrees?
                     NATURAL_ROLL,
                 }
                 public enum NaturalAxes

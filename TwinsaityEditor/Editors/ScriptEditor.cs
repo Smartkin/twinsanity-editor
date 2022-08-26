@@ -52,6 +52,31 @@ namespace TwinsaityEditor
             comboBox_propGrid_ActionID.DropDownStyle = ComboBoxStyle.DropDownList;
             filterSelection.DropDownStyle = ComboBoxStyle.DropDownList;
             comboBox_StartUnit.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox_packet_space.Items.Clear();
+            for (int i = 0; i < (int)Script.MainScript.SupportType1.SpaceType.STORED_SPACE + 1; i++)
+            {
+                comboBox_packet_space.Items.Add((Script.MainScript.SupportType1.SpaceType)i);
+            }
+            comboBox_packet_motion.Items.Clear();
+            for (int i = 0; i < (int)Script.MainScript.SupportType1.MotionType.AIR_CHASE + 1; i++)
+            {
+                comboBox_packet_motion.Items.Add((Script.MainScript.SupportType1.MotionType)i);
+            }
+            comboBox_packet_rotation.Items.Clear();
+            for (int i = 0; i < (int)Script.MainScript.SupportType1.ContinuousRotate.NATURAL_ROLL + 1; i++)
+            {
+                comboBox_packet_rotation.Items.Add((Script.MainScript.SupportType1.ContinuousRotate)i);
+            }
+            comboBox_packet_axes.Items.Clear();
+            for (int i = 0; i < (int)Script.MainScript.SupportType1.NaturalAxes.ALL_NATURAL + 1; i++)
+            {
+                comboBox_packet_axes.Items.Add((Script.MainScript.SupportType1.NaturalAxes)i);
+            }
+            comboBox_packet_accel.Items.Clear();
+            for (int i = 0; i < (int)Script.MainScript.SupportType1.AccelFunction.SMOOTH_CURVE + 1; i++)
+            {
+                comboBox_packet_accel.Items.Add((Script.MainScript.SupportType1.AccelFunction)i);
+            }
         }
 
         private void ScriptEditor_Load(object sender, EventArgs e)
@@ -627,14 +652,29 @@ namespace TwinsaityEditor
         {
             type1UnkByte1.Text = selectedType1.unkByte1.ToString();
             type1UnkByte2.Text = selectedType1.unkByte2.ToString();
-            //type1UnkShort.Text = selectedType1.unkUShort1.ToString();
-            type1UnkInt.Text = selectedType1.unkInt1.ToString(); //Convert.ToString(selectedType1.unkInt1, 2).PadLeft(32, '0');
-            type1Val1.Text = selectedType1.UnkVal1.ToString();
-            type1Val2.Text = selectedType1.UnkVal2.ToString();
-            type1Val3.Text = selectedType1.UnkVal3.ToString();
-            type1Val4.Text = selectedType1.UnkVal4.ToString();
-            type1Flag1.Checked = selectedType1.UnkFlag1;
-            type1Flag2.Checked = selectedType1.UnkFlag2;
+
+            comboBox_packet_accel.SelectedIndex = (int)selectedType1.AccelFunc;
+            comboBox_packet_axes.SelectedIndex = (int)selectedType1.Axes;
+            comboBox_packet_motion.SelectedIndex = (int)selectedType1.Motion;
+            comboBox_packet_rotation.SelectedIndex = (int)selectedType1.ContRotate;
+            comboBox_packet_space.SelectedIndex = (int)selectedType1.Space;
+
+            checkBox_packet_translates.Checked = selectedType1.Translates;
+            checkBox_packet_rotates.Checked = selectedType1.Rotates;
+            checkBox_packet_usesphysics.Checked = selectedType1.UsesPhysics;
+            checkBox_packet_usesrotator.Checked = selectedType1.UsesRotator;
+            checkBox_packet_usesinterpolator.Checked = selectedType1.UsesInterpolator;
+            checkBox_packet_interpolatesangles.Checked = selectedType1.InterpolatesAngles;
+            checkBox_packet_translationcont.Checked = selectedType1.TranslationContinues;
+            checkBox_packet_yawfaces.Checked = selectedType1.YawFaces;
+            checkBox_packet_pitchfaces.Checked = selectedType1.PitchFaces;
+            checkBox_packet_orients.Checked = selectedType1.OrientsPredicts;
+            checkBox_packet_tracksdest.Checked = selectedType1.TracksDestination;
+            checkBox_packet_keyislocal.Checked = selectedType1.KeyIsLocal;
+            checkBox_packet_controtates.Checked = selectedType1.ContRotatesInWorldSpace;
+            checkBox_packet_stalls.Checked = selectedType1.Stalls;
+            checkBox_packet_hasValidData.Checked = selectedType1.HasValidData;
+
             blockType1IndexChanged = true;
             UpdateType1Bytes();
             UpdateType1Floats();
@@ -758,7 +798,8 @@ namespace TwinsaityEditor
 
         private void type1UnkInt_TextChanged(object sender, EventArgs e)
         {
-            
+            return;
+            /*
             Int32 val = selectedType1.unkInt1;
             if (Int32.TryParse(((TextBox)sender).Text, out val))
             {
@@ -769,7 +810,7 @@ namespace TwinsaityEditor
             {
                 ((TextBox)sender).BackColor = Color.Red;
             }
-            
+            */
         }
 
         private void type1Array_TextChanged(object sender, EventArgs e)
@@ -2526,6 +2567,116 @@ namespace TwinsaityEditor
             listBox_header_participants.Items.RemoveAt(index);
             selectedHeaderScript.pairs.RemoveAt(index);
             UpdateNodeName();
+        }
+
+        private void comboBox_packet_space_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ComboBox s = (ComboBox)sender;
+            if (s.SelectedIndex < 0) return;
+            selectedType1.Space = (Script.MainScript.SupportType1.SpaceType)s.SelectedIndex;
+        }
+
+        private void comboBox_packet_motion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ComboBox s = (ComboBox)sender;
+            if (s.SelectedIndex < 0) return;
+            selectedType1.Motion = (Script.MainScript.SupportType1.MotionType)s.SelectedIndex;
+        }
+
+        private void comboBox_packet_rotation_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ComboBox s = (ComboBox)sender;
+            if (s.SelectedIndex < 0) return;
+            selectedType1.ContRotate = (Script.MainScript.SupportType1.ContinuousRotate)s.SelectedIndex;
+        }
+
+        private void comboBox_packet_axes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ComboBox s = (ComboBox)sender;
+            if (s.SelectedIndex < 0) return;
+            selectedType1.Axes = (Script.MainScript.SupportType1.NaturalAxes)s.SelectedIndex;
+        }
+
+        private void comboBox_packet_accel_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ComboBox s = (ComboBox)sender;
+            if (s.SelectedIndex < 0) return;
+            selectedType1.AccelFunc = (Script.MainScript.SupportType1.AccelFunction)s.SelectedIndex;
+        }
+
+        private void checkBox_packet_translates_CheckedChanged(object sender, EventArgs e)
+        {
+            selectedType1.Translates = checkBox_packet_translates.Checked;
+        }
+
+        private void checkBox_packet_rotates_CheckedChanged(object sender, EventArgs e)
+        {
+            selectedType1.Rotates = checkBox_packet_rotates.Checked;
+        }
+
+        private void checkBox_packet_usesphysics_CheckedChanged(object sender, EventArgs e)
+        {
+            selectedType1.UsesPhysics = checkBox_packet_usesphysics.Checked;
+        }
+
+        private void checkBox_packet_usesrotator_CheckedChanged(object sender, EventArgs e)
+        {
+            selectedType1.UsesRotator = checkBox_packet_usesrotator.Checked;
+        }
+
+        private void checkBox_packet_usesinterpolator_CheckedChanged(object sender, EventArgs e)
+        {
+            selectedType1.UsesInterpolator = checkBox_packet_usesinterpolator.Checked;
+        }
+
+        private void checkBox_packet_interpolatesangles_CheckedChanged(object sender, EventArgs e)
+        {
+            selectedType1.InterpolatesAngles = checkBox_packet_interpolatesangles.Checked;
+        }
+
+        private void checkBox_packet_translationcont_CheckedChanged(object sender, EventArgs e)
+        {
+            selectedType1.TranslationContinues = checkBox_packet_translationcont.Checked;
+        }
+
+        private void checkBox_packet_yawfaces_CheckedChanged(object sender, EventArgs e)
+        {
+            selectedType1.YawFaces = checkBox_packet_yawfaces.Checked;
+        }
+
+        private void checkBox_packet_pitchfaces_CheckedChanged(object sender, EventArgs e)
+        {
+            selectedType1.PitchFaces = checkBox_packet_pitchfaces.Checked;
+        }
+
+        private void checkBox_packet_orients_CheckedChanged(object sender, EventArgs e)
+        {
+            selectedType1.OrientsPredicts = checkBox_packet_orients.Checked;
+        }
+
+        private void checkBox_packet_tracksdest_CheckedChanged(object sender, EventArgs e)
+        {
+            selectedType1.TracksDestination = checkBox_packet_tracksdest.Checked;
+        }
+
+        private void checkBox_packet_keyislocal_CheckedChanged(object sender, EventArgs e)
+        {
+            selectedType1.KeyIsLocal = checkBox_packet_keyislocal.Checked;
+        }
+
+        private void checkBox_packet_controtates_CheckedChanged(object sender, EventArgs e)
+        {
+            selectedType1.ContRotatesInWorldSpace = checkBox_packet_controtates.Checked;
+        }
+
+        private void checkBox_packet_stalls_CheckedChanged(object sender, EventArgs e)
+        {
+            selectedType1.Stalls = checkBox_packet_stalls.Checked;
+        }
+
+        private void checkBox_packet_hasValidData_CheckedChanged(object sender, EventArgs e)
+        {
+            selectedType1.HasValidData = checkBox_packet_hasValidData.Checked;
         }
     }
 }
