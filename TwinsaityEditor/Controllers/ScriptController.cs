@@ -28,7 +28,7 @@ namespace TwinsaityEditor
                 text.Add($"Participants: {Data.Header.pairs.Count}");
                 for (int i = 0; i < Data.Header.pairs.Count; i++)
                 {
-                    text.Add($"{i}: {Data.Header.pairs[i].unkInt2} - Script ID {Data.Header.pairs[i].mainScriptIndex - 1}");
+                    text.Add($"{i}: {Data.Header.pairs[i].AssignType} {Data.Header.pairs[i].AssignStatus} {Data.Header.pairs[i].AssignPreference} {Data.Header.pairs[i].AssignLocality} Object ID {Data.Header.pairs[i].ObjectID} - Script ID {Data.Header.pairs[i].mainScriptIndex - 1}");
                 }
             }
             TextPrev = text.ToArray();

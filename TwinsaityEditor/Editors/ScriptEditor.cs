@@ -77,6 +77,26 @@ namespace TwinsaityEditor
             {
                 comboBox_packet_accel.Items.Add((Script.MainScript.SupportType1.AccelFunction)i);
             }
+            comboBox_participant_locality.Items.Clear();
+            for (int i = 0; i < (int)Script.HeaderScript.AssignLocalityID.ANYWHERE + 1; i++)
+            {
+                comboBox_participant_locality.Items.Add((Script.HeaderScript.AssignLocalityID)i);
+            }
+            comboBox_participant_status.Items.Clear();
+            for (int i = 0; i < (int)Script.HeaderScript.AssignStatusID.ANYSTATE + 1; i++)
+            {
+                comboBox_participant_status.Items.Add((Script.HeaderScript.AssignStatusID)i);
+            }
+            comboBox_participant_preference.Items.Clear();
+            for (int i = 0; i < (int)Script.HeaderScript.AssignPreferenceID.ANYHOW + 1; i++)
+            {
+                comboBox_participant_preference.Items.Add((Script.HeaderScript.AssignPreferenceID)i);
+            }
+            comboBox_participant_type.Items.Clear();
+            for (int i = 0; i < (int)Script.HeaderScript.AssignTypeID.ORIGINATOR + 1; i++)
+            {
+                comboBox_participant_type.Items.Add((Script.HeaderScript.AssignTypeID)i);
+            }
         }
 
         private void ScriptEditor_Load(object sender, EventArgs e)
@@ -522,11 +542,12 @@ namespace TwinsaityEditor
             {
                 Script.HeaderScript.UnkIntPairs pair = selectedHeaderScript.pairs[listBox_header_participants.SelectedIndex];
                 TextBox textBox = (TextBox)sender;
-                UInt32 val = pair.unkInt2;
-                if (UInt32.TryParse(textBox.Text, out val))
+                UInt16 val = pair.ObjectID;
+                if (UInt16.TryParse(textBox.Text, out val))
                 {
                     textBox.BackColor = Color.White;
-                    pair.unkInt2 = val;
+                    //pair.unkInt2 = val;
+                    pair.ObjectID = val;
                     listBox_header_participants.Items[listBox_header_participants.SelectedIndex] = listBox_header_participants.Items[listBox_header_participants.SelectedIndex];
                 }
                 else
@@ -2545,8 +2566,12 @@ namespace TwinsaityEditor
             {
                 Script.HeaderScript.UnkIntPairs pair = selectedHeaderScript.pairs[listBox_header_participants.SelectedIndex];
                 headerSubscriptID.Text = (pair.mainScriptIndex - 1).ToString();
-                headerSubscriptArg.Text = pair.unkInt2.ToString();  //Convert.ToString(pair.unkInt2, 2).PadLeft(32, '0');
+                headerSubscriptArg.Text = pair.ObjectID.ToString();//pair.unkInt2.ToString();  //Convert.ToString(pair.unkInt2, 2).PadLeft(32, '0');
                 UpdateNodeName();
+                comboBox_participant_locality.SelectedIndex = (int)pair.AssignLocality;
+                comboBox_participant_type.SelectedIndex = (int)pair.AssignType;
+                comboBox_participant_status.SelectedIndex = (int)pair.AssignStatus;
+                comboBox_participant_preference.SelectedIndex = (int)pair.AssignPreference;
             }
         }
 
@@ -2677,6 +2702,38 @@ namespace TwinsaityEditor
         private void checkBox_packet_hasValidData_CheckedChanged(object sender, EventArgs e)
         {
             selectedType1.HasValidData = checkBox_packet_hasValidData.Checked;
+        }
+
+        private void comboBox_participant_type_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (selectedHeaderScript == null) return;
+            Script.HeaderScript.UnkIntPairs pair = selectedHeaderScript.pairs[listBox_header_participants.SelectedIndex];
+            if (pair == null) return;
+            pair.AssignType = (Script.HeaderScript.AssignTypeID)comboBox_participant_type.SelectedIndex;
+        }
+
+        private void comboBox_participant_locality_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (selectedHeaderScript == null) return;
+            Script.HeaderScript.UnkIntPairs pair = selectedHeaderScript.pairs[listBox_header_participants.SelectedIndex];
+            if (pair == null) return;
+            pair.AssignLocality = (Script.HeaderScript.AssignLocalityID)comboBox_participant_locality.SelectedIndex;
+        }
+
+        private void comboBox_participant_status_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (selectedHeaderScript == null) return;
+            Script.HeaderScript.UnkIntPairs pair = selectedHeaderScript.pairs[listBox_header_participants.SelectedIndex];
+            if (pair == null) return;
+            pair.AssignStatus = (Script.HeaderScript.AssignStatusID)comboBox_participant_status.SelectedIndex;
+        }
+
+        private void comboBox_participant_preference_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (selectedHeaderScript == null) return;
+            Script.HeaderScript.UnkIntPairs pair = selectedHeaderScript.pairs[listBox_header_participants.SelectedIndex];
+            if (pair == null) return;
+            pair.AssignPreference = (Script.HeaderScript.AssignPreferenceID)comboBox_participant_preference.SelectedIndex;
         }
     }
 }

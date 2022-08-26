@@ -20,7 +20,7 @@ namespace Twinsanity
                 pairs = new List<UnkIntPairs>();
                 pair = new UnkIntPairs();
                 pair.mainScriptIndex = id + 1;
-                pair.unkInt2 = 4294922800;
+                pair.unkInt2 = 4294922800; // ME = ME
                 pairs.Add(pair);
             }
             public HeaderScript(BinaryReader reader)
@@ -55,10 +55,102 @@ namespace Twinsanity
                 public uint unkInt2;
                 public override string ToString()
                 {
-                    return $"{unkInt2} - Script ID: {mainScriptIndex - 1}";
+                    return $"{AssignType} - Script ID: {mainScriptIndex - 1}";
+                }
+
+                public ushort ObjectID
+                {
+                    get
+                    {
+                        return (ushort)(unkInt2 >> 0x10);
+                    }
+                    set
+                    {
+                        unkInt2 = unkInt2 & 0xffff | (uint)value << 0x10;
+                    }
+                }
+                public AssignTypeID AssignType
+                {
+                    get
+                    {
+                        return (AssignTypeID)(unkInt2 & 0xf);
+                    }
+                    set
+                    {
+                        unkInt2 = unkInt2 & 0xfffffff0 | ((uint)value & 0xf);
+                    }
+                }
+                public AssignLocalityID AssignLocality
+                {
+                    get
+                    {
+                        return (AssignLocalityID)(unkInt2 >> 4 & 0xf);
+                    }
+                    set
+                    {
+                        unkInt2 = unkInt2 & 0xffffff0f | ((uint)value & 0xf) << 4;
+                    }
+                }
+                public AssignStatusID AssignStatus
+                {
+                    get
+                    {
+                        return (AssignStatusID)(unkInt2 >> 8 & 0xf);
+                    }
+                    set
+                    {
+                        unkInt2 = unkInt2 & 0xfffff0ff | ((uint)value & 0xf) << 8;
+                    }
+                }
+                public AssignPreferenceID AssignPreference
+                {
+                    get
+                    {
+                        return (AssignPreferenceID)(unkInt2 >> 0xc & 0xf);
+                    }
+                    set
+                    {
+                        unkInt2 = unkInt2 & 0xffff0fff | ((uint)value & 0xf) << 0xc;
+                    }
                 }
             }
             public List<UnkIntPairs> pairs;
+
+
+            public enum AssignTypeID
+            {
+                ME = 0,
+                OBJECT_CHILD,
+                LINKED_OBJECT,
+                GLOBAL_AGENT,
+                HUMAN_PLAYER,
+                BACKGROUND_CHARACTER,
+                ANYBODY,
+                GENERATE_AGENT,
+                ORIGINATOR,
+            }
+            public enum AssignLocalityID
+            {
+                NEARBY = 0,
+                LOCAL,
+                GLOBAL,
+                ANYWHERE,
+            }
+            public enum AssignStatusID
+            {
+                IDLE = 0,
+                BUSY,
+                ANYSTATE,
+            }
+            public enum AssignPreferenceID
+            {
+                NEAREST = 0,
+                FURTHEST,
+                STRONGEST,
+                WEAKEST,
+                BEST_ALIGNED,
+                ANYHOW,
+            }
         }
 
         public class MainScript

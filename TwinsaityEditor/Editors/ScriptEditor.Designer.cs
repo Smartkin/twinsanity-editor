@@ -31,6 +31,26 @@
             this.scriptListBox = new System.Windows.Forms.ListBox();
             this.scriptTree = new System.Windows.Forms.TreeView();
             this.panelType1 = new System.Windows.Forms.Panel();
+            this.checkBox_packet_hasValidData = new System.Windows.Forms.CheckBox();
+            this.checkBox_packet_stalls = new System.Windows.Forms.CheckBox();
+            this.checkBox_packet_controtates = new System.Windows.Forms.CheckBox();
+            this.checkBox_packet_keyislocal = new System.Windows.Forms.CheckBox();
+            this.checkBox_packet_tracksdest = new System.Windows.Forms.CheckBox();
+            this.checkBox_packet_orients = new System.Windows.Forms.CheckBox();
+            this.checkBox_packet_pitchfaces = new System.Windows.Forms.CheckBox();
+            this.checkBox_packet_yawfaces = new System.Windows.Forms.CheckBox();
+            this.checkBox_packet_translationcont = new System.Windows.Forms.CheckBox();
+            this.checkBox_packet_interpolatesangles = new System.Windows.Forms.CheckBox();
+            this.checkBox_packet_usesinterpolator = new System.Windows.Forms.CheckBox();
+            this.checkBox_packet_usesrotator = new System.Windows.Forms.CheckBox();
+            this.checkBox_packet_usesphysics = new System.Windows.Forms.CheckBox();
+            this.checkBox_packet_rotates = new System.Windows.Forms.CheckBox();
+            this.checkBox_packet_translates = new System.Windows.Forms.CheckBox();
+            this.comboBox_packet_accel = new System.Windows.Forms.ComboBox();
+            this.comboBox_packet_axes = new System.Windows.Forms.ComboBox();
+            this.comboBox_packet_rotation = new System.Windows.Forms.ComboBox();
+            this.comboBox_packet_motion = new System.Windows.Forms.ComboBox();
+            this.comboBox_packet_space = new System.Windows.Forms.ComboBox();
             this.comboBox_controlPacketByteType = new System.Windows.Forms.ComboBox();
             this.label46 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
@@ -161,26 +181,14 @@
             this.deleteScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.comboBox_packet_space = new System.Windows.Forms.ComboBox();
-            this.comboBox_packet_motion = new System.Windows.Forms.ComboBox();
-            this.comboBox_packet_rotation = new System.Windows.Forms.ComboBox();
-            this.comboBox_packet_axes = new System.Windows.Forms.ComboBox();
-            this.comboBox_packet_accel = new System.Windows.Forms.ComboBox();
-            this.checkBox_packet_translates = new System.Windows.Forms.CheckBox();
-            this.checkBox_packet_rotates = new System.Windows.Forms.CheckBox();
-            this.checkBox_packet_usesphysics = new System.Windows.Forms.CheckBox();
-            this.checkBox_packet_usesrotator = new System.Windows.Forms.CheckBox();
-            this.checkBox_packet_usesinterpolator = new System.Windows.Forms.CheckBox();
-            this.checkBox_packet_interpolatesangles = new System.Windows.Forms.CheckBox();
-            this.checkBox_packet_translationcont = new System.Windows.Forms.CheckBox();
-            this.checkBox_packet_yawfaces = new System.Windows.Forms.CheckBox();
-            this.checkBox_packet_pitchfaces = new System.Windows.Forms.CheckBox();
-            this.checkBox_packet_orients = new System.Windows.Forms.CheckBox();
-            this.checkBox_packet_tracksdest = new System.Windows.Forms.CheckBox();
-            this.checkBox_packet_keyislocal = new System.Windows.Forms.CheckBox();
-            this.checkBox_packet_controtates = new System.Windows.Forms.CheckBox();
-            this.checkBox_packet_stalls = new System.Windows.Forms.CheckBox();
-            this.checkBox_packet_hasValidData = new System.Windows.Forms.CheckBox();
+            this.comboBox_participant_type = new System.Windows.Forms.ComboBox();
+            this.comboBox_participant_locality = new System.Windows.Forms.ComboBox();
+            this.comboBox_participant_status = new System.Windows.Forms.ComboBox();
+            this.comboBox_participant_preference = new System.Windows.Forms.ComboBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
             this.panelType1.SuspendLayout();
             this.panelMain.SuspendLayout();
             this.panelHeader.SuspendLayout();
@@ -262,6 +270,226 @@
             this.panelType1.Name = "panelType1";
             this.panelType1.Size = new System.Drawing.Size(336, 425);
             this.panelType1.TabIndex = 0;
+            // 
+            // checkBox_packet_hasValidData
+            // 
+            this.checkBox_packet_hasValidData.AutoSize = true;
+            this.checkBox_packet_hasValidData.Location = new System.Drawing.Point(220, 119);
+            this.checkBox_packet_hasValidData.Name = "checkBox_packet_hasValidData";
+            this.checkBox_packet_hasValidData.Size = new System.Drawing.Size(91, 17);
+            this.checkBox_packet_hasValidData.TabIndex = 49;
+            this.checkBox_packet_hasValidData.Text = "HasValidData";
+            this.checkBox_packet_hasValidData.UseVisualStyleBackColor = true;
+            this.checkBox_packet_hasValidData.CheckedChanged += new System.EventHandler(this.checkBox_packet_hasValidData_CheckedChanged);
+            // 
+            // checkBox_packet_stalls
+            // 
+            this.checkBox_packet_stalls.AutoSize = true;
+            this.checkBox_packet_stalls.Location = new System.Drawing.Point(110, 119);
+            this.checkBox_packet_stalls.Name = "checkBox_packet_stalls";
+            this.checkBox_packet_stalls.Size = new System.Drawing.Size(51, 17);
+            this.checkBox_packet_stalls.TabIndex = 48;
+            this.checkBox_packet_stalls.Text = "Stalls";
+            this.checkBox_packet_stalls.UseVisualStyleBackColor = true;
+            this.checkBox_packet_stalls.CheckedChanged += new System.EventHandler(this.checkBox_packet_stalls_CheckedChanged);
+            // 
+            // checkBox_packet_controtates
+            // 
+            this.checkBox_packet_controtates.AutoSize = true;
+            this.checkBox_packet_controtates.Location = new System.Drawing.Point(4, 118);
+            this.checkBox_packet_controtates.Name = "checkBox_packet_controtates";
+            this.checkBox_packet_controtates.Size = new System.Drawing.Size(85, 17);
+            this.checkBox_packet_controtates.TabIndex = 47;
+            this.checkBox_packet_controtates.Text = "ContRotates";
+            this.checkBox_packet_controtates.UseVisualStyleBackColor = true;
+            this.checkBox_packet_controtates.CheckedChanged += new System.EventHandler(this.checkBox_packet_controtates_CheckedChanged);
+            // 
+            // checkBox_packet_keyislocal
+            // 
+            this.checkBox_packet_keyislocal.AutoSize = true;
+            this.checkBox_packet_keyislocal.Location = new System.Drawing.Point(220, 102);
+            this.checkBox_packet_keyislocal.Name = "checkBox_packet_keyislocal";
+            this.checkBox_packet_keyislocal.Size = new System.Drawing.Size(78, 17);
+            this.checkBox_packet_keyislocal.TabIndex = 46;
+            this.checkBox_packet_keyislocal.Text = "KeyIsLocal";
+            this.checkBox_packet_keyislocal.UseVisualStyleBackColor = true;
+            this.checkBox_packet_keyislocal.CheckedChanged += new System.EventHandler(this.checkBox_packet_keyislocal_CheckedChanged);
+            // 
+            // checkBox_packet_tracksdest
+            // 
+            this.checkBox_packet_tracksdest.AutoSize = true;
+            this.checkBox_packet_tracksdest.Location = new System.Drawing.Point(110, 102);
+            this.checkBox_packet_tracksdest.Name = "checkBox_packet_tracksdest";
+            this.checkBox_packet_tracksdest.Size = new System.Drawing.Size(112, 17);
+            this.checkBox_packet_tracksdest.TabIndex = 45;
+            this.checkBox_packet_tracksdest.Text = "TracksDestination";
+            this.checkBox_packet_tracksdest.UseVisualStyleBackColor = true;
+            this.checkBox_packet_tracksdest.CheckedChanged += new System.EventHandler(this.checkBox_packet_tracksdest_CheckedChanged);
+            // 
+            // checkBox_packet_orients
+            // 
+            this.checkBox_packet_orients.AutoSize = true;
+            this.checkBox_packet_orients.Location = new System.Drawing.Point(4, 102);
+            this.checkBox_packet_orients.Name = "checkBox_packet_orients";
+            this.checkBox_packet_orients.Size = new System.Drawing.Size(102, 17);
+            this.checkBox_packet_orients.TabIndex = 44;
+            this.checkBox_packet_orients.Text = "Orients/Predicts";
+            this.checkBox_packet_orients.UseVisualStyleBackColor = true;
+            this.checkBox_packet_orients.CheckedChanged += new System.EventHandler(this.checkBox_packet_orients_CheckedChanged);
+            // 
+            // checkBox_packet_pitchfaces
+            // 
+            this.checkBox_packet_pitchfaces.AutoSize = true;
+            this.checkBox_packet_pitchfaces.Location = new System.Drawing.Point(220, 86);
+            this.checkBox_packet_pitchfaces.Name = "checkBox_packet_pitchfaces";
+            this.checkBox_packet_pitchfaces.Size = new System.Drawing.Size(79, 17);
+            this.checkBox_packet_pitchfaces.TabIndex = 43;
+            this.checkBox_packet_pitchfaces.Text = "PitchFaces";
+            this.checkBox_packet_pitchfaces.UseVisualStyleBackColor = true;
+            this.checkBox_packet_pitchfaces.CheckedChanged += new System.EventHandler(this.checkBox_packet_pitchfaces_CheckedChanged);
+            // 
+            // checkBox_packet_yawfaces
+            // 
+            this.checkBox_packet_yawfaces.AutoSize = true;
+            this.checkBox_packet_yawfaces.Location = new System.Drawing.Point(110, 86);
+            this.checkBox_packet_yawfaces.Name = "checkBox_packet_yawfaces";
+            this.checkBox_packet_yawfaces.Size = new System.Drawing.Size(76, 17);
+            this.checkBox_packet_yawfaces.TabIndex = 42;
+            this.checkBox_packet_yawfaces.Text = "YawFaces";
+            this.checkBox_packet_yawfaces.UseVisualStyleBackColor = true;
+            this.checkBox_packet_yawfaces.CheckedChanged += new System.EventHandler(this.checkBox_packet_yawfaces_CheckedChanged);
+            // 
+            // checkBox_packet_translationcont
+            // 
+            this.checkBox_packet_translationcont.AutoSize = true;
+            this.checkBox_packet_translationcont.Location = new System.Drawing.Point(4, 86);
+            this.checkBox_packet_translationcont.Name = "checkBox_packet_translationcont";
+            this.checkBox_packet_translationcont.Size = new System.Drawing.Size(100, 17);
+            this.checkBox_packet_translationcont.TabIndex = 41;
+            this.checkBox_packet_translationcont.Text = "TranslationCont";
+            this.checkBox_packet_translationcont.UseVisualStyleBackColor = true;
+            this.checkBox_packet_translationcont.CheckedChanged += new System.EventHandler(this.checkBox_packet_translationcont_CheckedChanged);
+            // 
+            // checkBox_packet_interpolatesangles
+            // 
+            this.checkBox_packet_interpolatesangles.AutoSize = true;
+            this.checkBox_packet_interpolatesangles.Location = new System.Drawing.Point(220, 68);
+            this.checkBox_packet_interpolatesangles.Name = "checkBox_packet_interpolatesangles";
+            this.checkBox_packet_interpolatesangles.Size = new System.Drawing.Size(113, 17);
+            this.checkBox_packet_interpolatesangles.TabIndex = 40;
+            this.checkBox_packet_interpolatesangles.Text = "InterpolatesAngles";
+            this.checkBox_packet_interpolatesangles.UseVisualStyleBackColor = true;
+            this.checkBox_packet_interpolatesangles.CheckedChanged += new System.EventHandler(this.checkBox_packet_interpolatesangles_CheckedChanged);
+            // 
+            // checkBox_packet_usesinterpolator
+            // 
+            this.checkBox_packet_usesinterpolator.AutoSize = true;
+            this.checkBox_packet_usesinterpolator.Location = new System.Drawing.Point(110, 68);
+            this.checkBox_packet_usesinterpolator.Name = "checkBox_packet_usesinterpolator";
+            this.checkBox_packet_usesinterpolator.Size = new System.Drawing.Size(103, 17);
+            this.checkBox_packet_usesinterpolator.TabIndex = 39;
+            this.checkBox_packet_usesinterpolator.Text = "UsesInterpolator";
+            this.checkBox_packet_usesinterpolator.UseVisualStyleBackColor = true;
+            this.checkBox_packet_usesinterpolator.CheckedChanged += new System.EventHandler(this.checkBox_packet_usesinterpolator_CheckedChanged);
+            // 
+            // checkBox_packet_usesrotator
+            // 
+            this.checkBox_packet_usesrotator.AutoSize = true;
+            this.checkBox_packet_usesrotator.Location = new System.Drawing.Point(4, 69);
+            this.checkBox_packet_usesrotator.Name = "checkBox_packet_usesrotator";
+            this.checkBox_packet_usesrotator.Size = new System.Drawing.Size(85, 17);
+            this.checkBox_packet_usesrotator.TabIndex = 38;
+            this.checkBox_packet_usesrotator.Text = "UsesRotator";
+            this.checkBox_packet_usesrotator.UseVisualStyleBackColor = true;
+            this.checkBox_packet_usesrotator.CheckedChanged += new System.EventHandler(this.checkBox_packet_usesrotator_CheckedChanged);
+            // 
+            // checkBox_packet_usesphysics
+            // 
+            this.checkBox_packet_usesphysics.AutoSize = true;
+            this.checkBox_packet_usesphysics.Location = new System.Drawing.Point(220, 51);
+            this.checkBox_packet_usesphysics.Name = "checkBox_packet_usesphysics";
+            this.checkBox_packet_usesphysics.Size = new System.Drawing.Size(86, 17);
+            this.checkBox_packet_usesphysics.TabIndex = 37;
+            this.checkBox_packet_usesphysics.Text = "UsesPhysics";
+            this.checkBox_packet_usesphysics.UseVisualStyleBackColor = true;
+            this.checkBox_packet_usesphysics.CheckedChanged += new System.EventHandler(this.checkBox_packet_usesphysics_CheckedChanged);
+            // 
+            // checkBox_packet_rotates
+            // 
+            this.checkBox_packet_rotates.AutoSize = true;
+            this.checkBox_packet_rotates.Location = new System.Drawing.Point(110, 51);
+            this.checkBox_packet_rotates.Name = "checkBox_packet_rotates";
+            this.checkBox_packet_rotates.Size = new System.Drawing.Size(63, 17);
+            this.checkBox_packet_rotates.TabIndex = 36;
+            this.checkBox_packet_rotates.Text = "Rotates";
+            this.checkBox_packet_rotates.UseVisualStyleBackColor = true;
+            this.checkBox_packet_rotates.CheckedChanged += new System.EventHandler(this.checkBox_packet_rotates_CheckedChanged);
+            // 
+            // checkBox_packet_translates
+            // 
+            this.checkBox_packet_translates.AutoSize = true;
+            this.checkBox_packet_translates.Location = new System.Drawing.Point(4, 51);
+            this.checkBox_packet_translates.Name = "checkBox_packet_translates";
+            this.checkBox_packet_translates.Size = new System.Drawing.Size(75, 17);
+            this.checkBox_packet_translates.TabIndex = 35;
+            this.checkBox_packet_translates.Text = "Translates";
+            this.checkBox_packet_translates.UseVisualStyleBackColor = true;
+            this.checkBox_packet_translates.CheckedChanged += new System.EventHandler(this.checkBox_packet_translates_CheckedChanged);
+            // 
+            // comboBox_packet_accel
+            // 
+            this.comboBox_packet_accel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBox_packet_accel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_packet_accel.FormattingEnabled = true;
+            this.comboBox_packet_accel.Location = new System.Drawing.Point(110, 27);
+            this.comboBox_packet_accel.Name = "comboBox_packet_accel";
+            this.comboBox_packet_accel.Size = new System.Drawing.Size(110, 21);
+            this.comboBox_packet_accel.TabIndex = 34;
+            this.comboBox_packet_accel.SelectedIndexChanged += new System.EventHandler(this.comboBox_packet_accel_SelectedIndexChanged);
+            // 
+            // comboBox_packet_axes
+            // 
+            this.comboBox_packet_axes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_packet_axes.FormattingEnabled = true;
+            this.comboBox_packet_axes.Location = new System.Drawing.Point(3, 27);
+            this.comboBox_packet_axes.Name = "comboBox_packet_axes";
+            this.comboBox_packet_axes.Size = new System.Drawing.Size(107, 21);
+            this.comboBox_packet_axes.TabIndex = 33;
+            this.comboBox_packet_axes.SelectedIndexChanged += new System.EventHandler(this.comboBox_packet_axes_SelectedIndexChanged);
+            // 
+            // comboBox_packet_rotation
+            // 
+            this.comboBox_packet_rotation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBox_packet_rotation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_packet_rotation.FormattingEnabled = true;
+            this.comboBox_packet_rotation.Location = new System.Drawing.Point(220, 5);
+            this.comboBox_packet_rotation.Name = "comboBox_packet_rotation";
+            this.comboBox_packet_rotation.Size = new System.Drawing.Size(116, 21);
+            this.comboBox_packet_rotation.TabIndex = 32;
+            this.comboBox_packet_rotation.SelectedIndexChanged += new System.EventHandler(this.comboBox_packet_rotation_SelectedIndexChanged);
+            // 
+            // comboBox_packet_motion
+            // 
+            this.comboBox_packet_motion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBox_packet_motion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_packet_motion.FormattingEnabled = true;
+            this.comboBox_packet_motion.Location = new System.Drawing.Point(110, 5);
+            this.comboBox_packet_motion.Name = "comboBox_packet_motion";
+            this.comboBox_packet_motion.Size = new System.Drawing.Size(110, 21);
+            this.comboBox_packet_motion.TabIndex = 31;
+            this.comboBox_packet_motion.SelectedIndexChanged += new System.EventHandler(this.comboBox_packet_motion_SelectedIndexChanged);
+            // 
+            // comboBox_packet_space
+            // 
+            this.comboBox_packet_space.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_packet_space.FormattingEnabled = true;
+            this.comboBox_packet_space.Location = new System.Drawing.Point(3, 5);
+            this.comboBox_packet_space.Name = "comboBox_packet_space";
+            this.comboBox_packet_space.Size = new System.Drawing.Size(107, 21);
+            this.comboBox_packet_space.TabIndex = 30;
+            this.comboBox_packet_space.SelectedIndexChanged += new System.EventHandler(this.comboBox_packet_space_SelectedIndexChanged);
             // 
             // comboBox_controlPacketByteType
             // 
@@ -479,6 +707,14 @@
             // 
             // panelHeader
             // 
+            this.panelHeader.Controls.Add(this.label11);
+            this.panelHeader.Controls.Add(this.label10);
+            this.panelHeader.Controls.Add(this.label9);
+            this.panelHeader.Controls.Add(this.label8);
+            this.panelHeader.Controls.Add(this.comboBox_participant_preference);
+            this.panelHeader.Controls.Add(this.comboBox_participant_status);
+            this.panelHeader.Controls.Add(this.comboBox_participant_locality);
+            this.panelHeader.Controls.Add(this.comboBox_participant_type);
             this.panelHeader.Controls.Add(this.button_header_participant_remove);
             this.panelHeader.Controls.Add(this.button_header_participant_add);
             this.panelHeader.Controls.Add(this.listBox_header_participants);
@@ -538,16 +774,16 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(7, 187);
+            this.label3.Location = new System.Drawing.Point(10, 324);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(87, 13);
+            this.label3.Size = new System.Drawing.Size(85, 13);
             this.label3.TabIndex = 5;
-            this.label3.Text = "Participant Value";
+            this.label3.Text = "Global Object ID";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(48, 210);
+            this.label2.Location = new System.Drawing.Point(52, 188);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(45, 13);
             this.label2.TabIndex = 4;
@@ -557,7 +793,7 @@
             // 
             this.headerSubscriptArg.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.headerSubscriptArg.Location = new System.Drawing.Point(103, 184);
+            this.headerSubscriptArg.Location = new System.Drawing.Point(103, 321);
             this.headerSubscriptArg.Name = "headerSubscriptArg";
             this.headerSubscriptArg.Size = new System.Drawing.Size(223, 20);
             this.headerSubscriptArg.TabIndex = 3;
@@ -567,7 +803,7 @@
             // 
             this.headerSubscriptID.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.headerSubscriptID.Location = new System.Drawing.Point(103, 207);
+            this.headerSubscriptID.Location = new System.Drawing.Point(103, 184);
             this.headerSubscriptID.Name = "headerSubscriptID";
             this.headerSubscriptID.Size = new System.Drawing.Size(223, 20);
             this.headerSubscriptID.TabIndex = 2;
@@ -1411,9 +1647,9 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.panelLinked);
             this.groupBox1.Controls.Add(this.panelHeader);
             this.groupBox1.Controls.Add(this.panelGeneral);
+            this.groupBox1.Controls.Add(this.panelLinked);
             this.groupBox1.Controls.Add(this.panel_LinkEditor);
             this.groupBox1.Controls.Add(this.panelMain);
             this.groupBox1.Controls.Add(this.panelType4);
@@ -1630,225 +1866,81 @@
             this.splitContainer2.SplitterDistance = 648;
             this.splitContainer2.TabIndex = 6;
             // 
-            // comboBox_packet_space
+            // comboBox_participant_type
             // 
-            this.comboBox_packet_space.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox_packet_space.FormattingEnabled = true;
-            this.comboBox_packet_space.Location = new System.Drawing.Point(3, 5);
-            this.comboBox_packet_space.Name = "comboBox_packet_space";
-            this.comboBox_packet_space.Size = new System.Drawing.Size(107, 21);
-            this.comboBox_packet_space.TabIndex = 30;
-            this.comboBox_packet_space.SelectedIndexChanged += new System.EventHandler(this.comboBox_packet_space_SelectedIndexChanged);
+            this.comboBox_participant_type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_participant_type.FormattingEnabled = true;
+            this.comboBox_participant_type.Location = new System.Drawing.Point(103, 209);
+            this.comboBox_participant_type.Name = "comboBox_participant_type";
+            this.comboBox_participant_type.Size = new System.Drawing.Size(223, 21);
+            this.comboBox_participant_type.TabIndex = 10;
+            this.comboBox_participant_type.SelectedIndexChanged += new System.EventHandler(this.comboBox_participant_type_SelectedIndexChanged);
             // 
-            // comboBox_packet_motion
+            // comboBox_participant_locality
             // 
-            this.comboBox_packet_motion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBox_packet_motion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox_packet_motion.FormattingEnabled = true;
-            this.comboBox_packet_motion.Location = new System.Drawing.Point(110, 5);
-            this.comboBox_packet_motion.Name = "comboBox_packet_motion";
-            this.comboBox_packet_motion.Size = new System.Drawing.Size(110, 21);
-            this.comboBox_packet_motion.TabIndex = 31;
-            this.comboBox_packet_motion.SelectedIndexChanged += new System.EventHandler(this.comboBox_packet_motion_SelectedIndexChanged);
+            this.comboBox_participant_locality.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_participant_locality.FormattingEnabled = true;
+            this.comboBox_participant_locality.Location = new System.Drawing.Point(103, 236);
+            this.comboBox_participant_locality.Name = "comboBox_participant_locality";
+            this.comboBox_participant_locality.Size = new System.Drawing.Size(223, 21);
+            this.comboBox_participant_locality.TabIndex = 11;
+            this.comboBox_participant_locality.SelectedIndexChanged += new System.EventHandler(this.comboBox_participant_locality_SelectedIndexChanged);
             // 
-            // comboBox_packet_rotation
+            // comboBox_participant_status
             // 
-            this.comboBox_packet_rotation.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBox_packet_rotation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox_packet_rotation.FormattingEnabled = true;
-            this.comboBox_packet_rotation.Location = new System.Drawing.Point(220, 5);
-            this.comboBox_packet_rotation.Name = "comboBox_packet_rotation";
-            this.comboBox_packet_rotation.Size = new System.Drawing.Size(116, 21);
-            this.comboBox_packet_rotation.TabIndex = 32;
-            this.comboBox_packet_rotation.SelectedIndexChanged += new System.EventHandler(this.comboBox_packet_rotation_SelectedIndexChanged);
+            this.comboBox_participant_status.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_participant_status.FormattingEnabled = true;
+            this.comboBox_participant_status.Location = new System.Drawing.Point(103, 263);
+            this.comboBox_participant_status.Name = "comboBox_participant_status";
+            this.comboBox_participant_status.Size = new System.Drawing.Size(223, 21);
+            this.comboBox_participant_status.TabIndex = 12;
+            this.comboBox_participant_status.SelectedIndexChanged += new System.EventHandler(this.comboBox_participant_status_SelectedIndexChanged);
             // 
-            // comboBox_packet_axes
+            // comboBox_participant_preference
             // 
-            this.comboBox_packet_axes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox_packet_axes.FormattingEnabled = true;
-            this.comboBox_packet_axes.Location = new System.Drawing.Point(3, 27);
-            this.comboBox_packet_axes.Name = "comboBox_packet_axes";
-            this.comboBox_packet_axes.Size = new System.Drawing.Size(107, 21);
-            this.comboBox_packet_axes.TabIndex = 33;
-            this.comboBox_packet_axes.SelectedIndexChanged += new System.EventHandler(this.comboBox_packet_axes_SelectedIndexChanged);
+            this.comboBox_participant_preference.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_participant_preference.FormattingEnabled = true;
+            this.comboBox_participant_preference.Location = new System.Drawing.Point(103, 292);
+            this.comboBox_participant_preference.Name = "comboBox_participant_preference";
+            this.comboBox_participant_preference.Size = new System.Drawing.Size(223, 21);
+            this.comboBox_participant_preference.TabIndex = 13;
+            this.comboBox_participant_preference.SelectedIndexChanged += new System.EventHandler(this.comboBox_participant_preference_SelectedIndexChanged);
             // 
-            // comboBox_packet_accel
+            // label8
             // 
-            this.comboBox_packet_accel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBox_packet_accel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox_packet_accel.FormattingEnabled = true;
-            this.comboBox_packet_accel.Location = new System.Drawing.Point(110, 27);
-            this.comboBox_packet_accel.Name = "comboBox_packet_accel";
-            this.comboBox_packet_accel.Size = new System.Drawing.Size(110, 21);
-            this.comboBox_packet_accel.TabIndex = 34;
-            this.comboBox_packet_accel.SelectedIndexChanged += new System.EventHandler(this.comboBox_packet_accel_SelectedIndexChanged);
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(35, 213);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(62, 13);
+            this.label8.TabIndex = 14;
+            this.label8.Text = "AssignType";
             // 
-            // checkBox_packet_translates
+            // label9
             // 
-            this.checkBox_packet_translates.AutoSize = true;
-            this.checkBox_packet_translates.Location = new System.Drawing.Point(4, 51);
-            this.checkBox_packet_translates.Name = "checkBox_packet_translates";
-            this.checkBox_packet_translates.Size = new System.Drawing.Size(75, 17);
-            this.checkBox_packet_translates.TabIndex = 35;
-            this.checkBox_packet_translates.Text = "Translates";
-            this.checkBox_packet_translates.UseVisualStyleBackColor = true;
-            this.checkBox_packet_translates.CheckedChanged += new System.EventHandler(this.checkBox_packet_translates_CheckedChanged);
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(23, 239);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(74, 13);
+            this.label9.TabIndex = 15;
+            this.label9.Text = "AssignLocality";
             // 
-            // checkBox_packet_rotates
+            // label10
             // 
-            this.checkBox_packet_rotates.AutoSize = true;
-            this.checkBox_packet_rotates.Location = new System.Drawing.Point(110, 51);
-            this.checkBox_packet_rotates.Name = "checkBox_packet_rotates";
-            this.checkBox_packet_rotates.Size = new System.Drawing.Size(63, 17);
-            this.checkBox_packet_rotates.TabIndex = 36;
-            this.checkBox_packet_rotates.Text = "Rotates";
-            this.checkBox_packet_rotates.UseVisualStyleBackColor = true;
-            this.checkBox_packet_rotates.CheckedChanged += new System.EventHandler(this.checkBox_packet_rotates_CheckedChanged);
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(27, 266);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(68, 13);
+            this.label10.TabIndex = 16;
+            this.label10.Text = "AssignStatus";
             // 
-            // checkBox_packet_usesphysics
+            // label11
             // 
-            this.checkBox_packet_usesphysics.AutoSize = true;
-            this.checkBox_packet_usesphysics.Location = new System.Drawing.Point(220, 51);
-            this.checkBox_packet_usesphysics.Name = "checkBox_packet_usesphysics";
-            this.checkBox_packet_usesphysics.Size = new System.Drawing.Size(86, 17);
-            this.checkBox_packet_usesphysics.TabIndex = 37;
-            this.checkBox_packet_usesphysics.Text = "UsesPhysics";
-            this.checkBox_packet_usesphysics.UseVisualStyleBackColor = true;
-            this.checkBox_packet_usesphysics.CheckedChanged += new System.EventHandler(this.checkBox_packet_usesphysics_CheckedChanged);
-            // 
-            // checkBox_packet_usesrotator
-            // 
-            this.checkBox_packet_usesrotator.AutoSize = true;
-            this.checkBox_packet_usesrotator.Location = new System.Drawing.Point(4, 69);
-            this.checkBox_packet_usesrotator.Name = "checkBox_packet_usesrotator";
-            this.checkBox_packet_usesrotator.Size = new System.Drawing.Size(85, 17);
-            this.checkBox_packet_usesrotator.TabIndex = 38;
-            this.checkBox_packet_usesrotator.Text = "UsesRotator";
-            this.checkBox_packet_usesrotator.UseVisualStyleBackColor = true;
-            this.checkBox_packet_usesrotator.CheckedChanged += new System.EventHandler(this.checkBox_packet_usesrotator_CheckedChanged);
-            // 
-            // checkBox_packet_usesinterpolator
-            // 
-            this.checkBox_packet_usesinterpolator.AutoSize = true;
-            this.checkBox_packet_usesinterpolator.Location = new System.Drawing.Point(110, 68);
-            this.checkBox_packet_usesinterpolator.Name = "checkBox_packet_usesinterpolator";
-            this.checkBox_packet_usesinterpolator.Size = new System.Drawing.Size(103, 17);
-            this.checkBox_packet_usesinterpolator.TabIndex = 39;
-            this.checkBox_packet_usesinterpolator.Text = "UsesInterpolator";
-            this.checkBox_packet_usesinterpolator.UseVisualStyleBackColor = true;
-            this.checkBox_packet_usesinterpolator.CheckedChanged += new System.EventHandler(this.checkBox_packet_usesinterpolator_CheckedChanged);
-            // 
-            // checkBox_packet_interpolatesangles
-            // 
-            this.checkBox_packet_interpolatesangles.AutoSize = true;
-            this.checkBox_packet_interpolatesangles.Location = new System.Drawing.Point(220, 68);
-            this.checkBox_packet_interpolatesangles.Name = "checkBox_packet_interpolatesangles";
-            this.checkBox_packet_interpolatesangles.Size = new System.Drawing.Size(113, 17);
-            this.checkBox_packet_interpolatesangles.TabIndex = 40;
-            this.checkBox_packet_interpolatesangles.Text = "InterpolatesAngles";
-            this.checkBox_packet_interpolatesangles.UseVisualStyleBackColor = true;
-            this.checkBox_packet_interpolatesangles.CheckedChanged += new System.EventHandler(this.checkBox_packet_interpolatesangles_CheckedChanged);
-            // 
-            // checkBox_packet_translationcont
-            // 
-            this.checkBox_packet_translationcont.AutoSize = true;
-            this.checkBox_packet_translationcont.Location = new System.Drawing.Point(4, 86);
-            this.checkBox_packet_translationcont.Name = "checkBox_packet_translationcont";
-            this.checkBox_packet_translationcont.Size = new System.Drawing.Size(100, 17);
-            this.checkBox_packet_translationcont.TabIndex = 41;
-            this.checkBox_packet_translationcont.Text = "TranslationCont";
-            this.checkBox_packet_translationcont.UseVisualStyleBackColor = true;
-            this.checkBox_packet_translationcont.CheckedChanged += new System.EventHandler(this.checkBox_packet_translationcont_CheckedChanged);
-            // 
-            // checkBox_packet_yawfaces
-            // 
-            this.checkBox_packet_yawfaces.AutoSize = true;
-            this.checkBox_packet_yawfaces.Location = new System.Drawing.Point(110, 86);
-            this.checkBox_packet_yawfaces.Name = "checkBox_packet_yawfaces";
-            this.checkBox_packet_yawfaces.Size = new System.Drawing.Size(76, 17);
-            this.checkBox_packet_yawfaces.TabIndex = 42;
-            this.checkBox_packet_yawfaces.Text = "YawFaces";
-            this.checkBox_packet_yawfaces.UseVisualStyleBackColor = true;
-            this.checkBox_packet_yawfaces.CheckedChanged += new System.EventHandler(this.checkBox_packet_yawfaces_CheckedChanged);
-            // 
-            // checkBox_packet_pitchfaces
-            // 
-            this.checkBox_packet_pitchfaces.AutoSize = true;
-            this.checkBox_packet_pitchfaces.Location = new System.Drawing.Point(220, 86);
-            this.checkBox_packet_pitchfaces.Name = "checkBox_packet_pitchfaces";
-            this.checkBox_packet_pitchfaces.Size = new System.Drawing.Size(79, 17);
-            this.checkBox_packet_pitchfaces.TabIndex = 43;
-            this.checkBox_packet_pitchfaces.Text = "PitchFaces";
-            this.checkBox_packet_pitchfaces.UseVisualStyleBackColor = true;
-            this.checkBox_packet_pitchfaces.CheckedChanged += new System.EventHandler(this.checkBox_packet_pitchfaces_CheckedChanged);
-            // 
-            // checkBox_packet_orients
-            // 
-            this.checkBox_packet_orients.AutoSize = true;
-            this.checkBox_packet_orients.Location = new System.Drawing.Point(4, 102);
-            this.checkBox_packet_orients.Name = "checkBox_packet_orients";
-            this.checkBox_packet_orients.Size = new System.Drawing.Size(102, 17);
-            this.checkBox_packet_orients.TabIndex = 44;
-            this.checkBox_packet_orients.Text = "Orients/Predicts";
-            this.checkBox_packet_orients.UseVisualStyleBackColor = true;
-            this.checkBox_packet_orients.CheckedChanged += new System.EventHandler(this.checkBox_packet_orients_CheckedChanged);
-            // 
-            // checkBox_packet_tracksdest
-            // 
-            this.checkBox_packet_tracksdest.AutoSize = true;
-            this.checkBox_packet_tracksdest.Location = new System.Drawing.Point(110, 102);
-            this.checkBox_packet_tracksdest.Name = "checkBox_packet_tracksdest";
-            this.checkBox_packet_tracksdest.Size = new System.Drawing.Size(112, 17);
-            this.checkBox_packet_tracksdest.TabIndex = 45;
-            this.checkBox_packet_tracksdest.Text = "TracksDestination";
-            this.checkBox_packet_tracksdest.UseVisualStyleBackColor = true;
-            this.checkBox_packet_tracksdest.CheckedChanged += new System.EventHandler(this.checkBox_packet_tracksdest_CheckedChanged);
-            // 
-            // checkBox_packet_keyislocal
-            // 
-            this.checkBox_packet_keyislocal.AutoSize = true;
-            this.checkBox_packet_keyislocal.Location = new System.Drawing.Point(220, 102);
-            this.checkBox_packet_keyislocal.Name = "checkBox_packet_keyislocal";
-            this.checkBox_packet_keyislocal.Size = new System.Drawing.Size(78, 17);
-            this.checkBox_packet_keyislocal.TabIndex = 46;
-            this.checkBox_packet_keyislocal.Text = "KeyIsLocal";
-            this.checkBox_packet_keyislocal.UseVisualStyleBackColor = true;
-            this.checkBox_packet_keyislocal.CheckedChanged += new System.EventHandler(this.checkBox_packet_keyislocal_CheckedChanged);
-            // 
-            // checkBox_packet_controtates
-            // 
-            this.checkBox_packet_controtates.AutoSize = true;
-            this.checkBox_packet_controtates.Location = new System.Drawing.Point(4, 118);
-            this.checkBox_packet_controtates.Name = "checkBox_packet_controtates";
-            this.checkBox_packet_controtates.Size = new System.Drawing.Size(85, 17);
-            this.checkBox_packet_controtates.TabIndex = 47;
-            this.checkBox_packet_controtates.Text = "ContRotates";
-            this.checkBox_packet_controtates.UseVisualStyleBackColor = true;
-            this.checkBox_packet_controtates.CheckedChanged += new System.EventHandler(this.checkBox_packet_controtates_CheckedChanged);
-            // 
-            // checkBox_packet_stalls
-            // 
-            this.checkBox_packet_stalls.AutoSize = true;
-            this.checkBox_packet_stalls.Location = new System.Drawing.Point(110, 119);
-            this.checkBox_packet_stalls.Name = "checkBox_packet_stalls";
-            this.checkBox_packet_stalls.Size = new System.Drawing.Size(51, 17);
-            this.checkBox_packet_stalls.TabIndex = 48;
-            this.checkBox_packet_stalls.Text = "Stalls";
-            this.checkBox_packet_stalls.UseVisualStyleBackColor = true;
-            this.checkBox_packet_stalls.CheckedChanged += new System.EventHandler(this.checkBox_packet_stalls_CheckedChanged);
-            // 
-            // checkBox_packet_hasValidData
-            // 
-            this.checkBox_packet_hasValidData.AutoSize = true;
-            this.checkBox_packet_hasValidData.Location = new System.Drawing.Point(220, 119);
-            this.checkBox_packet_hasValidData.Name = "checkBox_packet_hasValidData";
-            this.checkBox_packet_hasValidData.Size = new System.Drawing.Size(91, 17);
-            this.checkBox_packet_hasValidData.TabIndex = 49;
-            this.checkBox_packet_hasValidData.Text = "HasValidData";
-            this.checkBox_packet_hasValidData.UseVisualStyleBackColor = true;
-            this.checkBox_packet_hasValidData.CheckedChanged += new System.EventHandler(this.checkBox_packet_hasValidData_CheckedChanged);
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(7, 295);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(90, 13);
+            this.label11.TabIndex = 17;
+            this.label11.Text = "AssignPreference";
             // 
             // ScriptEditor
             // 
@@ -2053,5 +2145,13 @@
         private System.Windows.Forms.CheckBox checkBox_packet_usesrotator;
         private System.Windows.Forms.CheckBox checkBox_packet_usesphysics;
         private System.Windows.Forms.CheckBox checkBox_packet_rotates;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.ComboBox comboBox_participant_preference;
+        private System.Windows.Forms.ComboBox comboBox_participant_status;
+        private System.Windows.Forms.ComboBox comboBox_participant_locality;
+        private System.Windows.Forms.ComboBox comboBox_participant_type;
     }
 }
