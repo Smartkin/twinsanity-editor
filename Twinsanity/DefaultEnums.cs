@@ -935,6 +935,7 @@ namespace Twinsanity
 
             CameraFocusObject = 606,
             CameraStopFocusObject = 607,
+            DisablePlayerControl = 613,
             ForceGameOver = 618,
             ShowBottomText = 619,
             HideBottomText = 620,

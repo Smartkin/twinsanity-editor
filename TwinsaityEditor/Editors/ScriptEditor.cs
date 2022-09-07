@@ -118,26 +118,26 @@ namespace TwinsaityEditor
                     else
                     {
                         Label = $"-DELETED {i}";
-                    }  
+                    }
                 }
                 else if (Script.MainScript.ScriptCommand.GetCommandSize(i, scriptGameVersion) == 0x0C)
                 {
                     if (Enum.IsDefined(typeof(DefaultEnums.CommandID), i))
                     {
-                        Label = $"{((DefaultEnums.CommandID)i).ToString()} (No args)";
+                        Label = $"{i:000}: {((DefaultEnums.CommandID)i).ToString()} (No args)";
                     }
                     else
                     {
-                        Label = $"Unknown {i.ToString()} (No args)";
+                        Label = $"{i:000}: UNKNOWN (No args)";
                     }
                 }
                 else if (Enum.IsDefined(typeof(DefaultEnums.CommandID), i))
                 {
-                    Label = ((DefaultEnums.CommandID)i).ToString();
+                    Label = $"{i:000}: {((DefaultEnums.CommandID)i).ToString()}";
                 }
                 else
                 {
-                    Label = "Unknown " + i.ToString();
+                    Label = $"{i:000}: UNKNOWN";
                 }
                 cbCommandIndex.Items.Add(Label);
                 comboBox_propGrid_ActionID.Items.Add(Label);
@@ -149,7 +149,7 @@ namespace TwinsaityEditor
             {
                 if (Enum.IsDefined(typeof(DefaultEnums.ConditionID), i))
                 {
-                    comboBox_perceptID.Items.Add(((DefaultEnums.ConditionID)i).ToString());
+                    comboBox_perceptID.Items.Add($"{i:000}: {((DefaultEnums.ConditionID)i).ToString()}");
                 }
                 else if (i >= 177 && i <= 511)
                 {
@@ -157,7 +157,7 @@ namespace TwinsaityEditor
                 }
                 else
                 {
-                    comboBox_perceptID.Items.Add("Unknown " + i.ToString());
+                    comboBox_perceptID.Items.Add($"{i:000}: UNKNOWN");
                 }
             }
         }

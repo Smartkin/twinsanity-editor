@@ -15,19 +15,37 @@ namespace Twinsanity
         public new FileType Type { get; set; }
         public ConsoleType Console { get; set; }
 
+        public void LoadFile(string fileName, FileType type)
+        {
+            FileName = fileName;
+
+            byte[] buffer;
+            using (var br = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read, 0x10000, FileOptions.SequentialScan))
+            {
+                buffer = new byte[br.Length];
+                br.Read(buffer, 0, buffer.Length);
+            }
+            using (var memoryStream = new MemoryStream(buffer))
+            {
+                using (BinaryReader reader = new BinaryReader(memoryStream))
+                {
+                    LoadFileStream(reader, fileName, type);
+                }
+            }
+        }
+
         /// <summary>
         /// Load an RM/SM file.
         /// </summary>
         /// <param name="path">Path to the file to load from.</param>
         /// <param name="type">Filetype. RM2, SM2, etc.</param>
-        public void LoadFile(string path, FileType type)
+        public void LoadFileStream(BinaryReader reader, string path, FileType type)
         {
             if (!File.Exists(path))
                 return;
             Records = new List<TwinsItem>();
             RecordIDs = new Dictionary<uint, int>();
             var file = new FileStream(path, FileMode.Open, FileAccess.Read);
-            BinaryReader reader = new BinaryReader(file);
             Type = type;
             Console = ConsoleType.PS2;
             if (type == FileType.RMX || type == FileType.SMX) Console = ConsoleType.XBOX;
@@ -424,7 +442,6 @@ namespace Twinsanity
                         break;
                 }
             }
-            reader.Close();
         }
 
         public void Merge(TwinsFile package)
