@@ -263,7 +263,14 @@ namespace TwinsaityEditor
                             {
                                 file.LoadFile(ofd.FileName, TwinsFile.FileType.RM2);
                                 aux_file = new TwinsFile();
-                                aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".sm2", TwinsFile.FileType.SM2);
+                                if (System.IO.File.Exists(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".sm2"))
+                                {
+                                    aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".sm2", TwinsFile.FileType.SM2);
+                                }
+                                else
+                                {
+                                    aux_file = null;
+                                }
                                 if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + "/Default.rm2"))
                                 {
                                     default_file = new TwinsFile();
@@ -279,7 +286,14 @@ namespace TwinsaityEditor
                             {
                                 file.LoadFile(ofd.FileName, TwinsFile.FileType.RMX);
                                 aux_file = new TwinsFile();
-                                aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".smx", TwinsFile.FileType.SMX);
+                                if (System.IO.File.Exists(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".smx"))
+                                {
+                                    aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".smx", TwinsFile.FileType.SMX);
+                                }
+                                else
+                                {
+                                    aux_file = null;
+                                }
                             }
                             break;
                         case 5:
