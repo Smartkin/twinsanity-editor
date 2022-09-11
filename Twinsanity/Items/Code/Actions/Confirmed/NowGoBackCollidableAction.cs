@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Twinsanity.Actions
 {
-    [ActionID(DefaultEnums.CommandID.NowGoBackCollidable)]
+    //[ActionID(DefaultEnums.CommandID.NowGoBackCollidable)]
     public class NowGoBackCollidableAction : ScriptAction
     {
         public float Distance { get; set; } = 1f;

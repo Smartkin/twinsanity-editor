@@ -129,6 +129,11 @@ namespace Twinsanity
                         RawData[c + x] = Color.FromArgb(clr[3], clr[2], clr[1], clr[0]);
                     }
                 }
+
+                if (unkBytes2[4] != 0x84)
+                {
+                    reader.ReadBytes(unkBytes2[4] - 0x84); // 0x1C
+                }
             }
         }
 
