@@ -260,6 +260,44 @@ namespace TwinsaityEditor
             else
                 MeshViewers[id].Select();
         }
+        public void OpenMeshViewer(SkinController c)
+        {
+            var id = c.Data.ID;
+            if (!MeshViewers.ContainsKey(id))
+            {
+                var f = new Form { Size = new System.Drawing.Size(480, 480), Text = "Initializing viewer..." };
+                f.FormClosed += delegate
+                {
+                    MeshViewers.Remove(id);
+                };
+                f.Show();
+                MeshViewer v = new MeshViewer(c, f) { Dock = DockStyle.Fill };
+                f.Controls.Add(v);
+                f.Text = "MeshViewer";
+                MeshViewers.Add(id, f);
+            }
+            else
+                MeshViewers[id].Select();
+        }
+        public void OpenMeshViewer(BlendSkinController c)
+        {
+            var id = c.Data.ID;
+            if (!MeshViewers.ContainsKey(id))
+            {
+                var f = new Form { Size = new System.Drawing.Size(480, 480), Text = "Initializing viewer..." };
+                f.FormClosed += delegate
+                {
+                    MeshViewers.Remove(id);
+                };
+                f.Show();
+                MeshViewer v = new MeshViewer(c, f) { Dock = DockStyle.Fill };
+                f.Controls.Add(v);
+                f.Text = "MeshViewer";
+                MeshViewers.Add(id, f);
+            }
+            else
+                MeshViewers[id].Select();
+        }
         public void OpenMeshViewer(ModelXController c)
         {
             var id = c.Data.ID;

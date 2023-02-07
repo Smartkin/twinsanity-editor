@@ -10,6 +10,8 @@ namespace TwinsaityEditor
     {
         private FileController targetFile;
         private ModelController mesh;
+        private SkinController skin;
+        private BlendSkinController bskin;
         private ModelXController meshX;
         private SkinXController skinX;
         private BlendSkinXController bskinX;
@@ -36,6 +38,30 @@ namespace TwinsaityEditor
             InitVBO(1);
             pform.Text = "Loading mesh...";
             LoadMesh();
+            pform.Text = "Initializing...";
+        }
+        public MeshViewer(SkinController mesh, Form pform)
+        {
+            this.skin = mesh;
+            zFar = 50F;
+            lighting = true;
+            wire = false;
+            Tag = pform;
+            InitVBO(1);
+            pform.Text = "Loading mesh...";
+            LoadSkin();
+            pform.Text = "Initializing...";
+        }
+        public MeshViewer(BlendSkinController mesh, Form pform)
+        {
+            this.bskin = mesh;
+            zFar = 50F;
+            lighting = true;
+            wire = false;
+            Tag = pform;
+            InitVBO(1);
+            pform.Text = "Loading mesh...";
+            LoadBSkin();
             pform.Text = "Initializing...";
         }
         public MeshViewer(ModelXController mesh, Form pform)
@@ -241,6 +267,44 @@ namespace TwinsaityEditor
             }
             vtx[0].Vtx = mesh.Vertices;
             vtx[0].VtxInd = mesh.Indices;
+            zFar = Math.Max(zFar, Math.Max(max_x - min_x, Math.Max(max_y - min_y, max_z - min_z)));
+            UpdateVBO(0);
+        }
+
+        public void LoadSkin()
+        {
+            skin.LoadMeshData();
+            float min_x = float.MaxValue, min_y = float.MaxValue, min_z = float.MaxValue, max_x = float.MinValue, max_y = float.MinValue, max_z = float.MinValue;
+            foreach (var v in skin.Vertices)
+            {
+                min_x = Math.Min(min_x, v.Pos.X);
+                min_y = Math.Min(min_y, v.Pos.Y);
+                min_z = Math.Min(min_z, v.Pos.Z);
+                max_x = Math.Max(max_x, v.Pos.X);
+                max_y = Math.Max(max_y, v.Pos.Y);
+                max_z = Math.Max(max_z, v.Pos.Z);
+            }
+            vtx[0].Vtx = skin.Vertices;
+            vtx[0].VtxInd = skin.Indices;
+            zFar = Math.Max(zFar, Math.Max(max_x - min_x, Math.Max(max_y - min_y, max_z - min_z)));
+            UpdateVBO(0);
+        }
+
+        public void LoadBSkin()
+        {
+            bskin.LoadMeshData();
+            float min_x = float.MaxValue, min_y = float.MaxValue, min_z = float.MaxValue, max_x = float.MinValue, max_y = float.MinValue, max_z = float.MinValue;
+            foreach (var v in bskin.Vertices)
+            {
+                min_x = Math.Min(min_x, v.Pos.X);
+                min_y = Math.Min(min_y, v.Pos.Y);
+                min_z = Math.Min(min_z, v.Pos.Z);
+                max_x = Math.Max(max_x, v.Pos.X);
+                max_y = Math.Max(max_y, v.Pos.Y);
+                max_z = Math.Max(max_z, v.Pos.Z);
+            }
+            vtx[0].Vtx = bskin.Vertices;
+            vtx[0].VtxInd = bskin.Indices;
             zFar = Math.Max(zFar, Math.Max(max_x - min_x, Math.Max(max_y - min_y, max_z - min_z)));
             UpdateVBO(0);
         }

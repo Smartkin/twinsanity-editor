@@ -3,6 +3,7 @@ using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using Twinsanity;
 
@@ -1213,6 +1214,46 @@ namespace TwinsaityEditor
                                         }
                                     }
 
+                                    if (HasSkin && file.Data.Type == TwinsFile.FileType.RM2)
+                                    {
+                                        SkinController modelCont = null;
+                                        SectionController meshSec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(4);
+                                        foreach (Skin mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(4).Records.Cast<Skin>())
+                                        {
+                                            if (mod.ID == TargetSkin)
+                                            {
+                                                modelCont = meshSec.GetItem<SkinController>(mod.ID);
+                                            }
+                                        }
+
+                                        modelCont.LoadMeshData();
+                                        Vertex[] vbuffer = new Vertex[modelCont.Vertices.Length];
+
+                                        for (int v = 0; v < modelCont.Vertices.Length; v++)
+                                        {
+                                            vbuffer[v] = modelCont.Vertices[v];
+                                            Vector4 targetPos = new Vector4(modelCont.Vertices[v].Pos.X, modelCont.Vertices[v].Pos.Y, modelCont.Vertices[v].Pos.Z, 1);
+
+                                            //targetPos *= LocalRot;
+
+                                            bool rotationOverride = false;
+                                            if (!rotationOverride)
+                                            {
+                                                targetPos *= rot_ins_4;
+                                            }
+
+                                            targetPos += pos_ins_4;
+                                            modelCont.Vertices[v].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+                                        }
+                                        vtx[5 + cur_instance] = new VertexBufferData();
+                                        vtx[5 + cur_instance].Vtx = modelCont.Vertices;
+                                        vtx[5 + cur_instance].VtxInd = modelCont.Indices;
+                                        modelCont.Vertices = vbuffer;
+                                        UpdateVBO(5 + cur_instance);
+
+                                        cur_instance++;
+                                    }
+
                                     if (HasSkin && file.Data.Type == TwinsFile.FileType.RMX)
                                     {
                                         SkinXController modelCont = null;
@@ -1222,6 +1263,46 @@ namespace TwinsaityEditor
                                             if (mod.ID == TargetSkin)
                                             {
                                                 modelCont = mesh_sec.GetItem<SkinXController>(mod.ID);
+                                            }
+                                        }
+
+                                        modelCont.LoadMeshData();
+                                        Vertex[] vbuffer = new Vertex[modelCont.Vertices.Length];
+
+                                        for (int v = 0; v < modelCont.Vertices.Length; v++)
+                                        {
+                                            vbuffer[v] = modelCont.Vertices[v];
+                                            Vector4 targetPos = new Vector4(modelCont.Vertices[v].Pos.X, modelCont.Vertices[v].Pos.Y, modelCont.Vertices[v].Pos.Z, 1);
+
+                                            //targetPos *= LocalRot;
+
+                                            bool rotationOverride = false;
+                                            if (!rotationOverride)
+                                            {
+                                                targetPos *= rot_ins_4;
+                                            }
+
+                                            targetPos += pos_ins_4;
+                                            modelCont.Vertices[v].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+                                        }
+                                        vtx[5 + cur_instance] = new VertexBufferData();
+                                        vtx[5 + cur_instance].Vtx = modelCont.Vertices;
+                                        vtx[5 + cur_instance].VtxInd = modelCont.Indices;
+                                        modelCont.Vertices = vbuffer;
+                                        UpdateVBO(5 + cur_instance);
+
+                                        cur_instance++;
+                                    }
+
+                                    if (HasBlendSkin && file.Data.Type == TwinsFile.FileType.RM2)
+                                    {
+                                        BlendSkinController modelCont = null;
+                                        SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(5);
+                                        foreach (BlendSkin mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(5).Records)
+                                        {
+                                            if (mod.ID == TargetBSkin)
+                                            {
+                                                modelCont = mesh_sec.GetItem<BlendSkinController>(mod.ID);
                                             }
                                         }
 

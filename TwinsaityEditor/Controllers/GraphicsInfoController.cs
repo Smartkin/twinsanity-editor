@@ -31,6 +31,7 @@ namespace TwinsaityEditor
             text.Add($"Blend Skin Model ID: {Data.BlendSkinID.ToString("X8")}");
             text.Add($"Joint Count: {Data.Type1.Length}");
             text.Add($"Exit Point Count: {Data.Type2.Length}");
+            text.Add($"Parent Joint Count: {Data.HeaderVars[2]}");
             text.Add($"Collision Datas Size: {Data.CollisionData.Length}");
             text.Add($"Rigid Model Count: {Data.ModelIDs.Length}");
             if (Data.ModelIDs.Length > 0)
@@ -115,6 +116,11 @@ namespace TwinsaityEditor
                                 break;
                         }
                     }
+                }
+                text.Add("Collision data indices:\n");
+                foreach (var b in Data.CollisionDataRelated)
+                {
+                    text.Add($"\t{b}");
                 }
             }
 

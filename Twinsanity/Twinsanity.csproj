@@ -10,7 +10,7 @@
     <AssemblyName>Twinsanity</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Windows</MyType>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -155,6 +155,12 @@
     <Compile Include="Items\Graphics\Model.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Items\Code\Script.cs" />
+    <Compile Include="VIF\Color.cs" />
+    <Compile Include="VIF\DMATag.cs" />
+    <Compile Include="VIF\GIFTag.cs" />
+    <Compile Include="VIF\Vector4.cs" />
+    <Compile Include="VIF\VIFCode.cs" />
+    <Compile Include="VIF\VIFInterpreter.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
