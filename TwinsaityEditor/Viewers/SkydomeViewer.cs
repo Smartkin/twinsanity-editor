@@ -1,6 +1,7 @@
 ﻿using OpenTK.Graphics.OpenGL;
 using System;
 using System.Windows.Forms;
+using Twinsanity;
 
 namespace TwinsaityEditor
 {
@@ -19,7 +20,21 @@ namespace TwinsaityEditor
             this.sky = sky;
             file = sky.MainFile;
             zFar = 100F;
-            InitVBO(sky.Data.MeshIDs.Length);
+            var vbos = 0;
+            SectionController mesh_sec = file.GetItem<SectionController>(6).GetItem<SectionController>(6);
+            for (var i = 0; i < sky.Data.MeshIDs.Length; i++)
+            {
+                foreach (RigidModel mod in mesh_sec.Data.Records)
+                {
+                    if (mod.ID == sky.Data.MeshIDs[i])
+                    {
+                        var m = mesh_sec.GetItem<RigidModelController>(sky.Data.MeshIDs[i]);
+                        vbos += m.Data.MaterialIDs.Length;
+                        break;
+                    }
+                }
+            }
+            InitVBO(vbos);
             pform.Text = "Loading models...";
             LoadModels();
         }
@@ -83,6 +98,7 @@ namespace TwinsaityEditor
             SectionController mesh_sec = file.GetItem<SectionController>(6).GetItem<SectionController>(2);
             SectionController model_sec = file.GetItem<SectionController>(6).GetItem<SectionController>(6);
             SectionController special_sec = file.GetItem<SectionController>(6).GetItem<SectionController>(7);
+            var vtxIndex = 0;
             for (int i = 0; i < sky.Data.MeshIDs.Length; ++i)
             {
                 if (special_sec.Data.ContainsItem(sky.Data.MeshIDs[i]))
@@ -103,11 +119,14 @@ namespace TwinsaityEditor
                 }
                 for (int j = 0; j < mesh.Vertices.Count; j++)
                 {
-                    vtx[i + j].Vtx = mesh.Vertices[j];
-                    vtx[i + j].VtxInd = mesh.Indices[j];
+                    vtx[vtxIndex].Vtx = mesh.Vertices[j];
+                    vtx[vtxIndex].VtxInd = mesh.Indices[j];
+                    Utils.TextUtils.LoadTexture(model_sec.GetItem<RigidModelController>(sky.Data.MeshIDs[i]).Data.MaterialIDs, file, vtx[vtxIndex], j);
+                    UpdateVBO(vtxIndex);
+                    vtxIndex++;
                 }
                 
-                UpdateVBO(i);
+                
             }
             zFar = Math.Max(zFar, Math.Max(max_x - min_x, Math.Max(max_y - min_y, max_z - min_z)));
         }

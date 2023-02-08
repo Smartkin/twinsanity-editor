@@ -57,8 +57,13 @@ namespace TwinsaityEditor.Utils
         {
             var material = materials[index];
             {
-                var matSec = file.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(1);
-                var texSec = file.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(0);
+                var secId = 11U;
+                if (file.Data.Type == TwinsFile.FileType.SM2)
+                {
+                    secId = 6U;
+                }
+                var matSec = file.Data.GetItem<TwinsSection>(secId).GetItem<TwinsSection>(1);
+                var texSec = file.Data.GetItem<TwinsSection>(secId).GetItem<TwinsSection>(0);
                 if (matSec.ContainsItem(material))
                 {
                     var mat = matSec.GetItem<Material>(material);
