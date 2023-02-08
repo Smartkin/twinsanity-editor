@@ -7,6 +7,7 @@ namespace TwinsaityEditor
     {
         public int ID { get; set; }
         public int LastSize { get; set; }
+        public bool Textured { get; set; }
         public int[] VtxOffs { get; set; }
         public int[] VtxCounts { get; set; }
         public uint[] VtxInd { get; set; }
@@ -19,6 +20,7 @@ namespace TwinsaityEditor
             ID = GL.GenBuffer();
             LastSize = 0;
             Texture = -1;
+            Textured = true;
         }
 
         public void DrawAll(PrimitiveType primitive_type, BufferPointerFlags flags)
@@ -38,7 +40,7 @@ namespace TwinsaityEditor
 
         private void draw_func(int func, PrimitiveType prim, BufferPointerFlags flags)
         {
-            if (Texture != -1)
+            if (Texture != -1 && Textured)
             {
                 GL.BindTexture(TextureTarget.Texture2D, Texture);
             }
@@ -65,7 +67,10 @@ namespace TwinsaityEditor
                     GL.DrawArrays(prim, 0, Vtx.Length);
                     break;
                 case 1:
-                    GL.DrawElements(prim, VtxInd.Length, DrawElementsType.UnsignedInt, VtxInd);
+                    if (VtxInd != null)
+                    {
+                        GL.DrawElements(prim, VtxInd.Length, DrawElementsType.UnsignedInt, VtxInd);
+                    }
                     break;
                 case 2:
                     GL.MultiDrawArrays(prim, VtxOffs, VtxCounts, VtxCounts.Length);
@@ -78,7 +83,7 @@ namespace TwinsaityEditor
             if ((flags & BufferPointerFlags.Color) != 0)
                 GL.DisableClientState(ArrayCap.ColorArray);
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
-            if (Texture != -1)
+            if (Texture != -1 && Textured)
             {
                 GL.BindTexture(TextureTarget.Texture2D, 0);
             }

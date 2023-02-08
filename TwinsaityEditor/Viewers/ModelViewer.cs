@@ -23,34 +23,5 @@ namespace TwinsaityEditor
         {
             base.Dispose(disposing);
         }
-
-        public void LoadTexture(RigidModelController model, FileController file, VertexBufferData vtx, int index)
-        {
-            var material = model.Data.MaterialIDs[index];
-            {
-                var matSec = file.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(1);
-                var texSec = file.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(0);
-                if (matSec.ContainsItem(material))
-                {
-                    var mat = matSec.GetItem<Material>(material);
-                    Texture texture = null;
-                    foreach (var shader in mat.Shaders)
-                    {
-                        if (shader.TxtMapping == TwinsShader.TextureMapping.ON)
-                        {
-                            texture = texSec.GetItem<Texture>(shader.TextureId);
-                            break;
-                        }
-                    }
-                    if (texture != null)
-                    {
-                        var bmp = texture.GetBmp();
-                        var texId = LoadTexture(ref bmp);
-                        vtx.Texture = texId;
-                        vtx.Flags |= BufferPointerFlags.TexCoord;
-                    }
-                }
-            }
-        }
     }
 }

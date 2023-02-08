@@ -60,10 +60,10 @@ namespace Twinsanity
                 var fields = (data[i + 1][0].GetBinaryX() & 0xFF) / verts;
                 var scaleVec = data[i + 2][0];
 
-                var vertex_batch_1 = data[i + VERT_DATA_INDEX];
-                var vertex_batch_2 = data[i + VERT_DATA_INDEX + 1];
-                var vertex_batch_3 = data[i + VERT_DATA_INDEX + 3];
-                var vertex_batch_4 = data[i + VERT_DATA_INDEX + 2];
+                var vertex_batch_1 = data[i + VERT_DATA_INDEX];     // Position vectors
+                var vertex_batch_2 = data[i + VERT_DATA_INDEX + 1]; // UV vectors
+                var vertex_batch_3 = data[i + VERT_DATA_INDEX + 3]; // Transform vectors, also contain specific pointers in VU memory to some matrices
+                var vertex_batch_4 = data[i + VERT_DATA_INDEX + 2]; // Color vectors
 
                 // Vertex conversion
                 for (int j = 0; j < verts; ++j)
@@ -94,17 +94,22 @@ namespace Twinsanity
 
                 for (int j = 0; j < verts; j++)
                 {
-                    var vertData = new VertexData();
-                    vertData.X = vertex_batch_1[j].X;
-                    vertData.Y = vertex_batch_1[j].Y;
-                    vertData.Z = vertex_batch_1[j].Z;
-                    vertData.U = vertex_batch_2[j].X;
-                    vertData.V = vertex_batch_2[j].Y;
-                    vertData.R = vertex_batch_4[j].X;
-                    vertData.G = vertex_batch_4[j].Y;
-                    vertData.B = vertex_batch_4[j].Z;
-                    vertData.A = vertex_batch_4[j].W;
-                    vertData.Conn = connections[j];
+                    var vertData = new VertexData
+                    {
+                        // Vert coords
+                        X = vertex_batch_1[j].X,
+                        Y = vertex_batch_1[j].Y,
+                        Z = vertex_batch_1[j].Z,
+                        // UVs
+                        U = vertex_batch_2[j].X,
+                        V = vertex_batch_2[j].Y,
+                        // Colors
+                        R = (byte)(Math.Min(vertex_batch_4[j].X + 126, 255)),
+                        G = (byte)(Math.Min(vertex_batch_4[j].Y + 126, 255)),
+                        B = (byte)(Math.Min(vertex_batch_4[j].Z + 126, 255)),
+                        A = (byte)(Math.Min(vertex_batch_4[j].W + 126, 255)),
+                        Conn = connections[j]
+                    };
                     vertexes.Add(vertData);
                 }
 
@@ -140,7 +145,7 @@ namespace Twinsanity
         {
             public float X, Y, Z;
             public float U, V;
-            public float R, G, B, A;
+            public byte R, G, B, A;
             public bool Conn;
         }
     }

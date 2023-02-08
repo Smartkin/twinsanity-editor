@@ -51,6 +51,7 @@ namespace Twinsanity
             var Vertexes = new List<Vector4>();
             var UVW = new List<Vector4>();
             var EmitColor = new List<Vector4>();
+            var Colors = new List<Color>();
             var Normals = new List<Vector4>();
             var Connection = new List<bool>();
             for (var i = 0; i < data.Count;)
@@ -73,9 +74,19 @@ namespace Twinsanity
                     {
                         var conn = (e.GetBinaryW() & 0xFF00) >> 8;
                         Connection.Add(conn == 128 ? false : true);
+                        var r = e.GetBinaryX() & 0xFF;
+                        var g = e.GetBinaryY() & 0xFF;
+                        var b = e.GetBinaryZ() & 0xFF;
+                        var a = (e.GetBinaryW() & 0xFF) << 1;
+
+                        Color col = new Color((byte)r, (byte)g, (byte)b, (byte)a);
+                        Colors.Add(col);
+
                         Vector4 uv = new Vector4(e);
-                        uv.X *= uv.Z;
-                        uv.Y = 1 - uv.Y * uv.Z;
+                        uv.SetBinaryX(uv.GetBinaryX() & 0xFFFFFF00);
+                        uv.SetBinaryY(uv.GetBinaryY() & 0xFFFFFF00);
+                        uv.SetBinaryZ(uv.GetBinaryZ() & 0xFFFFFF00);
+                        uv.Y = 1 - uv.Y;
                         UVW.Add(uv);
                     }
                 }
@@ -116,10 +127,10 @@ namespace Twinsanity
                 vertData.Z = Vertexes[i].Z;
                 vertData.U = UVW[i].X;
                 vertData.V = UVW[i].Y;
-                vertData.R = EmitColor[i].X;
-                vertData.G = EmitColor[i].Y;
-                vertData.B = EmitColor[i].Z;
-                vertData.A = EmitColor[i].W;
+                vertData.R = Colors[i].R;
+                vertData.G = Colors[i].G;
+                vertData.B = Colors[i].B;
+                vertData.A = Colors[i].A;
                 vertData.Conn = Connection[i];
                 vertexes.Add(vertData);
             }
@@ -312,7 +323,7 @@ namespace Twinsanity
         {
             public float X, Y, Z;
             public float U, V;
-            public float R, G, B, A;
+            public byte R, G, B, A;
             public bool Conn;
         }
         #endregion

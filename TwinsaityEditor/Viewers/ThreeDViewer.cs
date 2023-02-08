@@ -467,24 +467,7 @@ namespace TwinsaityEditor
             GL.Enable(EnableCap.DepthTest);
         }
 
-        protected int LoadTexture(ref Bitmap data, int quality = 0, bool flip_y = false)
-        {
-            var bitmapBits = data.LockBits(new Rectangle(0, 0, data.Width, data.Height),
-                    System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-
-            var texture = GL.GenTexture();
-            GL.BindTexture(TextureTarget.Texture2D, texture);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, bitmapBits.Width, bitmapBits.Height, 0, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, bitmapBits.Scan0);
-            GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
-            data.UnlockBits(bitmapBits);
-            GL.BindTexture(TextureTarget.Texture2D, 0);
-
-            return texture;
-        }
+        
 
         protected int LoadTextTexture(ref Bitmap text, int quality = 0, bool flip_y = false)
         {

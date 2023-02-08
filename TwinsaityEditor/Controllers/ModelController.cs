@@ -80,9 +80,10 @@ namespace TwinsaityEditor
                         }
                         ++refIndex;
                     }
+                    Color col = Color.FromArgb(model.Vertexes[j].A, model.Vertexes[j].R, model.Vertexes[j].G, model.Vertexes[j].B);
                     vtx.Add(new Vertex(new Vector3(model.Vertexes[j].X, model.Vertexes[j].Y, model.Vertexes[j].Z),
                             new Vector3(0, 0, 0), new Vector2(model.Vertexes[j].U, model.Vertexes[j].V),
-                            Color.FromArgb(255, (int)(model.Vertexes[j].R * 256), (int)(model.Vertexes[j].G * 256), (int)(model.Vertexes[j].B * 256))));
+                            col));
                 }
                 //offset += model.Vertexes.Count;
                 refIndex = 0;
@@ -107,10 +108,6 @@ namespace TwinsaityEditor
                 Vertices.Add(vtx.ToArray());
                 Indices.Add(idx.ToArray());
             }
-
-            
-
-            
 
             IsLoaded = true;
         }
