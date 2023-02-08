@@ -99,9 +99,12 @@ namespace TwinsaityEditor
                 var v2 = vtx[(int)n2];
                 var v3 = vtx[(int)n3];
                 var normal = VectorFuncs.CalcNormal(v1.Pos, v2.Pos, v3.Pos);
-                v1.Nor = normal;
-                v2.Nor = normal;
-                v3.Nor = normal;
+                v1.Nor += normal;
+                v2.Nor += normal;
+                v3.Nor += normal;
+                vtx[(int)n1] = v1;
+                vtx[(int)n2] = v2;
+                vtx[(int)n3] = v3;
             }
             Vertices = vtx.ToArray();
             Indices = idx.ToArray();

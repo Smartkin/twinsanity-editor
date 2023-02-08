@@ -101,10 +101,10 @@ namespace Twinsanity
                     vertData.Z = vertex_batch_1[j].Z;
                     vertData.U = vertex_batch_2[j].X;
                     vertData.V = vertex_batch_2[j].Y;
-                    vertData.R = vertex_batch_4[j].X / 255f;
-                    vertData.G = vertex_batch_4[j].X / 255f;
-                    vertData.B = vertex_batch_4[j].X / 255f;
-                    vertData.A = vertex_batch_4[j].X / 255f;
+                    vertData.R = vertex_batch_4[j].X;
+                    vertData.G = vertex_batch_4[j].Y;
+                    vertData.B = vertex_batch_4[j].Z;
+                    vertData.A = vertex_batch_4[j].W;
                     vertData.Conn = connections[j];
                     vertexes.Add(vertData);
                 }

@@ -344,6 +344,8 @@ namespace TwinsaityEditor
 
         private void buttonRM2Viewer_Click(object sender, EventArgs e)
         {
+            if (CurCont == null) return;
+
             switch (CurFile.Type)
             {
                 case TwinsFile.FileType.SM2:
