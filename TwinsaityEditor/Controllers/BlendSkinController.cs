@@ -10,8 +10,10 @@ namespace TwinsaityEditor
     {
         public new BlendSkin Data { get; set; }
 
-        public Vertex[] Vertices { get; set; }
-        public uint[] Indices { get; set; }
+        public List<Vertex[]> Vertices { get; set; } = new List<Vertex[]>();
+        public List<uint[]> Indices { get; set; } = new List<uint[]>();
+
+        public bool IsLoaded { get; private set; }
 
         public BlendSkinController(MainForm topform, BlendSkin item) : base(topform, item)
         {
@@ -49,6 +51,8 @@ namespace TwinsaityEditor
 
         public void LoadMeshData()
         {
+            if (IsLoaded) return;
+
             List<Vertex> vtx = new List<Vertex>();
             List<uint> idx = new List<uint>();
 
@@ -61,9 +65,6 @@ namespace TwinsaityEditor
                 {
                     for (var j = 0; j < model.Vertexes.Count; ++j)
                     {
-                        var nIndex1 = 0;
-                        var nIndex2 = 0;
-                        var nIndex3 = 0;
                         if (j < model.Vertexes.Count - 2)
                         {
                             if (model.Vertexes[j + 2].Conn)
@@ -84,31 +85,34 @@ namespace TwinsaityEditor
                             ++refIndex;
                         }
                         vtx.Add(new Vertex(new Vector3(model.Vertexes[j].X, model.Vertexes[j].Y, model.Vertexes[j].Z),
-                                new Vector3(0, 0, 0), new Vector2(model.Vertexes[j].U, model.Vertexes[j].V),
+                                new Vector3(0, 0, 0), new Vector2(model.Vertexes[j].U, 1 - model.Vertexes[j].V),
                                 System.Drawing.Color.FromArgb((int)model.Vertexes[j].A << 1, (int)model.Vertexes[j].R << 1, (int)model.Vertexes[j].G << 1, (int)model.Vertexes[j].B << 1)));
                     }
                     offset += model.Vertexes.Count;
                     refIndex += 2;
                 }
+
+                for (int i = 0; i < idx.Count; i += 3)
+                {
+                    var n1 = idx[i];
+                    var n2 = idx[i + 1];
+                    var n3 = idx[i + 2];
+                    var v1 = vtx[(int)n1];
+                    var v2 = vtx[(int)n2];
+                    var v3 = vtx[(int)n3];
+                    var normal = VectorFuncs.CalcNormal(v1.Pos, v2.Pos, v3.Pos);
+                    v1.Nor += normal;
+                    v2.Nor += normal;
+                    v3.Nor += normal;
+                    vtx[(int)n1] = v1;
+                    vtx[(int)n2] = v2;
+                    vtx[(int)n3] = v3;
+                }
+                Vertices.Add(vtx.ToArray());
+                Indices.Add(idx.ToArray());
             }
-            for (int i = 0; i < idx.Count; i += 3)
-            {
-                var n1 = idx[i];
-                var n2 = idx[i + 1];
-                var n3 = idx[i + 2];
-                var v1 = vtx[(int)n1];
-                var v2 = vtx[(int)n2];
-                var v3 = vtx[(int)n3];
-                var normal = VectorFuncs.CalcNormal(v1.Pos, v2.Pos, v3.Pos);
-                v1.Nor += normal;
-                v2.Nor += normal;
-                v3.Nor += normal;
-                vtx[(int)n1] = v1;
-                vtx[(int)n2] = v2;
-                vtx[(int)n3] = v3;
-            }
-            Vertices = vtx.ToArray();
-            Indices = idx.ToArray();
+
+            IsLoaded = true;
         }
 
         private void Menu_OpenViewer()

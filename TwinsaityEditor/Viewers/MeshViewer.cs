@@ -29,6 +29,9 @@ namespace TwinsaityEditor
         private bool lighting, wire;
         private bool textures = true;
 
+        private int bskinEndIndex = 0;
+        private int skinEndIndex = 0;
+
         public MeshViewer(ModelController mesh, Form pform)
         {
             //initialize variables here
@@ -65,7 +68,7 @@ namespace TwinsaityEditor
             lighting = true;
             wire = false;
             Tag = pform;
-            InitVBO(mesh.Data.SubModels.Count);
+            InitVBO(mesh.Data.SubModels.Count, true);
             pform.Text = "Loading mesh...";
             LoadSkin();
             pform.Text = "Initializing...";
@@ -78,7 +81,7 @@ namespace TwinsaityEditor
             lighting = true;
             wire = false;
             Tag = pform;
-            InitVBO(1);
+            InitVBO(mesh.Data.Models.Length, true);
             pform.Text = "Loading mesh...";
             LoadBSkin();
             pform.Text = "Initializing...";
@@ -137,7 +140,7 @@ namespace TwinsaityEditor
             wire = false;
             Tag = pform;
             ModelController m;
-            var vbos = 2;
+            var vbos = 0;
             SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(2);
             for (var i = 0; i < model.Data.ModelIDs.Length; i++)
             {
@@ -152,13 +155,36 @@ namespace TwinsaityEditor
                     }
                 }
             }
-            InitVBO(2 + vbos, true);
-            pform.Text = "Loading mesh...";
+            
+            if (model.Data.SkinID != 0)
+            {
+                SectionController skin_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(4);
+                foreach (Skin mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(4).Records)
+                {
+                    if (mod.ID == model.Data.SkinID)
+                    {
+                        skin = skin_sec.GetItem<SkinController>(mod.ID);
+                        vbos += skin.Data.SubModels.Count;
+                    }
+                }
+            }
             if (mesh.Data.BlendSkinID != 0)
             {
                 BSkinActive = true;
+                SectionController blend_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(5);
+                foreach (BlendSkin mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(5).Records)
+                {
+                    if (mod.ID == model.Data.BlendSkinID)
+                    {
+                        bskin = blend_sec.GetItem<BlendSkinController>(mod.ID);
+                        vbos += bskin.Data.Models.Length;
+                    }
+                }
             }
             FullModelActive = true;
+
+            InitVBO(vbos, true);
+            pform.Text = "Loading mesh...";
             if (targetFile.Data.Type == TwinsFile.FileType.RM2)
             {
                 LoadOGI_PS2();
@@ -204,17 +230,23 @@ namespace TwinsaityEditor
             {
                 if (model.Data.BlendSkinID != 0 && Visible_BSkin)
                 {
-                    vtx[0].DrawAllElements(PrimitiveType.Triangles, flags);
+                    for (int i = 0; i < bskinEndIndex; i++)
+                    {
+                        vtx[i].DrawAllElements(PrimitiveType.Triangles, flags);
+                    }
                 }
                 if (model.Data.SkinID != 0 && Visible_Skin)
                 {
-                    vtx[1].DrawAllElements(PrimitiveType.Triangles, flags);
+                    for (int i = bskinEndIndex; i < skinEndIndex; i++)
+                    {
+                        vtx[i].DrawAllElements(PrimitiveType.Triangles, flags);
+                    }
                 }
                 if (Visible_Models)
                 {
-                    for (int i = 0; i < vtx.Count - 2; i++)
+                    for (int i = skinEndIndex; i < vtx.Count; i++)
                     {
-                        vtx[i + 2].DrawAllElements(PrimitiveType.Triangles, flags);
+                        vtx[i].DrawAllElements(PrimitiveType.Triangles, flags);
                     }
                 }
             }
@@ -381,19 +413,29 @@ namespace TwinsaityEditor
         {
             bskin.LoadMeshData();
             float min_x = float.MaxValue, min_y = float.MaxValue, min_z = float.MaxValue, max_x = float.MinValue, max_y = float.MinValue, max_z = float.MinValue;
-            foreach (var v in bskin.Vertices)
+            foreach (var list in bskin.Vertices)
             {
-                min_x = Math.Min(min_x, v.Pos.X);
-                min_y = Math.Min(min_y, v.Pos.Y);
-                min_z = Math.Min(min_z, v.Pos.Z);
-                max_x = Math.Max(max_x, v.Pos.X);
-                max_y = Math.Max(max_y, v.Pos.Y);
-                max_z = Math.Max(max_z, v.Pos.Z);
+                foreach (var v in list)
+                {
+                    min_x = Math.Min(min_x, v.Pos.X);
+                    min_y = Math.Min(min_y, v.Pos.Y);
+                    min_z = Math.Min(min_z, v.Pos.Z);
+                    max_x = Math.Max(max_x, v.Pos.X);
+                    max_y = Math.Max(max_y, v.Pos.Y);
+                    max_z = Math.Max(max_z, v.Pos.Z);
+                }
             }
-            vtx[0].Vtx = bskin.Vertices;
-            vtx[0].VtxInd = bskin.Indices;
+            for (int i = 0; i < bskin.Vertices.Count; i++)
+            {
+                vtx[i].Vtx = bskin.Vertices[i];
+                vtx[i].VtxInd = bskin.Indices[i];
+                Utils.TextUtils.LoadTexture(bskin.Data.Models.Select((subModel) =>
+                {
+                    return subModel.MaterialID;
+                }).ToArray(), file, vtx[i], i);
+                UpdateVBO(i);
+            }
             zFar = Math.Max(zFar, Math.Max(max_x - min_x, Math.Max(max_y - min_y, max_z - min_z)));
-            UpdateVBO(0);
         }
 
         public void LoadMeshX()
@@ -582,6 +624,7 @@ namespace TwinsaityEditor
         {
             float min_x = float.MaxValue, min_y = float.MaxValue, min_z = float.MaxValue, max_x = float.MinValue, max_y = float.MinValue, max_z = float.MinValue;
 
+            var vtxIndex = 0;
             if (model.Data.BlendSkinID != 0)
             {
                 SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(5);
@@ -594,19 +637,31 @@ namespace TwinsaityEditor
                 }
 
                 bskin.LoadMeshData();
-                foreach (var v in bskin.Vertices)
+                foreach (var list in bskin.Vertices)
                 {
-                    min_x = Math.Min(min_x, v.Pos.X);
-                    min_y = Math.Min(min_y, v.Pos.Y);
-                    min_z = Math.Min(min_z, v.Pos.Z);
-                    max_x = Math.Max(max_x, v.Pos.X);
-                    max_y = Math.Max(max_y, v.Pos.Y);
-                    max_z = Math.Max(max_z, v.Pos.Z);
+                    foreach (var v in list)
+                    {
+                        min_x = Math.Min(min_x, v.Pos.X);
+                        min_y = Math.Min(min_y, v.Pos.Y);
+                        min_z = Math.Min(min_z, v.Pos.Z);
+                        max_x = Math.Max(max_x, v.Pos.X);
+                        max_y = Math.Max(max_y, v.Pos.Y);
+                        max_z = Math.Max(max_z, v.Pos.Z);
+                    }
                 }
-                vtx[0].Vtx = bskin.Vertices;
-                vtx[0].VtxInd = bskin.Indices;
-                UpdateVBO(0);
+                for (int i = 0; i < bskin.Vertices.Count; i++)
+                {
+                    vtx[vtxIndex].Vtx = bskin.Vertices[i];
+                    vtx[vtxIndex].VtxInd = bskin.Indices[i];
+                    Utils.TextUtils.LoadTexture(bskin.Data.Models.Select((subModel) =>
+                    {
+                        return subModel.MaterialID;
+                    }).ToArray(), file, vtx[vtxIndex], i);
+                    UpdateVBO(vtxIndex);
+                    vtxIndex++;
+                }
             }
+            bskinEndIndex = vtxIndex;
             if (model.Data.SkinID != 0)
             {
                 SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(4);
@@ -633,16 +688,17 @@ namespace TwinsaityEditor
                 }
                 for (int i = 0; i < skin.Vertices.Count; i++)
                 {
-                    vtx[i].Vtx = skin.Vertices[i];
-                    vtx[i].VtxInd = skin.Indices[i];
+                    vtx[vtxIndex].Vtx = skin.Vertices[i];
+                    vtx[vtxIndex].VtxInd = skin.Indices[i];
                     Utils.TextUtils.LoadTexture(skin.Data.SubModels.Select((subModel) =>
                     {
                         return subModel.MaterialID;
-                    }).ToArray(), file, vtx[i], i);
-                    UpdateVBO(i);
+                    }).ToArray(), file, vtx[vtxIndex], i);
+                    UpdateVBO(vtxIndex);
+                    vtxIndex++;
                 }
             }
-            var vtxIndex = 3;
+            skinEndIndex = vtxIndex;
             for (int i = 0; i < model.Data.ModelIDs.Length; i++)
             {
                 SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(2);
