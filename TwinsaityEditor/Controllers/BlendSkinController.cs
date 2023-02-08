@@ -84,7 +84,8 @@ namespace TwinsaityEditor
                             ++refIndex;
                         }
                         vtx.Add(new Vertex(new Vector3(model.Vertexes[j].X, model.Vertexes[j].Y, model.Vertexes[j].Z),
-                                new Vector3(0, 0, 0), new Vector2(model.Vertexes[j].U, model.Vertexes[j].V), System.Drawing.Color.White));
+                                new Vector3(0, 0, 0), new Vector2(model.Vertexes[j].U, model.Vertexes[j].V),
+                                System.Drawing.Color.FromArgb((int)model.Vertexes[j].A << 1, (int)model.Vertexes[j].R << 1, (int)model.Vertexes[j].G << 1, (int)model.Vertexes[j].B << 1)));
                     }
                     offset += model.Vertexes.Count;
                     refIndex += 2;

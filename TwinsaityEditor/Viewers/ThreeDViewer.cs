@@ -46,7 +46,7 @@ namespace TwinsaityEditor
         protected static readonly float indicator_size = 0.5f;
         protected static Matrix3 identity_mat = Matrix3.Identity;
 
-        protected VertexBufferData[] vtx;
+        protected List<VertexBufferData> vtx;
 
         protected Dictionary<char, Vertex[]> charVtx;
         private Dictionary<char, int> charVtxOffs;
@@ -378,16 +378,16 @@ namespace TwinsaityEditor
         protected void InitVBO(int count, bool ForceCreate = false)
         {
             MakeCurrent();
-            vtx = new VertexBufferData[count];
+            vtx = new List<VertexBufferData>(count);
             for (int i = 0; i < count; ++i)
             {
                 if (i > 4 && !ForceCreate)
                 {
-                    vtx[i] = null;
+                    vtx.Add(null);
                 }
                 else
                 {
-                    vtx[i] = new VertexBufferData();
+                    vtx.Add(new VertexBufferData());
                 }
             }
         }
@@ -465,6 +465,25 @@ namespace TwinsaityEditor
             RenderChars();
             GL.DepthMask(true);
             GL.Enable(EnableCap.DepthTest);
+        }
+
+        protected int LoadTexture(ref Bitmap data, int quality = 0, bool flip_y = false)
+        {
+            var bitmapBits = data.LockBits(new Rectangle(0, 0, data.Width, data.Height),
+                    System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+            var texture = GL.GenTexture();
+            GL.BindTexture(TextureTarget.Texture2D, texture);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, bitmapBits.Width, bitmapBits.Height, 0, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, bitmapBits.Scan0);
+            GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+            data.UnlockBits(bitmapBits);
+            GL.BindTexture(TextureTarget.Texture2D, 0);
+
+            return texture;
         }
 
         protected int LoadTextTexture(ref Bitmap text, int quality = 0, bool flip_y = false)
@@ -667,7 +686,7 @@ namespace TwinsaityEditor
             refresh.Dispose();
             if (vtx != null)
             {
-                for (int i = 0; i < vtx.Length; ++i)
+                for (int i = 0; i < vtx.Count; ++i)
                 {
                     if (vtx[i] != null)
                     {

@@ -55,8 +55,7 @@ namespace Twinsanity
             var vertexes = new List<VertexData>();
             const int VERT_DATA_INDEX = 3;
             for (int i = 0; i < data.Count;)
-            {
-
+            { 
                 var verts = (data[i][0].GetBinaryX() & 0xFF);
                 var fields = (data[i + 1][0].GetBinaryX() & 0xFF) / verts;
                 var scaleVec = data[i + 2][0];

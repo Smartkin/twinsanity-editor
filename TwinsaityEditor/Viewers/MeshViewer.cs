@@ -10,6 +10,7 @@ namespace TwinsaityEditor
     {
         private FileController targetFile;
         private ModelController mesh;
+        private RigidModelController rigid;
         private SkinController skin;
         private BlendSkinController bskin;
         private ModelXController meshX;
@@ -35,7 +36,21 @@ namespace TwinsaityEditor
             lighting = true;
             wire = false;
             Tag = pform;
-            InitVBO(1);
+            InitVBO(mesh.Data.SubModels.Count, true);
+            pform.Text = "Loading mesh...";
+            LoadMesh();
+            pform.Text = "Initializing...";
+        }
+        public MeshViewer(RigidModelController rigid, Form pform)
+        {
+            this.mesh = rigid.MainFile.MeshSection.GetItem<ModelController>(rigid.Data.MeshID);
+            this.rigid = rigid;
+            zFar = 50F;
+            file = mesh.MainFile;
+            lighting = true;
+            wire = false;
+            Tag = pform;
+            InitVBO(mesh.Data.SubModels.Count, true);
             pform.Text = "Loading mesh...";
             LoadMesh();
             pform.Text = "Initializing...";
@@ -175,7 +190,7 @@ namespace TwinsaityEditor
                 }
                 if (Visible_Models)
                 {
-                    for (int i = 0; i < model.Data.ModelIDs.Length; i++)
+                    for (int i = 0; i < vtx.Count - 2; i++)
                     {
                         vtx[i + 2].DrawAllElements(PrimitiveType.Triangles, flags);
                     }
@@ -183,7 +198,10 @@ namespace TwinsaityEditor
             }
             else
             {
-                vtx[0].DrawAllElements(PrimitiveType.Triangles, flags);
+                for (int i = 0; i < vtx.Count; i++)
+                {
+                    vtx[i].DrawAllElements(PrimitiveType.Triangles, flags);
+                }
             }
 
             if (lighting)
@@ -204,7 +222,7 @@ namespace TwinsaityEditor
                     }
                     if (Visible_Models)
                     {
-                        for (int i = 0; i < model.Data.ModelIDs.Length; i++)
+                        for (int i = 0; i < vtx.Count - 2; i++)
                         {
                             vtx[i + 2].DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.None);
                         }
@@ -212,7 +230,10 @@ namespace TwinsaityEditor
                 }
                 else
                 {
-                    vtx[0].DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.None);
+                    for (int i = 0; i < vtx.Count; i++)
+                    {
+                        vtx[i].DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.None);
+                    }
                 }
                 GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
             }
@@ -263,19 +284,31 @@ namespace TwinsaityEditor
         {
             mesh.LoadMeshData();
             float min_x = float.MaxValue, min_y = float.MaxValue, min_z = float.MaxValue, max_x = float.MinValue, max_y = float.MinValue, max_z = float.MinValue;
-            foreach (var v in mesh.Vertices)
+            foreach (var list in mesh.Vertices)
             {
-                min_x = Math.Min(min_x, v.Pos.X);
-                min_y = Math.Min(min_y, v.Pos.Y);
-                min_z = Math.Min(min_z, v.Pos.Z);
-                max_x = Math.Max(max_x, v.Pos.X);
-                max_y = Math.Max(max_y, v.Pos.Y);
-                max_z = Math.Max(max_z, v.Pos.Z);
+                foreach (var v in list)
+                {
+                    min_x = Math.Min(min_x, v.Pos.X);
+                    min_y = Math.Min(min_y, v.Pos.Y);
+                    min_z = Math.Min(min_z, v.Pos.Z);
+                    max_x = Math.Max(max_x, v.Pos.X);
+                    max_y = Math.Max(max_y, v.Pos.Y);
+                    max_z = Math.Max(max_z, v.Pos.Z);
+                }
             }
-            vtx[0].Vtx = mesh.Vertices;
-            vtx[0].VtxInd = mesh.Indices;
+            for (int i = 0; i < mesh.Vertices.Count; i++)
+            {
+                vtx[i].Vtx = mesh.Vertices[i];
+                vtx[i].VtxInd = mesh.Indices[i];
+                if (this is ModelViewer rigidViewer)
+                {
+                    rigidViewer.LoadTexture(rigid, file, vtx[i], i);
+                }
+                UpdateVBO(i);
+            }
+            
             zFar = Math.Max(zFar, Math.Max(max_x - min_x, Math.Max(max_y - min_y, max_z - min_z)));
-            UpdateVBO(0);
+            
         }
 
         public void LoadSkin()
@@ -594,30 +627,38 @@ namespace TwinsaityEditor
 
                 mesh.LoadMeshData();
 
-                Vertex[] vbuffer = new Vertex[mesh.Vertices.Length];
+                
 
-                for (int v = 0; v < mesh.Vertices.Length; v++)
+                for (int v = 0; v < mesh.Vertices.Count; v++)
                 {
-                    vbuffer[v] = mesh.Vertices[v];
-                    Vector4 targetPos = new Vector4(mesh.Vertices[v].Pos.X, mesh.Vertices[v].Pos.Y, mesh.Vertices[v].Pos.Z, 1);
+                    Vertex[] vbuffer = new Vertex[mesh.Vertices[v].Length];
+                    for (int k = 0; k < mesh.Vertices[v].Length; k++)
+                    {
+                        vbuffer[k] = mesh.Vertices[v][k];
+                        Vector4 targetPos = new Vector4(mesh.Vertices[v][k].Pos.X, mesh.Vertices[v][k].Pos.Y, mesh.Vertices[v][k].Pos.Z, 1);
 
-                    targetPos *= tempRot;
+                        targetPos *= tempRot;
 
-                    mesh.Vertices[v].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+                        mesh.Vertices[v][k].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+
+                    }
+                    
+
+                    foreach (var p in mesh.Vertices[v])
+                    {
+                        min_x = Math.Min(min_x, p.Pos.X);
+                        min_y = Math.Min(min_y, p.Pos.Y);
+                        min_z = Math.Min(min_z, p.Pos.Z);
+                        max_x = Math.Max(max_x, p.Pos.X);
+                        max_y = Math.Max(max_y, p.Pos.Y);
+                        max_z = Math.Max(max_z, p.Pos.Z);
+                    }
+                    vtx[i + 2 + v].Vtx = mesh.Vertices[v];
+                    vtx[i + 2 + v].VtxInd = mesh.Indices[v];
+                    mesh.Vertices[v] = vbuffer;
                 }
 
-                foreach (var v in mesh.Vertices)
-                {
-                    min_x = Math.Min(min_x, v.Pos.X);
-                    min_y = Math.Min(min_y, v.Pos.Y);
-                    min_z = Math.Min(min_z, v.Pos.Z);
-                    max_x = Math.Max(max_x, v.Pos.X);
-                    max_y = Math.Max(max_y, v.Pos.Y);
-                    max_z = Math.Max(max_z, v.Pos.Z);
-                }
-                vtx[i + 2].Vtx = mesh.Vertices;
-                vtx[i + 2].VtxInd = mesh.Indices;
-                mesh.Vertices = vbuffer;
+                
                 UpdateVBO(i + 2);
 
             }

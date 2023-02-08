@@ -11,30 +11,37 @@ namespace TwinsaityEditor
         public int[] VtxCounts { get; set; }
         public uint[] VtxInd { get; set; }
         public Vertex[] Vtx { get; set; }
+        public BufferPointerFlags Flags { get; set; }
+        public int Texture { get; set; }
 
         public VertexBufferData()
         {
             ID = GL.GenBuffer();
             LastSize = 0;
+            Texture = -1;
         }
 
         public void DrawAll(PrimitiveType primitive_type, BufferPointerFlags flags)
         {
-            draw_func(0, primitive_type, flags);
+            draw_func(0, primitive_type, flags | Flags);
         }
 
         public void DrawAllElements(PrimitiveType primitive_type, BufferPointerFlags flags)
         {
-            draw_func(1, primitive_type, flags);
+            draw_func(1, primitive_type, flags | Flags);
         }
 
         public void DrawMulti(PrimitiveType primitive_type, BufferPointerFlags flags)
         {
-            draw_func(2, primitive_type, flags);
+            draw_func(2, primitive_type, flags | Flags);
         }
 
         private void draw_func(int func, PrimitiveType prim, BufferPointerFlags flags)
         {
+            if (Texture != -1)
+            {
+                GL.BindTexture(TextureTarget.Texture2D, Texture);
+            }
             GL.BindBuffer(BufferTarget.ArrayBuffer, ID);
             GL.VertexPointer(3, VertexPointerType.Float, Vertex.SizeOf, Vertex.OffsetOfPos);
             if ((flags & BufferPointerFlags.Normal) != 0)
@@ -71,6 +78,10 @@ namespace TwinsaityEditor
             if ((flags & BufferPointerFlags.Color) != 0)
                 GL.DisableClientState(ArrayCap.ColorArray);
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            if (Texture != -1)
+            {
+                GL.BindTexture(TextureTarget.Texture2D, 0);
+            }
         }
     }
 

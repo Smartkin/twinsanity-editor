@@ -33,7 +33,7 @@ namespace TwinsaityEditor
         protected override void RenderObjects()
         {
             //put all object rendering code here
-            for (int i = 0; i < vtx.Length; ++i)
+            for (int i = 0; i < vtx.Count; ++i)
             {
                 if (vtx[i].Vtx == null) continue;
                 var flags = lighting ? BufferPointerFlags.Normal : BufferPointerFlags.Default;
@@ -89,17 +89,24 @@ namespace TwinsaityEditor
                     continue;
                 ModelController mesh = mesh_sec.GetItem<ModelController>(model_sec.GetItem<RigidModelController>(sky.Data.MeshIDs[i]).Data.MeshID);
                 mesh.LoadMeshData();
-                foreach (var v in mesh.Vertices)
+                foreach (var list in mesh.Vertices)
                 {
-                    min_x = Math.Min(min_x, v.Pos.X);
-                    min_y = Math.Min(min_y, v.Pos.Y);
-                    min_z = Math.Min(min_z, v.Pos.Z);
-                    max_x = Math.Max(max_x, v.Pos.X);
-                    max_y = Math.Max(max_y, v.Pos.Y);
-                    max_z = Math.Max(max_z, v.Pos.Z);
+                    foreach (var v in list)
+                    {
+                        min_x = Math.Min(min_x, v.Pos.X);
+                        min_y = Math.Min(min_y, v.Pos.Y);
+                        min_z = Math.Min(min_z, v.Pos.Z);
+                        max_x = Math.Max(max_x, v.Pos.X);
+                        max_y = Math.Max(max_y, v.Pos.Y);
+                        max_z = Math.Max(max_z, v.Pos.Z);
+                    }
                 }
-                vtx[i].Vtx = mesh.Vertices;
-                vtx[i].VtxInd = mesh.Indices;
+                for (int j = 0; j < mesh.Vertices.Count; j++)
+                {
+                    vtx[i + j].Vtx = mesh.Vertices[j];
+                    vtx[i + j].VtxInd = mesh.Indices[j];
+                }
+                
                 UpdateVBO(i);
             }
             zFar = Math.Max(zFar, Math.Max(max_x - min_x, Math.Max(max_y - min_y, max_z - min_z)));
@@ -108,10 +115,10 @@ namespace TwinsaityEditor
         protected new void InitVBO(int count)
         {
             MakeCurrent();
-            vtx = new VertexBufferData[count];
+            vtx = new System.Collections.Generic.List<VertexBufferData>();
             for (int i = 0; i < count; ++i)
             {
-                vtx[i] = new VertexBufferData();
+                vtx.Add(new VertexBufferData());
             }
         }
 

@@ -1,11 +1,16 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using Twinsanity.VIF;
+using System.Linq;
 
 namespace Twinsanity
 {
     public class Model : TwinsItem
     {
+        public long ItemSize { get; set; }
+
         public List<SubModel> SubModels { get; set; } = new List<SubModel>();
 
         public override void Load(BinaryReader reader, int size)
@@ -16,130 +21,132 @@ namespace Twinsanity
             SubModels.Clear();
             for (int i = 0; i < count; i++)
             {
-                SubModel sub = new SubModel()
-                {
-                    VertexCount = reader.ReadInt32(),
-                    BlockSize = reader.ReadUInt32(),
-                    k = reader.ReadUInt16(),
-                    c = reader.ReadUInt16(),
-                    Null1 = reader.ReadUInt32(),
-                    Something = reader.ReadUInt32(),
-                    Null2 = reader.ReadUInt32()
-                };
-                int cnt = 0, offset = (int)(reader.BaseStream.Position - sk) - 12;
-                sub.Groups = new List<Group>();
-                while ((cnt < sub.VertexCount) && (reader.BaseStream.Position - sk < offset + sub.BlockSize))
-                {
-                    Group grp = new Group
-                    {
-                        SomeNum1 = reader.ReadUInt32(),
-                        VertexCount = reader.ReadByte(),
-                        Some80h = reader.ReadByte(),
-                        Null1 = reader.ReadUInt16(),
-                        SomeNum2 = reader.ReadUInt32(),
-                        SomeNum3 = reader.ReadUInt32(),
-                        Null2 = reader.ReadUInt32(),
-                        Signature1 = reader.ReadUInt32(),
-                        SomeShit1 = reader.ReadUInt32(),
-                        SomeShit2 = reader.ReadUInt32(),
-                        SomeShit3 = reader.ReadUInt32(),
-                        Signature2 = reader.ReadUInt32()
-                    };
-                    cnt += grp.VertexCount;
-                    uint head = reader.ReadUInt32();
-                    while (head != 0x14000000)
-                    {
-                        switch (head & 255)
-                        {
-                            case 3:
-                                {
-                                    grp.VertHead = head;
-                                    grp.Vertex = new Position3[grp.VertexCount];
-                                    for (int j = 0; j < grp.VertexCount; j++)
-                                    {
-                                        grp.Vertex[j].X = reader.ReadSingle();
-                                        grp.Vertex[j].Y = reader.ReadSingle();
-                                        grp.Vertex[j].Z = reader.ReadSingle();
-                                    }
+                var sub = new SubModel();
 
-                                    break;
-                                }
+                sub.VertexCount = (int)reader.ReadUInt32();
+                int vertexLen = reader.ReadInt32();
+                sub.VifCode = reader.ReadBytes(vertexLen);
+                int blobLen = reader.ReadInt32();
+                sub.UnusedBlob = reader.ReadBytes(blobLen);
 
-                            case 4:
-                                {
-                                    grp.VDataHead = head;
-                                    grp.VData = new VertexData[grp.VertexCount];
-                                    for (int j = 0; j < grp.VertexCount; j++)
-                                    {
-                                        grp.VData[j].R = reader.ReadByte();
-                                        grp.VData[j].PX = reader.ReadByte();
-                                        grp.VData[j].X = reader.ReadUInt16();
-                                        grp.VData[j].G = reader.ReadByte();
-                                        grp.VData[j].PY = reader.ReadByte();
-                                        grp.VData[j].Y = reader.ReadUInt16();
-                                        grp.VData[j].B = reader.ReadByte();
-                                        grp.VData[j].SomeFloat = reader.ReadSingle();
-                                        grp.VData[j].CONN = reader.ReadByte();
-                                        grp.VData[j].Null1 = reader.ReadUInt16();
-                                    }
-
-                                    break;
-                                }
-
-                            case 5:
-                                {
-                                    grp.UVHead = head;
-                                    grp.UV = new Position3[grp.VertexCount];
-                                    for (int j = 0; j < grp.VertexCount; j++)
-                                    {
-                                        grp.UV[j].X = reader.ReadSingle();
-                                        grp.UV[j].Y = reader.ReadSingle();
-                                        grp.UV[j].Z = reader.ReadSingle();
-                                    }
-
-                                    break;
-                                }
-
-                            case 6:
-                                {
-                                    grp.ShiteHead = head;
-                                    grp.Shit = new uint[grp.VertexCount];
-                                    for (int j = 0; j < grp.VertexCount; j++)
-                                        grp.Shit[j] = reader.ReadUInt32();
-                                    break;
-                                }
-                        }
-                        head = reader.ReadUInt32();
-                    }
-                    grp.EndSignature1 = head;
-                    grp.EndSignature2 = reader.ReadUInt32();
-                    grp.leftovers = new byte[] { };
-                    sub.Groups.Add(grp);
-                }
-                if (sub.Groups.Count > 0)
-                {
-                    long curPos = reader.BaseStream.Position;
-                    Group group = sub.Groups[sub.Groups.Count - 1];
-                    int leftoverSize = (int)(sub.BlockSize + offset - (reader.BaseStream.Position - sk));
-                    leftoverSize -= 4;
-                    reader.BaseStream.Position += leftoverSize;
-                    int paddingBytes = reader.ReadInt32();
-                    reader.BaseStream.Position = curPos;
-                    leftoverSize = (int)(sub.BlockSize + paddingBytes + offset - (reader.BaseStream.Position - sk));
-                    //Console.WriteLine("Padding: " + paddingBytes);
-
-                    group.leftovers = new byte[leftoverSize];
-                    group.leftovers = reader.ReadBytes(leftoverSize);
-                    sub.Groups[sub.Groups.Count - 1] = group;
-                }
+                sub.Vertexes = CalculateData(sub);
 
                 SubModels.Add(sub);
             }
+
+            ItemSize = size;
 
             //Console.WriteLine("end pos: " + (reader.BaseStream.Position - sk) + " target: " + size);
 
             //Remain = reader.ReadBytes((size) - (int)(reader.BaseStream.Position - sk));
 
+        }
+
+        public List<VertexData> CalculateData(SubModel model)
+        {
+            var vertexes = new List<VertexData>();
+
+            var interpreter = VIFInterpreter.InterpretCode(model.VifCode);
+            var data = interpreter.GetMem();
+            var Vertexes = new List<Vector4>();
+            var UVW = new List<Vector4>();
+            var EmitColor = new List<Vector4>();
+            var Normals = new List<Vector4>();
+            var Connection = new List<bool>();
+            for (var i = 0; i < data.Count;)
+            {
+                var verts = (data[i][0].GetBinaryX() & 0xFF);
+                var fields = 0;
+                while (data[i + 2 + fields].Where((v) => v != null).ToList().Count == verts)
+                {
+                    ++fields;
+                    if (i + fields + 2 >= data.Count)
+                    {
+                        break;
+                    }
+                }
+                Vertexes.AddRange(data[i + 2].Where((v) => v != null));
+                if (fields > 1)
+                {
+                    var uv_con = data[i + 3].Where((v) => v != null);
+                    foreach (var e in uv_con)
+                    {
+                        var conn = (e.GetBinaryW() & 0xFF00) >> 8;
+                        Connection.Add(conn == 128 ? false : true);
+                        Vector4 uv = new Vector4(e);
+                        uv.X *= uv.Z;
+                        uv.Y = 1 - uv.Y * uv.Z;
+                        UVW.Add(uv);
+                    }
+                }
+                if (fields > 2)
+                {
+                    foreach (var e in data[i + 4])
+                    {
+                        if (e == null)
+                            break;
+                        Normals.Add(new Vector4(e.X, e.Y, e.Z, 1.0f));
+                    }
+                }
+                if (fields > 3)
+                {
+                    foreach (var e in data[i + 5])
+                    {
+                        if (e == null)
+                            break;
+                        Vector4 emit = new Vector4(e);
+                        emit.X = (emit.X + 126.0f) / 256.0f;
+                        emit.Y = (emit.Y + 126.0f) / 256.0f;
+                        emit.Z = (emit.Z + 126.0f) / 256.0f;
+                        emit.W = (emit.W + 126.0f) / 256.0f;
+                        EmitColor.Add(emit);
+                    }
+                }
+                i += fields + 2;
+                TrimList(UVW, Vertexes.Count);
+                TrimList(EmitColor, Vertexes.Count);
+                TrimList(Normals, Vertexes.Count, new Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+            }
+
+            for (int i = 0; i < Vertexes.Count; i++)
+            {
+                var vertData = new VertexData();
+                vertData.X = Vertexes[i].X;
+                vertData.Y = Vertexes[i].Y;
+                vertData.Z = Vertexes[i].Z;
+                vertData.U = UVW[i].X;
+                vertData.V = UVW[i].Y;
+                vertData.R = EmitColor[i].X;
+                vertData.G = EmitColor[i].Y;
+                vertData.B = EmitColor[i].Z;
+                vertData.A = EmitColor[i].W;
+                vertData.Conn = Connection[i];
+                vertexes.Add(vertData);
+            }
+
+            return vertexes;
+        }
+
+        private void TrimList(List<Vector4> list, Int32 desiredLength, Vector4 defaultValue = null)
+        {
+            if (list != null)
+            {
+                if (list.Count > desiredLength)
+                {
+                    list.RemoveRange(desiredLength, list.Count - desiredLength);
+                }
+                while (list.Count < desiredLength)
+                {
+                    if (defaultValue != null)
+                    {
+                        list.Add(new Vector4(defaultValue));
+                    }
+                    else
+                    {
+                        list.Add(new Vector4());
+                    }
+                }
+            }
         }
 
         public override void Save(BinaryWriter writer)
@@ -149,113 +156,21 @@ namespace Twinsanity
             {
                 var sub = SubModels[i];
                 writer.Write(sub.VertexCount);
-                writer.Write(sub.BlockSize);
-                writer.Write(sub.k);
-                writer.Write(sub.c);
-                writer.Write(sub.Null1);
-                writer.Write(sub.Something);
-                writer.Write(sub.Null2);
-                for (int a = 0; a < sub.Groups.Count; ++a)
-                {
-                    var group = sub.Groups[a];
-                    writer.Write(group.SomeNum1);
-                    writer.Write(group.VertexCount);
-                    writer.Write(group.Some80h);
-                    writer.Write(group.Null1);
-                    writer.Write(group.SomeNum2);
-                    writer.Write(group.SomeNum3);
-                    writer.Write(group.Null2);
-                    writer.Write(group.Signature1);
-                    writer.Write(group.SomeShit1);
-                    writer.Write(group.SomeShit2);
-                    writer.Write(group.SomeShit3);
-                    writer.Write(group.Signature2);
-                    if (group.VertHead > 0) //vertex positions
-                    {
-                        writer.Write(group.VertHead);
-                        for (int j = 0; j < group.VertexCount; ++j)
-                        {
-                            writer.Write(group.Vertex[j].X);
-                            writer.Write(group.Vertex[j].Y);
-                            writer.Write(group.Vertex[j].Z);
-                        }
-                    }
-                    if (group.VDataHead > 0) //vertex data
-                    {
-                        writer.Write(group.VDataHead);
-                        for (int j = 0; j < group.VertexCount; ++j)
-                        {
-                            writer.Write(group.VData[j].R);
-                            writer.Write(group.VData[j].PX);
-                            writer.Write(group.VData[j].X);
-                            writer.Write(group.VData[j].G);
-                            writer.Write(group.VData[j].PY);
-                            writer.Write(group.VData[j].Y);
-                            writer.Write(group.VData[j].B);
-                            writer.Write(group.VData[j].SomeFloat);
-                            writer.Write(group.VData[j].CONN);
-                            writer.Write(group.VData[j].Null1);
-                        }
-                    }
-                    if (group.UVHead > 0) //textures?
-                    {
-                        writer.Write(group.UVHead);
-                        for (int j = 0; j < group.VertexCount; ++j)
-                        {
-                            writer.Write(group.UV[j].X);
-                            writer.Write(group.UV[j].Y);
-                            writer.Write(group.UV[j].Z);
-                        }
-                    }
-                    if (group.ShiteHead > 0) //lighting?
-                    {
-                        writer.Write(group.ShiteHead);
-                        for (int j = 0; j < group.VertexCount; ++j)
-                            writer.Write(group.Shit[j]);
-                    }
-                    writer.Write(group.EndSignature1);
-                    writer.Write(group.EndSignature2);
-                }
-                if (sub.Groups.Count > 0)
-                {
-                    writer.Write(sub.Groups[sub.Groups.Count - 1].leftovers);
-                }
+                writer.Write(sub.VifCode.Length);
+                writer.Write(sub.VifCode);
+                writer.Write(sub.UnusedBlob.Length);
+                writer.Write(sub.UnusedBlob);
             }
         }
 
         protected override int GetSize()
         {
-            int size = 4;
-            foreach (var i in SubModels)
-            {
-                size += 24;
-                foreach (var j in i.Groups)
-                {
-                    size += 48;
-                    if (j.VertHead > 0)
-                    {
-                        size += 4 + 12 * j.VertexCount;
-                    }
-                    if (j.VDataHead > 0)
-                    {
-                        size += 4 + 16 * j.VertexCount;
-                    }
-                    if (j.UVHead > 0)
-                    {
-                        size += 4 + 12 * j.VertexCount;
-                    }
-                    if (j.ShiteHead > 0)
-                    {
-                        size += 4 + 4 * j.VertexCount;
-                    }
-                    size += j.leftovers.Length;
-                }
-            }
-            return size;
+            return (int)ItemSize;
         }
 
-        public void Import(RawData[][] RawData)
+        public void Import()
         {
+            throw new NotImplementedException();
             /*
             SubModels = RawData.Length;
             Array.Resize(ref SubModel, SubModels);
@@ -333,17 +248,11 @@ namespace Twinsanity
                     int vertexcount = 0, polycount = 0;
                     for (int i = 0; i < SubModels.Count; ++i)
                     {
-                        for (int a = 0; a < SubModels[i].Groups.Count; ++a)
+                        vertexcount += SubModels[i].Vertexes.Count;
+                        for (int f = 0; f < SubModels[i].Vertexes.Count - 2; ++f)
                         {
-                            if (SubModels[i].Groups[a].VertHead > 0 && SubModels[i].Groups[a].VDataHead > 0)
-                            {
-                                vertexcount += SubModels[i].Groups[a].VertexCount;
-                                for (int f = 0; f < SubModels[i].Groups[a].VertexCount - 2; ++f)
-                                {
-                                    if (SubModels[i].Groups[a].VData[f + 2].CONN != 128)
-                                        ++polycount;
-                                }
-                            }
+                            if (SubModels[i].Vertexes[f + 2].Conn)
+                                ++polycount;
                         }
                     }
                     ply.WriteLine("ply");
@@ -360,40 +269,30 @@ namespace Twinsanity
                     ply.WriteLine("end_header");
                     foreach (var s in SubModels) //vertices
                     {
-                        foreach (var g in s.Groups)
+                        foreach (var g in s.Vertexes)
                         {
-                            if (g.VertHead > 0 && g.VDataHead > 0)
-                                for (int i = 0; i < g.VertexCount; ++i)
-                                {
-                                    byte red, green, blue;
-                                    red = g.VData[i].R;
-                                    green = g.VData[i].G;
-                                    blue = g.VData[i].B;
-                                    //if (g.ShiteHead > 0)
-                                    //{
-                                    //    red = (byte)((g.Shit[i] & 0xFF00) >> 8);
-                                    //    green = (byte)((g.Shit[i] & 0xFF0000) >> 16);
-                                    //    blue = (byte)((g.Shit[i] & 0xFF000000) >> 24);
-                                    //}
-                                    ply.WriteLine("{0} {1} {2} {3} {4} {5}", -g.Vertex[i].X, g.Vertex[i].Y, g.Vertex[i].Z, red, green, blue);
-                                }
+                            byte red, green, blue;
+                            red = (byte)(g.R * 256);
+                            green = (byte)(g.G * 256);
+                            blue = (byte)(g.B * 256);
+                            //if (g.ShiteHead > 0)
+                            //{
+                            //    red = (byte)((g.Shit[i] & 0xFF00) >> 8);
+                            //    green = (byte)((g.Shit[i] & 0xFF0000) >> 16);
+                            //    blue = (byte)((g.Shit[i] & 0xFF000000) >> 24);
+                            //}
+                            ply.WriteLine("{0} {1} {2} {3} {4} {5}", -g.X, g.Y, g.Z, red, green, blue);
                         }
                     }
                     vertexcount = 0;
                     foreach (var s in SubModels) //polys
                     {
-                        foreach (var g in s.Groups)
+                        for (int i = 0; i < s.Vertexes.Count - 2; ++i)
                         {
-                            if (g.VertHead > 0 && g.VDataHead > 0)
-                            {
-                                for (int i = 0; i < g.VertexCount - 2; ++i)
-                                {
-                                    if (g.VData[i + 2].CONN != 128)
-                                        ply.WriteLine("3 {0} {1} {2}", vertexcount + ((i & 0x1) == 0x1 ? i + 1 : i + 0), vertexcount + ((i & 0x1) == 0x1 ? i + 0 : i + 1), vertexcount + ((i & 0x1) == 0x1 ? i + 2 : i + 2));
-                                }
-                                vertexcount += g.VertexCount;
-                            }
+                            if (s.Vertexes[i].Conn)
+                                ply.WriteLine("3 {0} {1} {2}", vertexcount + ((i & 0x1) == 0x1 ? i + 1 : i + 0), vertexcount + ((i & 0x1) == 0x1 ? i + 0 : i + 1), vertexcount + ((i & 0x1) == 0x1 ? i + 2 : i + 2));
                         }
+                        vertexcount += s.Vertexes.Count;
                     }
                     return stream.ToArray();
                 }
@@ -405,59 +304,16 @@ namespace Twinsanity
         {
             // Primary Header
             public int VertexCount;
-            public uint BlockSize;
-            public ushort k, c;
-            public uint Null1;
-            public uint Something;
-            public uint Null2;
-            public List<Group> Groups;
-        }
-        public struct Group
-        {
-            public uint SomeNum1;
-            public byte VertexCount;
-            public byte Some80h;
-            public ushort Null1;
-            public uint SomeNum2;
-            public uint SomeNum3;
-            public uint Null2;
-            public uint Signature1;
-            public uint SomeShit1;
-            public uint SomeShit2;
-            public uint SomeShit3;
-            public uint Signature2;
-            public uint VertHead;
-            public Position3[] Vertex;
-            public uint VDataHead;
-            public VertexData[] VData;
-            public uint UVHead;
-            public Position3[] UV;
-            public uint ShiteHead;
-            public uint[] Shit;
-            public uint EndSignature1;
-            public uint EndSignature2;
-            public byte[] leftovers;
-        }
-        public struct Position3
-        {
-            public float X, Y, Z;
+            public Byte[] VifCode { get; set; }
+            public Byte[] UnusedBlob { get; set; }
+            public List<VertexData> Vertexes;
         }
         public struct VertexData
         {
-            public byte R, G, B;
-            public byte PX, PY;
-            public ushort X, Y;
-            public float SomeFloat;
-            public byte CONN;
-            public ushort Null1;
-        }
-        public struct RawData
-        {
             public float X, Y, Z;
-            public float U, V, W;
-            public bool CONN;
-            public uint Diffuse;
-            public float Nx, Ny, Nz;
+            public float U, V;
+            public float R, G, B, A;
+            public bool Conn;
         }
         #endregion
     }
