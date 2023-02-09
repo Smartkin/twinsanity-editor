@@ -120,7 +120,14 @@ namespace TwinsaityEditor
                 BSkinActive = true;
             }
             FullModelActive = true;
-            LoadOGI_Xbox();
+            if (targetFile.Data.Type == TwinsFile.FileType.RM2)
+            {
+                LoadOGI_PS2();
+            }
+            else if (targetFile.Data.Type == TwinsFile.FileType.RMX)
+            {
+                LoadOGI_Xbox();
+            }
             pform.Text = "Initializing...";
         }
 
@@ -130,7 +137,7 @@ namespace TwinsaityEditor
 
             if (FullModelActive)
             {
-                if (BSkinActive)
+                if (BSkinActive && targetFile.Data.Type == TwinsFile.FileType.RMX)
                 {
                     RenderString2D($"V Model {Visible_Models}\nB Skin {Visible_Skin}\nN Blend Skin {Visible_BSkin}\nZ BlendShape {TargetBlendShape}/{bskinX.Data.BlendShapeCount}\nL Lights\nX Wireframe", 0, Height, 12, System.Drawing.Color.White, TextAnchor.BotLeft);
                 }
@@ -139,7 +146,7 @@ namespace TwinsaityEditor
                     RenderString2D($"V Model {Visible_Models}\nB Skin {Visible_Skin}\nL Lights\nX Wireframe", 0, Height, 12, System.Drawing.Color.White, TextAnchor.BotLeft);
                 }
             }
-            else if (BSkinActive)
+            else if (BSkinActive && targetFile.Data.Type == TwinsFile.FileType.RMX)
             {
                 RenderString2D($"Z BlendShape {TargetBlendShape}/{bskinX.Data.BlendShapeCount}\nL Lights\nX Wireframe", 0, Height, 12, System.Drawing.Color.White, TextAnchor.BotLeft);
             }
@@ -484,6 +491,133 @@ namespace TwinsaityEditor
                 vtx[i + 2].Vtx = meshX.Vertices;
                 vtx[i + 2].VtxInd = meshX.Indices;
                 meshX.Vertices = vbuffer;
+                UpdateVBO(i + 2);
+
+            }
+
+            zFar = Math.Max(zFar, Math.Max(max_x - min_x, Math.Max(max_y - min_y, max_z - min_z)));
+        }
+
+        public void LoadOGI_PS2()
+        {
+            float min_x = float.MaxValue, min_y = float.MaxValue, min_z = float.MaxValue, max_x = float.MinValue, max_y = float.MinValue, max_z = float.MinValue;
+
+            if (model.Data.BlendSkinID != 0)
+            {
+                SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(5);
+                foreach (BlendSkin mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(5).Records)
+                {
+                    if (mod.ID == model.Data.BlendSkinID)
+                    {
+                        bskin = mesh_sec.GetItem<BlendSkinController>(mod.ID);
+                    }
+                }
+
+                bskin.LoadMeshData();
+                foreach (var v in bskin.Vertices)
+                {
+                    min_x = Math.Min(min_x, v.Pos.X);
+                    min_y = Math.Min(min_y, v.Pos.Y);
+                    min_z = Math.Min(min_z, v.Pos.Z);
+                    max_x = Math.Max(max_x, v.Pos.X);
+                    max_y = Math.Max(max_y, v.Pos.Y);
+                    max_z = Math.Max(max_z, v.Pos.Z);
+                }
+                vtx[0].Vtx = bskin.Vertices;
+                vtx[0].VtxInd = bskin.Indices;
+                UpdateVBO(0);
+            }
+            if (model.Data.SkinID != 0)
+            {
+                SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(4);
+                foreach (Skin mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(4).Records)
+                {
+                    if (mod.ID == model.Data.SkinID)
+                    {
+                        skin = mesh_sec.GetItem<SkinController>(mod.ID);
+                    }
+                }
+
+                skin.LoadMeshData();
+                foreach (var v in skin.Vertices)
+                {
+                    min_x = Math.Min(min_x, v.Pos.X);
+                    min_y = Math.Min(min_y, v.Pos.Y);
+                    min_z = Math.Min(min_z, v.Pos.Z);
+                    max_x = Math.Max(max_x, v.Pos.X);
+                    max_y = Math.Max(max_y, v.Pos.Y);
+                    max_z = Math.Max(max_z, v.Pos.Z);
+                }
+                vtx[1].Vtx = skin.Vertices;
+                vtx[1].VtxInd = skin.Indices;
+                UpdateVBO(1);
+            }
+            for (int i = 0; i < model.Data.ModelIDs.Length; i++)
+            {
+                SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(2);
+                foreach (RigidModel mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
+                {
+                    if (mod.ID == model.Data.ModelIDs[i].ModelID)
+                    {
+                        uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(mod.ID).MeshID;
+                        mesh = mesh_sec.GetItem<ModelController>(meshID);
+                    }
+                }
+
+                Matrix4 tempRot = Matrix4.Identity;
+
+                // Rotation
+                tempRot.M11 = -model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[0].X;
+                tempRot.M12 = -model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[1].X;
+                tempRot.M13 = -model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[2].X;
+
+                tempRot.M21 = model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[0].Y;
+                tempRot.M22 = model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[1].Y;
+                tempRot.M23 = model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[2].Y;
+
+                tempRot.M31 = model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[0].Z;
+                tempRot.M32 = model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[1].Z;
+                tempRot.M33 = model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[2].Z;
+
+                tempRot.M14 = model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[0].W;
+                tempRot.M24 = model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[1].W;
+                tempRot.M34 = model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[2].W;
+
+                // Position
+                tempRot.M41 = model.Data.Type1[model.Data.ModelIDs[i].ID].Matrix[1].X;
+                tempRot.M42 = model.Data.Type1[model.Data.ModelIDs[i].ID].Matrix[1].Y;
+                tempRot.M43 = model.Data.Type1[model.Data.ModelIDs[i].ID].Matrix[1].Z;
+                tempRot.M44 = model.Data.Type1[model.Data.ModelIDs[i].ID].Matrix[1].W;
+
+                // Adjusted for OpenTK
+                tempRot *= Matrix4.CreateScale(-1, 1, 1);
+
+                mesh.LoadMeshData();
+
+                Vertex[] vbuffer = new Vertex[mesh.Vertices.Length];
+
+                for (int v = 0; v < mesh.Vertices.Length; v++)
+                {
+                    vbuffer[v] = mesh.Vertices[v];
+                    Vector4 targetPos = new Vector4(mesh.Vertices[v].Pos.X, mesh.Vertices[v].Pos.Y, mesh.Vertices[v].Pos.Z, 1);
+
+                    targetPos *= tempRot;
+
+                    mesh.Vertices[v].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+                }
+
+                foreach (var v in mesh.Vertices)
+                {
+                    min_x = Math.Min(min_x, v.Pos.X);
+                    min_y = Math.Min(min_y, v.Pos.Y);
+                    min_z = Math.Min(min_z, v.Pos.Z);
+                    max_x = Math.Max(max_x, v.Pos.X);
+                    max_y = Math.Max(max_y, v.Pos.Y);
+                    max_z = Math.Max(max_z, v.Pos.Z);
+                }
+                vtx[i + 2].Vtx = mesh.Vertices;
+                vtx[i + 2].VtxInd = mesh.Indices;
+                mesh.Vertices = vbuffer;
                 UpdateVBO(i + 2);
 
             }
