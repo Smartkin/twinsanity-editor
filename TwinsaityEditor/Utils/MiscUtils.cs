@@ -13,6 +13,8 @@ namespace TwinsaityEditor.Utils
         public static bool Pref_EnableAnyObjectNames = true;
 
         private static readonly Dictionary<uint, int> TextureCache = new Dictionary<uint, int>();
+        private static int[] TexturesBuffer;
+        private static int textureIndex;
 
         public static string TruncateObjectName(string obj_name, ushort ObjectID, string prefix, string suffix)
         {
@@ -39,7 +41,12 @@ namespace TwinsaityEditor.Utils
 
         public static void ClearTextureCache()
         {
+            if (TexturesBuffer == null) return;
+
             TextureCache.Clear();
+            GL.DeleteTextures(TexturesBuffer.Length, TexturesBuffer);
+            TexturesBuffer = null;
+            textureIndex = 0;
         }
 
         public static int LoadTexture(ref Bitmap data, int quality = 0, bool flip_y = false)
@@ -47,18 +54,27 @@ namespace TwinsaityEditor.Utils
             var bitmapBits = data.LockBits(new Rectangle(0, 0, data.Width, data.Height),
                     System.Drawing.Imaging.ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
-            var texture = GL.GenTexture();
-            GL.BindTexture(TextureTarget.Texture2D, texture);
+            if (TexturesBuffer == null)
+            {
+                TexturesBuffer = new int[256];
+                GL.GenTextures(TexturesBuffer.Length, TexturesBuffer);
+            }
+            GL.BindTexture(TextureTarget.Texture2D, TexturesBuffer[textureIndex]);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.Repeat);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, bitmapBits.Width, bitmapBits.Height, 0, OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, bitmapBits.Scan0);
-            GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, bitmapBits.Width, bitmapBits.Height, 0, PixelFormat.Bgra, PixelType.UnsignedByte, bitmapBits.Scan0);
+            //GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
             data.UnlockBits(bitmapBits);
             GL.BindTexture(TextureTarget.Texture2D, 0);
 
-            return texture;
+            return TexturesBuffer[textureIndex++];
+        }
+
+        public static void LoadTexture(uint material, FileController file, VertexBufferData vtx)
+        {
+            LoadTexture(new uint[1] {material}, file, vtx, 0);
         }
 
         public static void LoadTexture(uint[] materials, FileController file, VertexBufferData vtx, int index)
@@ -71,7 +87,7 @@ namespace TwinsaityEditor.Utils
                 return;
             }
             var secId = 11U;
-            if (file.Data.Type == TwinsFile.FileType.SM2)
+            if (file.Data.Type == TwinsFile.FileType.SM2 || file.Data.Type == TwinsFile.FileType.SMX)
             {
                 secId = 6U;
             }
@@ -79,23 +95,53 @@ namespace TwinsaityEditor.Utils
             var texSec = file.Data.GetItem<TwinsSection>(secId).GetItem<TwinsSection>(0);
             if (matSec.ContainsItem(material))
             {
-                var mat = matSec.GetItem<Material>(material);
-                Texture texture = null;
-                foreach (var shader in mat.Shaders)
+                if (file.Data.Type == TwinsFile.FileType.RM2 || file.Data.Type == TwinsFile.FileType.SM2)
                 {
-                    if (shader.TxtMapping == TwinsShader.TextureMapping.ON)
+                    var mat = matSec.GetItem<Material>(material);
+                    Texture texture = null;
+                    foreach (var shader in mat.Shaders)
                     {
-                        texture = texSec.GetItem<Texture>(shader.TextureId);
-                        break;
+                        if (shader.TxtMapping == TwinsShader.TextureMapping.ON)
+                        {
+                            texture = texSec.GetItem<Texture>(shader.TextureId);
+                            break;
+                        }
+                    }
+                    if (texture != null)
+                    {
+                        var bmp = texture.GetBmp();
+                        var texId = LoadTexture(ref bmp);
+                        if (!TextureCache.ContainsKey(material))
+                        {
+                            TextureCache.Add(material, texId);
+                        }
+                        vtx.Texture = texId;
+                        vtx.Flags |= BufferPointerFlags.TexCoord;
                     }
                 }
-                if (texture != null)
+                else if (file.Data.Type == TwinsFile.FileType.RMX || file.Data.Type == TwinsFile.FileType.SMX)
                 {
-                    var bmp = texture.GetBmp();
-                    var texId = LoadTexture(ref bmp);
-                    TextureCache.Add(material, texId);
-                    vtx.Texture = texId;
-                    vtx.Flags |= BufferPointerFlags.TexCoord;
+                    var mat = matSec.GetItem<Material>(material);
+                    TextureX texture = null;
+                    foreach (var shader in mat.Shaders)
+                    {
+                        if (shader.TxtMapping == TwinsShader.TextureMapping.ON)
+                        {
+                            texture = texSec.GetItem<TextureX>(shader.TextureId);
+                            break;
+                        }
+                    }
+                    if (texture != null)
+                    {
+                        var bmp = texture.GetBmp();
+                        var texId = LoadTexture(ref bmp);
+                        if (!TextureCache.ContainsKey(material))
+                        {
+                            TextureCache.Add(material, texId);
+                        }
+                        vtx.Texture = texId;
+                        vtx.Flags |= BufferPointerFlags.TexCoord;
+                    }
                 }
             }
         }

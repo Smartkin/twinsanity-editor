@@ -40,11 +40,13 @@ namespace TwinsaityEditor
 
         private void draw_func(int func, PrimitiveType prim, BufferPointerFlags flags)
         {
+            
+            GL.BindBuffer(BufferTarget.ArrayBuffer, ID);
             if (Texture != -1 && Textured)
             {
+                GL.Enable(EnableCap.Texture2D);
                 GL.BindTexture(TextureTarget.Texture2D, Texture);
             }
-            GL.BindBuffer(BufferTarget.ArrayBuffer, ID);
             GL.VertexPointer(3, VertexPointerType.Float, Vertex.SizeOf, Vertex.OffsetOfPos);
             if ((flags & BufferPointerFlags.Normal) != 0)
             {
@@ -76,6 +78,7 @@ namespace TwinsaityEditor
                     GL.MultiDrawArrays(prim, VtxOffs, VtxCounts, VtxCounts.Length);
                     break;
             }
+            GL.Flush();
             if ((flags & BufferPointerFlags.Normal) != 0)
                 GL.DisableClientState(ArrayCap.NormalArray);
             if ((flags & BufferPointerFlags.TexCoord) != 0)

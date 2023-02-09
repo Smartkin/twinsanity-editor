@@ -80,7 +80,7 @@ namespace TwinsaityEditor
                         ++refIndex;
                     }
                     Color col = Color.FromArgb(model.Vertexes[j].A, model.Vertexes[j].R, model.Vertexes[j].G, model.Vertexes[j].B);
-                    vtx.Add(new Vertex(new Vector3(model.Vertexes[j].X, model.Vertexes[j].Y, model.Vertexes[j].Z),
+                    vtx.Add(new Vertex(new Vector3(-model.Vertexes[j].X, model.Vertexes[j].Y, model.Vertexes[j].Z),
                             new Vector3(0, 0, 0), new Vector2(model.Vertexes[j].U, 1 - model.Vertexes[j].V),
                             col));
                 }

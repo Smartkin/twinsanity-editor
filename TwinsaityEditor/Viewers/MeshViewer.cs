@@ -52,7 +52,7 @@ namespace TwinsaityEditor
             this.rigid = rigid;
             zFar = 50F;
             file = mesh.MainFile;
-            lighting = true;
+            lighting = false;
             wire = false;
             Tag = pform;
             InitVBO(mesh.Data.SubModels.Count, true);
@@ -65,7 +65,7 @@ namespace TwinsaityEditor
             this.skin = mesh;
             file = mesh.MainFile;
             zFar = 50F;
-            lighting = true;
+            lighting = false;
             wire = false;
             Tag = pform;
             InitVBO(mesh.Data.SubModels.Count, true);
@@ -78,7 +78,7 @@ namespace TwinsaityEditor
             this.bskin = mesh;
             zFar = 50F;
             file = mesh.MainFile;
-            lighting = true;
+            lighting = false;
             wire = false;
             Tag = pform;
             InitVBO(mesh.Data.Models.Length, true);
@@ -105,6 +105,7 @@ namespace TwinsaityEditor
             //initialize variables here
             this.skinX = mesh;
             file = mesh.MainFile;
+            targetFile = file;
             zFar = 50F;
             lighting = true;
             wire = false;
@@ -119,11 +120,12 @@ namespace TwinsaityEditor
             //initialize variables here
             this.bskinX = mesh;
             file = mesh.MainFile;
+            targetFile = file;
             zFar = 50F;
             lighting = true;
             wire = false;
             Tag = pform;
-            InitVBO(1);
+            InitVBO(mesh.Data.SubModels.Count);
             pform.Text = "Loading mesh...";
             BSkinActive = true;
             LoadBSkinX();
@@ -136,7 +138,7 @@ namespace TwinsaityEditor
             file = mesh.MainFile;
             this.model = mesh;
             zFar = 50F;
-            lighting = true;
+            lighting = false;
             wire = false;
             Tag = pform;
             ModelController m;
@@ -426,10 +428,7 @@ namespace TwinsaityEditor
             {
                 vtx[i].Vtx = bskin.Vertices[i];
                 vtx[i].VtxInd = bskin.Indices[i];
-                Utils.TextUtils.LoadTexture(bskin.Data.Models.Select((subModel) =>
-                {
-                    return subModel.MaterialID;
-                }).ToArray(), file, vtx[i], i);
+                Utils.TextUtils.LoadTexture(bskin.Data.Models[i].MaterialID, file, vtx[i]);
                 UpdateVBO(i);
             }
             zFar = Math.Max(zFar, Math.Max(max_x - min_x, Math.Max(max_y - min_y, max_z - min_z)));
@@ -475,25 +474,36 @@ namespace TwinsaityEditor
         {
             bskinX.LoadMeshData();
             float min_x = float.MaxValue, min_y = float.MaxValue, min_z = float.MaxValue, max_x = float.MinValue, max_y = float.MinValue, max_z = float.MinValue;
-            foreach (var v in bskinX.Vertices)
+            foreach (var list in bskinX.Vertices)
             {
-                min_x = Math.Min(min_x, v.Pos.X);
-                min_y = Math.Min(min_y, v.Pos.Y);
-                min_z = Math.Min(min_z, v.Pos.Z);
-                max_x = Math.Max(max_x, v.Pos.X);
-                max_y = Math.Max(max_y, v.Pos.Y);
-                max_z = Math.Max(max_z, v.Pos.Z);
+                foreach (var v in list)
+                {
+                    min_x = Math.Min(min_x, v.Pos.X);
+                    min_y = Math.Min(min_y, v.Pos.Y);
+                    min_z = Math.Min(min_z, v.Pos.Z);
+                    max_x = Math.Max(max_x, v.Pos.X);
+                    max_y = Math.Max(max_y, v.Pos.Y);
+                    max_z = Math.Max(max_z, v.Pos.Z);
+                }
             }
-            vtx[0].Vtx = bskinX.Vertices;
-            vtx[0].VtxInd = bskinX.Indices;
+            for (int i = 0; i < bskinX.Vertices.Count; i++)
+            {
+                vtx[i].Vtx = bskinX.Vertices[i];
+                vtx[i].VtxInd = bskinX.Indices[i];
+                Utils.TextUtils.LoadTexture(bskinX.Data.SubModels.Select((subModel) =>
+                {
+                    return subModel.MaterialID;
+                }).ToArray(), file, vtx[i], i);
+                UpdateVBO(i);
+            }
             zFar = Math.Max(zFar, Math.Max(max_x - min_x, Math.Max(max_y - min_y, max_z - min_z)));
-            UpdateVBO(0);
         }
 
         public void LoadOGI_Xbox()
         {
             float min_x = float.MaxValue, min_y = float.MaxValue, min_z = float.MaxValue, max_x = float.MinValue, max_y = float.MinValue, max_z = float.MinValue;
 
+            var vtxIndex = 0;
             if (model.Data.BlendSkinID != 0)
             {
                 SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(5);
@@ -506,18 +516,29 @@ namespace TwinsaityEditor
                 }
 
                 bskinX.LoadMeshData();
-                foreach (var v in bskinX.Vertices)
+                foreach (var list in bskin.Vertices)
                 {
-                    min_x = Math.Min(min_x, v.Pos.X);
-                    min_y = Math.Min(min_y, v.Pos.Y);
-                    min_z = Math.Min(min_z, v.Pos.Z);
-                    max_x = Math.Max(max_x, v.Pos.X);
-                    max_y = Math.Max(max_y, v.Pos.Y);
-                    max_z = Math.Max(max_z, v.Pos.Z);
+                    foreach (var v in list)
+                    {
+                        min_x = Math.Min(min_x, v.Pos.X);
+                        min_y = Math.Min(min_y, v.Pos.Y);
+                        min_z = Math.Min(min_z, v.Pos.Z);
+                        max_x = Math.Max(max_x, v.Pos.X);
+                        max_y = Math.Max(max_y, v.Pos.Y);
+                        max_z = Math.Max(max_z, v.Pos.Z);
+                    }
                 }
-                vtx[0].Vtx = bskinX.Vertices;
-                vtx[0].VtxInd = bskinX.Indices;
-                UpdateVBO(0);
+                for (int i = 0; i < bskin.Vertices.Count; i++)
+                {
+                    vtx[vtxIndex].Vtx = bskin.Vertices[i];
+                    vtx[vtxIndex].VtxInd = bskin.Indices[i];
+                    Utils.TextUtils.LoadTexture(bskin.Data.Models.Select((subModel) =>
+                    {
+                        return subModel.MaterialID;
+                    }).ToArray(), file, vtx[vtxIndex], i);
+                    UpdateVBO(vtxIndex);
+                    vtxIndex++;
+                }
             }
             if (model.Data.SkinID != 0)
             {
@@ -540,9 +561,10 @@ namespace TwinsaityEditor
                     max_y = Math.Max(max_y, v.Pos.Y);
                     max_z = Math.Max(max_z, v.Pos.Z);
                 }
-                vtx[1].Vtx = skinX.Vertices;
-                vtx[1].VtxInd = skinX.Indices;
-                UpdateVBO(1);
+                vtx[vtxIndex].Vtx = skinX.Vertices;
+                vtx[vtxIndex].VtxInd = skinX.Indices;
+                UpdateVBO(vtxIndex);
+                vtxIndex++;
             }
             for (int i = 0; i < model.Data.ModelIDs.Length; i++)
             {
@@ -607,10 +629,10 @@ namespace TwinsaityEditor
                     max_y = Math.Max(max_y, v.Pos.Y);
                     max_z = Math.Max(max_z, v.Pos.Z);
                 }
-                vtx[i + 2].Vtx = meshX.Vertices;
-                vtx[i + 2].VtxInd = meshX.Indices;
+                vtx[i + vtxIndex].Vtx = meshX.Vertices;
+                vtx[i + vtxIndex].VtxInd = meshX.Indices;
                 meshX.Vertices = vbuffer;
-                UpdateVBO(i + 2);
+                UpdateVBO(i + vtxIndex);
 
             }
 
@@ -804,19 +826,29 @@ namespace TwinsaityEditor
                 bskinX.LoadMeshData_BlendShape((int)TargetBlendShape - 1);
             }
             float min_x = float.MaxValue, min_y = float.MaxValue, min_z = float.MaxValue, max_x = float.MinValue, max_y = float.MinValue, max_z = float.MinValue;
-            foreach (var v in bskinX.Vertices)
+            foreach (var list in bskinX.Vertices)
             {
-                min_x = Math.Min(min_x, v.Pos.X);
-                min_y = Math.Min(min_y, v.Pos.Y);
-                min_z = Math.Min(min_z, v.Pos.Z);
-                max_x = Math.Max(max_x, v.Pos.X);
-                max_y = Math.Max(max_y, v.Pos.Y);
-                max_z = Math.Max(max_z, v.Pos.Z);
+                foreach (var v in list)
+                {
+                    min_x = Math.Min(min_x, v.Pos.X);
+                    min_y = Math.Min(min_y, v.Pos.Y);
+                    min_z = Math.Min(min_z, v.Pos.Z);
+                    max_x = Math.Max(max_x, v.Pos.X);
+                    max_y = Math.Max(max_y, v.Pos.Y);
+                    max_z = Math.Max(max_z, v.Pos.Z);
+                }
             }
-            vtx[0].Vtx = bskinX.Vertices;
-            vtx[0].VtxInd = bskinX.Indices;
+            for (int i = 0; i < bskinX.Vertices.Count; i++)
+            {
+                vtx[i].Vtx = bskinX.Vertices[i];
+                vtx[i].VtxInd = bskinX.Indices[i];
+                Utils.TextUtils.LoadTexture(bskinX.Data.SubModels.Select((subModel) =>
+                {
+                    return subModel.MaterialID;
+                }).ToArray(), file, vtx[i], i);
+                UpdateVBO(i);
+            }
             zFar = Math.Max(zFar, Math.Max(max_x - min_x, Math.Max(max_y - min_y, max_z - min_z)));
-            UpdateVBO(0);
 
         }
 
@@ -827,6 +859,7 @@ namespace TwinsaityEditor
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
+            Utils.TextUtils.ClearTextureCache();
             base.Dispose(disposing);
         }
     }

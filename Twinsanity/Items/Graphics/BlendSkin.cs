@@ -7,7 +7,7 @@ namespace Twinsanity
 {
     public class BlendSkin : TwinsItem
     {
-        public BlendSkin_Type0[] Models;
+        public BlendSkinRigidModel[] Models;
         public uint Bone_Count;
 
         public override void Save(BinaryWriter writer)
@@ -22,7 +22,7 @@ namespace Twinsanity
                 for (int t = 0; t < Models[sub].SubModels.Length; t++)
                 {
                     writer.Write(Models[sub].SubModels[t].VifCode.Length);
-                    writer.Write(Models[sub].SubModels[t].UnkInt);
+                    writer.Write(Models[sub].SubModels[t].VertexesAmount);
                     writer.Write(Models[sub].SubModels[t].VifCode);
                     writer.Write(Models[sub].SubModels[t].UnkData);
 
@@ -42,21 +42,21 @@ namespace Twinsanity
         {
             long start_pos = reader.BaseStream.Position;
 
-            uint SubModel_Count = reader.ReadUInt32();
+            uint rigidCount = reader.ReadUInt32();
             Bone_Count = reader.ReadUInt32();
-            Models = new BlendSkin_Type0[SubModel_Count];
+            Models = new BlendSkinRigidModel[rigidCount];
 
-            for (int sub = 0; sub < SubModel_Count; sub++)
+            for (int rigidIndex = 0; rigidIndex < rigidCount; rigidIndex++)
             {
-                Models[sub] = new BlendSkin_Type0();
-                uint Type1_Count = reader.ReadUInt32();
-                Models[sub].MaterialID = reader.ReadUInt32();
-                Models[sub].SubModels = new BlendSkin_Type1[Type1_Count];
-                for (int t = 0; t < Type1_Count; t++)
+                Models[rigidIndex] = new BlendSkinRigidModel();
+                uint subModelCount = reader.ReadUInt32();
+                Models[rigidIndex].MaterialID = reader.ReadUInt32();
+                Models[rigidIndex].SubModels = new BlendSkinSubModel[subModelCount];
+                for (int t = 0; t < subModelCount; t++)
                 {
-                    BlendSkin_Type1 Skin = new BlendSkin_Type1();
+                    BlendSkinSubModel Skin = new BlendSkinSubModel();
                     int BlobSize = reader.ReadInt32();
-                    Skin.UnkInt = reader.ReadUInt32();
+                    Skin.VertexesAmount = reader.ReadUInt32();
                     Skin.VifCode = reader.ReadBytes(BlobSize);
                     Skin.UnkData = reader.ReadBytes(0xC);
 
@@ -74,7 +74,7 @@ namespace Twinsanity
                         Skin.Bones[b] = BSkin;
                     }
 
-                    Models[sub].SubModels[t] = Skin;
+                    Models[rigidIndex].SubModels[t] = Skin;
                 }
             }
 
@@ -167,15 +167,15 @@ namespace Twinsanity
             return size;
         }
 
-        public class BlendSkin_Type0
+        public class BlendSkinRigidModel
         {
             public uint MaterialID;
-            public BlendSkin_Type1[] SubModels; // Type1_Count
+            public BlendSkinSubModel[] SubModels; // Type1_Count
         }
 
-        public class BlendSkin_Type1
+        public class BlendSkinSubModel
         {
-            public uint UnkInt;
+            public uint VertexesAmount;
             public byte[] VifCode; //blobSize
             public byte[] UnkData; //0xC
             public List<VertexData> Vertexes;

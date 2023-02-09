@@ -12,8 +12,8 @@ namespace TwinsaityEditor
     {
         public new BlendSkinX Data { get; set; }
 
-        public Vertex[] Vertices { get; set; }
-        public uint[] Indices { get; set; }
+        public List<Vertex[]> Vertices { get; set; } = new List<Vertex[]>();
+        public List<uint[]> Indices { get; set; } = new List<uint[]>();
         public bool IsLoaded { get; private set; }
 
         public BlendSkinXController(MainForm topform, BlendSkinX item) : base(topform, item)
@@ -63,20 +63,28 @@ namespace TwinsaityEditor
 
         public void LoadMeshData()
         {
-            List<Vertex> vtx = new List<Vertex>();
-            List<uint> idx = new List<uint>();
-            int off = 0;
-            int gvert = 0;
+
+            Vertices.Clear();
+            Indices.Clear();
             foreach (var s in Data.SubModels)
             {
-                gvert = 0;
+                List<Vertex> vtx = new List<Vertex>();
+                List<uint> idx = new List<uint>();
+                int gvert = 0;
+                int off = 0;
                 for (int g = 0; g < s.GroupList.Count; g++)
                 {
-                    vtx.Add(new Vertex(new Vector3(-s.VData[gvert + 0].X, s.VData[gvert + 0].Y, s.VData[gvert + 0].Z), Color.FromArgb(s.VData[gvert + 0].R, s.VData[gvert + 0].G, s.VData[gvert + 0].B)));
-                    vtx.Add(new Vertex(new Vector3(-s.VData[gvert + 1].X, s.VData[gvert + 1].Y, s.VData[gvert + 1].Z), Color.FromArgb(s.VData[gvert + 1].R, s.VData[gvert + 1].G, s.VData[gvert + 1].B)));
+                    vtx.Add(new Vertex(new Vector3(-s.VData[gvert + 0].X, s.VData[gvert + 0].Y, s.VData[gvert + 0].Z),
+                        new Vector2(s.VData[gvert + 0].UV_X, 1 - s.VData[gvert + 0].UV_Y),
+                        Color.FromArgb(s.VData[gvert + 0].R, s.VData[gvert + 0].G, s.VData[gvert + 0].B)));
+                    vtx.Add(new Vertex(new Vector3(-s.VData[gvert + 1].X, s.VData[gvert + 1].Y, s.VData[gvert + 1].Z),
+                        new Vector2(s.VData[gvert + 1].UV_X, 1 - s.VData[gvert + 1].UV_Y),
+                        Color.FromArgb(s.VData[gvert + 1].R, s.VData[gvert + 1].G, s.VData[gvert + 1].B)));
                     for (int i = 2; i < s.GroupList[g]; ++i)
                     {
-                        vtx.Add(new Vertex(new Vector3(-s.VData[gvert + i].X, s.VData[gvert + i].Y, s.VData[gvert + i].Z), Color.FromArgb(s.VData[gvert + i].R, s.VData[gvert + i].G, s.VData[gvert + i].B)));
+                        vtx.Add(new Vertex(new Vector3(-s.VData[gvert + i].X, s.VData[gvert + i].Y, s.VData[gvert + i].Z),
+                            new Vector2(s.VData[gvert + i].UV_X, 1 - s.VData[gvert + i].UV_Y),
+                            Color.FromArgb(s.VData[gvert + i].R, s.VData[gvert + i].G, s.VData[gvert + i].B)));
                         int v1 = off + i - 2 + (i & 1);
                         int v2 = off + i - 1 - (i & 1);
                         int v3 = off + i;
@@ -97,26 +105,35 @@ namespace TwinsaityEditor
                     gvert += (int)s.GroupList[g];
                     off += (int)s.GroupList[g];
                 }
+
+                Vertices.Add(vtx.ToArray());
+                Indices.Add(idx.ToArray());
             }
-            Vertices = vtx.ToArray();
-            Indices = idx.ToArray();
+            
         }
         public void LoadMeshData_BlendShape(int id)
         {
-            List<Vertex> vtx = new List<Vertex>();
-            List<uint> idx = new List<uint>();
-            int off = 0;
-            int gvert = 0;
+            Vertices.Clear();
+            Indices.Clear();
             foreach (var s in Data.SubModels)
             {
-                gvert = 0;
+                List<Vertex> vtx = new List<Vertex>();
+                List<uint> idx = new List<uint>();
+                int gvert = 0;
+                int off = 0;
                 for (int g = 0; g < s.GroupList.Count; g++)
                 {
-                    vtx.Add(new Vertex(new Vector3(-s.VData[gvert + 0].BlendShapes[id].X, s.VData[gvert + 0].BlendShapes[id].Y, s.VData[gvert + 0].BlendShapes[id].Z), Color.FromArgb(s.VData[gvert + 0].R, s.VData[gvert + 0].G, s.VData[gvert + 0].B)));
-                    vtx.Add(new Vertex(new Vector3(-s.VData[gvert + 1].BlendShapes[id].X, s.VData[gvert + 1].BlendShapes[id].Y, s.VData[gvert + 1].BlendShapes[id].Z), Color.FromArgb(s.VData[gvert + 1].R, s.VData[gvert + 1].G, s.VData[gvert + 1].B)));
+                    vtx.Add(new Vertex(new Vector3(-s.VData[gvert + 0].BlendShapes[id].X, s.VData[gvert + 0].BlendShapes[id].Y, s.VData[gvert + 0].BlendShapes[id].Z),
+                        new Vector2(s.VData[gvert + 0].UV_X, 1 - s.VData[gvert + 0].UV_Y),
+                        Color.FromArgb(s.VData[gvert + 0].R, s.VData[gvert + 0].G, s.VData[gvert + 0].B)));
+                    vtx.Add(new Vertex(new Vector3(-s.VData[gvert + 1].BlendShapes[id].X, s.VData[gvert + 1].BlendShapes[id].Y, s.VData[gvert + 1].BlendShapes[id].Z),
+                        new Vector2(s.VData[gvert + 1].UV_X, 1 - s.VData[gvert + 1].UV_Y),
+                        Color.FromArgb(s.VData[gvert + 1].R, s.VData[gvert + 1].G, s.VData[gvert + 1].B)));
                     for (int i = 2; i < s.GroupList[g]; ++i)
                     {
-                        vtx.Add(new Vertex(new Vector3(-s.VData[gvert + i].BlendShapes[id].X, s.VData[gvert + i].BlendShapes[id].Y, s.VData[gvert + i].BlendShapes[id].Z), Color.FromArgb(s.VData[gvert + i].R, s.VData[gvert + i].G, s.VData[gvert + i].B)));
+                        vtx.Add(new Vertex(new Vector3(-s.VData[gvert + i].BlendShapes[id].X, s.VData[gvert + i].BlendShapes[id].Y, s.VData[gvert + i].BlendShapes[id].Z),
+                            new Vector2(s.VData[gvert + i].UV_X, 1 - s.VData[gvert + i].UV_Y),
+                            Color.FromArgb(s.VData[gvert + i].R, s.VData[gvert + i].G, s.VData[gvert + i].B)));
                         int v1 = off + i - 2 + (i & 1);
                         int v2 = off + i - 1 - (i & 1);
                         int v3 = off + i;
@@ -137,10 +154,10 @@ namespace TwinsaityEditor
                     gvert += (int)s.GroupList[g];
                     off += (int)s.GroupList[g];
                 }
+                Vertices.Add(vtx.ToArray());
+                Indices.Add(idx.ToArray());
             }
 
-            Vertices = vtx.ToArray();
-            Indices = idx.ToArray();
         }
 
         private void Menu_OpenViewer()

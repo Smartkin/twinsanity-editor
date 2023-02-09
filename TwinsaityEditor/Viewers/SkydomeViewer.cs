@@ -131,7 +131,7 @@ namespace TwinsaityEditor
             zFar = Math.Max(zFar, Math.Max(max_x - min_x, Math.Max(max_y - min_y, max_z - min_z)));
         }
 
-        protected new void InitVBO(int count)
+        protected void InitVBO(int count)
         {
             MakeCurrent();
             vtx = new System.Collections.Generic.List<VertexBufferData>();
