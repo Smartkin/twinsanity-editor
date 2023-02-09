@@ -184,7 +184,7 @@ namespace Twinsanity
                                 LoadSection(reader, sub, SectionType.Skydome);
                                 break;
                             default:
-                                LoadItem<TwinsItem>(reader, sub);
+                                LoadItem<TwinsItem>(reader, sub, Type);
                                 break;
                         }
                         break;
@@ -229,7 +229,7 @@ namespace Twinsanity
                                     LoadSection(reader, sub, SectionType.Camera);
                                 break;
                             default:
-                                LoadItem<TwinsItem>(reader, sub);
+                                LoadItem<TwinsItem>(reader, sub, Type);
                                 break;
                         }
                         break;
@@ -264,7 +264,7 @@ namespace Twinsanity
                                 LoadSection(reader, sub, SectionType.Camera);
                                 break;
                             default:
-                                LoadItem<TwinsItem>(reader, sub);
+                                LoadItem<TwinsItem>(reader, sub, Type);
                                 break;
                         }
                         break;
@@ -344,7 +344,7 @@ namespace Twinsanity
                                     LoadSection(reader, sub, SectionType.SE_Jpn);
                                 break;
                             default:
-                                LoadItem<TwinsItem>(reader, sub);
+                                LoadItem<TwinsItem>(reader, sub, Type);
                                 break;
                         }
                         break;
@@ -392,15 +392,15 @@ namespace Twinsanity
                                 LoadSection(reader, sub, SectionType.SE_Jpn);
                                 break;
                             default:
-                                LoadItem<TwinsItem>(reader, sub);
+                                LoadItem<TwinsItem>(reader, sub, Type);
                                 break;
                         }
                         break;
                     case SectionType.Texture:
-                        LoadItem<Texture>(reader, sub);
+                        LoadItem<Texture>(reader, sub, Type);
                         break;
                     case SectionType.TextureX: //XBOX textures
-                        LoadItem<TextureX>(reader, sub);
+                        LoadItem<TextureX>(reader, sub, Type);
                         break;
                     case SectionType.Material:
                         LoadItem<Material>(reader, sub, Type);
@@ -409,23 +409,23 @@ namespace Twinsanity
                         LoadItem<MaterialDemo>(reader, sub, Type);
                         break;
                     case SectionType.Model:
-                        LoadItem<Model>(reader, sub);
+                        LoadItem<Model>(reader, sub, Type);
                         break;
                     case SectionType.ModelX:
-                        LoadItem<ModelX>(reader, sub);
+                        LoadItem<ModelX>(reader, sub, Type);
                         break;
                     case SectionType.RigidModel:
                     case SectionType.Mesh:
-                        LoadItem<RigidModel>(reader, sub);
+                        LoadItem<RigidModel>(reader, sub, Type);
                         break;
                     case SectionType.Skydome:
-                        LoadItem<Skydome>(reader, sub);
+                        LoadItem<Skydome>(reader, sub, Type);
                         break;
                     case SectionType.Object:
                         LoadItem<GameObject>(reader, sub, Type);
                         break;
                     case SectionType.ObjectDemo: //PS2 DEMO objects
-                        LoadItem<GameObjectDemo>(reader, sub);
+                        LoadItem<GameObjectDemo>(reader, sub, Type);
                         break;
                     case SectionType.CodeModel:
                         LoadItem<CodeModel>(reader, sub, Type);
@@ -449,7 +449,7 @@ namespace Twinsanity
                         LoadItem<Script>(reader, sub, Type);
                         break;
                     case SectionType.Animation:
-                        LoadItem<Animation>(reader, sub);
+                        LoadItem<Animation>(reader, sub, Type);
                         break;
                     case SectionType.SE:
                     case SectionType.SE_Eng:
@@ -458,7 +458,7 @@ namespace Twinsanity
                     case SectionType.SE_Ita:
                     case SectionType.SE_Spa:
                     case SectionType.SE_Jpn:
-                        LoadItem<SoundEffect>(reader, sub);
+                        LoadItem<SoundEffect>(reader, sub, Type);
                         break;
                     case SectionType.Xbox_SE:
                     case SectionType.Xbox_SE_Eng:
@@ -467,7 +467,7 @@ namespace Twinsanity
                     case SectionType.Xbox_SE_Ita:
                     case SectionType.Xbox_SE_Jpn:
                     case SectionType.Xbox_SE_Spa:
-                        LoadItem<SoundEffectX>(reader, sub);
+                        LoadItem<SoundEffectX>(reader, sub, Type);
                         break;
                     case SectionType.AIPosition:
                         LoadItem<AIPosition>(reader, sub, Type);
@@ -500,19 +500,19 @@ namespace Twinsanity
                         LoadItem<Camera>(reader, sub, Type);
                         break;
                     case SectionType.OGI:
-                        LoadItem<GraphicsInfo>(reader, sub);
+                        LoadItem<GraphicsInfo>(reader, sub, Type);
                         break;
                     case SectionType.GraphicsInfoMB:
-                        LoadItem<GraphicsInfoMB>(reader, sub);
+                        LoadItem<GraphicsInfoMB>(reader, sub, Type);
                         break;
                     case SectionType.Skin:
-                        LoadItem<Skin>(reader, sub);
+                        LoadItem<Skin>(reader, sub, Type);
                         break;
                     case SectionType.SkinX: //XBOX Skins
-                        LoadItem<SkinX>(reader, sub);
+                        LoadItem<SkinX>(reader, sub, Type);
                         break;
                     case SectionType.LodModel:
-                        LoadItem<LodModel>(reader, sub);
+                        LoadItem<LodModel>(reader, sub, Type);
                         break;
                     case SectionType.ParticleData:
                         LoadItem<ParticleData>(reader, sub, Type);
@@ -527,13 +527,13 @@ namespace Twinsanity
                         LoadItem<InstanceTemplateDemo>(reader, sub, Type);
                         break;
                     case SectionType.BlendSkin:
-                        LoadItem<BlendSkin>(reader, sub);
+                        LoadItem<BlendSkin>(reader, sub, Type);
                         break;
                     case SectionType.BlendSkinX:
-                        LoadItem<BlendSkinX>(reader, sub);
+                        LoadItem<BlendSkinX>(reader, sub, Type);
                         break;
                     default:
-                        LoadItem<TwinsItem>(reader, sub);
+                        LoadItem<TwinsItem>(reader, sub, Type);
                         break;
                 }
                 reader.BaseStream.Position = sk;
@@ -542,17 +542,6 @@ namespace Twinsanity
             ExtraData = reader.ReadBytes((int)(size - extra_begin));
         }
 
-        protected void LoadItem<T>(BinaryReader reader, TwinsSubInfo sub) where T : TwinsItem, new()
-        {
-            T rec = new T
-            {
-                ID = sub.ID,
-                Parent = this
-            };
-            rec.Load(reader, sub.Size);
-            RecordIDs.Add(sub.ID, Records.Count);
-            Records.Add(rec);
-        }
         protected void LoadItem<T>(BinaryReader reader, TwinsSubInfo sub, SectionType type) where T : TwinsItem, new()
         {
             T rec = new T

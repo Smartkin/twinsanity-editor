@@ -51,10 +51,14 @@ namespace TwinsaityEditor
                 }
                 AddMenu("Re-order by ID (asc.)", Menu_ReOrderByID_Asc);
             }
-            else if (item is TwinsFile f && f.Type == TwinsFile.FileType.RM2)
+            else if (item is TwinsFile f)
             {
-                AddMenu("Add remaining instance sections", Menu_FileFillInstanceSections);
-                AddMenu("Import object package (RM2)", Menu_ImportPackage);
+                if (f.Type == TwinsFile.FileType.RM2)
+                {
+                    AddMenu("Add remaining instance sections", Menu_FileFillInstanceSections);
+                    AddMenu("Import object package (RM2)", Menu_ImportPackage);
+                }
+                AddMenu($"Toggle default asset names", Menu_ToggleDefaultNames);
             }
             else
             {
@@ -380,6 +384,12 @@ namespace TwinsaityEditor
                     }
                 }
             }
+        }
+
+        public void Menu_ToggleDefaultNames()
+        {
+            DefaultHashes.DefaultNames = !DefaultHashes.DefaultNames;
+            RefreshSection();
         }
     }
 }

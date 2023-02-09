@@ -157,6 +157,15 @@ namespace TwinsaityEditor
 
             if (!cached)
                 c.UpdateText();
+
+            if (DefaultHashes.DefaultNames)
+            {
+                if (c is ItemController item)
+                {
+                    item.Node.Text = DefaultHashes.ToName(item.Data.ParentType, item.Data.ID);
+                }
+            }
+            
             controller.AddNode(c);
         }
 
