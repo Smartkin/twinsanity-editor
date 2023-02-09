@@ -1,10 +1,12 @@
 ## Crash TwinSanity Editor
 
 ## Description
-This is an editor of game files for the games Crash TwinSanity (PS2/XBOX) and Super Monkey Ball Adventure (PSP). (Originally created by NeoKesha)  
+This is an editor of game files for the games Crash TwinSanity (PS2/XBOX) and Super Monkey Ball Adventure (PSP).  
+(Editor originally created by NeoKesha)  
+  
 The following formats are supported:  
 - .BD/.BH (PS2 file archives) extraction and rebuilding  
-- .MG/.MH (PS2 music archives) extraction and rebuilding  
+- .MB/.MH (PS2 music archives) extraction and rebuilding  
 - .RM2 (PS2 level resources) editing  
 - .SM2 (PS2 scenery resources) editing  
 - .RMX (XBOX level resources) editing  

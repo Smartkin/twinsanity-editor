@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DefaultEnums.cs" />
+    <Compile Include="DefaultHashes.cs" />
     <Compile Include="EzSwizzle.cs" />
     <Compile Include="Items\Code\Actions\Confirmed\AddAmmoAction.cs" />
     <Compile Include="Items\Code\Actions\Confirmed\AddGemAction.cs" />
