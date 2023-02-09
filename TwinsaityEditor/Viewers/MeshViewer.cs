@@ -203,13 +203,10 @@ namespace TwinsaityEditor
             var renderString = $"L Lights {lighting}\nX Wireframe {wire}\nY Textures {textures}\n";
             if (FullModelActive)
             {
+                renderString += $"V Model {Visible_Models}\nB Skin {Visible_Skin}\nN Blend Skin {Visible_BSkin}\n";
                 if (BSkinActive && targetFile.Data.Type == TwinsFile.FileType.RMX)
                 {
-                    renderString += $"V Model {Visible_Models}\nB Skin {Visible_Skin}\nN Blend Skin {Visible_BSkin}\nZ BlendShape {TargetBlendShape}/{bskinX.Data.BlendShapeCount}\n";
-                }
-                else
-                {
-                    renderString += $"V Model {Visible_Models}\nB Skin {Visible_Skin}\n";
+                    renderString += $"Z BlendShape {TargetBlendShape}/{bskinX.Data.BlendShapeCount}\n";
                 }
             }
             else if (BSkinActive && targetFile.Data.Type == TwinsFile.FileType.RMX)
@@ -579,10 +576,10 @@ namespace TwinsaityEditor
                 tempRot.M34 = model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[2].W;
 
                 // Position
-                tempRot.M41 = model.Data.Type1[model.Data.ModelIDs[i].ID].Matrix[1].X;
-                tempRot.M42 = model.Data.Type1[model.Data.ModelIDs[i].ID].Matrix[1].Y;
-                tempRot.M43 = model.Data.Type1[model.Data.ModelIDs[i].ID].Matrix[1].Z;
-                tempRot.M44 = model.Data.Type1[model.Data.ModelIDs[i].ID].Matrix[1].W;
+                tempRot.M41 = model.Data.Joints[model.Data.ModelIDs[i].ID].Matrix[1].X;
+                tempRot.M42 = model.Data.Joints[model.Data.ModelIDs[i].ID].Matrix[1].Y;
+                tempRot.M43 = model.Data.Joints[model.Data.ModelIDs[i].ID].Matrix[1].Z;
+                tempRot.M44 = model.Data.Joints[model.Data.ModelIDs[i].ID].Matrix[1].W;
 
                 // Adjusted for OpenTK
                 tempRot *= Matrix4.CreateScale(-1, 1, 1);
@@ -734,10 +731,10 @@ namespace TwinsaityEditor
                 tempRot.M34 = model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[2].W;
 
                 // Position
-                tempRot.M41 = model.Data.Type1[model.Data.ModelIDs[i].ID].Matrix[1].X;
-                tempRot.M42 = model.Data.Type1[model.Data.ModelIDs[i].ID].Matrix[1].Y;
-                tempRot.M43 = model.Data.Type1[model.Data.ModelIDs[i].ID].Matrix[1].Z;
-                tempRot.M44 = model.Data.Type1[model.Data.ModelIDs[i].ID].Matrix[1].W;
+                tempRot.M41 = model.Data.Joints[model.Data.ModelIDs[i].ID].Matrix[1].X;
+                tempRot.M42 = model.Data.Joints[model.Data.ModelIDs[i].ID].Matrix[1].Y;
+                tempRot.M43 = model.Data.Joints[model.Data.ModelIDs[i].ID].Matrix[1].Z;
+                tempRot.M44 = model.Data.Joints[model.Data.ModelIDs[i].ID].Matrix[1].W;
 
                 // Adjusted for OpenTK
                 tempRot *= Matrix4.CreateScale(-1, 1, 1);

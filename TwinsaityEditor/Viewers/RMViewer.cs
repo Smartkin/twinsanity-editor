@@ -13,7 +13,7 @@ namespace TwinsaityEditor
     {
         private static readonly int circle_res = 16;
 
-        private bool show_col_nodes, show_triggers, show_cams, wire_col, sm2_links, obj_models;
+        private bool show_col_nodes, show_triggers, show_cams, wire_col, sm2_links, obj_models, collisions;
         private FileController file;
         private ChunkLinks links;
 
@@ -29,6 +29,7 @@ namespace TwinsaityEditor
             show_col_nodes = show_triggers = wire_col = show_cams = false;
             sm2_links = true;
             obj_models = true;
+            collisions = true;
             this.file = file;
             Tag = pform;
             if (file.Data.Type == TwinsFile.FileType.RM2 || file.Data.Type == TwinsFile.FileType.RMX)
@@ -70,7 +71,7 @@ namespace TwinsaityEditor
         protected override void RenderHUD()
         {
             base.RenderHUD();
-            RenderString2D("Press C to toggle collision nodes\nPress X to toggle collision tree wireframe\nPress T to toggle object triggers\nPress Y to toggle camera triggers\nPress V to toggle object models", 0, Height, 10, Color.White, TextAnchor.BotLeft);
+            RenderString2D("Press C to toggle collision nodes\nPress X to toggle collision tree wireframe\nPress T to toggle object triggers\nPress Y to toggle camera triggers\nPress V to toggle object models\nPress F to toggle collision rendering", 0, Height, 10, Color.White, TextAnchor.BotLeft);
             RenderString2D("X: " + (-pos.X) + "\n\nY: " + pos.Y + "\n\nZ: " + pos.Z, 0, Height - 54, 12, Color.White, TextAnchor.BotLeft);
         }
 
@@ -85,9 +86,12 @@ namespace TwinsaityEditor
             //draw collision
             if (file.Data.ContainsItem(9))
             {
-                GL.Enable(EnableCap.Lighting);
-                vtx[0].DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Normal);
-                GL.Disable(EnableCap.Lighting);
+                if (collisions)
+                {
+                    GL.Enable(EnableCap.Lighting);
+                    vtx[0].DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Normal);
+                    GL.Disable(EnableCap.Lighting);
+                }
 
                 if (wire_col)
                 {
@@ -106,12 +110,12 @@ namespace TwinsaityEditor
             //object visuals
             if ((file.Data.Type == TwinsFile.FileType.RM2 || file.Data.Type == TwinsFile.FileType.RMX) && obj_models)
             {
-                GL.Enable(EnableCap.Lighting);
+                //GL.Enable(EnableCap.Lighting);
                 for (int i = 5; i < vtx.Count; i++)
                 {
                     vtx[i]?.DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Normal);
                 }
-                GL.Disable(EnableCap.Lighting);
+                //GL.Disable(EnableCap.Lighting);
             }
 
             //instances
@@ -743,6 +747,7 @@ namespace TwinsaityEditor
                 case Keys.T:
                 case Keys.X:
                 case Keys.Y:
+                case Keys.F:
                     return true;
             }
             return base.IsInputKey(keyData);
@@ -759,6 +764,7 @@ namespace TwinsaityEditor
                 case Keys.X: wire_col = !wire_col; break;
                 case Keys.V: obj_models = !obj_models; break;
                 case Keys.Y: show_cams = !show_cams; break;
+                case Keys.F: collisions = !collisions; break;
             }
         }
 
@@ -1056,10 +1062,10 @@ namespace TwinsaityEditor
                                                     tempRot.M34 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[2].W;
 
                                                     // Position
-                                                    tempRot.M41 = GI.Type1[GI.ModelIDs[gi_model].ID].Matrix[1].X;
-                                                    tempRot.M42 = GI.Type1[GI.ModelIDs[gi_model].ID].Matrix[1].Y;
-                                                    tempRot.M43 = GI.Type1[GI.ModelIDs[gi_model].ID].Matrix[1].Z;
-                                                    tempRot.M44 = GI.Type1[GI.ModelIDs[gi_model].ID].Matrix[1].W;
+                                                    tempRot.M41 = GI.Joints[GI.ModelIDs[gi_model].ID].Matrix[1].X;
+                                                    tempRot.M42 = GI.Joints[GI.ModelIDs[gi_model].ID].Matrix[1].Y;
+                                                    tempRot.M43 = GI.Joints[GI.ModelIDs[gi_model].ID].Matrix[1].Z;
+                                                    tempRot.M44 = GI.Joints[GI.ModelIDs[gi_model].ID].Matrix[1].W;
 
                                                     // Adjusted for OpenTK
                                                     tempRot *= Matrix4.CreateScale(-1, 1, 1);
@@ -1082,11 +1088,13 @@ namespace TwinsaityEditor
                                             {
                                                 ModelController modelCont = null;
                                                 SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(2);
+                                                RigidModel rigid = null;
                                                 foreach (RigidModel model in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
                                                 {
                                                     if (model.ID == TargetModel)
                                                     {
-                                                        uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(TargetModel).MeshID;
+                                                        rigid = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(TargetModel);
+                                                        uint meshID = rigid.MeshID;
                                                         modelCont = mesh_sec.GetItem<ModelController>(meshID);
                                                         HasMesh = true;
                                                     }
@@ -1134,6 +1142,7 @@ namespace TwinsaityEditor
                                                         vtx[5 + cur_instance].Vtx = modelCont.Vertices[v];
                                                         vtx[5 + cur_instance].VtxInd = modelCont.Indices[v];
                                                         modelCont.Vertices[v] = vbuffer;
+                                                        Utils.TextUtils.LoadTexture(rigid.MaterialIDs, file, vtx[5 + cur_instance], v);
                                                         UpdateVBO(5 + cur_instance);
                                                         cur_instance++;
                                                     }
@@ -1150,11 +1159,11 @@ namespace TwinsaityEditor
                                             {
                                                 ModelXController modelCont = null;
                                                 SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(2);
-                                                foreach (RigidModel model in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
+                                                foreach (Twinsanity.RigidModel model in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
                                                 {
                                                     if (model.ID == TargetModel)
                                                     {
-                                                        uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(TargetModel).MeshID;
+                                                        uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<Twinsanity.RigidModel>(TargetModel).MeshID;
                                                         modelCont = mesh_sec.GetItem<ModelXController>(meshID);
                                                         HasMesh = true;
                                                     }
@@ -1224,7 +1233,7 @@ namespace TwinsaityEditor
                                     {
                                         SkinController modelCont = null;
                                         SectionController meshSec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(4);
-                                        foreach (Skin mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(4).Records.Cast<Skin>())
+                                        foreach (Twinsanity.Skin mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(4).Records.Cast<Twinsanity.Skin>())
                                         {
                                             if (mod.ID == TargetSkin)
                                             {
@@ -1270,6 +1279,10 @@ namespace TwinsaityEditor
                                             vtx[5 + cur_instance] = new VertexBufferData();
                                             vtx[5 + cur_instance].Vtx = modelCont.Vertices[v];
                                             vtx[5 + cur_instance].VtxInd = modelCont.Indices[v];
+                                            Utils.TextUtils.LoadTexture(modelCont.Data.SubModels.Select((subModel) =>
+                                            {
+                                                return subModel.MaterialID;
+                                            }).ToArray(), file, vtx[5 + cur_instance], v);
                                             modelCont.Vertices[v] = vbuffer;
                                             UpdateVBO(5 + cur_instance);
                                             cur_instance++;
@@ -1320,7 +1333,7 @@ namespace TwinsaityEditor
                                     {
                                         BlendSkinController modelCont = null;
                                         SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(5);
-                                        foreach (BlendSkin mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(5).Records)
+                                        foreach (Twinsanity.BlendSkin mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(5).Records)
                                         {
                                             if (mod.ID == TargetBSkin)
                                             {
@@ -1366,6 +1379,10 @@ namespace TwinsaityEditor
                                             vtx[5 + cur_instance] = new VertexBufferData();
                                             vtx[5 + cur_instance].Vtx = modelCont.Vertices[v];
                                             vtx[5 + cur_instance].VtxInd = modelCont.Indices[v];
+                                            Utils.TextUtils.LoadTexture(modelCont.Data.Models.Select((subModel) =>
+                                            {
+                                                return subModel.MaterialID;
+                                            }).ToArray(), file, vtx[5 + cur_instance], v);
                                             modelCont.Vertices[v] = vbuffer;
                                             UpdateVBO(5 + cur_instance);
                                             cur_instance++;

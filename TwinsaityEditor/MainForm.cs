@@ -255,7 +255,10 @@ namespace TwinsaityEditor
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
                     if (CurCont != null)
+                    {
+                        Utils.TextUtils.ClearTextureCache();
                         CurCont.CloseFile();
+                    }
                     Tag = null;
                     Settings.Default.ChunkFilePath = ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('\\'));
                     TwinsFile file = new TwinsFile();

@@ -11,8 +11,8 @@ namespace Twinsanity
         public uint BlendSkinID { get; set; }
         public Pos Coord1 { get; set; } // Bounding box?
         public Pos Coord2 { get; set; } // Bounding box?
-        public GI_Type1[] Type1 { get; set; }
-        public GI_Type2[] Type2 { get; set; }
+        public Joint[] Joints { get; set; }
+        public ExitPoint[] ExitPoints { get; set; }
         public GI_Type3[] Type3 { get; set; }
         public GI_CollisionData[] CollisionData { get; set; }
 
@@ -31,38 +31,38 @@ namespace Twinsanity
             writer.Write(Coord2.Z);
             writer.Write(Coord2.W);
 
-            if (Type1.Length > 0)
+            if (Joints.Length > 0)
             {
-                for (int i = 0; i < Type1.Length; i++)
+                for (int i = 0; i < Joints.Length; i++)
                 {
-                    for (int a = 0; a < Type1[i].Numbers.Length; a++)
+                    for (int a = 0; a < Joints[i].Numbers.Length; a++)
                     {
-                        writer.Write(Type1[i].Numbers[a]);
+                        writer.Write(Joints[i].Numbers[a]);
                     }
-                    for (int a = 0; a < Type1[i].Matrix.Length; a++)
+                    for (int a = 0; a < Joints[i].Matrix.Length; a++)
                     {
-                        writer.Write(Type1[i].Matrix[a].X);
-                        writer.Write(Type1[i].Matrix[a].Y);
-                        writer.Write(Type1[i].Matrix[a].Z);
-                        writer.Write(Type1[i].Matrix[a].W);
+                        writer.Write(Joints[i].Matrix[a].X);
+                        writer.Write(Joints[i].Matrix[a].Y);
+                        writer.Write(Joints[i].Matrix[a].Z);
+                        writer.Write(Joints[i].Matrix[a].W);
                     }
                 }
             }
 
-            if (Type2.Length > 0)
+            if (ExitPoints.Length > 0)
             {
-                for (int i = 0; i < Type2.Length; i++)
+                for (int i = 0; i < ExitPoints.Length; i++)
                 {
-                    for (int a = 0; a < Type2[i].Numbers.Length; a++)
+                    for (int a = 0; a < ExitPoints[i].Numbers.Length; a++)
                     {
-                        writer.Write(Type2[i].Numbers[a]);
+                        writer.Write(ExitPoints[i].Numbers[a]);
                     }
-                    for (int a = 0; a < Type2[i].Matrix.Length; a++)
+                    for (int a = 0; a < ExitPoints[i].Matrix.Length; a++)
                     {
-                        writer.Write(Type2[i].Matrix[a].X);
-                        writer.Write(Type2[i].Matrix[a].Y);
-                        writer.Write(Type2[i].Matrix[a].Z);
-                        writer.Write(Type2[i].Matrix[a].W);
+                        writer.Write(ExitPoints[i].Matrix[a].X);
+                        writer.Write(ExitPoints[i].Matrix[a].Y);
+                        writer.Write(ExitPoints[i].Matrix[a].Z);
+                        writer.Write(ExitPoints[i].Matrix[a].W);
                     }
                 }
             }
@@ -79,7 +79,7 @@ namespace Twinsanity
                 }
             }
 
-            if (Type1.Length > 0)
+            if (Joints.Length > 0)
             {
                 for (int a = 0; a < Type3.Length; a++)
                 {
@@ -132,7 +132,7 @@ namespace Twinsanity
 
             if (Type1_Size > 0)
             {
-                Type1 = new GI_Type1[Type1_Size];
+                Joints = new Joint[Type1_Size];
                 for (int i = 0; i < Type1_Size; i++)
                 {
                     Pos[] Type1_Matrix = new Pos[5];
@@ -146,18 +146,18 @@ namespace Twinsanity
                     Type1_Matrix[2] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                     Type1_Matrix[3] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                     Type1_Matrix[4] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    GI_Type1 temp_Type1 = new GI_Type1() { Matrix = Type1_Matrix, Numbers = Type1_Numbers };
-                    Type1[i] = temp_Type1;
+                    Joint temp_Type1 = new Joint() { Matrix = Type1_Matrix, Numbers = Type1_Numbers };
+                    Joints[i] = temp_Type1;
                 }
             }
             else
             {
-                Type1 = new GI_Type1[0];
+                Joints = new Joint[0];
             }
 
             if (Type2_Size > 0)
             {
-                Type2 = new GI_Type2[Type2_Size];
+                ExitPoints = new ExitPoint[Type2_Size];
                 for (int i = 0; i < Type2_Size; i++)
                 {
                     Pos[] Type2_Matrix = new Pos[4];
@@ -168,13 +168,13 @@ namespace Twinsanity
                     {
                         Type2_Matrix[a] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                     }
-                    GI_Type2 temp_Type2 = new GI_Type2() { Matrix = Type2_Matrix, Numbers = Type2_Numbers };
-                    Type2[i] = temp_Type2;
+                    ExitPoint temp_Type2 = new ExitPoint() { Matrix = Type2_Matrix, Numbers = Type2_Numbers };
+                    ExitPoints[i] = temp_Type2;
                 }
             }
             else
             {
-                Type2 = new GI_Type2[0];
+                ExitPoints = new ExitPoint[0];
             }
 
             if (Model_Size > 0)
@@ -277,21 +277,21 @@ namespace Twinsanity
         {
             int count = 0x10 + 16 + 16 + 4 + 4 + CollisionDataRelated.Length;
 
-            if (Type1.Length > 0)
+            if (Joints.Length > 0)
             {
-                for (int i = 0; i < Type1.Length; i++)
+                for (int i = 0; i < Joints.Length; i++)
                 {
-                    count += Type1[i].Numbers.Length * 4;
-                    count += Type1[i].Matrix.Length * 16;
+                    count += Joints[i].Numbers.Length * 4;
+                    count += Joints[i].Matrix.Length * 16;
                 }
             }
 
-            if (Type2.Length > 0)
+            if (ExitPoints.Length > 0)
             {
-                for (int i = 0; i < Type2.Length; i++)
+                for (int i = 0; i < ExitPoints.Length; i++)
                 {
-                    count += Type2[i].Numbers.Length * 4;
-                    count += Type2[i].Matrix.Length * 16;
+                    count += ExitPoints[i].Numbers.Length * 4;
+                    count += ExitPoints[i].Matrix.Length * 16;
                 }
             }
 
@@ -325,13 +325,13 @@ namespace Twinsanity
             public uint ModelID;
         }
 
-        public struct GI_Type1
+        public struct Joint
         {
             public uint[] Numbers; // 5
             public Pos[] Matrix; // 5
         }
 
-        public struct GI_Type2
+        public struct ExitPoint
         {
             public uint[] Numbers; // 2
             public Pos[] Matrix; // 4

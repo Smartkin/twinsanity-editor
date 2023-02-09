@@ -2,6 +2,7 @@
 using System;
 using System.Drawing;
 using OpenTK.Graphics.OpenGL;
+using System.Collections.Generic;
 
 namespace TwinsaityEditor.Utils
 {
@@ -10,6 +11,8 @@ namespace TwinsaityEditor.Utils
 
         public static bool Pref_TruncateObjectNames = true;
         public static bool Pref_EnableAnyObjectNames = true;
+
+        private static readonly Dictionary<uint, int> TextureCache = new Dictionary<uint, int>();
 
         public static string TruncateObjectName(string obj_name, ushort ObjectID, string prefix, string suffix)
         {
@@ -34,6 +37,11 @@ namespace TwinsaityEditor.Utils
             return obj_name;
         }
 
+        public static void ClearTextureCache()
+        {
+            TextureCache.Clear();
+        }
+
         public static int LoadTexture(ref Bitmap data, int quality = 0, bool flip_y = false)
         {
             var bitmapBits = data.LockBits(new Rectangle(0, 0, data.Width, data.Height),
@@ -56,33 +64,38 @@ namespace TwinsaityEditor.Utils
         public static void LoadTexture(uint[] materials, FileController file, VertexBufferData vtx, int index)
         {
             var material = materials[index];
+            if (TextureCache.ContainsKey(material))
             {
-                var secId = 11U;
-                if (file.Data.Type == TwinsFile.FileType.SM2)
+                vtx.Texture = TextureCache[material];
+                vtx.Flags |= BufferPointerFlags.TexCoord;
+                return;
+            }
+            var secId = 11U;
+            if (file.Data.Type == TwinsFile.FileType.SM2)
+            {
+                secId = 6U;
+            }
+            var matSec = file.Data.GetItem<TwinsSection>(secId).GetItem<TwinsSection>(1);
+            var texSec = file.Data.GetItem<TwinsSection>(secId).GetItem<TwinsSection>(0);
+            if (matSec.ContainsItem(material))
+            {
+                var mat = matSec.GetItem<Material>(material);
+                Texture texture = null;
+                foreach (var shader in mat.Shaders)
                 {
-                    secId = 6U;
+                    if (shader.TxtMapping == TwinsShader.TextureMapping.ON)
+                    {
+                        texture = texSec.GetItem<Texture>(shader.TextureId);
+                        break;
+                    }
                 }
-                var matSec = file.Data.GetItem<TwinsSection>(secId).GetItem<TwinsSection>(1);
-                var texSec = file.Data.GetItem<TwinsSection>(secId).GetItem<TwinsSection>(0);
-                if (matSec.ContainsItem(material))
+                if (texture != null)
                 {
-                    var mat = matSec.GetItem<Material>(material);
-                    Texture texture = null;
-                    foreach (var shader in mat.Shaders)
-                    {
-                        if (shader.TxtMapping == TwinsShader.TextureMapping.ON)
-                        {
-                            texture = texSec.GetItem<Texture>(shader.TextureId);
-                            break;
-                        }
-                    }
-                    if (texture != null)
-                    {
-                        var bmp = texture.GetBmp();
-                        var texId = LoadTexture(ref bmp);
-                        vtx.Texture = texId;
-                        vtx.Flags |= BufferPointerFlags.TexCoord;
-                    }
+                    var bmp = texture.GetBmp();
+                    var texId = LoadTexture(ref bmp);
+                    TextureCache.Add(material, texId);
+                    vtx.Texture = texId;
+                    vtx.Flags |= BufferPointerFlags.TexCoord;
                 }
             }
         }

@@ -29,8 +29,8 @@ namespace TwinsaityEditor
             text.Add($"Bounding Box Vector 2: {Data.Coord2.X}; {Data.Coord2.Y}; {Data.Coord2.Z}; {Data.Coord2.W}");
             text.Add($"Skin ID: {Data.SkinID}");
             text.Add($"Blend Skin Model ID: {Data.BlendSkinID}");
-            text.Add($"Joints: {Data.Type1.Length}");
-            text.Add($"Exit Points: {Data.Type2.Length}");
+            text.Add($"Joints: {Data.Joints.Length}");
+            text.Add($"Exit Points: {Data.ExitPoints.Length}");
             text.Add($"Collision Datas Size: {Data.CollisionData.Length}");
             text.Add($"Rigid Model Count: {Data.ModelIDs.Length}");
             text.Add(string.Empty);
@@ -42,17 +42,17 @@ namespace TwinsaityEditor
                 }
             }
             text.Add(string.Empty);
-            if (Data.Type1.Length > 0)
+            if (Data.Joints.Length > 0)
             {
                 text.Add($"Joints:");
-                for (int i = 0; i < Data.Type1.Length; i++)
+                for (int i = 0; i < Data.Joints.Length; i++)
                 {
-                    text.Add($"#{ i } Numbers: { Data.Type1[i].Numbers[0] }; { Data.Type1[i].Numbers[1] }; { Data.Type1[i].Numbers[2] }; { Data.Type1[i].Numbers[3] }; { Data.Type1[i].Numbers[4] }");
-                    text.Add($"#{ i } Vector 1: { Data.Type1[i].Matrix[0].X }; { Data.Type1[i].Matrix[0].Y }; { Data.Type1[i].Matrix[0].Z }; { Data.Type1[i].Matrix[0].W }");
-                    text.Add($"#{ i } Vector 2: { Data.Type1[i].Matrix[1].X }; { Data.Type1[i].Matrix[1].Y }; { Data.Type1[i].Matrix[1].Z }; { Data.Type1[i].Matrix[1].W }");
-                    text.Add($"#{ i } Vector 3: { Data.Type1[i].Matrix[2].X }; { Data.Type1[i].Matrix[2].Y }; { Data.Type1[i].Matrix[2].Z }; { Data.Type1[i].Matrix[2].W }");
-                    text.Add($"#{ i } Vector 4: { Data.Type1[i].Matrix[3].X }; { Data.Type1[i].Matrix[3].Y }; { Data.Type1[i].Matrix[3].Z }; { Data.Type1[i].Matrix[3].W }");
-                    text.Add($"#{ i } Vector 5: { Data.Type1[i].Matrix[4].X }; { Data.Type1[i].Matrix[4].Y }; { Data.Type1[i].Matrix[4].Z }; { Data.Type1[i].Matrix[4].W }");
+                    text.Add($"#{ i } Numbers: { Data.Joints[i].Numbers[0] }; { Data.Joints[i].Numbers[1] }; { Data.Joints[i].Numbers[2] }; { Data.Joints[i].Numbers[3] }; { Data.Joints[i].Numbers[4] }");
+                    text.Add($"#{ i } Vector 1: { Data.Joints[i].Matrix[0].X }; { Data.Joints[i].Matrix[0].Y }; { Data.Joints[i].Matrix[0].Z }; { Data.Joints[i].Matrix[0].W }");
+                    text.Add($"#{ i } Vector 2: { Data.Joints[i].Matrix[1].X }; { Data.Joints[i].Matrix[1].Y }; { Data.Joints[i].Matrix[1].Z }; { Data.Joints[i].Matrix[1].W }");
+                    text.Add($"#{ i } Vector 3: { Data.Joints[i].Matrix[2].X }; { Data.Joints[i].Matrix[2].Y }; { Data.Joints[i].Matrix[2].Z }; { Data.Joints[i].Matrix[2].W }");
+                    text.Add($"#{ i } Vector 4: { Data.Joints[i].Matrix[3].X }; { Data.Joints[i].Matrix[3].Y }; { Data.Joints[i].Matrix[3].Z }; { Data.Joints[i].Matrix[3].W }");
+                    text.Add($"#{ i } Vector 5: { Data.Joints[i].Matrix[4].X }; { Data.Joints[i].Matrix[4].Y }; { Data.Joints[i].Matrix[4].Z }; { Data.Joints[i].Matrix[4].W }");
                     text.Add($"#{ i } T3 Matrix 1: { Data.Type3[i].Matrix[0].X }; { Data.Type3[i].Matrix[0].Y }; { Data.Type3[i].Matrix[0].Z }; { Data.Type3[i].Matrix[0].W }");
                     text.Add($"#{ i } T3 Matrix 2: { Data.Type3[i].Matrix[1].X }; { Data.Type3[i].Matrix[1].Y }; { Data.Type3[i].Matrix[1].Z }; { Data.Type3[i].Matrix[1].W }");
                     text.Add($"#{ i } T3 Matrix 3: { Data.Type3[i].Matrix[2].X }; { Data.Type3[i].Matrix[2].Y }; { Data.Type3[i].Matrix[2].Z }; { Data.Type3[i].Matrix[2].W }");
@@ -60,16 +60,16 @@ namespace TwinsaityEditor
                 }
             }
             text.Add(string.Empty);
-            if (Data.Type2.Length > 0)
+            if (Data.ExitPoints.Length > 0)
             {
                 text.Add($"Exit Points:");
-                for (int i = 0; i < Data.Type2.Length; i++)
+                for (int i = 0; i < Data.ExitPoints.Length; i++)
                 {
-                    text.Add($"#{ i } Attached to Joint { Data.Type2[i].Numbers[0] }; ID: { Data.Type2[i].Numbers[1] }");
-                    text.Add($"#{ i } Matrix 1: { Data.Type2[i].Matrix[0].X }; { Data.Type2[i].Matrix[0].Y }; { Data.Type2[i].Matrix[0].Z }; { Data.Type2[i].Matrix[0].W }");
-                    text.Add($"#{ i } Matrix 2: { Data.Type2[i].Matrix[1].X }; { Data.Type2[i].Matrix[1].Y }; { Data.Type2[i].Matrix[1].Z }; { Data.Type2[i].Matrix[1].W }");
-                    text.Add($"#{ i } Matrix 3: { Data.Type2[i].Matrix[2].X }; { Data.Type2[i].Matrix[2].Y }; { Data.Type2[i].Matrix[2].Z }; { Data.Type2[i].Matrix[2].W }");
-                    text.Add($"#{ i } Matrix 4: { Data.Type2[i].Matrix[3].X }; { Data.Type2[i].Matrix[3].Y }; { Data.Type2[i].Matrix[3].Z }; { Data.Type2[i].Matrix[3].W }");
+                    text.Add($"#{ i } Attached to Joint { Data.ExitPoints[i].Numbers[0] }; ID: { Data.ExitPoints[i].Numbers[1] }");
+                    text.Add($"#{ i } Matrix 1: { Data.ExitPoints[i].Matrix[0].X }; { Data.ExitPoints[i].Matrix[0].Y }; { Data.ExitPoints[i].Matrix[0].Z }; { Data.ExitPoints[i].Matrix[0].W }");
+                    text.Add($"#{ i } Matrix 2: { Data.ExitPoints[i].Matrix[1].X }; { Data.ExitPoints[i].Matrix[1].Y }; { Data.ExitPoints[i].Matrix[1].Z }; { Data.ExitPoints[i].Matrix[1].W }");
+                    text.Add($"#{ i } Matrix 3: { Data.ExitPoints[i].Matrix[2].X }; { Data.ExitPoints[i].Matrix[2].Y }; { Data.ExitPoints[i].Matrix[2].Z }; { Data.ExitPoints[i].Matrix[2].W }");
+                    text.Add($"#{ i } Matrix 4: { Data.ExitPoints[i].Matrix[3].X }; { Data.ExitPoints[i].Matrix[3].Y }; { Data.ExitPoints[i].Matrix[3].Z }; { Data.ExitPoints[i].Matrix[3].W }");
                 }
             }
             text.Add(string.Empty);
