@@ -127,17 +127,19 @@ namespace Twinsanity
 
                 for (int j = 0; j < verts; j++)
                 {
-                    var vertData = new VertexData();
-                    vertData.X = vertex_batch_1[j].X;
-                    vertData.Y = vertex_batch_1[j].Y;
-                    vertData.Z = vertex_batch_1[j].Z;
-                    vertData.U = vertex_batch_2[j].X;
-                    vertData.V = vertex_batch_2[j].Y;
-                    vertData.R = vertex_batch_4[j].X;
-                    vertData.G = vertex_batch_4[j].Y;
-                    vertData.B = vertex_batch_4[j].Z;
-                    vertData.A = vertex_batch_4[j].W;
-                    vertData.Conn = connections[j];
+                    var vertData = new VertexData
+                    {
+                        X = vertex_batch_1[j].X,
+                        Y = vertex_batch_1[j].Y,
+                        Z = vertex_batch_1[j].Z,
+                        U = vertex_batch_2[j].X,
+                        V = vertex_batch_2[j].Y,
+                        R = (byte)(Math.Min(vertex_batch_4[j].X + 126, 255)),
+                        G = (byte)(Math.Min(vertex_batch_4[j].Y + 126, 255)),
+                        B = (byte)(Math.Min(vertex_batch_4[j].Z + 126, 255)),
+                        A = (byte)(Math.Min(vertex_batch_4[j].W + 126, 255)),
+                        Conn = connections[j]
+                    };
                     vertexes.Add(vertData);
                 }
 
@@ -207,7 +209,7 @@ namespace Twinsanity
         {
             public float X, Y, Z;
             public float U, V;
-            public float R, G, B, A;
+            public byte R, G, B, A;
             public bool Conn;
         }
     }

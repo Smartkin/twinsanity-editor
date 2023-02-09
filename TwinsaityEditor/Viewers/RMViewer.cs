@@ -109,10 +109,7 @@ namespace TwinsaityEditor
                 GL.Enable(EnableCap.Lighting);
                 for (int i = 5; i < vtx.Count; i++)
                 {
-                    if (vtx[i] != null)
-                    {
-                        vtx[i].DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Normal);
-                    }
+                    vtx[i]?.DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Normal);
                 }
                 GL.Disable(EnableCap.Lighting);
             }
@@ -1132,10 +1129,11 @@ namespace TwinsaityEditor
                                                                 modelCont.Vertices[v][p].Col = Vertex.ColorToABGR(Color.SandyBrown);
                                                             }
                                                         }
-                                                        modelCont.Vertices[v] = vbuffer;
+                                                        
                                                         vtx[5 + cur_instance] = new VertexBufferData();
                                                         vtx[5 + cur_instance].Vtx = modelCont.Vertices[v];
                                                         vtx[5 + cur_instance].VtxInd = modelCont.Indices[v];
+                                                        modelCont.Vertices[v] = vbuffer;
                                                         UpdateVBO(5 + cur_instance);
                                                         cur_instance++;
                                                     }
@@ -1268,10 +1266,11 @@ namespace TwinsaityEditor
                                                     modelCont.Vertices[v][p].Col = Vertex.ColorToABGR(Color.SandyBrown);
                                                 }
                                             }
-                                            modelCont.Vertices[v] = vbuffer;
+                                            
                                             vtx[5 + cur_instance] = new VertexBufferData();
                                             vtx[5 + cur_instance].Vtx = modelCont.Vertices[v];
                                             vtx[5 + cur_instance].VtxInd = modelCont.Indices[v];
+                                            modelCont.Vertices[v] = vbuffer;
                                             UpdateVBO(5 + cur_instance);
                                             cur_instance++;
                                         }
@@ -1363,10 +1362,11 @@ namespace TwinsaityEditor
                                                     modelCont.Vertices[v][p].Col = Vertex.ColorToABGR(Color.SandyBrown);
                                                 }
                                             }
-                                            modelCont.Vertices[v] = vbuffer;
+                                            
                                             vtx[5 + cur_instance] = new VertexBufferData();
                                             vtx[5 + cur_instance].Vtx = modelCont.Vertices[v];
                                             vtx[5 + cur_instance].VtxInd = modelCont.Indices[v];
+                                            modelCont.Vertices[v] = vbuffer;
                                             UpdateVBO(5 + cur_instance);
                                             cur_instance++;
                                         }
