@@ -39,8 +39,8 @@ namespace TwinsaityEditor
                 text.Add($"Model {i}: Material - {MainFile.GetMaterialName(Data.Models[i].MaterialID)} [ID: {Data.Models[i].MaterialID}]");
                 for (int a = 0; a < Data.Models[i].SubModels.Length; a++)
                 {
-                    text.Add($"SubModel {a}: Vertexes {Data.Models[i].SubModels[a].VertexesAmount}, Bone Count {Data.Models[i].SubModels[a].Bones.Length}");
-                    for (int b = 0; b < Data.Models[i].SubModels[a].Bones.Length; b++)
+                    text.Add($"SubModel {a}: Vertexes {Data.Models[i].SubModels[a].VertexesAmount}, Bone Count {Data.Models[i].SubModels[a].BlendShapes.Length}");
+                    for (int b = 0; b < Data.Models[i].SubModels[a].BlendShapes.Length; b++)
                     {
                         //text.Add($"Bone {b}: Int {Data.Models[i].SubModels[a].Bones[b].UnkInt}");
                     }
@@ -56,6 +56,8 @@ namespace TwinsaityEditor
 
             var refIndex = 0U;
             var offset = 0;
+
+            var isSpyroModel = DefaultHashes.Hash_BlendSkins[Data.ID] == "Spyro";
 
             foreach (var rigidModel in Data.Models)
             {
@@ -85,9 +87,18 @@ namespace TwinsaityEditor
                             ++refIndex;
                         }
                         Color col = Color.FromArgb(model.Vertexes[j].A, model.Vertexes[j].R, model.Vertexes[j].G, model.Vertexes[j].B);
-                        vtx.Add(new Vertex(new Vector3(-model.Vertexes[j].X, model.Vertexes[j].Y, model.Vertexes[j].Z),
-                                new Vector3(0, 0, 0), new Vector2(model.Vertexes[j].U, 1 - model.Vertexes[j].V),
-                                col));
+                        if (isSpyroModel)
+                        { // Spyro model specifically doesn't need UV flipping
+                            vtx.Add(new Vertex(new Vector3(-model.Vertexes[j].X, model.Vertexes[j].Y, model.Vertexes[j].Z),
+                                    new Vector3(0, 0, 0), new Vector2(model.Vertexes[j].U, model.Vertexes[j].V),
+                                    col));
+                        }
+                        else
+                        {
+                            vtx.Add(new Vertex(new Vector3(-model.Vertexes[j].X, model.Vertexes[j].Y, model.Vertexes[j].Z),
+                                    new Vector3(0, 0, 0), new Vector2(model.Vertexes[j].U, 1 - model.Vertexes[j].V),
+                                    col));
+                        }
                     }
                     //offset += model.Vertexes.Count;
                     refIndex += 2;

@@ -23,17 +23,19 @@ namespace TwinsaityEditor
 
         protected override void GenText()
         {
-            List<string> text = new List<string>();
-            text.Add($"ID: {Data.ID}");
-            text.Add($"Bounding Box Vector 1: {Data.Coord1.X}; {Data.Coord1.Y}; {Data.Coord1.Z}; {Data.Coord1.W}");
-            text.Add($"Bounding Box Vector 2: {Data.Coord2.X}; {Data.Coord2.Y}; {Data.Coord2.Z}; {Data.Coord2.W}");
-            text.Add($"Skin ID: {Data.SkinID.ToString("X8")}");
-            text.Add($"Blend Skin Model ID: {Data.BlendSkinID.ToString("X8")}");
-            text.Add($"Joint Count: {Data.Joints.Length}");
-            text.Add($"Exit Point Count: {Data.ExitPoints.Length}");
-            text.Add($"Parent Joint Count: {Data.HeaderVars[2]}");
-            text.Add($"Collision Datas Size: {Data.CollisionData.Length}");
-            text.Add($"Rigid Model Count: {Data.ModelIDs.Length}");
+            List<string> text = new List<string>
+            {
+                $"ID: {Data.ID}",
+                $"Bounding Box Vector 1: {Data.Coord1.X}; {Data.Coord1.Y}; {Data.Coord1.Z}; {Data.Coord1.W}",
+                $"Bounding Box Vector 2: {Data.Coord2.X}; {Data.Coord2.Y}; {Data.Coord2.Z}; {Data.Coord2.W}",
+                $"Skin ID: {Data.SkinID.ToString("X8")}",
+                $"Blend Skin Model ID: {Data.BlendSkinID.ToString("X8")}",
+                $"Joint Count: {Data.Joints.Length}",
+                $"Exit Point Count: {Data.ExitPoints.Length}",
+                $"Parent Joint Count: {Data.HeaderVars[2]}",
+                $"Collision Datas Size: {Data.CollisionData.Length}",
+                $"Rigid Model Count: {Data.ModelIDs.Length}"
+            };
             if (Data.ModelIDs.Length > 0)
             {
                 for (int i = 0; i < Data.ModelIDs.Length; i++)
@@ -51,7 +53,7 @@ namespace TwinsaityEditor
                     //text.Add($"#{ i } Numbers: { Data.Type1[i].Numbers[0] }; { Data.Type1[i].Numbers[1] }; { Data.Type1[i].Numbers[2] }; { Data.Type1[i].Numbers[3] }; { Data.Type1[i].Numbers[4] }");
                     text.Add($"\t#{ i } Local Space Position: { Data.Joints[i].Matrix[0].X }; { Data.Joints[i].Matrix[0].Y }; { Data.Joints[i].Matrix[0].Z }; { Data.Joints[i].Matrix[0].W }");
                     text.Add($"\t#{ i } World Space Position: { Data.Joints[i].Matrix[1].X }; { Data.Joints[i].Matrix[1].Y }; { Data.Joints[i].Matrix[1].Z }; { Data.Joints[i].Matrix[1].W }");
-                    text.Add($"\t#{ i } Vector 3: { Data.Joints[i].Matrix[2].X }; { Data.Joints[i].Matrix[2].Y }; { Data.Joints[i].Matrix[2].Z }; { Data.Joints[i].Matrix[2].W }");
+                    text.Add($"\t#{ i } Local Space Rotation: { Data.Joints[i].Matrix[2].X }; { Data.Joints[i].Matrix[2].Y }; { Data.Joints[i].Matrix[2].Z }; { Data.Joints[i].Matrix[2].W }");
                     text.Add($"\t#{ i } Vector 4: { Data.Joints[i].Matrix[3].X }; { Data.Joints[i].Matrix[3].Y }; { Data.Joints[i].Matrix[3].Z }; { Data.Joints[i].Matrix[3].W }");
                     text.Add($"\t#{ i } Vector 5: { Data.Joints[i].Matrix[4].X }; { Data.Joints[i].Matrix[4].Y }; { Data.Joints[i].Matrix[4].Z }; { Data.Joints[i].Matrix[4].W }");
                     text.Add($"\t#{ i } T3 Matrix 1: { Data.Type3[i].Matrix[0].X }; { Data.Type3[i].Matrix[0].Y }; { Data.Type3[i].Matrix[0].Z }; { Data.Type3[i].Matrix[0].W }");

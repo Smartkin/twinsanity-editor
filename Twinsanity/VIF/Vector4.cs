@@ -39,6 +39,8 @@ namespace Twinsanity.VIF
             return 0x10;
         }
 
+        public double Length => Math.Sqrt(X * X + Y * Y + Z * Z);
+
         public void Read(BinaryReader reader, int length)
         {
             X = reader.ReadSingle();
@@ -49,11 +51,13 @@ namespace Twinsanity.VIF
 
         public Vector4 Multiply(float value)
         {
-            var resVec = new Vector4();
-            resVec.X = X * value;
-            resVec.Y = Y * value;
-            resVec.Z = Z * value;
-            resVec.W = W * value;
+            var resVec = new Vector4
+            {
+                X = X * value,
+                Y = Y * value,
+                Z = Z * value,
+                W = W * value
+            };
             return resVec;
         }
 

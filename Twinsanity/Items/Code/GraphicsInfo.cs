@@ -6,7 +6,7 @@ namespace Twinsanity
     public class GraphicsInfo : TwinsItem
     {
 
-        public GI_Type0[] ModelIDs { get; set; }
+        public ModelLink[] ModelIDs { get; set; }
         public uint SkinID { get; set; }
         public uint BlendSkinID { get; set; }
         public Pos Coord1 { get; set; } // Bounding box?
@@ -113,6 +113,11 @@ namespace Twinsanity
 
         }
 
+        public override string ToString()
+        {
+            return DefaultHashes.Hash_OGI[ID];
+        }
+
         public override void Load(BinaryReader reader, int size)
         {
             long pre_pos = reader.BaseStream.Position;
@@ -120,20 +125,21 @@ namespace Twinsanity
             HeaderVars = new byte[0x10];
             HeaderVars = reader.ReadBytes(0x10);
 
-            uint Type1_Size = HeaderVars[0];
-            uint Type2_Size = HeaderVars[1];
+            uint jointsAmt = HeaderVars[0];
+            uint exitPointsAmt = HeaderVars[1];
+            uint cameraJointsAmt = HeaderVars[2]; // These joints rotate when camera rotates
             uint Model_Size = HeaderVars[5];
             uint SkinFlag = HeaderVars[6];
             uint BlendSkinFlag = HeaderVars[7];
-            int Type4_Size = HeaderVars[8];
+            int collisionDataAmount = HeaderVars[8];
 
             Coord1 = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
             Coord2 = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
 
-            if (Type1_Size > 0)
+            if (jointsAmt > 0)
             {
-                Joints = new Joint[Type1_Size];
-                for (int i = 0; i < Type1_Size; i++)
+                Joints = new Joint[jointsAmt];
+                for (int i = 0; i < jointsAmt; i++)
                 {
                     Pos[] Type1_Matrix = new Pos[5];
                     uint[] Type1_Numbers = new uint[5];
@@ -155,10 +161,10 @@ namespace Twinsanity
                 Joints = new Joint[0];
             }
 
-            if (Type2_Size > 0)
+            if (exitPointsAmt > 0)
             {
-                ExitPoints = new ExitPoint[Type2_Size];
-                for (int i = 0; i < Type2_Size; i++)
+                ExitPoints = new ExitPoint[exitPointsAmt];
+                for (int i = 0; i < exitPointsAmt; i++)
                 {
                     Pos[] Type2_Matrix = new Pos[4];
                     uint[] Type2_Numbers = new uint[2];
@@ -179,7 +185,7 @@ namespace Twinsanity
 
             if (Model_Size > 0)
             {
-                ModelIDs = new GI_Type0[Model_Size];
+                ModelIDs = new ModelLink[Model_Size];
                 uint[] IDs = new uint[Model_Size];
                 uint[] IDs_m = new uint[Model_Size];
                 for (int i = 0; i < Model_Size; i++)
@@ -192,20 +198,20 @@ namespace Twinsanity
                 }
                 for (int i = 0; i < Model_Size; i++)
                 {
-                    GI_Type0 Type0 = new GI_Type0() { ID = IDs[i], ModelID = IDs_m[i] };
+                    ModelLink Type0 = new ModelLink() { ID = IDs[i], ModelID = IDs_m[i] };
                     ModelIDs[i] = Type0;
                 }
 
             }
             else
             {
-                ModelIDs = new GI_Type0[0];
+                ModelIDs = new ModelLink[0];
             }
 
-            if (Type1_Size > 0)
+            if (jointsAmt > 0)
             {
-                Type3 = new GI_Type3[Type1_Size];
-                for (int a = 0; a < Type1_Size; a++)
+                Type3 = new GI_Type3[jointsAmt];
+                for (int a = 0; a < jointsAmt; a++)
                 {
                     Pos[] Type3_Matrix = new Pos[4];
                     for (int i = 0; i < Type3_Matrix.Length; i++)
@@ -224,10 +230,10 @@ namespace Twinsanity
 
             BlendSkinID = reader.ReadUInt32();
 
-            if (Type4_Size > 0)
+            if (collisionDataAmount > 0)
             {
-                CollisionData = new GI_CollisionData[Type4_Size];
-                for (int a = 0; a < Type4_Size; a++)
+                CollisionData = new GI_CollisionData[collisionDataAmount];
+                for (int a = 0; a < collisionDataAmount; a++)
                 {
                     ushort[] header = new ushort[11];
                     for (var i = 0; i < 11; ++i)
@@ -269,7 +275,7 @@ namespace Twinsanity
                 CollisionData = new GI_CollisionData[0];
             }
 
-            CollisionDataRelated = reader.ReadBytes(Type4_Size);
+            CollisionDataRelated = reader.ReadBytes(collisionDataAmount);
 
         }
 
@@ -319,7 +325,7 @@ namespace Twinsanity
             return count;
         }
 
-        public struct GI_Type0
+        public struct ModelLink
         {
             public uint ID;
             public uint ModelID;
@@ -357,7 +363,7 @@ namespace Twinsanity
             var destinationSkins = destination.GetItem<TwinsSection>(11).GetItem<TwinsSection>(4);
             var sourceBlend = source.GetItem<TwinsSection>(11).GetItem<TwinsSection>(5);
             var destinationBlend = destination.GetItem<TwinsSection>(11).GetItem<TwinsSection>(5);
-            foreach (GI_Type0 modelID in ModelIDs)
+            foreach (ModelLink modelID in ModelIDs)
             {
                 if (destinationModels.HasItem(modelID.ModelID))
                 {

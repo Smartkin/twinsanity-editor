@@ -1,7 +1,9 @@
 ﻿using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using Twinsanity;
 
@@ -11,15 +13,36 @@ namespace TwinsaityEditor
     {
         private FileController file;
         private ChunkLinks links;
+        private SceneryData scenery;
+        private Skydome skydome;
+        private DynamicSceneryData dynamicScenery;
+        private List<VertexBufferData> renderObjects;
+
+        private bool showScenery;
+
 
         public SMViewer(FileController file, Form pform)
         {
             this.file = file;
+            showScenery = true;
+
+            InitVBO(objectLimit);
+
+            // Chunk links
             if (file.Data.ContainsItem(5))
             {
                 links = file.Data.GetItem<ChunkLinks>(5);
             }
+            // Scenery data
+            if (file.Data.ContainsItem(0))
+            {
+                scenery = file.Data.GetItem<SceneryData>(0);
+                LoadScenery(new Matrix4());
+            }
             zFar = 2000F;
+
+            renderObjects = new List<VertexBufferData>();
+            renderObjects.AddRange(vtx.Where(v => v != null));
         }
 
         //protected override void RenderHUD()
@@ -196,7 +219,154 @@ namespace TwinsaityEditor
                 GL.LineWidth(1);
             }
 
+            GL.Enable(EnableCap.Lighting);
+            for (int i = 0; i < renderObjects.Count; i++)
+            {
+                renderObjects[i].DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Normal);
+            }
+            GL.Disable(EnableCap.Lighting);
+
             GL.PopMatrix();
+        }
+
+        private void LoadScenery(Matrix4 chunkMatrix)
+        {
+            if (scenery.SceneryRoot == null)
+            {
+                return;
+            }
+
+            LoadSceneryStruct(scenery.SceneryRoot, chunkMatrix);
+        }
+
+        private void LoadSceneryStruct(SceneryData.SceneryStruct branch, Matrix4 chunkMatrix)
+        {
+            LoadSceneryModel(branch.Model, chunkMatrix);
+
+            for (int i = 0; i < branch.Links.Length; i++)
+            {
+                if (branch.Links[i] is SceneryData.SceneryModelStruct modelStruct)
+                {
+                    LoadSceneryModel(modelStruct, chunkMatrix);
+                }
+                else if (branch.Links[i] is SceneryData.SceneryStruct @struct)
+                {
+                    LoadSceneryStruct(@struct, chunkMatrix);
+                }
+            }
+        }
+
+        private void LoadSceneryModel(SceneryData.SceneryModelStruct leaf, Matrix4 chunkMatrix)
+        {
+            float min_x = float.MaxValue, min_y = float.MaxValue, min_z = float.MaxValue, max_x = float.MinValue, max_y = float.MinValue, max_z = float.MinValue;
+            SceneryDataController scenery_sec = file.GetItem<SceneryDataController>(0);
+            SectionController graphics_sec = file.GetItem<SectionController>(6);
+            SectionController tex_sec = graphics_sec.GetItem<SectionController>(0);
+            SectionController mat_sec = graphics_sec.GetItem<SectionController>(1);
+            SectionController mesh_sec = graphics_sec.GetItem<SectionController>(2);
+            SectionController model_sec = graphics_sec.GetItem<SectionController>(6);
+            SectionController special_sec = graphics_sec.GetItem<SectionController>(7);
+
+            if (file.Data.Type == TwinsFile.FileType.SM2 || file.Data.Type == TwinsFile.FileType.DemoSM2)
+            {
+                for (int m = 0; m < leaf.Models.Count; m++)
+                {
+                    ModelController mesh;
+                    uint modelID;
+                    if (!leaf.Models[m].isSpecial)
+                    {
+                        modelID = leaf.Models[m].ModelID;
+                    }
+                    else
+                    {
+                        //uint LODcount = special_sec.Data.GetItem<SpecialModel>(ptr.Models[m].ModelID).ModelsAmount;
+                        //int targetLOD = LODcount == 1 ? 0 : 1;
+                        modelID = special_sec.Data.GetItem<LodModel>(leaf.Models[m].ModelID).LODModelIDs[0];
+                    }
+                    mesh = mesh_sec.GetItem<ModelController>(model_sec.GetItem<RigidModelController>(modelID).Data.MeshID);
+
+                    var rigid = model_sec.GetItem<RigidModelController>(modelID).Data;
+                    mesh.LoadMeshData();
+
+                    Matrix4 modelMatrix = Matrix4.Identity;
+
+                    // closest: -M11, -M21, -M31, -X
+
+                    // Rotation
+                    modelMatrix.M11 = -leaf.Models[m].ModelMatrix[0].X;
+                    modelMatrix.M12 = leaf.Models[m].ModelMatrix[1].X;
+                    modelMatrix.M13 = leaf.Models[m].ModelMatrix[2].X;
+
+                    modelMatrix.M21 = -leaf.Models[m].ModelMatrix[0].Y;
+                    modelMatrix.M22 = leaf.Models[m].ModelMatrix[1].Y;
+                    modelMatrix.M23 = leaf.Models[m].ModelMatrix[2].Y;
+
+                    modelMatrix.M31 = -leaf.Models[m].ModelMatrix[0].Z;
+                    modelMatrix.M32 = leaf.Models[m].ModelMatrix[1].Z;
+                    modelMatrix.M33 = leaf.Models[m].ModelMatrix[2].Z;
+
+                    modelMatrix.M14 = leaf.Models[m].ModelMatrix[0].W;
+                    modelMatrix.M24 = leaf.Models[m].ModelMatrix[1].W;
+                    modelMatrix.M34 = leaf.Models[m].ModelMatrix[2].W;
+
+                    // Position
+                    modelMatrix.M41 = leaf.Models[m].ModelMatrix[3].X;
+                    modelMatrix.M42 = leaf.Models[m].ModelMatrix[3].Y;
+                    modelMatrix.M43 = leaf.Models[m].ModelMatrix[3].Z;
+                    modelMatrix.M44 = leaf.Models[m].ModelMatrix[3].W;
+
+                    modelMatrix *= Matrix4.CreateScale(-1, 1, 1);
+
+
+                    for (int v = 0; v < mesh.Vertices.Count; v++)
+                    {
+                        Vertex[] vbuffer = new Vertex[mesh.Vertices[v].Length];
+
+                        for (int k = 0; k < mesh.Vertices[v].Length; k++)
+                        {
+                            vbuffer[k] = mesh.Vertices[v][k];
+                            Vector4 vertexPos = new Vector4(mesh.Vertices[v][k].Pos.X, mesh.Vertices[v][k].Pos.Y, mesh.Vertices[v][k].Pos.Z, 1);
+                            vertexPos *= modelMatrix;
+                            mesh.Vertices[v][k].Pos = new Vector3(vertexPos.X, vertexPos.Y, vertexPos.Z);
+                        }
+
+                        foreach (var p in mesh.Vertices[v])
+                        {
+                            min_x = Math.Min(min_x, p.Pos.X);
+                            min_y = Math.Min(min_y, p.Pos.Y);
+                            min_z = Math.Min(min_z, p.Pos.Z);
+                            max_x = Math.Max(max_x, p.Pos.X);
+                            max_y = Math.Max(max_y, p.Pos.Y);
+                            max_z = Math.Max(max_z, p.Pos.Z);
+                        }
+
+                        int vtx_id = GenerateVBO();
+
+                        if (rigid != null)
+                        {
+                            Utils.TextUtils.LoadTexture(rigid.MaterialIDs, file, vtx[vtx_id], v);
+                        }
+
+                        vtx[vtx_id].Vtx = mesh.Vertices[v];
+                        vtx[vtx_id].VtxInd = mesh.Indices[v];
+                        mesh.Vertices[v] = vbuffer;
+
+                        UpdateVBO(vtx_id);
+                    }
+                }
+            }
+        }
+
+        private readonly int objectLimit = 4000;
+        private int vtxIndex;
+        private int GenerateVBO()
+        {
+            if (vtxIndex >= objectLimit)
+            {
+                vtxIndex = 0;
+            }
+            vtx[vtxIndex] = new VertexBufferData();
+            return vtxIndex++;
         }
 
         /// <summary> 

@@ -54,6 +54,8 @@ namespace TwinsaityEditor
             var refIndex = 0U;
             var offset = 0;
 
+            var isSpyroModel = DefaultHashes.Hash_Skins[Data.ID] == "Spyro";
+
             foreach (var model in Data.SubModels)
             {
                 List<Vertex> vtx = new List<Vertex>();
@@ -80,9 +82,18 @@ namespace TwinsaityEditor
                         ++refIndex;
                     }
                     Color col = Color.FromArgb(model.Vertexes[j].A, model.Vertexes[j].R, model.Vertexes[j].G, model.Vertexes[j].B);
-                    vtx.Add(new Vertex(new Vector3(-model.Vertexes[j].X, model.Vertexes[j].Y, model.Vertexes[j].Z),
-                            new Vector3(0, 0, 0), new Vector2(model.Vertexes[j].U, 1 - model.Vertexes[j].V),
-                            col));
+                    if (isSpyroModel)
+                    { // Spyro model specifically doesn't need UV flipping
+                        vtx.Add(new Vertex(new Vector3(-model.Vertexes[j].X, model.Vertexes[j].Y, model.Vertexes[j].Z),
+                                new Vector3(0, 0, 0), new Vector2(model.Vertexes[j].U, model.Vertexes[j].V),
+                                col));
+                    }
+                    else
+                    {
+                        vtx.Add(new Vertex(new Vector3(-model.Vertexes[j].X, model.Vertexes[j].Y, model.Vertexes[j].Z),
+                                new Vector3(0, 0, 0), new Vector2(model.Vertexes[j].U, 1 - model.Vertexes[j].V),
+                                col));
+                    }
                 }
                 //offset += model.Vertexes.Count;
                 refIndex = 0;

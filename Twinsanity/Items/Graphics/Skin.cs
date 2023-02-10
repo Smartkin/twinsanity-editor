@@ -104,10 +104,10 @@ namespace Twinsanity
                         U = vertex_batch_2[j].X,
                         V = vertex_batch_2[j].Y,
                         // Colors
-                        R = (byte)(Math.Min(vertex_batch_4[j].X + 126, 255)),
-                        G = (byte)(Math.Min(vertex_batch_4[j].Y + 126, 255)),
-                        B = (byte)(Math.Min(vertex_batch_4[j].Z + 126, 255)),
-                        A = (byte)(Math.Min(vertex_batch_4[j].W + 126, 255)),
+                        R = (byte)(Math.Min((int)(vertex_batch_4[j].GetBinaryX() & 0xFF) + 127, 255)),
+                        G = (byte)(Math.Min((int)(vertex_batch_4[j].GetBinaryY() & 0xFF) + 127, 255)),
+                        B = (byte)(Math.Min((int)(vertex_batch_4[j].GetBinaryZ() & 0xFF) + 127, 255)),
+                        A = (byte)(Math.Min((int)(vertex_batch_4[j].GetBinaryW() & 0xFF) + 127, 255)),
                         Conn = connections[j]
                     };
                     vertexes.Add(vertData);

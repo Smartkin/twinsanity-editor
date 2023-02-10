@@ -307,6 +307,9 @@
     <Compile Include="Utils\MatrixWrapper.cs" />
     <Compile Include="Utils\MiscUtils.cs" />
     <Compile Include="Utils\VectorFuncs.cs" />
+    <Compile Include="Viewers\AnimationViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Viewers\SkydomeViewer.cs">
       <SubType>UserControl</SubType>
     </Compile>
