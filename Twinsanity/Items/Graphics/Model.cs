@@ -150,21 +150,26 @@ namespace Twinsanity
 
             for (int i = 0; i < Vertexes.Count; i++)
             {
-                var vertData = new VertexData();
-                vertData.X = Vertexes[i].X;
-                vertData.Y = Vertexes[i].Y;
-                vertData.Z = Vertexes[i].Z;
-                vertData.U = UVW[i].X;
-                vertData.V = UVW[i].Y;
-                vertData.R = Colors[i].R;
-                vertData.G = Colors[i].G;
-                vertData.B = Colors[i].B;
-                vertData.A = Colors[i].A;
-                vertData.ER = (byte)EmitColor[i].X;
-                vertData.EG = (byte)EmitColor[i].Y;
-                vertData.EB = (byte)EmitColor[i].Z;
-                vertData.EA = (byte)EmitColor[i].W;
-                vertData.Conn = Connection[i];
+                var vertData = new VertexData
+                {
+                    X = Vertexes[i].X,
+                    Y = Vertexes[i].Y,
+                    Z = Vertexes[i].Z,
+                    U = UVW[i].X,
+                    V = UVW[i].Y,
+                    R = Colors[i].R,
+                    G = Colors[i].G,
+                    B = Colors[i].B,
+                    A = Colors[i].A,
+                    NX = Normals[i].X,
+                    NY = Normals[i].Y,
+                    NZ = Normals[i].Z,
+                    ER = (byte)EmitColor[i].X,
+                    EG = (byte)EmitColor[i].Y,
+                    EB = (byte)EmitColor[i].Z,
+                    EA = (byte)EmitColor[i].W,
+                    Conn = Connection[i]
+                };
                 vertexes.Add(vertData);
             }
 
@@ -355,6 +360,7 @@ namespace Twinsanity
         public struct VertexData
         {
             public float X, Y, Z;
+            public float NX, NY, NZ;
             public float U, V;
             public byte R, G, B, A;
             public byte ER, EG, EB, EA; // Emit colors

@@ -61,6 +61,15 @@ namespace Twinsanity.VIF
             return resVec;
         }
 
+        public static Vector4 NormalizeW(Vector4 v)
+        {
+            v.X *= v.W;
+            v.Y *= v.W;
+            v.Z *= v.W;
+            v.W /= v.W;
+            return v;
+        }
+
         public static Vector4 operator +(Vector4 v1, Vector4 v2)
         {
             return new Vector4(v1.X + v2.X, v1.Y + v2.Y, v1.Z + v2.Z, v1.W + v2.W);

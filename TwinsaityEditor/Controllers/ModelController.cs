@@ -85,27 +85,31 @@ namespace TwinsaityEditor
                         Math.Min(model.Vertexes[j].G + model.Vertexes[j].EG, 255),
                         Math.Min(model.Vertexes[j].B + model.Vertexes[j].EB, 255));
                     vtx.Add(new Vertex(new Vector3(-model.Vertexes[j].X, model.Vertexes[j].Y, model.Vertexes[j].Z),
-                            new Vector3(0, 0, 0), new Vector2(model.Vertexes[j].U, model.Vertexes[j].V),
+                            new Vector3(-model.Vertexes[j].NX, model.Vertexes[j].NY, model.Vertexes[j].NZ), new Vector2(model.Vertexes[j].U, model.Vertexes[j].V),
                             col));
                 }
                 //offset += model.Vertexes.Count;
                 refIndex = 0;
 
-                for (int i = 0; i < idx.Count; i += 3)
+                // If there are no prebaked normals, apply flat shading
+                if (vtx[0].Nor.Length == 0)
                 {
-                    var n1 = idx[i];
-                    var n2 = idx[i + 1];
-                    var n3 = idx[i + 2];
-                    var v1 = vtx[(int)n1];
-                    var v2 = vtx[(int)n2];
-                    var v3 = vtx[(int)n3];
-                    var normal = VectorFuncs.CalcNormal(v1.Pos, v2.Pos, v3.Pos);
-                    v1.Nor += normal;
-                    v2.Nor += normal;
-                    v3.Nor += normal;
-                    vtx[(int)n1] = v1;
-                    vtx[(int)n2] = v2;
-                    vtx[(int)n3] = v3;
+                    for (int i = 0; i < idx.Count; i += 3)
+                    {
+                        var n1 = idx[i];
+                        var n2 = idx[i + 1];
+                        var n3 = idx[i + 2];
+                        var v1 = vtx[(int)n1];
+                        var v2 = vtx[(int)n2];
+                        var v3 = vtx[(int)n3];
+                        var normal = VectorFuncs.CalcNormal(v1.Pos, v2.Pos, v3.Pos);
+                        v1.Nor += normal;
+                        v2.Nor += normal;
+                        v3.Nor += normal;
+                        vtx[(int)n1] = v1;
+                        vtx[(int)n2] = v2;
+                        vtx[(int)n3] = v3;
+                    }
                 }
 
                 Vertices.Add(vtx.ToArray());
