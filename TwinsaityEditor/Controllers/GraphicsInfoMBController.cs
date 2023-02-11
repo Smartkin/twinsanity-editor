@@ -32,13 +32,13 @@ namespace TwinsaityEditor
             text.Add($"Joints: {Data.Joints.Length}");
             text.Add($"Exit Points: {Data.ExitPoints.Length}");
             text.Add($"Collision Datas Size: {Data.CollisionData.Length}");
-            text.Add($"Rigid Model Count: {Data.ModelIDs.Length}");
+            text.Add($"Rigid Model Count: {Data.ModelIDs.Count}");
             text.Add(string.Empty);
-            if (Data.ModelIDs.Length > 0)
+            if (Data.ModelIDs.Count > 0)
             {
-                for (int i = 0; i < Data.ModelIDs.Length; i++)
+                foreach (var pair in Data.ModelIDs)
                 {
-                    text.Add(string.Format("Rigid Model ID: {1:X8} - Attached to Joint {0}", Data.ModelIDs[i].ID, Data.ModelIDs[i].ModelID));
+                    text.Add(string.Format("Rigid Model ID: {1:X8} - Attached to Joint {0}", pair.Value, pair.Key));
                 }
             }
             text.Add(string.Empty);
@@ -47,7 +47,7 @@ namespace TwinsaityEditor
                 text.Add($"Joints:");
                 for (int i = 0; i < Data.Joints.Length; i++)
                 {
-                    text.Add($"#{ i } Numbers: { Data.Joints[i].Numbers[0] }; { Data.Joints[i].Numbers[1] }; { Data.Joints[i].Numbers[2] }; { Data.Joints[i].Numbers[3] }; { Data.Joints[i].Numbers[4] }");
+                    //text.Add($"#{ i } Numbers: { Data.Joints[i].Numbers[0] }; { Data.Joints[i].Numbers[1] }; { Data.Joints[i].Numbers[2] }; { Data.Joints[i].Numbers[3] }; { Data.Joints[i].Numbers[4] }");
                     text.Add($"#{ i } Vector 1: { Data.Joints[i].Matrix[0].X }; { Data.Joints[i].Matrix[0].Y }; { Data.Joints[i].Matrix[0].Z }; { Data.Joints[i].Matrix[0].W }");
                     text.Add($"#{ i } Vector 2: { Data.Joints[i].Matrix[1].X }; { Data.Joints[i].Matrix[1].Y }; { Data.Joints[i].Matrix[1].Z }; { Data.Joints[i].Matrix[1].W }");
                     text.Add($"#{ i } Vector 3: { Data.Joints[i].Matrix[2].X }; { Data.Joints[i].Matrix[2].Y }; { Data.Joints[i].Matrix[2].Z }; { Data.Joints[i].Matrix[2].W }");

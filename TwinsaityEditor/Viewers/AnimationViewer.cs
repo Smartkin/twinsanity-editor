@@ -1,4 +1,5 @@
 ﻿using OpenTK;
+using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,9 +8,11 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Forms;
+using TwinsaityEditor.Animations;
+using TwinsaityEditor.Controllers;
 using Twinsanity;
-using static OpenTK.Graphics.OpenGL.GL;
 
 namespace TwinsaityEditor.Viewers
 {
@@ -21,29 +24,58 @@ namespace TwinsaityEditor.Viewers
         private ModelController mesh;
         private FileController targetFile;
         private FileController file;
+        private AnimationController animation;
+        private AnimationPlayer player;
+        private readonly Dictionary<uint, int> VbufferMap = new Dictionary<uint, int>();
+
+        public int FPS { get => player.FPS; set { player.FPS = value; if (animUpdateTimer != null) animUpdateTimer.Interval = (int)Math.Floor(1.0 / FPS * 1000); } }
+        public bool Loop { get => player.Loop; set => player.Loop = value; }
+        public bool Playing { get => player.Playing; set => player.Playing = value; }
+        public bool Finished { get => player.Finished; }
+
+        private Timer animUpdateTimer;
+        
 
         private int bskinEndIndex = 0;
         private int skinEndIndex = 0;
 
-        protected override void RenderObjects()
+        public AnimationViewer()
         {
-            
+            player = new AnimationPlayer();
         }
 
-        public AnimationViewer(GraphicsInfoController mesh, FileController tFile)
+        public AnimationViewer(GraphicsInfoController mesh, AnimationController animation, FileController tFile)
         {
             targetFile = tFile;
             file = mesh.MainFile;
-            this.graphicsInfo = mesh;
+            graphicsInfo = mesh;
+            this.animation = animation;
+            player = new AnimationPlayer(animation);
             zFar = 50F;
+            SetupVBORender();
+
+            animUpdateTimer = new Timer
+            {
+                Interval = (int)Math.Floor(1.0 / 60 * 1000), //Set to ~60fps by default, TODO: Add to Preferences later
+                Enabled = true
+            };
+
+            animUpdateTimer.Tick += delegate (object sender, EventArgs e)
+            {
+                UpdateAnimation(1.0f / FPS);
+            };
+        }
+
+        private void SetupVBORender()
+        {
             ModelController m;
             var vbos = 0;
             SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(2);
-            for (var i = 0; i < graphicsInfo.Data.ModelIDs.Length; i++)
+            foreach(var pair in graphicsInfo.Data.ModelIDs)
             {
                 foreach (RigidModel mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
                 {
-                    if (mod.ID == graphicsInfo.Data.ModelIDs[i].ModelID)
+                    if (mod.ID == pair.Key)
                     {
                         uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(mod.ID).MeshID;
                         m = mesh_sec.GetItem<ModelController>(meshID);
@@ -65,7 +97,7 @@ namespace TwinsaityEditor.Viewers
                     }
                 }
             }
-            if (mesh.Data.BlendSkinID != 0)
+            if (graphicsInfo.Data.BlendSkinID != 0)
             {
                 SectionController blend_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(5);
                 foreach (BlendSkin mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(5).Records)
@@ -84,6 +116,120 @@ namespace TwinsaityEditor.Viewers
             {
                 LoadOGI_PS2();
             }
+        }
+
+        protected override void RenderHUD()
+        {
+            base.RenderHUD();
+        }
+
+        protected override void RenderObjects()
+        {
+            if (vtx == null) return;
+
+
+            GL.PushMatrix();
+            for (int i = 0; i < bskinEndIndex; i++)
+            {
+                vtx[i]?.DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Normal);
+            }
+            for (int i = bskinEndIndex; i < skinEndIndex; i++)
+            {
+                vtx[i]?.DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Normal);
+            }
+            for (int i = skinEndIndex; i < vtx.Count; i++)
+            {
+                vtx[i]?.DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Normal);
+            }
+            GL.PopMatrix();
+        }
+
+        private void UpdateAnimation(float deltaTime)
+        {
+            player.AdvanceClock(deltaTime);
+
+            AnimateSkeleton(graphicsInfo.Data);
+        }
+
+        private void AnimateSkeleton(GraphicsInfo ogi)
+        {
+            var skeleton = ogi.Skeleton;
+            AnimateJoint(skeleton.Root, player.Play((int)skeleton.Root.Joint.JointIndex));
+        }
+
+        private void AnimateJoint(GraphicsInfo.JointNode joint, Matrix4 transform)
+        {
+            var endTransform = player.Play((int)joint.Joint.JointIndex) * transform;
+            foreach (var c in joint.Children)
+            {
+                AnimateJoint(c, endTransform);
+            }
+
+            var models = graphicsInfo.Data.ModelIDs.Where((v) => v.Value == joint.Joint.JointIndex);
+
+            var transMat = endTransform;
+
+            /*Matrix4 tempRot = Matrix4.Identity;
+
+            // Rotation
+            tempRot.M11 = -graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[0].X;
+            tempRot.M12 = -graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[1].X;
+            tempRot.M13 = -graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[2].X;
+
+            tempRot.M21 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[0].Y;
+            tempRot.M22 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[1].Y;
+            tempRot.M23 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[2].Y;
+
+            tempRot.M31 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[0].Z;
+            tempRot.M32 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[1].Z;
+            tempRot.M33 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[2].Z;
+
+            tempRot.M14 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[0].W;
+            tempRot.M24 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[1].W;
+            tempRot.M34 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[2].W;
+
+            // Position
+            tempRot.M41 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].X;
+            tempRot.M42 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].Y;
+            tempRot.M43 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].Z;
+            tempRot.M44 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].W;
+
+            transMat *= tempRot;*/
+            transMat *= Matrix4.CreateScale(-1, 1, 1);
+
+            foreach (var model in models)
+            {
+                SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(2);
+                SectionController rigid_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(3);
+                foreach (RigidModel mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
+                {
+                    if (mod.ID == model.Key)
+                    {
+                        uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(mod.ID).MeshID;
+                        mesh = mesh_sec.GetItem<ModelController>(meshID);
+                    }
+                }
+
+                var vtxIndex = VbufferMap[mesh.Data.ID];
+                for (int v = 0; v < mesh.Vertices.Count; v++)
+                {
+                    Vertex[] vbuffer = new Vertex[mesh.Vertices[v].Length];
+                    for (int k = 0; k < mesh.Vertices[v].Length; k++)
+                    {
+                        vbuffer[k] = mesh.Vertices[v][k];
+                        Vector4 targetPos = new Vector4(mesh.Vertices[v][k].Pos.X, mesh.Vertices[v][k].Pos.Y, mesh.Vertices[v][k].Pos.Z, 1);
+                        targetPos *= transMat;
+                        mesh.Vertices[v][k].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+                    }
+
+                    vtx[vtxIndex].Vtx = mesh.Vertices[v];
+                    vtx[vtxIndex].VtxInd = mesh.Indices[v];
+                    mesh.Vertices[v] = vbuffer;
+                    UpdateVBO(vtxIndex);
+                    vtxIndex++;
+                }
+            }
+            
         }
 
         public void LoadOGI_PS2()
@@ -165,14 +311,14 @@ namespace TwinsaityEditor.Viewers
                 }
             }
             skinEndIndex = vtxIndex;
-            for (int i = 0; i < graphicsInfo.Data.ModelIDs.Length; i++)
+            foreach (var pair in graphicsInfo.Data.ModelIDs)
             {
                 SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(2);
                 SectionController rigid_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(3);
                 RigidModelController rigid = null;
                 foreach (RigidModel mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
                 {
-                    if (mod.ID == graphicsInfo.Data.ModelIDs[i].ModelID)
+                    if (mod.ID == pair.Key)
                     {
                         uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(mod.ID).MeshID;
                         mesh = mesh_sec.GetItem<ModelController>(meshID);
@@ -183,34 +329,34 @@ namespace TwinsaityEditor.Viewers
                 Matrix4 tempRot = Matrix4.Identity;
 
                 // Rotation
-                tempRot.M11 = -graphicsInfo.Data.Type3[graphicsInfo.Data.ModelIDs[i].ID].Matrix[0].X;
-                tempRot.M12 = -graphicsInfo.Data.Type3[graphicsInfo.Data.ModelIDs[i].ID].Matrix[1].X;
-                tempRot.M13 = -graphicsInfo.Data.Type3[graphicsInfo.Data.ModelIDs[i].ID].Matrix[2].X;
+                tempRot.M11 = -graphicsInfo.Data.Type3[pair.Value].Matrix[0].X;
+                tempRot.M12 = -graphicsInfo.Data.Type3[pair.Value].Matrix[1].X;
+                tempRot.M13 = -graphicsInfo.Data.Type3[pair.Value].Matrix[2].X;
 
-                tempRot.M21 = graphicsInfo.Data.Type3[graphicsInfo.Data.ModelIDs[i].ID].Matrix[0].Y;
-                tempRot.M22 = graphicsInfo.Data.Type3[graphicsInfo.Data.ModelIDs[i].ID].Matrix[1].Y;
-                tempRot.M23 = graphicsInfo.Data.Type3[graphicsInfo.Data.ModelIDs[i].ID].Matrix[2].Y;
+                tempRot.M21 = graphicsInfo.Data.Type3[pair.Value].Matrix[0].Y;
+                tempRot.M22 = graphicsInfo.Data.Type3[pair.Value].Matrix[1].Y;
+                tempRot.M23 = graphicsInfo.Data.Type3[pair.Value].Matrix[2].Y;
 
-                tempRot.M31 = graphicsInfo.Data.Type3[graphicsInfo.Data.ModelIDs[i].ID].Matrix[0].Z;
-                tempRot.M32 = graphicsInfo.Data.Type3[graphicsInfo.Data.ModelIDs[i].ID].Matrix[1].Z;
-                tempRot.M33 = graphicsInfo.Data.Type3[graphicsInfo.Data.ModelIDs[i].ID].Matrix[2].Z;
+                tempRot.M31 = graphicsInfo.Data.Type3[pair.Value].Matrix[0].Z;
+                tempRot.M32 = graphicsInfo.Data.Type3[pair.Value].Matrix[1].Z;
+                tempRot.M33 = graphicsInfo.Data.Type3[pair.Value].Matrix[2].Z;
 
-                tempRot.M14 = graphicsInfo.Data.Type3[graphicsInfo.Data.ModelIDs[i].ID].Matrix[0].W;
-                tempRot.M24 = graphicsInfo.Data.Type3[graphicsInfo.Data.ModelIDs[i].ID].Matrix[1].W;
-                tempRot.M34 = graphicsInfo.Data.Type3[graphicsInfo.Data.ModelIDs[i].ID].Matrix[2].W;
+                tempRot.M14 = graphicsInfo.Data.Type3[pair.Value].Matrix[0].W;
+                tempRot.M24 = graphicsInfo.Data.Type3[pair.Value].Matrix[1].W;
+                tempRot.M34 = graphicsInfo.Data.Type3[pair.Value].Matrix[2].W;
 
                 // Position
-                tempRot.M41 = graphicsInfo.Data.Joints[graphicsInfo.Data.ModelIDs[i].ID].Matrix[1].X;
-                tempRot.M42 = graphicsInfo.Data.Joints[graphicsInfo.Data.ModelIDs[i].ID].Matrix[1].Y;
-                tempRot.M43 = graphicsInfo.Data.Joints[graphicsInfo.Data.ModelIDs[i].ID].Matrix[1].Z;
-                tempRot.M44 = graphicsInfo.Data.Joints[graphicsInfo.Data.ModelIDs[i].ID].Matrix[1].W;
+                tempRot.M41 = graphicsInfo.Data.Joints[pair.Value].Matrix[1].X;
+                tempRot.M42 = graphicsInfo.Data.Joints[pair.Value].Matrix[1].Y;
+                tempRot.M43 = graphicsInfo.Data.Joints[pair.Value].Matrix[1].Z;
+                tempRot.M44 = graphicsInfo.Data.Joints[pair.Value].Matrix[1].W;
 
                 // Adjusted for OpenTK
                 tempRot *= Matrix4.CreateScale(-1, 1, 1);
                 mesh.LoadMeshData();
 
 
-
+                VbufferMap.Add(mesh.Data.ID, vtxIndex);
                 for (int v = 0; v < mesh.Vertices.Count; v++)
                 {
                     Vertex[] vbuffer = new Vertex[mesh.Vertices[v].Length];
@@ -240,9 +386,9 @@ namespace TwinsaityEditor.Viewers
                     vtx[vtxIndex].VtxInd = mesh.Indices[v];
                     mesh.Vertices[v] = vbuffer;
                     UpdateVBO(vtxIndex);
+                    
                     vtxIndex++;
                 }
-
 
 
             }
@@ -250,5 +396,23 @@ namespace TwinsaityEditor.Viewers
             zFar = Math.Max(zFar, Math.Max(max_x - min_x, Math.Max(max_y - min_y, max_z - min_z)));
         }
 
+
+        public void ChangeGraphicsInfo(GraphicsInfoController mesh)
+        {
+            graphicsInfo = mesh;
+            VbufferMap.Clear();
+            Utils.TextUtils.ClearTextureCache();
+            SetupVBORender();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (animUpdateTimer != null)
+            {
+                animUpdateTimer.Dispose();
+            }
+            
+            base.Dispose(disposing);
+        }
     }
 }

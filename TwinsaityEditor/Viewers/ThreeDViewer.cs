@@ -69,6 +69,7 @@ namespace TwinsaityEditor
 
         protected long timeRenderObj = 0, timeRenderObj_min = long.MaxValue, timeRenderObj_max = 0;
         protected long timeRenderHud = 0, timeRenderHud_min = long.MaxValue, timeRenderHud_max = 0;
+        protected long frameDelta = 0;
 
         public ThreeDViewer()
         {
@@ -149,9 +150,11 @@ namespace TwinsaityEditor
 
         private void ThreeDViewer_ParentChanged(object sender, EventArgs e)
         {
-            Form par = (Form)Parent;
-            par.Icon = Properties.Resources.icon;
-            ParentChanged -= ThreeDViewer_ParentChanged;
+            if (Parent is Form par)
+            {
+                par.Icon = Properties.Resources.icon;
+                ParentChanged -= ThreeDViewer_ParentChanged;
+            }
         }
 
         protected abstract void RenderObjects();
@@ -311,6 +314,7 @@ namespace TwinsaityEditor
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            var frameWatch = System.Diagnostics.Stopwatch.StartNew();
             MakeCurrent();
             GL.Viewport(Location, Size);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -349,6 +353,8 @@ namespace TwinsaityEditor
             timeRenderHud_max = Math.Max(timeRenderHud_max, timeRenderHud);
             timeRenderHud_min = Math.Min(timeRenderHud_min, timeRenderHud);
             SwapBuffers();
+            frameWatch.Stop();
+            frameDelta = frameWatch.ElapsedMilliseconds;
         }
 
         protected override void OnLoad(EventArgs e)
@@ -682,6 +688,7 @@ namespace TwinsaityEditor
             {
                 GL.DeleteTexture(t);
             }
+            Utils.TextUtils.ClearTextureCache();
             base.Dispose(disposing);
         }
     }
