@@ -26,6 +26,7 @@ namespace TwinsaityEditor.Viewers
         private FileController file;
         private AnimationController animation;
         private AnimationPlayer player;
+        private readonly Dictionary<uint, int> VbufferMap = new Dictionary<uint, int>();
 
         public int FPS { get => player.FPS; set { player.FPS = value; if (animUpdateTimer != null) animUpdateTimer.Interval = (int)Math.Floor(1.0 / FPS * 1000); } }
         public bool Loop { get => player.Loop; set => player.Loop = value; }
@@ -152,17 +153,16 @@ namespace TwinsaityEditor.Viewers
 
         private void AnimateSkeleton(GraphicsInfo ogi)
         {
-            var vtxIndex = skinEndIndex;
             var skeleton = ogi.Skeleton;
-            AnimateJoint(skeleton.Root, player.Play((int)skeleton.Root.Joint.JointIndex), ref vtxIndex);
+            AnimateJoint(skeleton.Root, player.Play((int)skeleton.Root.Joint.JointIndex));
         }
 
-        private void AnimateJoint(GraphicsInfo.JointNode joint, Matrix4 transform, ref int vtxIndex)
+        private void AnimateJoint(GraphicsInfo.JointNode joint, Matrix4 transform)
         {
             var endTransform = player.Play((int)joint.Joint.JointIndex) * transform;
             foreach (var c in joint.Children)
             {
-                AnimateJoint(c, endTransform, ref vtxIndex);
+                AnimateJoint(c, endTransform);
             }
 
             var models = graphicsInfo.Data.ModelIDs.Where((v) => v.Value == joint.Joint.JointIndex);
@@ -210,6 +210,7 @@ namespace TwinsaityEditor.Viewers
                     }
                 }
 
+                var vtxIndex = VbufferMap[mesh.Data.ID];
                 for (int v = 0; v < mesh.Vertices.Count; v++)
                 {
                     Vertex[] vbuffer = new Vertex[mesh.Vertices[v].Length];
@@ -355,7 +356,7 @@ namespace TwinsaityEditor.Viewers
                 mesh.LoadMeshData();
 
 
-
+                VbufferMap.Add(mesh.Data.ID, vtxIndex);
                 for (int v = 0; v < mesh.Vertices.Count; v++)
                 {
                     Vertex[] vbuffer = new Vertex[mesh.Vertices[v].Length];
@@ -385,9 +386,9 @@ namespace TwinsaityEditor.Viewers
                     vtx[vtxIndex].VtxInd = mesh.Indices[v];
                     mesh.Vertices[v] = vbuffer;
                     UpdateVBO(vtxIndex);
+                    
                     vtxIndex++;
                 }
-
 
 
             }
@@ -399,6 +400,7 @@ namespace TwinsaityEditor.Viewers
         public void ChangeGraphicsInfo(GraphicsInfoController mesh)
         {
             graphicsInfo = mesh;
+            VbufferMap.Clear();
             Utils.TextUtils.ClearTextureCache();
             SetupVBORender();
         }
