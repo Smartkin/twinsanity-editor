@@ -515,7 +515,6 @@ namespace TwinsaityEditor
             {
                 playing = viewer.Finished || !playing;
                 viewer.Playing = playing;
-                
             }
         }
 
@@ -541,5 +540,6 @@ namespace TwinsaityEditor
             animation.AnimatedTransforms2.RemoveAt(animation.AnimatedTransforms2.Count - 1);
             UpdateLists();
         }
+
     }
 }

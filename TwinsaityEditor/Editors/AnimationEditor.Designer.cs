@@ -368,9 +368,9 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(4, 431);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(80, 13);
+            this.label5.Size = new System.Drawing.Size(108, 13);
             this.label5.TabIndex = 15;
-            this.label5.Text = "Static transform";
+            this.label5.Text = "Static transform index";
             // 
             // label3
             // 
@@ -600,7 +600,7 @@
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(125, 13);
             this.label16.TabIndex = 17;
-            this.label16.Text = "Aniamted transform index";
+            this.label16.Text = "Animated transform index";
             // 
             // label18
             // 

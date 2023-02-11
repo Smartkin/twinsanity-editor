@@ -178,7 +178,6 @@ namespace TwinsaityEditor.Controllers
             var scaleMat = Matrix4.CreateScale(scale.Xyz);
             var rotMat = Matrix4.CreateFromQuaternion(new Quaternion(rotation.Xyz));
             var transformMatrix = transMat * rotMat * scaleMat;
-            transformMatrix *= Matrix4.CreateScale(-1, 1, 1);
             return transformMatrix;
         }
 

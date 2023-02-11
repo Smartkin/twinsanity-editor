@@ -144,11 +144,11 @@ namespace TwinsaityEditor
             ModelController m;
             var vbos = 0;
             SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(2);
-            for (var i = 0; i < model.Data.ModelIDs.Length; i++)
+            foreach (var pair in model.Data.ModelIDs)
             {
                 foreach (RigidModel mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
                 {
-                    if (mod.ID == model.Data.ModelIDs[i].ModelID)
+                    if (mod.ID == pair.Key)
                     {
                         uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(mod.ID).MeshID;
                         m = mesh_sec.GetItem<ModelController>(meshID);
@@ -566,12 +566,13 @@ namespace TwinsaityEditor
                 UpdateVBO(vtxIndex);
                 vtxIndex++;
             }
-            for (int i = 0; i < model.Data.ModelIDs.Length; i++)
+            var ind = 0;
+            foreach (var pair in model.Data.ModelIDs)
             {
                 SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(2);
                 foreach (RigidModel mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
                 {
-                    if (mod.ID == model.Data.ModelIDs[i].ModelID)
+                    if (mod.ID == pair.Key)
                     {
                         uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(mod.ID).MeshID;
                         meshX = mesh_sec.GetItem<ModelXController>(meshID);
@@ -581,27 +582,27 @@ namespace TwinsaityEditor
                 Matrix4 tempRot = Matrix4.Identity;
 
                 // Rotation
-                tempRot.M11 = -model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[0].X;
-                tempRot.M12 = -model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[1].X;
-                tempRot.M13 = -model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[2].X;
+                tempRot.M11 = -model.Data.Type3[pair.Value].Matrix[0].X;
+                tempRot.M12 = -model.Data.Type3[pair.Value].Matrix[1].X;
+                tempRot.M13 = -model.Data.Type3[pair.Value].Matrix[2].X;
 
-                tempRot.M21 = model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[0].Y;
-                tempRot.M22 = model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[1].Y;
-                tempRot.M23 = model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[2].Y;
+                tempRot.M21 = model.Data.Type3[pair.Value].Matrix[0].Y;
+                tempRot.M22 = model.Data.Type3[pair.Value].Matrix[1].Y;
+                tempRot.M23 = model.Data.Type3[pair.Value].Matrix[2].Y;
 
-                tempRot.M31 = model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[0].Z;
-                tempRot.M32 = model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[1].Z;
-                tempRot.M33 = model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[2].Z;
+                tempRot.M31 = model.Data.Type3[pair.Value].Matrix[0].Z;
+                tempRot.M32 = model.Data.Type3[pair.Value].Matrix[1].Z;
+                tempRot.M33 = model.Data.Type3[pair.Value].Matrix[2].Z;
 
-                tempRot.M14 = model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[0].W;
-                tempRot.M24 = model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[1].W;
-                tempRot.M34 = model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[2].W;
+                tempRot.M14 = model.Data.Type3[pair.Value].Matrix[0].W;
+                tempRot.M24 = model.Data.Type3[pair.Value].Matrix[1].W;
+                tempRot.M34 = model.Data.Type3[pair.Value].Matrix[2].W;
 
                 // Position
-                tempRot.M41 = model.Data.Joints[model.Data.ModelIDs[i].ID].Matrix[1].X;
-                tempRot.M42 = model.Data.Joints[model.Data.ModelIDs[i].ID].Matrix[1].Y;
-                tempRot.M43 = model.Data.Joints[model.Data.ModelIDs[i].ID].Matrix[1].Z;
-                tempRot.M44 = model.Data.Joints[model.Data.ModelIDs[i].ID].Matrix[1].W;
+                tempRot.M41 = model.Data.Joints[pair.Value].Matrix[1].X;
+                tempRot.M42 = model.Data.Joints[pair.Value].Matrix[1].Y;
+                tempRot.M43 = model.Data.Joints[pair.Value].Matrix[1].Z;
+                tempRot.M44 = model.Data.Joints[pair.Value].Matrix[1].W;
 
                 // Adjusted for OpenTK
                 tempRot *= Matrix4.CreateScale(-1, 1, 1);
@@ -629,11 +630,11 @@ namespace TwinsaityEditor
                     max_y = Math.Max(max_y, v.Pos.Y);
                     max_z = Math.Max(max_z, v.Pos.Z);
                 }
-                vtx[i + vtxIndex].Vtx = meshX.Vertices;
-                vtx[i + vtxIndex].VtxInd = meshX.Indices;
+                vtx[ind + vtxIndex].Vtx = meshX.Vertices;
+                vtx[ind + vtxIndex].VtxInd = meshX.Indices;
                 meshX.Vertices = vbuffer;
-                UpdateVBO(i + vtxIndex);
-
+                UpdateVBO(ind + vtxIndex);
+                ++ind;
             }
 
             zFar = Math.Max(zFar, Math.Max(max_x - min_x, Math.Max(max_y - min_y, max_z - min_z)));
@@ -718,14 +719,14 @@ namespace TwinsaityEditor
                 }
             }
             skinEndIndex = vtxIndex;
-            for (int i = 0; i < model.Data.ModelIDs.Length; i++)
+            foreach (var pair in model.Data.ModelIDs)
             {
                 SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(2);
                 SectionController rigid_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(3);
                 RigidModelController rigid = null;
                 foreach (RigidModel mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
                 {
-                    if (mod.ID == model.Data.ModelIDs[i].ModelID)
+                    if (mod.ID == pair.Key)
                     {
                         uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(mod.ID).MeshID;
                         mesh = mesh_sec.GetItem<ModelController>(meshID);
@@ -736,27 +737,27 @@ namespace TwinsaityEditor
                 Matrix4 tempRot = Matrix4.Identity;
 
                 // Rotation
-                tempRot.M11 = -model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[0].X;
-                tempRot.M12 = -model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[1].X;
-                tempRot.M13 = -model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[2].X;
+                tempRot.M11 = -model.Data.Type3[pair.Value].Matrix[0].X;
+                tempRot.M12 = -model.Data.Type3[pair.Value].Matrix[1].X;
+                tempRot.M13 = -model.Data.Type3[pair.Value].Matrix[2].X;
 
-                tempRot.M21 = model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[0].Y;
-                tempRot.M22 = model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[1].Y;
-                tempRot.M23 = model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[2].Y;
+                tempRot.M21 = model.Data.Type3[pair.Value].Matrix[0].Y;
+                tempRot.M22 = model.Data.Type3[pair.Value].Matrix[1].Y;
+                tempRot.M23 = model.Data.Type3[pair.Value].Matrix[2].Y;
 
-                tempRot.M31 = model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[0].Z;
-                tempRot.M32 = model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[1].Z;
-                tempRot.M33 = model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[2].Z;
+                tempRot.M31 = model.Data.Type3[pair.Value].Matrix[0].Z;
+                tempRot.M32 = model.Data.Type3[pair.Value].Matrix[1].Z;
+                tempRot.M33 = model.Data.Type3[pair.Value].Matrix[2].Z;
 
-                tempRot.M14 = model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[0].W;
-                tempRot.M24 = model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[1].W;
-                tempRot.M34 = model.Data.Type3[model.Data.ModelIDs[i].ID].Matrix[2].W;
+                tempRot.M14 = model.Data.Type3[pair.Value].Matrix[0].W;
+                tempRot.M24 = model.Data.Type3[pair.Value].Matrix[1].W;
+                tempRot.M34 = model.Data.Type3[pair.Value].Matrix[2].W;
 
                 // Position
-                tempRot.M41 = model.Data.Joints[model.Data.ModelIDs[i].ID].Matrix[1].X;
-                tempRot.M42 = model.Data.Joints[model.Data.ModelIDs[i].ID].Matrix[1].Y;
-                tempRot.M43 = model.Data.Joints[model.Data.ModelIDs[i].ID].Matrix[1].Z;
-                tempRot.M44 = model.Data.Joints[model.Data.ModelIDs[i].ID].Matrix[1].W;
+                tempRot.M41 = model.Data.Joints[pair.Value].Matrix[1].X;
+                tempRot.M42 = model.Data.Joints[pair.Value].Matrix[1].Y;
+                tempRot.M43 = model.Data.Joints[pair.Value].Matrix[1].Z;
+                tempRot.M44 = model.Data.Joints[pair.Value].Matrix[1].W;
 
                 // Adjusted for OpenTK
                 tempRot *= Matrix4.CreateScale(-1, 1, 1);

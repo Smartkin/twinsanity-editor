@@ -25,6 +25,7 @@ namespace TwinsaityEditor.Animations
                 if (value && Finished)
                 {
                     animFrame = 0;
+                    Finished = false;
                 }
                 playing = value;
             }

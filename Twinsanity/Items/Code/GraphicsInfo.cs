@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Twinsanity
@@ -6,7 +7,7 @@ namespace Twinsanity
     public class GraphicsInfo : TwinsItem
     {
 
-        public ModelLink[] ModelIDs { get; set; }
+        public Dictionary<uint, int> ModelIDs { get; set; } = new Dictionary<uint, int>();
         public uint SkinID { get; set; }
         public uint BlendSkinID { get; set; }
         public Pos Coord1 { get; set; } // Bounding box?
@@ -15,6 +16,7 @@ namespace Twinsanity
         public ExitPoint[] ExitPoints { get; set; }
         public GI_Type3[] Type3 { get; set; }
         public GI_CollisionData[] CollisionData { get; set; }
+        public JointTree Skeleton { get; private set; }
 
         public byte[] HeaderVars;
         public byte[] CollisionDataRelated;
@@ -68,15 +70,15 @@ namespace Twinsanity
                 }
             }
 
-            if (ModelIDs.Length > 0)
+            if (ModelIDs.Count > 0)
             {
-                for (int i = 0; i < ModelIDs.Length; i++)
+                foreach (var pair in ModelIDs)
                 {
-                    writer.Write((byte)ModelIDs[i].ID);
+                    writer.Write((byte)pair.Value);
                 }
-                for (int i = 0; i < ModelIDs.Length; i++)
+                foreach (var pair in ModelIDs)
                 {
-                    writer.Write(ModelIDs[i].ModelID);
+                    writer.Write(pair.Key);
                 }
             }
 
@@ -128,7 +130,7 @@ namespace Twinsanity
 
             uint jointsAmt = HeaderVars[0];
             uint exitPointsAmt = HeaderVars[1];
-            uint cameraJointsAmt = HeaderVars[2]; // These joints rotate when camera rotates
+            uint reactJointsAmt = HeaderVars[2]; // These joints rotate and react to camera movement
             uint Model_Size = HeaderVars[5];
             uint SkinFlag = HeaderVars[6];
             uint BlendSkinFlag = HeaderVars[7];
@@ -194,7 +196,7 @@ namespace Twinsanity
 
             if (Model_Size > 0)
             {
-                ModelIDs = new ModelLink[Model_Size];
+                ModelIDs = new Dictionary<uint, int>();
                 uint[] IDs = new uint[Model_Size];
                 uint[] IDs_m = new uint[Model_Size];
                 for (int i = 0; i < Model_Size; i++)
@@ -207,14 +209,13 @@ namespace Twinsanity
                 }
                 for (int i = 0; i < Model_Size; i++)
                 {
-                    ModelLink Type0 = new ModelLink() { ID = IDs[i], ModelID = IDs_m[i] };
-                    ModelIDs[i] = Type0;
+                    ModelIDs.Add(IDs_m[i], (int)IDs[i]);
                 }
 
             }
             else
             {
-                ModelIDs = new ModelLink[0];
+                ModelIDs = new Dictionary<uint, int>();
             }
 
             if (jointsAmt > 0)
@@ -286,6 +287,38 @@ namespace Twinsanity
 
             CollisionDataRelated = reader.ReadBytes(collisionDataAmount);
 
+            BuildSkeleton();
+        }
+
+        private void BuildSkeleton()
+        {
+            Skeleton = new JointTree
+            {
+                Root = new JointNode(Joints[0]),
+                Nodes = new Dictionary<int, JointNode>()
+            };
+            Skeleton.Nodes.Add(0, Skeleton.Root);
+
+            for (int i = 1; i < Joints.Length; i++)
+            {
+                var joint = Joints[i];
+                var node = new JointNode(joint);
+                Skeleton.Nodes.Add((int)joint.JointIndex, node);
+                if (Skeleton.Nodes.ContainsKey((int)joint.ParentJointIndex))
+                {
+                    var parent = Skeleton.Nodes[(int)joint.ParentJointIndex];
+                    parent.Children.Add(node);
+                }
+            }
+
+            // Children amount validation
+            foreach (var node in Skeleton.Nodes)
+            {
+                if (node.Value.Joint.ChildJointAmount != node.Value.Children.Count)
+                {
+                    Console.WriteLine($"WARNING: Joint {node.Value.Joint.JointIndex} in OGI 0x{ID:X} {ToString()} was supposed to have {node.Value.Joint.ChildJointAmount} children, instead has {node.Value.Children.Count}");
+                }
+            }
         }
 
         protected override int GetSize()
@@ -310,9 +343,9 @@ namespace Twinsanity
                 }
             }
 
-            if (ModelIDs.Length > 0)
+            if (ModelIDs.Count > 0)
             {
-                count += ModelIDs.Length * 5;
+                count += ModelIDs.Count * 5;
             }
 
             if (Type3.Length > 0)
@@ -334,9 +367,26 @@ namespace Twinsanity
             return count;
         }
 
+        public struct JointTree
+        {
+            public JointNode Root;
+            public Dictionary<int, JointNode> Nodes;
+        }
+
+        public struct JointNode
+        {
+            public List<JointNode> Children;
+            public Joint Joint;
+            public JointNode(Joint joint)
+            {
+                Children = new List<JointNode>();
+                Joint = joint;
+            }
+        }
+
         public struct ModelLink
         {
-            public uint ID;
+            public uint JointIndex;
             public uint ModelID;
         }
 
@@ -376,14 +426,14 @@ namespace Twinsanity
             var destinationSkins = destination.GetItem<TwinsSection>(11).GetItem<TwinsSection>(4);
             var sourceBlend = source.GetItem<TwinsSection>(11).GetItem<TwinsSection>(5);
             var destinationBlend = destination.GetItem<TwinsSection>(11).GetItem<TwinsSection>(5);
-            foreach (ModelLink modelID in ModelIDs)
+            foreach (var modelID in ModelIDs)
             {
-                if (destinationModels.HasItem(modelID.ModelID))
+                if (destinationModels.HasItem(modelID.Key))
                 {
                     continue;
                 }
-                var linkedModel = sourceModels.GetItem<RigidModel>(modelID.ModelID);
-                destinationModels.AddItem(modelID.ModelID, linkedModel);
+                var linkedModel = sourceModels.GetItem<RigidModel>(modelID.Key);
+                destinationModels.AddItem(modelID.Key, linkedModel);
                 linkedModel.FillPackage(source, destination);
             }
             if (sourceSkins.HasItem(SkinID))

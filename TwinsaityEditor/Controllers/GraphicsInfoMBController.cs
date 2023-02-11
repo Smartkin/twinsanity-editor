@@ -32,13 +32,13 @@ namespace TwinsaityEditor
             text.Add($"Joints: {Data.Joints.Length}");
             text.Add($"Exit Points: {Data.ExitPoints.Length}");
             text.Add($"Collision Datas Size: {Data.CollisionData.Length}");
-            text.Add($"Rigid Model Count: {Data.ModelIDs.Length}");
+            text.Add($"Rigid Model Count: {Data.ModelIDs.Count}");
             text.Add(string.Empty);
-            if (Data.ModelIDs.Length > 0)
+            if (Data.ModelIDs.Count > 0)
             {
-                for (int i = 0; i < Data.ModelIDs.Length; i++)
+                foreach (var pair in Data.ModelIDs)
                 {
-                    text.Add(string.Format("Rigid Model ID: {1:X8} - Attached to Joint {0}", Data.ModelIDs[i].ID, Data.ModelIDs[i].ModelID));
+                    text.Add(string.Format("Rigid Model ID: {1:X8} - Attached to Joint {0}", pair.Value, pair.Key));
                 }
             }
             text.Add(string.Empty);

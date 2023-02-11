@@ -70,11 +70,11 @@ namespace TwinsaityEditor.Viewers
             ModelController m;
             var vbos = 0;
             SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(2);
-            for (var i = 0; i < graphicsInfo.Data.ModelIDs.Length; i++)
+            foreach(var pair in graphicsInfo.Data.ModelIDs)
             {
                 foreach (RigidModel mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
                 {
-                    if (mod.ID == graphicsInfo.Data.ModelIDs[i].ModelID)
+                    if (mod.ID == pair.Key)
                     {
                         uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(mod.ID).MeshID;
                         m = mesh_sec.GetItem<ModelController>(meshID);
@@ -147,16 +147,63 @@ namespace TwinsaityEditor.Viewers
         {
             player.AdvanceClock(deltaTime);
 
-            var vtxIndex = skinEndIndex;
-            for (int i = 0; i < graphicsInfo.Data.ModelIDs.Length; i++)
-            {
-                var transMat = player.Play((int)graphicsInfo.Data.ModelIDs[i].ID);
+            AnimateSkeleton(graphicsInfo.Data);
+        }
 
+        private void AnimateSkeleton(GraphicsInfo ogi)
+        {
+            var vtxIndex = skinEndIndex;
+            var skeleton = ogi.Skeleton;
+            AnimateJoint(skeleton.Root, player.Play((int)skeleton.Root.Joint.JointIndex), ref vtxIndex);
+        }
+
+        private void AnimateJoint(GraphicsInfo.JointNode joint, Matrix4 transform, ref int vtxIndex)
+        {
+            var endTransform = player.Play((int)joint.Joint.JointIndex) * transform;
+            foreach (var c in joint.Children)
+            {
+                AnimateJoint(c, endTransform, ref vtxIndex);
+            }
+
+            var models = graphicsInfo.Data.ModelIDs.Where((v) => v.Value == joint.Joint.JointIndex);
+
+            var transMat = endTransform;
+
+            /*Matrix4 tempRot = Matrix4.Identity;
+
+            // Rotation
+            tempRot.M11 = -graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[0].X;
+            tempRot.M12 = -graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[1].X;
+            tempRot.M13 = -graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[2].X;
+
+            tempRot.M21 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[0].Y;
+            tempRot.M22 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[1].Y;
+            tempRot.M23 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[2].Y;
+
+            tempRot.M31 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[0].Z;
+            tempRot.M32 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[1].Z;
+            tempRot.M33 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[2].Z;
+
+            tempRot.M14 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[0].W;
+            tempRot.M24 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[1].W;
+            tempRot.M34 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[2].W;
+
+            // Position
+            tempRot.M41 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].X;
+            tempRot.M42 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].Y;
+            tempRot.M43 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].Z;
+            tempRot.M44 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].W;
+
+            transMat *= tempRot;*/
+            transMat *= Matrix4.CreateScale(-1, 1, 1);
+
+            foreach (var model in models)
+            {
                 SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(2);
                 SectionController rigid_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(3);
                 foreach (RigidModel mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
                 {
-                    if (mod.ID == graphicsInfo.Data.ModelIDs[i].ModelID)
+                    if (mod.ID == model.Key)
                     {
                         uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(mod.ID).MeshID;
                         mesh = mesh_sec.GetItem<ModelController>(meshID);
@@ -181,6 +228,7 @@ namespace TwinsaityEditor.Viewers
                     vtxIndex++;
                 }
             }
+            
         }
 
         public void LoadOGI_PS2()
@@ -262,14 +310,14 @@ namespace TwinsaityEditor.Viewers
                 }
             }
             skinEndIndex = vtxIndex;
-            for (int i = 0; i < graphicsInfo.Data.ModelIDs.Length; i++)
+            foreach (var pair in graphicsInfo.Data.ModelIDs)
             {
                 SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(2);
                 SectionController rigid_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(3);
                 RigidModelController rigid = null;
                 foreach (RigidModel mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
                 {
-                    if (mod.ID == graphicsInfo.Data.ModelIDs[i].ModelID)
+                    if (mod.ID == pair.Key)
                     {
                         uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(mod.ID).MeshID;
                         mesh = mesh_sec.GetItem<ModelController>(meshID);
@@ -280,27 +328,27 @@ namespace TwinsaityEditor.Viewers
                 Matrix4 tempRot = Matrix4.Identity;
 
                 // Rotation
-                tempRot.M11 = -graphicsInfo.Data.Type3[graphicsInfo.Data.ModelIDs[i].ID].Matrix[0].X;
-                tempRot.M12 = -graphicsInfo.Data.Type3[graphicsInfo.Data.ModelIDs[i].ID].Matrix[1].X;
-                tempRot.M13 = -graphicsInfo.Data.Type3[graphicsInfo.Data.ModelIDs[i].ID].Matrix[2].X;
+                tempRot.M11 = -graphicsInfo.Data.Type3[pair.Value].Matrix[0].X;
+                tempRot.M12 = -graphicsInfo.Data.Type3[pair.Value].Matrix[1].X;
+                tempRot.M13 = -graphicsInfo.Data.Type3[pair.Value].Matrix[2].X;
 
-                tempRot.M21 = graphicsInfo.Data.Type3[graphicsInfo.Data.ModelIDs[i].ID].Matrix[0].Y;
-                tempRot.M22 = graphicsInfo.Data.Type3[graphicsInfo.Data.ModelIDs[i].ID].Matrix[1].Y;
-                tempRot.M23 = graphicsInfo.Data.Type3[graphicsInfo.Data.ModelIDs[i].ID].Matrix[2].Y;
+                tempRot.M21 = graphicsInfo.Data.Type3[pair.Value].Matrix[0].Y;
+                tempRot.M22 = graphicsInfo.Data.Type3[pair.Value].Matrix[1].Y;
+                tempRot.M23 = graphicsInfo.Data.Type3[pair.Value].Matrix[2].Y;
 
-                tempRot.M31 = graphicsInfo.Data.Type3[graphicsInfo.Data.ModelIDs[i].ID].Matrix[0].Z;
-                tempRot.M32 = graphicsInfo.Data.Type3[graphicsInfo.Data.ModelIDs[i].ID].Matrix[1].Z;
-                tempRot.M33 = graphicsInfo.Data.Type3[graphicsInfo.Data.ModelIDs[i].ID].Matrix[2].Z;
+                tempRot.M31 = graphicsInfo.Data.Type3[pair.Value].Matrix[0].Z;
+                tempRot.M32 = graphicsInfo.Data.Type3[pair.Value].Matrix[1].Z;
+                tempRot.M33 = graphicsInfo.Data.Type3[pair.Value].Matrix[2].Z;
 
-                tempRot.M14 = graphicsInfo.Data.Type3[graphicsInfo.Data.ModelIDs[i].ID].Matrix[0].W;
-                tempRot.M24 = graphicsInfo.Data.Type3[graphicsInfo.Data.ModelIDs[i].ID].Matrix[1].W;
-                tempRot.M34 = graphicsInfo.Data.Type3[graphicsInfo.Data.ModelIDs[i].ID].Matrix[2].W;
+                tempRot.M14 = graphicsInfo.Data.Type3[pair.Value].Matrix[0].W;
+                tempRot.M24 = graphicsInfo.Data.Type3[pair.Value].Matrix[1].W;
+                tempRot.M34 = graphicsInfo.Data.Type3[pair.Value].Matrix[2].W;
 
                 // Position
-                tempRot.M41 = graphicsInfo.Data.Joints[graphicsInfo.Data.ModelIDs[i].ID].Matrix[1].X;
-                tempRot.M42 = graphicsInfo.Data.Joints[graphicsInfo.Data.ModelIDs[i].ID].Matrix[1].Y;
-                tempRot.M43 = graphicsInfo.Data.Joints[graphicsInfo.Data.ModelIDs[i].ID].Matrix[1].Z;
-                tempRot.M44 = graphicsInfo.Data.Joints[graphicsInfo.Data.ModelIDs[i].ID].Matrix[1].W;
+                tempRot.M41 = graphicsInfo.Data.Joints[pair.Value].Matrix[1].X;
+                tempRot.M42 = graphicsInfo.Data.Joints[pair.Value].Matrix[1].Y;
+                tempRot.M43 = graphicsInfo.Data.Joints[pair.Value].Matrix[1].Z;
+                tempRot.M44 = graphicsInfo.Data.Joints[pair.Value].Matrix[1].W;
 
                 // Adjusted for OpenTK
                 tempRot *= Matrix4.CreateScale(-1, 1, 1);
