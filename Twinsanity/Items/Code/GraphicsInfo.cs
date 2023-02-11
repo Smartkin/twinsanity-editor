@@ -7,7 +7,7 @@ namespace Twinsanity
     public class GraphicsInfo : TwinsItem
     {
 
-        public Dictionary<uint, int> ModelIDs { get; set; } = new Dictionary<uint, int>();
+        public Dictionary<int, ModelLink> ModelIDs { get; set; } = new Dictionary<int, ModelLink>();
         public uint SkinID { get; set; }
         public uint BlendSkinID { get; set; }
         public Pos Coord1 { get; set; } // Bounding box?
@@ -74,11 +74,11 @@ namespace Twinsanity
             {
                 foreach (var pair in ModelIDs)
                 {
-                    writer.Write((byte)pair.Value);
+                    writer.Write((byte)pair.Value.JointIndex);
                 }
                 foreach (var pair in ModelIDs)
                 {
-                    writer.Write(pair.Key);
+                    writer.Write(pair.Value.ModelID);
                 }
             }
 
@@ -196,7 +196,7 @@ namespace Twinsanity
 
             if (Model_Size > 0)
             {
-                ModelIDs = new Dictionary<uint, int>();
+                ModelIDs = new Dictionary<int, ModelLink>();
                 uint[] IDs = new uint[Model_Size];
                 uint[] IDs_m = new uint[Model_Size];
                 for (int i = 0; i < Model_Size; i++)
@@ -209,13 +209,18 @@ namespace Twinsanity
                 }
                 for (int i = 0; i < Model_Size; i++)
                 {
-                    ModelIDs.Add(IDs_m[i], (int)IDs[i]);
+                    var modelLink = new ModelLink()
+                    {
+                        JointIndex = IDs[i],
+                        ModelID = IDs_m[i]
+                    };
+                    ModelIDs.Add(i, modelLink);
                 }
 
             }
             else
             {
-                ModelIDs = new Dictionary<uint, int>();
+                ModelIDs = new Dictionary<int, ModelLink>();
             }
 
             if (jointsAmt > 0)
@@ -428,12 +433,12 @@ namespace Twinsanity
             var destinationBlend = destination.GetItem<TwinsSection>(11).GetItem<TwinsSection>(5);
             foreach (var modelID in ModelIDs)
             {
-                if (destinationModels.HasItem(modelID.Key))
+                if (destinationModels.HasItem(modelID.Value.ModelID))
                 {
                     continue;
                 }
-                var linkedModel = sourceModels.GetItem<RigidModel>(modelID.Key);
-                destinationModels.AddItem(modelID.Key, linkedModel);
+                var linkedModel = sourceModels.GetItem<RigidModel>(modelID.Value.ModelID);
+                destinationModels.AddItem(modelID.Value.ModelID, linkedModel);
                 linkedModel.FillPackage(source, destination);
             }
             if (sourceSkins.HasItem(SkinID))

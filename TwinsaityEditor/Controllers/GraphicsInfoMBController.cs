@@ -38,7 +38,7 @@ namespace TwinsaityEditor
             {
                 foreach (var pair in Data.ModelIDs)
                 {
-                    text.Add(string.Format("Rigid Model ID: {1:X8} - Attached to Joint {0}", pair.Value, pair.Key));
+                    text.Add(string.Format("Rigid Model ID: {1:X8} - Attached to Joint {0}", pair.Value.JointIndex, pair.Value.ModelID));
                 }
             }
             text.Add(string.Empty);

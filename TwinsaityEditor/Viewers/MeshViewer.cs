@@ -148,7 +148,7 @@ namespace TwinsaityEditor
             {
                 foreach (RigidModel mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
                 {
-                    if (mod.ID == pair.Key)
+                    if (mod.ID == pair.Value.ModelID)
                     {
                         uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(mod.ID).MeshID;
                         m = mesh_sec.GetItem<ModelController>(meshID);
@@ -572,7 +572,7 @@ namespace TwinsaityEditor
                 SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(2);
                 foreach (RigidModel mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
                 {
-                    if (mod.ID == pair.Key)
+                    if (mod.ID == pair.Value.ModelID)
                     {
                         uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(mod.ID).MeshID;
                         meshX = mesh_sec.GetItem<ModelXController>(meshID);
@@ -582,27 +582,27 @@ namespace TwinsaityEditor
                 Matrix4 tempRot = Matrix4.Identity;
 
                 // Rotation
-                tempRot.M11 = -model.Data.Type3[pair.Value].Matrix[0].X;
-                tempRot.M12 = -model.Data.Type3[pair.Value].Matrix[1].X;
-                tempRot.M13 = -model.Data.Type3[pair.Value].Matrix[2].X;
+                tempRot.M11 = -model.Data.Type3[pair.Value.JointIndex].Matrix[0].X;
+                tempRot.M12 = -model.Data.Type3[pair.Value.JointIndex].Matrix[1].X;
+                tempRot.M13 = -model.Data.Type3[pair.Value.JointIndex].Matrix[2].X;
 
-                tempRot.M21 = model.Data.Type3[pair.Value].Matrix[0].Y;
-                tempRot.M22 = model.Data.Type3[pair.Value].Matrix[1].Y;
-                tempRot.M23 = model.Data.Type3[pair.Value].Matrix[2].Y;
+                tempRot.M21 = model.Data.Type3[pair.Value.JointIndex].Matrix[0].Y;
+                tempRot.M22 = model.Data.Type3[pair.Value.JointIndex].Matrix[1].Y;
+                tempRot.M23 = model.Data.Type3[pair.Value.JointIndex].Matrix[2].Y;
 
-                tempRot.M31 = model.Data.Type3[pair.Value].Matrix[0].Z;
-                tempRot.M32 = model.Data.Type3[pair.Value].Matrix[1].Z;
-                tempRot.M33 = model.Data.Type3[pair.Value].Matrix[2].Z;
+                tempRot.M31 = model.Data.Type3[pair.Value.JointIndex].Matrix[0].Z;
+                tempRot.M32 = model.Data.Type3[pair.Value.JointIndex].Matrix[1].Z;
+                tempRot.M33 = model.Data.Type3[pair.Value.JointIndex].Matrix[2].Z;
 
-                tempRot.M14 = model.Data.Type3[pair.Value].Matrix[0].W;
-                tempRot.M24 = model.Data.Type3[pair.Value].Matrix[1].W;
-                tempRot.M34 = model.Data.Type3[pair.Value].Matrix[2].W;
+                tempRot.M14 = model.Data.Type3[pair.Value.JointIndex].Matrix[0].W;
+                tempRot.M24 = model.Data.Type3[pair.Value.JointIndex].Matrix[1].W;
+                tempRot.M34 = model.Data.Type3[pair.Value.JointIndex].Matrix[2].W;
 
                 // Position
-                tempRot.M41 = model.Data.Joints[pair.Value].Matrix[1].X;
-                tempRot.M42 = model.Data.Joints[pair.Value].Matrix[1].Y;
-                tempRot.M43 = model.Data.Joints[pair.Value].Matrix[1].Z;
-                tempRot.M44 = model.Data.Joints[pair.Value].Matrix[1].W;
+                tempRot.M41 = model.Data.Joints[pair.Value.JointIndex].Matrix[1].X;
+                tempRot.M42 = model.Data.Joints[pair.Value.JointIndex].Matrix[1].Y;
+                tempRot.M43 = model.Data.Joints[pair.Value.JointIndex].Matrix[1].Z;
+                tempRot.M44 = model.Data.Joints[pair.Value.JointIndex].Matrix[1].W;
 
                 // Adjusted for OpenTK
                 tempRot *= Matrix4.CreateScale(-1, 1, 1);
@@ -726,7 +726,7 @@ namespace TwinsaityEditor
                 RigidModelController rigid = null;
                 foreach (RigidModel mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
                 {
-                    if (mod.ID == pair.Key)
+                    if (mod.ID == pair.Value.ModelID)
                     {
                         uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(mod.ID).MeshID;
                         mesh = mesh_sec.GetItem<ModelController>(meshID);
@@ -737,27 +737,27 @@ namespace TwinsaityEditor
                 Matrix4 tempRot = Matrix4.Identity;
 
                 // Rotation
-                tempRot.M11 = -model.Data.Type3[pair.Value].Matrix[0].X;
-                tempRot.M12 = -model.Data.Type3[pair.Value].Matrix[1].X;
-                tempRot.M13 = -model.Data.Type3[pair.Value].Matrix[2].X;
+                tempRot.M11 = -model.Data.Type3[pair.Value.JointIndex].Matrix[0].X;
+                tempRot.M12 = -model.Data.Type3[pair.Value.JointIndex].Matrix[1].X;
+                tempRot.M13 = -model.Data.Type3[pair.Value.JointIndex].Matrix[2].X;
 
-                tempRot.M21 = model.Data.Type3[pair.Value].Matrix[0].Y;
-                tempRot.M22 = model.Data.Type3[pair.Value].Matrix[1].Y;
-                tempRot.M23 = model.Data.Type3[pair.Value].Matrix[2].Y;
+                tempRot.M21 = model.Data.Type3[pair.Value.JointIndex].Matrix[0].Y;
+                tempRot.M22 = model.Data.Type3[pair.Value.JointIndex].Matrix[1].Y;
+                tempRot.M23 = model.Data.Type3[pair.Value.JointIndex].Matrix[2].Y;
 
-                tempRot.M31 = model.Data.Type3[pair.Value].Matrix[0].Z;
-                tempRot.M32 = model.Data.Type3[pair.Value].Matrix[1].Z;
-                tempRot.M33 = model.Data.Type3[pair.Value].Matrix[2].Z;
+                tempRot.M31 = model.Data.Type3[pair.Value.JointIndex].Matrix[0].Z;
+                tempRot.M32 = model.Data.Type3[pair.Value.JointIndex].Matrix[1].Z;
+                tempRot.M33 = model.Data.Type3[pair.Value.JointIndex].Matrix[2].Z;
 
-                tempRot.M14 = model.Data.Type3[pair.Value].Matrix[0].W;
-                tempRot.M24 = model.Data.Type3[pair.Value].Matrix[1].W;
-                tempRot.M34 = model.Data.Type3[pair.Value].Matrix[2].W;
+                tempRot.M14 = model.Data.Type3[pair.Value.JointIndex].Matrix[0].W;
+                tempRot.M24 = model.Data.Type3[pair.Value.JointIndex].Matrix[1].W;
+                tempRot.M34 = model.Data.Type3[pair.Value.JointIndex].Matrix[2].W;
 
                 // Position
-                tempRot.M41 = model.Data.Joints[pair.Value].Matrix[1].X;
-                tempRot.M42 = model.Data.Joints[pair.Value].Matrix[1].Y;
-                tempRot.M43 = model.Data.Joints[pair.Value].Matrix[1].Z;
-                tempRot.M44 = model.Data.Joints[pair.Value].Matrix[1].W;
+                tempRot.M41 = model.Data.Joints[pair.Value.JointIndex].Matrix[1].X;
+                tempRot.M42 = model.Data.Joints[pair.Value.JointIndex].Matrix[1].Y;
+                tempRot.M43 = model.Data.Joints[pair.Value.JointIndex].Matrix[1].Z;
+                tempRot.M44 = model.Data.Joints[pair.Value.JointIndex].Matrix[1].W;
 
                 // Adjusted for OpenTK
                 tempRot *= Matrix4.CreateScale(-1, 1, 1);

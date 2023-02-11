@@ -1041,31 +1041,31 @@ namespace TwinsaityEditor
                                             {
                                                 foreach (var pair in GI.ModelIDs)
                                                 {
-                                                    ModelList.Add(pair.Key);
+                                                    ModelList.Add(pair.Value.ModelID);
                                                     Matrix4 tempRot = Matrix4.Identity;
 
                                                     // Rotation
-                                                    tempRot.M11 = -GI.Type3[pair.Value].Matrix[0].X;
-                                                    tempRot.M12 = -GI.Type3[pair.Value].Matrix[1].X;
-                                                    tempRot.M13 = -GI.Type3[pair.Value].Matrix[2].X;
+                                                    tempRot.M11 = -GI.Type3[pair.Value.JointIndex].Matrix[0].X;
+                                                    tempRot.M12 = -GI.Type3[pair.Value.JointIndex].Matrix[1].X;
+                                                    tempRot.M13 = -GI.Type3[pair.Value.JointIndex].Matrix[2].X;
 
-                                                    tempRot.M21 = GI.Type3[pair.Value].Matrix[0].Y;
-                                                    tempRot.M22 = GI.Type3[pair.Value].Matrix[1].Y;
-                                                    tempRot.M23 = GI.Type3[pair.Value].Matrix[2].Y;
+                                                    tempRot.M21 = GI.Type3[pair.Value.JointIndex].Matrix[0].Y;
+                                                    tempRot.M22 = GI.Type3[pair.Value.JointIndex].Matrix[1].Y;
+                                                    tempRot.M23 = GI.Type3[pair.Value.JointIndex].Matrix[2].Y;
 
-                                                    tempRot.M31 = GI.Type3[pair.Value].Matrix[0].Z;
-                                                    tempRot.M32 = GI.Type3[pair.Value].Matrix[1].Z;
-                                                    tempRot.M33 = GI.Type3[pair.Value].Matrix[2].Z;
+                                                    tempRot.M31 = GI.Type3[pair.Value.JointIndex].Matrix[0].Z;
+                                                    tempRot.M32 = GI.Type3[pair.Value.JointIndex].Matrix[1].Z;
+                                                    tempRot.M33 = GI.Type3[pair.Value.JointIndex].Matrix[2].Z;
 
-                                                    tempRot.M14 = GI.Type3[pair.Value].Matrix[0].W;
-                                                    tempRot.M24 = GI.Type3[pair.Value].Matrix[1].W;
-                                                    tempRot.M34 = GI.Type3[pair.Value].Matrix[2].W;
+                                                    tempRot.M14 = GI.Type3[pair.Value.JointIndex].Matrix[0].W;
+                                                    tempRot.M24 = GI.Type3[pair.Value.JointIndex].Matrix[1].W;
+                                                    tempRot.M34 = GI.Type3[pair.Value.JointIndex].Matrix[2].W;
 
                                                     // Position
-                                                    tempRot.M41 = GI.Joints[pair.Value].Matrix[1].X;
-                                                    tempRot.M42 = GI.Joints[pair.Value].Matrix[1].Y;
-                                                    tempRot.M43 = GI.Joints[pair.Value].Matrix[1].Z;
-                                                    tempRot.M44 = GI.Joints[pair.Value].Matrix[1].W;
+                                                    tempRot.M41 = GI.Joints[pair.Value.JointIndex].Matrix[1].X;
+                                                    tempRot.M42 = GI.Joints[pair.Value.JointIndex].Matrix[1].Y;
+                                                    tempRot.M43 = GI.Joints[pair.Value.JointIndex].Matrix[1].Z;
+                                                    tempRot.M44 = GI.Joints[pair.Value.JointIndex].Matrix[1].W;
 
                                                     // Adjusted for OpenTK
                                                     tempRot *= Matrix4.CreateScale(-1, 1, 1);
