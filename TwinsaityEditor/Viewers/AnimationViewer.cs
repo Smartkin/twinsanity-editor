@@ -1,4 +1,5 @@
 ﻿using OpenTK;
+using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,9 +8,11 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Forms;
+using TwinsaityEditor.Animations;
+using TwinsaityEditor.Controllers;
 using Twinsanity;
-using static OpenTK.Graphics.OpenGL.GL;
 
 namespace TwinsaityEditor.Viewers
 {
@@ -21,21 +24,47 @@ namespace TwinsaityEditor.Viewers
         private ModelController mesh;
         private FileController targetFile;
         private FileController file;
+        private AnimationController animation;
+        private AnimationPlayer player;
+
+        public int FPS { get => player.FPS; set { player.FPS = value; if (animUpdateTimer != null) animUpdateTimer.Interval = (int)Math.Floor(1.0 / FPS * 1000); } }
+        public bool Loop { get => player.Loop; set => player.Loop = value; }
+        public bool Playing { get => player.Playing; set => player.Playing = value; }
+        public bool Finished { get => player.Finished; }
+
+        private Timer animUpdateTimer;
+        
 
         private int bskinEndIndex = 0;
         private int skinEndIndex = 0;
 
-        protected override void RenderObjects()
-        {
-            
-        }
+        public AnimationViewer()
+        { }
 
-        public AnimationViewer(GraphicsInfoController mesh, FileController tFile)
+        public AnimationViewer(GraphicsInfoController mesh, AnimationController animation, FileController tFile)
         {
             targetFile = tFile;
             file = mesh.MainFile;
-            this.graphicsInfo = mesh;
+            graphicsInfo = mesh;
+            this.animation = animation;
+            player = new AnimationPlayer(animation);
             zFar = 50F;
+            SetupVBORender();
+
+            animUpdateTimer = new Timer
+            {
+                Interval = (int)Math.Floor(1.0 / 60 * 1000), //Set to ~60fps by default, TODO: Add to Preferences later
+                Enabled = true
+            };
+
+            animUpdateTimer.Tick += delegate (object sender, EventArgs e)
+            {
+                UpdateAnimation(1.0f / FPS);
+            };
+        }
+
+        private void SetupVBORender()
+        {
             ModelController m;
             var vbos = 0;
             SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(2);
@@ -65,7 +94,7 @@ namespace TwinsaityEditor.Viewers
                     }
                 }
             }
-            if (mesh.Data.BlendSkinID != 0)
+            if (graphicsInfo.Data.BlendSkinID != 0)
             {
                 SectionController blend_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(5);
                 foreach (BlendSkin mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(5).Records)
@@ -83,6 +112,72 @@ namespace TwinsaityEditor.Viewers
             if (targetFile.Data.Type == TwinsFile.FileType.RM2)
             {
                 LoadOGI_PS2();
+            }
+        }
+
+        protected override void RenderHUD()
+        {
+            base.RenderHUD();
+        }
+
+        protected override void RenderObjects()
+        {
+            if (vtx == null) return;
+
+
+            GL.PushMatrix();
+            for (int i = 0; i < bskinEndIndex; i++)
+            {
+                vtx[i]?.DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Normal);
+            }
+            for (int i = bskinEndIndex; i < skinEndIndex; i++)
+            {
+                vtx[i]?.DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Normal);
+            }
+            for (int i = skinEndIndex; i < vtx.Count; i++)
+            {
+                vtx[i]?.DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Normal);
+            }
+            GL.PopMatrix();
+        }
+
+        private void UpdateAnimation(float deltaTime)
+        {
+            player.AdvanceClock(deltaTime);
+
+            var vtxIndex = skinEndIndex;
+            for (int i = 0; i < graphicsInfo.Data.ModelIDs.Length; i++)
+            {
+                var transMat = player.Play((int)graphicsInfo.Data.ModelIDs[i].ID);
+
+                SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(2);
+                SectionController rigid_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(3);
+                foreach (RigidModel mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
+                {
+                    if (mod.ID == graphicsInfo.Data.ModelIDs[i].ModelID)
+                    {
+                        uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(mod.ID).MeshID;
+                        mesh = mesh_sec.GetItem<ModelController>(meshID);
+                    }
+                }
+
+                for (int v = 0; v < mesh.Vertices.Count; v++)
+                {
+                    Vertex[] vbuffer = new Vertex[mesh.Vertices[v].Length];
+                    for (int k = 0; k < mesh.Vertices[v].Length; k++)
+                    {
+                        vbuffer[k] = mesh.Vertices[v][k];
+                        Vector4 targetPos = new Vector4(mesh.Vertices[v][k].Pos.X, mesh.Vertices[v][k].Pos.Y, mesh.Vertices[v][k].Pos.Z, 1);
+                        targetPos *= transMat;
+                        mesh.Vertices[v][k].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+                    }
+
+                    vtx[vtxIndex].Vtx = mesh.Vertices[v];
+                    vtx[vtxIndex].VtxInd = mesh.Indices[v];
+                    mesh.Vertices[v] = vbuffer;
+                    UpdateVBO(vtxIndex);
+                    vtxIndex++;
+                }
             }
         }
 
@@ -250,5 +345,12 @@ namespace TwinsaityEditor.Viewers
             zFar = Math.Max(zFar, Math.Max(max_x - min_x, Math.Max(max_y - min_y, max_z - min_z)));
         }
 
+
+        public void ChangeGraphicsInfo(GraphicsInfoController mesh)
+        {
+            graphicsInfo = mesh;
+            Utils.TextUtils.ClearTextureCache();
+            SetupVBORender();
+        }
     }
 }

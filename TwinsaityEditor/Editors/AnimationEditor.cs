@@ -4,7 +4,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using TwinsaityEditor.Controllers;
+using TwinsaityEditor.Viewers;
 using Twinsanity;
+using static OpenTK.Graphics.OpenGL.GL;
 
 namespace TwinsaityEditor
 {
@@ -18,9 +21,10 @@ namespace TwinsaityEditor
         private Animation.AnimatedTransform AnimatedTransform2;
         private Animation.Transformation StaticTransform;
         private Animation.Transformation StaticTransform2;
+        private AnimationViewer viewer;
 
         private bool playing, loop;
-        private float fps = 50;
+        private int fps = 50;
 
         public AnimationEditor(SectionController c)
         {
@@ -59,10 +63,10 @@ namespace TwinsaityEditor
             AnimatedTransform2 = null;
             StaticTransform = null;
             StaticTransform2 = null;
-            tbJointUnused.Text = "";
+            tbJointUnknown.Text = "";
             tbJointTransformChoice.Text = "";
             tbJointTransformIndex.Text = "";
-            tbJointTwoPartTransformIndex.Text = "";
+            tbJointAnimatedTransformIndex.Text = "";
             tbJointUnused2.Text = "";
             tbJointTransformChoice2.Text = "";
             tbJointTransformIndex2.Text = "";
@@ -72,6 +76,12 @@ namespace TwinsaityEditor
             cbOGIList.Items.Clear();
             playing = false;
             animation = (Animation)controller.Data.Records[lbAnimations.SelectedIndex];
+            viewer?.Dispose();
+            viewer = null;
+            fps = 50;
+            tbPlaybackFps.Text = fps.ToString();
+            cbLoop.Checked = false;
+            playing = false;
             UpdateLists();
         }
 
@@ -84,13 +94,13 @@ namespace TwinsaityEditor
 
             PopulateWithAnimData(lbJointSettings.Items, animation.JointsSettings, listAdder, "Joint setting");
             PopulateWithAnimData(lbTransformations.Items, animation.StaticTransforms, listAdder, "Transform");
-            PopulateWithAnimData(lbTwoPartTransforms.Items, animation.AnimatedTransforms, listAdder, "Animated transform");
+            PopulateWithAnimData(lbAnimatedTransforms.Items, animation.AnimatedTransforms, listAdder, "Animated transform");
             PopulateWithAnimData(lbJointSettings2.Items, animation.JointsSettings2, listAdder, "Joint setting");
             PopulateWithAnimData(lbTransformations2.Items, animation.StaticTransforms2, listAdder, "Transform");
             PopulateWithAnimData(lbTwoPartTransforms2.Items, animation.AnimatedTransforms2, listAdder, "Animated transform");
 
-            var ogis = controller.MainFile.GetItem<SectionController>(10).GetItem<SectionController>(3).Data.Records.Cast<GraphicsInfo>();
-            foreach (GraphicsInfo ogi in ogis)
+            var ogis = controller.MainFile.GetItem<SectionController>(10).GetItem<SectionController>(3);
+            foreach (GraphicsInfo ogi in ogis.Data.Records.Cast<GraphicsInfo>())
             {
                 if (ogi.Joints.Length == lbJointSettings.Items.Count)
                 {
@@ -100,7 +110,31 @@ namespace TwinsaityEditor
             if (cbOGIList.Items.Count > 0)
             {
                 cbOGIList.SelectedIndex = 0;
+                var ogi = cbOGIList.SelectedItem as GraphicsInfo;
+                var ogic = ogis.GetItem<GraphicsInfoController>(ogi.ID);
+                var animViewer = new AnimationViewer(ogic, controller.GetItem<AnimationController>(animation.ID), controller.MainFile)
+                {
+                    Parent = tpPreview,
+                    AutoSize = true,
+                    Location = new System.Drawing.Point(3, 3),
+                    Dock = DockStyle.Fill,
+                    MinimumSize = new System.Drawing.Size(0, 450)
+                };
+                viewer = animViewer;
             }
+            else
+            {
+                var animViewer = new AnimationViewer()
+                {
+                    Parent = tpPreview,
+                    AutoSize = true,
+                    Location = new System.Drawing.Point(3, 3),
+                    Dock = DockStyle.Fill,
+                    MinimumSize = new System.Drawing.Size(0, 450)
+                };
+                viewer = animViewer;
+            }
+            viewer.FPS = fps;
         }
 
         private void lbDisplacements_SelectedIndexChanged(object sender, EventArgs e)
@@ -110,10 +144,10 @@ namespace TwinsaityEditor
 
             Animation.JointSettings displacement = animation.JointsSettings[list.SelectedIndex];
             JointSettings = displacement;
-            tbJointUnused.Text = displacement.Unused.ToString();
+            tbJointUnknown.Text = displacement.Unused.ToString();
             tbJointTransformChoice.Text = displacement.TransformationChoice.ToString();
             tbJointTransformIndex.Text = displacement.TransformationIndex.ToString();
-            tbJointTwoPartTransformIndex.Text = displacement.AnimatedTransformIndex.ToString();
+            tbJointAnimatedTransformIndex.Text = displacement.AnimatedTransformIndex.ToString();
 
             var transformChoice = JointSettings.TransformationChoice;
             var timelineText = new List<string>();
@@ -463,6 +497,42 @@ namespace TwinsaityEditor
                 animation.AnimatedTransforms2[animation.AnimatedTransforms2.Count - 1].Values.Add(0);
             }
             UpdateLists();
+        }
+
+        private void cbOGIList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbOGIList.SelectedIndex == -1) return;
+
+            var ogis = controller.MainFile.GetItem<SectionController>(10).GetItem<SectionController>(3);
+            var ogi = cbOGIList.SelectedItem as GraphicsInfo;
+            var ogic = ogis.GetItem<GraphicsInfoController>(ogi.ID);
+            viewer?.ChangeGraphicsInfo(ogic);
+        }
+
+        private void btnPlayAnim_Click(object sender, EventArgs e)
+        {
+            if (viewer != null)
+            {
+                playing = viewer.Finished || !playing;
+                viewer.Playing = playing;
+                
+            }
+        }
+
+        private void tbPlaybackFps_TextChanged(object sender, EventArgs e)
+        {
+            var tb = (TextBox)sender;
+            if (!UInt16.TryParse(tb.Text, out UInt16 result) || viewer == null || result > 120 || result == 0) return;
+            fps = result;
+            viewer.FPS = fps;
+        }
+
+        private void cbLoop_CheckedChanged(object sender, EventArgs e)
+        {
+            if (viewer == null) return;
+            loop = cbLoop.Checked;
+            viewer.Loop = loop;
+            
         }
 
         private void btnDeleteTimeline2_Click(object sender, EventArgs e)

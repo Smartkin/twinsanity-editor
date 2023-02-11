@@ -35,10 +35,11 @@ namespace Twinsanity
             {
                 for (int i = 0; i < Joints.Length; i++)
                 {
-                    for (int a = 0; a < Joints[i].Numbers.Length; a++)
-                    {
-                        writer.Write(Joints[i].Numbers[a]);
-                    }
+                    writer.Write(Joints[i].ReactJointID);
+                    writer.Write(Joints[i].JointIndex);
+                    writer.Write(Joints[i].ParentJointIndex);
+                    writer.Write(Joints[i].ChildJointAmount);
+                    writer.Write(Joints[i].ChildJointAmount2);
                     for (int a = 0; a < Joints[i].Matrix.Length; a++)
                     {
                         writer.Write(Joints[i].Matrix[a].X);
@@ -152,7 +153,15 @@ namespace Twinsanity
                     Type1_Matrix[2] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                     Type1_Matrix[3] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                     Type1_Matrix[4] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    Joint temp_Type1 = new Joint() { Matrix = Type1_Matrix, Numbers = Type1_Numbers };
+                    Joint temp_Type1 = new Joint()
+                    {
+                        Matrix = Type1_Matrix,
+                        ReactJointID = Type1_Numbers[0],
+                        JointIndex = Type1_Numbers[1],
+                        ParentJointIndex = Type1_Numbers[2],
+                        ChildJointAmount = Type1_Numbers[3],
+                        ChildJointAmount2 = Type1_Numbers[4]
+                    };
                     Joints[i] = temp_Type1;
                 }
             }
@@ -287,7 +296,7 @@ namespace Twinsanity
             {
                 for (int i = 0; i < Joints.Length; i++)
                 {
-                    count += Joints[i].Numbers.Length * 4;
+                    count += 5 * 4;
                     count += Joints[i].Matrix.Length * 16;
                 }
             }
@@ -333,7 +342,11 @@ namespace Twinsanity
 
         public struct Joint
         {
-            public uint[] Numbers; // 5
+            public uint ReactJointID;
+            public uint JointIndex;
+            public uint ParentJointIndex;
+            public uint ChildJointAmount;
+            public uint ChildJointAmount2;
             public Pos[] Matrix; // 5
         }
 

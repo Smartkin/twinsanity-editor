@@ -49,7 +49,7 @@ namespace TwinsaityEditor
                 text.Add($"Joints:");
                 for (int i = 0; i < Data.Joints.Length; i++)
                 {
-                    text.Add($"#{ i } Joint-ID: { Data.Joints[i].Numbers[0] }; Joint index: { Data.Joints[i].Numbers[1] }; Parent Joint: { Data.Joints[i].Numbers[2] }; Child joints: { Data.Joints[i].Numbers[3] }; { Data.Joints[i].Numbers[4] }");
+                    text.Add($"#{ i } React Joint-ID: { Data.Joints[i].ReactJointID }; Joint index: { Data.Joints[i].JointIndex }; Parent Joint: { Data.Joints[i].ParentJointIndex }; Child joints: { Data.Joints[i].ChildJointAmount }; { Data.Joints[i].ChildJointAmount2 }");
                     //text.Add($"#{ i } Numbers: { Data.Type1[i].Numbers[0] }; { Data.Type1[i].Numbers[1] }; { Data.Type1[i].Numbers[2] }; { Data.Type1[i].Numbers[3] }; { Data.Type1[i].Numbers[4] }");
                     text.Add($"\t#{ i } Local Space Position: { Data.Joints[i].Matrix[0].X }; { Data.Joints[i].Matrix[0].Y }; { Data.Joints[i].Matrix[0].Z }; { Data.Joints[i].Matrix[0].W }");
                     text.Add($"\t#{ i } World Space Position: { Data.Joints[i].Matrix[1].X }; { Data.Joints[i].Matrix[1].Y }; { Data.Joints[i].Matrix[1].Z }; { Data.Joints[i].Matrix[1].W }");

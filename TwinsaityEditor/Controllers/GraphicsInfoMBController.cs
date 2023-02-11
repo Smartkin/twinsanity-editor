@@ -47,7 +47,7 @@ namespace TwinsaityEditor
                 text.Add($"Joints:");
                 for (int i = 0; i < Data.Joints.Length; i++)
                 {
-                    text.Add($"#{ i } Numbers: { Data.Joints[i].Numbers[0] }; { Data.Joints[i].Numbers[1] }; { Data.Joints[i].Numbers[2] }; { Data.Joints[i].Numbers[3] }; { Data.Joints[i].Numbers[4] }");
+                    //text.Add($"#{ i } Numbers: { Data.Joints[i].Numbers[0] }; { Data.Joints[i].Numbers[1] }; { Data.Joints[i].Numbers[2] }; { Data.Joints[i].Numbers[3] }; { Data.Joints[i].Numbers[4] }");
                     text.Add($"#{ i } Vector 1: { Data.Joints[i].Matrix[0].X }; { Data.Joints[i].Matrix[0].Y }; { Data.Joints[i].Matrix[0].Z }; { Data.Joints[i].Matrix[0].W }");
                     text.Add($"#{ i } Vector 2: { Data.Joints[i].Matrix[1].X }; { Data.Joints[i].Matrix[1].Y }; { Data.Joints[i].Matrix[1].Z }; { Data.Joints[i].Matrix[1].W }");
                     text.Add($"#{ i } Vector 3: { Data.Joints[i].Matrix[2].X }; { Data.Joints[i].Matrix[2].Y }; { Data.Joints[i].Matrix[2].Z }; { Data.Joints[i].Matrix[2].W }");

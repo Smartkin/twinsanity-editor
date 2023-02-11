@@ -39,7 +39,7 @@
             this.label9 = new System.Windows.Forms.Label();
             this.tbTransformOffset = new System.Windows.Forms.TextBox();
             this.btnDeleteTwoPartTransform = new System.Windows.Forms.Button();
-            this.lbTwoPartTransforms = new System.Windows.Forms.ListBox();
+            this.lbAnimatedTransforms = new System.Windows.Forms.ListBox();
             this.btnAddTwoPartTransform = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.tbTransformation = new System.Windows.Forms.TextBox();
@@ -52,10 +52,10 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.tbJointTwoPartTransformIndex = new System.Windows.Forms.TextBox();
+            this.tbJointAnimatedTransformIndex = new System.Windows.Forms.TextBox();
             this.tbJointTransformIndex = new System.Windows.Forms.TextBox();
             this.tbJointTransformChoice = new System.Windows.Forms.TextBox();
-            this.tbJointUnused = new System.Windows.Forms.TextBox();
+            this.tbJointUnknown = new System.Windows.Forms.TextBox();
             this.lbJointSettings = new System.Windows.Forms.ListBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
@@ -80,7 +80,7 @@
             this.tbJointTransformChoice2 = new System.Windows.Forms.TextBox();
             this.tbJointUnused2 = new System.Windows.Forms.TextBox();
             this.lbJointSettings2 = new System.Windows.Forms.ListBox();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.tpPreview = new System.Windows.Forms.TabPage();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
             this.tbPlaybackFps = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -88,7 +88,6 @@
             this.cbOGIList = new System.Windows.Forms.ComboBox();
             this.cbLoop = new System.Windows.Forms.CheckBox();
             this.btnPlayAnim = new System.Windows.Forms.Button();
-            this.animRender = new OpenTK.GLControl();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tcProperties.SuspendLayout();
@@ -101,7 +100,7 @@
             this.groupBox6.SuspendLayout();
             this.groupBox7.SuspendLayout();
             this.groupBox8.SuspendLayout();
-            this.tabPage3.SuspendLayout();
+            this.tpPreview.SuspendLayout();
             this.groupBox9.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -141,7 +140,7 @@
             // 
             this.tcProperties.Controls.Add(this.tabPage1);
             this.tcProperties.Controls.Add(this.tabPage2);
-            this.tcProperties.Controls.Add(this.tabPage3);
+            this.tcProperties.Controls.Add(this.tpPreview);
             this.tcProperties.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tcProperties.Location = new System.Drawing.Point(3, 16);
             this.tcProperties.Name = "tcProperties";
@@ -160,7 +159,7 @@
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(848, 538);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Part 1";
+            this.tabPage1.Text = "Main Animation";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // groupBox10
@@ -181,6 +180,7 @@
             this.tbJointTimelineView.Location = new System.Drawing.Point(3, 16);
             this.tbJointTimelineView.Multiline = true;
             this.tbJointTimelineView.Name = "tbJointTimelineView";
+            this.tbJointTimelineView.ReadOnly = true;
             this.tbJointTimelineView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.tbJointTimelineView.Size = new System.Drawing.Size(553, 195);
             this.tbJointTimelineView.TabIndex = 1;
@@ -192,7 +192,7 @@
             this.groupBox5.Controls.Add(this.label9);
             this.groupBox5.Controls.Add(this.tbTransformOffset);
             this.groupBox5.Controls.Add(this.btnDeleteTwoPartTransform);
-            this.groupBox5.Controls.Add(this.lbTwoPartTransforms);
+            this.groupBox5.Controls.Add(this.lbAnimatedTransforms);
             this.groupBox5.Controls.Add(this.btnAddTwoPartTransform);
             this.groupBox5.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox5.Location = new System.Drawing.Point(483, 3);
@@ -227,6 +227,7 @@
             // 
             this.btnDeleteTwoPartTransform.AutoSize = true;
             this.btnDeleteTwoPartTransform.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnDeleteTwoPartTransform.Enabled = false;
             this.btnDeleteTwoPartTransform.Location = new System.Drawing.Point(3, 251);
             this.btnDeleteTwoPartTransform.Name = "btnDeleteTwoPartTransform";
             this.btnDeleteTwoPartTransform.Size = new System.Drawing.Size(330, 23);
@@ -235,20 +236,21 @@
             this.btnDeleteTwoPartTransform.UseVisualStyleBackColor = true;
             this.btnDeleteTwoPartTransform.Click += new System.EventHandler(this.btnDeleteTimeline_Click);
             // 
-            // lbTwoPartTransforms
+            // lbAnimatedTransforms
             // 
-            this.lbTwoPartTransforms.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lbTwoPartTransforms.FormattingEnabled = true;
-            this.lbTwoPartTransforms.Location = new System.Drawing.Point(3, 16);
-            this.lbTwoPartTransforms.Name = "lbTwoPartTransforms";
-            this.lbTwoPartTransforms.Size = new System.Drawing.Size(330, 199);
-            this.lbTwoPartTransforms.TabIndex = 0;
-            this.lbTwoPartTransforms.SelectedIndexChanged += new System.EventHandler(this.lbRotations_SelectedIndexChanged);
+            this.lbAnimatedTransforms.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lbAnimatedTransforms.FormattingEnabled = true;
+            this.lbAnimatedTransforms.Location = new System.Drawing.Point(3, 16);
+            this.lbAnimatedTransforms.Name = "lbAnimatedTransforms";
+            this.lbAnimatedTransforms.Size = new System.Drawing.Size(330, 199);
+            this.lbAnimatedTransforms.TabIndex = 0;
+            this.lbAnimatedTransforms.SelectedIndexChanged += new System.EventHandler(this.lbRotations_SelectedIndexChanged);
             // 
             // btnAddTwoPartTransform
             // 
             this.btnAddTwoPartTransform.AutoSize = true;
             this.btnAddTwoPartTransform.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnAddTwoPartTransform.Enabled = false;
             this.btnAddTwoPartTransform.Location = new System.Drawing.Point(3, 274);
             this.btnAddTwoPartTransform.Name = "btnAddTwoPartTransform";
             this.btnAddTwoPartTransform.Size = new System.Drawing.Size(330, 23);
@@ -299,6 +301,7 @@
             // 
             this.btnDeleteTransformation.AutoSize = true;
             this.btnDeleteTransformation.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnDeleteTransformation.Enabled = false;
             this.btnDeleteTransformation.Location = new System.Drawing.Point(3, 251);
             this.btnDeleteTransformation.Name = "btnDeleteTransformation";
             this.btnDeleteTransformation.Size = new System.Drawing.Size(224, 23);
@@ -321,6 +324,7 @@
             // 
             this.btnAddTransformation.AutoSize = true;
             this.btnAddTransformation.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnAddTransformation.Enabled = false;
             this.btnAddTransformation.Location = new System.Drawing.Point(3, 274);
             this.btnAddTransformation.Name = "btnAddTransformation";
             this.btnAddTransformation.Size = new System.Drawing.Size(224, 23);
@@ -336,10 +340,10 @@
             this.groupBox3.Controls.Add(this.label5);
             this.groupBox3.Controls.Add(this.label3);
             this.groupBox3.Controls.Add(this.label1);
-            this.groupBox3.Controls.Add(this.tbJointTwoPartTransformIndex);
+            this.groupBox3.Controls.Add(this.tbJointAnimatedTransformIndex);
             this.groupBox3.Controls.Add(this.tbJointTransformIndex);
             this.groupBox3.Controls.Add(this.tbJointTransformChoice);
-            this.groupBox3.Controls.Add(this.tbJointUnused);
+            this.groupBox3.Controls.Add(this.tbJointUnknown);
             this.groupBox3.Controls.Add(this.lbJointSettings);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox3.Location = new System.Drawing.Point(3, 3);
@@ -355,27 +359,27 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(4, 457);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(123, 13);
+            this.label7.Size = new System.Drawing.Size(125, 13);
             this.label7.TabIndex = 17;
-            this.label7.Text = "Two part transform index";
+            this.label7.Text = "Animated transform index";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(4, 431);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(105, 13);
+            this.label5.Size = new System.Drawing.Size(80, 13);
             this.label5.TabIndex = 15;
-            this.label5.Text = "Transformation index";
+            this.label5.Text = "Static transform";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(4, 405);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(112, 13);
+            this.label3.Size = new System.Drawing.Size(89, 13);
             this.label3.TabIndex = 13;
-            this.label3.Text = "Transformation choice";
+            this.label3.Text = "Transform choice";
             // 
             // label1
             // 
@@ -386,13 +390,13 @@
             this.label1.TabIndex = 11;
             this.label1.Text = "Unknown";
             // 
-            // tbJointTwoPartTransformIndex
+            // tbJointAnimatedTransformIndex
             // 
-            this.tbJointTwoPartTransformIndex.Location = new System.Drawing.Point(144, 452);
-            this.tbJointTwoPartTransformIndex.Name = "tbJointTwoPartTransformIndex";
-            this.tbJointTwoPartTransformIndex.Size = new System.Drawing.Size(100, 20);
-            this.tbJointTwoPartTransformIndex.TabIndex = 9;
-            this.tbJointTwoPartTransformIndex.TextChanged += new System.EventHandler(this.tbDisB7_TextChanged);
+            this.tbJointAnimatedTransformIndex.Location = new System.Drawing.Point(144, 452);
+            this.tbJointAnimatedTransformIndex.Name = "tbJointAnimatedTransformIndex";
+            this.tbJointAnimatedTransformIndex.Size = new System.Drawing.Size(100, 20);
+            this.tbJointAnimatedTransformIndex.TabIndex = 9;
+            this.tbJointAnimatedTransformIndex.TextChanged += new System.EventHandler(this.tbDisB7_TextChanged);
             // 
             // tbJointTransformIndex
             // 
@@ -410,13 +414,14 @@
             this.tbJointTransformChoice.TabIndex = 5;
             this.tbJointTransformChoice.TextChanged += new System.EventHandler(this.tbDisB3_TextChanged);
             // 
-            // tbJointUnused
+            // tbJointUnknown
             // 
-            this.tbJointUnused.Location = new System.Drawing.Point(144, 377);
-            this.tbJointUnused.Name = "tbJointUnused";
-            this.tbJointUnused.Size = new System.Drawing.Size(100, 20);
-            this.tbJointUnused.TabIndex = 3;
-            this.tbJointUnused.TextChanged += new System.EventHandler(this.tbDisB1_TextChanged);
+            this.tbJointUnknown.Location = new System.Drawing.Point(144, 377);
+            this.tbJointUnknown.Name = "tbJointUnknown";
+            this.tbJointUnknown.ReadOnly = true;
+            this.tbJointUnknown.Size = new System.Drawing.Size(100, 20);
+            this.tbJointUnknown.TabIndex = 3;
+            this.tbJointUnknown.TextChanged += new System.EventHandler(this.tbDisB1_TextChanged);
             // 
             // lbJointSettings
             // 
@@ -438,7 +443,7 @@
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(848, 538);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Part 2";
+            this.tabPage2.Text = "Blend shape animation";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // groupBox6
@@ -454,7 +459,7 @@
             this.groupBox6.Size = new System.Drawing.Size(304, 532);
             this.groupBox6.TabIndex = 5;
             this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "Timelines 2";
+            this.groupBox6.Text = "Animated transforms";
             // 
             // label12
             // 
@@ -518,7 +523,7 @@
             this.groupBox7.Size = new System.Drawing.Size(237, 532);
             this.groupBox7.TabIndex = 4;
             this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "Transformations 2";
+            this.groupBox7.Text = "Static transforms";
             // 
             // tbTransformation2
             // 
@@ -586,43 +591,43 @@
             this.groupBox8.Size = new System.Drawing.Size(295, 532);
             this.groupBox8.TabIndex = 3;
             this.groupBox8.TabStop = false;
-            this.groupBox8.Text = "Joint settings 2";
+            this.groupBox8.Text = "Joint settings";
             // 
             // label16
             // 
             this.label16.AutoSize = true;
             this.label16.Location = new System.Drawing.Point(4, 457);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(123, 13);
+            this.label16.Size = new System.Drawing.Size(125, 13);
             this.label16.TabIndex = 17;
-            this.label16.Text = "Two part transform index";
+            this.label16.Text = "Aniamted transform index";
             // 
             // label18
             // 
             this.label18.AutoSize = true;
             this.label18.Location = new System.Drawing.Point(4, 431);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(105, 13);
+            this.label18.Size = new System.Drawing.Size(108, 13);
             this.label18.TabIndex = 15;
-            this.label18.Text = "Transformation index";
+            this.label18.Text = "Static transform index";
             // 
             // label20
             // 
             this.label20.AutoSize = true;
             this.label20.Location = new System.Drawing.Point(4, 405);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(112, 13);
+            this.label20.Size = new System.Drawing.Size(89, 13);
             this.label20.TabIndex = 13;
-            this.label20.Text = "Transformation choice";
+            this.label20.Text = "Transform choice";
             // 
             // label22
             // 
             this.label22.AutoSize = true;
             this.label22.Location = new System.Drawing.Point(4, 378);
             this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(44, 13);
+            this.label22.Size = new System.Drawing.Size(75, 13);
             this.label22.TabIndex = 11;
-            this.label22.Text = "Unused";
+            this.label22.Text = "Bones amount";
             // 
             // tbJointTwoPartTransformIndex2
             // 
@@ -652,6 +657,7 @@
             // 
             this.tbJointUnused2.Location = new System.Drawing.Point(149, 376);
             this.tbJointUnused2.Name = "tbJointUnused2";
+            this.tbJointUnused2.ReadOnly = true;
             this.tbJointUnused2.Size = new System.Drawing.Size(140, 20);
             this.tbJointUnused2.TabIndex = 3;
             this.tbJointUnused2.TextChanged += new System.EventHandler(this.tbDis2B1_TextChanged);
@@ -666,17 +672,16 @@
             this.lbJointSettings2.TabIndex = 0;
             this.lbJointSettings2.SelectedIndexChanged += new System.EventHandler(this.lbDisplacements2_SelectedIndexChanged);
             // 
-            // tabPage3
+            // tpPreview
             // 
-            this.tabPage3.Controls.Add(this.groupBox9);
-            this.tabPage3.Controls.Add(this.animRender);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(848, 538);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Preview";
-            this.tabPage3.UseVisualStyleBackColor = true;
+            this.tpPreview.Controls.Add(this.groupBox9);
+            this.tpPreview.Location = new System.Drawing.Point(4, 22);
+            this.tpPreview.Name = "tpPreview";
+            this.tpPreview.Padding = new System.Windows.Forms.Padding(3);
+            this.tpPreview.Size = new System.Drawing.Size(848, 538);
+            this.tpPreview.TabIndex = 2;
+            this.tpPreview.Text = "Preview";
+            this.tpPreview.UseVisualStyleBackColor = true;
             // 
             // groupBox9
             // 
@@ -687,10 +692,10 @@
             this.groupBox9.Controls.Add(this.cbOGIList);
             this.groupBox9.Controls.Add(this.cbLoop);
             this.groupBox9.Controls.Add(this.btnPlayAnim);
-            this.groupBox9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox9.Location = new System.Drawing.Point(3, 403);
+            this.groupBox9.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.groupBox9.Location = new System.Drawing.Point(3, 450);
             this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(842, 132);
+            this.groupBox9.Size = new System.Drawing.Size(842, 85);
             this.groupBox9.TabIndex = 1;
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "Playback controls";
@@ -701,6 +706,7 @@
             this.tbPlaybackFps.Name = "tbPlaybackFps";
             this.tbPlaybackFps.Size = new System.Drawing.Size(100, 20);
             this.tbPlaybackFps.TabIndex = 5;
+            this.tbPlaybackFps.TextChanged += new System.EventHandler(this.tbPlaybackFps_TextChanged);
             // 
             // label4
             // 
@@ -728,6 +734,7 @@
             this.cbOGIList.Name = "cbOGIList";
             this.cbOGIList.Size = new System.Drawing.Size(121, 21);
             this.cbOGIList.TabIndex = 2;
+            this.cbOGIList.SelectedIndexChanged += new System.EventHandler(this.cbOGIList_SelectedIndexChanged);
             // 
             // cbLoop
             // 
@@ -738,6 +745,7 @@
             this.cbLoop.TabIndex = 1;
             this.cbLoop.Text = "Loop";
             this.cbLoop.UseVisualStyleBackColor = true;
+            this.cbLoop.CheckedChanged += new System.EventHandler(this.cbLoop_CheckedChanged);
             // 
             // btnPlayAnim
             // 
@@ -747,18 +755,7 @@
             this.btnPlayAnim.TabIndex = 0;
             this.btnPlayAnim.Text = "Play";
             this.btnPlayAnim.UseVisualStyleBackColor = true;
-            // 
-            // animRender
-            // 
-            this.animRender.AutoSize = true;
-            this.animRender.BackColor = System.Drawing.Color.Black;
-            this.animRender.Dock = System.Windows.Forms.DockStyle.Top;
-            this.animRender.Location = new System.Drawing.Point(3, 3);
-            this.animRender.MinimumSize = new System.Drawing.Size(0, 400);
-            this.animRender.Name = "animRender";
-            this.animRender.Size = new System.Drawing.Size(842, 400);
-            this.animRender.TabIndex = 0;
-            this.animRender.VSync = false;
+            this.btnPlayAnim.Click += new System.EventHandler(this.btnPlayAnim_Click);
             // 
             // AnimationEditor
             // 
@@ -789,8 +786,8 @@
             this.groupBox7.PerformLayout();
             this.groupBox8.ResumeLayout(false);
             this.groupBox8.PerformLayout();
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
+            this.tpPreview.ResumeLayout(false);
+            this.tpPreview.PerformLayout();
             this.groupBox9.ResumeLayout(false);
             this.groupBox9.PerformLayout();
             this.ResumeLayout(false);
@@ -814,15 +811,15 @@
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.Button btnAddTwoPartTransform;
         private System.Windows.Forms.Button btnDeleteTwoPartTransform;
-        private System.Windows.Forms.ListBox lbTwoPartTransforms;
+        private System.Windows.Forms.ListBox lbAnimatedTransforms;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox tbJointTwoPartTransformIndex;
+        private System.Windows.Forms.TextBox tbJointAnimatedTransformIndex;
         private System.Windows.Forms.TextBox tbJointTransformIndex;
         private System.Windows.Forms.TextBox tbJointTransformChoice;
-        private System.Windows.Forms.TextBox tbJointUnused;
+        private System.Windows.Forms.TextBox tbJointUnknown;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.Button btnAddTimeline2;
@@ -849,7 +846,7 @@
         private System.Windows.Forms.TextBox tbTransformOffset;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.TextBox tbTransformOffset2;
-        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TabPage tpPreview;
         private System.Windows.Forms.GroupBox groupBox9;
         private System.Windows.Forms.CheckBox cbLoop;
         private System.Windows.Forms.Button btnPlayAnim;
@@ -859,6 +856,5 @@
         private System.Windows.Forms.TextBox tbJointTimelineView;
         private System.Windows.Forms.TextBox tbPlaybackFps;
         private System.Windows.Forms.Label label4;
-        private OpenTK.GLControl animRender;
     }
 }
