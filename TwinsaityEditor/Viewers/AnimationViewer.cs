@@ -26,7 +26,7 @@ namespace TwinsaityEditor.Viewers
         private FileController file;
         private AnimationController animation;
         private AnimationPlayer player;
-        private readonly Dictionary<uint, int> VbufferMap = new Dictionary<uint, int>();
+        private readonly Dictionary<int, int> VbufferMap = new Dictionary<int, int>();
 
         public int FPS { get => player.FPS; set { player.FPS = value; if (animUpdateTimer != null) animUpdateTimer.Interval = (int)Math.Floor(1.0 / FPS * 1000); } }
         public bool Loop { get => player.Loop; set => player.Loop = value; }
@@ -159,7 +159,37 @@ namespace TwinsaityEditor.Viewers
 
         private void AnimateJoint(GraphicsInfo.JointNode joint, Matrix4 transform)
         {
-            var endTransform = player.Play((int)joint.Joint.JointIndex) * transform;
+            Matrix4 tempRot = Matrix4.Identity;
+
+            // Rotation
+            /*tempRot.M11 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[0].X;
+            tempRot.M12 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[0].Y;
+            tempRot.M13 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[0].Z;
+            tempRot.M14 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[0].W;
+
+            tempRot.M21 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[1].X;
+            tempRot.M22 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[1].Y;
+            tempRot.M23 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[1].Z;
+            tempRot.M24 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[1].W;
+
+            tempRot.M31 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[2].X;
+            tempRot.M32 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[2].Y;
+            tempRot.M33 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[2].Z;
+            tempRot.M34 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[2].W;
+
+            tempRot.M41 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[3].X;
+            tempRot.M42 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[3].Y;
+            tempRot.M43 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[3].Z;
+            tempRot.M44 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[3].W;*/
+
+
+            // Position
+            /*tempRot.M41 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].X;
+            tempRot.M42 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].Y;
+            tempRot.M43 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].Z;
+            tempRot.M44 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].W;*/
+
+            var endTransform = tempRot * player.Play((int)joint.Joint.JointIndex) * transform;
             foreach (var c in joint.Children)
             {
                 AnimateJoint(c, endTransform);
@@ -170,6 +200,8 @@ namespace TwinsaityEditor.Viewers
             var transMat = endTransform;
 
             /*Matrix4 tempRot = Matrix4.Identity;
+            tempRot *= Matrix4.CreateFromQuaternion(new Quaternion(joint.Joint.Matrix[2].X, joint.Joint.Matrix[2].Y, joint.Joint.Matrix[2].Z));
+            tempRot *= Matrix4.CreateTranslation(new Vector3(joint.Joint.Matrix[0].X, joint.Joint.Matrix[0].Y, joint.Joint.Matrix[0].Z));
 
             // Rotation
             tempRot.M11 = -graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[0].X;
@@ -194,7 +226,7 @@ namespace TwinsaityEditor.Viewers
             tempRot.M43 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].Z;
             tempRot.M44 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].W;
 
-            transMat *= tempRot;*/
+            tempRot *= transMat;*/
             transMat *= Matrix4.CreateScale(-1, 1, 1);
 
             foreach (var model in models)
@@ -210,7 +242,7 @@ namespace TwinsaityEditor.Viewers
                     }
                 }
 
-                var vtxIndex = VbufferMap[mesh.Data.ID];
+                var vtxIndex = VbufferMap[model.Key];
                 for (int v = 0; v < mesh.Vertices.Count; v++)
                 {
                     Vertex[] vbuffer = new Vertex[mesh.Vertices[v].Length];
@@ -356,7 +388,7 @@ namespace TwinsaityEditor.Viewers
                 mesh.LoadMeshData();
 
 
-                VbufferMap.Add(mesh.Data.ID, vtxIndex);
+                VbufferMap.Add(pair.Key, vtxIndex);
                 for (int v = 0; v < mesh.Vertices.Count; v++)
                 {
                     Vertex[] vbuffer = new Vertex[mesh.Vertices[v].Length];
