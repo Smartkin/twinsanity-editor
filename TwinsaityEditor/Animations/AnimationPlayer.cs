@@ -31,6 +31,11 @@ namespace TwinsaityEditor.Animations
         }
         public bool Finished { get; private set; }
 
+        public AnimationPlayer()
+        {
+
+        }
+
         public AnimationPlayer(AnimationController animation)
         {
             this.animation = animation;
@@ -40,7 +45,7 @@ namespace TwinsaityEditor.Animations
 
         public void AdvanceClock(float deltaTime) // In seconds
         {
-            if (!Playing) return;
+            if (!Playing || animation == null) return;
 
             var frameTime = 1f / FPS;
             time += deltaTime;
@@ -54,6 +59,8 @@ namespace TwinsaityEditor.Animations
 
         public Matrix4 Play(int joint)
         {
+            if (animation == null) return Matrix4.Identity;
+
             if (!Playing)
             {
                 return animation.GetMainAnimationTransform(joint, animFrame, animFrame, 0);

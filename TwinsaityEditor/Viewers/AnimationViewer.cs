@@ -39,7 +39,9 @@ namespace TwinsaityEditor.Viewers
         private int skinEndIndex = 0;
 
         public AnimationViewer()
-        { }
+        {
+            player = new AnimationPlayer();
+        }
 
         public AnimationViewer(GraphicsInfoController mesh, AnimationController animation, FileController tFile)
         {
@@ -351,6 +353,16 @@ namespace TwinsaityEditor.Viewers
             graphicsInfo = mesh;
             Utils.TextUtils.ClearTextureCache();
             SetupVBORender();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (animUpdateTimer != null)
+            {
+                animUpdateTimer.Dispose();
+            }
+            
+            base.Dispose(disposing);
         }
     }
 }
