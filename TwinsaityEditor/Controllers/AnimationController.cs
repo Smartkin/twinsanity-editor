@@ -22,7 +22,9 @@ namespace TwinsaityEditor.Controllers
         {
             Vector4 rotation = new Vector4();
             Vector4 translation = new Vector4();
+            translation.W = 1.0f;
             Vector4 scale = new Vector4();
+            scale.W = 1.0f;
             var jointSetting = Data.JointsSettings[jointIndex];
             var transformIndex = jointSetting.TransformationIndex;
             int currentFrameTransformIndex = jointSetting.AnimatedTransformIndex;
@@ -79,11 +81,11 @@ namespace TwinsaityEditor.Controllers
                 var diff = rot1 - rot2;
                 if (diff < -0x8000)
                 {
-                    rot1 -= 0x10000;
+                    rot1 += 0x10000;
                 }
                 if (diff > 0x8000)
                 {
-                    rot1 += 0x10000;
+                    rot1 -= 0x10000;
                 }
                 var rot1Rad = rot1 / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi;
                 var rot2Rad = rot2 / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi;
@@ -102,11 +104,11 @@ namespace TwinsaityEditor.Controllers
                 var diff = rot1 - rot2;
                 if (diff < -0x8000)
                 {
-                    rot1 -= 0x10000;
+                    rot1 += 0x10000;
                 }
                 if (diff > 0x8000)
                 {
-                    rot1 += 0x10000;
+                    rot1 -= 0x10000;
                 }
                 var rot1Rad = rot1 / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi;
                 var rot2Rad = rot2 / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi;
@@ -125,11 +127,11 @@ namespace TwinsaityEditor.Controllers
                 var diff = rot1 - rot2;
                 if (diff < -0x8000)
                 {
-                    rot1 -= 0x10000;
+                    rot1 += 0x10000;
                 }
                 if (diff > 0x8000)
                 {
-                    rot1 += 0x10000;
+                    rot1 -= 0x10000;
                 }
                 var rot1Rad = rot1 / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi;
                 var rot2Rad = rot2 / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi;
@@ -174,10 +176,14 @@ namespace TwinsaityEditor.Controllers
                 scale.Z = Data.StaticTransforms[transformIndex++].Value;
             }
 
-            var transMat = Matrix4.CreateTranslation(translation.Xyz);
+            /*var transMat = Matrix4.CreateTranslation(translation.Xyz);
             var scaleMat = Matrix4.CreateScale(scale.Xyz);
             var rotMat = Matrix4.CreateFromQuaternion(new Quaternion(rotation.Xyz));
-            var transformMatrix = transMat * rotMat * scaleMat;
+            var transformMatrix = transMat * rotMat * scaleMat;*/
+            var transformMatrix = Matrix4.Zero;
+            transformMatrix.Row0 = translation;
+            transformMatrix.Row1 = scale;
+            transformMatrix.Row2 = rotation;
             return transformMatrix;
         }
 

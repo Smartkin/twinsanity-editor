@@ -141,7 +141,7 @@ namespace TwinsaityEditor
             TraverseJoint(Data.Skeleton.Root, text, Matrix4.Identity, Vector4.Zero, 0);
         }
 
-        private void TraverseJoint(GraphicsInfo.JointNode joint, List<string> text, Matrix4 transform, Vector4 localTranslation, int traverseLevel)
+        private void TraverseJoint(GraphicsInfo.JointNode joint, List<string> text, Matrix4 parentTransform, Vector4 parentTranslation, int traverseLevel)
         {
             var jointString = "";
             for (int i = 0; i < traverseLevel; i++)
@@ -155,9 +155,14 @@ namespace TwinsaityEditor
                 Data.Joints[index].Matrix[2].Y,
                 Data.Joints[index].Matrix[2].Z,
                 Data.Joints[index].Matrix[2].W));
+            var globalTransform = Matrix4.CreateTranslation(
+                    Data.Joints[index].Matrix[1].X,
+                    Data.Joints[index].Matrix[1].Y,
+                    Data.Joints[index].Matrix[1].Z
+                );
 
-            var childTransform = localTransform * transform;
-            var childTranslation = localTransform * localTranslation - localTransform * (new Vector4(
+            var childTransform = localTransform * parentTransform;
+            var childTranslation = localTransform * parentTranslation - localTransform * (new Vector4(
                     Data.Joints[index].Matrix[0].X,
                     Data.Joints[index].Matrix[0].Y,
                     Data.Joints[index].Matrix[0].Z,
