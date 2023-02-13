@@ -14,7 +14,7 @@ namespace Twinsanity
         public Pos Coord2 { get; set; } // Bounding box?
         public Joint[] Joints { get; set; }
         public ExitPoint[] ExitPoints { get; set; }
-        public GI_Type3[] Type3 { get; set; }
+        public JointToWorldTransform[] JointToWorldTransforms { get; set; }
         public GI_CollisionData[] CollisionData { get; set; }
         public JointTree Skeleton { get; private set; }
 
@@ -84,14 +84,14 @@ namespace Twinsanity
 
             if (Joints.Length > 0)
             {
-                for (int a = 0; a < Type3.Length; a++)
+                for (int a = 0; a < JointToWorldTransforms.Length; a++)
                 {
-                    for (int i = 0; i < Type3[a].Matrix.Length; i++)
+                    for (int i = 0; i < JointToWorldTransforms[a].Matrix.Length; i++)
                     {
-                        writer.Write(Type3[a].Matrix[i].X);
-                        writer.Write(Type3[a].Matrix[i].Y);
-                        writer.Write(Type3[a].Matrix[i].Z);
-                        writer.Write(Type3[a].Matrix[i].W);
+                        writer.Write(JointToWorldTransforms[a].Matrix[i].X);
+                        writer.Write(JointToWorldTransforms[a].Matrix[i].Y);
+                        writer.Write(JointToWorldTransforms[a].Matrix[i].Z);
+                        writer.Write(JointToWorldTransforms[a].Matrix[i].W);
                     }
                 }
             }
@@ -225,7 +225,7 @@ namespace Twinsanity
 
             if (jointsAmt > 0)
             {
-                Type3 = new GI_Type3[jointsAmt];
+                JointToWorldTransforms = new JointToWorldTransform[jointsAmt];
                 for (int a = 0; a < jointsAmt; a++)
                 {
                     Pos[] Type3_Matrix = new Pos[4];
@@ -233,12 +233,12 @@ namespace Twinsanity
                     {
                         Type3_Matrix[i] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                     }
-                    Type3[a] = new GI_Type3() { Matrix = Type3_Matrix };
+                    JointToWorldTransforms[a] = new JointToWorldTransform() { Matrix = Type3_Matrix };
                 }
             }
             else
             {
-                Type3 = new GI_Type3[0];
+                JointToWorldTransforms = new JointToWorldTransform[0];
             }
 
             SkinID = reader.ReadUInt32();
@@ -353,11 +353,11 @@ namespace Twinsanity
                 count += ModelIDs.Count * 5;
             }
 
-            if (Type3.Length > 0)
+            if (JointToWorldTransforms.Length > 0)
             {
-                for (int i = 0; i < Type3.Length; i++)
+                for (int i = 0; i < JointToWorldTransforms.Length; i++)
                 {
-                    count += Type3[i].Matrix.Length * 16;
+                    count += JointToWorldTransforms[i].Matrix.Length * 16;
                 }
             }
 
@@ -411,7 +411,7 @@ namespace Twinsanity
             public Pos[] Matrix; // 4
         }
 
-        public struct GI_Type3
+        public struct JointToWorldTransform // Used for skinning vertexes on skins (already precomputed and inverted)
         {
             public Pos[] Matrix; // 4
         }

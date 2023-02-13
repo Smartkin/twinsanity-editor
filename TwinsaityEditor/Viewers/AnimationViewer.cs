@@ -457,21 +457,21 @@ namespace TwinsaityEditor.Viewers
                 Matrix4 tempRot = Matrix4.Identity;
 
                 // Rotation
-                tempRot.M11 = -graphicsInfo.Data.Type3[pair.Value.JointIndex].Matrix[0].X;
-                tempRot.M12 = -graphicsInfo.Data.Type3[pair.Value.JointIndex].Matrix[1].X;
-                tempRot.M13 = -graphicsInfo.Data.Type3[pair.Value.JointIndex].Matrix[2].X;
+                tempRot.M11 = -graphicsInfo.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[0].X;
+                tempRot.M12 = -graphicsInfo.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[1].X;
+                tempRot.M13 = -graphicsInfo.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[2].X;
 
-                tempRot.M21 = graphicsInfo.Data.Type3[pair.Value.JointIndex].Matrix[0].Y;
-                tempRot.M22 = graphicsInfo.Data.Type3[pair.Value.JointIndex].Matrix[1].Y;
-                tempRot.M23 = graphicsInfo.Data.Type3[pair.Value.JointIndex].Matrix[2].Y;
+                tempRot.M21 = graphicsInfo.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[0].Y;
+                tempRot.M22 = graphicsInfo.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[1].Y;
+                tempRot.M23 = graphicsInfo.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[2].Y;
 
-                tempRot.M31 = graphicsInfo.Data.Type3[pair.Value.JointIndex].Matrix[0].Z;
-                tempRot.M32 = graphicsInfo.Data.Type3[pair.Value.JointIndex].Matrix[1].Z;
-                tempRot.M33 = graphicsInfo.Data.Type3[pair.Value.JointIndex].Matrix[2].Z;
+                tempRot.M31 = graphicsInfo.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[0].Z;
+                tempRot.M32 = graphicsInfo.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[1].Z;
+                tempRot.M33 = graphicsInfo.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[2].Z;
 
-                tempRot.M14 = graphicsInfo.Data.Type3[pair.Value.JointIndex].Matrix[0].W;
-                tempRot.M24 = graphicsInfo.Data.Type3[pair.Value.JointIndex].Matrix[1].W;
-                tempRot.M34 = graphicsInfo.Data.Type3[pair.Value.JointIndex].Matrix[2].W;
+                tempRot.M14 = graphicsInfo.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[0].W;
+                tempRot.M24 = graphicsInfo.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[1].W;
+                tempRot.M34 = graphicsInfo.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[2].W;
 
                 // Position
                 tempRot.M41 = graphicsInfo.Data.Joints[pair.Value.JointIndex].Matrix[1].X;

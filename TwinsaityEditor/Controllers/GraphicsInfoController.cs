@@ -59,10 +59,10 @@ namespace TwinsaityEditor
                     text.Add($"\t#{ i } Local Space Rotation: { Data.Joints[i].Matrix[2].X }; { Data.Joints[i].Matrix[2].Y }; { Data.Joints[i].Matrix[2].Z }; { Data.Joints[i].Matrix[2].W }");
                     text.Add($"\t#{ i } Vector 4: { Data.Joints[i].Matrix[3].X }; { Data.Joints[i].Matrix[3].Y }; { Data.Joints[i].Matrix[3].Z }; { Data.Joints[i].Matrix[3].W }");
                     text.Add($"\t#{ i } Vector 5: { Data.Joints[i].Matrix[4].X }; { Data.Joints[i].Matrix[4].Y }; { Data.Joints[i].Matrix[4].Z }; { Data.Joints[i].Matrix[4].W }");
-                    text.Add($"\t#{ i } T3 Matrix 1: { Data.Type3[i].Matrix[0].X }; { Data.Type3[i].Matrix[0].Y }; { Data.Type3[i].Matrix[0].Z }; { Data.Type3[i].Matrix[0].W }");
-                    text.Add($"\t#{ i } T3 Matrix 2: { Data.Type3[i].Matrix[1].X }; { Data.Type3[i].Matrix[1].Y }; { Data.Type3[i].Matrix[1].Z }; { Data.Type3[i].Matrix[1].W }");
-                    text.Add($"\t#{ i } T3 Matrix 3: { Data.Type3[i].Matrix[2].X }; { Data.Type3[i].Matrix[2].Y }; { Data.Type3[i].Matrix[2].Z }; { Data.Type3[i].Matrix[2].W }");
-                    text.Add($"\t#{ i } T3 Matrix 4: { Data.Type3[i].Matrix[3].X }; { Data.Type3[i].Matrix[3].Y }; { Data.Type3[i].Matrix[3].Z }; { Data.Type3[i].Matrix[3].W }");
+                    text.Add($"\t#{ i } T3 Matrix 1: { Data.JointToWorldTransforms[i].Matrix[0].X }; { Data.JointToWorldTransforms[i].Matrix[0].Y }; { Data.JointToWorldTransforms[i].Matrix[0].Z }; { Data.JointToWorldTransforms[i].Matrix[0].W }");
+                    text.Add($"\t#{ i } T3 Matrix 2: { Data.JointToWorldTransforms[i].Matrix[1].X }; { Data.JointToWorldTransforms[i].Matrix[1].Y }; { Data.JointToWorldTransforms[i].Matrix[1].Z }; { Data.JointToWorldTransforms[i].Matrix[1].W }");
+                    text.Add($"\t#{ i } T3 Matrix 3: { Data.JointToWorldTransforms[i].Matrix[2].X }; { Data.JointToWorldTransforms[i].Matrix[2].Y }; { Data.JointToWorldTransforms[i].Matrix[2].Z }; { Data.JointToWorldTransforms[i].Matrix[2].W }");
+                    text.Add($"\t#{ i } T3 Matrix 4: { Data.JointToWorldTransforms[i].Matrix[3].X }; { Data.JointToWorldTransforms[i].Matrix[3].Y }; { Data.JointToWorldTransforms[i].Matrix[3].Z }; { Data.JointToWorldTransforms[i].Matrix[3].W }");
                 }
             }
             if (Data.ExitPoints.Length > 0)
@@ -138,10 +138,10 @@ namespace TwinsaityEditor
         private void TraverseSkeleton(List<string> text)
         {
             text.Add("Skeleton:");
-            TraverseJoint(Data.Skeleton.Root, text, Matrix4.Identity, Vector4.Zero, 0);
+            TraverseJoint(Data.Skeleton.Root, text, Matrix4.Identity, 0);
         }
 
-        private void TraverseJoint(GraphicsInfo.JointNode joint, List<string> text, Matrix4 parentTransform, Vector4 parentTranslation, int traverseLevel)
+        private void TraverseJoint(GraphicsInfo.JointNode joint, List<string> text, Matrix4 parentTransform, int traverseLevel)
         {
             var jointString = "";
             for (int i = 0; i < traverseLevel; i++)
@@ -154,31 +154,48 @@ namespace TwinsaityEditor
                 Data.Joints[index].Matrix[2].X,
                 Data.Joints[index].Matrix[2].Y,
                 Data.Joints[index].Matrix[2].Z,
-                Data.Joints[index].Matrix[2].W));
-            var globalTransform = Matrix4.CreateTranslation(
-                    Data.Joints[index].Matrix[1].X,
-                    Data.Joints[index].Matrix[1].Y,
-                    Data.Joints[index].Matrix[1].Z
-                );
-
-            var childTransform = localTransform * parentTransform;
-            var childTranslation = localTransform * parentTranslation - localTransform * (new Vector4(
+                Data.Joints[index].Matrix[2].W)) * Matrix4.CreateTranslation(
                     Data.Joints[index].Matrix[0].X,
                     Data.Joints[index].Matrix[0].Y,
-                    Data.Joints[index].Matrix[0].Z,
-                    1.0f
-                ));
-            childTranslation.W = 1.0f;
+                    Data.Joints[index].Matrix[0].Z);
+
+            var childTransform = localTransform * parentTransform;
             var jointTransform = childTransform;
-            jointTransform.Row3 = childTranslation;
-            text.Add($"{jointString} Transform Row 1: {jointTransform.Row0}");
-            text.Add($"{jointString} Transform Row 2: {jointTransform.Row1}");
-            text.Add($"{jointString} Transform Row 3: {jointTransform.Row2}");
-            text.Add($"{jointString} Transform Row 4: {jointTransform.Row3}");
+            jointTransform.Invert();
+            text.Add($"{jointString} Transform from joint to world coordinates Row 1: {jointTransform.Row0}");
+            text.Add($"{jointString} Transform from joint to world coordinates Row 2: {jointTransform.Row1}");
+            text.Add($"{jointString} Transform from joint to world coordinates Row 3: {jointTransform.Row2}");
+            text.Add($"{jointString} Transform from joint to world coordinates Row 4: {jointTransform.Row3}");
             foreach (var c in joint.Children)
             {
-                TraverseJoint(c, text, childTransform, childTranslation, traverseLevel + 1);
+                TraverseJoint(c, text, childTransform, traverseLevel + 1);
             }
+        }
+
+        public Matrix4 GetJointToWorldTransform(int jointIndex)
+        {
+            var mat = Matrix4.Zero;
+            mat.M11 = Data.JointToWorldTransforms[jointIndex].Matrix[0].X;
+            mat.M12 = Data.JointToWorldTransforms[jointIndex].Matrix[0].Y;
+            mat.M13 = Data.JointToWorldTransforms[jointIndex].Matrix[0].Z;
+            mat.M14 = Data.JointToWorldTransforms[jointIndex].Matrix[0].W;
+
+            mat.M21 = Data.JointToWorldTransforms[jointIndex].Matrix[1].X;
+            mat.M22 = Data.JointToWorldTransforms[jointIndex].Matrix[1].Y;
+            mat.M23 = Data.JointToWorldTransforms[jointIndex].Matrix[1].Z;
+            mat.M24 = Data.JointToWorldTransforms[jointIndex].Matrix[1].W;
+
+            mat.M31 = Data.JointToWorldTransforms[jointIndex].Matrix[2].X;
+            mat.M32 = Data.JointToWorldTransforms[jointIndex].Matrix[2].Y;
+            mat.M33 = Data.JointToWorldTransforms[jointIndex].Matrix[2].Z;
+            mat.M34 = Data.JointToWorldTransforms[jointIndex].Matrix[2].W;
+
+            mat.M41 = Data.JointToWorldTransforms[jointIndex].Matrix[3].X;
+            mat.M42 = Data.JointToWorldTransforms[jointIndex].Matrix[3].Y;
+            mat.M43 = Data.JointToWorldTransforms[jointIndex].Matrix[3].Z;
+            mat.M44 = Data.JointToWorldTransforms[jointIndex].Matrix[3].W;
+
+            return mat;
         }
 
         private void Menu_OpenViewer()
