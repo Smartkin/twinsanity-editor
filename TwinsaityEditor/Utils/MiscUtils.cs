@@ -56,7 +56,7 @@ namespace TwinsaityEditor.Utils
 
             if (TexturesBuffer == null)
             {
-                TexturesBuffer = new int[256];
+                TexturesBuffer = new int[512];
                 GL.GenTextures(TexturesBuffer.Length, TexturesBuffer);
             }
             GL.BindTexture(TextureTarget.Texture2D, TexturesBuffer[textureIndex]);
