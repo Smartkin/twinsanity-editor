@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("TwinsaityEditor")]
-[assembly: AssemblyCopyright("Copyright © 2015-2018")]
+[assembly: AssemblyCopyright("Copyright © 2015-2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: ComVisible(false)]
 [assembly: Guid("7018a100-0558-4177-a945-68f840a0303c")]
