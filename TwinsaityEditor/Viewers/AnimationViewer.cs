@@ -141,7 +141,42 @@ namespace TwinsaityEditor.Viewers
             {
                 vtx[i]?.DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Normal);
             }
+
+            DrawSkeleton();
             GL.PopMatrix();
+        }
+
+        private void DrawSkeleton()
+        {
+            GL.Begin(PrimitiveType.Lines);
+            GL.LineWidth(10f);
+            GL.Color3(Color.White);
+            var skeleton = graphicsInfo.Data.Skeleton;
+            DrawJoint(skeleton.Root);
+            GL.End();
+        }
+
+        private Matrix4 DrawJoint(GraphicsInfo.JointNode joint)
+        {
+            var transMat = player.Play((int)joint.Joint.JointIndex);
+            var endTransform = Matrix4.CreateFromQuaternion(new Quaternion(transMat.Row1.Xyz)) * Matrix4.CreateScale(transMat.Row2.Xyz)
+                * Matrix4.CreateTranslation(transMat.Row0.Xyz);
+            //endTransform = endTransform;
+            var pos = new Vector4
+            {
+                X = -graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].X,
+                Y = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].Y,
+                Z = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].Z,
+                W = 1.0f
+            };
+            
+            foreach (var c in joint.Children)
+            {
+                endTransform *= DrawJoint(c);
+            }
+            GL.Vertex3((endTransform * pos).Xyz);
+
+            return endTransform;
         }
 
         private void UpdateAnimation(float deltaTime)
@@ -164,32 +199,34 @@ namespace TwinsaityEditor.Viewers
             //Matrix4 tempRot = Matrix4.Identity;
 
             // Rotation
-            /*tempRot.M11 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[0].X;
-            tempRot.M12 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[0].Y;
-            tempRot.M13 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[0].Z;
-            tempRot.M14 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[0].W;
+            /*tempRot.M11 = -graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[0].X;
+            tempRot.M12 = -graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[1].X;
+            tempRot.M13 = -graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[2].X;
 
-            tempRot.M21 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[1].X;
+            tempRot.M21 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[0].Y;
             tempRot.M22 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[1].Y;
-            tempRot.M23 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[1].Z;
-            tempRot.M24 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[1].W;
+            tempRot.M23 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[2].Y;
 
-            tempRot.M31 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[2].X;
-            tempRot.M32 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[2].Y;
+            tempRot.M31 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[0].Z;
+            tempRot.M32 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[1].Z;
             tempRot.M33 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[2].Z;
+
+            tempRot.M14 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[0].W;
+            tempRot.M24 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[1].W;
             tempRot.M34 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[2].W;
 
-            tempRot.M41 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[3].X;
-            tempRot.M42 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[3].Y;
-            tempRot.M43 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[3].Z;
-            tempRot.M44 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[3].W;*/
-
-
             // Position
-            /*tempRot.M41 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].X;
+            tempRot.M41 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].X;
             tempRot.M42 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].Y;
             tempRot.M43 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].Z;
             tempRot.M44 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].W;*/
+            var pos = new Vector4
+            {
+                X = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].X,
+                Y = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].Y,
+                Z = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].Z,
+                W = 1.0f
+            };
 
             var transforms = player.Play((int)joint.Joint.JointIndex);
             var localTransform = Matrix4.CreateFromQuaternion(new Quaternion(transforms.Row2.Xyz))
@@ -283,7 +320,8 @@ namespace TwinsaityEditor.Viewers
                     vtxIndex++;
                 }
             }
-            
+
+            return transMat;
         }
 
         public void LoadOGI_PS2()
@@ -449,6 +487,7 @@ namespace TwinsaityEditor.Viewers
 
             zFar = Math.Max(zFar, Math.Max(max_x - min_x, Math.Max(max_y - min_y, max_z - min_z)));
         }
+
 
 
         public void ChangeGraphicsInfo(GraphicsInfoController mesh)

@@ -32,19 +32,29 @@ namespace TwinsaityEditor
 
         protected override void GenText()
         {
-            TextPrev = new string[2 + (Data.SubModels.Count * 3)];
-            TextPrev[0] = $"ID: {Data.ID}";
-            TextPrev[1] = $"SubModels {Data.SubModels.Count}";
-            int line = 2;
+            var text = new List<string>
+            {
+                $"ID: {Data.ID}",
+                $"SubModels {Data.SubModels.Count}"
+            };
+
             var index = 0;
             foreach (var model in Data.SubModels)
             {
-                TextPrev[line + 0] = $"SubModel {index}";
-                TextPrev[line + 1] = $"MaterialID {model.MaterialID}/0x{model.MaterialID:X}";
-                TextPrev[line + 2] = $"Vertexes {model.Vertexes.Count}";
-                line += 3;
+                text.Add($"SubModel {index}");
+                text.Add($"MaterialID {model.MaterialID}/0x{model.MaterialID:X}");
+                text.Add($"Vertexes {model.Vertexes.Count}");
+                for (var i = 0; i < model.Vertexes.Count; ++i)
+                {
+                    text.Add($"Vertex #{i}:");
+                    text.Add($"\tJoint index 1 {model.Vertexes[i].Joint.JointIndex1}; Weight 1 {model.Vertexes[i].Joint.Weight1}");
+                    text.Add($"\tJoint index 2 {model.Vertexes[i].Joint.JointIndex2}; Weight 2 {model.Vertexes[i].Joint.Weight2}");
+                    text.Add($"\tJoint index 3 {model.Vertexes[i].Joint.JointIndex3}; Weight 3 {model.Vertexes[i].Joint.Weight3}");
+                }
                 index++;
             }
+
+            TextPrev = text.ToArray();
         }
 
         public void LoadMeshData()

@@ -30,19 +30,28 @@ namespace TwinsaityEditor
 
         protected override void GenText()
         {
-            List<string> text = new List<string>();
-            text.Add($"ID: {Data.ID} ");
-            text.Add($"Size: {Data.Size}");
+            List<string> text = new List<string>
+            {
+                $"ID: {Data.ID} ",
+                $"Size: {Data.Size}"
+            };
 
             for (int i = 0; i < Data.Models.Length; i++)
             {
                 text.Add($"Model {i}: Material - {MainFile.GetMaterialName(Data.Models[i].MaterialID)} [ID: {Data.Models[i].MaterialID}]");
                 for (int a = 0; a < Data.Models[i].SubModels.Length; a++)
                 {
-                    text.Add($"SubModel {a}: Vertexes {Data.Models[i].SubModels[a].VertexesAmount}, Bone Count {Data.Models[i].SubModels[a].BlendShapes.Length}");
+                    text.Add($"SubModel {a}: Vertexes {Data.Models[i].SubModels[a].VertexesAmount}, Joint Count {Data.Models[i].SubModels[a].BlendShapes.Length}");
                     for (int b = 0; b < Data.Models[i].SubModels[a].BlendShapes.Length; b++)
                     {
                         //text.Add($"Bone {b}: Int {Data.Models[i].SubModels[a].Bones[b].UnkInt}");
+                    }
+                    for (var j = 0; j < Data.Models[i].SubModels[a].Vertexes.Count; j++)
+                    {
+                        text.Add($"Vertex {j}");
+                        text.Add($"\tJoint index 1 {Data.Models[i].SubModels[a].Vertexes[j].Joint.JointIndex1}; Weight 1 {Data.Models[i].SubModels[a].Vertexes[j].Joint.Weight1}");
+                        text.Add($"\tJoint index 2 {Data.Models[i].SubModels[a].Vertexes[j].Joint.JointIndex2}; Weight 2 {Data.Models[i].SubModels[a].Vertexes[j].Joint.Weight2}");
+                        text.Add($"\tJoint index 3 {Data.Models[i].SubModels[a].Vertexes[j].Joint.JointIndex3}; Weight 3 {Data.Models[i].SubModels[a].Vertexes[j].Joint.Weight3}");
                     }
                 }
             }
