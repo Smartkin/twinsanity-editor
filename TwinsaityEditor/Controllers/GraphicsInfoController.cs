@@ -1,5 +1,6 @@
 ﻿using Twinsanity;
 using System.Collections.Generic;
+using OpenTK;
 
 namespace TwinsaityEditor
 {
@@ -128,7 +129,51 @@ namespace TwinsaityEditor
                 }
             }
 
+            text.Add("");
+            TraverseSkeleton(text);
+
             TextPrev = text.ToArray();
+        }
+
+        private void TraverseSkeleton(List<string> text)
+        {
+            text.Add("Skeleton:");
+            TraverseJoint(Data.Skeleton.Root, text, Matrix4.Identity, Vector4.Zero, 0);
+        }
+
+        private void TraverseJoint(GraphicsInfo.JointNode joint, List<string> text, Matrix4 transform, Vector4 localTranslation, int traverseLevel)
+        {
+            var jointString = "";
+            for (int i = 0; i < traverseLevel; i++)
+            {
+                jointString += "--";
+            }
+            var index = joint.Joint.JointIndex;
+            text.Add($"{jointString}Joint {index}");
+            var localTransform = Matrix4.CreateFromQuaternion(new Quaternion(
+                Data.Joints[index].Matrix[2].X,
+                Data.Joints[index].Matrix[2].Y,
+                Data.Joints[index].Matrix[2].Z,
+                Data.Joints[index].Matrix[2].W));
+
+            var childTransform = localTransform * transform;
+            var childTranslation = localTransform * localTranslation - localTransform * (new Vector4(
+                    Data.Joints[index].Matrix[0].X,
+                    Data.Joints[index].Matrix[0].Y,
+                    Data.Joints[index].Matrix[0].Z,
+                    1.0f
+                ));
+            childTranslation.W = 1.0f;
+            var jointTransform = childTransform;
+            jointTransform.Row3 = childTranslation;
+            text.Add($"{jointString} Transform Row 1: {jointTransform.Row0}");
+            text.Add($"{jointString} Transform Row 2: {jointTransform.Row1}");
+            text.Add($"{jointString} Transform Row 3: {jointTransform.Row2}");
+            text.Add($"{jointString} Transform Row 4: {jointTransform.Row3}");
+            foreach (var c in joint.Children)
+            {
+                TraverseJoint(c, text, childTransform, childTranslation, traverseLevel + 1);
+            }
         }
 
         private void Menu_OpenViewer()
