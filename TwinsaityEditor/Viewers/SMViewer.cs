@@ -16,7 +16,7 @@ namespace TwinsaityEditor
         private SceneryData scenery;
         private Skydome skydome;
         private DynamicSceneryData dynamicScenery;
-        private List<VertexBufferData> renderObjects;
+        private List<VertexBufferData> sceneryObjects = new List<VertexBufferData>();
 
         private bool showScenery;
 
@@ -26,7 +26,7 @@ namespace TwinsaityEditor
             this.file = file;
             showScenery = true;
 
-            InitVBO(objectLimit);
+            //InitVBO(1);
 
             // Chunk links
             if (file.Data.ContainsItem(5))
@@ -40,9 +40,6 @@ namespace TwinsaityEditor
                 LoadScenery(new Matrix4());
             }
             zFar = 2000F;
-
-            renderObjects = new List<VertexBufferData>();
-            renderObjects.AddRange(vtx.Where(v => v != null));
         }
 
         //protected override void RenderHUD()
@@ -54,6 +51,16 @@ namespace TwinsaityEditor
         {
             //put all object rendering code here
             GL.PushMatrix();
+
+            if (showScenery)
+            {
+                GL.Enable(EnableCap.Lighting);
+                for (int i = 0; i < sceneryObjects.Count; i++)
+                {
+                    sceneryObjects[i].DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Normal);
+                }
+                GL.Disable(EnableCap.Lighting);
+            }
 
             if (links != null)
             {
@@ -219,14 +226,26 @@ namespace TwinsaityEditor
                 GL.LineWidth(1);
             }
 
-            GL.Enable(EnableCap.Lighting);
-            for (int i = 0; i < renderObjects.Count; i++)
-            {
-                renderObjects[i].DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Normal);
-            }
-            GL.Disable(EnableCap.Lighting);
-
             GL.PopMatrix();
+        }
+
+        protected override bool IsInputKey(Keys keyData)
+        {
+            switch (keyData)
+            {
+                case Keys.U:
+                    return true;
+            }
+            return base.IsInputKey(keyData);
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+            switch (e.KeyCode)
+            {
+                case Keys.U: showScenery = !showScenery; break;
+            }
         }
 
         private void LoadScenery(Matrix4 chunkMatrix)
@@ -340,15 +359,15 @@ namespace TwinsaityEditor
                             max_z = Math.Max(max_z, p.Pos.Z);
                         }
 
-                        int vtx_id = GenerateVBO();
+                        int vtx_id = GenerateVBOforScenery();
 
                         if (rigid != null)
                         {
                             Utils.TextUtils.LoadTexture(rigid.MaterialIDs, file, vtx[vtx_id], v);
                         }
 
-                        vtx[vtx_id].Vtx = mesh.Vertices[v];
-                        vtx[vtx_id].VtxInd = mesh.Indices[v];
+                        sceneryObjects[vtx_id].Vtx = mesh.Vertices[v];
+                        sceneryObjects[vtx_id].VtxInd = mesh.Indices[v];
                         mesh.Vertices[v] = vbuffer;
 
                         UpdateVBO(vtx_id);
@@ -357,16 +376,23 @@ namespace TwinsaityEditor
             }
         }
 
-        private readonly int objectLimit = 4000;
-        private int vtxIndex;
-        private int GenerateVBO()
+        private readonly int sceneryLimit = 4000;
+        private int sceneryIndex;
+        private int GenerateVBOforScenery()
         {
-            if (vtxIndex >= objectLimit)
+            if (sceneryIndex >= sceneryLimit)
             {
-                vtxIndex = 0;
+                sceneryIndex = 0;
             }
-            vtx[vtxIndex] = new VertexBufferData();
-            return vtxIndex++;
+            if (sceneryObjects.Count >= sceneryLimit)
+            {
+                sceneryObjects[sceneryIndex] = new VertexBufferData();
+            }
+            else
+            {
+                sceneryObjects.Add(new VertexBufferData());
+            }
+            return sceneryIndex++;
         }
 
         /// <summary> 
