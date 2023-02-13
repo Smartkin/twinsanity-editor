@@ -129,6 +129,8 @@ namespace TwinsaityEditor.Viewers
 
 
             GL.PushMatrix();
+            DrawSkeleton();
+
             for (int i = 0; i < bskinEndIndex; i++)
             {
                 vtx[i]?.DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Normal);
@@ -142,7 +144,7 @@ namespace TwinsaityEditor.Viewers
                 vtx[i]?.DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Normal);
             }
 
-            DrawSkeleton();
+            
             GL.PopMatrix();
         }
 
@@ -152,31 +154,73 @@ namespace TwinsaityEditor.Viewers
             GL.LineWidth(10f);
             GL.Color3(Color.White);
             var skeleton = graphicsInfo.Data.Skeleton;
-            DrawJoint(skeleton.Root);
+            DrawJoint(skeleton.Root, Matrix4.Identity);
             GL.End();
         }
 
-        private Matrix4 DrawJoint(GraphicsInfo.JointNode joint)
+        private void DrawJoint(GraphicsInfo.JointNode joint, Matrix4 parentTransform)
         {
-            var transMat = player.Play((int)joint.Joint.JointIndex);
-            var endTransform = Matrix4.CreateFromQuaternion(new Quaternion(transMat.Row1.Xyz)) * Matrix4.CreateScale(transMat.Row2.Xyz)
-                * Matrix4.CreateTranslation(transMat.Row0.Xyz);
-            //endTransform = endTransform;
-            var pos = new Vector4
-            {
-                X = -graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].X,
-                Y = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].Y,
-                Z = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].Z,
-                W = 1.0f
-            };
-            
+            var transforms = player.Play((int)joint.Joint.JointIndex);
+            var localTransform = Matrix4.CreateFromQuaternion(new Quaternion(transforms.Row2.Xyz))
+                * Matrix4.CreateScale(transforms.Row1.Xyz)
+                * Matrix4.CreateTranslation(transforms.Row0.Xyz);
+            /*var localTransform = Matrix4.CreateFromQuaternion(new Quaternion(
+                graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[2].X,
+                graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[2].Y,
+                graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[2].Z,
+                graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[2].W));*/
+            var childTransform = localTransform * parentTransform;
+            /*var childTranslation = childTransform * parentTranslation + childTransform * (new Vector4(
+                    graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[0].X,
+                    graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[0].Y,
+                    graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[0].Z,
+                    1.0f
+                ));*/
+            /*var childTranslation = childTransform * parentTranslation + childTransform * transforms.Row0;
+            childTranslation.W = 1.0f;*/
             foreach (var c in joint.Children)
             {
-                endTransform *= DrawJoint(c);
+                DrawJoint(c, childTransform);
             }
-            GL.Vertex3((endTransform * pos).Xyz);
 
-            return endTransform;
+            var models = graphicsInfo.Data.ModelIDs.Where((v) => v.Value.JointIndex == joint.Joint.JointIndex);
+
+            var jointTransform = childTransform;
+
+            Matrix4 tempRot = Matrix4.Identity;
+            /*tempRot *= Matrix4.CreateFromQuaternion(new Quaternion(joint.Joint.Matrix[2].X, joint.Joint.Matrix[2].Y, joint.Joint.Matrix[2].Z));
+            tempRot *= Matrix4.CreateTranslation(new Vector3(joint.Joint.Matrix[0].X, joint.Joint.Matrix[0].Y, joint.Joint.Matrix[0].Z));*/
+
+            // Rotation
+            tempRot.M11 = -jointTransform.M11;
+            tempRot.M12 = -jointTransform.M12;
+            tempRot.M13 = -jointTransform.M13;
+
+            tempRot.M21 = jointTransform.M21;
+            tempRot.M22 = jointTransform.M22;
+            tempRot.M23 = jointTransform.M23;
+
+            tempRot.M31 = jointTransform.M31;
+            tempRot.M32 = jointTransform.M32;
+            tempRot.M33 = jointTransform.M33;
+
+            tempRot.M14 = jointTransform.M14;
+            tempRot.M24 = jointTransform.M24;
+            tempRot.M34 = jointTransform.M34;
+
+            // Position
+            //tempRot.M41 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].X;
+            //tempRot.M42 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].Y;
+            //tempRot.M43 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].Z;
+            //tempRot.M44 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].W;
+            tempRot.Row3 = jointTransform.Row3;
+
+            //tempRot.Row3 += transforms.Row0;
+
+            //tempRot *= transMat;
+            tempRot *= Matrix4.CreateScale(-1, 1, 1);
+            GL.Vertex3(tempRot.ExtractTranslation());
+
         }
 
         private void UpdateAnimation(float deltaTime)
@@ -220,13 +264,6 @@ namespace TwinsaityEditor.Viewers
             tempRot.M42 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].Y;
             tempRot.M43 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].Z;
             tempRot.M44 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].W;*/
-            var pos = new Vector4
-            {
-                X = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].X,
-                Y = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].Y,
-                Z = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].Z,
-                W = 1.0f
-            };
 
             var transforms = player.Play((int)joint.Joint.JointIndex);
             var localTransform = Matrix4.CreateFromQuaternion(new Quaternion(transforms.Row2.Xyz))
@@ -321,7 +358,6 @@ namespace TwinsaityEditor.Viewers
                 }
             }
 
-            return transMat;
         }
 
         public void LoadOGI_PS2()
