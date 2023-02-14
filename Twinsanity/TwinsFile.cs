@@ -280,6 +280,7 @@ namespace Twinsanity
                                         TwinsSection sec = new TwinsSection() { ID = s_id };
                                         if (s_id == 12)
                                         {
+                                            // empty on PSP
                                             sec.Type = SectionType.GraphicsMB;
                                         }
                                         else if (s_id == 11)
@@ -395,7 +396,7 @@ namespace Twinsanity
                                     }
                                 case 7:
                                     {
-                                        // usually all empty
+                                        // empty on PSP
                                         SectionType targetType = SectionType.GraphicsMB;
                                         TwinsSection sec = new TwinsSection
                                         {
@@ -405,7 +406,7 @@ namespace Twinsanity
                                         };
                                         var sk = reader.BaseStream.Position;
                                         reader.BaseStream.Position = s_off;
-                                        sec.Load(reader, s_size);
+                                        sec.Load(reader, s_size, miniFix);
                                         reader.BaseStream.Position = sk;
                                         RecordIDs.Add(s_id, Records.Count);
                                         Records.Add(sec);

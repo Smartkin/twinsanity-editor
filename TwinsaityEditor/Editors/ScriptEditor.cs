@@ -171,12 +171,15 @@ namespace TwinsaityEditor
             scriptListBox.Items.Clear();
             scriptIndices.Clear();
             var index = 0;
-            foreach (Script i in controller.Data.Records)
+            foreach (TwinsItem scr in controller.Data.Records)
             {
-                if (predicate.Invoke(i))
+                if (scr is Script i)
                 {
-                    scriptIndices.Add(index);
-                    scriptListBox.Items.Add(GenTextForList(i));
+                    if (predicate.Invoke(i))
+                    {
+                        scriptIndices.Add(index);
+                        scriptListBox.Items.Add(GenTextForList(i));
+                    }
                 }
                 ++index;
             }

@@ -327,7 +327,14 @@ namespace TwinsaityEditor
                         case 7:
                             file.LoadFile(ofd.FileName, TwinsFile.FileType.MonkeyBallRM);
                             aux_file = new TwinsFile();
-                            aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".sm", TwinsFile.FileType.MonkeyBallSM);
+                            try
+                            {
+                                aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".sm", TwinsFile.FileType.MonkeyBallSM);
+                            }
+                            catch
+                            {
+                                aux_file = null;
+                            }
                             break;
                         case 8:
                             file.LoadFile(ofd.FileName, TwinsFile.FileType.MonkeyBallSM);

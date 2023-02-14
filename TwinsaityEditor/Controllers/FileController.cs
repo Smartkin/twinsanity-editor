@@ -52,14 +52,7 @@ namespace TwinsaityEditor
 
         protected override string GetName()
         {
-            if (Data.Type == TwinsFile.FileType.MonkeyBallRM || Data.Type == TwinsFile.FileType.MonkeyBallSM)
-            {
-                if (Data.Console == TwinsFile.ConsoleType.PS2)
-                {
-                    return "Compressed File";
-                }
-            }
-            return "File";
+            return $"{Data.Type} File";
         }
 
         protected override void GenText()
@@ -382,9 +375,17 @@ namespace TwinsaityEditor
                 texViewer = new TextureViewer();
                 texViewer.SelectedTexture = c.Data;
                 List<TwinsItem> textures = null;
-                if (c.MainFile.FileName.EndsWith(".sm2"))
+                if (c.MainFile.Data.Type == TwinsFile.FileType.DemoSM2 || c.MainFile.Data.Type == TwinsFile.FileType.SM2 || c.MainFile.Data.Type == TwinsFile.FileType.SMX)
                 {
                     textures = Data.GetItem<TwinsSection>(6).GetItem<TwinsSection>(0).Records;
+                }
+                else if (c.MainFile.Data.Type == TwinsFile.FileType.MonkeyBallRM)
+                {
+                    textures = Data.GetItem<TwinsSection>(12).GetItem<TwinsSection>(0).Records;
+                }
+                else if (c.MainFile.Data.Type == TwinsFile.FileType.MonkeyBallSM)
+                {
+                    textures = Data.GetItem<TwinsSection>(7).GetItem<TwinsSection>(0).Records;
                 }
                 else
                 {
@@ -392,10 +393,13 @@ namespace TwinsaityEditor
                 }
                 for (var i = 0; i < textures.Count; ++i)
                 {
-                    texViewer.Textures.Add((Texture)textures[i]);
-                    if ((Texture)textures[i] == c.Data)
+                    if (textures[i] is Texture)
                     {
-                        texViewer.TextureIndex = i;
+                        texViewer.Textures.Add((Texture)textures[i]);
+                        if ((Texture)textures[i] == c.Data)
+                        {
+                            texViewer.TextureIndex = i;
+                        }
                     }
                 }
                 texViewer.UpdateTextureLabel();

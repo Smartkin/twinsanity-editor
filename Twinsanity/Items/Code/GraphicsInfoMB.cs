@@ -6,10 +6,10 @@ using System.Collections.Generic;
 
 namespace Twinsanity
 {
-    public class GraphicsInfoMB : TwinsItem
+    public class GraphicsInfoMB : GraphicsInfo
     {
 
-        public GraphicsInfo OGI;
+        //public GraphicsInfo OGI;
         public List<byte[]> SurfData;
         public GHG_Actor_MB GHG;
 
@@ -24,11 +24,12 @@ namespace Twinsanity
 
             uint Version = reader.ReadUInt32();
             uint GHG_Size = reader.ReadUInt32(); // Size of GHG file at the end
-            OGI = new GraphicsInfo();
-            OGI.Load(reader, size);
+            //OGI = new GraphicsInfo();
+            //OGI.Load(reader, size);
+            base.Load(reader, size);
 
             SurfData = new List<byte[]>();
-            for (int i = 0; i < OGI.CollisionData.Length; i++)
+            for (int i = 0; i < CollisionData.Length; i++)
             {
                 SurfData.Add(reader.ReadBytes(0x10));
             }
@@ -43,6 +44,11 @@ namespace Twinsanity
         protected override int GetSize()
         {
             return Data.Length;
+        }
+
+        public override string ToString()
+        {
+            return $"GI_{ID:X8}";
         }
     }
 

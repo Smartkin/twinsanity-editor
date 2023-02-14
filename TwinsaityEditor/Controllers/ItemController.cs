@@ -20,7 +20,8 @@ namespace TwinsaityEditor
 
         protected override string GetName()
         {
-            return $"Item [ID {Data.ID}]";
+            string compr = Data.WasCompressed ? "Packed " : "";
+            return $"{compr}Item [ID 0x{Data.ID:X8}] [{Data.ID}]";
         }
 
         protected override void GenText()

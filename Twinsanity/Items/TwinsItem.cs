@@ -28,5 +28,6 @@ namespace Twinsanity
         public int Size { get => GetSize(); }
         public TwinsSection Parent { get; set; }
         public SectionType ParentType { get; set; }
+        public bool WasCompressed { get; set; }
     }
 }
