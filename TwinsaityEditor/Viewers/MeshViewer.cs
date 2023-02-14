@@ -737,9 +737,9 @@ namespace TwinsaityEditor
                 Matrix4 tempRot = Matrix4.Identity;
 
                 // Rotation
-                tempRot.M11 = -model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[0].X;
-                tempRot.M12 = -model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[1].X;
-                tempRot.M13 = -model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[2].X;
+                tempRot.M11 = model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[0].X;
+                tempRot.M12 = model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[1].X;
+                tempRot.M13 = model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[2].X;
 
                 tempRot.M21 = model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[0].Y;
                 tempRot.M22 = model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[1].Y;
@@ -753,14 +753,23 @@ namespace TwinsaityEditor
                 tempRot.M24 = model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[1].W;
                 tempRot.M34 = model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[2].W;
 
-                // Position
+                //var rot = tempRot.ExtractRotation();
+                //rot.X = -rot.X;
+                //rot.Y = -rot.Y;
+                //rot.Z = -rot.Z;
+                //tempRot = Matrix4.CreateFromQuaternion(rot);
+
+                // Position (Joint's world position)
                 tempRot.M41 = model.Data.Joints[pair.Value.JointIndex].Matrix[1].X;
                 tempRot.M42 = model.Data.Joints[pair.Value.JointIndex].Matrix[1].Y;
                 tempRot.M43 = model.Data.Joints[pair.Value.JointIndex].Matrix[1].Z;
                 tempRot.M44 = model.Data.Joints[pair.Value.JointIndex].Matrix[1].W;
 
+                tempRot.Column0 = -tempRot.Column0;
+
+                
                 // Adjusted for OpenTK
-                tempRot *= Matrix4.CreateScale(-1, 1, 1);
+                //tempRot *= Matrix4.CreateScale(-1, 1, 1);
 
                 mesh.LoadMeshData();
 

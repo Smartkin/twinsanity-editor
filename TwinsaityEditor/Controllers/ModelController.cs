@@ -13,6 +13,7 @@ namespace TwinsaityEditor
         public new Model Data { get; set; }
 
         public List<Vertex[]> Vertices { get; set; } = new List<Vertex[]>();
+        public List<Vertex[]> TposeVertices { get; set; } = new List<Vertex[]>();
         public List<uint[]> Indices { get; set; } = new List<uint[]>();
         public bool IsLoaded { get; private set; }
 
@@ -49,7 +50,9 @@ namespace TwinsaityEditor
 
         public void LoadMeshData()
         {
-            if (IsLoaded) return;
+            Vertices.Clear();
+            Indices.Clear();
+            TposeVertices.Clear();
 
             var refIndex = 0U;
             var offset = 0;
@@ -114,6 +117,7 @@ namespace TwinsaityEditor
 
                 Vertices.Add(vtx.ToArray());
                 Indices.Add(idx.ToArray());
+                TposeVertices.Add(vtx.ToArray());
             }
 
             IsLoaded = true;

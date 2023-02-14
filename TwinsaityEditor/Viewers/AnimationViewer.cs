@@ -34,7 +34,8 @@ namespace TwinsaityEditor.Viewers
         public bool Finished { get => player.Finished; }
 
         private Timer animUpdateTimer;
-        
+        private VertexBufferData skeletonBuffer;
+        private Vector3[] tposeBuffer;
 
         private int bskinEndIndex = 0;
         private int skinEndIndex = 0;
@@ -112,6 +113,21 @@ namespace TwinsaityEditor.Viewers
 
             InitVBO(vbos, true);
 
+            // Load skeleton in T-Pose
+            skeletonBuffer = new VertexBufferData();
+            skeletonBuffer.Vtx = new Vertex[graphicsInfo.Data.Joints.Length];
+            skeletonBuffer.VtxInd = new uint[graphicsInfo.Data.Joints.Length];
+            tposeBuffer = new Vector3[graphicsInfo.Data.Joints.Length];
+            foreach (var joint in graphicsInfo.Data.Joints)
+            {
+                var skeleton = graphicsInfo.Skeleton;
+                skeletonBuffer.Vtx[(int)joint.JointIndex].Pos = new Vector3(skeleton.BindPose.Position((int)joint.JointIndex));
+                tposeBuffer[(int)joint.JointIndex] = skeletonBuffer.Vtx[(int)joint.JointIndex].Pos;
+                skeletonBuffer.Vtx[(int)joint.JointIndex].Col = Vertex.ColorToABGR(Color.FromArgb(255, Color.White));
+                skeletonBuffer.VtxInd[(int)joint.JointIndex] = joint.JointIndex;
+            }
+            UpdateSkeletonBuffer();
+
             if (targetFile.Data.Type == TwinsFile.FileType.RM2)
             {
                 LoadOGI_PS2();
@@ -150,214 +166,112 @@ namespace TwinsaityEditor.Viewers
 
         private void DrawSkeleton()
         {
-            GL.Begin(PrimitiveType.Lines);
+            AnimateSkeletonBuffer();
+            UpdateSkeletonBuffer();
             GL.LineWidth(10f);
-            GL.Color3(Color.White);
+            skeletonBuffer.DrawAllElements(PrimitiveType.Lines, BufferPointerFlags.Color);
+            GL.LineWidth(1f);
+        }
+
+        private void AnimateSkeletonBuffer()
+        {
             var skeleton = graphicsInfo.Data.Skeleton;
-            DrawJoint(skeleton.Root, Matrix4.Identity);
-            GL.End();
+            AnimateSkeletonJointBuffer(skeleton.Root, Matrix4.Identity);
         }
 
-        private void DrawJoint(GraphicsInfo.JointNode joint, Matrix4 parentTransform)
+        private void AnimateSkeletonJointBuffer(GraphicsInfo.JointNode joint, Matrix4 parentTransform)
         {
-            var transforms = player.Play((int)joint.Joint.JointIndex);
-            var localTransform = Matrix4.CreateFromQuaternion(new Quaternion(transforms.Row2.Xyz))
-                * Matrix4.CreateScale(transforms.Row1.Xyz)
-                * Matrix4.CreateTranslation(transforms.Row0.Xyz);
-            /*var localTransform = Matrix4.CreateFromQuaternion(new Quaternion(
-                graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[2].X,
-                graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[2].Y,
-                graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[2].Z,
-                graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[2].W));*/
-            var childTransform = localTransform * parentTransform;
-            /*var childTranslation = childTransform * parentTranslation + childTransform * (new Vector4(
-                    graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[0].X,
-                    graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[0].Y,
-                    graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[0].Z,
-                    1.0f
-                ));*/
-            /*var childTranslation = childTransform * parentTranslation + childTransform * transforms.Row0;
-            childTranslation.W = 1.0f;*/
+            var transform = ComputeJointTransform((int)joint.Joint.JointIndex, parentTransform);
+            var poseTransform = ComputePoseTransform((int)joint.Joint.JointIndex, transform);
+
+            var newPosition = new Vector4(tposeBuffer[(int)joint.Joint.JointIndex], 1f) * poseTransform;
+            skeletonBuffer.Vtx[(int)joint.Joint.JointIndex].Pos = newPosition.Xyz;
+            skeletonBuffer.Vtx[(int)joint.Joint.JointIndex].Col = Vertex.ColorToABGR(Color.FromArgb(255, Color.White));
+            skeletonBuffer.VtxInd[(int)joint.Joint.JointIndex] = joint.Joint.JointIndex;
             foreach (var c in joint.Children)
             {
-                DrawJoint(c, childTransform);
+                AnimateSkeletonJointBuffer(c, transform);
             }
 
             var models = graphicsInfo.Data.ModelIDs.Where((v) => v.Value.JointIndex == joint.Joint.JointIndex);
-
-            var jointTransform = childTransform;
-
-            Matrix4 tempRot = Matrix4.Identity;
-            /*tempRot *= Matrix4.CreateFromQuaternion(new Quaternion(joint.Joint.Matrix[2].X, joint.Joint.Matrix[2].Y, joint.Joint.Matrix[2].Z));
-            tempRot *= Matrix4.CreateTranslation(new Vector3(joint.Joint.Matrix[0].X, joint.Joint.Matrix[0].Y, joint.Joint.Matrix[0].Z));*/
-
-            // Rotation
-            tempRot.M11 = -jointTransform.M11;
-            tempRot.M12 = -jointTransform.M12;
-            tempRot.M13 = -jointTransform.M13;
-
-            tempRot.M21 = jointTransform.M21;
-            tempRot.M22 = jointTransform.M22;
-            tempRot.M23 = jointTransform.M23;
-
-            tempRot.M31 = jointTransform.M31;
-            tempRot.M32 = jointTransform.M32;
-            tempRot.M33 = jointTransform.M33;
-
-            tempRot.M14 = jointTransform.M14;
-            tempRot.M24 = jointTransform.M24;
-            tempRot.M34 = jointTransform.M34;
-
-            // Position
-            //tempRot.M41 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].X;
-            //tempRot.M42 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].Y;
-            //tempRot.M43 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].Z;
-            //tempRot.M44 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].W;
-            tempRot.Row3 = jointTransform.Row3;
-
-            //tempRot.Row3 += transforms.Row0;
-
-            //tempRot *= transMat;
-            tempRot *= Matrix4.CreateScale(-1, 1, 1);
-            GL.Vertex3(tempRot.ExtractTranslation());
-
-        }
-
-        private void UpdateAnimation(float deltaTime)
-        {
-            player.AdvanceClock(deltaTime);
-
-            AnimateSkeleton(graphicsInfo.Data);
-        }
-
-        private void AnimateSkeleton(GraphicsInfo ogi)
-        {
-            var skeleton = ogi.Skeleton;
-            var transforms = player.Play((int)skeleton.Root.Joint.JointIndex);
-            var localTransform = Matrix4.CreateFromQuaternion(new Quaternion(transforms.Row2.Xyz));
-            AnimateJoint(skeleton.Root, localTransform);
-        }
-
-        private void AnimateJoint(GraphicsInfo.JointNode joint, Matrix4 parentTransform)
-        {
-            //Matrix4 tempRot = Matrix4.Identity;
-
-            // Rotation
-            /*tempRot.M11 = -graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[0].X;
-            tempRot.M12 = -graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[1].X;
-            tempRot.M13 = -graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[2].X;
-
-            tempRot.M21 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[0].Y;
-            tempRot.M22 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[1].Y;
-            tempRot.M23 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[2].Y;
-
-            tempRot.M31 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[0].Z;
-            tempRot.M32 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[1].Z;
-            tempRot.M33 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[2].Z;
-
-            tempRot.M14 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[0].W;
-            tempRot.M24 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[1].W;
-            tempRot.M34 = graphicsInfo.Data.Type3[joint.Joint.JointIndex].Matrix[2].W;
-
-            // Position
-            tempRot.M41 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].X;
-            tempRot.M42 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].Y;
-            tempRot.M43 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].Z;
-            tempRot.M44 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].W;*/
-
-            var transforms = player.Play((int)joint.Joint.JointIndex);
-            var localTransform = Matrix4.CreateFromQuaternion(new Quaternion(transforms.Row2.Xyz))
-                * Matrix4.CreateScale(transforms.Row1.Xyz)
-                * Matrix4.CreateTranslation(transforms.Row0.Xyz);
-            /*var localTransform = Matrix4.CreateFromQuaternion(new Quaternion(
-                graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[2].X,
-                graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[2].Y,
-                graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[2].Z,
-                graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[2].W));*/
-            var childTransform = localTransform * parentTransform;
-            /*var childTranslation = childTransform * parentTranslation + childTransform * (new Vector4(
-                    graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[0].X,
-                    graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[0].Y,
-                    graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[0].Z,
-                    1.0f
-                ));*/
-            /*var childTranslation = childTransform * parentTranslation + childTransform * transforms.Row0;
-            childTranslation.W = 1.0f;*/
-            foreach (var c in joint.Children)
-            {
-                AnimateJoint(c, childTransform);
-            }
-
-            var models = graphicsInfo.Data.ModelIDs.Where((v) => v.Value.JointIndex == joint.Joint.JointIndex);
-
-            var jointTransform = childTransform;
-
-            Matrix4 tempRot = Matrix4.Identity;
-            /*tempRot *= Matrix4.CreateFromQuaternion(new Quaternion(joint.Joint.Matrix[2].X, joint.Joint.Matrix[2].Y, joint.Joint.Matrix[2].Z));
-            tempRot *= Matrix4.CreateTranslation(new Vector3(joint.Joint.Matrix[0].X, joint.Joint.Matrix[0].Y, joint.Joint.Matrix[0].Z));*/
-
-            // Rotation
-            tempRot.M11 = -jointTransform.M11;
-            tempRot.M12 = -jointTransform.M12;
-            tempRot.M13 = -jointTransform.M13;
-
-            tempRot.M21 = jointTransform.M21;
-            tempRot.M22 = jointTransform.M22;
-            tempRot.M23 = jointTransform.M23;
-
-            tempRot.M31 = jointTransform.M31;
-            tempRot.M32 = jointTransform.M32;
-            tempRot.M33 = jointTransform.M33;
-
-            tempRot.M14 = jointTransform.M14;
-            tempRot.M24 = jointTransform.M24;
-            tempRot.M34 = jointTransform.M34;
-
-            // Position
-            //tempRot.M41 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].X;
-            //tempRot.M42 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].Y;
-            //tempRot.M43 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].Z;
-            //tempRot.M44 = graphicsInfo.Data.Joints[joint.Joint.JointIndex].Matrix[1].W;
-            tempRot.Row3 = jointTransform.Row3;
-            
-            //tempRot.Row3 += transforms.Row0;
-
-            //tempRot *= transMat;
-            tempRot *= Matrix4.CreateScale(-1, 1, 1);
 
             foreach (var model in models)
             {
+                var vtxIndex = VbufferMap[model.Key];
+                var modelId = model.Value.ModelID;
+
                 SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(2);
-                SectionController rigid_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(3);
                 foreach (RigidModel mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
                 {
-                    if (mod.ID == model.Value.ModelID)
+                    if (mod.ID == modelId)
                     {
                         uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(mod.ID).MeshID;
                         mesh = mesh_sec.GetItem<ModelController>(meshID);
                     }
                 }
 
-                var vtxIndex = VbufferMap[model.Key];
                 for (int v = 0; v < mesh.Vertices.Count; v++)
                 {
-                    Vertex[] vbuffer = new Vertex[mesh.Vertices[v].Length];
-                    for (int k = 0; k < mesh.Vertices[v].Length; k++)
+                    Vertex[] vbuffer = new Vertex[mesh.TposeVertices[v].Length];
+                    for (int k = 0; k < mesh.TposeVertices[v].Length; k++)
                     {
-                        vbuffer[k] = mesh.Vertices[v][k];
-                        Vector4 targetPos = new Vector4(mesh.Vertices[v][k].Pos.X, mesh.Vertices[v][k].Pos.Y, mesh.Vertices[v][k].Pos.Z, 1);
-                        targetPos *= tempRot;
-                        mesh.Vertices[v][k].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+                        vbuffer[k] = mesh.TposeVertices[v][k];
+                        Vector4 targetPos = new Vector4(mesh.TposeVertices[v][k].Pos.X, mesh.TposeVertices[v][k].Pos.Y, mesh.TposeVertices[v][k].Pos.Z, 1);
+                        targetPos *= poseTransform;
+                        mesh.TposeVertices[v][k].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
                     }
 
-                    vtx[vtxIndex].Vtx = mesh.Vertices[v];
+                    vtx[vtxIndex].Vtx = mesh.TposeVertices[v];
                     vtx[vtxIndex].VtxInd = mesh.Indices[v];
-                    mesh.Vertices[v] = vbuffer;
+                    mesh.TposeVertices[v] = vbuffer;
                     UpdateVBO(vtxIndex);
+
                     vtxIndex++;
                 }
             }
+        }
 
+        private void UpdateSkeletonBuffer()
+        {
+            GL.BindBuffer(BufferTarget.ArrayBuffer, skeletonBuffer.ID);
+            if (skeletonBuffer.Vtx.Length > skeletonBuffer.LastSize)
+                GL.BufferData(BufferTarget.ArrayBuffer, Vertex.SizeOf * skeletonBuffer.Vtx.Length, skeletonBuffer.Vtx, BufferUsageHint.StaticDraw);
+            else
+                GL.BufferSubData(BufferTarget.ArrayBuffer, (IntPtr)0, Vertex.SizeOf * skeletonBuffer.Vtx.Length, skeletonBuffer.Vtx);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            skeletonBuffer.LastSize = skeletonBuffer.Vtx.Length;
+        }
+
+        private Matrix4 ComputeJointTransform(int jointIndex, Matrix4 parentTransform)
+        {
+            var transforms = player.Play(jointIndex);
+            var localTransform = Matrix4.CreateFromQuaternion(new Quaternion(transforms.Row2.Xyz))
+                * Matrix4.CreateTranslation(transforms.Row0.Xyz)
+                * Matrix4.CreateScale(transforms.Row1.Xyz);
+
+            var jointTransform = localTransform * parentTransform;
+
+            return jointTransform;
+        }
+
+        private Matrix4 ComputePoseTransform(int jointIndex, Matrix4 jointTransform)
+        {
+            // Black magic that doesn't really help :(
+            jointTransform.M11 = -jointTransform.M11;
+            jointTransform.M12 = -jointTransform.M12;
+            jointTransform.M13 = -jointTransform.M13;
+
+            var skeleton = graphicsInfo.Skeleton;
+            var inversePose = skeleton.InverseBindPose[jointIndex];
+            var resTransform = inversePose * jointTransform;
+            resTransform *= Matrix4.CreateScale(-1, 1, 1);
+
+            return resTransform;
+        }
+
+        private void UpdateAnimation(float deltaTime)
+        {
+            player.AdvanceClock(deltaTime);
         }
 
         public void LoadOGI_PS2()
@@ -454,46 +368,20 @@ namespace TwinsaityEditor.Viewers
                     }
                 }
 
-                Matrix4 tempRot = Matrix4.Identity;
-
-                // Rotation
-                tempRot.M11 = -graphicsInfo.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[0].X;
-                tempRot.M12 = -graphicsInfo.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[1].X;
-                tempRot.M13 = -graphicsInfo.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[2].X;
-
-                tempRot.M21 = graphicsInfo.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[0].Y;
-                tempRot.M22 = graphicsInfo.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[1].Y;
-                tempRot.M23 = graphicsInfo.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[2].Y;
-
-                tempRot.M31 = graphicsInfo.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[0].Z;
-                tempRot.M32 = graphicsInfo.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[1].Z;
-                tempRot.M33 = graphicsInfo.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[2].Z;
-
-                tempRot.M14 = graphicsInfo.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[0].W;
-                tempRot.M24 = graphicsInfo.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[1].W;
-                tempRot.M34 = graphicsInfo.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[2].W;
-
-                // Position
-                tempRot.M41 = graphicsInfo.Data.Joints[pair.Value.JointIndex].Matrix[1].X;
-                tempRot.M42 = graphicsInfo.Data.Joints[pair.Value.JointIndex].Matrix[1].Y;
-                tempRot.M43 = graphicsInfo.Data.Joints[pair.Value.JointIndex].Matrix[1].Z;
-                tempRot.M44 = graphicsInfo.Data.Joints[pair.Value.JointIndex].Matrix[1].W;
-
-                // Adjusted for OpenTK
-                tempRot *= Matrix4.CreateScale(-1, 1, 1);
                 mesh.LoadMeshData();
 
-
+                var skeleton = graphicsInfo.Skeleton;
+                var bindPose = skeleton.BindPose[(int)pair.Value.JointIndex];
                 VbufferMap.Add(pair.Key, vtxIndex);
-                for (int v = 0; v < mesh.Vertices.Count; v++)
+
+                for (int v = 0; v < mesh.TposeVertices.Count; v++)
                 {
-                    Vertex[] vbuffer = new Vertex[mesh.Vertices[v].Length];
-                    for (int k = 0; k < mesh.Vertices[v].Length; k++)
+                    for (int k = 0; k < mesh.TposeVertices[v].Length; k++)
                     {
-                        vbuffer[k] = mesh.Vertices[v][k];
-                        Vector4 targetPos = new Vector4(mesh.Vertices[v][k].Pos.X, mesh.Vertices[v][k].Pos.Y, mesh.Vertices[v][k].Pos.Z, 1);
-                        targetPos *= tempRot;
-                        mesh.Vertices[v][k].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+                        Vector4 targetPos = new Vector4(mesh.TposeVertices[v][k].Pos.X, mesh.TposeVertices[v][k].Pos.Y, mesh.TposeVertices[v][k].Pos.Z, 1);
+                        targetPos *= bindPose;
+                        mesh.TposeVertices[v][k].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+                        mesh.TposeVertices[v][k].Col = Vertex.ColorToABGR(Color.FromArgb(220, Color.White));
                     }
 
 
@@ -510,9 +398,8 @@ namespace TwinsaityEditor.Viewers
                     {
                         Utils.TextUtils.LoadTexture(rigid.Data.MaterialIDs, file, vtx[vtxIndex], v);
                     }
-                    vtx[vtxIndex].Vtx = mesh.Vertices[v];
+                    vtx[vtxIndex].Vtx = mesh.TposeVertices[v];
                     vtx[vtxIndex].VtxInd = mesh.Indices[v];
-                    mesh.Vertices[v] = vbuffer;
                     UpdateVBO(vtxIndex);
                     
                     vtxIndex++;

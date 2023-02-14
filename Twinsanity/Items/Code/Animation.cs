@@ -180,6 +180,15 @@ namespace Twinsanity
                 }
             }
 
+            public Single GetRot(bool negate)
+            {
+                if (negate)
+                {
+                    return (-StoredTransformValue * 16) / (float)(ushort.MaxValue + 1) * (float)Math.PI * 2;
+                }
+                return RotValue;
+            }
+
             public void Read(BinaryReader reader)
             {
                 StoredTransformValue = reader.ReadInt16();

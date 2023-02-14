@@ -205,21 +205,21 @@ namespace TwinsaityEditor
                     var diff = rot1 - rot2;
                     if (diff < -0x8000)
                     {
-                        rot1 -= 0x10000;
+                        rot1 += 0x10000;
                     }
                     if (diff > 0x8000)
                     {
-                        rot1 += 0x10000;
+                        rot1 -= 0x10000;
                     }
                     var rot1Rad = rot1 / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi;
                     var rot2Rad = rot2 / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi;
-                    timelineText.Add($"Animate Rotation from X {MathHelper.RadiansToDegrees(rot1Rad)}");
-                    timelineText.Add($"Animate Rotation to X {MathHelper.RadiansToDegrees(rot2Rad)}");
+                    timelineText.Add($"Animate Rotation from X {(rot1Rad)}");
+                    timelineText.Add($"Animate Rotation to X {(rot2Rad)}");
                 }
                 else
                 {
                     var rot = animation.StaticTransforms[transformIndex++].RotValue;
-                    timelineText.Add($"Static Rotation X {MathHelper.RadiansToDegrees(rot)}");
+                    timelineText.Add($"Static Rotation X {(rot)}");
                 }
 
                 if (rotYChoice)
@@ -229,21 +229,21 @@ namespace TwinsaityEditor
                     var diff = rot1 - rot2;
                     if (diff < -0x8000)
                     {
-                        rot1 -= 0x10000;
+                        rot1 += 0x10000;
                     }
                     if (diff > 0x8000)
                     {
-                        rot1 += 0x10000;
+                        rot1 -= 0x10000;
                     }
                     var rot1Rad = rot1 / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi;
                     var rot2Rad = rot2 / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi;
-                    timelineText.Add($"Animate Rotation from Y {MathHelper.RadiansToDegrees(rot1Rad)}");
-                    timelineText.Add($"Animate Rotation to Y {MathHelper.RadiansToDegrees(rot2Rad)}");
+                    timelineText.Add($"Animate Rotation from Y {(-rot1Rad)}");
+                    timelineText.Add($"Animate Rotation to Y {(-rot2Rad)}");
                 }
                 else
                 {
                     var rot = animation.StaticTransforms[transformIndex++].RotValue;
-                    timelineText.Add($"Static Rotation Y {MathHelper.RadiansToDegrees(rot)}");
+                    timelineText.Add($"Static Rotation Y {(-rot)}");
                 }
 
                 if (rotZChoice)
@@ -253,21 +253,21 @@ namespace TwinsaityEditor
                     var diff = rot1 - rot2;
                     if (diff < -0x8000)
                     {
-                        rot1 -= 0x10000;
+                        rot1 += 0x10000;
                     }
                     if (diff > 0x8000)
                     {
-                        rot1 += 0x10000;
+                        rot1 -= 0x10000;
                     }
                     var rot1Rad = rot1 / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi;
                     var rot2Rad = rot2 / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi;
-                    timelineText.Add($"Animate Rotation from Z {MathHelper.RadiansToDegrees(rot1Rad)}");
-                    timelineText.Add($"Animate Rotation to Z {MathHelper.RadiansToDegrees(rot2Rad)}");
+                    timelineText.Add($"Animate Rotation from Z {(-rot1Rad)}");
+                    timelineText.Add($"Animate Rotation to Z {(-rot2Rad)}");
                 }
                 else
                 {
                     var rot = animation.StaticTransforms[transformIndex++].RotValue;
-                    timelineText.Add($"Static Rotation Z {MathHelper.RadiansToDegrees(rot)}");
+                    timelineText.Add($"Static Rotation Z {(-rot)}");
                 }
 
                 if (scaleXChoice)

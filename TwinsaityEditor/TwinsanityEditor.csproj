@@ -175,6 +175,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Animations\AnimationPlayer.cs" />
+    <Compile Include="Animations\SkeletalJoint.cs" />
+    <Compile Include="Animations\SkeletalPose.cs" />
+    <Compile Include="Animations\SkeletalVertex.cs" />
+    <Compile Include="Animations\SkeletalWeight.cs" />
+    <Compile Include="Animations\Skeleton.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Controllers\AIPathController.cs" />
     <Compile Include="Controllers\AnimationController.cs" />

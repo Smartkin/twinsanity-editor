@@ -93,7 +93,7 @@ namespace TwinsaityEditor.Controllers
             }
             else
             {
-                var rot = Data.StaticTransforms[transformIndex++].RotValue;
+                var rot = Data.StaticTransforms[transformIndex++].GetRot(false);
                 rotation.X = rot;
             }
 
@@ -116,7 +116,7 @@ namespace TwinsaityEditor.Controllers
             }
             else
             {
-                var rot = Data.StaticTransforms[transformIndex++].RotValue;
+                var rot = Data.StaticTransforms[transformIndex++].GetRot(false);
                 rotation.Y = rot;
             }
 
@@ -139,7 +139,7 @@ namespace TwinsaityEditor.Controllers
             }
             else
             {
-                var rot = Data.StaticTransforms[transformIndex++].RotValue;
+                var rot = Data.StaticTransforms[transformIndex++].GetRot(false);
                 rotation.Z = rot;
             }
 
