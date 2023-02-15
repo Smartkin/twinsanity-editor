@@ -48,6 +48,10 @@ namespace TwinsaityEditor
             MeshViewers = new Dictionary<uint, Form>();
             ModelViewers = new Dictionary<uint, Form>();
             LoadFileInfo();
+            if (Data.Type == TwinsFile.FileType.SM2)
+            {
+                AddMenu("Convert to Monkey Ball SM", Menu_ConvertToSMBA);
+            }
         }
 
         protected override string GetName()
@@ -710,6 +714,20 @@ namespace TwinsaityEditor
                     return null;
             }
             else throw new System.ArgumentException("The requested section does not have an object instance section.");
+        }
+
+        public void Menu_ConvertToSMBA()
+        {
+            Data.Type = TwinsFile.FileType.MonkeyBallSM;
+            Data.Records[0].ID = 7;
+            Data.Records[5].ID = 5;
+            Data.Records[5] = new TwinsItem() { ID = 5, Data = new byte[8] { 0x09, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00 } };
+            Data.Records[6].ID = 6;
+            Data.Records[6] = new TwinsItem() { ID = 6, Data = new byte[4] { 0x00, 0x00, 0x00, 0x00 } };
+            TwinsItem EmptyItem = new TwinsItem() { ID = 4, Data = new byte[0] { } };
+            Data.Records.Insert(5, EmptyItem);
+
+            RefreshSection();
         }
     }
 }

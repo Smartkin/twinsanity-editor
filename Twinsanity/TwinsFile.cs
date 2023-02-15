@@ -71,21 +71,15 @@ namespace Twinsanity
             bool miniFix = false;
             if (type == FileType.MonkeyBallRM || type == FileType.MonkeyBallSM) 
             {
-                var sk = reader.BaseStream.Position;
                 count = reader.ReadInt16();
                 uint test = reader.ReadUInt16();
-                if (test != 0) // PS2 starts off weird
+                if (test != 0) // PS2 file and sections contain 0x0080 here
                 {
-                    reader.BaseStream.Position = sk;
-                    count = reader.ReadInt16();
-                    reader.ReadByte();
                     miniFix = true;
                 }
                 else
                 {
                     Console = ConsoleType.PSP;
-                    reader.BaseStream.Position = sk;
-                    count = reader.ReadInt32();
                 }
             }
             else
@@ -93,10 +87,6 @@ namespace Twinsanity
                 count = reader.ReadInt32();
             }
             var sec_size = reader.ReadUInt32();
-            if (miniFix)
-            {
-                reader.ReadByte();
-            }
             uint s_off = 0, s_id = 0;
             int s_size = 0;
             for (int i = 0; i < count; i++)
@@ -480,7 +470,22 @@ namespace Twinsanity
             FileStream file = new FileStream(path, FileMode.Create, FileAccess.Write);
             BinaryWriter writer = new BinaryWriter(file, System.Text.Encoding.ASCII);
             writer.Write(Magic);
-            writer.Write(Records.Count);
+            if (Type == FileType.MonkeyBallRM || Type == FileType.MonkeyBallSM)
+            {
+                if (Console == ConsoleType.PS2)
+                {
+                    writer.Write(Records.Count);
+                }
+                else
+                {
+                    writer.Write(Records.Count);
+                }
+            }
+            else
+            {
+                writer.Write(Records.Count);
+            }
+            
             writer.Write(ContentSize);
 
             var sec_off = Records.Count * 12 + 12;

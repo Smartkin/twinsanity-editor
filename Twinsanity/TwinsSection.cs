@@ -104,17 +104,13 @@ namespace Twinsanity
             if (isMonkeyBallPS2)
             {
                 count = reader.ReadInt16();
-                reader.ReadByte();
+                reader.ReadBytes(2); // compression flag?
             }
             else
             {
                 count = reader.ReadInt32();
             }
             var sec_size = reader.ReadUInt32();
-            if (isMonkeyBallPS2)
-            {
-                reader.ReadByte();
-            }
             var start_sk = reader.BaseStream.Position - 12;
             long extra_begin = 12;
             if (isMonkeyBallPS2 && Level == 2)
