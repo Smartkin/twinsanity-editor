@@ -15,6 +15,10 @@ The following formats are supported:
 - .RM (PSP level resources) limited editing  
 - .SM (PSP level resources) limited editing  
   
+## Installation
+- Download the latest version from [releases](https://github.com/Smartkin/twinsanity-editor/releases)
+- Visual C++ 2013 Redistributable is required to use the viewer.
+
 ## Current roadmap
 Here's the list of what needs to be implemented:
 - [x] Model viewing
@@ -22,10 +26,11 @@ Here's the list of what needs to be implemented:
 - [ ] Scenery viewing
 - [x] Sound playback
 - [x] Fully functional editing GUI
-- [ ] Ditch any unnecessery dependencies (OpenTK should suffice for sounds and graphics)
-- [ ] General code refactoring and rewriting (having 6k lines of code doesn't seem practical)
+- [ ] Animations playback
+- [ ] Ditch any unnecessery dependencies
+- [ ] General code refactoring and rewriting
 - [ ] More API optimizations?
 - [ ] A lot of other smaller stuff
 
 ## Compiling
-Just open your project in Visual Studio 2017 and compile it. (requires .NET Framework 4.7)
+Clone the repository (or download the archive) and open the solution project in Visual Studio 2017 and compile it. (requires .NET Framework 4.7)
