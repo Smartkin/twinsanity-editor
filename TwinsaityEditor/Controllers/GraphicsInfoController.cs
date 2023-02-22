@@ -76,12 +76,12 @@ namespace TwinsaityEditor
                     text.Add($"\t#{ i } Bind Position: { Data.Joints[i].Matrix[0].X }; { Data.Joints[i].Matrix[0].Y }; { Data.Joints[i].Matrix[0].Z }; { Data.Joints[i].Matrix[0].W }");
                     text.Add($"\t#{ i } World Space Position: { Data.Joints[i].Matrix[1].X }; { Data.Joints[i].Matrix[1].Y }; { Data.Joints[i].Matrix[1].Z }; { Data.Joints[i].Matrix[1].W }");
                     text.Add($"\t#{ i } Bind Rotation: { Data.Joints[i].Matrix[2].X }; { Data.Joints[i].Matrix[2].Y }; { Data.Joints[i].Matrix[2].Z }; { Data.Joints[i].Matrix[2].W }");
-                    text.Add($"\t#{ i } Vector 4: { Data.Joints[i].Matrix[3].X }; { Data.Joints[i].Matrix[3].Y }; { Data.Joints[i].Matrix[3].Z }; { Data.Joints[i].Matrix[3].W }");
-                    text.Add($"\t#{ i } Vector 5: { Data.Joints[i].Matrix[4].X }; { Data.Joints[i].Matrix[4].Y }; { Data.Joints[i].Matrix[4].Z }; { Data.Joints[i].Matrix[4].W }");
-                    text.Add($"\t#{ i } T3 Matrix 1: { Data.JointToWorldTransforms[i].Matrix[0].X }; { Data.JointToWorldTransforms[i].Matrix[0].Y }; { Data.JointToWorldTransforms[i].Matrix[0].Z }; { Data.JointToWorldTransforms[i].Matrix[0].W }");
-                    text.Add($"\t#{ i } T3 Matrix 2: { Data.JointToWorldTransforms[i].Matrix[1].X }; { Data.JointToWorldTransforms[i].Matrix[1].Y }; { Data.JointToWorldTransforms[i].Matrix[1].Z }; { Data.JointToWorldTransforms[i].Matrix[1].W }");
-                    text.Add($"\t#{ i } T3 Matrix 3: { Data.JointToWorldTransforms[i].Matrix[2].X }; { Data.JointToWorldTransforms[i].Matrix[2].Y }; { Data.JointToWorldTransforms[i].Matrix[2].Z }; { Data.JointToWorldTransforms[i].Matrix[2].W }");
-                    text.Add($"\t#{ i } T3 Matrix 4: { Data.JointToWorldTransforms[i].Matrix[3].X }; { Data.JointToWorldTransforms[i].Matrix[3].Y }; { Data.JointToWorldTransforms[i].Matrix[3].Z }; { Data.JointToWorldTransforms[i].Matrix[3].W }");
+                    text.Add($"\t#{ i } Unused rotation: { Data.Joints[i].Matrix[3].X }; { Data.Joints[i].Matrix[3].Y }; { Data.Joints[i].Matrix[3].Z }; { Data.Joints[i].Matrix[3].W }");
+                    text.Add($"\t#{ i } Additional rotation for animations: { Data.Joints[i].Matrix[4].X }; { Data.Joints[i].Matrix[4].Y }; { Data.Joints[i].Matrix[4].Z }; { Data.Joints[i].Matrix[4].W }");
+                    text.Add($"\t#{ i } Skin Matrix Row 1: { Data.SkinTransforms[i].Matrix[0].X }; { Data.SkinTransforms[i].Matrix[1].X }; { Data.SkinTransforms[i].Matrix[2].X }; { Data.SkinTransforms[i].Matrix[3].X }");
+                    text.Add($"\t#{ i } Skin Matrix Row 2: { Data.SkinTransforms[i].Matrix[0].Y }; { Data.SkinTransforms[i].Matrix[1].Y }; { Data.SkinTransforms[i].Matrix[2].Y }; { Data.SkinTransforms[i].Matrix[3].Y }");
+                    text.Add($"\t#{ i } Skin Matrix Row 3: { Data.SkinTransforms[i].Matrix[0].Z }; { Data.SkinTransforms[i].Matrix[1].Z }; { Data.SkinTransforms[i].Matrix[2].Z }; { Data.SkinTransforms[i].Matrix[3].Z }");
+                    text.Add($"\t#{ i } Skin Matrix Row 4: { Data.SkinTransforms[i].Matrix[0].W }; { Data.SkinTransforms[i].Matrix[1].W }; { Data.SkinTransforms[i].Matrix[2].W }; { Data.SkinTransforms[i].Matrix[3].W }");
                 }
             }
             if (Data.ExitPoints.Length > 0)
@@ -157,10 +157,10 @@ namespace TwinsaityEditor
         private void TraverseSkeleton(List<string> text)
         {
             text.Add("Skeleton:");
-            TraverseJoint(Data.Skeleton.Root, text, Matrix4.Identity, Matrix4.Identity, 0);
+            TraverseJoint(Data.Skeleton.Root, text, Matrix4.Identity, 0);
         }
 
-        private void TraverseJoint(GraphicsInfo.JointNode joint, List<string> text, Matrix4 worldTransform, Matrix4 parentTransform, int traverseLevel)
+        private void TraverseJoint(GraphicsInfo.JointNode joint, List<string> text, Matrix4 parentTransform, int traverseLevel)
         {
             var jointString = "";
             for (int i = 0; i < traverseLevel; i++)
@@ -178,28 +178,21 @@ namespace TwinsaityEditor
                     Data.Joints[index].Matrix[0].X,
                     Data.Joints[index].Matrix[0].Y,
                     Data.Joints[index].Matrix[0].Z);
-            var worldT = Matrix4.CreateTranslation(
-                    Data.Joints[index].Matrix[1].X,
-                    Data.Joints[index].Matrix[1].Y,
-                    Data.Joints[index].Matrix[1].Z
-                );
-            var localTransform = Matrix4.Identity * localTranslate * localRot; 
-            //worldPos *= localTransform;
-            var childTransform = worldT * localRot;
-            var worldPos = /*worldTransform * parentTransform * localTransform **/ new Vector4(childTransform.ExtractTranslation(), 1.0f);
-            var jointTransform = localTransform;
-            jointTransform.Invert();
-            var worldTranslate = new Vector4(-jointTransform.ExtractTranslation(), 1f);
-            worldPos.W = 1;
-            text.Add($"{jointString} Joint's world position: {worldTranslate}");
-            text.Add($"{jointString} Joint's actual world position: {joint.Joint.Matrix[1]}");
-            text.Add($"{jointString} Transform from joint to world coordinates Row 1: {jointTransform.Row0}");
-            text.Add($"{jointString} Transform from joint to world coordinates Row 2: {jointTransform.Row1}");
-            text.Add($"{jointString} Transform from joint to world coordinates Row 3: {jointTransform.Row2}");
-            text.Add($"{jointString} Transform from joint to world coordinates Row 4: {jointTransform.Row3}");
+            var jointTransform = localRot * localTranslate * parentTransform;
+
+            var skinMat = jointTransform.Inverted();
+            skinMat.Transpose();
+            text.Add($"{jointString} Skin Matrix Row 1: {Data.SkinTransforms[index].Matrix[0].X}; {Data.SkinTransforms[index].Matrix[1].X}; {Data.SkinTransforms[index].Matrix[2].X}; {Data.SkinTransforms[index].Matrix[3].X}");
+            text.Add($"{jointString} Skin Matrix Row 2: {Data.SkinTransforms[index].Matrix[0].Y}; {Data.SkinTransforms[index].Matrix[1].Y}; {Data.SkinTransforms[index].Matrix[2].Y}; {Data.SkinTransforms[index].Matrix[3].Y}");
+            text.Add($"{jointString} Skin Matrix Row 3: {Data.SkinTransforms[index].Matrix[0].Z}; {Data.SkinTransforms[index].Matrix[1].Z}; {Data.SkinTransforms[index].Matrix[2].Z}; {Data.SkinTransforms[index].Matrix[3].Z}");
+            text.Add($"{jointString} Skin Matrix Row 4: {Data.SkinTransforms[index].Matrix[0].W}; {Data.SkinTransforms[index].Matrix[1].W}; {Data.SkinTransforms[index].Matrix[2].W}; {Data.SkinTransforms[index].Matrix[3].W}");
+            text.Add($"{jointString} Computed Skin Matrix Row 1: {skinMat.Row0}");
+            text.Add($"{jointString} Computed Skin Matrix Row 2: {skinMat.Row1}");
+            text.Add($"{jointString} Computed Skin Matrix Row 3: {skinMat.Row2}");
+            text.Add($"{jointString} Computed Skin Matrix Row 4: {skinMat.Row3}");
             foreach (var c in joint.Children)
             {
-                TraverseJoint(c, text, worldTransform, childTransform, traverseLevel + 1);
+                TraverseJoint(c, text, jointTransform, traverseLevel + 1);
             }
         }
 
@@ -208,28 +201,33 @@ namespace TwinsaityEditor
             Matrix4 tempRot = Matrix4.Identity;
 
             // Rotation
-            tempRot.M11 = Data.JointToWorldTransforms[jointIndex].Matrix[0].X;
-            tempRot.M12 = Data.JointToWorldTransforms[jointIndex].Matrix[1].X;
-            tempRot.M13 = Data.JointToWorldTransforms[jointIndex].Matrix[2].X;
+            tempRot.M11 = Data.SkinTransforms[jointIndex].Matrix[0].X;
+            tempRot.M12 = Data.SkinTransforms[jointIndex].Matrix[1].X;
+            tempRot.M13 = Data.SkinTransforms[jointIndex].Matrix[2].X;
 
-            tempRot.M21 = Data.JointToWorldTransforms[jointIndex].Matrix[0].Y;
-            tempRot.M22 = Data.JointToWorldTransforms[jointIndex].Matrix[1].Y;
-            tempRot.M23 = Data.JointToWorldTransforms[jointIndex].Matrix[2].Y;
+            tempRot.M21 = Data.SkinTransforms[jointIndex].Matrix[0].Y;
+            tempRot.M22 = Data.SkinTransforms[jointIndex].Matrix[1].Y;
+            tempRot.M23 = Data.SkinTransforms[jointIndex].Matrix[2].Y;
 
-            tempRot.M31 = Data.JointToWorldTransforms[jointIndex].Matrix[0].Z;
-            tempRot.M32 = Data.JointToWorldTransforms[jointIndex].Matrix[1].Z;
-            tempRot.M33 = Data.JointToWorldTransforms[jointIndex].Matrix[2].Z;
+            tempRot.M31 = Data.SkinTransforms[jointIndex].Matrix[0].Z;
+            tempRot.M32 = Data.SkinTransforms[jointIndex].Matrix[1].Z;
+            tempRot.M33 = Data.SkinTransforms[jointIndex].Matrix[2].Z;
 
-            tempRot.M14 = Data.JointToWorldTransforms[jointIndex].Matrix[0].W;
-            tempRot.M24 = Data.JointToWorldTransforms[jointIndex].Matrix[1].W;
-            tempRot.M34 = Data.JointToWorldTransforms[jointIndex].Matrix[2].W;
+            tempRot.M14 = Data.SkinTransforms[jointIndex].Matrix[0].W;
+            tempRot.M24 = Data.SkinTransforms[jointIndex].Matrix[1].W;
+            tempRot.M34 = Data.SkinTransforms[jointIndex].Matrix[2].W;
 
             // Position (Joint's world position)
-            tempRot.M41 = Data.Joints[jointIndex].Matrix[1].X;
-            tempRot.M42 = Data.Joints[jointIndex].Matrix[1].Y;
-            tempRot.M43 = Data.Joints[jointIndex].Matrix[1].Z;
-            tempRot.M44 = Data.Joints[jointIndex].Matrix[1].W;
-
+            tempRot.M41 = Data.SkinTransforms[jointIndex].Matrix[3].X;//Data.Joints[jointIndex].Matrix[1].X;
+            tempRot.M42 = Data.SkinTransforms[jointIndex].Matrix[3].Y;//Data.Joints[jointIndex].Matrix[1].Y;
+            tempRot.M43 = Data.SkinTransforms[jointIndex].Matrix[3].Z;//Data.Joints[jointIndex].Matrix[1].Z;
+            tempRot.M44 = Data.SkinTransforms[jointIndex].Matrix[3].W;//Data.Joints[jointIndex].Matrix[1].W;
+            /*var addRot = Matrix4.CreateFromQuaternion(new Quaternion(
+                Data.Joints[jointIndex].Matrix[3].X,
+                Data.Joints[jointIndex].Matrix[3].Y,
+                Data.Joints[jointIndex].Matrix[3].Z,
+                Data.Joints[jointIndex].Matrix[3].W));
+            tempRot *= addRot;*/
             // Adjusted for OpenTK
             //tempRot *= Matrix4.CreateScale(-1, 1, 1);
 

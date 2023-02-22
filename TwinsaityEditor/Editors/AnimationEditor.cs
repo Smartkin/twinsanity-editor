@@ -63,11 +63,12 @@ namespace TwinsaityEditor
             AnimatedTransform2 = null;
             StaticTransform = null;
             StaticTransform2 = null;
-            tbJointUnknown.Text = "";
+            cbParentScale.Checked = false;
+            cbAddRotation.Checked = false;
             tbJointTransformChoice.Text = "";
             tbJointTransformIndex.Text = "";
             tbJointAnimatedTransformIndex.Text = "";
-            tbJointUnused2.Text = "";
+            tbBlendShapes.Text = "";
             tbJointTransformChoice2.Text = "";
             tbJointTransformIndex2.Text = "";
             tbJointTwoPartTransformIndex2.Text = "";
@@ -142,12 +143,13 @@ namespace TwinsaityEditor
             var list = (ListBox)sender;
             if (list.SelectedIndex == -1) return;
 
-            Animation.JointSettings displacement = animation.JointsSettings[list.SelectedIndex];
-            JointSettings = displacement;
-            tbJointUnknown.Text = displacement.Unused.ToString();
-            tbJointTransformChoice.Text = displacement.TransformationChoice.ToString();
-            tbJointTransformIndex.Text = displacement.TransformationIndex.ToString();
-            tbJointAnimatedTransformIndex.Text = displacement.AnimatedTransformIndex.ToString();
+            Animation.JointSettings jointSettings = animation.JointsSettings[list.SelectedIndex];
+            JointSettings = jointSettings;
+            cbAddRotation.Checked = (jointSettings.Flags >> 0xC & 0x1) != 0;
+            cbParentScale.Checked = (jointSettings.Flags >> 0xD & 0x1) != 0;
+            tbJointTransformChoice.Text = jointSettings.TransformationChoice.ToString();
+            tbJointTransformIndex.Text = jointSettings.TransformationIndex.ToString();
+            tbJointAnimatedTransformIndex.Text = jointSettings.AnimatedTransformIndex.ToString();
 
             var transformChoice = JointSettings.TransformationChoice;
             var timelineText = new List<string>();
@@ -327,12 +329,12 @@ namespace TwinsaityEditor
             var list = (ListBox)sender;
             if (list.SelectedIndex == -1) return;
 
-            Animation.JointSettings displacement = animation.JointsSettings2[list.SelectedIndex];
-            JointSettings2 = displacement;
-            tbJointUnused2.Text = displacement.Unused.ToString();
-            tbJointTransformChoice2.Text = displacement.TransformationChoice.ToString();
-            tbJointTransformIndex2.Text = displacement.TransformationIndex.ToString();
-            tbJointTwoPartTransformIndex2.Text = displacement.AnimatedTransformIndex.ToString();
+            Animation.JointSettings jointSettings = animation.JointsSettings2[list.SelectedIndex];
+            JointSettings2 = jointSettings;
+            tbBlendShapes.Text = (jointSettings.Flags >> 0x8 & 0xf).ToString();
+            tbJointTransformChoice2.Text = jointSettings.TransformationChoice.ToString();
+            tbJointTransformIndex2.Text = jointSettings.TransformationIndex.ToString();
+            tbJointTwoPartTransformIndex2.Text = jointSettings.AnimatedTransformIndex.ToString();
         }
 
         private void lbScales2_SelectedIndexChanged(object sender, EventArgs e)
@@ -358,7 +360,7 @@ namespace TwinsaityEditor
         {
             var tb = (TextBox)sender;
             if (!ushort.TryParse(tb.Text, out ushort result) || JointSettings == null) return;
-            JointSettings.Unused = result;
+            JointSettings.Flags = result;
         }
 
         private void tbDisB3_TextChanged(object sender, EventArgs e)
@@ -393,7 +395,7 @@ namespace TwinsaityEditor
         {
             var tb = (TextBox)sender;
             if (!ushort.TryParse(tb.Text, out ushort result) || JointSettings2 == null) return;
-            JointSettings2.Unused = result;
+            JointSettings2.Flags = result;
         }
 
         private void tbDis2B3_TextChanged(object sender, EventArgs e)

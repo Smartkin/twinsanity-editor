@@ -1225,21 +1225,21 @@ namespace TwinsaityEditor
                                                     Matrix4 tempRot = Matrix4.Identity;
 
                                                     // Rotation
-                                                    tempRot.M11 = -GI.JointToWorldTransforms[pair.Value.JointIndex].Matrix[0].X;
-                                                    tempRot.M12 = -GI.JointToWorldTransforms[pair.Value.JointIndex].Matrix[1].X;
-                                                    tempRot.M13 = -GI.JointToWorldTransforms[pair.Value.JointIndex].Matrix[2].X;
+                                                    tempRot.M11 = -GI.SkinTransforms[pair.Value.JointIndex].Matrix[0].X;
+                                                    tempRot.M12 = -GI.SkinTransforms[pair.Value.JointIndex].Matrix[1].X;
+                                                    tempRot.M13 = -GI.SkinTransforms[pair.Value.JointIndex].Matrix[2].X;
 
-                                                    tempRot.M21 = GI.JointToWorldTransforms[pair.Value.JointIndex].Matrix[0].Y;
-                                                    tempRot.M22 = GI.JointToWorldTransforms[pair.Value.JointIndex].Matrix[1].Y;
-                                                    tempRot.M23 = GI.JointToWorldTransforms[pair.Value.JointIndex].Matrix[2].Y;
+                                                    tempRot.M21 = GI.SkinTransforms[pair.Value.JointIndex].Matrix[0].Y;
+                                                    tempRot.M22 = GI.SkinTransforms[pair.Value.JointIndex].Matrix[1].Y;
+                                                    tempRot.M23 = GI.SkinTransforms[pair.Value.JointIndex].Matrix[2].Y;
 
-                                                    tempRot.M31 = GI.JointToWorldTransforms[pair.Value.JointIndex].Matrix[0].Z;
-                                                    tempRot.M32 = GI.JointToWorldTransforms[pair.Value.JointIndex].Matrix[1].Z;
-                                                    tempRot.M33 = GI.JointToWorldTransforms[pair.Value.JointIndex].Matrix[2].Z;
+                                                    tempRot.M31 = GI.SkinTransforms[pair.Value.JointIndex].Matrix[0].Z;
+                                                    tempRot.M32 = GI.SkinTransforms[pair.Value.JointIndex].Matrix[1].Z;
+                                                    tempRot.M33 = GI.SkinTransforms[pair.Value.JointIndex].Matrix[2].Z;
 
-                                                    tempRot.M14 = GI.JointToWorldTransforms[pair.Value.JointIndex].Matrix[0].W;
-                                                    tempRot.M24 = GI.JointToWorldTransforms[pair.Value.JointIndex].Matrix[1].W;
-                                                    tempRot.M34 = GI.JointToWorldTransforms[pair.Value.JointIndex].Matrix[2].W;
+                                                    tempRot.M14 = GI.SkinTransforms[pair.Value.JointIndex].Matrix[0].W;
+                                                    tempRot.M24 = GI.SkinTransforms[pair.Value.JointIndex].Matrix[1].W;
+                                                    tempRot.M34 = GI.SkinTransforms[pair.Value.JointIndex].Matrix[2].W;
 
                                                     // Position
                                                     tempRot.M41 = GI.Joints[pair.Value.JointIndex].Matrix[1].X;

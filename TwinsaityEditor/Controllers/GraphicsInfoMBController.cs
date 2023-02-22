@@ -53,10 +53,10 @@ namespace TwinsaityEditor
                     text.Add($"#{ i } Vector 3: { Data.Joints[i].Matrix[2].X }; { Data.Joints[i].Matrix[2].Y }; { Data.Joints[i].Matrix[2].Z }; { Data.Joints[i].Matrix[2].W }");
                     text.Add($"#{ i } Vector 4: { Data.Joints[i].Matrix[3].X }; { Data.Joints[i].Matrix[3].Y }; { Data.Joints[i].Matrix[3].Z }; { Data.Joints[i].Matrix[3].W }");
                     text.Add($"#{ i } Vector 5: { Data.Joints[i].Matrix[4].X }; { Data.Joints[i].Matrix[4].Y }; { Data.Joints[i].Matrix[4].Z }; { Data.Joints[i].Matrix[4].W }");
-                    text.Add($"#{ i } T3 Matrix 1: { Data.JointToWorldTransforms[i].Matrix[0].X }; { Data.JointToWorldTransforms[i].Matrix[0].Y }; { Data.JointToWorldTransforms[i].Matrix[0].Z }; { Data.JointToWorldTransforms[i].Matrix[0].W }");
-                    text.Add($"#{ i } T3 Matrix 2: { Data.JointToWorldTransforms[i].Matrix[1].X }; { Data.JointToWorldTransforms[i].Matrix[1].Y }; { Data.JointToWorldTransforms[i].Matrix[1].Z }; { Data.JointToWorldTransforms[i].Matrix[1].W }");
-                    text.Add($"#{ i } T3 Matrix 3: { Data.JointToWorldTransforms[i].Matrix[2].X }; { Data.JointToWorldTransforms[i].Matrix[2].Y }; { Data.JointToWorldTransforms[i].Matrix[2].Z }; { Data.JointToWorldTransforms[i].Matrix[2].W }");
-                    text.Add($"#{ i } T3 Matrix 4: { Data.JointToWorldTransforms[i].Matrix[3].X }; { Data.JointToWorldTransforms[i].Matrix[3].Y }; { Data.JointToWorldTransforms[i].Matrix[3].Z }; { Data.JointToWorldTransforms[i].Matrix[3].W }");
+                    text.Add($"#{ i } T3 Matrix 1: { Data.SkinTransforms[i].Matrix[0].X }; { Data.SkinTransforms[i].Matrix[0].Y }; { Data.SkinTransforms[i].Matrix[0].Z }; { Data.SkinTransforms[i].Matrix[0].W }");
+                    text.Add($"#{ i } T3 Matrix 2: { Data.SkinTransforms[i].Matrix[1].X }; { Data.SkinTransforms[i].Matrix[1].Y }; { Data.SkinTransforms[i].Matrix[1].Z }; { Data.SkinTransforms[i].Matrix[1].W }");
+                    text.Add($"#{ i } T3 Matrix 3: { Data.SkinTransforms[i].Matrix[2].X }; { Data.SkinTransforms[i].Matrix[2].Y }; { Data.SkinTransforms[i].Matrix[2].Z }; { Data.SkinTransforms[i].Matrix[2].W }");
+                    text.Add($"#{ i } T3 Matrix 4: { Data.SkinTransforms[i].Matrix[3].X }; { Data.SkinTransforms[i].Matrix[3].Y }; { Data.SkinTransforms[i].Matrix[3].Z }; { Data.SkinTransforms[i].Matrix[3].W }");
                 }
             }
             text.Add(string.Empty);

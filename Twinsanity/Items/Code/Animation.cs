@@ -133,7 +133,7 @@ namespace Twinsanity
 
         public class JointSettings
         {
-            public ushort Unused;
+            public ushort Flags;
             public ushort TransformationChoice;
             public ushort TransformationIndex;
             public ushort AnimatedTransformIndex;
@@ -142,14 +142,14 @@ namespace Twinsanity
             }
             public void Read(BinaryReader reader)
             {
-                Unused = reader.ReadUInt16();
+                Flags = reader.ReadUInt16();
                 TransformationChoice = reader.ReadUInt16();
                 TransformationIndex = reader.ReadUInt16();
                 AnimatedTransformIndex = reader.ReadUInt16();
             }
             public void Write(BinaryWriter writer)
             {
-                writer.Write(Unused);
+                writer.Write(Flags);
                 writer.Write(TransformationChoice);
                 writer.Write(TransformationIndex);
                 writer.Write(AnimatedTransformIndex);

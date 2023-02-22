@@ -18,7 +18,7 @@ namespace TwinsaityEditor.Controllers
             AddMenu("Open editor", Menu_OpenEditor);
         }
 
-        public Matrix4 GetMainAnimationTransform(int jointIndex, int curFrame, int nextFrame, float frameDisplacement)
+        public Tuple<Matrix4, bool> GetMainAnimationTransform(int jointIndex, int curFrame, int nextFrame, float frameDisplacement)
         {
             Vector4 rotation = new Vector4();
             Vector4 translation = new Vector4();
@@ -26,6 +26,7 @@ namespace TwinsaityEditor.Controllers
             Vector4 scale = new Vector4();
             scale.W = 1.0f;
             var jointSetting = Data.JointsSettings[jointIndex];
+            var useAddRot = (jointSetting.Flags >> 0xC & 0x1) != 0;
             var transformIndex = jointSetting.TransformationIndex;
             int currentFrameTransformIndex = jointSetting.AnimatedTransformIndex;
             var nextFrameTransformIndex = jointSetting.AnimatedTransformIndex;
@@ -184,7 +185,7 @@ namespace TwinsaityEditor.Controllers
             transformMatrix.Row0 = translation;
             transformMatrix.Row1 = scale;
             transformMatrix.Row2 = rotation;
-            return transformMatrix;
+            return new Tuple<Matrix4, bool>(transformMatrix, useAddRot);
         }
 
         protected override string GetName()

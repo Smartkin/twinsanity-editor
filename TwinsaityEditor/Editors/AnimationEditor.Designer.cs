@@ -51,11 +51,9 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.tbJointAnimatedTransformIndex = new System.Windows.Forms.TextBox();
             this.tbJointTransformIndex = new System.Windows.Forms.TextBox();
             this.tbJointTransformChoice = new System.Windows.Forms.TextBox();
-            this.tbJointUnknown = new System.Windows.Forms.TextBox();
             this.lbJointSettings = new System.Windows.Forms.ListBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
@@ -78,7 +76,7 @@
             this.tbJointTwoPartTransformIndex2 = new System.Windows.Forms.TextBox();
             this.tbJointTransformIndex2 = new System.Windows.Forms.TextBox();
             this.tbJointTransformChoice2 = new System.Windows.Forms.TextBox();
-            this.tbJointUnused2 = new System.Windows.Forms.TextBox();
+            this.tbBlendShapes = new System.Windows.Forms.TextBox();
             this.lbJointSettings2 = new System.Windows.Forms.ListBox();
             this.tpPreview = new System.Windows.Forms.TabPage();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
@@ -88,6 +86,8 @@
             this.cbOGIList = new System.Windows.Forms.ComboBox();
             this.cbLoop = new System.Windows.Forms.CheckBox();
             this.btnPlayAnim = new System.Windows.Forms.Button();
+            this.cbParentScale = new System.Windows.Forms.CheckBox();
+            this.cbAddRotation = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tcProperties.SuspendLayout();
@@ -195,7 +195,7 @@
             this.groupBox5.Controls.Add(this.lbAnimatedTransforms);
             this.groupBox5.Controls.Add(this.btnAddTwoPartTransform);
             this.groupBox5.Dock = System.Windows.Forms.DockStyle.Left;
-            this.groupBox5.Location = new System.Drawing.Point(483, 3);
+            this.groupBox5.Location = new System.Drawing.Point(497, 3);
             this.groupBox5.MaximumSize = new System.Drawing.Size(0, 300);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(336, 300);
@@ -268,7 +268,7 @@
             this.groupBox4.Controls.Add(this.lbTransformations);
             this.groupBox4.Controls.Add(this.btnAddTransformation);
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Left;
-            this.groupBox4.Location = new System.Drawing.Point(253, 3);
+            this.groupBox4.Location = new System.Drawing.Point(267, 3);
             this.groupBox4.MaximumSize = new System.Drawing.Size(0, 300);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(230, 300);
@@ -336,20 +336,20 @@
             // groupBox3
             // 
             this.groupBox3.AutoSize = true;
+            this.groupBox3.Controls.Add(this.cbAddRotation);
+            this.groupBox3.Controls.Add(this.cbParentScale);
             this.groupBox3.Controls.Add(this.label7);
             this.groupBox3.Controls.Add(this.label5);
             this.groupBox3.Controls.Add(this.label3);
-            this.groupBox3.Controls.Add(this.label1);
             this.groupBox3.Controls.Add(this.tbJointAnimatedTransformIndex);
             this.groupBox3.Controls.Add(this.tbJointTransformIndex);
             this.groupBox3.Controls.Add(this.tbJointTransformChoice);
-            this.groupBox3.Controls.Add(this.tbJointUnknown);
             this.groupBox3.Controls.Add(this.lbJointSettings);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox3.Location = new System.Drawing.Point(3, 3);
             this.groupBox3.MinimumSize = new System.Drawing.Size(250, 0);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(250, 532);
+            this.groupBox3.Size = new System.Drawing.Size(264, 532);
             this.groupBox3.TabIndex = 0;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Joint settings";
@@ -381,15 +381,6 @@
             this.label3.TabIndex = 13;
             this.label3.Text = "Transform choice";
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(4, 378);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(53, 13);
-            this.label1.TabIndex = 11;
-            this.label1.Text = "Unknown";
-            // 
             // tbJointAnimatedTransformIndex
             // 
             this.tbJointAnimatedTransformIndex.Location = new System.Drawing.Point(144, 452);
@@ -414,22 +405,13 @@
             this.tbJointTransformChoice.TabIndex = 5;
             this.tbJointTransformChoice.TextChanged += new System.EventHandler(this.tbDisB3_TextChanged);
             // 
-            // tbJointUnknown
-            // 
-            this.tbJointUnknown.Location = new System.Drawing.Point(144, 377);
-            this.tbJointUnknown.Name = "tbJointUnknown";
-            this.tbJointUnknown.ReadOnly = true;
-            this.tbJointUnknown.Size = new System.Drawing.Size(100, 20);
-            this.tbJointUnknown.TabIndex = 3;
-            this.tbJointUnknown.TextChanged += new System.EventHandler(this.tbDisB1_TextChanged);
-            // 
             // lbJointSettings
             // 
             this.lbJointSettings.Dock = System.Windows.Forms.DockStyle.Top;
             this.lbJointSettings.FormattingEnabled = true;
             this.lbJointSettings.Location = new System.Drawing.Point(3, 16);
             this.lbJointSettings.Name = "lbJointSettings";
-            this.lbJointSettings.Size = new System.Drawing.Size(244, 355);
+            this.lbJointSettings.Size = new System.Drawing.Size(258, 355);
             this.lbJointSettings.TabIndex = 0;
             this.lbJointSettings.SelectedIndexChanged += new System.EventHandler(this.lbDisplacements_SelectedIndexChanged);
             // 
@@ -583,7 +565,7 @@
             this.groupBox8.Controls.Add(this.tbJointTwoPartTransformIndex2);
             this.groupBox8.Controls.Add(this.tbJointTransformIndex2);
             this.groupBox8.Controls.Add(this.tbJointTransformChoice2);
-            this.groupBox8.Controls.Add(this.tbJointUnused2);
+            this.groupBox8.Controls.Add(this.tbBlendShapes);
             this.groupBox8.Controls.Add(this.lbJointSettings2);
             this.groupBox8.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox8.Location = new System.Drawing.Point(3, 3);
@@ -653,14 +635,14 @@
             this.tbJointTransformChoice2.TabIndex = 5;
             this.tbJointTransformChoice2.TextChanged += new System.EventHandler(this.tbDis2B3_TextChanged);
             // 
-            // tbJointUnused2
+            // tbBlendShapes
             // 
-            this.tbJointUnused2.Location = new System.Drawing.Point(149, 376);
-            this.tbJointUnused2.Name = "tbJointUnused2";
-            this.tbJointUnused2.ReadOnly = true;
-            this.tbJointUnused2.Size = new System.Drawing.Size(140, 20);
-            this.tbJointUnused2.TabIndex = 3;
-            this.tbJointUnused2.TextChanged += new System.EventHandler(this.tbDis2B1_TextChanged);
+            this.tbBlendShapes.Location = new System.Drawing.Point(149, 376);
+            this.tbBlendShapes.Name = "tbBlendShapes";
+            this.tbBlendShapes.ReadOnly = true;
+            this.tbBlendShapes.Size = new System.Drawing.Size(140, 20);
+            this.tbBlendShapes.TabIndex = 3;
+            this.tbBlendShapes.TextChanged += new System.EventHandler(this.tbDis2B1_TextChanged);
             // 
             // lbJointSettings2
             // 
@@ -757,6 +739,26 @@
             this.btnPlayAnim.UseVisualStyleBackColor = true;
             this.btnPlayAnim.Click += new System.EventHandler(this.btnPlayAnim_Click);
             // 
+            // cbParentScale
+            // 
+            this.cbParentScale.AutoSize = true;
+            this.cbParentScale.Location = new System.Drawing.Point(7, 378);
+            this.cbParentScale.Name = "cbParentScale";
+            this.cbParentScale.Size = new System.Drawing.Size(113, 17);
+            this.cbParentScale.TabIndex = 18;
+            this.cbParentScale.Text = "Use parent\'s scale";
+            this.cbParentScale.UseVisualStyleBackColor = true;
+            // 
+            // cbAddRotation
+            // 
+            this.cbAddRotation.AutoSize = true;
+            this.cbAddRotation.Location = new System.Drawing.Point(127, 378);
+            this.cbAddRotation.Name = "cbAddRotation";
+            this.cbAddRotation.Size = new System.Drawing.Size(131, 17);
+            this.cbAddRotation.TabIndex = 19;
+            this.cbAddRotation.Text = "Add additional rotation";
+            this.cbAddRotation.UseVisualStyleBackColor = true;
+            // 
             // AnimationEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -815,11 +817,9 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox tbJointAnimatedTransformIndex;
         private System.Windows.Forms.TextBox tbJointTransformIndex;
         private System.Windows.Forms.TextBox tbJointTransformChoice;
-        private System.Windows.Forms.TextBox tbJointUnknown;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.Button btnAddTimeline2;
@@ -839,7 +839,7 @@
         private System.Windows.Forms.TextBox tbJointTwoPartTransformIndex2;
         private System.Windows.Forms.TextBox tbJointTransformIndex2;
         private System.Windows.Forms.TextBox tbJointTransformChoice2;
-        private System.Windows.Forms.TextBox tbJointUnused2;
+        private System.Windows.Forms.TextBox tbBlendShapes;
         private System.Windows.Forms.ListBox lbJointSettings2;
         private System.Windows.Forms.TextBox tbTransformation;
         private System.Windows.Forms.Label label9;
@@ -856,5 +856,7 @@
         private System.Windows.Forms.TextBox tbJointTimelineView;
         private System.Windows.Forms.TextBox tbPlaybackFps;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.CheckBox cbAddRotation;
+        private System.Windows.Forms.CheckBox cbParentScale;
     }
 }

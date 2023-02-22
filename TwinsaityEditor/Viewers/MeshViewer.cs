@@ -582,21 +582,21 @@ namespace TwinsaityEditor
                 Matrix4 tempRot = Matrix4.Identity;
 
                 // Rotation
-                tempRot.M11 = -model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[0].X;
-                tempRot.M12 = -model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[1].X;
-                tempRot.M13 = -model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[2].X;
+                tempRot.M11 = -model.Data.SkinTransforms[pair.Value.JointIndex].Matrix[0].X;
+                tempRot.M12 = -model.Data.SkinTransforms[pair.Value.JointIndex].Matrix[1].X;
+                tempRot.M13 = -model.Data.SkinTransforms[pair.Value.JointIndex].Matrix[2].X;
 
-                tempRot.M21 = model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[0].Y;
-                tempRot.M22 = model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[1].Y;
-                tempRot.M23 = model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[2].Y;
+                tempRot.M21 = model.Data.SkinTransforms[pair.Value.JointIndex].Matrix[0].Y;
+                tempRot.M22 = model.Data.SkinTransforms[pair.Value.JointIndex].Matrix[1].Y;
+                tempRot.M23 = model.Data.SkinTransforms[pair.Value.JointIndex].Matrix[2].Y;
 
-                tempRot.M31 = model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[0].Z;
-                tempRot.M32 = model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[1].Z;
-                tempRot.M33 = model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[2].Z;
+                tempRot.M31 = model.Data.SkinTransforms[pair.Value.JointIndex].Matrix[0].Z;
+                tempRot.M32 = model.Data.SkinTransforms[pair.Value.JointIndex].Matrix[1].Z;
+                tempRot.M33 = model.Data.SkinTransforms[pair.Value.JointIndex].Matrix[2].Z;
 
-                tempRot.M14 = model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[0].W;
-                tempRot.M24 = model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[1].W;
-                tempRot.M34 = model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[2].W;
+                tempRot.M14 = model.Data.SkinTransforms[pair.Value.JointIndex].Matrix[0].W;
+                tempRot.M24 = model.Data.SkinTransforms[pair.Value.JointIndex].Matrix[1].W;
+                tempRot.M34 = model.Data.SkinTransforms[pair.Value.JointIndex].Matrix[2].W;
 
                 // Position
                 tempRot.M41 = model.Data.Joints[pair.Value.JointIndex].Matrix[1].X;
@@ -737,21 +737,21 @@ namespace TwinsaityEditor
                 Matrix4 tempRot = Matrix4.Identity;
 
                 // Rotation
-                tempRot.M11 = model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[0].X;
-                tempRot.M12 = model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[1].X;
-                tempRot.M13 = model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[2].X;
+                tempRot.M11 = -model.Data.SkinTransforms[pair.Value.JointIndex].Matrix[0].X;
+                tempRot.M12 = -model.Data.SkinTransforms[pair.Value.JointIndex].Matrix[1].X;
+                tempRot.M13 = -model.Data.SkinTransforms[pair.Value.JointIndex].Matrix[2].X;
 
-                tempRot.M21 = model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[0].Y;
-                tempRot.M22 = model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[1].Y;
-                tempRot.M23 = model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[2].Y;
+                tempRot.M21 = model.Data.SkinTransforms[pair.Value.JointIndex].Matrix[0].Y;
+                tempRot.M22 = model.Data.SkinTransforms[pair.Value.JointIndex].Matrix[1].Y;
+                tempRot.M23 = model.Data.SkinTransforms[pair.Value.JointIndex].Matrix[2].Y;
 
-                tempRot.M31 = model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[0].Z;
-                tempRot.M32 = model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[1].Z;
-                tempRot.M33 = model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[2].Z;
+                tempRot.M31 = model.Data.SkinTransforms[pair.Value.JointIndex].Matrix[0].Z;
+                tempRot.M32 = model.Data.SkinTransforms[pair.Value.JointIndex].Matrix[1].Z;
+                tempRot.M33 = model.Data.SkinTransforms[pair.Value.JointIndex].Matrix[2].Z;
 
-                tempRot.M14 = model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[0].W;
-                tempRot.M24 = model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[1].W;
-                tempRot.M34 = model.Data.JointToWorldTransforms[pair.Value.JointIndex].Matrix[2].W;
+                tempRot.M14 = model.Data.SkinTransforms[pair.Value.JointIndex].Matrix[0].W;
+                tempRot.M24 = model.Data.SkinTransforms[pair.Value.JointIndex].Matrix[1].W;
+                tempRot.M34 = model.Data.SkinTransforms[pair.Value.JointIndex].Matrix[2].W;
 
                 //var rot = tempRot.ExtractRotation();
                 //rot.X = -rot.X;
@@ -765,9 +765,7 @@ namespace TwinsaityEditor
                 tempRot.M43 = model.Data.Joints[pair.Value.JointIndex].Matrix[1].Z;
                 tempRot.M44 = model.Data.Joints[pair.Value.JointIndex].Matrix[1].W;
 
-                tempRot.Column0 = -tempRot.Column0;
 
-                
                 // Adjusted for OpenTK
                 //tempRot *= Matrix4.CreateScale(-1, 1, 1);
 

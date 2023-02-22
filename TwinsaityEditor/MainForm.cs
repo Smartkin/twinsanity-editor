@@ -339,10 +339,15 @@ namespace TwinsaityEditor
                     file.SafeFileName = ofd.SafeFileName;
                     Tag = new FileController(this, file);
                     ((FileController)Tag).DataAux = aux_file;
-                    ((FileController)Tag).DataAuxCont = new FileController(this, aux_file);
-                    foreach (var r in ((FileController)Tag).DataAux.Records)
+                    if (aux_file != null)
                     {
-                        GenTreeNode(r, ((FileController)Tag).DataAuxCont, true);
+
+
+                        ((FileController)Tag).DataAuxCont = new FileController(this, aux_file);
+                        foreach (var r in ((FileController)Tag).DataAux.Records)
+                        {
+                            GenTreeNode(r, ((FileController)Tag).DataAuxCont, true);
+                        }
                     }
                     ((FileController)Tag).DataDefault = default_file;
                     if (default_file != null)

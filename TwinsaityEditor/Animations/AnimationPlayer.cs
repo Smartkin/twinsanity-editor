@@ -58,9 +58,9 @@ namespace TwinsaityEditor.Animations
             }
         }
 
-        public Matrix4 Play(int joint)
+        public Tuple<Matrix4, bool> Play(int joint)
         {
-            if (animation == null) return Matrix4.Identity;
+            if (animation == null) return new Tuple<Matrix4, bool>(Matrix4.Identity, false);
 
             if (!Playing)
             {

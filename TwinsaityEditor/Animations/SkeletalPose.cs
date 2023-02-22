@@ -40,7 +40,8 @@ namespace TwinsaityEditor.Animations
 
         public Vector3 Position(int boneIndex)
         {
-            return boneTransformations[boneIndex].ExtractTranslation();
+            var tr = boneTransformations[boneIndex].ExtractTranslation();
+            return new Vector3(tr.X, tr.Y, tr.Z);
         }
 
         public Quaternion Rotation(int boneIndex)

@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using TwinsaityEditor.Animations;
 using TwinsaityEditor.Controllers;
 using Twinsanity;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace TwinsaityEditor.Viewers
 {
@@ -113,15 +114,18 @@ namespace TwinsaityEditor.Viewers
 
             InitVBO(vbos, true);
 
+            var skeleton = graphicsInfo.Data.Skeleton;
+            ComputeTposeTransform(skeleton.Root, Matrix4.Identity);
+
             // Load skeleton in T-Pose
             skeletonBuffer = new VertexBufferData();
             skeletonBuffer.Vtx = new Vertex[graphicsInfo.Data.Joints.Length];
             skeletonBuffer.VtxInd = new uint[graphicsInfo.Data.Joints.Length];
             tposeBuffer = new Vector3[graphicsInfo.Data.Joints.Length];
+            var skel = graphicsInfo.Skeleton;
             foreach (var joint in graphicsInfo.Data.Joints)
             {
-                var skeleton = graphicsInfo.Skeleton;
-                skeletonBuffer.Vtx[(int)joint.JointIndex].Pos = new Vector3(skeleton.BindPose.Position((int)joint.JointIndex));
+                skeletonBuffer.Vtx[(int)joint.JointIndex].Pos = new Vector3(skel.BindPose.Position((int)joint.JointIndex));
                 tposeBuffer[(int)joint.JointIndex] = skeletonBuffer.Vtx[(int)joint.JointIndex].Pos;
                 skeletonBuffer.Vtx[(int)joint.JointIndex].Col = Vertex.ColorToABGR(Color.FromArgb(255, Color.White));
                 skeletonBuffer.VtxInd[(int)joint.JointIndex] = joint.JointIndex;
@@ -143,8 +147,15 @@ namespace TwinsaityEditor.Viewers
         {
             if (vtx == null) return;
 
+            JointTransforms.Clear();
+            var skeleton = graphicsInfo.Data.Skeleton;
+            ComputeJointTransformTree(skeleton.Root, Matrix4.Identity);
 
             GL.PushMatrix();
+
+            AnimateSkeletonBuffer();
+            UpdateSkeletonBuffer();
+
             DrawSkeleton();
 
             for (int i = 0; i < bskinEndIndex; i++)
@@ -166,8 +177,6 @@ namespace TwinsaityEditor.Viewers
 
         private void DrawSkeleton()
         {
-            AnimateSkeletonBuffer();
-            UpdateSkeletonBuffer();
             GL.LineWidth(10f);
             skeletonBuffer.DrawAllElements(PrimitiveType.Lines, BufferPointerFlags.Color);
             GL.LineWidth(1f);
@@ -176,13 +185,57 @@ namespace TwinsaityEditor.Viewers
         private void AnimateSkeletonBuffer()
         {
             var skeleton = graphicsInfo.Data.Skeleton;
-            AnimateSkeletonJointBuffer(skeleton.Root, Matrix4.Identity);
+            AnimateSkeletonJointBuffer(skeleton.Root);
+            if (skin != null)
+            {
+                AnimateSkeletonSkin();
+            }
         }
 
-        private void AnimateSkeletonJointBuffer(GraphicsInfo.JointNode joint, Matrix4 parentTransform)
+        private void AnimateSkeletonSkin()
+        {
+            var vtxIndex = bskinEndIndex;
+
+            for (int i = 0; i < skin.Vertices.Count; i++)
+            {
+                Vertex[] vbuffer = new Vertex[skin.TposeVertices[i].Length];
+                for (int k = 0; k < skin.TposeVertices[i].Length; k++)
+                {
+                    vbuffer[k] = skin.TposeVertices[i][k];
+                    var bindPose1 = graphicsInfo.GetJointToWorldTransform(skin.JointInfos[i][k].JointIndex1) * JointTransforms[skin.JointInfos[i][k].JointIndex1];
+                    var bindPose2 = graphicsInfo.GetJointToWorldTransform(skin.JointInfos[i][k].JointIndex2) * JointTransforms[skin.JointInfos[i][k].JointIndex2];
+                    var bindPose3 = graphicsInfo.GetJointToWorldTransform(skin.JointInfos[i][k].JointIndex3) * JointTransforms[skin.JointInfos[i][k].JointIndex3];
+                    Vector4 targetPos = new Vector4(skin.TposeVertices[i][k].Pos.X, skin.TposeVertices[i][k].Pos.Y, skin.TposeVertices[i][k].Pos.Z, 1);
+                    var t1 = (targetPos * bindPose1) * skin.JointInfos[i][k].Weight1;
+                    var t2 = (targetPos * bindPose2) * skin.JointInfos[i][k].Weight2;
+                    var t3 = (targetPos * bindPose3) * skin.JointInfos[i][k].Weight3;
+                    targetPos = t1 + t2 + t3;
+                    skin.TposeVertices[i][k].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+                }
+                vtx[vtxIndex].Vtx = skin.TposeVertices[i];
+                vtx[vtxIndex].VtxInd = skin.Indices[i];
+                skin.TposeVertices[i] = vbuffer;
+                UpdateVBO(vtxIndex);
+                vtxIndex++;
+            }
+        }
+
+        private Dictionary<int, Matrix4> JointTransforms = new Dictionary<int, Matrix4>();
+        private void ComputeJointTransformTree(GraphicsInfo.JointNode joint, Matrix4 parentTransform)
         {
             var transform = ComputeJointTransform((int)joint.Joint.JointIndex, parentTransform);
             var poseTransform = ComputePoseTransform((int)joint.Joint.JointIndex, transform);
+            JointTransforms.Add((int)joint.Joint.JointIndex, poseTransform);
+
+            foreach (var c in joint.Children)
+            {
+                ComputeJointTransformTree(c, transform);
+            }
+        }
+
+        private void AnimateSkeletonJointBuffer(GraphicsInfo.JointNode joint)
+        {
+            var poseTransform = JointTransforms[(int)joint.Joint.JointIndex];
 
             var newPosition = new Vector4(tposeBuffer[(int)joint.Joint.JointIndex], 1f) * poseTransform;
             skeletonBuffer.Vtx[(int)joint.Joint.JointIndex].Pos = newPosition.Xyz;
@@ -190,7 +243,7 @@ namespace TwinsaityEditor.Viewers
             skeletonBuffer.VtxInd[(int)joint.Joint.JointIndex] = joint.Joint.JointIndex;
             foreach (var c in joint.Children)
             {
-                AnimateSkeletonJointBuffer(c, transform);
+                AnimateSkeletonJointBuffer(c);
             }
 
             var models = graphicsInfo.Data.ModelIDs.Where((v) => v.Value.JointIndex == joint.Joint.JointIndex);
@@ -245,13 +298,48 @@ namespace TwinsaityEditor.Viewers
         private Matrix4 ComputeJointTransform(int jointIndex, Matrix4 parentTransform)
         {
             var transforms = player.Play(jointIndex);
-            var localTransform = Matrix4.CreateFromQuaternion(new Quaternion(transforms.Row2.Xyz))
-                * Matrix4.CreateTranslation(transforms.Row0.Xyz)
-                * Matrix4.CreateScale(transforms.Row1.Xyz);
+            
+            var rotQuat = new Quaternion(transforms.Item1.Row2.Xyz);
+            var rot = Matrix4.CreateFromQuaternion(rotQuat);
+            if (transforms.Item2)
+            {
+                var jointAddRot = graphicsInfo.Data.Joints[jointIndex].Matrix[4];
+                var addRot = new Quaternion(jointAddRot.X, jointAddRot.Y, jointAddRot.Z, jointAddRot.W);
+                Quaternion.Multiply(ref addRot, ref rotQuat, out Quaternion resQuat);
+                rot = Matrix4.CreateFromQuaternion(resQuat);
+            }
+            var localTransform = rot
+                //* Matrix4.CreateScale(transforms.Item1.Row1.Xyz)
+                * Matrix4.CreateTranslation(transforms.Item1.Row0.Xyz);
 
             var jointTransform = localTransform * parentTransform;
 
             return jointTransform;
+        }
+
+        private void ComputeTposeTransform(GraphicsInfo.JointNode joint, Matrix4 parentTransform)
+        {
+            var index = joint.Joint.JointIndex;
+            var localRot = Matrix4.CreateFromQuaternion(new Quaternion(
+                graphicsInfo.Data.Joints[index].Matrix[2].X,
+                graphicsInfo.Data.Joints[index].Matrix[2].Y,
+                graphicsInfo.Data.Joints[index].Matrix[2].Z,
+                graphicsInfo.Data.Joints[index].Matrix[2].W));
+            var localTranslate = Matrix4.CreateTranslation(
+                    graphicsInfo.Data.Joints[index].Matrix[0].X,
+                    graphicsInfo.Data.Joints[index].Matrix[0].Y,
+                    graphicsInfo.Data.Joints[index].Matrix[0].Z);
+            var localTransform = localRot * localTranslate;
+            var jointTransform = localTransform * parentTransform;
+            var bindMat = jointTransform;
+            var skeleton = graphicsInfo.Skeleton;
+            skeleton.BindPose.Set((int)index, bindMat.ExtractTranslation(), bindMat.ExtractRotation());
+            bindMat.Invert();
+            skeleton.InverseBindPose.Set((int)index, bindMat.ExtractTranslation(), bindMat.ExtractRotation());
+            foreach (var c in joint.Children)
+            {
+                ComputeTposeTransform(c, jointTransform);
+            }
         }
 
         private Matrix4 ComputePoseTransform(int jointIndex, Matrix4 jointTransform)
@@ -281,15 +369,6 @@ namespace TwinsaityEditor.Viewers
             var vtxIndex = 0;
             if (graphicsInfo.Data.BlendSkinID != 0)
             {
-                SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(5);
-                foreach (BlendSkin mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(5).Records)
-                {
-                    if (mod.ID == graphicsInfo.Data.BlendSkinID)
-                    {
-                        bskin = mesh_sec.GetItem<BlendSkinController>(mod.ID);
-                    }
-                }
-
                 bskin.LoadMeshData();
                 foreach (var list in bskin.Vertices)
                 {
@@ -318,15 +397,6 @@ namespace TwinsaityEditor.Viewers
             bskinEndIndex = vtxIndex;
             if (graphicsInfo.Data.SkinID != 0)
             {
-                SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(4);
-                foreach (Skin mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(4).Records)
-                {
-                    if (mod.ID == graphicsInfo.Data.SkinID)
-                    {
-                        skin = mesh_sec.GetItem<SkinController>(mod.ID);
-                    }
-                }
-
                 skin.LoadMeshData();
                 foreach (var list in skin.Vertices)
                 {
@@ -340,14 +410,24 @@ namespace TwinsaityEditor.Viewers
                         max_z = Math.Max(max_z, v.Pos.Z);
                     }
                 }
+
                 for (int i = 0; i < skin.Vertices.Count; i++)
                 {
-                    vtx[vtxIndex].Vtx = skin.Vertices[i];
+                    Vertex[] vbuffer = new Vertex[skin.TposeVertices[i].Length];
+                    for (int k = 0; k < skin.TposeVertices[i].Length; k++)
+                    {
+                        vbuffer[k] = skin.TposeVertices[i][k];
+                        Vector4 targetPos = new Vector4(skin.TposeVertices[i][k].Pos.X, skin.TposeVertices[i][k].Pos.Y, skin.TposeVertices[i][k].Pos.Z, 1);
+                        skin.TposeVertices[i][k].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+                        skin.TposeVertices[i][k].Col = Vertex.ColorToABGR(Color.FromArgb(220, Color.White));
+                    }
+                    vtx[vtxIndex].Vtx = skin.TposeVertices[i];
                     vtx[vtxIndex].VtxInd = skin.Indices[i];
                     Utils.TextUtils.LoadTexture(skin.Data.SubModels.Select((subModel) =>
                     {
                         return subModel.MaterialID;
                     }).ToArray(), file, vtx[vtxIndex], i);
+                    skin.TposeVertices[i] = vbuffer;
                     UpdateVBO(vtxIndex);
                     vtxIndex++;
                 }
