@@ -13,6 +13,7 @@ namespace TwinsaityEditor
 
         public List<Vertex[]> Vertices { get; set; } = new List<Vertex[]>();
         public List<uint[]> Indices { get; set; } = new List<uint[]>();
+        public List<BlendSkin.JointInfo[]> JointInfos { get; set; } = new List<BlendSkin.JointInfo[]>();
 
         public bool IsLoaded { get; private set; }
 
@@ -72,6 +73,7 @@ namespace TwinsaityEditor
             {
                 List<Vertex> vtx = new List<Vertex>();
                 List<uint> idx = new List<uint>();
+                List<BlendSkin.JointInfo> jointInfos = new List<BlendSkin.JointInfo>();
                 foreach (var model in rigidModel.SubModels)
                 {
                     for (var j = 0; j < model.Vertexes.Count; ++j)
@@ -108,6 +110,7 @@ namespace TwinsaityEditor
                                     new Vector3(0, 0, 0), new Vector2(model.Vertexes[j].U, 1 - model.Vertexes[j].V),
                                     col));
                         }
+                        jointInfos.Add(model.Vertexes[j].Joint);
                     }
                     //offset += model.Vertexes.Count;
                     refIndex += 2;
@@ -132,6 +135,7 @@ namespace TwinsaityEditor
                 }
                 Vertices.Add(vtx.ToArray());
                 Indices.Add(idx.ToArray());
+                JointInfos.Add(jointInfos.ToArray());
             }
 
             IsLoaded = true;
