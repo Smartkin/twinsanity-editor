@@ -46,11 +46,11 @@ namespace TwinsaityEditor.Controllers
             {
                 var x1 = Data.AnimatedTransforms[curFrame].GetOffset(currentFrameTransformIndex++);
                 var x2 = Data.AnimatedTransforms[nextFrame].GetOffset(nextFrameTransformIndex++);
-                translation.X = VectorFuncs.Lerp(x1, x2, frameDisplacement);
+                translation.X = -VectorFuncs.Lerp(x1, x2, frameDisplacement);
             }
             else
             {
-                translation.X = Data.StaticTransforms[transformIndex++].Value;
+                translation.X = -Data.StaticTransforms[transformIndex++].Value;
             }
 
             if (translateYChoice)

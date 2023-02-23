@@ -148,6 +148,7 @@ namespace TwinsaityEditor.Viewers
             if (vtx == null) return;
 
             JointTransforms.Clear();
+            PoseTransforms.Clear();
             var skeleton = graphicsInfo.Data.Skeleton;
             ComputeJointTransformTree(skeleton.Root, Matrix4.Identity);
 
@@ -195,16 +196,16 @@ namespace TwinsaityEditor.Viewers
         private void AnimateSkeletonSkin()
         {
             var vtxIndex = bskinEndIndex;
-
+            var skeleton = graphicsInfo.Skeleton;
             for (int i = 0; i < skin.Vertices.Count; i++)
             {
                 Vertex[] vbuffer = new Vertex[skin.TposeVertices[i].Length];
                 for (int k = 0; k < skin.TposeVertices[i].Length; k++)
                 {
                     vbuffer[k] = skin.TposeVertices[i][k];
-                    var bindPose1 = graphicsInfo.GetJointToWorldTransform(skin.JointInfos[i][k].JointIndex1) * JointTransforms[skin.JointInfos[i][k].JointIndex1];
-                    var bindPose2 = graphicsInfo.GetJointToWorldTransform(skin.JointInfos[i][k].JointIndex2) * JointTransforms[skin.JointInfos[i][k].JointIndex2];
-                    var bindPose3 = graphicsInfo.GetJointToWorldTransform(skin.JointInfos[i][k].JointIndex3) * JointTransforms[skin.JointInfos[i][k].JointIndex3];
+                    var bindPose1 = skeleton.InverseBindPose[skin.JointInfos[i][k].JointIndex1] * JointTransforms[skin.JointInfos[i][k].JointIndex1];
+                    var bindPose2 = skeleton.InverseBindPose[skin.JointInfos[i][k].JointIndex2] * JointTransforms[skin.JointInfos[i][k].JointIndex2];
+                    var bindPose3 = skeleton.InverseBindPose[skin.JointInfos[i][k].JointIndex3] * JointTransforms[skin.JointInfos[i][k].JointIndex3];
                     Vector4 targetPos = new Vector4(skin.TposeVertices[i][k].Pos.X, skin.TposeVertices[i][k].Pos.Y, skin.TposeVertices[i][k].Pos.Z, 1);
                     var t1 = (targetPos * bindPose1) * skin.JointInfos[i][k].Weight1;
                     var t2 = (targetPos * bindPose2) * skin.JointInfos[i][k].Weight2;
@@ -221,11 +222,13 @@ namespace TwinsaityEditor.Viewers
         }
 
         private Dictionary<int, Matrix4> JointTransforms = new Dictionary<int, Matrix4>();
+        private Dictionary<int, Matrix4> PoseTransforms = new Dictionary<int, Matrix4>();
         private void ComputeJointTransformTree(GraphicsInfo.JointNode joint, Matrix4 parentTransform)
         {
             var transform = ComputeJointTransform((int)joint.Joint.JointIndex, parentTransform);
             var poseTransform = ComputePoseTransform((int)joint.Joint.JointIndex, transform);
-            JointTransforms.Add((int)joint.Joint.JointIndex, poseTransform);
+            JointTransforms.Add((int)joint.Joint.JointIndex, transform);
+            PoseTransforms.Add((int)joint.Joint.JointIndex, poseTransform);
 
             foreach (var c in joint.Children)
             {
@@ -235,7 +238,7 @@ namespace TwinsaityEditor.Viewers
 
         private void AnimateSkeletonJointBuffer(GraphicsInfo.JointNode joint)
         {
-            var poseTransform = JointTransforms[(int)joint.Joint.JointIndex];
+            var poseTransform = PoseTransforms[(int)joint.Joint.JointIndex];
 
             var newPosition = new Vector4(tposeBuffer[(int)joint.Joint.JointIndex], 1f) * poseTransform;
             skeletonBuffer.Vtx[(int)joint.Joint.JointIndex].Pos = newPosition.Xyz;
@@ -300,16 +303,18 @@ namespace TwinsaityEditor.Viewers
             var transforms = player.Play(jointIndex);
             
             var rotQuat = new Quaternion(transforms.Item1.Row2.Xyz);
+            rotQuat.Y = -rotQuat.Y;
+            rotQuat.Z = -rotQuat.Z;
             var rot = Matrix4.CreateFromQuaternion(rotQuat);
             if (transforms.Item2)
             {
                 var jointAddRot = graphicsInfo.Data.Joints[jointIndex].Matrix[4];
-                var addRot = new Quaternion(jointAddRot.X, jointAddRot.Y, jointAddRot.Z, jointAddRot.W);
+                var addRot = new Quaternion(jointAddRot.X, -jointAddRot.Y, -jointAddRot.Z, jointAddRot.W);
                 Quaternion.Multiply(ref addRot, ref rotQuat, out Quaternion resQuat);
                 rot = Matrix4.CreateFromQuaternion(resQuat);
             }
             var localTransform = rot
-                //* Matrix4.CreateScale(transforms.Item1.Row1.Xyz)
+               * Matrix4.CreateScale(transforms.Item1.Row1.Xyz)
                 * Matrix4.CreateTranslation(transforms.Item1.Row0.Xyz);
 
             var jointTransform = localTransform * parentTransform;
@@ -322,11 +327,11 @@ namespace TwinsaityEditor.Viewers
             var index = joint.Joint.JointIndex;
             var localRot = Matrix4.CreateFromQuaternion(new Quaternion(
                 graphicsInfo.Data.Joints[index].Matrix[2].X,
-                graphicsInfo.Data.Joints[index].Matrix[2].Y,
-                graphicsInfo.Data.Joints[index].Matrix[2].Z,
+                -graphicsInfo.Data.Joints[index].Matrix[2].Y,
+                -graphicsInfo.Data.Joints[index].Matrix[2].Z,
                 graphicsInfo.Data.Joints[index].Matrix[2].W));
             var localTranslate = Matrix4.CreateTranslation(
-                    graphicsInfo.Data.Joints[index].Matrix[0].X,
+                    -graphicsInfo.Data.Joints[index].Matrix[0].X,
                     graphicsInfo.Data.Joints[index].Matrix[0].Y,
                     graphicsInfo.Data.Joints[index].Matrix[0].Z);
             var localTransform = localRot * localTranslate;
@@ -344,15 +349,9 @@ namespace TwinsaityEditor.Viewers
 
         private Matrix4 ComputePoseTransform(int jointIndex, Matrix4 jointTransform)
         {
-            // Black magic that doesn't really help :(
-            jointTransform.M11 = -jointTransform.M11;
-            jointTransform.M12 = -jointTransform.M12;
-            jointTransform.M13 = -jointTransform.M13;
-
             var skeleton = graphicsInfo.Skeleton;
             var inversePose = skeleton.InverseBindPose[jointIndex];
             var resTransform = inversePose * jointTransform;
-            resTransform *= Matrix4.CreateScale(-1, 1, 1);
 
             return resTransform;
         }
