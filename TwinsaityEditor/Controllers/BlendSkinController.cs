@@ -42,10 +42,16 @@ namespace TwinsaityEditor
                 text.Add($"Model {i}: Material - {MainFile.GetMaterialName(Data.Models[i].MaterialID)} [ID: {Data.Models[i].MaterialID}]");
                 for (int a = 0; a < Data.Models[i].SubModels.Length; a++)
                 {
-                    text.Add($"SubModel {a}: Vertexes {Data.Models[i].SubModels[a].VertexesAmount}, Joint Count {Data.Models[i].SubModels[a].BlendShapes.Length}");
+                    text.Add($"SubModel {a}: Vertexes {Data.Models[i].SubModels[a].VertexesAmount}, Blend Shapes Count {Data.Models[i].SubModels[a].BlendShapes.Length}");
+                    text.Add($"Blend vertex: {Data.Models[i].SubModels[a].BlendShapeX}, {Data.Models[i].SubModels[a].BlendShapeY}, {Data.Models[i].SubModels[a].BlendShapeZ}");
                     for (int b = 0; b < Data.Models[i].SubModels[a].BlendShapes.Length; b++)
                     {
-                        //text.Add($"Bone {b}: Int {Data.Models[i].SubModels[a].Bones[b].UnkInt}");
+                        text.Add($"Shape {b}:");
+                        text.Add($"\t Vertexes {Data.Models[i].SubModels[a].BlendShapes[b].VertexesAmount}");
+                        for (int k = 0; k < Data.Models[i].SubModels[a].BlendShapes[b].ShapeVertecies.Length; k++)
+                        {
+                            text.Add($"\t Vec {k}: {Data.Models[i].SubModels[a].BlendShapes[b].ShapeVertecies[k].Unknown.ToIntString()}");
+                        }
                     }
                     for (var j = 0; j < Data.Models[i].SubModels[a].Vertexes.Count; j++)
                     {

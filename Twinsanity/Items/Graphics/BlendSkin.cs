@@ -31,7 +31,7 @@ namespace Twinsanity
                     for (int b = 0; b < BlendShapesCount; b++)
                     {
                         writer.Write(Models[sub].SubModels[t].BlendShapes[b].Blob.Length >> 4);
-                        writer.Write(Models[sub].SubModels[t].BlendShapes[b].UnkInt);
+                        writer.Write(Models[sub].SubModels[t].BlendShapes[b].VertexesAmount);
                         writer.Write(Models[sub].SubModels[t].BlendShapes[b].Blob);
                     }
                 }
@@ -73,14 +73,14 @@ namespace Twinsanity
                     {
                         BlendShape BSkin = new BlendShape();
                         int BSize = reader.ReadInt32();
-                        BSkin.UnkInt = reader.ReadUInt32();
+                        BSkin.VertexesAmount = reader.ReadUInt32();
                         BSkin.Blob = reader.ReadBytes(BSize << 4);
-                        BSkin.Unknown = new BlendShapeVertex[BSize];
+                        BSkin.ShapeVertecies = new BlendShapeVertex[BSize];
 
                         var dma = new DMATag
                         {
                             QWC = (ushort)BSize,
-                            Extra = (ulong)(0x6E000000 | (BSize << 0x10) | 0x12B)
+                            Extra = (ulong)(0x6E000000 | (BSize << 0x10) | 0x12B) // Unpack vectors compressed in V4_8 format
                         };
 
                         using (var mem = new MemoryStream())
@@ -97,9 +97,9 @@ namespace Twinsanity
                                     var vData = interp.GetMem();
                                     for (var i = 0; i < BSize; i++)
                                     {
-                                        BSkin.Unknown[i] = new BlendShapeVertex()
+                                        BSkin.ShapeVertecies[i] = new BlendShapeVertex()
                                         {
-                                            Unknown = new Pos(vData[0][i].GetBinaryX(), vData[0][i].GetBinaryY(), vData[0][i].GetBinaryZ(), vData[0][i].GetBinaryW())
+                                            Unknown = vData[0][i]
                                         };
                                     }
                                 }
@@ -262,8 +262,8 @@ namespace Twinsanity
 
         public class BlendShape
         {
-            public uint UnkInt;
-            public BlendShapeVertex[] Unknown;
+            public uint VertexesAmount;
+            public BlendShapeVertex[] ShapeVertecies;
             public byte[] Blob; //Vector 4 stored in V4_8 format
         }
 
@@ -296,7 +296,7 @@ namespace Twinsanity
 
         public struct BlendShapeVertex
         {
-            public Pos Unknown;
+            public Vector4 Unknown;
         }
 
         public struct VertexData

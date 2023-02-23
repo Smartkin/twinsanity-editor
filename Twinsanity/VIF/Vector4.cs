@@ -118,6 +118,22 @@ namespace Twinsanity.VIF
         {
             return $"({X:0.00000}; {Y:0.00000}; {Z:0.00000}; {W:0.00000})";
         }
+        public String ToIntString()
+        {
+            var x_int = (int)GetBinaryX();
+            var y_int = (int)GetBinaryY();
+            var z_int = (int)GetBinaryZ();
+            var w_int = (int)GetBinaryW();
+            return $"({x_int}; {y_int}; {z_int}; {w_int})";
+        }
+        public String ToIntString(float factor_x, float factor_y, float factor_z)
+        {
+            var x_int = (int)GetBinaryX();
+            var y_int = (int)GetBinaryY();
+            var z_int = (int)GetBinaryZ();
+            var w_int = (int)GetBinaryW();
+            return $"({x_int * factor_x}; {y_int * factor_y}; {z_int * factor_z}; {w_int})";
+        }
         public Color GetColor()
         {
             var c = new Color

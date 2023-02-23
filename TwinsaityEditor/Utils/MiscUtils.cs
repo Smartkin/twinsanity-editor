@@ -87,7 +87,7 @@ namespace TwinsaityEditor.Utils
                 return;
             }
             var secId = 11U;
-            if (file.Data.Type == TwinsFile.FileType.SM2 || file.Data.Type == TwinsFile.FileType.SMX)
+            if (file.Data.Type == TwinsFile.FileType.SM2 || file.Data.Type == TwinsFile.FileType.SMX || file.Data.Type == TwinsFile.FileType.DemoSM2)
             {
                 secId = 6U;
             }
@@ -128,6 +128,30 @@ namespace TwinsaityEditor.Utils
                         if (shader.TxtMapping == TwinsShader.TextureMapping.ON)
                         {
                             texture = texSec.GetItem<TextureX>(shader.TextureId);
+                            break;
+                        }
+                    }
+                    if (texture != null)
+                    {
+                        var bmp = texture.GetBmp();
+                        var texId = LoadTexture(ref bmp);
+                        if (!TextureCache.ContainsKey(material))
+                        {
+                            TextureCache.Add(material, texId);
+                        }
+                        vtx.Texture = texId;
+                        vtx.Flags |= BufferPointerFlags.TexCoord;
+                    }
+                }
+                else if (file.Data.Type == TwinsFile.FileType.DemoRM2 || file.Data.Type == TwinsFile.FileType.DemoSM2)
+                {
+                    var mat = matSec.GetItem<MaterialDemo>(material);
+                    Texture texture = null;
+                    foreach (var shader in mat.Shaders)
+                    {
+                        if (shader.TxtMapping == TwinsShader.TextureMapping.ON)
+                        {
+                            texture = texSec.GetItem<Texture>(shader.TextureId);
                             break;
                         }
                     }
