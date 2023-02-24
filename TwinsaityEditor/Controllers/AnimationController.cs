@@ -18,6 +18,34 @@ namespace TwinsaityEditor.Controllers
             AddMenu("Open editor", Menu_OpenEditor);
         }
 
+        public float[] GetFacialAnimationTransform(int curFrame, int nextFrame, float frameDisplacement)
+        {
+            var jointSetting = Data.FacialJointsSettings[0];
+            var shapesAmount = (jointSetting.Flags & 0xf);
+            var shapeWeights = new float[shapesAmount];
+            var transformIndex = jointSetting.TransformationIndex;
+            var currentFrameTransformIndex = jointSetting.AnimatedTransformIndex;
+            var nextFrameTransformIndex = jointSetting.AnimatedTransformIndex;
+            var transformChoice = jointSetting.TransformationChoice;
+
+            for (int i = 0; i < shapeWeights.Length; i++)
+            {
+                if ((transformChoice & 0x1) == 0)
+                {
+                    var f1 = Data.FacialAnimatedTransforms[curFrame].GetOffset(currentFrameTransformIndex++);
+                    var f2 = Data.FacialAnimatedTransforms[nextFrame].GetOffset(nextFrameTransformIndex++);
+                    shapeWeights[i] = VectorFuncs.Lerp(f1, f2, frameDisplacement);
+                }
+                else
+                {
+                    shapeWeights[i] = Data.FacialStaticTransforms[transformIndex++].Value;
+                }
+                transformChoice >>= 1;
+            }
+
+            return shapeWeights;
+        }
+
         public Tuple<Matrix4, bool> GetMainAnimationTransform(int jointIndex, int curFrame, int nextFrame, float frameDisplacement)
         {
             Vector4 rotation = new Vector4();
@@ -207,9 +235,9 @@ namespace TwinsaityEditor.Controllers
                 $"Main animation animated transforms: {Data.AnimatedTransforms.Count}",
                 $"Facial animation total frames: {Data.TotalFrames2}",
                 $"Blob packed 2: 0x{Data.UnkBlobSizePacked2:X}",
-                $"Facial animation joint settings: {Data.JointsSettings2.Count}",
-                $"Facial animation static transforms: {Data.StaticTransforms2.Count}",
-                $"Facial animation animated transforms: {Data.AnimatedTransforms2.Count}",
+                $"Facial animation joint settings: {Data.FacialJointsSettings.Count}",
+                $"Facial animation static transforms: {Data.FacialStaticTransforms.Count}",
+                $"Facial animation animated transforms: {Data.FacialAnimatedTransforms.Count}",
             };
             TextPrev = text.ToArray();
         }

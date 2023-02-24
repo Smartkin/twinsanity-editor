@@ -75,12 +75,12 @@ namespace Twinsanity
                         int BSize = reader.ReadInt32();
                         BSkin.VertexesAmount = reader.ReadUInt32();
                         BSkin.Blob = reader.ReadBytes(BSize << 4);
-                        BSkin.ShapeVertecies = new BlendShapeVertex[BSize];
+                        BSkin.ShapeVertecies = new BlendShapeVertex[BSkin.VertexesAmount];
 
                         var dma = new DMATag
                         {
                             QWC = (ushort)BSize,
-                            Extra = (ulong)(0x6E000000 | (BSize << 0x10) | 0x12B) // Unpack vectors compressed in V4_8 format
+                            Extra = 0x12B + 1 | BSkin.VertexesAmount << 0x10 | 0x6E000000 // Unpack vectors compressed in V4_8 format
                         };
 
                         using (var mem = new MemoryStream())
@@ -95,12 +95,19 @@ namespace Twinsanity
                                 {
                                     var interp = VIFInterpreter.InterpretCode(memReader);
                                     var vData = interp.GetMem();
-                                    for (var i = 0; i < BSize; i++)
+                                    for (var i = 0; i < BSkin.VertexesAmount; i++)
                                     {
+                                        var x_comp = (int)vData[0][i].GetBinaryX();
+                                        var y_comp = (int)vData[0][i].GetBinaryY();
+                                        var z_comp = (int)vData[0][i].GetBinaryZ();
                                         BSkin.ShapeVertecies[i] = new BlendShapeVertex()
                                         {
-                                            Unknown = vData[0][i]
+                                            Position = new Vector4(x_comp * Skin.BlendShapeX,
+                                                y_comp * Skin.BlendShapeY,
+                                                z_comp * Skin.BlendShapeZ,
+                                                1f)
                                         };
+                                        Skin.Vertexes[i].BlendShapes.Add(BSkin.ShapeVertecies[i]);
                                     }
                                 }
                             }
@@ -216,7 +223,8 @@ namespace Twinsanity
                         B = (byte)(Math.Min((int)(vertex_batch_4[j].GetBinaryZ() & 0xFF) + 127, 255)),
                         A = (byte)(Math.Min((int)(vertex_batch_4[j].GetBinaryW() & 0xFF) + 127, 255)),
                         Joint = jointInfos[j],
-                        Conn = connections[j]
+                        Conn = connections[j],
+                        BlendShapes = new List<BlendShapeVertex>()
                     };
                     vertexes.Add(vertData);
                 }
@@ -296,7 +304,7 @@ namespace Twinsanity
 
         public struct BlendShapeVertex
         {
-            public Vector4 Unknown;
+            public Vector4 Position;
         }
 
         public struct VertexData
@@ -306,6 +314,7 @@ namespace Twinsanity
             public byte R, G, B, A;
             public JointInfo Joint;
             public bool Conn;
+            public List<BlendShapeVertex> BlendShapes;
         }
     }
 }

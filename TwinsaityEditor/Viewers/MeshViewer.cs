@@ -78,11 +78,13 @@ namespace TwinsaityEditor
             this.bskin = mesh;
             zFar = 50F;
             file = mesh.MainFile;
+            targetFile = file;
             lighting = false;
             wire = false;
             Tag = pform;
             InitVBO(mesh.Data.Models.Length, true);
             pform.Text = "Loading mesh...";
+            BSkinActive = true;
             LoadBSkin();
             pform.Text = "Initializing...";
         }
@@ -206,14 +208,28 @@ namespace TwinsaityEditor
             if (FullModelActive)
             {
                 renderString += $"V Model {Visible_Models}\nB Skin {Visible_Skin}\nN Blend Skin {Visible_BSkin}\n";
-                if (BSkinActive && targetFile.Data.Type == TwinsFile.FileType.RMX)
+                if (BSkinActive)
+                {
+                    if (targetFile.Data.Type == TwinsFile.FileType.RMX)
+                    {
+                        renderString += $"Z BlendShape {TargetBlendShape}/{bskinX.Data.BlendShapeCount}\n";
+                    }
+                    else if (targetFile.Data.Type == TwinsFile.FileType.RM2)
+                    {
+                        renderString += $"Z BlendShape {TargetBlendShape}/{bskin.Data.BlendShapesCount}\n";
+                    }
+                }
+            }
+            else if (BSkinActive)
+            {
+                if (targetFile.Data.Type == TwinsFile.FileType.RMX)
                 {
                     renderString += $"Z BlendShape {TargetBlendShape}/{bskinX.Data.BlendShapeCount}\n";
                 }
-            }
-            else if (BSkinActive && targetFile.Data.Type == TwinsFile.FileType.RMX)
-            {
-                renderString += $"Z BlendShape {TargetBlendShape}/{bskinX.Data.BlendShapeCount}\n";
+                else if (targetFile.Data.Type == TwinsFile.FileType.RM2)
+                {
+                    renderString += $"Z BlendShape {TargetBlendShape}/{bskin.Data.BlendShapesCount}\n";
+                }
             }
             RenderString2D(renderString, 0, Height, 12, System.Drawing.Color.White, TextAnchor.BotLeft);
         }
@@ -817,44 +833,81 @@ namespace TwinsaityEditor
 
         public void NextBlendShape()
         {
-            if (bskinX == null) return;
+            if (bskinX == null && bskin == null) return;
 
             TargetBlendShape++;
-            if (TargetBlendShape > bskinX.Data.BlendShapeCount)
+            if (bskinX != null)
             {
-                TargetBlendShape = 0;
+                if (TargetBlendShape > bskinX.Data.BlendShapeCount)
+                {
+                    TargetBlendShape = 0;
+                }
+            }
+            if (bskin != null)
+            {
+                if (TargetBlendShape > bskin.Data.BlendShapesCount)
+                {
+                    TargetBlendShape = 0;
+                }
             }
 
             if (TargetBlendShape == 0)
             {
-                bskinX.LoadMeshData();
+                bskinX?.LoadMeshData();
+                bskin?.LoadMeshData();
             }
             else
             {
-                bskinX.LoadMeshData_BlendShape((int)TargetBlendShape - 1);
+                bskinX?.LoadMeshData_BlendShape((int)TargetBlendShape - 1);
+                bskin?.LoadMeshData_BlendShape((int)TargetBlendShape - 1);
             }
             float min_x = float.MaxValue, min_y = float.MaxValue, min_z = float.MaxValue, max_x = float.MinValue, max_y = float.MinValue, max_z = float.MinValue;
-            foreach (var list in bskinX.Vertices)
+            if (bskinX != null)
             {
-                foreach (var v in list)
+                foreach (var list in bskinX.Vertices)
                 {
-                    min_x = Math.Min(min_x, v.Pos.X);
-                    min_y = Math.Min(min_y, v.Pos.Y);
-                    min_z = Math.Min(min_z, v.Pos.Z);
-                    max_x = Math.Max(max_x, v.Pos.X);
-                    max_y = Math.Max(max_y, v.Pos.Y);
-                    max_z = Math.Max(max_z, v.Pos.Z);
+                    foreach (var v in list)
+                    {
+                        min_x = Math.Min(min_x, v.Pos.X);
+                        min_y = Math.Min(min_y, v.Pos.Y);
+                        min_z = Math.Min(min_z, v.Pos.Z);
+                        max_x = Math.Max(max_x, v.Pos.X);
+                        max_y = Math.Max(max_y, v.Pos.Y);
+                        max_z = Math.Max(max_z, v.Pos.Z);
+                    }
+                }
+                for (int i = 0; i < bskinX.Vertices.Count; i++)
+                {
+                    vtx[i].Vtx = bskinX.Vertices[i];
+                    vtx[i].VtxInd = bskinX.Indices[i];
+                    Utils.TextUtils.LoadTexture(bskinX.Data.SubModels.Select((subModel) =>
+                    {
+                        return subModel.MaterialID;
+                    }).ToArray(), file, vtx[i], i);
+                    UpdateVBO(i);
                 }
             }
-            for (int i = 0; i < bskinX.Vertices.Count; i++)
+            if (bskin != null)
             {
-                vtx[i].Vtx = bskinX.Vertices[i];
-                vtx[i].VtxInd = bskinX.Indices[i];
-                Utils.TextUtils.LoadTexture(bskinX.Data.SubModels.Select((subModel) =>
+                foreach (var list in bskin.Vertices)
                 {
-                    return subModel.MaterialID;
-                }).ToArray(), file, vtx[i], i);
-                UpdateVBO(i);
+                    foreach (var v in list)
+                    {
+                        min_x = Math.Min(min_x, v.Pos.X);
+                        min_y = Math.Min(min_y, v.Pos.Y);
+                        min_z = Math.Min(min_z, v.Pos.Z);
+                        max_x = Math.Max(max_x, v.Pos.X);
+                        max_y = Math.Max(max_y, v.Pos.Y);
+                        max_z = Math.Max(max_z, v.Pos.Z);
+                    }
+                }
+                for (int i = 0; i < bskin.Vertices.Count; i++)
+                {
+                    vtx[i].Vtx = bskin.Vertices[i];
+                    vtx[i].VtxInd = bskin.Indices[i];
+                    Utils.TextUtils.LoadTexture(bskin.Data.Models[i].MaterialID, file, vtx[i]);
+                    UpdateVBO(i);
+                }
             }
             zFar = Math.Max(zFar, Math.Max(max_x - min_x, Math.Max(max_y - min_y, max_z - min_z)));
 

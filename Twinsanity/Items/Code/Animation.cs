@@ -17,9 +17,9 @@ namespace Twinsanity
         public List<AnimatedTransform> AnimatedTransforms = new List<AnimatedTransform>();
         public UInt32 UnkBlobSizePacked2;
         public UInt16 TotalFrames2;
-        public List<JointSettings> JointsSettings2 = new List<JointSettings>();
-        public List<Transformation> StaticTransforms2 = new List<Transformation>();
-        public List<AnimatedTransform> AnimatedTransforms2 = new List<AnimatedTransform>();
+        public List<JointSettings> FacialJointsSettings = new List<JointSettings>();
+        public List<Transformation> FacialStaticTransforms = new List<Transformation>();
+        public List<AnimatedTransform> FacialAnimatedTransforms = new List<AnimatedTransform>();
 
         public override void Save(BinaryWriter writer)
         {
@@ -49,22 +49,22 @@ namespace Twinsanity
             UnkBlobSizePacked2 &= ~0x7FU;
             UnkBlobSizePacked2 &= ~(0xFFEU << 0xA);
             UnkBlobSizePacked2 &= ~(0x3FFU << 0x16);
-            UInt32 packed2 = (UInt32)JointsSettings2.Count & 0x7F;
-            packed2 |= (UInt32)(((StaticTransforms2.Count * 2) & 0xFFE) << 0xA);
-            packed2 |= (UInt32)(AnimatedTransforms2.Count << 0x16);
+            UInt32 packed2 = (UInt32)FacialJointsSettings.Count & 0x7F;
+            packed2 |= (UInt32)(((FacialStaticTransforms.Count * 2) & 0xFFE) << 0xA);
+            packed2 |= (UInt32)(FacialAnimatedTransforms.Count << 0x16);
             packed2 |= UnkBlobSizePacked2;
             writer.Write(packed2);
             UnkBlobSizePacked2 = packed2;
             writer.Write(TotalFrames2);
-            foreach (var boneSetting in JointsSettings2)
+            foreach (var boneSetting in FacialJointsSettings)
             {
                 boneSetting.Write(writer);
             }
-            foreach (var transformation in StaticTransforms2)
+            foreach (var transformation in FacialStaticTransforms)
             {
                 transformation.Write(writer);
             }
-            foreach (var twoPartTransform in AnimatedTransforms2)
+            foreach (var twoPartTransform in FacialAnimatedTransforms)
             {
                 twoPartTransform.Write(writer);
             }
@@ -103,25 +103,25 @@ namespace Twinsanity
             joints = (UnkBlobSizePacked2 & 0x7F);
             transformations = (UnkBlobSizePacked2 >> 0xA & 0xFFE) / 2;
             twoPartTransforms = (UnkBlobSizePacked2 >> 0x16);
-            JointsSettings2.Clear();
-            StaticTransforms2.Clear();
-            AnimatedTransforms2.Clear();
+            FacialJointsSettings.Clear();
+            FacialStaticTransforms.Clear();
+            FacialAnimatedTransforms.Clear();
             if (blobSize > 0)
             {
                 for (var i = 0; i < joints; ++i)
                 {
-                    JointsSettings2.Add(new JointSettings());
-                    JointsSettings2[i].Read(reader);
+                    FacialJointsSettings.Add(new JointSettings());
+                    FacialJointsSettings[i].Read(reader);
                 }
                 for (var i = 0; i < transformations; ++i)
                 {
-                    StaticTransforms2.Add(new Transformation());
-                    StaticTransforms2[i].Read(reader);
+                    FacialStaticTransforms.Add(new Transformation());
+                    FacialStaticTransforms[i].Read(reader);
                 }
-                for (var i = 0; i < twoPartTransforms; ++i)
+                for (var i = 0; i < TotalFrames2; ++i)
                 {
-                    AnimatedTransforms2.Add(new AnimatedTransform(TotalFrames2));
-                    AnimatedTransforms2[i].Read(reader);
+                    FacialAnimatedTransforms.Add(new AnimatedTransform((ushort)twoPartTransforms));
+                    FacialAnimatedTransforms[i].Read(reader);
                 }
             }
         }
@@ -243,7 +243,7 @@ namespace Twinsanity
             var totalSize = 10; // Bitfield, blob packed, blob size helper
             totalSize += JointsSettings.Sum(d => 8) + StaticTransforms.Count * 2 + AnimatedTransforms.Sum(r => r.Values.Count * 2);
             totalSize += 6; // blob packed 2, blob size helper 2
-            totalSize += JointsSettings2.Sum(d => 8) + StaticTransforms2.Count * 2 + AnimatedTransforms2.Sum(r => r.Values.Count * 2);
+            totalSize += FacialJointsSettings.Sum(d => 8) + FacialStaticTransforms.Count * 2 + FacialAnimatedTransforms.Sum(r => r.Values.Count * 2);
             return totalSize;
         }
     }

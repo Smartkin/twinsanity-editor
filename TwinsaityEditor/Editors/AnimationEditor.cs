@@ -7,7 +7,6 @@ using System.Windows.Forms;
 using TwinsaityEditor.Controllers;
 using TwinsaityEditor.Viewers;
 using Twinsanity;
-using static OpenTK.Graphics.OpenGL.GL;
 
 namespace TwinsaityEditor
 {
@@ -68,7 +67,7 @@ namespace TwinsaityEditor
             tbJointTransformChoice.Text = "";
             tbJointTransformIndex.Text = "";
             tbJointAnimatedTransformIndex.Text = "";
-            tbBlendShapes.Text = "";
+            tbShapesAmount.Text = "";
             tbJointTransformChoice2.Text = "";
             tbJointTransformIndex2.Text = "";
             tbJointTwoPartTransformIndex2.Text = "";
@@ -96,9 +95,9 @@ namespace TwinsaityEditor
             PopulateWithAnimData(lbJointSettings.Items, animation.JointsSettings, listAdder, "Joint setting");
             PopulateWithAnimData(lbTransformations.Items, animation.StaticTransforms, listAdder, "Transform");
             PopulateWithAnimData(lbAnimatedTransforms.Items, animation.AnimatedTransforms, listAdder, "Animated transform");
-            PopulateWithAnimData(lbJointSettings2.Items, animation.JointsSettings2, listAdder, "Joint setting");
-            PopulateWithAnimData(lbTransformations2.Items, animation.StaticTransforms2, listAdder, "Transform");
-            PopulateWithAnimData(lbTwoPartTransforms2.Items, animation.AnimatedTransforms2, listAdder, "Animated transform");
+            PopulateWithAnimData(lbShapeSettings.Items, animation.FacialJointsSettings, listAdder, "Joint setting");
+            PopulateWithAnimData(lbTransformations2.Items, animation.FacialStaticTransforms, listAdder, "Transform");
+            PopulateWithAnimData(lbTwoPartTransforms2.Items, animation.FacialAnimatedTransforms, listAdder, "Animated transform");
 
             var ogis = controller.MainFile.GetItem<SectionController>(10).GetItem<SectionController>(3);
             foreach (GraphicsInfo ogi in ogis.Data.Records.Cast<GraphicsInfo>())
@@ -329,12 +328,45 @@ namespace TwinsaityEditor
             var list = (ListBox)sender;
             if (list.SelectedIndex == -1) return;
 
-            Animation.JointSettings jointSettings = animation.JointsSettings2[list.SelectedIndex];
+            Animation.JointSettings jointSettings = animation.FacialJointsSettings[list.SelectedIndex];
             JointSettings2 = jointSettings;
-            tbBlendShapes.Text = (jointSettings.Flags >> 0x8 & 0xf).ToString();
+            var flags = jointSettings.Flags;
+            tbShapesAmount.Text = (flags >> 0x8 & 0xf).ToString();
             tbJointTransformChoice2.Text = jointSettings.TransformationChoice.ToString();
             tbJointTransformIndex2.Text = jointSettings.TransformationIndex.ToString();
             tbJointTwoPartTransformIndex2.Text = jointSettings.AnimatedTransformIndex.ToString();
+            var timelineText = new List<string>();
+            var joints = (flags >> 0x8 & 0xf);
+            var floats = new float[joints];
+            
+
+            for (int j = 0; j < animation.TotalFrames2 - 1; j++)
+            {
+                var transformIndex = jointSettings.TransformationIndex;
+                int currentFrameTransformIndex = jointSettings.AnimatedTransformIndex;
+                var nextFrameTransformIndex = jointSettings.AnimatedTransformIndex;
+                var transformChoice = jointSettings.TransformationChoice;
+
+                timelineText.Add($"Frame {j + 1}:\n");
+
+                for (int i = 0; i < floats.Length; i++)
+                {
+                    if ((transformChoice & 0x1) == 0)
+                    {
+                        var f1 = animation.FacialAnimatedTransforms[j].GetOffset(currentFrameTransformIndex++);
+                        var f2 = animation.FacialAnimatedTransforms[j + 1].GetOffset(nextFrameTransformIndex++);
+                        timelineText.Add($"\tAnimation value {i} from {f1} to {f2}");
+                    }
+                    else
+                    {
+                        floats[i] = animation.FacialStaticTransforms[transformIndex++].Value;
+                        timelineText.Add($"\tSet value {i} to {floats[i]}");
+                    }
+                    transformChoice >>= 1;
+                }
+            }
+            
+            tbMorphTimeline.Lines = timelineText.ToArray();
         }
 
         private void lbScales2_SelectedIndexChanged(object sender, EventArgs e)
@@ -342,7 +374,7 @@ namespace TwinsaityEditor
             var list = (ListBox)sender;
             if (list.SelectedIndex == -1) return;
 
-            Animation.Transformation scale = animation.StaticTransforms2[list.SelectedIndex];
+            Animation.Transformation scale = animation.FacialStaticTransforms[list.SelectedIndex];
             StaticTransform2 = scale;
             tbTransformation2.Text = scale.Value.ToString();
         }
@@ -352,7 +384,7 @@ namespace TwinsaityEditor
             var list = (ListBox)sender;
             if (list.SelectedIndex == -1) return;
 
-            Animation.AnimatedTransform timeline = animation.AnimatedTransforms2[list.SelectedIndex];
+            Animation.AnimatedTransform timeline = animation.FacialAnimatedTransforms[list.SelectedIndex];
             AnimatedTransform2 = timeline;
         }
 
@@ -389,13 +421,6 @@ namespace TwinsaityEditor
             var tb = (TextBox)sender;
             if (!Single.TryParse(tb.Text, out Single result) || StaticTransform == null) return;
             StaticTransform.Value = result;
-        }
-
-        private void tbDis2B1_TextChanged(object sender, EventArgs e)
-        {
-            var tb = (TextBox)sender;
-            if (!ushort.TryParse(tb.Text, out ushort result) || JointSettings2 == null) return;
-            JointSettings2.Flags = result;
         }
 
         private void tbDis2B3_TextChanged(object sender, EventArgs e)
@@ -475,14 +500,14 @@ namespace TwinsaityEditor
         private void btnAddTransformation2_Click(object sender, EventArgs e)
         {
             if (animation == null) return;
-            animation.StaticTransforms2.Add(new Animation.Transformation());
+            animation.FacialStaticTransforms.Add(new Animation.Transformation());
             UpdateLists();
         }
 
         private void btnDeleteTransformation2_Click(object sender, EventArgs e)
         {
             if (animation == null) return;
-            animation.StaticTransforms2.RemoveAt(animation.StaticTransforms2.Count - 1);
+            animation.FacialStaticTransforms.RemoveAt(animation.FacialStaticTransforms.Count - 1);
             UpdateLists();
         }
 
@@ -493,10 +518,10 @@ namespace TwinsaityEditor
             {
                 animation.TotalFrames2 = 1;
             }
-            animation.AnimatedTransforms2.Add(new Animation.AnimatedTransform(animation.TotalFrames2));
-            for (var i = 0; i < animation.AnimatedTransforms2[animation.AnimatedTransforms2.Count - 1].Values.Capacity; ++i)
+            animation.FacialAnimatedTransforms.Add(new Animation.AnimatedTransform(animation.TotalFrames2));
+            for (var i = 0; i < animation.FacialAnimatedTransforms[animation.FacialAnimatedTransforms.Count - 1].Values.Capacity; ++i)
             {
-                animation.AnimatedTransforms2[animation.AnimatedTransforms2.Count - 1].Values.Add(0);
+                animation.FacialAnimatedTransforms[animation.FacialAnimatedTransforms.Count - 1].Values.Add(0);
             }
             UpdateLists();
         }
@@ -539,7 +564,7 @@ namespace TwinsaityEditor
         private void btnDeleteTimeline2_Click(object sender, EventArgs e)
         {
             if (animation == null) return;
-            animation.AnimatedTransforms2.RemoveAt(animation.AnimatedTransforms2.Count - 1);
+            animation.FacialAnimatedTransforms.RemoveAt(animation.FacialAnimatedTransforms.Count - 1);
             UpdateLists();
         }
 

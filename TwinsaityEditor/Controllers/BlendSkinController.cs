@@ -50,7 +50,7 @@ namespace TwinsaityEditor
                         text.Add($"\t Vertexes {Data.Models[i].SubModels[a].BlendShapes[b].VertexesAmount}");
                         for (int k = 0; k < Data.Models[i].SubModels[a].BlendShapes[b].ShapeVertecies.Length; k++)
                         {
-                            text.Add($"\t Vec {k}: {Data.Models[i].SubModels[a].BlendShapes[b].ShapeVertecies[k].Unknown.ToIntString()}");
+                            text.Add($"\t Vec {k}: {Data.Models[i].SubModels[a].BlendShapes[b].ShapeVertecies[k].Position}");
                         }
                     }
                     for (var j = 0; j < Data.Models[i].SubModels[a].Vertexes.Count; j++)
@@ -68,7 +68,9 @@ namespace TwinsaityEditor
 
         public void LoadMeshData()
         {
-            if (IsLoaded) return;
+            Vertices.Clear();
+            Indices.Clear();
+            JointInfos.Clear();
 
             var refIndex = 0U;
             var offset = 0;
@@ -144,7 +146,107 @@ namespace TwinsaityEditor
                 JointInfos.Add(jointInfos.ToArray());
             }
 
-            IsLoaded = true;
+        }
+
+        public void LoadMeshData_BlendShape(int blendShape)
+        {
+            Vertices.Clear();
+            Indices.Clear();
+            JointInfos.Clear();
+
+            var refIndex = 0U;
+
+            var isSpyroModel = DefaultHashes.Hash_BlendSkins[Data.ID] == "Spyro";
+
+            foreach (var rigidModel in Data.Models)
+            {
+                List<Vertex> vtx = new List<Vertex>();
+                List<uint> idx = new List<uint>();
+                List<BlendSkin.JointInfo> jointInfos = new List<BlendSkin.JointInfo>();
+                foreach (var model in rigidModel.SubModels)
+                {
+                    for (var j = 0; j < model.Vertexes.Count; ++j)
+                    {
+                        if (j < model.Vertexes.Count - 2)
+                        {
+                            if (model.Vertexes[j + 2].Conn)
+                            {
+                                idx.Add(refIndex + (uint)(j % 2));
+                                idx.Add(refIndex + 1 - (uint)(j % 2));
+                                idx.Add(refIndex + 2);
+                            }
+                            ++refIndex;
+                        }
+                        Color col = Color.FromArgb(model.Vertexes[j].A, model.Vertexes[j].R, model.Vertexes[j].G, model.Vertexes[j].B);
+                        var blendVec = new Vector3(-model.Vertexes[j].BlendShapes[blendShape].Position.X,
+                            model.Vertexes[j].BlendShapes[blendShape].Position.Y,
+                            model.Vertexes[j].BlendShapes[blendShape].Position.Z);
+                        blendVec *= model.BlendShapes[blendShape].ShapeVertecies[j].Position.W;
+                        var x_comp = blendVec.X + -model.Vertexes[j].X;
+                        var y_comp = blendVec.Y + model.Vertexes[j].Y;
+                        var z_comp = blendVec.Z + model.Vertexes[j].Z;
+                        if (isSpyroModel)
+                        { // Spyro model specifically doesn't need UV flipping
+                            vtx.Add(new Vertex(new Vector3(x_comp, y_comp, z_comp),
+                                    new Vector3(0, 0, 0), new Vector2(model.Vertexes[j].U, model.Vertexes[j].V),
+                                    col));
+                        }
+                        else
+                        {
+                            vtx.Add(new Vertex(new Vector3(x_comp, y_comp, z_comp),
+                                    new Vector3(0, 0, 0), new Vector2(model.Vertexes[j].U, 1 - model.Vertexes[j].V),
+                                    col));
+                        }
+                        jointInfos.Add(model.Vertexes[j].Joint);
+                    }
+                    refIndex += 2;
+                }
+                refIndex = 0;
+
+                for (int i = 0; i < idx.Count; i += 3)
+                {
+                    var n1 = idx[i];
+                    var n2 = idx[i + 1];
+                    var n3 = idx[i + 2];
+                    var v1 = vtx[(int)n1];
+                    var v2 = vtx[(int)n2];
+                    var v3 = vtx[(int)n3];
+                    var normal = VectorFuncs.CalcNormal(v1.Pos, v2.Pos, v3.Pos);
+                    v1.Nor += normal;
+                    v2.Nor += normal;
+                    v3.Nor += normal;
+                    vtx[(int)n1] = v1;
+                    vtx[(int)n2] = v2;
+                    vtx[(int)n3] = v3;
+                }
+                Vertices.Add(vtx.ToArray());
+                Indices.Add(idx.ToArray());
+                JointInfos.Add(jointInfos.ToArray());
+            }
+
+        }
+
+        public List<Vector3[]> GetFacialPositions(int blendShape, float faceProgress)
+        {
+            var faceOffsets = new List<Vector3[]>();
+            foreach (var rigidModel in Data.Models)
+            {
+                var modelFace = new List<Vector3>();
+                foreach (var model in rigidModel.SubModels)
+                {
+                    for (var j = 0; j < model.Vertexes.Count; ++j)
+                    {
+                        var blendVec = new Vector3(-model.Vertexes[j].BlendShapes[blendShape].Position.X,
+                            model.Vertexes[j].BlendShapes[blendShape].Position.Y,
+                            model.Vertexes[j].BlendShapes[blendShape].Position.Z);
+                        blendVec *= faceProgress;
+                        modelFace.Add(blendVec);
+                    }
+                }
+                faceOffsets.Add(modelFace.ToArray());
+            }
+
+            return faceOffsets;
         }
 
         private void Menu_OpenViewer()

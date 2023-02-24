@@ -199,10 +199,23 @@ namespace TwinsaityEditor.Viewers
 
         private void AnimateSkeletonBskin()
         {
+            var faceProgress = player.PlayFacial();
             var vtxIndex = 0;
             var skeleton = graphicsInfo.Skeleton;
             for (int i = 0; i < bskin.Vertices.Count; i++)
             {
+                var faceVerts = new Vector3[bskin.Vertices[i].Length];
+                if (faceProgress.Length > 0)
+                {
+                    for (var j = 0; j < faceProgress.Length; ++j)
+                    {
+                        var face = bskin.GetFacialPositions(j, faceProgress[j]);
+                        for (int k = 0; k < bskin.Vertices[i].Length; ++k)
+                        {
+                            faceVerts[k] += face[i][k];
+                        }
+                    }
+                }
                 Vertex[] vbuffer = new Vertex[bskin.Vertices[i].Length];
                 for (int k = 0; k < bskin.Vertices[i].Length; k++)
                 {
@@ -210,7 +223,7 @@ namespace TwinsaityEditor.Viewers
                     var bindPose1 = skeleton.InverseBindPose[bskin.JointInfos[i][k].JointIndex1] * JointTransforms[bskin.JointInfos[i][k].JointIndex1];
                     var bindPose2 = skeleton.InverseBindPose[bskin.JointInfos[i][k].JointIndex2] * JointTransforms[bskin.JointInfos[i][k].JointIndex2];
                     var bindPose3 = skeleton.InverseBindPose[bskin.JointInfos[i][k].JointIndex3] * JointTransforms[bskin.JointInfos[i][k].JointIndex3];
-                    Vector4 targetPos = new Vector4(bskin.Vertices[i][k].Pos.X, bskin.Vertices[i][k].Pos.Y, bskin.Vertices[i][k].Pos.Z, 1);
+                    Vector4 targetPos = new Vector4(bskin.Vertices[i][k].Pos.X + faceVerts[k].X, bskin.Vertices[i][k].Pos.Y + faceVerts[k].Y, bskin.Vertices[i][k].Pos.Z + faceVerts[k].Z, 1);
                     var t1 = (targetPos * bindPose1) * bskin.JointInfos[i][k].Weight1;
                     var t2 = (targetPos * bindPose2) * bskin.JointInfos[i][k].Weight2;
                     var t3 = (targetPos * bindPose3) * bskin.JointInfos[i][k].Weight3;
