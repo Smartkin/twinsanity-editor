@@ -8,12 +8,12 @@ namespace Twinsanity
     public class BlendSkin : TwinsItem
     {
         public BlendSkinRigidModel[] Models;
-        public uint BlendShapesCount;
+        public uint BlendShapeCount;
 
         public override void Save(BinaryWriter writer)
         {
             writer.Write(Models.Length);
-            writer.Write(BlendShapesCount);
+            writer.Write(BlendShapeCount);
 
             for (int sub = 0; sub < Models.Length; sub++)
             {
@@ -28,7 +28,7 @@ namespace Twinsanity
                     writer.Write(Models[sub].SubModels[t].BlendShapeY);
                     writer.Write(Models[sub].SubModels[t].BlendShapeZ);
 
-                    for (int b = 0; b < BlendShapesCount; b++)
+                    for (int b = 0; b < BlendShapeCount; b++)
                     {
                         writer.Write(Models[sub].SubModels[t].BlendShapes[b].Blob.Length >> 4);
                         writer.Write(Models[sub].SubModels[t].BlendShapes[b].VertexesAmount);
@@ -45,7 +45,7 @@ namespace Twinsanity
             long start_pos = reader.BaseStream.Position;
 
             uint rigidCount = reader.ReadUInt32();
-            BlendShapesCount = reader.ReadUInt32();
+            BlendShapeCount = reader.ReadUInt32();
             Models = new BlendSkinRigidModel[rigidCount];
 
             for (int rigidIndex = 0; rigidIndex < rigidCount; rigidIndex++)
@@ -68,19 +68,18 @@ namespace Twinsanity
                     var data = interpreter.GetMem();
                     Skin.Vertexes = CalculateData(data);
 
-                    Skin.BlendShapes = new BlendShape[BlendShapesCount];
-                    for (int b = 0; b < BlendShapesCount; b++)
+                    Skin.BlendShapes = new BlendShape[BlendShapeCount];
+                    for (int b = 0; b < BlendShapeCount; b++)
                     {
                         BlendShape BSkin = new BlendShape();
                         int BSize = reader.ReadInt32();
                         BSkin.VertexesAmount = reader.ReadUInt32();
                         BSkin.Blob = reader.ReadBytes(BSize << 4);
                         BSkin.ShapeVertecies = new BlendShapeVertex[BSkin.VertexesAmount];
-
                         var dma = new DMATag
                         {
                             QWC = (ushort)BSize,
-                            Extra = 0x12B + 1 | BSkin.VertexesAmount << 0x10 | 0x6E000000 // Unpack vectors compressed in V4_8 format
+                            Extra = (0x0) | ((BSkin.VertexesAmount + 1) << 0x10) | 0x6E000000 // Unpack vectors compressed in V4_8 format
                         };
 
                         using (var mem = new MemoryStream())
@@ -97,12 +96,12 @@ namespace Twinsanity
                                     var vData = interp.GetMem();
                                     for (var i = 0; i < BSkin.VertexesAmount; i++)
                                     {
-                                        var x_comp = (int)vData[0][i].GetBinaryX();
-                                        var y_comp = (int)vData[0][i].GetBinaryY();
-                                        var z_comp = (int)vData[0][i].GetBinaryZ();
+                                        var x_comp = (int)vData[0][i + 1].GetBinaryX();
+                                        var y_comp = (int)vData[0][i + 1].GetBinaryY();
+                                        var z_comp = (int)vData[0][i + 1].GetBinaryZ();
                                         BSkin.ShapeVertecies[i] = new BlendShapeVertex()
                                         {
-                                            Position = new Vector4(x_comp * Skin.BlendShapeX,
+                                            Offset = new Vector4(x_comp * Skin.BlendShapeX,
                                                 y_comp * Skin.BlendShapeY,
                                                 z_comp * Skin.BlendShapeZ,
                                                 1f)
@@ -243,7 +242,7 @@ namespace Twinsanity
                 for (int t = 0; t < Models[sub].SubModels.Length; t++)
                 {
                     size += 8 + 0xC + Models[sub].SubModels[t].VifCode.Length;
-                    for (int b = 0; b < BlendShapesCount; b++)
+                    for (int b = 0; b < BlendShapeCount; b++)
                     {
                         size += 8 + Models[sub].SubModels[t].BlendShapes[b].Blob.Length;
                     }
@@ -304,7 +303,7 @@ namespace Twinsanity
 
         public struct BlendShapeVertex
         {
-            public Vector4 Position;
+            public Vector4 Offset;
         }
 
         public struct VertexData

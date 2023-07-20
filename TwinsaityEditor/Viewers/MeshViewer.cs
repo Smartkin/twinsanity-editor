@@ -28,6 +28,7 @@ namespace TwinsaityEditor
 
         private bool lighting, wire;
         private bool textures = true;
+        private float curShapeWeight = 1.0f;
 
         private int bskinEndIndex = 0;
         private int skinEndIndex = 0;
@@ -216,7 +217,7 @@ namespace TwinsaityEditor
                     }
                     else if (targetFile.Data.Type == TwinsFile.FileType.RM2)
                     {
-                        renderString += $"Z BlendShape {TargetBlendShape}/{bskin.Data.BlendShapesCount}\n";
+                        renderString += $"Z BlendShape {TargetBlendShape}/{bskin.Data.BlendShapeCount}\n";
                     }
                 }
             }
@@ -228,7 +229,7 @@ namespace TwinsaityEditor
                 }
                 else if (targetFile.Data.Type == TwinsFile.FileType.RM2)
                 {
-                    renderString += $"Z BlendShape {TargetBlendShape}/{bskin.Data.BlendShapesCount}\n";
+                    renderString += $"Z BlendShape {TargetBlendShape}/{bskin.Data.BlendShapeCount}\n";
                 }
             }
             RenderString2D(renderString, 0, Height, 12, System.Drawing.Color.White, TextAnchor.BotLeft);
@@ -241,59 +242,29 @@ namespace TwinsaityEditor
             if (lighting)
                 GL.Enable(EnableCap.Lighting);
 
-            if (FullModelActive)
+            if (!wire)
             {
-                if (model.Data.BlendSkinID != 0 && Visible_BSkin)
-                {
-                    for (int i = 0; i < bskinEndIndex; i++)
-                    {
-                        vtx[i].DrawAllElements(PrimitiveType.Triangles, flags);
-                    }
-                }
-                if (model.Data.SkinID != 0 && Visible_Skin)
-                {
-                    for (int i = bskinEndIndex; i < skinEndIndex; i++)
-                    {
-                        vtx[i].DrawAllElements(PrimitiveType.Triangles, flags);
-                    }
-                }
-                if (Visible_Models)
-                {
-                    for (int i = skinEndIndex; i < vtx.Count; i++)
-                    {
-                        vtx[i].DrawAllElements(PrimitiveType.Triangles, flags);
-                    }
-                }
-            }
-            else
-            {
-                for (int i = 0; i < vtx.Count; i++)
-                {
-                    vtx[i].DrawAllElements(PrimitiveType.Triangles, flags);
-                }
-            }
-
-            if (lighting)
-                GL.Disable(EnableCap.Lighting);
-            if (wire)
-            {
-                GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
-                GL.Color3(System.Drawing.Color.Black);
                 if (FullModelActive)
                 {
                     if (model.Data.BlendSkinID != 0 && Visible_BSkin)
                     {
-                        vtx[0].DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.None);
+                        for (int i = 0; i < bskinEndIndex; i++)
+                        {
+                            vtx[i].DrawAllElements(PrimitiveType.Triangles, flags);
+                        }
                     }
                     if (model.Data.SkinID != 0 && Visible_Skin)
                     {
-                        vtx[1].DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.None);
+                        for (int i = bskinEndIndex; i < skinEndIndex; i++)
+                        {
+                            vtx[i].DrawAllElements(PrimitiveType.Triangles, flags);
+                        }
                     }
                     if (Visible_Models)
                     {
-                        for (int i = 0; i < vtx.Count - 2; i++)
+                        for (int i = skinEndIndex; i < vtx.Count; i++)
                         {
-                            vtx[i + 2].DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.None);
+                            vtx[i].DrawAllElements(PrimitiveType.Triangles, flags);
                         }
                     }
                 }
@@ -301,9 +272,46 @@ namespace TwinsaityEditor
                 {
                     for (int i = 0; i < vtx.Count; i++)
                     {
-                        vtx[i].DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.None);
+                        vtx[i].DrawAllElements(PrimitiveType.Triangles, flags);
                     }
                 }
+            }
+
+            if (lighting)
+                GL.Disable(EnableCap.Lighting);
+            if (wire)
+            {
+                var wire_flags = textures ? BufferPointerFlags.TexCoord : BufferPointerFlags.None;
+                GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
+                GL.Color3(System.Drawing.Color.Black);
+                GL.LineWidth(2);
+                if (FullModelActive)
+                {
+                    if (model.Data.BlendSkinID != 0 && Visible_BSkin)
+                    {
+                        vtx[0].DrawAllElements(PrimitiveType.Triangles, wire_flags, true);
+                    }
+                    if (model.Data.SkinID != 0 && Visible_Skin)
+                    {
+                        vtx[1].DrawAllElements(PrimitiveType.Triangles, wire_flags, true);
+                    }
+                    if (Visible_Models)
+                    {
+                        for (int i = 0; i < vtx.Count - 2; i++)
+                        {
+                            vtx[i + 2].DrawAllElements(PrimitiveType.Triangles, wire_flags, true);
+                        }
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < vtx.Count; i++)
+                    {
+                        
+                        vtx[i].DrawAllElements(PrimitiveType.Triangles, wire_flags, true);
+                    }
+                }
+                GL.LineWidth(1);
                 GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
             }
         }
@@ -318,6 +326,7 @@ namespace TwinsaityEditor
                 case Keys.V:
                 case Keys.B:
                 case Keys.N:
+                case Keys.P:
                     return true;
             }
             return base.IsInputKey(keyData);
@@ -349,6 +358,14 @@ namespace TwinsaityEditor
                 case Keys.Y:
                     textures = !textures;
                     SetTexturing(textures);
+                    break;
+                case Keys.P:
+                    curShapeWeight += 0.05f;
+                    if (curShapeWeight > 1f)
+                    {
+                        curShapeWeight = 0f;
+                    }
+                    LoadBlendShape(curShapeWeight);
                     break;
             }
         }
@@ -845,12 +862,18 @@ namespace TwinsaityEditor
             }
             if (bskin != null)
             {
-                if (TargetBlendShape > bskin.Data.BlendShapesCount)
+                if (TargetBlendShape > bskin.Data.BlendShapeCount)
                 {
                     TargetBlendShape = 0;
                 }
             }
 
+            LoadBlendShape();
+
+        }
+
+        private void LoadBlendShape(float shapeWeight = 1f)
+        {
             if (TargetBlendShape == 0)
             {
                 bskinX?.LoadMeshData();
@@ -859,7 +882,7 @@ namespace TwinsaityEditor
             else
             {
                 bskinX?.LoadMeshData_BlendShape((int)TargetBlendShape - 1);
-                bskin?.LoadMeshData_BlendShape((int)TargetBlendShape - 1);
+                bskin?.LoadMeshData_BlendShape((int)TargetBlendShape - 1, shapeWeight);
             }
             float min_x = float.MaxValue, min_y = float.MaxValue, min_z = float.MaxValue, max_x = float.MinValue, max_y = float.MinValue, max_z = float.MinValue;
             if (bskinX != null)
@@ -910,7 +933,6 @@ namespace TwinsaityEditor
                 }
             }
             zFar = Math.Max(zFar, Math.Max(max_x - min_x, Math.Max(max_y - min_y, max_z - min_z)));
-
         }
 
 

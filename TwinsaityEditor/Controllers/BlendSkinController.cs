@@ -50,12 +50,18 @@ namespace TwinsaityEditor
                         text.Add($"\t Vertexes {Data.Models[i].SubModels[a].BlendShapes[b].VertexesAmount}");
                         for (int k = 0; k < Data.Models[i].SubModels[a].BlendShapes[b].ShapeVertecies.Length; k++)
                         {
-                            text.Add($"\t Vec {k}: {Data.Models[i].SubModels[a].BlendShapes[b].ShapeVertecies[k].Position}");
+                            var blendVec = new Vector3(-Data.Models[i].SubModels[a].Vertexes[k].BlendShapes[b].Offset.X,
+                            Data.Models[i].SubModels[a].Vertexes[k].BlendShapes[b].Offset.Y,
+                            Data.Models[i].SubModels[a].Vertexes[k].BlendShapes[b].Offset.Z);
+                            var x_comp = -Data.Models[i].SubModels[a].Vertexes[k].X + blendVec.X;
+                            var y_comp = Data.Models[i].SubModels[a].Vertexes[k].Y + blendVec.Y;
+                            var z_comp = Data.Models[i].SubModels[a].Vertexes[k].Z + blendVec.Z;
+                            text.Add($"\t Vec {k}: {new Vector3(x_comp, y_comp, z_comp)}");
                         }
                     }
                     for (var j = 0; j < Data.Models[i].SubModels[a].Vertexes.Count; j++)
                     {
-                        text.Add($"Vertex {j}");
+                        text.Add($"Vertex {j}: {-Data.Models[i].SubModels[a].Vertexes[j].X}; {Data.Models[i].SubModels[a].Vertexes[j].Y}; {Data.Models[i].SubModels[a].Vertexes[j].Z}");
                         text.Add($"\tJoint index 1 {Data.Models[i].SubModels[a].Vertexes[j].Joint.JointIndex1}; Weight 1 {Data.Models[i].SubModels[a].Vertexes[j].Joint.Weight1}");
                         text.Add($"\tJoint index 2 {Data.Models[i].SubModels[a].Vertexes[j].Joint.JointIndex2}; Weight 2 {Data.Models[i].SubModels[a].Vertexes[j].Joint.Weight2}");
                         text.Add($"\tJoint index 3 {Data.Models[i].SubModels[a].Vertexes[j].Joint.JointIndex3}; Weight 3 {Data.Models[i].SubModels[a].Vertexes[j].Joint.Weight3}");
@@ -148,7 +154,7 @@ namespace TwinsaityEditor
 
         }
 
-        public void LoadMeshData_BlendShape(int blendShape)
+        public void LoadMeshData_BlendShape(int blendShape, float shapeWeight = 1.0f)
         {
             Vertices.Clear();
             Indices.Clear();
@@ -178,13 +184,13 @@ namespace TwinsaityEditor
                             ++refIndex;
                         }
                         Color col = Color.FromArgb(model.Vertexes[j].A, model.Vertexes[j].R, model.Vertexes[j].G, model.Vertexes[j].B);
-                        var blendVec = new Vector3(-model.Vertexes[j].BlendShapes[blendShape].Position.X,
-                            model.Vertexes[j].BlendShapes[blendShape].Position.Y,
-                            model.Vertexes[j].BlendShapes[blendShape].Position.Z);
-                        blendVec *= model.BlendShapes[blendShape].ShapeVertecies[j].Position.W;
-                        var x_comp = blendVec.X + -model.Vertexes[j].X;
-                        var y_comp = blendVec.Y + model.Vertexes[j].Y;
-                        var z_comp = blendVec.Z + model.Vertexes[j].Z;
+                        var blendVec = new Vector3(-model.Vertexes[j].BlendShapes[blendShape].Offset.X,
+                            model.Vertexes[j].BlendShapes[blendShape].Offset.Y,
+                            model.Vertexes[j].BlendShapes[blendShape].Offset.Z);
+                        blendVec *= shapeWeight;
+                        var x_comp = -model.Vertexes[j].X + blendVec.X;
+                        var y_comp = model.Vertexes[j].Y + blendVec.Y;
+                        var z_comp = model.Vertexes[j].Z + blendVec.Z;
                         if (isSpyroModel)
                         { // Spyro model specifically doesn't need UV flipping
                             vtx.Add(new Vertex(new Vector3(x_comp, y_comp, z_comp),
@@ -236,9 +242,9 @@ namespace TwinsaityEditor
                 {
                     for (var j = 0; j < model.Vertexes.Count; ++j)
                     {
-                        var blendVec = new Vector3(-model.Vertexes[j].BlendShapes[blendShape].Position.X,
-                            model.Vertexes[j].BlendShapes[blendShape].Position.Y,
-                            model.Vertexes[j].BlendShapes[blendShape].Position.Z);
+                        var blendVec = new Vector3(-model.Vertexes[j].BlendShapes[blendShape].Offset.X,
+                            model.Vertexes[j].BlendShapes[blendShape].Offset.Y,
+                            model.Vertexes[j].BlendShapes[blendShape].Offset.Z);
                         blendVec *= faceProgress;
                         modelFace.Add(blendVec);
                     }

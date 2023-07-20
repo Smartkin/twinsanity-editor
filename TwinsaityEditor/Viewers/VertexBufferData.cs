@@ -23,19 +23,40 @@ namespace TwinsaityEditor
             Textured = true;
         }
 
-        public void DrawAll(PrimitiveType primitive_type, BufferPointerFlags flags)
+        public void DrawAll(PrimitiveType primitive_type, BufferPointerFlags flags, bool useOnlyFlagsParam = false)
         {
-            draw_func(0, primitive_type, flags | Flags);
+            if (!useOnlyFlagsParam)
+            {
+                draw_func(0, primitive_type, flags | Flags);
+            }
+            else
+            {
+                draw_func(0, primitive_type, flags);
+            }
         }
 
-        public void DrawAllElements(PrimitiveType primitive_type, BufferPointerFlags flags)
+        public void DrawAllElements(PrimitiveType primitive_type, BufferPointerFlags flags, bool useOnlyFlagsParam = false)
         {
-            draw_func(1, primitive_type, flags | Flags);
+            if (!useOnlyFlagsParam)
+            {
+                draw_func(1, primitive_type, flags | Flags);
+            }
+            else
+            {
+                draw_func(1, primitive_type, flags);
+            }
         }
 
-        public void DrawMulti(PrimitiveType primitive_type, BufferPointerFlags flags)
+        public void DrawMulti(PrimitiveType primitive_type, BufferPointerFlags flags, bool useOnlyFlagsParam = false)
         {
-            draw_func(2, primitive_type, flags | Flags);
+            if (!useOnlyFlagsParam)
+            {
+                draw_func(2, primitive_type, flags | Flags);
+            }
+            else
+            {
+                draw_func(2, primitive_type, flags);
+            }
         }
 
         private void draw_func(int func, PrimitiveType prim, BufferPointerFlags flags)
