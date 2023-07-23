@@ -89,7 +89,7 @@ namespace TwinsaityEditor
                 text.Add($"Exit Points:");
                 for (int i = 0; i < Data.ExitPoints.Length; i++)
                 {
-                    text.Add($"#{ i } Parent Joint: { Data.ExitPoints[i].Numbers[0] }; ID: { Data.ExitPoints[i].Numbers[1] }");
+                    text.Add($"#{ i } Parent Joint: { Data.ExitPoints[i].ParentJointIndex }; ID: { Data.ExitPoints[i].ID }");
                     //text.Add($"#{ i } Numbers: { Data.Type2[i].Numbers[0] }; { Data.Type2[i].Numbers[1] }");
                     text.Add($"\t#{ i } Matrix 1: { Data.ExitPoints[i].Matrix[0].X }; { Data.ExitPoints[i].Matrix[0].Y }; { Data.ExitPoints[i].Matrix[0].Z }; { Data.ExitPoints[i].Matrix[0].W }");
                     text.Add($"\t#{ i } Matrix 2: { Data.ExitPoints[i].Matrix[1].X }; { Data.ExitPoints[i].Matrix[1].Y }; { Data.ExitPoints[i].Matrix[1].Z }; { Data.ExitPoints[i].Matrix[1].W }");

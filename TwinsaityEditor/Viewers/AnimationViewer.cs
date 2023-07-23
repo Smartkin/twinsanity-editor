@@ -29,7 +29,7 @@ namespace TwinsaityEditor.Viewers
         private AnimationPlayer player;
         private readonly Dictionary<int, int> VbufferMap = new Dictionary<int, int>();
 
-        public int FPS { get => player.FPS; set { player.FPS = value; if (animUpdateTimer != null) animUpdateTimer.Interval = (int)Math.Floor(1.0 / FPS * 1000); } }
+        public int FPS { get => player.FPS; set { player.FPS = value; } }
         public bool Loop { get => player.Loop; set => player.Loop = value; }
         public bool Playing { get => player.Playing; set => player.Playing = value; }
         public bool Finished { get => player.Finished; }
@@ -64,7 +64,7 @@ namespace TwinsaityEditor.Viewers
 
             animUpdateTimer.Tick += delegate (object sender, EventArgs e)
             {
-                UpdateAnimation(1.0f / FPS);
+                UpdateAnimation(1.0f / 60);
             };
         }
 
@@ -72,6 +72,8 @@ namespace TwinsaityEditor.Viewers
         {
             ModelController m;
             var vbos = 0;
+            skin = null;
+            bskin = null;
             SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(2);
             foreach(var pair in graphicsInfo.Data.ModelIDs)
             {
@@ -96,6 +98,7 @@ namespace TwinsaityEditor.Viewers
                     {
                         skin = skin_sec.GetItem<SkinController>(mod.ID);
                         vbos += skin.Data.SubModels.Count;
+                        break;
                     }
                 }
             }
@@ -108,6 +111,7 @@ namespace TwinsaityEditor.Viewers
                     {
                         bskin = blend_sec.GetItem<BlendSkinController>(mod.ID);
                         vbos += bskin.Data.Models.Length;
+                        break;
                     }
                 }
             }
@@ -308,6 +312,7 @@ namespace TwinsaityEditor.Viewers
                     {
                         uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(mod.ID).MeshID;
                         mesh = mesh_sec.GetItem<ModelController>(meshID);
+                        break;
                     }
                 }
 
@@ -383,9 +388,9 @@ namespace TwinsaityEditor.Viewers
             var jointTransform = localTransform * parentTransform;
             var bindMat = jointTransform;
             var skeleton = graphicsInfo.Skeleton;
-            skeleton.BindPose.Set((int)index, bindMat.ExtractTranslation(), bindMat.ExtractRotation());
+            skeleton.BindPose.Set((int)index, bindMat);
             bindMat.Invert();
-            skeleton.InverseBindPose.Set((int)index, bindMat.ExtractTranslation(), bindMat.ExtractRotation());
+            skeleton.InverseBindPose.Set((int)index, bindMat);
             foreach (var c in joint.Children)
             {
                 ComputeTposeTransform(c, jointTransform);
@@ -540,6 +545,7 @@ namespace TwinsaityEditor.Viewers
         public void ChangeGraphicsInfo(GraphicsInfoController mesh)
         {
             graphicsInfo = mesh;
+            vtx.Clear();
             VbufferMap.Clear();
             Utils.TextUtils.ClearTextureCache();
             SetupVBORender();

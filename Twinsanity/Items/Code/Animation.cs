@@ -16,7 +16,7 @@ namespace Twinsanity
         public List<Transformation> StaticTransforms = new List<Transformation>();
         public List<AnimatedTransform> AnimatedTransforms = new List<AnimatedTransform>();
         public UInt32 UnkBlobSizePacked2;
-        public UInt16 TotalFrames2;
+        public UInt16 FacialAnimationTotalFrames;
         public List<JointSettings> FacialJointsSettings = new List<JointSettings>();
         public List<Transformation> FacialStaticTransforms = new List<Transformation>();
         public List<AnimatedTransform> FacialAnimatedTransforms = new List<AnimatedTransform>();
@@ -55,7 +55,7 @@ namespace Twinsanity
             packed2 |= UnkBlobSizePacked2;
             writer.Write(packed2);
             UnkBlobSizePacked2 = packed2;
-            writer.Write(TotalFrames2);
+            writer.Write(FacialAnimationTotalFrames);
             foreach (var boneSetting in FacialJointsSettings)
             {
                 boneSetting.Write(writer);
@@ -97,8 +97,8 @@ namespace Twinsanity
                 AnimatedTransforms[i].Read(reader);
             }
             UnkBlobSizePacked2 = reader.ReadUInt32();
-            TotalFrames2 = reader.ReadUInt16();
-            var blobSize = (UnkBlobSizePacked2 & 0x7F) * 0x8 + (UnkBlobSizePacked2 >> 0xA & 0xFFE) + (UnkBlobSizePacked2 >> 0x16) * TotalFrames2 * 0x2;
+            FacialAnimationTotalFrames = reader.ReadUInt16();
+            var blobSize = (UnkBlobSizePacked2 & 0x7F) * 0x8 + (UnkBlobSizePacked2 >> 0xA & 0xFFE) + (UnkBlobSizePacked2 >> 0x16) * FacialAnimationTotalFrames * 0x2;
 
             joints = (UnkBlobSizePacked2 & 0x7F);
             transformations = (UnkBlobSizePacked2 >> 0xA & 0xFFE) / 2;
@@ -118,7 +118,7 @@ namespace Twinsanity
                     FacialStaticTransforms.Add(new Transformation());
                     FacialStaticTransforms[i].Read(reader);
                 }
-                for (var i = 0; i < TotalFrames2; ++i)
+                for (var i = 0; i < FacialAnimationTotalFrames; ++i)
                 {
                     FacialAnimatedTransforms.Add(new AnimatedTransform((ushort)twoPartTransforms));
                     FacialAnimatedTransforms[i].Read(reader);

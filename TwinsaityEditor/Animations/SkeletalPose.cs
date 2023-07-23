@@ -54,6 +54,11 @@ namespace TwinsaityEditor.Animations
             boneTransformations[boneIndex] = Matrix4.CreateFromQuaternion(rotation) * Matrix4.CreateTranslation(position);
         }
 
+        public void Set(int boneIndex, Matrix4 transform)
+        {
+            boneTransformations[boneIndex] = transform;
+        }
+
         public SkeletalPose Clone(string name)
         {
             return new SkeletalPose((Matrix4[])this.boneTransformations.Clone()) { Name = name };

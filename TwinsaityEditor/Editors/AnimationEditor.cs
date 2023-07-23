@@ -340,7 +340,7 @@ namespace TwinsaityEditor
             var floats = new float[joints];
             
 
-            for (int j = 0; j < animation.TotalFrames2 - 1; j++)
+            for (int j = 0; j < animation.FacialAnimationTotalFrames - 1; j++)
             {
                 var transformIndex = jointSettings.TransformationIndex;
                 int currentFrameTransformIndex = jointSettings.AnimatedTransformIndex;
@@ -514,11 +514,11 @@ namespace TwinsaityEditor
         private void btnAddTimeline2_Click(object sender, EventArgs e)
         {
             if (animation == null) return;
-            if (animation.TotalFrames2 == 0)
+            if (animation.FacialAnimationTotalFrames == 0)
             {
-                animation.TotalFrames2 = 1;
+                animation.FacialAnimationTotalFrames = 1;
             }
-            animation.FacialAnimatedTransforms.Add(new Animation.AnimatedTransform(animation.TotalFrames2));
+            animation.FacialAnimatedTransforms.Add(new Animation.AnimatedTransform(animation.FacialAnimationTotalFrames));
             for (var i = 0; i < animation.FacialAnimatedTransforms[animation.FacialAnimatedTransforms.Count - 1].Values.Capacity; ++i)
             {
                 animation.FacialAnimatedTransforms[animation.FacialAnimatedTransforms.Count - 1].Values.Add(0);

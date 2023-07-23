@@ -65,7 +65,7 @@ namespace TwinsaityEditor
                 text.Add($"Exit Points:");
                 for (int i = 0; i < Data.ExitPoints.Length; i++)
                 {
-                    text.Add($"#{ i } Attached to Joint { Data.ExitPoints[i].Numbers[0] }; ID: { Data.ExitPoints[i].Numbers[1] }");
+                    text.Add($"#{ i } Attached to Joint { Data.ExitPoints[i].ParentJointIndex }; ID: { Data.ExitPoints[i].ID }");
                     text.Add($"#{ i } Matrix 1: { Data.ExitPoints[i].Matrix[0].X }; { Data.ExitPoints[i].Matrix[0].Y }; { Data.ExitPoints[i].Matrix[0].Z }; { Data.ExitPoints[i].Matrix[0].W }");
                     text.Add($"#{ i } Matrix 2: { Data.ExitPoints[i].Matrix[1].X }; { Data.ExitPoints[i].Matrix[1].Y }; { Data.ExitPoints[i].Matrix[1].Z }; { Data.ExitPoints[i].Matrix[1].W }");
                     text.Add($"#{ i } Matrix 3: { Data.ExitPoints[i].Matrix[2].X }; { Data.ExitPoints[i].Matrix[2].Y }; { Data.ExitPoints[i].Matrix[2].Z }; { Data.ExitPoints[i].Matrix[2].W }");

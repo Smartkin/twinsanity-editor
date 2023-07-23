@@ -233,7 +233,7 @@ namespace TwinsaityEditor.Controllers
                 $"Main animation joint settings: {Data.JointsSettings.Count}",
                 $"Main animation static transforms: {Data.StaticTransforms.Count}",
                 $"Main animation animated transforms: {Data.AnimatedTransforms.Count}",
-                $"Facial animation total frames: {Data.TotalFrames2}",
+                $"Facial animation total frames: {Data.FacialAnimationTotalFrames}",
                 $"Blob packed 2: 0x{Data.UnkBlobSizePacked2:X}",
                 $"Facial animation joint settings: {Data.FacialJointsSettings.Count}",
                 $"Facial animation static transforms: {Data.FacialStaticTransforms.Count}",

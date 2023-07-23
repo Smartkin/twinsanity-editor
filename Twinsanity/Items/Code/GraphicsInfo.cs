@@ -56,10 +56,8 @@ namespace Twinsanity
             {
                 for (int i = 0; i < ExitPoints.Length; i++)
                 {
-                    for (int a = 0; a < ExitPoints[i].Numbers.Length; a++)
-                    {
-                        writer.Write(ExitPoints[i].Numbers[a]);
-                    }
+                    writer.Write(ExitPoints[i].ParentJointIndex);
+                    writer.Write(ExitPoints[i].ID);
                     for (int a = 0; a < ExitPoints[i].Matrix.Length; a++)
                     {
                         writer.Write(ExitPoints[i].Matrix[a].X);
@@ -144,27 +142,27 @@ namespace Twinsanity
                 Joints = new Joint[jointsAmt];
                 for (int i = 0; i < jointsAmt; i++)
                 {
-                    Pos[] Type1_Matrix = new Pos[5];
-                    uint[] Type1_Numbers = new uint[5];
-                    for (int a = 0; a < Type1_Numbers.Length; a++)
+                    Pos[] jointMatrix = new Pos[5];
+                    uint[] jointParameters = new uint[5];
+                    for (int a = 0; a < jointParameters.Length; a++)
                     {
-                        Type1_Numbers[a] = reader.ReadUInt32();
+                        jointParameters[a] = reader.ReadUInt32();
                     }
-                    Type1_Matrix[0] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    Type1_Matrix[1] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    Type1_Matrix[2] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    Type1_Matrix[3] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    Type1_Matrix[4] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    Joint temp_Type1 = new Joint()
+                    jointMatrix[0] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                    jointMatrix[1] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                    jointMatrix[2] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                    jointMatrix[3] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                    jointMatrix[4] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                    Joint joint = new Joint()
                     {
-                        Matrix = Type1_Matrix,
-                        ReactJointID = Type1_Numbers[0],
-                        JointIndex = Type1_Numbers[1],
-                        ParentJointIndex = Type1_Numbers[2],
-                        ChildJointAmount = Type1_Numbers[3],
-                        ChildJointAmount2 = Type1_Numbers[4]
+                        Matrix = jointMatrix,
+                        ReactJointID = jointParameters[0],
+                        JointIndex = jointParameters[1],
+                        ParentJointIndex = jointParameters[2],
+                        ChildJointAmount = jointParameters[3],
+                        ChildJointAmount2 = jointParameters[4]
                     };
-                    Joints[i] = temp_Type1;
+                    Joints[i] = joint;
                 }
             }
             else
@@ -177,16 +175,16 @@ namespace Twinsanity
                 ExitPoints = new ExitPoint[exitPointsAmt];
                 for (int i = 0; i < exitPointsAmt; i++)
                 {
-                    Pos[] Type2_Matrix = new Pos[4];
-                    uint[] Type2_Numbers = new uint[2];
-                    Type2_Numbers[0] = reader.ReadUInt32();
-                    Type2_Numbers[1] = reader.ReadUInt32();
-                    for (int a = 0; a < Type2_Matrix.Length; a++)
+                    Pos[] exitPointMatrix = new Pos[4];
+                    uint[] exitPointParameters = new uint[2];
+                    exitPointParameters[0] = reader.ReadUInt32();
+                    exitPointParameters[1] = reader.ReadUInt32();
+                    for (int a = 0; a < exitPointMatrix.Length; a++)
                     {
-                        Type2_Matrix[a] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                        exitPointMatrix[a] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                     }
-                    ExitPoint temp_Type2 = new ExitPoint() { Matrix = Type2_Matrix, Numbers = Type2_Numbers };
-                    ExitPoints[i] = temp_Type2;
+                    ExitPoint exitPoint = new ExitPoint() { Matrix = exitPointMatrix, ParentJointIndex = exitPointParameters[0], ID = exitPointParameters[1] };
+                    ExitPoints[i] = exitPoint;
                 }
             }
             else
@@ -228,12 +226,12 @@ namespace Twinsanity
                 SkinTransforms = new SkinTransform[jointsAmt];
                 for (int a = 0; a < jointsAmt; a++)
                 {
-                    Pos[] Type3_Matrix = new Pos[4];
-                    for (int i = 0; i < Type3_Matrix.Length; i++)
+                    Pos[] skinTransform = new Pos[4];
+                    for (int i = 0; i < skinTransform.Length; i++)
                     {
-                        Type3_Matrix[i] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                        skinTransform[i] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                     }
-                    SkinTransforms[a] = new SkinTransform() { Matrix = Type3_Matrix };
+                    SkinTransforms[a] = new SkinTransform() { Matrix = skinTransform };
                 }
             }
             else
@@ -343,7 +341,8 @@ namespace Twinsanity
             {
                 for (int i = 0; i < ExitPoints.Length; i++)
                 {
-                    count += ExitPoints[i].Numbers.Length * 4;
+                    count += 4;
+                    count += 4;
                     count += ExitPoints[i].Matrix.Length * 16;
                 }
             }
@@ -407,7 +406,8 @@ namespace Twinsanity
 
         public struct ExitPoint
         {
-            public uint[] Numbers; // 2
+            public uint ParentJointIndex;
+            public uint ID;
             public Pos[] Matrix; // 4
         }
 
