@@ -21,7 +21,7 @@ namespace TwinsaityEditor.Controllers
         public float[] GetFacialAnimationTransform(int curFrame, int nextFrame, float frameDisplacement)
         {
             var jointSetting = Data.FacialJointsSettings[0];
-            var shapesAmount = (jointSetting.Flags & 0xf);
+            var shapesAmount = ((jointSetting.Flags >> 0x8) & 0xf);
             var shapeWeights = new float[shapesAmount];
             var transformIndex = jointSetting.TransformationIndex;
             var currentFrameTransformIndex = jointSetting.AnimatedTransformIndex;
@@ -46,9 +46,8 @@ namespace TwinsaityEditor.Controllers
             return shapeWeights;
         }
 
-        public Tuple<Matrix4, bool> GetMainAnimationTransform(int jointIndex, int curFrame, int nextFrame, float frameDisplacement)
+        public Tuple<Matrix4, Quaternion, bool> GetMainAnimationTransform(int jointIndex, int curFrame, int nextFrame, float frameDisplacement)
         {
-            Vector4 rotation = new Vector4();
             Vector4 translation = new Vector4();
             translation.W = 1.0f;
             Vector4 scale = new Vector4();
@@ -69,6 +68,12 @@ namespace TwinsaityEditor.Controllers
             var scaleYChoice = (transformChoice & 0x80) == 0;
             var scaleZChoice = (transformChoice & 0x100) == 0;
 
+            var endRotX1 = 0.0f;
+            var endRotY1 = 0.0f;
+            var endRotZ1 = 0.0f;
+            var endRotX2 = 0.0f;
+            var endRotY2 = 0.0f;
+            var endRotZ2 = 0.0f;
 
             if (translateXChoice)
             {
@@ -118,12 +123,14 @@ namespace TwinsaityEditor.Controllers
                 }
                 var rot1Rad = rot1 / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi;
                 var rot2Rad = rot2 / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi;
-                rotation.X = VectorFuncs.Lerp(rot1Rad, rot2Rad, frameDisplacement);
+                endRotX1 = rot1Rad;
+                endRotX2 = rot2Rad;
             }
             else
             {
                 var rot = Data.StaticTransforms[transformIndex++].GetRot(false);
-                rotation.X = rot;
+                endRotX1 = rot;
+                endRotX2 = rot;
             }
 
             if (rotYChoice)
@@ -141,12 +148,14 @@ namespace TwinsaityEditor.Controllers
                 }
                 var rot1Rad = rot1 / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi;
                 var rot2Rad = rot2 / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi;
-                rotation.Y = VectorFuncs.Lerp(rot1Rad, rot2Rad, frameDisplacement);
+                endRotY1 = rot1Rad;
+                endRotY2 = rot2Rad;
             }
             else
             {
                 var rot = Data.StaticTransforms[transformIndex++].GetRot(false);
-                rotation.Y = rot;
+                endRotY1 = rot;
+                endRotY2 = rot;
             }
 
             if (rotZChoice)
@@ -164,12 +173,14 @@ namespace TwinsaityEditor.Controllers
                 }
                 var rot1Rad = rot1 / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi;
                 var rot2Rad = rot2 / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi;
-                rotation.Z = VectorFuncs.Lerp(rot1Rad, rot2Rad, frameDisplacement);
+                endRotZ1 = rot1Rad;
+                endRotZ2 = rot2Rad;
             }
             else
             {
                 var rot = Data.StaticTransforms[transformIndex++].GetRot(false);
-                rotation.Z = rot;
+                endRotZ1 = rot;
+                endRotZ2 = rot;
             }
 
             if (scaleXChoice)
@@ -205,15 +216,22 @@ namespace TwinsaityEditor.Controllers
                 scale.Z = Data.StaticTransforms[transformIndex++].Value;
             }
 
-            /*var transMat = Matrix4.CreateTranslation(translation.Xyz);
-            var scaleMat = Matrix4.CreateScale(scale.Xyz);
-            var rotMat = Matrix4.CreateFromQuaternion(new Quaternion(rotation.Xyz));
-            var transformMatrix = transMat * rotMat * scaleMat;*/
+            var rotX = Matrix3.CreateRotationX(endRotX1);
+            var rotY = Matrix3.CreateRotationY(endRotY1);
+            var rotZ = Matrix3.CreateRotationZ(endRotZ1);
+            var endRot = rotX * rotY * rotZ;
+            var rotX2 = Matrix3.CreateRotationX(endRotX2);
+            var rotY2 = Matrix3.CreateRotationY(endRotY2);
+            var rotZ2 = Matrix3.CreateRotationZ(endRotZ2);
+            var endRot2 = rotX2 * rotY2 * rotZ2;
+            var quat1 = Quaternion.FromMatrix(endRot);
+            var quat2 = Quaternion.FromMatrix(endRot2);
+            var lerpedQuat = Quaternion.Slerp(quat1, quat2, frameDisplacement);
+
             var transformMatrix = Matrix4.Zero;
             transformMatrix.Row0 = translation;
             transformMatrix.Row1 = scale;
-            transformMatrix.Row2 = rotation;
-            return new Tuple<Matrix4, bool>(transformMatrix, useAddRot);
+            return new Tuple<Matrix4, Quaternion, bool>(transformMatrix, lerpedQuat, useAddRot);
         }
 
         protected override string GetName()

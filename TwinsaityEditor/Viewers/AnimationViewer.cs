@@ -270,8 +270,8 @@ namespace TwinsaityEditor.Viewers
             }
         }
 
-        private Dictionary<int, Matrix4> JointTransforms = new Dictionary<int, Matrix4>();
-        private Dictionary<int, Matrix4> PoseTransforms = new Dictionary<int, Matrix4>();
+        private readonly Dictionary<int, Matrix4> JointTransforms = new Dictionary<int, Matrix4>();
+        private readonly Dictionary<int, Matrix4> PoseTransforms = new Dictionary<int, Matrix4>();
         private void ComputeJointTransformTree(GraphicsInfo.JointNode joint, Matrix4 parentTransform)
         {
             var transform = ComputeJointTransform((int)joint.Joint.JointIndex, parentTransform);
@@ -351,16 +351,16 @@ namespace TwinsaityEditor.Viewers
         private Matrix4 ComputeJointTransform(int jointIndex, Matrix4 parentTransform)
         {
             var transforms = player.Play(jointIndex);
-            
-            var rotQuat = new Quaternion(transforms.Item1.Row2.Xyz);
-            rotQuat.Y = -rotQuat.Y;
-            rotQuat.Z = -rotQuat.Z;
-            var rot = Matrix4.CreateFromQuaternion(rotQuat);
-            if (transforms.Item2)
+
+            var slerpedRot = transforms.Item2;
+            slerpedRot.X = -slerpedRot.X;
+
+            var rot = Matrix4.CreateFromQuaternion(slerpedRot);
+            if (transforms.Item3)
             {
                 var jointAddRot = graphicsInfo.Data.Joints[jointIndex].Matrix[4];
                 var addRot = new Quaternion(jointAddRot.X, -jointAddRot.Y, -jointAddRot.Z, jointAddRot.W);
-                Quaternion.Multiply(ref addRot, ref rotQuat, out Quaternion resQuat);
+                Quaternion.Multiply(ref addRot, ref slerpedRot, out Quaternion resQuat);
                 rot = Matrix4.CreateFromQuaternion(resQuat);
             }
             var localTransform = rot

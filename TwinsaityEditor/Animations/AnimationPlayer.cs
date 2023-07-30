@@ -87,9 +87,9 @@ namespace TwinsaityEditor.Animations
             return animation.GetFacialAnimationTransform(animFrame, animFrame + 1, frameDisplacement);
         }
 
-        public Tuple<Matrix4, bool> Play(int joint)
+        public Tuple<Matrix4, Quaternion, bool> Play(int joint)
         {
-            if (animation == null) return new Tuple<Matrix4, bool>(Matrix4.Identity, false);
+            if (animation == null) return new Tuple<Matrix4, Quaternion, bool>(Matrix4.Identity, Quaternion.Identity, false);
 
             if (!Playing)
             {
