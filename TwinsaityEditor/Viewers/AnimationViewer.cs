@@ -136,7 +136,7 @@ namespace TwinsaityEditor.Viewers
             }
             UpdateSkeletonBuffer();
 
-            if (targetFile.Data.Type == TwinsFile.FileType.RM2)
+            if (targetFile.Data.Type == TwinsFile.FileType.RM2 || targetFile.Data.Type == TwinsFile.FileType.DemoRM2)
             {
                 LoadOGI_PS2();
             }
