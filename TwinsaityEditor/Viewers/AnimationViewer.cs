@@ -364,8 +364,8 @@ namespace TwinsaityEditor.Viewers
                 rot = Matrix4.CreateFromQuaternion(resQuat);
             }
             var localTransform = rot
-               * Matrix4.CreateScale(transforms.Item1.Row1.Xyz)
-                * Matrix4.CreateTranslation(transforms.Item1.Row0.Xyz);
+                * Matrix4.CreateTranslation(transforms.Item1.Row0.Xyz)
+                 * Matrix4.CreateScale(transforms.Item1.Row1.Xyz);
 
             var jointTransform = localTransform * parentTransform;
 

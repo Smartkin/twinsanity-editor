@@ -10,12 +10,12 @@ namespace Twinsanity
     public class Animation : TwinsItem
     {
         public UInt32 Bitfield;
-        public UInt32 UnkBlobSizePacked1;
+        public UInt32 AnimationDataPacker;
         public UInt16 TotalFrames;
         public List<JointSettings> JointsSettings = new List<JointSettings>();
         public List<Transformation> StaticTransforms = new List<Transformation>();
         public List<AnimatedTransform> AnimatedTransforms = new List<AnimatedTransform>();
-        public UInt32 UnkBlobSizePacked2;
+        public UInt32 FacialAnimationDataPacker;
         public UInt16 FacialAnimationTotalFrames;
         public List<JointSettings> FacialJointsSettings = new List<JointSettings>();
         public List<Transformation> FacialStaticTransforms = new List<Transformation>();
@@ -24,15 +24,15 @@ namespace Twinsanity
         public override void Save(BinaryWriter writer)
         {
             writer.Write(Bitfield);
-            UnkBlobSizePacked1 &= ~0x7FU;
-            UnkBlobSizePacked1 &= ~(0xFFEU << 0xA);
-            UnkBlobSizePacked1 &= ~(0x3FFU << 0x16);
+            AnimationDataPacker &= ~0x7FU;
+            AnimationDataPacker &= ~(0xFFEU << 0xA);
+            AnimationDataPacker &= ~(0x3FFU << 0x16);
             UInt32 packed1 = (UInt32)JointsSettings.Count & 0x7F;
             packed1 |= (UInt32)(((StaticTransforms.Count * 2) & 0xFFE) << 0xA);
             packed1 |= (UInt32)(AnimatedTransforms.Count << 0x16);
-            packed1 |= UnkBlobSizePacked1;
+            packed1 |= AnimationDataPacker;
             writer.Write(packed1);
-            UnkBlobSizePacked1 = packed1;
+            AnimationDataPacker = packed1;
             writer.Write(TotalFrames);
             foreach (var jointSetting in JointsSettings)
             {
@@ -46,15 +46,15 @@ namespace Twinsanity
             {
                 timeline.Write(writer);
             }
-            UnkBlobSizePacked2 &= ~0x7FU;
-            UnkBlobSizePacked2 &= ~(0xFFEU << 0xA);
-            UnkBlobSizePacked2 &= ~(0x3FFU << 0x16);
+            FacialAnimationDataPacker &= ~0x7FU;
+            FacialAnimationDataPacker &= ~(0xFFEU << 0xA);
+            FacialAnimationDataPacker &= ~(0x3FFU << 0x16);
             UInt32 packed2 = (UInt32)FacialJointsSettings.Count & 0x7F;
             packed2 |= (UInt32)(((FacialStaticTransforms.Count * 2) & 0xFFE) << 0xA);
             packed2 |= (UInt32)(FacialAnimatedTransforms.Count << 0x16);
-            packed2 |= UnkBlobSizePacked2;
+            packed2 |= FacialAnimationDataPacker;
             writer.Write(packed2);
-            UnkBlobSizePacked2 = packed2;
+            FacialAnimationDataPacker = packed2;
             writer.Write(FacialAnimationTotalFrames);
             foreach (var boneSetting in FacialJointsSettings)
             {
@@ -73,11 +73,11 @@ namespace Twinsanity
         public override void Load(BinaryReader reader, int size)
         {
             Bitfield = reader.ReadUInt32();
-            UnkBlobSizePacked1 = reader.ReadUInt32();
+            AnimationDataPacker = reader.ReadUInt32();
             TotalFrames = reader.ReadUInt16();
-            var joints = (UnkBlobSizePacked1 & 0x7F);
-            var transformations = (UnkBlobSizePacked1 >> 0xA & 0xFFE) / 2;
-            var twoPartTransforms = (UnkBlobSizePacked1 >> 0x16);
+            var joints = (AnimationDataPacker & 0x7F);
+            var transformations = (AnimationDataPacker >> 0xA & 0xFFE) / 2;
+            var twoPartTransforms = (AnimationDataPacker >> 0x16);
             JointsSettings.Clear();
             for (var i = 0; i < joints; ++i)
             {
@@ -96,13 +96,13 @@ namespace Twinsanity
                 AnimatedTransforms.Add(new AnimatedTransform((ushort)twoPartTransforms));
                 AnimatedTransforms[i].Read(reader);
             }
-            UnkBlobSizePacked2 = reader.ReadUInt32();
+            FacialAnimationDataPacker = reader.ReadUInt32();
             FacialAnimationTotalFrames = reader.ReadUInt16();
-            var blobSize = (UnkBlobSizePacked2 & 0x7F) * 0x8 + (UnkBlobSizePacked2 >> 0xA & 0xFFE) + (UnkBlobSizePacked2 >> 0x16) * FacialAnimationTotalFrames * 0x2;
+            var blobSize = (FacialAnimationDataPacker & 0x7F) * 0x8 + (FacialAnimationDataPacker >> 0xA & 0xFFE) + (FacialAnimationDataPacker >> 0x16) * FacialAnimationTotalFrames * 0x2;
 
-            joints = (UnkBlobSizePacked2 & 0x7F);
-            transformations = (UnkBlobSizePacked2 >> 0xA & 0xFFE) / 2;
-            twoPartTransforms = (UnkBlobSizePacked2 >> 0x16);
+            joints = (FacialAnimationDataPacker & 0x7F);
+            transformations = (FacialAnimationDataPacker >> 0xA & 0xFFE) / 2;
+            twoPartTransforms = (FacialAnimationDataPacker >> 0x16);
             FacialJointsSettings.Clear();
             FacialStaticTransforms.Clear();
             FacialAnimatedTransforms.Clear();
@@ -128,7 +128,7 @@ namespace Twinsanity
 
         public uint ComponentsUsedPerFrame
         {
-            get => (UnkBlobSizePacked1 >> 0x16);
+            get => (AnimationDataPacker >> 0x16);
         }
 
         public class JointSettings
