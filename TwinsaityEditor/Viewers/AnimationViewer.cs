@@ -154,7 +154,7 @@ namespace TwinsaityEditor.Viewers
             JointTransforms.Clear();
             PoseTransforms.Clear();
             var skeleton = graphicsInfo.Data.Skeleton;
-            ComputeJointTransformTree(skeleton.Root, Matrix4.Identity);
+            ComputeJointTransformTree(skeleton.Root, Vector4.One, Matrix4.Identity);
 
             GL.PushMatrix();
 
@@ -272,16 +272,16 @@ namespace TwinsaityEditor.Viewers
 
         private readonly Dictionary<int, Matrix4> JointTransforms = new Dictionary<int, Matrix4>();
         private readonly Dictionary<int, Matrix4> PoseTransforms = new Dictionary<int, Matrix4>();
-        private void ComputeJointTransformTree(GraphicsInfo.JointNode joint, Matrix4 parentTransform)
+        private void ComputeJointTransformTree(GraphicsInfo.JointNode joint, Vector4 parentScale, Matrix4 parentTransform)
         {
-            var transform = ComputeJointTransform((int)joint.Joint.JointIndex, parentTransform);
-            var poseTransform = ComputePoseTransform((int)joint.Joint.JointIndex, transform);
-            JointTransforms.Add((int)joint.Joint.JointIndex, transform);
+            var transform = ComputeJointTransform((int)joint.Joint.JointIndex, parentScale, parentTransform);
+            var poseTransform = ComputePoseTransform((int)joint.Joint.JointIndex, transform.Item1);
+            JointTransforms.Add((int)joint.Joint.JointIndex, transform.Item1);
             PoseTransforms.Add((int)joint.Joint.JointIndex, poseTransform);
 
             foreach (var c in joint.Children)
             {
-                ComputeJointTransformTree(c, transform);
+                ComputeJointTransformTree(c, transform.Item2, transform.Item1);
             }
         }
 
@@ -348,7 +348,7 @@ namespace TwinsaityEditor.Viewers
             skeletonBuffer.LastSize = skeletonBuffer.Vtx.Length;
         }
 
-        private Matrix4 ComputeJointTransform(int jointIndex, Matrix4 parentTransform)
+        private Tuple<Matrix4, Vector4> ComputeJointTransform(int jointIndex, Vector4 parentScale, Matrix4 parentTransform)
         {
             var transforms = player.Play(jointIndex);
 
@@ -359,27 +359,29 @@ namespace TwinsaityEditor.Viewers
             if (transforms.Item3)
             {
                 var jointAddRot = graphicsInfo.Data.Joints[jointIndex].Matrix[4];
-                var addRot = new Quaternion(jointAddRot.X, -jointAddRot.Y, -jointAddRot.Z, jointAddRot.W);
+                var addRot = new Quaternion(-jointAddRot.X, jointAddRot.Y, jointAddRot.Z, -jointAddRot.W);
                 Quaternion.Multiply(ref addRot, ref slerpedRot, out Quaternion resQuat);
                 rot = Matrix4.CreateFromQuaternion(resQuat);
             }
-            var localTransform = rot
-                * Matrix4.CreateTranslation(transforms.Item1.Row0.Xyz)
-                 * Matrix4.CreateScale(transforms.Item1.Row1.Xyz);
 
+            var jointScale = new Vector4(transforms.Item1.Row1.Xyz, 1.0f);
+            var resultScale = new Vector3(jointScale.X / parentScale.X, jointScale.Y / parentScale.Y, jointScale.Z / parentScale.Z);
+            var scale = Matrix4.CreateScale(resultScale);
+
+            var localTransform = rot * scale * Matrix4.CreateTranslation(transforms.Item1.Row0.Xyz);
             var jointTransform = localTransform * parentTransform;
 
-            return jointTransform;
+            return new Tuple<Matrix4, Vector4>(jointTransform, jointScale);
         }
 
         private void ComputeTposeTransform(GraphicsInfo.JointNode joint, Matrix4 parentTransform)
         {
             var index = joint.Joint.JointIndex;
             var localRot = Matrix4.CreateFromQuaternion(new Quaternion(
-                graphicsInfo.Data.Joints[index].Matrix[2].X,
-                -graphicsInfo.Data.Joints[index].Matrix[2].Y,
-                -graphicsInfo.Data.Joints[index].Matrix[2].Z,
-                graphicsInfo.Data.Joints[index].Matrix[2].W));
+                -graphicsInfo.Data.Joints[index].Matrix[2].X,
+                graphicsInfo.Data.Joints[index].Matrix[2].Y,
+                graphicsInfo.Data.Joints[index].Matrix[2].Z,
+                -graphicsInfo.Data.Joints[index].Matrix[2].W));
             var localTranslate = Matrix4.CreateTranslation(
                     -graphicsInfo.Data.Joints[index].Matrix[0].X,
                     graphicsInfo.Data.Joints[index].Matrix[0].Y,

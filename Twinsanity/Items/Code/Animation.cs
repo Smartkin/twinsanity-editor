@@ -98,7 +98,9 @@ namespace Twinsanity
             }
             FacialAnimationDataPacker = reader.ReadUInt32();
             FacialAnimationTotalFrames = reader.ReadUInt16();
-            var blobSize = (FacialAnimationDataPacker & 0x7F) * 0x8 + (FacialAnimationDataPacker >> 0xA & 0xFFE) + (FacialAnimationDataPacker >> 0x16) * FacialAnimationTotalFrames * 0x2;
+            var facialAnimationDataSize = (FacialAnimationDataPacker & 0x7F) * 0x8
+                + (FacialAnimationDataPacker >> 0xA & 0xFFE)
+                + (FacialAnimationDataPacker >> 0x16) * FacialAnimationTotalFrames * 0x2;
 
             joints = (FacialAnimationDataPacker & 0x7F);
             transformations = (FacialAnimationDataPacker >> 0xA & 0xFFE) / 2;
@@ -106,7 +108,7 @@ namespace Twinsanity
             FacialJointsSettings.Clear();
             FacialStaticTransforms.Clear();
             FacialAnimatedTransforms.Clear();
-            if (blobSize > 0)
+            if (facialAnimationDataSize > 0)
             {
                 for (var i = 0; i < joints; ++i)
                 {

@@ -48,8 +48,10 @@ namespace TwinsaityEditor.Controllers
 
         public Tuple<Matrix4, Quaternion, bool> GetMainAnimationTransform(int jointIndex, int curFrame, int nextFrame, float frameDisplacement)
         {
-            Vector4 translation = new Vector4();
-            translation.W = 1.0f;
+            Vector4 currentFrameTranslation = new Vector4();
+            currentFrameTranslation.W = 1.0f;
+            Vector4 nextFrameTranslation = new Vector4();
+            nextFrameTranslation.W = 1.0f;
             Vector4 scale = new Vector4();
             scale.W = 1.0f;
             var jointSetting = Data.JointsSettings[jointIndex];
@@ -79,33 +81,39 @@ namespace TwinsaityEditor.Controllers
             {
                 var x1 = Data.AnimatedTransforms[curFrame].GetOffset(currentFrameTransformIndex++);
                 var x2 = Data.AnimatedTransforms[nextFrame].GetOffset(nextFrameTransformIndex++);
-                translation.X = -VectorFuncs.Lerp(x1, x2, frameDisplacement);
+                currentFrameTranslation.X = x1;
+                nextFrameTranslation.X = x2;
             }
             else
             {
-                translation.X = -Data.StaticTransforms[transformIndex++].Value;
+                currentFrameTranslation.X = Data.StaticTransforms[transformIndex].Value;
+                nextFrameTranslation.X = Data.StaticTransforms[transformIndex++].Value;
             }
 
             if (translateYChoice)
             {
                 var y1 = Data.AnimatedTransforms[curFrame].GetOffset(currentFrameTransformIndex++);
                 var y2 = Data.AnimatedTransforms[nextFrame].GetOffset(nextFrameTransformIndex++);
-                translation.Y = VectorFuncs.Lerp(y1, y2, frameDisplacement);
+                currentFrameTranslation.Y = y1;
+                nextFrameTranslation.Y = y2;
             }
             else
             {
-                translation.Y = Data.StaticTransforms[transformIndex++].Value;
+                currentFrameTranslation.Y = Data.StaticTransforms[transformIndex].Value;
+                nextFrameTranslation.Y = Data.StaticTransforms[transformIndex++].Value;
             }
 
             if (translateZChoice)
             {
                 var z1 = Data.AnimatedTransforms[curFrame].GetOffset(currentFrameTransformIndex++);
                 var z2 = Data.AnimatedTransforms[nextFrame].GetOffset(nextFrameTransformIndex++);
-                translation.Z = VectorFuncs.Lerp(z1, z2, frameDisplacement);
+                currentFrameTranslation.Z = z1;
+                nextFrameTranslation.Z = z2;
             }
             else
             {
-                translation.Z = Data.StaticTransforms[transformIndex++].Value;
+                currentFrameTranslation.Z = Data.StaticTransforms[transformIndex].Value;
+                nextFrameTranslation.Z = Data.StaticTransforms[transformIndex++].Value;
             }
 
             if (rotXChoice)
@@ -216,6 +224,9 @@ namespace TwinsaityEditor.Controllers
                 scale.Z = Data.StaticTransforms[transformIndex++].Value;
             }
 
+            var resultTranslation = Vector4.Lerp(currentFrameTranslation, nextFrameTranslation, frameDisplacement);
+            resultTranslation.X = -resultTranslation.X;
+
             var rotX = Matrix3.CreateRotationX(endRotX1);
             var rotY = Matrix3.CreateRotationY(endRotY1);
             var rotZ = Matrix3.CreateRotationZ(endRotZ1);
@@ -229,7 +240,7 @@ namespace TwinsaityEditor.Controllers
             var lerpedQuat = Quaternion.Slerp(quat1, quat2, frameDisplacement);
 
             var transformMatrix = Matrix4.Zero;
-            transformMatrix.Row0 = translation;
+            transformMatrix.Row0 = resultTranslation;
             transformMatrix.Row1 = scale;
             return new Tuple<Matrix4, Quaternion, bool>(transformMatrix, lerpedQuat, useAddRot);
         }
