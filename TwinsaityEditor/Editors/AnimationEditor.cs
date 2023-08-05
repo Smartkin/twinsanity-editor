@@ -39,7 +39,14 @@ namespace TwinsaityEditor
             lbAnimations.Items.Clear();
             foreach (Animation anim in controller.Data.Records)
             {
-                lbAnimations.Items.Add($"Animation ID {anim.ID}");
+                if (DefaultHashes.Hash_Animations.ContainsKey(anim.ID))
+                {
+                    lbAnimations.Items.Add($"ID {anim.ID} - {DefaultHashes.Hash_Animations[anim.ID]}");
+                }
+                else
+                {
+                    lbAnimations.Items.Add($"ID {anim.ID} - Unknown animation");
+                }
             }
         }
 
@@ -73,6 +80,7 @@ namespace TwinsaityEditor
             tbJointTwoPartTransformIndex2.Text = "";
             tbTransformation.Text = "";
             tbTransformation2.Text = "";
+            tbAnimationTimeline.Value = 0;
             cbOGIList.Items.Clear();
             playing = false;
             animation = (Animation)controller.Data.Records[lbAnimations.SelectedIndex];
@@ -99,17 +107,25 @@ namespace TwinsaityEditor
             PopulateWithAnimData(lbTransformations2.Items, animation.FacialStaticTransforms, listAdder, "Transform");
             PopulateWithAnimData(lbTwoPartTransforms2.Items, animation.FacialAnimatedTransforms, listAdder, "Animated transform");
 
+            if (viewer != null)
+            {
+                viewer.FrameChanged -= Viewer_FrameChanged;
+            }
+
             var ogis = controller.MainFile.GetItem<SectionController>(10).GetItem<SectionController>(3);
+            var ogisList = new List<GraphicsInfo>();
             foreach (GraphicsInfo ogi in ogis.Data.Records.Cast<GraphicsInfo>())
             {
-                if (ogi.Joints.Length == lbJointSettings.Items.Count)
+                if (ogi.Joints.Length <= lbJointSettings.Items.Count)
                 {
                     cbOGIList.Items.Add(ogi);
+                    ogisList.Add(ogi);
                 }
             }
             if (cbOGIList.Items.Count > 0)
             {
-                cbOGIList.SelectedIndex = 0;
+                var bestFitOgi = ogisList.FindIndex((gi) => { return gi.Joints.Length == lbJointSettings.Items.Count; });
+                cbOGIList.SelectedIndex = bestFitOgi == -1 ? 0 : bestFitOgi;
                 var ogi = cbOGIList.SelectedItem as GraphicsInfo;
                 var ogic = ogis.GetItem<GraphicsInfoController>(ogi.ID);
                 var animViewer = new AnimationViewer(ogic, controller.GetItem<AnimationController>(animation.ID), controller.MainFile)
@@ -135,6 +151,16 @@ namespace TwinsaityEditor
                 viewer = animViewer;
             }
             viewer.FPS = fps;
+            viewer.DrawSkeletonOutline = cbShowSkeleton.Checked;
+            tbAnimationTimeline.Maximum = animation.TotalFrames - 1;
+            viewer.FrameChanged += Viewer_FrameChanged;
+        }
+
+        private void Viewer_FrameChanged(object sender, EventArgs e)
+        {
+            if (viewer.CurrentFrame > tbAnimationTimeline.Maximum) return;
+
+            tbAnimationTimeline.Value = viewer.CurrentFrame;
         }
 
         private void lbDisplacements_SelectedIndexChanged(object sender, EventArgs e)
@@ -465,20 +491,6 @@ namespace TwinsaityEditor
             //TwoPartTransform2.SetOffset(tbTimeline2.Value, result);
         }
 
-        private void btnAddTransformation_Click(object sender, EventArgs e)
-        {
-            if (animation == null) return;
-            animation.StaticTransforms.Add(new Animation.Transformation());
-            UpdateLists();
-        }
-
-        private void btnDeleteTransformation_Click(object sender, EventArgs e)
-        {
-            if (animation == null) return;
-            animation.StaticTransforms.RemoveAt(animation.StaticTransforms.Count - 1);
-            UpdateLists();
-        }
-
         private void btnAddTimeline_Click(object sender, EventArgs e)
         {
             if (animation == null) return;
@@ -486,42 +498,6 @@ namespace TwinsaityEditor
             for (var i = 0; i < animation.AnimatedTransforms[animation.AnimatedTransforms.Count - 1].Values.Capacity; ++i)
             {
                 animation.AnimatedTransforms[animation.AnimatedTransforms.Count - 1].Values.Add(0);
-            }
-            UpdateLists();
-        }
-
-        private void btnDeleteTimeline_Click(object sender, EventArgs e)
-        {
-            if (animation == null) return;
-            animation.AnimatedTransforms.RemoveAt(animation.AnimatedTransforms.Count - 1);
-            UpdateLists();
-        }
-
-        private void btnAddTransformation2_Click(object sender, EventArgs e)
-        {
-            if (animation == null) return;
-            animation.FacialStaticTransforms.Add(new Animation.Transformation());
-            UpdateLists();
-        }
-
-        private void btnDeleteTransformation2_Click(object sender, EventArgs e)
-        {
-            if (animation == null) return;
-            animation.FacialStaticTransforms.RemoveAt(animation.FacialStaticTransforms.Count - 1);
-            UpdateLists();
-        }
-
-        private void btnAddTimeline2_Click(object sender, EventArgs e)
-        {
-            if (animation == null) return;
-            if (animation.FacialAnimationTotalFrames == 0)
-            {
-                animation.FacialAnimationTotalFrames = 1;
-            }
-            animation.FacialAnimatedTransforms.Add(new Animation.AnimatedTransform(animation.FacialAnimationTotalFrames));
-            for (var i = 0; i < animation.FacialAnimatedTransforms[animation.FacialAnimatedTransforms.Count - 1].Values.Capacity; ++i)
-            {
-                animation.FacialAnimatedTransforms[animation.FacialAnimatedTransforms.Count - 1].Values.Add(0);
             }
             UpdateLists();
         }
@@ -559,6 +535,21 @@ namespace TwinsaityEditor
             loop = cbLoop.Checked;
             viewer.Loop = loop;
             
+        }
+
+        private void tbAnimationTimeline_Scroll(object sender, EventArgs e)
+        {
+            if (viewer == null) return;
+
+            viewer.ChangeAnimationFrame(tbAnimationTimeline.Value);
+            playing = false;
+        }
+
+        private void cbShowSkeleton_CheckedChanged(object sender, EventArgs e)
+        {
+            if (viewer == null) return;
+
+            viewer.DrawSkeletonOutline = cbShowSkeleton.Checked;
         }
 
         private void btnDeleteTimeline2_Click(object sender, EventArgs e)

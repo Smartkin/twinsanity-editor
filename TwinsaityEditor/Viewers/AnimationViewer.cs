@@ -25,14 +25,17 @@ namespace TwinsaityEditor.Viewers
         private ModelController mesh;
         private FileController targetFile;
         private FileController file;
-        private AnimationController animation;
         private AnimationPlayer player;
         private readonly Dictionary<int, int> VbufferMap = new Dictionary<int, int>();
+
+        public event EventHandler FrameChanged;
 
         public int FPS { get => player.FPS; set { player.FPS = value; } }
         public bool Loop { get => player.Loop; set => player.Loop = value; }
         public bool Playing { get => player.Playing; set => player.Playing = value; }
         public bool Finished { get => player.Finished; }
+        public int CurrentFrame { get => player.Frame; }
+        public bool DrawSkeletonOutline { get; set; } = true;
 
         private Timer animUpdateTimer;
         private VertexBufferData skeletonBuffer;
@@ -44,6 +47,12 @@ namespace TwinsaityEditor.Viewers
         public AnimationViewer()
         {
             player = new AnimationPlayer();
+            player.FrameChanged += OnFrameChanged;
+        }
+
+        ~AnimationViewer()
+        {
+            player.FrameChanged -= OnFrameChanged;
         }
 
         public AnimationViewer(GraphicsInfoController mesh, AnimationController animation, FileController tFile)
@@ -51,8 +60,8 @@ namespace TwinsaityEditor.Viewers
             targetFile = tFile;
             file = mesh.MainFile;
             graphicsInfo = mesh;
-            this.animation = animation;
             player = new AnimationPlayer(animation);
+            player.FrameChanged += OnFrameChanged;
             zFar = 50F;
             SetupVBORender();
 
@@ -161,7 +170,10 @@ namespace TwinsaityEditor.Viewers
             AnimateSkeletonBuffer();
             UpdateSkeletonBuffer();
 
-            DrawSkeleton();
+            if (DrawSkeletonOutline)
+            {
+                DrawSkeleton();
+            }
 
             for (int i = 0; i < bskinEndIndex; i++)
             {
@@ -371,7 +383,7 @@ namespace TwinsaityEditor.Viewers
             var localTransform = rot * scale * Matrix4.CreateTranslation(transforms.Item1.Row0.Xyz);
             var jointTransform = localTransform * parentTransform;
 
-            return new Tuple<Matrix4, Vector4>(jointTransform, jointScale);
+            return new Tuple<Matrix4, Vector4>(jointTransform, new Vector4(jointTransform.ExtractScale(), 1.0f));
         }
 
         private void ComputeTposeTransform(GraphicsInfo.JointNode joint, Matrix4 parentTransform)
@@ -470,7 +482,7 @@ namespace TwinsaityEditor.Viewers
                         vbuffer[k] = skin.TposeVertices[i][k];
                         Vector4 targetPos = new Vector4(skin.TposeVertices[i][k].Pos.X, skin.TposeVertices[i][k].Pos.Y, skin.TposeVertices[i][k].Pos.Z, 1);
                         skin.TposeVertices[i][k].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
-                        skin.TposeVertices[i][k].Col = Vertex.ColorToABGR(Color.FromArgb(220, Color.White));
+                        skin.TposeVertices[i][k].Col = Vertex.ColorToABGR(Color.FromArgb(255, Color.White));
                     }
                     vtx[vtxIndex].Vtx = skin.TposeVertices[i];
                     vtx[vtxIndex].VtxInd = skin.Indices[i];
@@ -512,7 +524,7 @@ namespace TwinsaityEditor.Viewers
                         Vector4 targetPos = new Vector4(mesh.TposeVertices[v][k].Pos.X, mesh.TposeVertices[v][k].Pos.Y, mesh.TposeVertices[v][k].Pos.Z, 1);
                         targetPos *= bindPose;
                         mesh.TposeVertices[v][k].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
-                        mesh.TposeVertices[v][k].Col = Vertex.ColorToABGR(Color.FromArgb(220, Color.White));
+                        mesh.TposeVertices[v][k].Col = Vertex.ColorToABGR(Color.FromArgb(255, Color.White));
                     }
 
 
@@ -542,7 +554,10 @@ namespace TwinsaityEditor.Viewers
             zFar = Math.Max(zFar, Math.Max(max_x - min_x, Math.Max(max_y - min_y, max_z - min_z)));
         }
 
-
+        private void OnFrameChanged(object sender, EventArgs e)
+        {
+            FrameChanged?.Invoke(this, e);
+        }
 
         public void ChangeGraphicsInfo(GraphicsInfoController mesh)
         {
@@ -551,6 +566,11 @@ namespace TwinsaityEditor.Viewers
             VbufferMap.Clear();
             Utils.TextUtils.ClearTextureCache();
             SetupVBORender();
+        }
+
+        public void ChangeAnimationFrame(int frame)
+        {
+            player.Frame = frame;
         }
 
         protected override void Dispose(bool disposing)

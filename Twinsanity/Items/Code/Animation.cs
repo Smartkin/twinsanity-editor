@@ -29,7 +29,7 @@ namespace Twinsanity
             AnimationDataPacker &= ~(0x3FFU << 0x16);
             UInt32 packed1 = (UInt32)JointsSettings.Count & 0x7F;
             packed1 |= (UInt32)(((StaticTransforms.Count * 2) & 0xFFE) << 0xA);
-            packed1 |= (UInt32)(AnimatedTransforms.Count << 0x16);
+            packed1 |= (UInt32)(AnimatedTransforms[0].Values.Count << 0x16);
             packed1 |= AnimationDataPacker;
             writer.Write(packed1);
             AnimationDataPacker = packed1;

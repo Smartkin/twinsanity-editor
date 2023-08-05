@@ -15,6 +15,8 @@ namespace TwinsaityEditor.Animations
         private int animFrame;
         private bool playing;
 
+        public event EventHandler FrameChanged;
+
         public int FPS { get; set; }
         public bool Loop { get; set; }
         public bool Playing
@@ -25,12 +27,28 @@ namespace TwinsaityEditor.Animations
                 if (value && Finished)
                 {
                     animFrame = 0;
+                    OnFrameChanged(EventArgs.Empty);
                     Finished = false;
                 }
                 playing = value;
             }
         }
         public bool Finished { get; private set; }
+        public int Frame
+        {
+            get => animFrame;
+
+            set
+            {
+                if (value > animation.Data.TotalFrames)
+                {
+                    return;
+                }
+
+                animFrame = value;
+                Finished = animFrame == animation.Data.TotalFrames - 1;
+            }
+        }
 
         public AnimationPlayer()
         {
@@ -55,6 +73,7 @@ namespace TwinsaityEditor.Animations
             {
                 time -= frameTime;
                 animFrame++;
+                OnFrameChanged(EventArgs.Empty);
             }
         }
 
@@ -115,6 +134,11 @@ namespace TwinsaityEditor.Animations
             var frameTime = 1f / FPS;
             var frameDisplacement = time / frameTime;
             return animation.GetMainAnimationTransform(joint, animFrame, animFrame + 1, frameDisplacement);
+        }
+
+        private void OnFrameChanged(EventArgs e)
+        {
+           FrameChanged?.Invoke(this, e);
         }
     }
 }
