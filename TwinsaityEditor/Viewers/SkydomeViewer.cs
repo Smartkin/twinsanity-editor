@@ -1,6 +1,7 @@
 ﻿using OpenTK.Graphics.OpenGL;
 using System;
 using System.Windows.Forms;
+using Twinsanity;
 
 namespace TwinsaityEditor
 {
@@ -19,7 +20,21 @@ namespace TwinsaityEditor
             this.sky = sky;
             file = sky.MainFile;
             zFar = 100F;
-            InitVBO(sky.Data.MeshIDs.Length);
+            var vbos = 0;
+            SectionController mesh_sec = file.GetItem<SectionController>(6).GetItem<SectionController>(6);
+            for (var i = 0; i < sky.Data.MeshIDs.Length; i++)
+            {
+                foreach (RigidModel mod in mesh_sec.Data.Records)
+                {
+                    if (mod.ID == sky.Data.MeshIDs[i])
+                    {
+                        var m = mesh_sec.GetItem<RigidModelController>(sky.Data.MeshIDs[i]);
+                        vbos += m.Data.MaterialIDs.Length;
+                        break;
+                    }
+                }
+            }
+            InitVBO(vbos);
             pform.Text = "Loading models...";
             LoadModels();
         }
@@ -33,7 +48,7 @@ namespace TwinsaityEditor
         protected override void RenderObjects()
         {
             //put all object rendering code here
-            for (int i = 0; i < vtx.Length; ++i)
+            for (int i = 0; i < vtx.Count; ++i)
             {
                 if (vtx[i].Vtx == null) continue;
                 var flags = lighting ? BufferPointerFlags.Normal : BufferPointerFlags.Default;
@@ -83,35 +98,46 @@ namespace TwinsaityEditor
             SectionController mesh_sec = file.GetItem<SectionController>(6).GetItem<SectionController>(2);
             SectionController model_sec = file.GetItem<SectionController>(6).GetItem<SectionController>(6);
             SectionController special_sec = file.GetItem<SectionController>(6).GetItem<SectionController>(7);
+            var vtxIndex = 0;
             for (int i = 0; i < sky.Data.MeshIDs.Length; ++i)
             {
                 if (special_sec.Data.ContainsItem(sky.Data.MeshIDs[i]))
                     continue;
                 ModelController mesh = mesh_sec.GetItem<ModelController>(model_sec.GetItem<RigidModelController>(sky.Data.MeshIDs[i]).Data.MeshID);
                 mesh.LoadMeshData();
-                foreach (var v in mesh.Vertices)
+                foreach (var list in mesh.Vertices)
                 {
-                    min_x = Math.Min(min_x, v.Pos.X);
-                    min_y = Math.Min(min_y, v.Pos.Y);
-                    min_z = Math.Min(min_z, v.Pos.Z);
-                    max_x = Math.Max(max_x, v.Pos.X);
-                    max_y = Math.Max(max_y, v.Pos.Y);
-                    max_z = Math.Max(max_z, v.Pos.Z);
+                    foreach (var v in list)
+                    {
+                        min_x = Math.Min(min_x, v.Pos.X);
+                        min_y = Math.Min(min_y, v.Pos.Y);
+                        min_z = Math.Min(min_z, v.Pos.Z);
+                        max_x = Math.Max(max_x, v.Pos.X);
+                        max_y = Math.Max(max_y, v.Pos.Y);
+                        max_z = Math.Max(max_z, v.Pos.Z);
+                    }
                 }
-                vtx[i].Vtx = mesh.Vertices;
-                vtx[i].VtxInd = mesh.Indices;
-                UpdateVBO(i);
+                for (int j = 0; j < mesh.Vertices.Count; j++)
+                {
+                    vtx[vtxIndex].Vtx = mesh.Vertices[j];
+                    vtx[vtxIndex].VtxInd = mesh.Indices[j];
+                    Utils.TextUtils.LoadTexture(model_sec.GetItem<RigidModelController>(sky.Data.MeshIDs[i]).Data.MaterialIDs, file, vtx[vtxIndex], j);
+                    UpdateVBO(vtxIndex);
+                    vtxIndex++;
+                }
+                
+                
             }
             zFar = Math.Max(zFar, Math.Max(max_x - min_x, Math.Max(max_y - min_y, max_z - min_z)));
         }
 
-        protected new void InitVBO(int count)
+        protected void InitVBO(int count)
         {
             MakeCurrent();
-            vtx = new VertexBufferData[count];
+            vtx = new System.Collections.Generic.List<VertexBufferData>();
             for (int i = 0; i < count; ++i)
             {
-                vtx[i] = new VertexBufferData();
+                vtx.Add(new VertexBufferData());
             }
         }
 

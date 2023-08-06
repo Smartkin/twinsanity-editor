@@ -13,9 +13,11 @@ namespace TwinsaityEditor
     {
         private static readonly int circle_res = 16;
 
-        private bool show_col_nodes, show_triggers, show_cams, wire_col, sm2_links, obj_models;
+        private bool show_col_nodes, show_triggers, show_cams, wire_col, sm2_links, obj_models, collisions, show_scenery;
         private FileController file;
         private ChunkLinks links;
+        private SceneryData scenery;
+        private List<VertexBufferData> sceneryObjects = new List<VertexBufferData>();
 
         private List<DefaultEnums.ObjectID> WoodCrates = new List<DefaultEnums.ObjectID>()
         {
@@ -26,14 +28,15 @@ namespace TwinsaityEditor
         public RMViewer(FileController file, Form pform)
         {
             //initialize variables here
-            show_col_nodes = show_triggers = wire_col = show_cams = false;
+            show_col_nodes = show_triggers = wire_col = show_cams = show_scenery = false;
             sm2_links = true;
             obj_models = true;
+            collisions = true;
             this.file = file;
             Tag = pform;
             if (file.Data.Type == TwinsFile.FileType.RM2 || file.Data.Type == TwinsFile.FileType.RMX)
             {
-                int ObjectModelPool = 2000; // model limit
+                int ObjectModelPool = 3000; // model limit
                 InitVBO(ObjectModelPool);
             }
             else
@@ -41,10 +44,15 @@ namespace TwinsaityEditor
                 InitVBO(6);
             }
             uint link_section = 5;
-            if (file.DataAux.Type == TwinsFile.FileType.MonkeyBallSM) link_section = 6;
+            if (file.DataAux != null && file.DataAux.Type == TwinsFile.FileType.MonkeyBallSM) link_section = 6;
             if (file.DataAux != null && file.DataAux.ContainsItem(link_section))
             {
                 links = file.DataAux.GetItem<ChunkLinks>(link_section);
+            }
+            if (file.DataAux != null && file.DataAux.ContainsItem(0))
+            {
+                scenery = file.DataAux.GetItem<SceneryData>(0);
+                LoadScenery(new Matrix4());
             }
             uint col_section = 9;
             if (file.Data.Type == TwinsFile.FileType.MonkeyBallRM) col_section = 10;
@@ -65,13 +73,15 @@ namespace TwinsaityEditor
             pform.Text = "Loading AI positions...";
             LoadAIPositions();
             pform.Text = "Initializing...";
+
+
         }
 
         protected override void RenderHUD()
         {
             base.RenderHUD();
-            RenderString2D("Press C to toggle collision nodes\nPress X to toggle collision tree wireframe\nPress T to toggle object triggers\nPress Y to toggle camera triggers\nPress V to toggle object models", 0, Height, 10, Color.White, TextAnchor.BotLeft);
-            RenderString2D("X: " + (-pos.X) + "\n\nY: " + pos.Y + "\n\nZ: " + pos.Z, 0, Height - 54, 12, Color.White, TextAnchor.BotLeft);
+            RenderString2D("Press C to toggle collision nodes\nPress X to toggle collision tree wireframe\nPress T to toggle object triggers\nPress Y to toggle camera triggers\nPress V to toggle object models\nPress F to toggle collision rendering\nPress U to toggle scenery", 0, Height, 10, Color.White, TextAnchor.BotLeft);
+            RenderString2D("X: " + (-pos.X) + "\n\nY: " + pos.Y + "\n\nZ: " + pos.Z, 0, Height - 104, 12, Color.White, TextAnchor.BotLeft);
         }
 
         public Vector3 GetViewerPos()
@@ -85,9 +95,12 @@ namespace TwinsaityEditor
             //draw collision
             if (file.Data.ContainsItem(9))
             {
-                GL.Enable(EnableCap.Lighting);
-                vtx[0].DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Normal);
-                GL.Disable(EnableCap.Lighting);
+                if (collisions)
+                {
+                    GL.Enable(EnableCap.Lighting);
+                    vtx[0].DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Normal);
+                    GL.Disable(EnableCap.Lighting);
+                }
 
                 if (wire_col)
                 {
@@ -103,18 +116,26 @@ namespace TwinsaityEditor
                 }
             }
 
+            //Scenery
+            if (show_scenery && scenery != null)
+            {
+                GL.Enable(EnableCap.Lighting);
+                for (int i = 0; i < sceneryObjects.Count; i++)
+                {
+                    sceneryObjects[i].DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Normal);
+                }
+                GL.Disable(EnableCap.Lighting);
+            }
+
             //object visuals
             if ((file.Data.Type == TwinsFile.FileType.RM2 || file.Data.Type == TwinsFile.FileType.RMX) && obj_models)
             {
-                GL.Enable(EnableCap.Lighting);
-                for (int i = 5; i < vtx.Length; i++)
+                //GL.Enable(EnableCap.Lighting);
+                for (int i = 5; i < vtx.Count; i++)
                 {
-                    if (vtx[i] != null)
-                    {
-                        vtx[i].DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Normal);
-                    }
+                    vtx[i]?.DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Normal);
                 }
-                GL.Disable(EnableCap.Lighting);
+                //GL.Disable(EnableCap.Lighting);
             }
 
             //instances
@@ -127,6 +148,8 @@ namespace TwinsaityEditor
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
 
             GL.PushMatrix();
+
+            
 
             uint mb_add = 0;
             if (file.Data.Type == TwinsFile.FileType.MonkeyBallRM) mb_add = 1;
@@ -746,6 +769,8 @@ namespace TwinsaityEditor
                 case Keys.T:
                 case Keys.X:
                 case Keys.Y:
+                case Keys.F:
+                case Keys.U:
                     return true;
             }
             return base.IsInputKey(keyData);
@@ -762,7 +787,165 @@ namespace TwinsaityEditor
                 case Keys.X: wire_col = !wire_col; break;
                 case Keys.V: obj_models = !obj_models; break;
                 case Keys.Y: show_cams = !show_cams; break;
+                case Keys.F: collisions = !collisions; break;
+                case Keys.U: show_scenery = !show_scenery; break;
             }
+        }
+
+        private void LoadScenery(Matrix4 chunkMatrix)
+        {
+            if (scenery.SceneryRoot == null)
+            {
+                return;
+            }
+
+            LoadSceneryStruct(scenery.SceneryRoot, chunkMatrix);
+        }
+
+        private void LoadSceneryStruct(SceneryData.SceneryStruct branch, Matrix4 chunkMatrix)
+        {
+            LoadSceneryModel(branch.Model, chunkMatrix);
+
+            for (int i = 0; i < branch.Links.Length; i++)
+            {
+                if (branch.Links[i] is SceneryData.SceneryModelStruct modelStruct)
+                {
+                    LoadSceneryModel(modelStruct, chunkMatrix);
+                }
+                else if (branch.Links[i] is SceneryData.SceneryStruct @struct)
+                {
+                    LoadSceneryStruct(@struct, chunkMatrix);
+                }
+            }
+        }
+
+        private void LoadSceneryModel(SceneryData.SceneryModelStruct leaf, Matrix4 chunkMatrix)
+        {
+            float min_x = float.MaxValue, min_y = float.MaxValue, min_z = float.MaxValue, max_x = float.MinValue, max_y = float.MinValue, max_z = float.MinValue;
+
+            SectionController graphics_sec = file.DataAuxCont.GetItem<SectionController>(6);
+            SectionController mesh_sec = graphics_sec.GetItem<SectionController>(2);
+            SectionController model_sec = graphics_sec.GetItem<SectionController>(6);
+            SectionController special_sec = graphics_sec.GetItem<SectionController>(7);
+
+            if (file.DataAux.Type == TwinsFile.FileType.SM2 || file.DataAux.Type == TwinsFile.FileType.DemoSM2)
+            {
+                for (int m = 0; m < leaf.Models.Count; m++)
+                {
+                    ModelController mesh;
+                    uint modelID;
+                    if (!leaf.Models[m].isSpecial)
+                    {
+                        modelID = leaf.Models[m].ModelID;
+                    }
+                    else
+                    {
+                        //uint LODcount = special_sec.Data.GetItem<SpecialModel>(ptr.Models[m].ModelID).ModelsAmount;
+                        //int targetLOD = LODcount == 1 ? 0 : 1;
+                        modelID = special_sec.Data.GetItem<LodModel>(leaf.Models[m].ModelID).LODModelIDs[0];
+                    }
+                    mesh = mesh_sec.GetItem<ModelController>(model_sec.GetItem<RigidModelController>(modelID).Data.MeshID);
+
+                    var rigid = model_sec.GetItem<RigidModelController>(modelID).Data;
+                    mesh.LoadMeshData();
+
+                    Matrix4 modelMatrix = Matrix4.Identity;
+
+                    // closest: -M11, -M21, -M31, -X
+
+                    // Rotation
+                    modelMatrix.M11 = -leaf.Models[m].ModelMatrix[0].X;
+                    modelMatrix.M12 = leaf.Models[m].ModelMatrix[1].X;
+                    modelMatrix.M13 = leaf.Models[m].ModelMatrix[2].X;
+
+                    modelMatrix.M21 = -leaf.Models[m].ModelMatrix[0].Y;
+                    modelMatrix.M22 = leaf.Models[m].ModelMatrix[1].Y;
+                    modelMatrix.M23 = leaf.Models[m].ModelMatrix[2].Y;
+
+                    modelMatrix.M31 = -leaf.Models[m].ModelMatrix[0].Z;
+                    modelMatrix.M32 = leaf.Models[m].ModelMatrix[1].Z;
+                    modelMatrix.M33 = leaf.Models[m].ModelMatrix[2].Z;
+
+                    modelMatrix.M14 = leaf.Models[m].ModelMatrix[0].W;
+                    modelMatrix.M24 = leaf.Models[m].ModelMatrix[1].W;
+                    modelMatrix.M34 = leaf.Models[m].ModelMatrix[2].W;
+
+                    // Position
+                    modelMatrix.M41 = leaf.Models[m].ModelMatrix[3].X;
+                    modelMatrix.M42 = leaf.Models[m].ModelMatrix[3].Y;
+                    modelMatrix.M43 = leaf.Models[m].ModelMatrix[3].Z;
+                    modelMatrix.M44 = leaf.Models[m].ModelMatrix[3].W;
+
+                    modelMatrix *= Matrix4.CreateScale(-1, 1, 1);
+
+
+                    for (int v = 0; v < mesh.Vertices.Count; v++)
+                    {
+                        Vertex[] vbuffer = new Vertex[mesh.Vertices[v].Length];
+
+                        for (int k = 0; k < mesh.Vertices[v].Length; k++)
+                        {
+                            vbuffer[k] = mesh.Vertices[v][k];
+                            Vector4 vertexPos = new Vector4(mesh.Vertices[v][k].Pos.X, mesh.Vertices[v][k].Pos.Y, mesh.Vertices[v][k].Pos.Z, 1);
+                            vertexPos *= modelMatrix;
+                            mesh.Vertices[v][k].Pos = new Vector3(vertexPos.X, vertexPos.Y, vertexPos.Z);
+                        }
+
+                        foreach (var p in mesh.Vertices[v])
+                        {
+                            min_x = Math.Min(min_x, p.Pos.X);
+                            min_y = Math.Min(min_y, p.Pos.Y);
+                            min_z = Math.Min(min_z, p.Pos.Z);
+                            max_x = Math.Max(max_x, p.Pos.X);
+                            max_y = Math.Max(max_y, p.Pos.Y);
+                            max_z = Math.Max(max_z, p.Pos.Z);
+                        }
+
+                        int vtx_id = GenerateVBOforScenery();
+
+                        if (rigid != null)
+                        {
+                            Utils.TextUtils.LoadTexture(rigid.MaterialIDs, file.DataAuxCont, sceneryObjects[vtx_id], v);
+                        }
+
+                        sceneryObjects[vtx_id].Vtx = mesh.Vertices[v];
+                        sceneryObjects[vtx_id].VtxInd = mesh.Indices[v];
+                        mesh.Vertices[v] = vbuffer;
+
+                        UpdateVBOforScenery(vtx_id);
+                    }
+                }
+            }
+        }
+
+        private readonly int sceneryLimit = 4000;
+        private int sceneryIndex;
+        private int GenerateVBOforScenery()
+        {
+            if (sceneryIndex >= sceneryLimit)
+            {
+                sceneryIndex = 0;
+            }
+            if (sceneryObjects.Count >= sceneryLimit)
+            {
+                sceneryObjects[sceneryIndex] = new VertexBufferData();
+            }
+            else
+            {
+                sceneryObjects.Add(new VertexBufferData());
+            }
+            return sceneryIndex++;
+        }
+
+        protected void UpdateVBOforScenery(int id)
+        {
+            GL.BindBuffer(BufferTarget.ArrayBuffer, sceneryObjects[id].ID);
+            if (sceneryObjects[id].Vtx.Length > sceneryObjects[id].LastSize)
+                GL.BufferData(BufferTarget.ArrayBuffer, Vertex.SizeOf * sceneryObjects[id].Vtx.Length, sceneryObjects[id].Vtx, BufferUsageHint.StaticDraw);
+            else
+                GL.BufferSubData(BufferTarget.ArrayBuffer, (IntPtr)0, Vertex.SizeOf * sceneryObjects[id].Vtx.Length, sceneryObjects[id].Vtx);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            sceneryObjects[id].LastSize = sceneryObjects[id].Vtx.Length;
         }
 
         public void LoadColTree()
@@ -1034,35 +1217,35 @@ namespace TwinsaityEditor
                                                 HasSkin = true;
                                                 TargetSkin = GI.SkinID;
                                             }
-                                            if (GI.ModelIDs.Length > 0)
+                                            if (GI.ModelIDs.Count > 0)
                                             {
-                                                for (int gi_model = 0; gi_model < GI.ModelIDs.Length; gi_model++)
+                                                foreach (var pair in GI.ModelIDs)
                                                 {
-                                                    ModelList.Add(GI.ModelIDs[gi_model].ModelID);
+                                                    ModelList.Add(pair.Value.ModelID);
                                                     Matrix4 tempRot = Matrix4.Identity;
 
                                                     // Rotation
-                                                    tempRot.M11 = -GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[0].X;
-                                                    tempRot.M12 = -GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[1].X;
-                                                    tempRot.M13 = -GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[2].X;
+                                                    tempRot.M11 = -GI.SkinTransforms[pair.Value.JointIndex].Matrix[0].X;
+                                                    tempRot.M12 = -GI.SkinTransforms[pair.Value.JointIndex].Matrix[1].X;
+                                                    tempRot.M13 = -GI.SkinTransforms[pair.Value.JointIndex].Matrix[2].X;
 
-                                                    tempRot.M21 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[0].Y;
-                                                    tempRot.M22 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[1].Y;
-                                                    tempRot.M23 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[2].Y;
+                                                    tempRot.M21 = GI.SkinTransforms[pair.Value.JointIndex].Matrix[0].Y;
+                                                    tempRot.M22 = GI.SkinTransforms[pair.Value.JointIndex].Matrix[1].Y;
+                                                    tempRot.M23 = GI.SkinTransforms[pair.Value.JointIndex].Matrix[2].Y;
 
-                                                    tempRot.M31 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[0].Z;
-                                                    tempRot.M32 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[1].Z;
-                                                    tempRot.M33 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[2].Z;
+                                                    tempRot.M31 = GI.SkinTransforms[pair.Value.JointIndex].Matrix[0].Z;
+                                                    tempRot.M32 = GI.SkinTransforms[pair.Value.JointIndex].Matrix[1].Z;
+                                                    tempRot.M33 = GI.SkinTransforms[pair.Value.JointIndex].Matrix[2].Z;
 
-                                                    tempRot.M14 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[0].W;
-                                                    tempRot.M24 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[1].W;
-                                                    tempRot.M34 = GI.Type3[GI.ModelIDs[gi_model].ID].Matrix[2].W;
+                                                    tempRot.M14 = GI.SkinTransforms[pair.Value.JointIndex].Matrix[0].W;
+                                                    tempRot.M24 = GI.SkinTransforms[pair.Value.JointIndex].Matrix[1].W;
+                                                    tempRot.M34 = GI.SkinTransforms[pair.Value.JointIndex].Matrix[2].W;
 
                                                     // Position
-                                                    tempRot.M41 = GI.Type1[GI.ModelIDs[gi_model].ID].Matrix[1].X;
-                                                    tempRot.M42 = GI.Type1[GI.ModelIDs[gi_model].ID].Matrix[1].Y;
-                                                    tempRot.M43 = GI.Type1[GI.ModelIDs[gi_model].ID].Matrix[1].Z;
-                                                    tempRot.M44 = GI.Type1[GI.ModelIDs[gi_model].ID].Matrix[1].W;
+                                                    tempRot.M41 = GI.Joints[pair.Value.JointIndex].Matrix[1].X;
+                                                    tempRot.M42 = GI.Joints[pair.Value.JointIndex].Matrix[1].Y;
+                                                    tempRot.M43 = GI.Joints[pair.Value.JointIndex].Matrix[1].Z;
+                                                    tempRot.M44 = GI.Joints[pair.Value.JointIndex].Matrix[1].W;
 
                                                     // Adjusted for OpenTK
                                                     tempRot *= Matrix4.CreateScale(-1, 1, 1);
@@ -1085,11 +1268,13 @@ namespace TwinsaityEditor
                                             {
                                                 ModelController modelCont = null;
                                                 SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(2);
+                                                RigidModel rigid = null;
                                                 foreach (RigidModel model in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
                                                 {
                                                     if (model.ID == TargetModel)
                                                     {
-                                                        uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(TargetModel).MeshID;
+                                                        rigid = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(TargetModel);
+                                                        uint meshID = rigid.MeshID;
                                                         modelCont = mesh_sec.GetItem<ModelController>(meshID);
                                                         HasMesh = true;
                                                     }
@@ -1098,42 +1283,52 @@ namespace TwinsaityEditor
                                                 if (HasMesh)
                                                 {
                                                     modelCont.LoadMeshData();
-                                                    Vertex[] vbuffer = new Vertex[modelCont.Vertices.Length];
+                                                    
 
-                                                    for (int v = 0; v < modelCont.Vertices.Length; v++)
+                                                    for (int v = 0; v < modelCont.Vertices.Count; v++)
                                                     {
-                                                        vbuffer[v] = modelCont.Vertices[v];
-                                                        Vector4 targetPos = new Vector4(modelCont.Vertices[v].Pos.X, modelCont.Vertices[v].Pos.Y, modelCont.Vertices[v].Pos.Z, 1);
-
-                                                        targetPos *= LocalRot;
-
-                                                        bool rotationOverride = false;
-
-                                                        if (!rotationOverride)
+                                                        Vertex[] vbuffer = new Vertex[modelCont.Vertices[v].Length];
+                                                        for (int p = 0; p < modelCont.Vertices[v].Length; p++)
                                                         {
-                                                            targetPos *= rot_ins_4;
-                                                        }
+                                                            vbuffer[p] = modelCont.Vertices[v][p];
+                                                            Vector4 targetPos = new Vector4(modelCont.Vertices[v][p].Pos.X, modelCont.Vertices[v][p].Pos.Y, modelCont.Vertices[v][p].Pos.Z, 1);
 
-                                                        targetPos += pos_ins_4;
-                                                        modelCont.Vertices[v].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
-                                                        if (ins.ObjectID == (ushort)DefaultEnums.ObjectID.TNTCRATE)
-                                                        {
-                                                            modelCont.Vertices[v].Col = Vertex.ColorToABGR(Color.Red);
+                                                            targetPos *= LocalRot;
+
+                                                            bool rotationOverride = false;
+
+                                                            if (!rotationOverride)
+                                                            {
+                                                                targetPos *= rot_ins_4;
+                                                            }
+
+                                                            targetPos += pos_ins_4;
+                                                            modelCont.Vertices[v][p].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+                                                            if (ins.ObjectID == (ushort)DefaultEnums.ObjectID.TNTCRATE)
+                                                            {
+                                                                modelCont.Vertices[v][p].Col = Vertex.ColorToABGR(Color.Red);
+                                                            }
+                                                            else if (ins.ObjectID == (ushort)DefaultEnums.ObjectID.NITROCRATE)
+                                                            {
+                                                                modelCont.Vertices[v][p].Col = Vertex.ColorToABGR(Color.Green);
+                                                            }
+                                                            else if (WoodCrates.Contains((DefaultEnums.ObjectID)ins.ObjectID))
+                                                            {
+                                                                modelCont.Vertices[v][p].Col = Vertex.ColorToABGR(Color.SandyBrown);
+                                                            }
                                                         }
-                                                        else if (ins.ObjectID == (ushort)DefaultEnums.ObjectID.NITROCRATE)
-                                                        {
-                                                            modelCont.Vertices[v].Col = Vertex.ColorToABGR(Color.Green);
-                                                        }
-                                                        else if (WoodCrates.Contains((DefaultEnums.ObjectID)ins.ObjectID))
-                                                        {
-                                                            modelCont.Vertices[v].Col = Vertex.ColorToABGR(Color.SandyBrown);
-                                                        }
+                                                        
+                                                        vtx[5 + cur_instance] = new VertexBufferData();
+                                                        vtx[5 + cur_instance].Vtx = modelCont.Vertices[v];
+                                                        vtx[5 + cur_instance].VtxInd = modelCont.Indices[v];
+                                                        modelCont.Vertices[v] = vbuffer;
+                                                        Utils.TextUtils.LoadTexture(rigid.MaterialIDs, file, vtx[5 + cur_instance], v);
+                                                        UpdateVBO(5 + cur_instance);
+                                                        cur_instance++;
                                                     }
-                                                    vtx[5 + cur_instance] = new VertexBufferData();
-                                                    vtx[5 + cur_instance].Vtx = modelCont.Vertices;
-                                                    vtx[5 + cur_instance].VtxInd = modelCont.Indices;
-                                                    modelCont.Vertices = vbuffer;
-                                                    UpdateVBO(5 + cur_instance);
+                                                    
+                                                    
+                                                    
                                                 }
                                                 else
                                                 {
@@ -1144,11 +1339,11 @@ namespace TwinsaityEditor
                                             {
                                                 ModelXController modelCont = null;
                                                 SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(2);
-                                                foreach (RigidModel model in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
+                                                foreach (Twinsanity.RigidModel model in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
                                                 {
                                                     if (model.ID == TargetModel)
                                                     {
-                                                        uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(TargetModel).MeshID;
+                                                        uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<Twinsanity.RigidModel>(TargetModel).MeshID;
                                                         modelCont = mesh_sec.GetItem<ModelXController>(meshID);
                                                         HasMesh = true;
                                                     }
@@ -1218,7 +1413,7 @@ namespace TwinsaityEditor
                                     {
                                         SkinController modelCont = null;
                                         SectionController meshSec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(4);
-                                        foreach (Skin mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(4).Records.Cast<Skin>())
+                                        foreach (Twinsanity.Skin mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(4).Records.Cast<Twinsanity.Skin>())
                                         {
                                             if (mod.ID == TargetSkin)
                                             {
@@ -1227,31 +1422,51 @@ namespace TwinsaityEditor
                                         }
 
                                         modelCont.LoadMeshData();
-                                        Vertex[] vbuffer = new Vertex[modelCont.Vertices.Length];
 
-                                        for (int v = 0; v < modelCont.Vertices.Length; v++)
+                                        for (int v = 0; v < modelCont.Vertices.Count; v++)
                                         {
-                                            vbuffer[v] = modelCont.Vertices[v];
-                                            Vector4 targetPos = new Vector4(modelCont.Vertices[v].Pos.X, modelCont.Vertices[v].Pos.Y, modelCont.Vertices[v].Pos.Z, 1);
-
-                                            //targetPos *= LocalRot;
-
-                                            bool rotationOverride = false;
-                                            if (!rotationOverride)
+                                            Vertex[] vbuffer = new Vertex[modelCont.Vertices[v].Length];
+                                            for (int p = 0; p < modelCont.Vertices[v].Length; p++)
                                             {
-                                                targetPos *= rot_ins_4;
+                                                vbuffer[p] = modelCont.Vertices[v][p];
+                                                Vector4 targetPos = new Vector4(modelCont.Vertices[v][p].Pos.X, modelCont.Vertices[v][p].Pos.Y, modelCont.Vertices[v][p].Pos.Z, 1);
+
+                                                //targetPos *= LocalRot;
+
+                                                bool rotationOverride = false;
+
+                                                if (!rotationOverride)
+                                                {
+                                                    targetPos *= rot_ins_4;
+                                                }
+
+                                                targetPos += pos_ins_4;
+                                                modelCont.Vertices[v][p].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+                                                if (ins.ObjectID == (ushort)DefaultEnums.ObjectID.TNTCRATE)
+                                                {
+                                                    modelCont.Vertices[v][p].Col = Vertex.ColorToABGR(Color.Red);
+                                                }
+                                                else if (ins.ObjectID == (ushort)DefaultEnums.ObjectID.NITROCRATE)
+                                                {
+                                                    modelCont.Vertices[v][p].Col = Vertex.ColorToABGR(Color.Green);
+                                                }
+                                                else if (WoodCrates.Contains((DefaultEnums.ObjectID)ins.ObjectID))
+                                                {
+                                                    modelCont.Vertices[v][p].Col = Vertex.ColorToABGR(Color.SandyBrown);
+                                                }
                                             }
-
-                                            targetPos += pos_ins_4;
-                                            modelCont.Vertices[v].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+                                            
+                                            vtx[5 + cur_instance] = new VertexBufferData();
+                                            vtx[5 + cur_instance].Vtx = modelCont.Vertices[v];
+                                            vtx[5 + cur_instance].VtxInd = modelCont.Indices[v];
+                                            Utils.TextUtils.LoadTexture(modelCont.Data.SubModels.Select((subModel) =>
+                                            {
+                                                return subModel.MaterialID;
+                                            }).ToArray(), file, vtx[5 + cur_instance], v);
+                                            modelCont.Vertices[v] = vbuffer;
+                                            UpdateVBO(5 + cur_instance);
+                                            cur_instance++;
                                         }
-                                        vtx[5 + cur_instance] = new VertexBufferData();
-                                        vtx[5 + cur_instance].Vtx = modelCont.Vertices;
-                                        vtx[5 + cur_instance].VtxInd = modelCont.Indices;
-                                        modelCont.Vertices = vbuffer;
-                                        UpdateVBO(5 + cur_instance);
-
-                                        cur_instance++;
                                     }
 
                                     if (HasSkin && file.Data.Type == TwinsFile.FileType.RMX)
@@ -1298,7 +1513,7 @@ namespace TwinsaityEditor
                                     {
                                         BlendSkinController modelCont = null;
                                         SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(5);
-                                        foreach (BlendSkin mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(5).Records)
+                                        foreach (Twinsanity.BlendSkin mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(5).Records)
                                         {
                                             if (mod.ID == TargetBSkin)
                                             {
@@ -1307,31 +1522,51 @@ namespace TwinsaityEditor
                                         }
 
                                         modelCont.LoadMeshData();
-                                        Vertex[] vbuffer = new Vertex[modelCont.Vertices.Length];
 
-                                        for (int v = 0; v < modelCont.Vertices.Length; v++)
+                                        for (int v = 0; v < modelCont.Vertices.Count; v++)
                                         {
-                                            vbuffer[v] = modelCont.Vertices[v];
-                                            Vector4 targetPos = new Vector4(modelCont.Vertices[v].Pos.X, modelCont.Vertices[v].Pos.Y, modelCont.Vertices[v].Pos.Z, 1);
-
-                                            //targetPos *= LocalRot;
-
-                                            bool rotationOverride = false;
-                                            if (!rotationOverride)
+                                            Vertex[] vbuffer = new Vertex[modelCont.Vertices[v].Length];
+                                            for (int p = 0; p < modelCont.Vertices[v].Length; p++)
                                             {
-                                                targetPos *= rot_ins_4;
+                                                vbuffer[p] = modelCont.Vertices[v][p];
+                                                Vector4 targetPos = new Vector4(modelCont.Vertices[v][p].Pos.X, modelCont.Vertices[v][p].Pos.Y, modelCont.Vertices[v][p].Pos.Z, 1);
+
+                                                //targetPos *= LocalRot;
+
+                                                bool rotationOverride = false;
+
+                                                if (!rotationOverride)
+                                                {
+                                                    targetPos *= rot_ins_4;
+                                                }
+
+                                                targetPos += pos_ins_4;
+                                                modelCont.Vertices[v][p].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+                                                if (ins.ObjectID == (ushort)DefaultEnums.ObjectID.TNTCRATE)
+                                                {
+                                                    modelCont.Vertices[v][p].Col = Vertex.ColorToABGR(Color.Red);
+                                                }
+                                                else if (ins.ObjectID == (ushort)DefaultEnums.ObjectID.NITROCRATE)
+                                                {
+                                                    modelCont.Vertices[v][p].Col = Vertex.ColorToABGR(Color.Green);
+                                                }
+                                                else if (WoodCrates.Contains((DefaultEnums.ObjectID)ins.ObjectID))
+                                                {
+                                                    modelCont.Vertices[v][p].Col = Vertex.ColorToABGR(Color.SandyBrown);
+                                                }
                                             }
-
-                                            targetPos += pos_ins_4;
-                                            modelCont.Vertices[v].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+                                            
+                                            vtx[5 + cur_instance] = new VertexBufferData();
+                                            vtx[5 + cur_instance].Vtx = modelCont.Vertices[v];
+                                            vtx[5 + cur_instance].VtxInd = modelCont.Indices[v];
+                                            Utils.TextUtils.LoadTexture(modelCont.Data.Models.Select((subModel) =>
+                                            {
+                                                return subModel.MaterialID;
+                                            }).ToArray(), file, vtx[5 + cur_instance], v);
+                                            modelCont.Vertices[v] = vbuffer;
+                                            UpdateVBO(5 + cur_instance);
+                                            cur_instance++;
                                         }
-                                        vtx[5 + cur_instance] = new VertexBufferData();
-                                        vtx[5 + cur_instance].Vtx = modelCont.Vertices;
-                                        vtx[5 + cur_instance].VtxInd = modelCont.Indices;
-                                        modelCont.Vertices = vbuffer;
-                                        UpdateVBO(5 + cur_instance);
-
-                                        cur_instance++;
                                     }
 
                                     if (HasBlendSkin && file.Data.Type == TwinsFile.FileType.RMX)
@@ -1347,31 +1582,50 @@ namespace TwinsaityEditor
                                         }
 
                                         modelCont.LoadMeshData();
-                                        Vertex[] vbuffer = new Vertex[modelCont.Vertices.Length];
-
-                                        for (int v = 0; v < modelCont.Vertices.Length; v++)
+                                        for (int v = 0; v < modelCont.Vertices.Count; v++)
                                         {
-                                            vbuffer[v] = modelCont.Vertices[v];
-                                            Vector4 targetPos = new Vector4(modelCont.Vertices[v].Pos.X, modelCont.Vertices[v].Pos.Y, modelCont.Vertices[v].Pos.Z, 1);
-
-                                            //targetPos *= LocalRot;
-
-                                            bool rotationOverride = false;
-                                            if (!rotationOverride)
+                                            Vertex[] vbuffer = new Vertex[modelCont.Vertices[v].Length];
+                                            for (int p = 0; p < modelCont.Vertices[v].Length; p++)
                                             {
-                                                targetPos *= rot_ins_4;
+                                                vbuffer[p] = modelCont.Vertices[v][p];
+                                                Vector4 targetPos = new Vector4(modelCont.Vertices[v][p].Pos.X, modelCont.Vertices[v][p].Pos.Y, modelCont.Vertices[v][p].Pos.Z, 1);
+
+                                                //targetPos *= LocalRot;
+
+                                                bool rotationOverride = false;
+
+                                                if (!rotationOverride)
+                                                {
+                                                    targetPos *= rot_ins_4;
+                                                }
+
+                                                targetPos += pos_ins_4;
+                                                modelCont.Vertices[v][p].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+                                                if (ins.ObjectID == (ushort)DefaultEnums.ObjectID.TNTCRATE)
+                                                {
+                                                    modelCont.Vertices[v][p].Col = Vertex.ColorToABGR(Color.Red);
+                                                }
+                                                else if (ins.ObjectID == (ushort)DefaultEnums.ObjectID.NITROCRATE)
+                                                {
+                                                    modelCont.Vertices[v][p].Col = Vertex.ColorToABGR(Color.Green);
+                                                }
+                                                else if (WoodCrates.Contains((DefaultEnums.ObjectID)ins.ObjectID))
+                                                {
+                                                    modelCont.Vertices[v][p].Col = Vertex.ColorToABGR(Color.SandyBrown);
+                                                }
                                             }
 
-                                            targetPos += pos_ins_4;
-                                            modelCont.Vertices[v].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+                                            vtx[5 + cur_instance] = new VertexBufferData();
+                                            vtx[5 + cur_instance].Vtx = modelCont.Vertices[v];
+                                            vtx[5 + cur_instance].VtxInd = modelCont.Indices[v];
+                                            Utils.TextUtils.LoadTexture(modelCont.Data.SubModels.Select((subModel) =>
+                                            {
+                                                return subModel.MaterialID;
+                                            }).ToArray(), file, vtx[5 + cur_instance], v);
+                                            modelCont.Vertices[v] = vbuffer;
+                                            UpdateVBO(5 + cur_instance);
+                                            cur_instance++;
                                         }
-                                        vtx[5 + cur_instance] = new VertexBufferData();
-                                        vtx[5 + cur_instance].Vtx = modelCont.Vertices;
-                                        vtx[5 + cur_instance].VtxInd = modelCont.Indices;
-                                        modelCont.Vertices = vbuffer;
-                                        UpdateVBO(5 + cur_instance);
-
-                                        cur_instance++;
                                     }
                                 }
                             }
@@ -1455,7 +1709,7 @@ namespace TwinsaityEditor
                         record_exists[i] = false;
                 }
             }
-            if (vtx[3] == null || vtx.Length != (circle_res * 3 + 6) * posi_count)
+            if (vtx[3] == null || vtx.Count != (circle_res * 3 + 6) * posi_count)
             {
                 vtx[3].VtxCounts = new int[6 * posi_count];
                 vtx[3].VtxOffs = new int[6 * posi_count];
@@ -1545,7 +1799,7 @@ namespace TwinsaityEditor
                         record_exists[i] = false;
                 }
             }
-            if (vtx[4] == null || vtx.Length != (circle_res * 3 + 6) * posi_count)
+            if (vtx[4] == null || vtx.Count != (circle_res * 3 + 6) * posi_count)
             {
                 vtx[4].VtxCounts = new int[6 * posi_count];
                 vtx[4].VtxOffs = new int[6 * posi_count];

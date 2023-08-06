@@ -255,7 +255,10 @@ namespace TwinsaityEditor
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
                     if (CurCont != null)
+                    {
+                        Utils.TextUtils.ClearTextureCache();
                         CurCont.CloseFile();
+                    }
                     Tag = null;
                     Settings.Default.ChunkFilePath = ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('\\'));
                     TwinsFile file = new TwinsFile();
@@ -336,6 +339,16 @@ namespace TwinsaityEditor
                     file.SafeFileName = ofd.SafeFileName;
                     Tag = new FileController(this, file);
                     ((FileController)Tag).DataAux = aux_file;
+                    if (aux_file != null)
+                    {
+
+
+                        ((FileController)Tag).DataAuxCont = new FileController(this, aux_file);
+                        foreach (var r in ((FileController)Tag).DataAux.Records)
+                        {
+                            GenTreeNode(r, ((FileController)Tag).DataAuxCont, true);
+                        }
+                    }
                     ((FileController)Tag).DataDefault = default_file;
                     if (default_file != null)
                     {

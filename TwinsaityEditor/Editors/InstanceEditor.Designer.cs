@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InstanceEditor));
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -40,6 +41,7 @@
             this.groupBox12 = new System.Windows.Forms.GroupBox();
             this.numericUpDown12 = new System.Windows.Forms.NumericUpDown();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.numFlags = new System.Windows.Forms.NumericUpDown();
             this.btnEditInstanceFlags = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.numericUpDown15 = new System.Windows.Forms.NumericUpDown();
@@ -88,7 +90,6 @@
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.numericUpDown9 = new System.Windows.Forms.NumericUpDown();
             this.textBox2 = new System.Windows.Forms.TextBox();
-            this.numFlags = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -99,6 +100,7 @@
             this.groupBox12.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown12)).BeginInit();
             this.groupBox5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numFlags)).BeginInit();
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown15)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown14)).BeginInit();
@@ -127,7 +129,6 @@
             this.groupBox11.SuspendLayout();
             this.groupBox6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown9)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numFlags)).BeginInit();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -269,6 +270,20 @@
             this.groupBox5.TabIndex = 10;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Flags";
+            // 
+            // numFlags
+            // 
+            this.numFlags.Hexadecimal = true;
+            this.numFlags.Location = new System.Drawing.Point(6, 19);
+            this.numFlags.Maximum = new decimal(new int[] {
+            -1,
+            0,
+            0,
+            0});
+            this.numFlags.Name = "numFlags";
+            this.numFlags.Size = new System.Drawing.Size(73, 20);
+            this.numFlags.TabIndex = 2;
+            this.numFlags.ValueChanged += new System.EventHandler(this.numFlags_ValueChanged);
             // 
             // btnEditInstanceFlags
             // 
@@ -663,7 +678,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(502, 330);
+            this.tabPage2.Size = new System.Drawing.Size(505, 330);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Advanced Properties";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -918,26 +933,13 @@
             this.textBox2.TabIndex = 0;
             this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
-            // numFlags
-            // 
-            this.numFlags.Hexadecimal = true;
-            this.numFlags.Location = new System.Drawing.Point(6, 19);
-            this.numFlags.Maximum = new decimal(new int[] {
-            -1,
-            0,
-            0,
-            0});
-            this.numFlags.Name = "numFlags";
-            this.numFlags.Size = new System.Drawing.Size(73, 20);
-            this.numFlags.TabIndex = 2;
-            this.numFlags.ValueChanged += new System.EventHandler(this.numFlags_ValueChanged);
-            // 
             // InstanceEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 356);
             this.Controls.Add(this.splitContainer1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "InstanceEditor";
             this.Text = "InstanceEditor";
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -953,6 +955,7 @@
             this.groupBox12.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown12)).EndInit();
             this.groupBox5.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numFlags)).EndInit();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown15)).EndInit();
@@ -990,7 +993,6 @@
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown9)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numFlags)).EndInit();
             this.ResumeLayout(false);
 
         }
