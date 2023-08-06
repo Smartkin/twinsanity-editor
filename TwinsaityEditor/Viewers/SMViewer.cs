@@ -26,7 +26,7 @@ namespace TwinsaityEditor
             this.file = file;
             showScenery = true;
 
-            //InitVBO(1);
+            MakeCurrent();
 
             // Chunk links
             if (file.Data.ContainsItem(5))
