@@ -12,8 +12,9 @@ namespace TwinsaityEditor
     {
         public new Model Data { get; set; }
 
-        public Vertex[] Vertices { get; set; }
-        public uint[] Indices { get; set; }
+        public List<Vertex[]> Vertices { get; set; } = new List<Vertex[]>();
+        public List<Vertex[]> TposeVertices { get; set; } = new List<Vertex[]>();
+        public List<uint[]> Indices { get; set; } = new List<uint[]>();
         public bool IsLoaded { get; private set; }
 
         public ModelController(MainForm topform, Model item) : base (topform, item)
@@ -38,11 +39,7 @@ namespace TwinsaityEditor
             {
                 var sub = Data.SubModels[i];
                 ex_lines.Add($"SubModel{i}");
-                ex_lines.Add($"VertexCount: {sub.VertexCount} BlockSize: {sub.BlockSize}");
-                ex_lines.Add($"K: {sub.k} C: {sub.c}");
-                ex_lines.Add($"GroupCount: {sub.Groups.Count}");
-                foreach (var j in sub.Groups)
-                    ex_lines.Add($"VertexCount: {j.VertexCount}");
+                ex_lines.Add($"VertexCount: {sub.VertexCount} VIF code length: {sub.VifCode.Length}");
             }
             TextPrev = new string[3 + ex_lines.Count];
             TextPrev[0] = string.Format("ID: {0:X8}", Data.ID);
@@ -53,68 +50,76 @@ namespace TwinsaityEditor
 
         public void LoadMeshData()
         {
-            if (IsLoaded) return;
-            List<Vertex> vtx = new List<Vertex>();
-            List<uint> idx = new List<uint>();
-            int off = 0;
-            foreach (var s in Data.SubModels)
+            Vertices.Clear();
+            Indices.Clear();
+            TposeVertices.Clear();
+
+            var refIndex = 0U;
+            var offset = 0;
+
+            foreach (var model in Data.SubModels)
             {
-                foreach (var g in s.Groups)
+                List<Vertex> vtx = new List<Vertex>();
+                List<uint> idx = new List<uint>();
+
+                for (var j = 0; j < model.Vertexes.Count; ++j)
                 {
-                    if (g.VertHead > 0 && g.VDataHead > 0 && g.VertexCount >= 3)
+                    if (j < model.Vertexes.Count - 2)
                     {
-                        vtx.Add(new Vertex(new Vector3(-g.Vertex[0].X, g.Vertex[0].Y, g.Vertex[0].Z), Color.FromArgb(g.VData[0].R, g.VData[0].G, g.VData[0].B)));
-                        vtx.Add(new Vertex(new Vector3(-g.Vertex[1].X, g.Vertex[1].Y, g.Vertex[1].Z), Color.FromArgb(g.VData[1].R, g.VData[1].G, g.VData[1].B)));
-                        for (int i = 2; i < g.VertexCount; ++i)
+                        if (model.Vertexes[j + 2].Conn)
                         {
-                            vtx.Add(new Vertex(new Vector3(-g.Vertex[i].X, g.Vertex[i].Y, g.Vertex[i].Z), Color.FromArgb(g.VData[i].R, g.VData[i].G, g.VData[i].B)));
-                            int v1 = off + i - 2 + (i & 1);
-                            int v2 = off + i - 1 - (i & 1);
-                            int v3 = off + i;
-                            if (g.VData[i].CONN == 128) continue;
-                            Vector3 normal = VectorFuncs.CalcNormal(vtx[v1].Pos, vtx[v2].Pos, vtx[v3].Pos);
-                            var v = vtx[v1];
-                            v.Nor += normal;
-                            vtx[v1] = v;
-                            v = vtx[v2];
-                            v.Nor += normal;
-                            vtx[v2] = v;
-                            v = vtx[v3];
-                            v.Nor += normal;
-                            vtx[v3] = v;
-                            idx.Add((uint)v1);
-                            idx.Add((uint)v2);
-                            idx.Add((uint)v3);
+                            if ((/*offset +*/ j) % 2 == 0)
+                            {
+                                idx.Add(refIndex);
+                                idx.Add(refIndex + 1);
+                                idx.Add(refIndex + 2);
+                            }
+                            else
+                            {
+                                idx.Add(refIndex + 1);
+                                idx.Add(refIndex);
+                                idx.Add(refIndex + 2);
+                            }
                         }
-                        off += g.VertexCount;
+                        ++refIndex;
+                    }
+                    Color col = Color.FromArgb(Math.Min(model.Vertexes[j].A + model.Vertexes[j].EA, 255),
+                        Math.Min(model.Vertexes[j].R + model.Vertexes[j].ER, 255),
+                        Math.Min(model.Vertexes[j].G + model.Vertexes[j].EG, 255),
+                        Math.Min(model.Vertexes[j].B + model.Vertexes[j].EB, 255));
+                    vtx.Add(new Vertex(new Vector3(-model.Vertexes[j].X, model.Vertexes[j].Y, model.Vertexes[j].Z),
+                            new Vector3(-model.Vertexes[j].NX, model.Vertexes[j].NY, model.Vertexes[j].NZ), new Vector2(model.Vertexes[j].U, model.Vertexes[j].V),
+                            col));
+                }
+                //offset += model.Vertexes.Count;
+                refIndex = 0;
+
+                // If there are no prebaked normals, apply flat shading
+                if (vtx[0].Nor.Length == 0)
+                {
+                    for (int i = 0; i < idx.Count; i += 3)
+                    {
+                        var n1 = idx[i];
+                        var n2 = idx[i + 1];
+                        var n3 = idx[i + 2];
+                        var v1 = vtx[(int)n1];
+                        var v2 = vtx[(int)n2];
+                        var v3 = vtx[(int)n3];
+                        var normal = VectorFuncs.CalcNormal(v1.Pos, v2.Pos, v3.Pos);
+                        v1.Nor += normal;
+                        v2.Nor += normal;
+                        v3.Nor += normal;
+                        vtx[(int)n1] = v1;
+                        vtx[(int)n2] = v2;
+                        vtx[(int)n3] = v3;
                     }
                 }
+
+                Vertices.Add(vtx.ToArray());
+                Indices.Add(idx.ToArray());
+                TposeVertices.Add(vtx.ToArray());
             }
-            //sort out duplicates
-            for (int i = 0; i < vtx.Count; ++i)
-            {
-                Vector3 pos = vtx[i].Pos;
-                uint col = vtx[i].Col;
-                for (int j = i + 1; j < vtx.Count; ++j)
-                {
-                    if (vtx[j].Col == col && vtx[j].Pos == pos)
-                    {
-                        for (int k = 0; k < idx.Count; ++k)
-                        {
-                            if (idx[k] == j)
-                                idx[k] = (uint)i;
-                            else if (idx[k] > j)
-                                idx[k]--;
-                        }
-                        var v = vtx[i];
-                        v.Nor += vtx[j].Nor;
-                        vtx[i] = v;
-                        vtx.RemoveAt(j);
-                    }
-                }
-            }
-            Vertices = vtx.ToArray();
-            Indices = idx.ToArray();
+
             IsLoaded = true;
         }
 

@@ -28,6 +28,7 @@ namespace Twinsanity.VIF
         private List<List<Vector4>> VUMem = new List<List<Vector4>>();
         private List<GIFTag> GifBuffer = new List<GIFTag>();
         private List<UInt32> tmpStack = new List<UInt32>();
+        private List<List<UInt16>> AddressOuput = new List<List<UInt16>>();
 
         // Wrapper function for generating Interpreter instances
         public static VIFInterpreter InterpretCode(BinaryReader reader)
@@ -66,6 +67,11 @@ namespace Twinsanity.VIF
         public List<List<Vector4>> GetMem()
         {
             return VUMem;
+        }
+
+        public List<List<UInt16>> GetAddressOutput()
+        {
+            return AddressOuput;
         }
 
         public List<GIFTag> GetGifMem()
@@ -118,6 +124,11 @@ namespace Twinsanity.VIF
                         packet_length = 1 + f;
                     }
                     Console.WriteLine($"VU memory address 0x{addr:x}");
+                    if (AddressOuput.Count == 0)
+                    {
+                        AddressOuput.Add(new List<ushort>());
+                    }
+                    AddressOuput[AddressOuput.Count - 1].Add(addr);
                     PackFormat fmt = (PackFormat)(vl | (vn << 2));
                     List<Vector4> vectors = new List<Vector4>(new Vector4[1024]);
                     tmpStack.Clear();
@@ -169,6 +180,7 @@ namespace Twinsanity.VIF
                             break;
                         case VIFCodeEnum.MSCAL:
                             //throw new NotImplementedException();
+                            AddressOuput.Add(new List<ushort>());
                             break;
                         case VIFCodeEnum.MSCNT:
                             //throw new NotImplementedException();
@@ -349,8 +361,8 @@ namespace Twinsanity.VIF
                             SEXT8(ref w2);
                         }
 
-                        v1.X = (w1 + (IsInOffsetMode() ? VIFn_R[0] : 0));
-                        v1.Y = (w2 + (IsInOffsetMode() ? VIFn_R[1] : 0));
+                        v1.SetBinaryX(w1 + (IsInOffsetMode() ? VIFn_R[0] : 0));
+                        v1.SetBinaryY(w2 + (IsInOffsetMode() ? VIFn_R[1] : 0));
                         Fill(dst, v1, i, fill, write, cycle, ref addr);
                         if (i % 2 != 0)
                         {
@@ -458,9 +470,9 @@ namespace Twinsanity.VIF
                             SEXT8(ref w2);
                             SEXT8(ref w3);
                         }
-                        v1.X = (w1 + (IsInOffsetMode() ? VIFn_R[0] : 0));
-                        v1.Y = (w2 + (IsInOffsetMode() ? VIFn_R[1] : 0));
-                        v1.Z = (w3 + (IsInOffsetMode() ? VIFn_R[2] : 0));
+                        v1.SetBinaryX(w1 + (IsInOffsetMode() ? VIFn_R[0] : 0));
+                        v1.SetBinaryY(w2 + (IsInOffsetMode() ? VIFn_R[1] : 0));
+                        v1.SetBinaryZ(w3 + (IsInOffsetMode() ? VIFn_R[2] : 0));
                         Fill(dst, v1, i, fill, write, cycle, ref addr);
                     }
                     break;
@@ -512,10 +524,10 @@ namespace Twinsanity.VIF
                             SEXT8(ref w3);
                             SEXT8(ref w4);
                         }
-                        v.X = (w1 + (IsInOffsetMode() ? VIFn_R[0] : 0));
-                        v.Y = (w2 + (IsInOffsetMode() ? VIFn_R[1] : 0));
-                        v.Z = (w3 + (IsInOffsetMode() ? VIFn_R[2] : 0));
-                        v.W = (w4 + (IsInOffsetMode() ? VIFn_R[3] : 0));
+                        v.SetBinaryX(w1 + (IsInOffsetMode() ? VIFn_R[0] : 0));
+                        v.SetBinaryY(w2 + (IsInOffsetMode() ? VIFn_R[1] : 0));
+                        v.SetBinaryZ(w3 + (IsInOffsetMode() ? VIFn_R[2] : 0));
+                        v.SetBinaryW(w4 + (IsInOffsetMode() ? VIFn_R[3] : 0));
                         Fill(dst, v, i, fill, write, cycle, ref addr);
                     }
                     break;

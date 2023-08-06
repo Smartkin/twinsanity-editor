@@ -17,6 +17,11 @@ namespace Twinsanity
             return new float[4] { X, Y, Z, W };
         }
 
+        public override string ToString()
+        {
+            return $"{{{X}, {Y}, {Z}, {W}}}";
+        }
+
         public float X { get; set; }
         public float Y { get; set; }
         public float Z { get; set; }

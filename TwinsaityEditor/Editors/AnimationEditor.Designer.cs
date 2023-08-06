@@ -28,89 +28,81 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AnimationEditor));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lbAnimations = new System.Windows.Forms.ListBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.tcProperties = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.tbJointTimelineView = new System.Windows.Forms.TextBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.lblFrame = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.tbTransformOffset = new System.Windows.Forms.TextBox();
-            this.tbTimeline = new System.Windows.Forms.TrackBar();
-            this.btnAddTimeline = new System.Windows.Forms.Button();
-            this.btnDeleteTimeline = new System.Windows.Forms.Button();
-            this.lbTimelines = new System.Windows.Forms.ListBox();
+            this.lbAnimatedTransforms = new System.Windows.Forms.ListBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.tbTransformation = new System.Windows.Forms.TextBox();
-            this.btnAddTransformation = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
-            this.btnDeleteTransformation = new System.Windows.Forms.Button();
             this.lbTransformations = new System.Windows.Forms.ListBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.label8 = new System.Windows.Forms.Label();
+            this.cbAddRotation = new System.Windows.Forms.CheckBox();
+            this.cbParentScale = new System.Windows.Forms.CheckBox();
             this.label7 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.tbDisB8 = new System.Windows.Forms.TextBox();
-            this.tbDisB7 = new System.Windows.Forms.TextBox();
-            this.tbDisB6 = new System.Windows.Forms.TextBox();
-            this.tbDisB5 = new System.Windows.Forms.TextBox();
-            this.tbDisB4 = new System.Windows.Forms.TextBox();
-            this.tbDisB3 = new System.Windows.Forms.TextBox();
-            this.tbDisB2 = new System.Windows.Forms.TextBox();
-            this.tbDisB1 = new System.Windows.Forms.TextBox();
-            this.lbBoneSettings = new System.Windows.Forms.ListBox();
+            this.tbJointAnimatedTransformIndex = new System.Windows.Forms.TextBox();
+            this.tbJointTransformIndex = new System.Windows.Forms.TextBox();
+            this.tbJointTransformChoice = new System.Windows.Forms.TextBox();
+            this.lbJointSettings = new System.Windows.Forms.ListBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.groupBox11 = new System.Windows.Forms.GroupBox();
+            this.tbMorphTimeline = new System.Windows.Forms.TextBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.lblFrame2 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
             this.tbTransformOffset2 = new System.Windows.Forms.TextBox();
-            this.tbTimeline2 = new System.Windows.Forms.TrackBar();
-            this.btnAddTimeline2 = new System.Windows.Forms.Button();
-            this.btnDeleteTimeline2 = new System.Windows.Forms.Button();
-            this.lbTimelines2 = new System.Windows.Forms.ListBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.lbTwoPartTransforms2 = new System.Windows.Forms.ListBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.tbTransformation2 = new System.Windows.Forms.TextBox();
-            this.btnAddTransformation2 = new System.Windows.Forms.Button();
             this.label14 = new System.Windows.Forms.Label();
-            this.btnDeleteTransformation2 = new System.Windows.Forms.Button();
             this.lbTransformations2 = new System.Windows.Forms.ListBox();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
-            this.label15 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
-            this.label19 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
-            this.label21 = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
-            this.tbDis2B8 = new System.Windows.Forms.TextBox();
-            this.tbDis2B7 = new System.Windows.Forms.TextBox();
-            this.tbDis2B6 = new System.Windows.Forms.TextBox();
-            this.tbDis2B5 = new System.Windows.Forms.TextBox();
-            this.tbDis2B4 = new System.Windows.Forms.TextBox();
-            this.tbDis2B3 = new System.Windows.Forms.TextBox();
-            this.tbDis2B2 = new System.Windows.Forms.TextBox();
-            this.tbDis2B1 = new System.Windows.Forms.TextBox();
-            this.lbBoneSettings2 = new System.Windows.Forms.ListBox();
+            this.tbJointTwoPartTransformIndex2 = new System.Windows.Forms.TextBox();
+            this.tbJointTransformIndex2 = new System.Windows.Forms.TextBox();
+            this.tbJointTransformChoice2 = new System.Windows.Forms.TextBox();
+            this.tbShapesAmount = new System.Windows.Forms.TextBox();
+            this.lbShapeSettings = new System.Windows.Forms.ListBox();
+            this.tpPreview = new System.Windows.Forms.TabPage();
+            this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.cbShowSkeleton = new System.Windows.Forms.CheckBox();
+            this.tbAnimationTimeline = new System.Windows.Forms.TrackBar();
+            this.cbLoop = new System.Windows.Forms.CheckBox();
+            this.btnPlayAnim = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
+            this.tbPlaybackFps = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.cbOGIList = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tcProperties.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.groupBox10.SuspendLayout();
             this.groupBox5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tbTimeline)).BeginInit();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.groupBox11.SuspendLayout();
             this.groupBox6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tbTimeline2)).BeginInit();
             this.groupBox7.SuspendLayout();
             this.groupBox8.SuspendLayout();
+            this.tpPreview.SuspendLayout();
+            this.groupBox9.SuspendLayout();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbAnimationTimeline)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -149,6 +141,7 @@
             // 
             this.tcProperties.Controls.Add(this.tabPage1);
             this.tcProperties.Controls.Add(this.tabPage2);
+            this.tcProperties.Controls.Add(this.tpPreview);
             this.tcProperties.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tcProperties.Location = new System.Drawing.Point(3, 16);
             this.tcProperties.Name = "tcProperties";
@@ -158,6 +151,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.groupBox10);
             this.tabPage1.Controls.Add(this.groupBox5);
             this.tabPage1.Controls.Add(this.groupBox4);
             this.tabPage1.Controls.Add(this.groupBox3);
@@ -166,147 +160,113 @@
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(848, 538);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Part 1";
+            this.tabPage1.Text = "Main Animation";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // groupBox10
+            // 
+            this.groupBox10.AutoSize = true;
+            this.groupBox10.Controls.Add(this.tbJointTimelineView);
+            this.groupBox10.Location = new System.Drawing.Point(270, 309);
+            this.groupBox10.Name = "groupBox10";
+            this.groupBox10.Size = new System.Drawing.Size(559, 214);
+            this.groupBox10.TabIndex = 3;
+            this.groupBox10.TabStop = false;
+            this.groupBox10.Text = "Joint timeline view";
+            // 
+            // tbJointTimelineView
+            // 
+            this.tbJointTimelineView.AcceptsReturn = true;
+            this.tbJointTimelineView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbJointTimelineView.Location = new System.Drawing.Point(3, 16);
+            this.tbJointTimelineView.Multiline = true;
+            this.tbJointTimelineView.Name = "tbJointTimelineView";
+            this.tbJointTimelineView.ReadOnly = true;
+            this.tbJointTimelineView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbJointTimelineView.Size = new System.Drawing.Size(553, 195);
+            this.tbJointTimelineView.TabIndex = 1;
             // 
             // groupBox5
             // 
             this.groupBox5.AutoSize = true;
-            this.groupBox5.Controls.Add(this.lblFrame);
+            this.groupBox5.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupBox5.Controls.Add(this.label9);
             this.groupBox5.Controls.Add(this.tbTransformOffset);
-            this.groupBox5.Controls.Add(this.tbTimeline);
-            this.groupBox5.Controls.Add(this.btnAddTimeline);
-            this.groupBox5.Controls.Add(this.btnDeleteTimeline);
-            this.groupBox5.Controls.Add(this.lbTimelines);
-            this.groupBox5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox5.Location = new System.Drawing.Point(533, 3);
+            this.groupBox5.Controls.Add(this.lbAnimatedTransforms);
+            this.groupBox5.Dock = System.Windows.Forms.DockStyle.Left;
+            this.groupBox5.Location = new System.Drawing.Point(497, 3);
+            this.groupBox5.MaximumSize = new System.Drawing.Size(0, 300);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(312, 532);
+            this.groupBox5.Size = new System.Drawing.Size(336, 300);
             this.groupBox5.TabIndex = 2;
             this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "Timelines";
-            // 
-            // lblFrame
-            // 
-            this.lblFrame.AutoSize = true;
-            this.lblFrame.Location = new System.Drawing.Point(7, 455);
-            this.lblFrame.Name = "lblFrame";
-            this.lblFrame.Size = new System.Drawing.Size(48, 13);
-            this.lblFrame.TabIndex = 6;
-            this.lblFrame.Text = "Frame: 0";
+            this.groupBox5.Text = "Animated transforms";
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(87, 454);
+            this.label9.Dock = System.Windows.Forms.DockStyle.Right;
+            this.label9.Location = new System.Drawing.Point(3, 215);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(67, 13);
+            this.label9.Padding = new System.Windows.Forms.Padding(3);
+            this.label9.Size = new System.Drawing.Size(72, 19);
             this.label9.TabIndex = 5;
-            this.label9.Text = "Value (Int16)";
+            this.label9.Text = "Value (Float)";
             // 
             // tbTransformOffset
             // 
-            this.tbTransformOffset.Location = new System.Drawing.Point(159, 449);
+            this.tbTransformOffset.Dock = System.Windows.Forms.DockStyle.Right;
+            this.tbTransformOffset.Location = new System.Drawing.Point(75, 215);
             this.tbTransformOffset.Name = "tbTransformOffset";
-            this.tbTransformOffset.Size = new System.Drawing.Size(147, 20);
+            this.tbTransformOffset.Size = new System.Drawing.Size(258, 20);
             this.tbTransformOffset.TabIndex = 4;
             this.tbTransformOffset.TextChanged += new System.EventHandler(this.tbTransformOffset_TextChanged);
             // 
-            // tbTimeline
+            // lbAnimatedTransforms
             // 
-            this.tbTimeline.Location = new System.Drawing.Point(6, 405);
-            this.tbTimeline.Name = "tbTimeline";
-            this.tbTimeline.Size = new System.Drawing.Size(303, 45);
-            this.tbTimeline.TabIndex = 3;
-            this.tbTimeline.Scroll += new System.EventHandler(this.tbTimeline_Scroll);
-            // 
-            // btnAddTimeline
-            // 
-            this.btnAddTimeline.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.btnAddTimeline.Location = new System.Drawing.Point(3, 483);
-            this.btnAddTimeline.Name = "btnAddTimeline";
-            this.btnAddTimeline.Size = new System.Drawing.Size(306, 23);
-            this.btnAddTimeline.TabIndex = 2;
-            this.btnAddTimeline.Text = "Add";
-            this.btnAddTimeline.UseVisualStyleBackColor = true;
-            this.btnAddTimeline.Click += new System.EventHandler(this.btnAddTimeline_Click);
-            // 
-            // btnDeleteTimeline
-            // 
-            this.btnDeleteTimeline.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.btnDeleteTimeline.Location = new System.Drawing.Point(3, 506);
-            this.btnDeleteTimeline.Name = "btnDeleteTimeline";
-            this.btnDeleteTimeline.Size = new System.Drawing.Size(306, 23);
-            this.btnDeleteTimeline.TabIndex = 1;
-            this.btnDeleteTimeline.Text = "Delete";
-            this.btnDeleteTimeline.UseVisualStyleBackColor = true;
-            this.btnDeleteTimeline.Click += new System.EventHandler(this.btnDeleteTimeline_Click);
-            // 
-            // lbTimelines
-            // 
-            this.lbTimelines.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lbTimelines.FormattingEnabled = true;
-            this.lbTimelines.Location = new System.Drawing.Point(3, 16);
-            this.lbTimelines.Name = "lbTimelines";
-            this.lbTimelines.Size = new System.Drawing.Size(306, 381);
-            this.lbTimelines.TabIndex = 0;
-            this.lbTimelines.SelectedIndexChanged += new System.EventHandler(this.lbRotations_SelectedIndexChanged);
+            this.lbAnimatedTransforms.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lbAnimatedTransforms.FormattingEnabled = true;
+            this.lbAnimatedTransforms.Location = new System.Drawing.Point(3, 16);
+            this.lbAnimatedTransforms.Name = "lbAnimatedTransforms";
+            this.lbAnimatedTransforms.Size = new System.Drawing.Size(330, 199);
+            this.lbAnimatedTransforms.TabIndex = 0;
+            this.lbAnimatedTransforms.SelectedIndexChanged += new System.EventHandler(this.lbRotations_SelectedIndexChanged);
             // 
             // groupBox4
             // 
             this.groupBox4.AutoSize = true;
             this.groupBox4.Controls.Add(this.tbTransformation);
-            this.groupBox4.Controls.Add(this.btnAddTransformation);
             this.groupBox4.Controls.Add(this.label10);
-            this.groupBox4.Controls.Add(this.btnDeleteTransformation);
             this.groupBox4.Controls.Add(this.lbTransformations);
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Left;
-            this.groupBox4.Location = new System.Drawing.Point(296, 3);
+            this.groupBox4.Location = new System.Drawing.Point(267, 3);
+            this.groupBox4.MaximumSize = new System.Drawing.Size(0, 300);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(237, 532);
+            this.groupBox4.Size = new System.Drawing.Size(230, 300);
             this.groupBox4.TabIndex = 1;
             this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Transformations";
+            this.groupBox4.Text = "Static transforms";
             // 
             // tbTransformation
             // 
-            this.tbTransformation.Location = new System.Drawing.Point(76, 460);
+            this.tbTransformation.Dock = System.Windows.Forms.DockStyle.Left;
+            this.tbTransformation.Location = new System.Drawing.Point(72, 215);
             this.tbTransformation.Name = "tbTransformation";
             this.tbTransformation.Size = new System.Drawing.Size(155, 20);
             this.tbTransformation.TabIndex = 20;
             this.tbTransformation.TextChanged += new System.EventHandler(this.tbTransformation_TextChanged);
             // 
-            // btnAddTransformation
-            // 
-            this.btnAddTransformation.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.btnAddTransformation.Location = new System.Drawing.Point(3, 483);
-            this.btnAddTransformation.Name = "btnAddTransformation";
-            this.btnAddTransformation.Size = new System.Drawing.Size(231, 23);
-            this.btnAddTransformation.TabIndex = 2;
-            this.btnAddTransformation.Text = "Add";
-            this.btnAddTransformation.UseVisualStyleBackColor = true;
-            this.btnAddTransformation.Click += new System.EventHandler(this.btnAddTransformation_Click);
-            // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(6, 463);
+            this.label10.Dock = System.Windows.Forms.DockStyle.Left;
+            this.label10.Location = new System.Drawing.Point(3, 215);
+            this.label10.Margin = new System.Windows.Forms.Padding(3);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(63, 13);
+            this.label10.Padding = new System.Windows.Forms.Padding(3);
+            this.label10.Size = new System.Drawing.Size(69, 19);
             this.label10.TabIndex = 19;
             this.label10.Text = "Value(Float)";
-            // 
-            // btnDeleteTransformation
-            // 
-            this.btnDeleteTransformation.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.btnDeleteTransformation.Location = new System.Drawing.Point(3, 506);
-            this.btnDeleteTransformation.Name = "btnDeleteTransformation";
-            this.btnDeleteTransformation.Size = new System.Drawing.Size(231, 23);
-            this.btnDeleteTransformation.TabIndex = 1;
-            this.btnDeleteTransformation.Text = "Delete";
-            this.btnDeleteTransformation.UseVisualStyleBackColor = true;
-            this.btnDeleteTransformation.Click += new System.EventHandler(this.btnDeleteTransformation_Click);
             // 
             // lbTransformations
             // 
@@ -314,186 +274,115 @@
             this.lbTransformations.FormattingEnabled = true;
             this.lbTransformations.Location = new System.Drawing.Point(3, 16);
             this.lbTransformations.Name = "lbTransformations";
-            this.lbTransformations.Size = new System.Drawing.Size(231, 433);
+            this.lbTransformations.Size = new System.Drawing.Size(224, 199);
             this.lbTransformations.TabIndex = 0;
             this.lbTransformations.SelectedIndexChanged += new System.EventHandler(this.lbScales_SelectedIndexChanged);
             // 
             // groupBox3
             // 
             this.groupBox3.AutoSize = true;
-            this.groupBox3.Controls.Add(this.label8);
+            this.groupBox3.Controls.Add(this.cbAddRotation);
+            this.groupBox3.Controls.Add(this.cbParentScale);
             this.groupBox3.Controls.Add(this.label7);
-            this.groupBox3.Controls.Add(this.label6);
             this.groupBox3.Controls.Add(this.label5);
-            this.groupBox3.Controls.Add(this.label4);
             this.groupBox3.Controls.Add(this.label3);
-            this.groupBox3.Controls.Add(this.label2);
-            this.groupBox3.Controls.Add(this.label1);
-            this.groupBox3.Controls.Add(this.tbDisB8);
-            this.groupBox3.Controls.Add(this.tbDisB7);
-            this.groupBox3.Controls.Add(this.tbDisB6);
-            this.groupBox3.Controls.Add(this.tbDisB5);
-            this.groupBox3.Controls.Add(this.tbDisB4);
-            this.groupBox3.Controls.Add(this.tbDisB3);
-            this.groupBox3.Controls.Add(this.tbDisB2);
-            this.groupBox3.Controls.Add(this.tbDisB1);
-            this.groupBox3.Controls.Add(this.lbBoneSettings);
+            this.groupBox3.Controls.Add(this.tbJointAnimatedTransformIndex);
+            this.groupBox3.Controls.Add(this.tbJointTransformIndex);
+            this.groupBox3.Controls.Add(this.tbJointTransformChoice);
+            this.groupBox3.Controls.Add(this.lbJointSettings);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox3.Location = new System.Drawing.Point(3, 3);
+            this.groupBox3.MinimumSize = new System.Drawing.Size(250, 0);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(293, 532);
+            this.groupBox3.Size = new System.Drawing.Size(264, 532);
             this.groupBox3.TabIndex = 0;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Bone settings";
+            this.groupBox3.Text = "Joint settings";
             // 
-            // label8
+            // cbAddRotation
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(146, 457);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(37, 13);
-            this.label8.TabIndex = 18;
-            this.label8.Text = "Byte 8";
+            this.cbAddRotation.AutoSize = true;
+            this.cbAddRotation.Location = new System.Drawing.Point(127, 378);
+            this.cbAddRotation.Name = "cbAddRotation";
+            this.cbAddRotation.Size = new System.Drawing.Size(131, 17);
+            this.cbAddRotation.TabIndex = 19;
+            this.cbAddRotation.Text = "Add additional rotation";
+            this.cbAddRotation.UseVisualStyleBackColor = true;
+            // 
+            // cbParentScale
+            // 
+            this.cbParentScale.AutoSize = true;
+            this.cbParentScale.Location = new System.Drawing.Point(7, 378);
+            this.cbParentScale.Name = "cbParentScale";
+            this.cbParentScale.Size = new System.Drawing.Size(113, 17);
+            this.cbParentScale.TabIndex = 18;
+            this.cbParentScale.Text = "Use parent\'s scale";
+            this.cbParentScale.UseVisualStyleBackColor = true;
             // 
             // label7
             // 
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(4, 457);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(37, 13);
+            this.label7.Size = new System.Drawing.Size(125, 13);
             this.label7.TabIndex = 17;
-            this.label7.Text = "Byte 7";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(146, 431);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(37, 13);
-            this.label6.TabIndex = 16;
-            this.label6.Text = "Byte 6";
+            this.label7.Text = "Animated transform index";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(4, 431);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(37, 13);
+            this.label5.Size = new System.Drawing.Size(108, 13);
             this.label5.TabIndex = 15;
-            this.label5.Text = "Byte 5";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(146, 405);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(37, 13);
-            this.label4.TabIndex = 14;
-            this.label4.Text = "Byte 4";
+            this.label5.Text = "Static transform index";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(4, 405);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(37, 13);
+            this.label3.Size = new System.Drawing.Size(89, 13);
             this.label3.TabIndex = 13;
-            this.label3.Text = "Byte 3";
+            this.label3.Text = "Transform choice";
             // 
-            // label2
+            // tbJointAnimatedTransformIndex
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(146, 379);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(37, 13);
-            this.label2.TabIndex = 12;
-            this.label2.Text = "Byte 2";
+            this.tbJointAnimatedTransformIndex.Location = new System.Drawing.Point(144, 452);
+            this.tbJointAnimatedTransformIndex.Name = "tbJointAnimatedTransformIndex";
+            this.tbJointAnimatedTransformIndex.Size = new System.Drawing.Size(100, 20);
+            this.tbJointAnimatedTransformIndex.TabIndex = 9;
+            this.tbJointAnimatedTransformIndex.TextChanged += new System.EventHandler(this.tbDisB7_TextChanged);
             // 
-            // label1
+            // tbJointTransformIndex
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(4, 378);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(37, 13);
-            this.label1.TabIndex = 11;
-            this.label1.Text = "Byte 1";
+            this.tbJointTransformIndex.Location = new System.Drawing.Point(144, 428);
+            this.tbJointTransformIndex.Name = "tbJointTransformIndex";
+            this.tbJointTransformIndex.Size = new System.Drawing.Size(100, 20);
+            this.tbJointTransformIndex.TabIndex = 7;
+            this.tbJointTransformIndex.TextChanged += new System.EventHandler(this.tbDisB5_TextChanged);
             // 
-            // tbDisB8
+            // tbJointTransformChoice
             // 
-            this.tbDisB8.Location = new System.Drawing.Point(187, 454);
-            this.tbDisB8.Name = "tbDisB8";
-            this.tbDisB8.Size = new System.Drawing.Size(100, 20);
-            this.tbDisB8.TabIndex = 10;
-            this.tbDisB8.TextChanged += new System.EventHandler(this.tbDisB8_TextChanged);
+            this.tbJointTransformChoice.Location = new System.Drawing.Point(144, 402);
+            this.tbJointTransformChoice.Name = "tbJointTransformChoice";
+            this.tbJointTransformChoice.Size = new System.Drawing.Size(100, 20);
+            this.tbJointTransformChoice.TabIndex = 5;
+            this.tbJointTransformChoice.TextChanged += new System.EventHandler(this.tbDisB3_TextChanged);
             // 
-            // tbDisB7
+            // lbJointSettings
             // 
-            this.tbDisB7.Location = new System.Drawing.Point(45, 454);
-            this.tbDisB7.Name = "tbDisB7";
-            this.tbDisB7.Size = new System.Drawing.Size(100, 20);
-            this.tbDisB7.TabIndex = 9;
-            this.tbDisB7.TextChanged += new System.EventHandler(this.tbDisB7_TextChanged);
-            // 
-            // tbDisB6
-            // 
-            this.tbDisB6.Location = new System.Drawing.Point(187, 428);
-            this.tbDisB6.Name = "tbDisB6";
-            this.tbDisB6.Size = new System.Drawing.Size(100, 20);
-            this.tbDisB6.TabIndex = 8;
-            this.tbDisB6.TextChanged += new System.EventHandler(this.tbDisB6_TextChanged);
-            // 
-            // tbDisB5
-            // 
-            this.tbDisB5.Location = new System.Drawing.Point(45, 428);
-            this.tbDisB5.Name = "tbDisB5";
-            this.tbDisB5.Size = new System.Drawing.Size(100, 20);
-            this.tbDisB5.TabIndex = 7;
-            this.tbDisB5.TextChanged += new System.EventHandler(this.tbDisB5_TextChanged);
-            // 
-            // tbDisB4
-            // 
-            this.tbDisB4.Location = new System.Drawing.Point(187, 402);
-            this.tbDisB4.Name = "tbDisB4";
-            this.tbDisB4.Size = new System.Drawing.Size(100, 20);
-            this.tbDisB4.TabIndex = 6;
-            this.tbDisB4.TextChanged += new System.EventHandler(this.tbDisB4_TextChanged);
-            // 
-            // tbDisB3
-            // 
-            this.tbDisB3.Location = new System.Drawing.Point(45, 402);
-            this.tbDisB3.Name = "tbDisB3";
-            this.tbDisB3.Size = new System.Drawing.Size(100, 20);
-            this.tbDisB3.TabIndex = 5;
-            this.tbDisB3.TextChanged += new System.EventHandler(this.tbDisB3_TextChanged);
-            // 
-            // tbDisB2
-            // 
-            this.tbDisB2.Location = new System.Drawing.Point(187, 376);
-            this.tbDisB2.Name = "tbDisB2";
-            this.tbDisB2.Size = new System.Drawing.Size(100, 20);
-            this.tbDisB2.TabIndex = 4;
-            this.tbDisB2.TextChanged += new System.EventHandler(this.tbDisB2_TextChanged);
-            // 
-            // tbDisB1
-            // 
-            this.tbDisB1.Location = new System.Drawing.Point(45, 376);
-            this.tbDisB1.Name = "tbDisB1";
-            this.tbDisB1.Size = new System.Drawing.Size(100, 20);
-            this.tbDisB1.TabIndex = 3;
-            this.tbDisB1.TextChanged += new System.EventHandler(this.tbDisB1_TextChanged);
-            // 
-            // lbBoneSettings
-            // 
-            this.lbBoneSettings.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lbBoneSettings.FormattingEnabled = true;
-            this.lbBoneSettings.Location = new System.Drawing.Point(3, 16);
-            this.lbBoneSettings.Name = "lbBoneSettings";
-            this.lbBoneSettings.Size = new System.Drawing.Size(287, 355);
-            this.lbBoneSettings.TabIndex = 0;
-            this.lbBoneSettings.SelectedIndexChanged += new System.EventHandler(this.lbDisplacements_SelectedIndexChanged);
+            this.lbJointSettings.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lbJointSettings.FormattingEnabled = true;
+            this.lbJointSettings.Location = new System.Drawing.Point(3, 16);
+            this.lbJointSettings.Name = "lbJointSettings";
+            this.lbJointSettings.Size = new System.Drawing.Size(258, 355);
+            this.lbJointSettings.TabIndex = 0;
+            this.lbJointSettings.SelectedIndexChanged += new System.EventHandler(this.lbDisplacements_SelectedIndexChanged);
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.groupBox11);
             this.tabPage2.Controls.Add(this.groupBox6);
             this.tabPage2.Controls.Add(this.groupBox7);
             this.tabPage2.Controls.Add(this.groupBox8);
@@ -502,328 +391,357 @@
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(848, 538);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Part 2";
+            this.tabPage2.Text = "Blend shape animation";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // groupBox11
+            // 
+            this.groupBox11.AutoSize = true;
+            this.groupBox11.Controls.Add(this.tbMorphTimeline);
+            this.groupBox11.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox11.Location = new System.Drawing.Point(448, 351);
+            this.groupBox11.MinimumSize = new System.Drawing.Size(180, 0);
+            this.groupBox11.Name = "groupBox11";
+            this.groupBox11.Size = new System.Drawing.Size(397, 184);
+            this.groupBox11.TabIndex = 6;
+            this.groupBox11.TabStop = false;
+            this.groupBox11.Text = "Facial morph timeline";
+            // 
+            // tbMorphTimeline
+            // 
+            this.tbMorphTimeline.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbMorphTimeline.Location = new System.Drawing.Point(3, 16);
+            this.tbMorphTimeline.Multiline = true;
+            this.tbMorphTimeline.Name = "tbMorphTimeline";
+            this.tbMorphTimeline.ReadOnly = true;
+            this.tbMorphTimeline.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbMorphTimeline.Size = new System.Drawing.Size(391, 165);
+            this.tbMorphTimeline.TabIndex = 0;
             // 
             // groupBox6
             // 
-            this.groupBox6.Controls.Add(this.lblFrame2);
-            this.groupBox6.Controls.Add(this.label12);
+            this.groupBox6.AutoSize = true;
             this.groupBox6.Controls.Add(this.tbTransformOffset2);
-            this.groupBox6.Controls.Add(this.tbTimeline2);
-            this.groupBox6.Controls.Add(this.btnAddTimeline2);
-            this.groupBox6.Controls.Add(this.btnDeleteTimeline2);
-            this.groupBox6.Controls.Add(this.lbTimelines2);
-            this.groupBox6.Dock = System.Windows.Forms.DockStyle.Right;
-            this.groupBox6.Location = new System.Drawing.Point(541, 3);
+            this.groupBox6.Controls.Add(this.label12);
+            this.groupBox6.Controls.Add(this.lbTwoPartTransforms2);
+            this.groupBox6.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox6.Location = new System.Drawing.Point(448, 3);
+            this.groupBox6.MinimumSize = new System.Drawing.Size(200, 0);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(304, 532);
+            this.groupBox6.Size = new System.Drawing.Size(397, 348);
             this.groupBox6.TabIndex = 5;
             this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "Timelines 2";
+            this.groupBox6.Text = "Animated transforms";
             // 
-            // lblFrame2
+            // tbTransformOffset2
             // 
-            this.lblFrame2.AutoSize = true;
-            this.lblFrame2.Location = new System.Drawing.Point(6, 460);
-            this.lblFrame2.Name = "lblFrame2";
-            this.lblFrame2.Size = new System.Drawing.Size(48, 13);
-            this.lblFrame2.TabIndex = 10;
-            this.lblFrame2.Text = "Frame: 0";
+            this.tbTransformOffset2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tbTransformOffset2.Location = new System.Drawing.Point(3, 325);
+            this.tbTransformOffset2.Name = "tbTransformOffset2";
+            this.tbTransformOffset2.Size = new System.Drawing.Size(391, 20);
+            this.tbTransformOffset2.TabIndex = 8;
+            this.tbTransformOffset2.TextChanged += new System.EventHandler(this.tbTransformOffset2_TextChanged);
             // 
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(82, 460);
+            this.label12.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label12.Location = new System.Drawing.Point(3, 306);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(67, 13);
+            this.label12.Padding = new System.Windows.Forms.Padding(3);
+            this.label12.Size = new System.Drawing.Size(72, 19);
             this.label12.TabIndex = 9;
-            this.label12.Text = "Value (Int16)";
+            this.label12.Text = "Value (Float)";
             // 
-            // tbTransformOffset2
+            // lbTwoPartTransforms2
             // 
-            this.tbTransformOffset2.Location = new System.Drawing.Point(154, 456);
-            this.tbTransformOffset2.Name = "tbTransformOffset2";
-            this.tbTransformOffset2.Size = new System.Drawing.Size(147, 20);
-            this.tbTransformOffset2.TabIndex = 8;
-            this.tbTransformOffset2.TextChanged += new System.EventHandler(this.tbTransformOffset2_TextChanged);
-            // 
-            // tbTimeline2
-            // 
-            this.tbTimeline2.Location = new System.Drawing.Point(1, 414);
-            this.tbTimeline2.Name = "tbTimeline2";
-            this.tbTimeline2.Size = new System.Drawing.Size(303, 45);
-            this.tbTimeline2.TabIndex = 7;
-            this.tbTimeline2.Scroll += new System.EventHandler(this.tbTimeline2_Scroll);
-            // 
-            // btnAddTimeline2
-            // 
-            this.btnAddTimeline2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.btnAddTimeline2.Location = new System.Drawing.Point(3, 483);
-            this.btnAddTimeline2.Name = "btnAddTimeline2";
-            this.btnAddTimeline2.Size = new System.Drawing.Size(298, 23);
-            this.btnAddTimeline2.TabIndex = 2;
-            this.btnAddTimeline2.Text = "Add";
-            this.btnAddTimeline2.UseVisualStyleBackColor = true;
-            this.btnAddTimeline2.Click += new System.EventHandler(this.btnAddTimeline2_Click);
-            // 
-            // btnDeleteTimeline2
-            // 
-            this.btnDeleteTimeline2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.btnDeleteTimeline2.Location = new System.Drawing.Point(3, 506);
-            this.btnDeleteTimeline2.Name = "btnDeleteTimeline2";
-            this.btnDeleteTimeline2.Size = new System.Drawing.Size(298, 23);
-            this.btnDeleteTimeline2.TabIndex = 1;
-            this.btnDeleteTimeline2.Text = "Delete";
-            this.btnDeleteTimeline2.UseVisualStyleBackColor = true;
-            this.btnDeleteTimeline2.Click += new System.EventHandler(this.btnDeleteTimeline2_Click);
-            // 
-            // lbTimelines2
-            // 
-            this.lbTimelines2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lbTimelines2.FormattingEnabled = true;
-            this.lbTimelines2.Location = new System.Drawing.Point(3, 16);
-            this.lbTimelines2.Name = "lbTimelines2";
-            this.lbTimelines2.Size = new System.Drawing.Size(298, 381);
-            this.lbTimelines2.TabIndex = 0;
-            this.lbTimelines2.SelectedIndexChanged += new System.EventHandler(this.lbRotations2_SelectedIndexChanged);
+            this.lbTwoPartTransforms2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lbTwoPartTransforms2.FormattingEnabled = true;
+            this.lbTwoPartTransforms2.Location = new System.Drawing.Point(3, 16);
+            this.lbTwoPartTransforms2.MaximumSize = new System.Drawing.Size(4, 300);
+            this.lbTwoPartTransforms2.MinimumSize = new System.Drawing.Size(194, 4);
+            this.lbTwoPartTransforms2.Name = "lbTwoPartTransforms2";
+            this.lbTwoPartTransforms2.Size = new System.Drawing.Size(194, 290);
+            this.lbTwoPartTransforms2.TabIndex = 0;
+            this.lbTwoPartTransforms2.SelectedIndexChanged += new System.EventHandler(this.lbRotations2_SelectedIndexChanged);
             // 
             // groupBox7
             // 
+            this.groupBox7.AutoSize = true;
             this.groupBox7.Controls.Add(this.tbTransformation2);
-            this.groupBox7.Controls.Add(this.btnAddTransformation2);
             this.groupBox7.Controls.Add(this.label14);
-            this.groupBox7.Controls.Add(this.btnDeleteTransformation2);
             this.groupBox7.Controls.Add(this.lbTransformations2);
             this.groupBox7.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox7.Location = new System.Drawing.Point(298, 3);
+            this.groupBox7.MinimumSize = new System.Drawing.Size(150, 0);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(237, 532);
+            this.groupBox7.Size = new System.Drawing.Size(150, 532);
             this.groupBox7.TabIndex = 4;
             this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "Transformations 2";
+            this.groupBox7.Text = "Static transforms";
             // 
             // tbTransformation2
             // 
-            this.tbTransformation2.Location = new System.Drawing.Point(82, 460);
+            this.tbTransformation2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tbTransformation2.Location = new System.Drawing.Point(3, 325);
             this.tbTransformation2.Name = "tbTransformation2";
-            this.tbTransformation2.Size = new System.Drawing.Size(149, 20);
-            this.tbTransformation2.TabIndex = 20;
+            this.tbTransformation2.Size = new System.Drawing.Size(144, 20);
+            this.tbTransformation2.TabIndex = 3;
             this.tbTransformation2.TextChanged += new System.EventHandler(this.tbTransformation2_TextChanged);
-            // 
-            // btnAddTransformation2
-            // 
-            this.btnAddTransformation2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.btnAddTransformation2.Location = new System.Drawing.Point(3, 483);
-            this.btnAddTransformation2.Name = "btnAddTransformation2";
-            this.btnAddTransformation2.Size = new System.Drawing.Size(231, 23);
-            this.btnAddTransformation2.TabIndex = 2;
-            this.btnAddTransformation2.Text = "Add";
-            this.btnAddTransformation2.UseVisualStyleBackColor = true;
-            this.btnAddTransformation2.Click += new System.EventHandler(this.btnAddTransformation2_Click);
             // 
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(6, 463);
+            this.label14.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label14.Location = new System.Drawing.Point(3, 306);
+            this.label14.Margin = new System.Windows.Forms.Padding(0);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(66, 13);
+            this.label14.Padding = new System.Windows.Forms.Padding(3);
+            this.label14.Size = new System.Drawing.Size(72, 19);
             this.label14.TabIndex = 19;
             this.label14.Text = "Value (Float)";
-            // 
-            // btnDeleteTransformation2
-            // 
-            this.btnDeleteTransformation2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.btnDeleteTransformation2.Location = new System.Drawing.Point(3, 506);
-            this.btnDeleteTransformation2.Name = "btnDeleteTransformation2";
-            this.btnDeleteTransformation2.Size = new System.Drawing.Size(231, 23);
-            this.btnDeleteTransformation2.TabIndex = 1;
-            this.btnDeleteTransformation2.Text = "Delete";
-            this.btnDeleteTransformation2.UseVisualStyleBackColor = true;
-            this.btnDeleteTransformation2.Click += new System.EventHandler(this.btnDeleteTransformation2_Click);
+            this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lbTransformations2
             // 
             this.lbTransformations2.Dock = System.Windows.Forms.DockStyle.Top;
             this.lbTransformations2.FormattingEnabled = true;
             this.lbTransformations2.Location = new System.Drawing.Point(3, 16);
+            this.lbTransformations2.MaximumSize = new System.Drawing.Size(4, 300);
+            this.lbTransformations2.MinimumSize = new System.Drawing.Size(144, 4);
             this.lbTransformations2.Name = "lbTransformations2";
-            this.lbTransformations2.Size = new System.Drawing.Size(231, 433);
+            this.lbTransformations2.Size = new System.Drawing.Size(144, 290);
             this.lbTransformations2.TabIndex = 0;
             this.lbTransformations2.SelectedIndexChanged += new System.EventHandler(this.lbScales2_SelectedIndexChanged);
             // 
             // groupBox8
             // 
-            this.groupBox8.Controls.Add(this.label15);
+            this.groupBox8.AutoSize = true;
             this.groupBox8.Controls.Add(this.label16);
-            this.groupBox8.Controls.Add(this.label17);
             this.groupBox8.Controls.Add(this.label18);
-            this.groupBox8.Controls.Add(this.label19);
             this.groupBox8.Controls.Add(this.label20);
-            this.groupBox8.Controls.Add(this.label21);
             this.groupBox8.Controls.Add(this.label22);
-            this.groupBox8.Controls.Add(this.tbDis2B8);
-            this.groupBox8.Controls.Add(this.tbDis2B7);
-            this.groupBox8.Controls.Add(this.tbDis2B6);
-            this.groupBox8.Controls.Add(this.tbDis2B5);
-            this.groupBox8.Controls.Add(this.tbDis2B4);
-            this.groupBox8.Controls.Add(this.tbDis2B3);
-            this.groupBox8.Controls.Add(this.tbDis2B2);
-            this.groupBox8.Controls.Add(this.tbDis2B1);
-            this.groupBox8.Controls.Add(this.lbBoneSettings2);
+            this.groupBox8.Controls.Add(this.tbJointTwoPartTransformIndex2);
+            this.groupBox8.Controls.Add(this.tbJointTransformIndex2);
+            this.groupBox8.Controls.Add(this.tbJointTransformChoice2);
+            this.groupBox8.Controls.Add(this.tbShapesAmount);
+            this.groupBox8.Controls.Add(this.lbShapeSettings);
             this.groupBox8.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox8.Location = new System.Drawing.Point(3, 3);
             this.groupBox8.Name = "groupBox8";
             this.groupBox8.Size = new System.Drawing.Size(295, 532);
             this.groupBox8.TabIndex = 3;
             this.groupBox8.TabStop = false;
-            this.groupBox8.Text = "Bone settings 2";
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(146, 457);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(37, 13);
-            this.label15.TabIndex = 18;
-            this.label15.Text = "Byte 8";
+            this.groupBox8.Text = "Shape settings";
             // 
             // label16
             // 
             this.label16.AutoSize = true;
             this.label16.Location = new System.Drawing.Point(4, 457);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(37, 13);
+            this.label16.Size = new System.Drawing.Size(125, 13);
             this.label16.TabIndex = 17;
-            this.label16.Text = "Byte 7";
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(146, 431);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(37, 13);
-            this.label17.TabIndex = 16;
-            this.label17.Text = "Byte 6";
+            this.label16.Text = "Animated transform index";
             // 
             // label18
             // 
             this.label18.AutoSize = true;
             this.label18.Location = new System.Drawing.Point(4, 431);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(37, 13);
+            this.label18.Size = new System.Drawing.Size(108, 13);
             this.label18.TabIndex = 15;
-            this.label18.Text = "Byte 5";
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(146, 405);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(37, 13);
-            this.label19.TabIndex = 14;
-            this.label19.Text = "Byte 4";
+            this.label18.Text = "Static transform index";
             // 
             // label20
             // 
             this.label20.AutoSize = true;
             this.label20.Location = new System.Drawing.Point(4, 405);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(37, 13);
+            this.label20.Size = new System.Drawing.Size(89, 13);
             this.label20.TabIndex = 13;
-            this.label20.Text = "Byte 3";
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(146, 379);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(37, 13);
-            this.label21.TabIndex = 12;
-            this.label21.Text = "Byte 2";
+            this.label20.Text = "Transform choice";
             // 
             // label22
             // 
             this.label22.AutoSize = true;
             this.label22.Location = new System.Drawing.Point(4, 378);
             this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(37, 13);
+            this.label22.Size = new System.Drawing.Size(81, 13);
             this.label22.TabIndex = 11;
-            this.label22.Text = "Byte 1";
+            this.label22.Text = "Shapes amount";
             // 
-            // tbDis2B8
+            // tbJointTwoPartTransformIndex2
             // 
-            this.tbDis2B8.Location = new System.Drawing.Point(187, 454);
-            this.tbDis2B8.Name = "tbDis2B8";
-            this.tbDis2B8.Size = new System.Drawing.Size(100, 20);
-            this.tbDis2B8.TabIndex = 10;
-            this.tbDis2B8.TextChanged += new System.EventHandler(this.tbDis2B8_TextChanged);
+            this.tbJointTwoPartTransformIndex2.Location = new System.Drawing.Point(149, 454);
+            this.tbJointTwoPartTransformIndex2.Name = "tbJointTwoPartTransformIndex2";
+            this.tbJointTwoPartTransformIndex2.Size = new System.Drawing.Size(140, 20);
+            this.tbJointTwoPartTransformIndex2.TabIndex = 9;
+            this.tbJointTwoPartTransformIndex2.TextChanged += new System.EventHandler(this.tbDis2B7_TextChanged);
             // 
-            // tbDis2B7
+            // tbJointTransformIndex2
             // 
-            this.tbDis2B7.Location = new System.Drawing.Point(45, 454);
-            this.tbDis2B7.Name = "tbDis2B7";
-            this.tbDis2B7.Size = new System.Drawing.Size(100, 20);
-            this.tbDis2B7.TabIndex = 9;
-            this.tbDis2B7.TextChanged += new System.EventHandler(this.tbDis2B7_TextChanged);
+            this.tbJointTransformIndex2.Location = new System.Drawing.Point(149, 428);
+            this.tbJointTransformIndex2.Name = "tbJointTransformIndex2";
+            this.tbJointTransformIndex2.Size = new System.Drawing.Size(140, 20);
+            this.tbJointTransformIndex2.TabIndex = 7;
+            this.tbJointTransformIndex2.TextChanged += new System.EventHandler(this.tbDis2B5_TextChanged);
             // 
-            // tbDis2B6
+            // tbJointTransformChoice2
             // 
-            this.tbDis2B6.Location = new System.Drawing.Point(187, 428);
-            this.tbDis2B6.Name = "tbDis2B6";
-            this.tbDis2B6.Size = new System.Drawing.Size(100, 20);
-            this.tbDis2B6.TabIndex = 8;
-            this.tbDis2B6.TextChanged += new System.EventHandler(this.tbDis2B6_TextChanged);
+            this.tbJointTransformChoice2.Location = new System.Drawing.Point(149, 402);
+            this.tbJointTransformChoice2.Name = "tbJointTransformChoice2";
+            this.tbJointTransformChoice2.Size = new System.Drawing.Size(140, 20);
+            this.tbJointTransformChoice2.TabIndex = 5;
+            this.tbJointTransformChoice2.TextChanged += new System.EventHandler(this.tbDis2B3_TextChanged);
             // 
-            // tbDis2B5
+            // tbShapesAmount
             // 
-            this.tbDis2B5.Location = new System.Drawing.Point(45, 428);
-            this.tbDis2B5.Name = "tbDis2B5";
-            this.tbDis2B5.Size = new System.Drawing.Size(100, 20);
-            this.tbDis2B5.TabIndex = 7;
-            this.tbDis2B5.TextChanged += new System.EventHandler(this.tbDis2B5_TextChanged);
+            this.tbShapesAmount.Location = new System.Drawing.Point(149, 376);
+            this.tbShapesAmount.Name = "tbShapesAmount";
+            this.tbShapesAmount.ReadOnly = true;
+            this.tbShapesAmount.Size = new System.Drawing.Size(140, 20);
+            this.tbShapesAmount.TabIndex = 3;
             // 
-            // tbDis2B4
+            // lbShapeSettings
             // 
-            this.tbDis2B4.Location = new System.Drawing.Point(187, 402);
-            this.tbDis2B4.Name = "tbDis2B4";
-            this.tbDis2B4.Size = new System.Drawing.Size(100, 20);
-            this.tbDis2B4.TabIndex = 6;
-            this.tbDis2B4.TextChanged += new System.EventHandler(this.tbDis2B4_TextChanged);
+            this.lbShapeSettings.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lbShapeSettings.FormattingEnabled = true;
+            this.lbShapeSettings.Location = new System.Drawing.Point(3, 16);
+            this.lbShapeSettings.Name = "lbShapeSettings";
+            this.lbShapeSettings.Size = new System.Drawing.Size(289, 355);
+            this.lbShapeSettings.TabIndex = 0;
+            this.lbShapeSettings.SelectedIndexChanged += new System.EventHandler(this.lbDisplacements2_SelectedIndexChanged);
             // 
-            // tbDis2B3
+            // tpPreview
             // 
-            this.tbDis2B3.Location = new System.Drawing.Point(45, 402);
-            this.tbDis2B3.Name = "tbDis2B3";
-            this.tbDis2B3.Size = new System.Drawing.Size(100, 20);
-            this.tbDis2B3.TabIndex = 5;
-            this.tbDis2B3.TextChanged += new System.EventHandler(this.tbDis2B3_TextChanged);
+            this.tpPreview.Controls.Add(this.groupBox9);
+            this.tpPreview.Location = new System.Drawing.Point(4, 22);
+            this.tpPreview.Name = "tpPreview";
+            this.tpPreview.Padding = new System.Windows.Forms.Padding(3);
+            this.tpPreview.Size = new System.Drawing.Size(848, 538);
+            this.tpPreview.TabIndex = 2;
+            this.tpPreview.Text = "Preview";
+            this.tpPreview.UseVisualStyleBackColor = true;
             // 
-            // tbDis2B2
+            // groupBox9
             // 
-            this.tbDis2B2.Location = new System.Drawing.Point(187, 376);
-            this.tbDis2B2.Name = "tbDis2B2";
-            this.tbDis2B2.Size = new System.Drawing.Size(100, 20);
-            this.tbDis2B2.TabIndex = 4;
-            this.tbDis2B2.TextChanged += new System.EventHandler(this.tbDis2B2_TextChanged);
+            this.groupBox9.AutoSize = true;
+            this.groupBox9.Controls.Add(this.panel1);
+            this.groupBox9.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.groupBox9.Location = new System.Drawing.Point(3, 446);
+            this.groupBox9.Name = "groupBox9";
+            this.groupBox9.Size = new System.Drawing.Size(842, 89);
+            this.groupBox9.TabIndex = 1;
+            this.groupBox9.TabStop = false;
+            this.groupBox9.Text = "Playback controls";
             // 
-            // tbDis2B1
+            // panel1
             // 
-            this.tbDis2B1.Location = new System.Drawing.Point(45, 376);
-            this.tbDis2B1.Name = "tbDis2B1";
-            this.tbDis2B1.Size = new System.Drawing.Size(100, 20);
-            this.tbDis2B1.TabIndex = 3;
-            this.tbDis2B1.TextChanged += new System.EventHandler(this.tbDis2B1_TextChanged);
+            this.panel1.AutoSize = true;
+            this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.panel1.Controls.Add(this.cbShowSkeleton);
+            this.panel1.Controls.Add(this.tbAnimationTimeline);
+            this.panel1.Controls.Add(this.cbLoop);
+            this.panel1.Controls.Add(this.btnPlayAnim);
+            this.panel1.Controls.Add(this.label4);
+            this.panel1.Controls.Add(this.tbPlaybackFps);
+            this.panel1.Controls.Add(this.label2);
+            this.panel1.Controls.Add(this.cbOGIList);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(3, 16);
+            this.panel1.MinimumSize = new System.Drawing.Size(290, 70);
+            this.panel1.Name = "panel1";
+            this.panel1.Padding = new System.Windows.Forms.Padding(5);
+            this.panel1.Size = new System.Drawing.Size(836, 70);
+            this.panel1.TabIndex = 6;
             // 
-            // lbBoneSettings2
+            // cbShowSkeleton
             // 
-            this.lbBoneSettings2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lbBoneSettings2.FormattingEnabled = true;
-            this.lbBoneSettings2.Location = new System.Drawing.Point(3, 16);
-            this.lbBoneSettings2.Name = "lbBoneSettings2";
-            this.lbBoneSettings2.Size = new System.Drawing.Size(289, 355);
-            this.lbBoneSettings2.TabIndex = 0;
-            this.lbBoneSettings2.SelectedIndexChanged += new System.EventHandler(this.lbDisplacements2_SelectedIndexChanged);
+            this.cbShowSkeleton.AutoSize = true;
+            this.cbShowSkeleton.Checked = true;
+            this.cbShowSkeleton.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbShowSkeleton.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.cbShowSkeleton.Location = new System.Drawing.Point(5, 48);
+            this.cbShowSkeleton.Name = "cbShowSkeleton";
+            this.cbShowSkeleton.Size = new System.Drawing.Size(336, 17);
+            this.cbShowSkeleton.TabIndex = 7;
+            this.cbShowSkeleton.Text = "Render skeleton outline";
+            this.cbShowSkeleton.UseVisualStyleBackColor = true;
+            this.cbShowSkeleton.CheckedChanged += new System.EventHandler(this.cbShowSkeleton_CheckedChanged);
+            // 
+            // tbAnimationTimeline
+            // 
+            this.tbAnimationTimeline.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbAnimationTimeline.Location = new System.Drawing.Point(5, 5);
+            this.tbAnimationTimeline.Name = "tbAnimationTimeline";
+            this.tbAnimationTimeline.Size = new System.Drawing.Size(336, 60);
+            this.tbAnimationTimeline.TabIndex = 6;
+            this.tbAnimationTimeline.Scroll += new System.EventHandler(this.tbAnimationTimeline_Scroll);
+            // 
+            // cbLoop
+            // 
+            this.cbLoop.AutoSize = true;
+            this.cbLoop.Dock = System.Windows.Forms.DockStyle.Right;
+            this.cbLoop.Location = new System.Drawing.Point(341, 5);
+            this.cbLoop.Name = "cbLoop";
+            this.cbLoop.Size = new System.Drawing.Size(50, 60);
+            this.cbLoop.TabIndex = 1;
+            this.cbLoop.Text = "Loop";
+            this.cbLoop.UseVisualStyleBackColor = true;
+            this.cbLoop.CheckedChanged += new System.EventHandler(this.cbLoop_CheckedChanged);
+            // 
+            // btnPlayAnim
+            // 
+            this.btnPlayAnim.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnPlayAnim.Location = new System.Drawing.Point(391, 5);
+            this.btnPlayAnim.Name = "btnPlayAnim";
+            this.btnPlayAnim.Size = new System.Drawing.Size(75, 60);
+            this.btnPlayAnim.TabIndex = 0;
+            this.btnPlayAnim.Text = "Play";
+            this.btnPlayAnim.UseVisualStyleBackColor = true;
+            this.btnPlayAnim.Click += new System.EventHandler(this.btnPlayAnim_Click);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Dock = System.Windows.Forms.DockStyle.Right;
+            this.label4.Location = new System.Drawing.Point(466, 5);
+            this.label4.Name = "label4";
+            this.label4.Padding = new System.Windows.Forms.Padding(2);
+            this.label4.Size = new System.Drawing.Size(78, 17);
+            this.label4.TabIndex = 4;
+            this.label4.Text = "Playback FPS";
+            // 
+            // tbPlaybackFps
+            // 
+            this.tbPlaybackFps.Dock = System.Windows.Forms.DockStyle.Right;
+            this.tbPlaybackFps.Location = new System.Drawing.Point(544, 5);
+            this.tbPlaybackFps.Name = "tbPlaybackFps";
+            this.tbPlaybackFps.Size = new System.Drawing.Size(100, 20);
+            this.tbPlaybackFps.TabIndex = 5;
+            this.tbPlaybackFps.TextChanged += new System.EventHandler(this.tbPlaybackFps_TextChanged);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Dock = System.Windows.Forms.DockStyle.Right;
+            this.label2.Location = new System.Drawing.Point(644, 5);
+            this.label2.Name = "label2";
+            this.label2.Padding = new System.Windows.Forms.Padding(2);
+            this.label2.Size = new System.Drawing.Size(30, 17);
+            this.label2.TabIndex = 3;
+            this.label2.Text = "OGI";
+            // 
+            // cbOGIList
+            // 
+            this.cbOGIList.Dock = System.Windows.Forms.DockStyle.Right;
+            this.cbOGIList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbOGIList.FormattingEnabled = true;
+            this.cbOGIList.Location = new System.Drawing.Point(674, 5);
+            this.cbOGIList.Name = "cbOGIList";
+            this.cbOGIList.Size = new System.Drawing.Size(157, 21);
+            this.cbOGIList.TabIndex = 2;
+            this.cbOGIList.SelectedIndexChanged += new System.EventHandler(this.cbOGIList_SelectedIndexChanged);
             // 
             // AnimationEditor
             // 
@@ -832,6 +750,7 @@
             this.ClientSize = new System.Drawing.Size(1118, 583);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "AnimationEditor";
             this.Text = "AnimationEditor";
             this.groupBox1.ResumeLayout(false);
@@ -839,21 +758,31 @@
             this.tcProperties.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            this.groupBox10.ResumeLayout(false);
+            this.groupBox10.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tbTimeline)).EndInit();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
+            this.groupBox11.ResumeLayout(false);
+            this.groupBox11.PerformLayout();
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tbTimeline2)).EndInit();
             this.groupBox7.ResumeLayout(false);
             this.groupBox7.PerformLayout();
             this.groupBox8.ResumeLayout(false);
             this.groupBox8.PerformLayout();
+            this.tpPreview.ResumeLayout(false);
+            this.tpPreview.PerformLayout();
+            this.groupBox9.ResumeLayout(false);
+            this.groupBox9.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbAnimationTimeline)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -866,69 +795,56 @@
         private System.Windows.Forms.TabControl tcProperties;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.ListBox lbBoneSettings;
+        private System.Windows.Forms.ListBox lbJointSettings;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.Button btnAddTransformation;
-        private System.Windows.Forms.Button btnDeleteTransformation;
         private System.Windows.Forms.ListBox lbTransformations;
         private System.Windows.Forms.GroupBox groupBox5;
-        private System.Windows.Forms.Button btnAddTimeline;
-        private System.Windows.Forms.Button btnDeleteTimeline;
-        private System.Windows.Forms.ListBox lbTimelines;
-        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.ListBox lbAnimatedTransforms;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox tbDisB8;
-        private System.Windows.Forms.TextBox tbDisB7;
-        private System.Windows.Forms.TextBox tbDisB6;
-        private System.Windows.Forms.TextBox tbDisB5;
-        private System.Windows.Forms.TextBox tbDisB4;
-        private System.Windows.Forms.TextBox tbDisB3;
-        private System.Windows.Forms.TextBox tbDisB2;
-        private System.Windows.Forms.TextBox tbDisB1;
+        private System.Windows.Forms.TextBox tbJointAnimatedTransformIndex;
+        private System.Windows.Forms.TextBox tbJointTransformIndex;
+        private System.Windows.Forms.TextBox tbJointTransformChoice;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.GroupBox groupBox6;
-        private System.Windows.Forms.Button btnAddTimeline2;
-        private System.Windows.Forms.Button btnDeleteTimeline2;
-        private System.Windows.Forms.ListBox lbTimelines2;
+        private System.Windows.Forms.ListBox lbTwoPartTransforms2;
         private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.TextBox tbTransformation2;
-        private System.Windows.Forms.Button btnAddTransformation2;
         private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.Button btnDeleteTransformation2;
         private System.Windows.Forms.ListBox lbTransformations2;
         private System.Windows.Forms.GroupBox groupBox8;
-        private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.Label label17;
         private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.Label label19;
         private System.Windows.Forms.Label label20;
-        private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label label22;
-        private System.Windows.Forms.TextBox tbDis2B8;
-        private System.Windows.Forms.TextBox tbDis2B7;
-        private System.Windows.Forms.TextBox tbDis2B6;
-        private System.Windows.Forms.TextBox tbDis2B5;
-        private System.Windows.Forms.TextBox tbDis2B4;
-        private System.Windows.Forms.TextBox tbDis2B3;
-        private System.Windows.Forms.TextBox tbDis2B2;
-        private System.Windows.Forms.TextBox tbDis2B1;
-        private System.Windows.Forms.ListBox lbBoneSettings2;
+        private System.Windows.Forms.TextBox tbJointTwoPartTransformIndex2;
+        private System.Windows.Forms.TextBox tbJointTransformIndex2;
+        private System.Windows.Forms.TextBox tbJointTransformChoice2;
+        private System.Windows.Forms.TextBox tbShapesAmount;
+        private System.Windows.Forms.ListBox lbShapeSettings;
         private System.Windows.Forms.TextBox tbTransformation;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox tbTransformOffset;
-        private System.Windows.Forms.TrackBar tbTimeline;
-        private System.Windows.Forms.Label lblFrame;
-        private System.Windows.Forms.Label lblFrame2;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.TextBox tbTransformOffset2;
-        private System.Windows.Forms.TrackBar tbTimeline2;
+        private System.Windows.Forms.TabPage tpPreview;
+        private System.Windows.Forms.GroupBox groupBox9;
+        private System.Windows.Forms.CheckBox cbLoop;
+        private System.Windows.Forms.Button btnPlayAnim;
+        private System.Windows.Forms.ComboBox cbOGIList;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.GroupBox groupBox10;
+        private System.Windows.Forms.TextBox tbJointTimelineView;
+        private System.Windows.Forms.TextBox tbPlaybackFps;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.CheckBox cbAddRotation;
+        private System.Windows.Forms.CheckBox cbParentScale;
+        private System.Windows.Forms.GroupBox groupBox11;
+        private System.Windows.Forms.TextBox tbMorphTimeline;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.TrackBar tbAnimationTimeline;
+        private System.Windows.Forms.CheckBox cbShowSkeleton;
     }
 }

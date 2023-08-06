@@ -1,4 +1,5 @@
 ﻿using OpenTK;
+using System;
 using Twinsanity;
 
 namespace TwinsaityEditor
@@ -25,6 +26,19 @@ namespace TwinsaityEditor
             return new Pos(v.X, v.Y, v.Z, v.W);
         }
 
+        public static float Lerp(float firstFloat, float secondFloat, float by)
+        {
+            return firstFloat * (1 - by) + secondFloat * by;
+        }
+
+        public static Vector3 Lerp(Vector3 firstVector, Vector3 secondVector, float by)
+        {
+            float retX = Lerp(firstVector.X, secondVector.X, by);
+            float retY = Lerp(firstVector.Y, secondVector.Y, by);
+            float retZ = Lerp(firstVector.Z, secondVector.Z, by);
+            return new Vector3(retX, retY, retZ);
+        }
+
         public static Vector3 ToVec3(this Pos p)
         {
             return new Vector3(p.X, p.Y, p.Z);
@@ -33,6 +47,16 @@ namespace TwinsaityEditor
         public static Vector4 ToVec4(this Pos p)
         {
             return new Vector4(p.X, p.Y, p.Z, p.W);
+        }
+
+        public static Quaternion ComputeW(this Quaternion q)
+        {
+            float t = 1.0f - (q.X * q.X) - (q.Y * q.Y) - (q.Z * q.Z);
+            float w = 0.0f;
+            if (t >= 0.0f)
+                w = -Convert.ToSingle(System.Math.Sqrt(t));
+
+            return new Quaternion(q.Xyz, w);
         }
 
         public static Vector4 NormalizeW(this Vector4 v)

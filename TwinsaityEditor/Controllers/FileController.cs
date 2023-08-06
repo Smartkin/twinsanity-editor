@@ -11,6 +11,7 @@ namespace TwinsaityEditor
         public TwinsFile DataAux { get; set; }
         public TwinsFile DataDefault { get; set; }
         public FileController DefaultCont { get; set; }
+        public FileController DataAuxCont { get; set; }
 
         public string FileName { get => Data.FileName; }
         public string SafeFileName { get => Data.SafeFileName; }
@@ -42,6 +43,7 @@ namespace TwinsaityEditor
         {
             Data = item;
             DataAux = null;
+            DataAuxCont = null;
             DataDefault = null;
             ObjectNames = new Dictionary<uint, string>();
             MaterialNames = new Dictionary<uint, string>();

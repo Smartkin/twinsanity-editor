@@ -39,6 +39,8 @@ namespace Twinsanity.VIF
             return 0x10;
         }
 
+        public double Length => Math.Sqrt(X * X + Y * Y + Z * Z);
+
         public void Read(BinaryReader reader, int length)
         {
             X = reader.ReadSingle();
@@ -49,12 +51,23 @@ namespace Twinsanity.VIF
 
         public Vector4 Multiply(float value)
         {
-            var resVec = new Vector4();
-            resVec.X = X * value;
-            resVec.Y = Y * value;
-            resVec.Z = Z * value;
-            resVec.W = W * value;
+            var resVec = new Vector4
+            {
+                X = X * value,
+                Y = Y * value,
+                Z = Z * value,
+                W = W * value
+            };
             return resVec;
+        }
+
+        public static Vector4 NormalizeW(Vector4 v)
+        {
+            v.X *= v.W;
+            v.Y *= v.W;
+            v.Z *= v.W;
+            v.W /= v.W;
+            return v;
         }
 
         public static Vector4 operator +(Vector4 v1, Vector4 v2)
@@ -104,6 +117,22 @@ namespace Twinsanity.VIF
         public override String ToString()
         {
             return $"({X:0.00000}; {Y:0.00000}; {Z:0.00000}; {W:0.00000})";
+        }
+        public String ToIntString()
+        {
+            var x_int = (int)GetBinaryX();
+            var y_int = (int)GetBinaryY();
+            var z_int = (int)GetBinaryZ();
+            var w_int = (int)GetBinaryW();
+            return $"({x_int}; {y_int}; {z_int}; {w_int})";
+        }
+        public String ToIntString(float factor_x, float factor_y, float factor_z)
+        {
+            var x_int = (int)GetBinaryX();
+            var y_int = (int)GetBinaryY();
+            var z_int = (int)GetBinaryZ();
+            var w_int = (int)GetBinaryW();
+            return $"({x_int * factor_x}; {y_int * factor_y}; {z_int * factor_z}; {w_int})";
         }
         public Color GetColor()
         {

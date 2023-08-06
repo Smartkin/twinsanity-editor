@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ScriptEditor));
             this.scriptListBox = new System.Windows.Forms.ListBox();
             this.scriptTree = new System.Windows.Forms.TreeView();
             this.panelType1 = new System.Windows.Forms.Panel();
@@ -72,6 +73,14 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.panelHeader = new System.Windows.Forms.Panel();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.comboBox_participant_preference = new System.Windows.Forms.ComboBox();
+            this.comboBox_participant_status = new System.Windows.Forms.ComboBox();
+            this.comboBox_participant_locality = new System.Windows.Forms.ComboBox();
+            this.comboBox_participant_type = new System.Windows.Forms.ComboBox();
             this.button_header_participant_remove = new System.Windows.Forms.Button();
             this.button_header_participant_add = new System.Windows.Forms.Button();
             this.listBox_header_participants = new System.Windows.Forms.ListBox();
@@ -181,14 +190,6 @@
             this.deleteScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.comboBox_participant_type = new System.Windows.Forms.ComboBox();
-            this.comboBox_participant_locality = new System.Windows.Forms.ComboBox();
-            this.comboBox_participant_status = new System.Windows.Forms.ComboBox();
-            this.comboBox_participant_preference = new System.Windows.Forms.ComboBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
             this.panelType1.SuspendLayout();
             this.panelMain.SuspendLayout();
             this.panelHeader.SuspendLayout();
@@ -729,6 +730,82 @@
             this.panelHeader.Name = "panelHeader";
             this.panelHeader.Size = new System.Drawing.Size(336, 609);
             this.panelHeader.TabIndex = 0;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(7, 295);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(90, 13);
+            this.label11.TabIndex = 17;
+            this.label11.Text = "AssignPreference";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(27, 266);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(68, 13);
+            this.label10.TabIndex = 16;
+            this.label10.Text = "AssignStatus";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(23, 239);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(74, 13);
+            this.label9.TabIndex = 15;
+            this.label9.Text = "AssignLocality";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(35, 213);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(62, 13);
+            this.label8.TabIndex = 14;
+            this.label8.Text = "AssignType";
+            // 
+            // comboBox_participant_preference
+            // 
+            this.comboBox_participant_preference.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_participant_preference.FormattingEnabled = true;
+            this.comboBox_participant_preference.Location = new System.Drawing.Point(103, 292);
+            this.comboBox_participant_preference.Name = "comboBox_participant_preference";
+            this.comboBox_participant_preference.Size = new System.Drawing.Size(223, 21);
+            this.comboBox_participant_preference.TabIndex = 13;
+            this.comboBox_participant_preference.SelectedIndexChanged += new System.EventHandler(this.comboBox_participant_preference_SelectedIndexChanged);
+            // 
+            // comboBox_participant_status
+            // 
+            this.comboBox_participant_status.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_participant_status.FormattingEnabled = true;
+            this.comboBox_participant_status.Location = new System.Drawing.Point(103, 263);
+            this.comboBox_participant_status.Name = "comboBox_participant_status";
+            this.comboBox_participant_status.Size = new System.Drawing.Size(223, 21);
+            this.comboBox_participant_status.TabIndex = 12;
+            this.comboBox_participant_status.SelectedIndexChanged += new System.EventHandler(this.comboBox_participant_status_SelectedIndexChanged);
+            // 
+            // comboBox_participant_locality
+            // 
+            this.comboBox_participant_locality.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_participant_locality.FormattingEnabled = true;
+            this.comboBox_participant_locality.Location = new System.Drawing.Point(103, 236);
+            this.comboBox_participant_locality.Name = "comboBox_participant_locality";
+            this.comboBox_participant_locality.Size = new System.Drawing.Size(223, 21);
+            this.comboBox_participant_locality.TabIndex = 11;
+            this.comboBox_participant_locality.SelectedIndexChanged += new System.EventHandler(this.comboBox_participant_locality_SelectedIndexChanged);
+            // 
+            // comboBox_participant_type
+            // 
+            this.comboBox_participant_type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_participant_type.FormattingEnabled = true;
+            this.comboBox_participant_type.Location = new System.Drawing.Point(103, 209);
+            this.comboBox_participant_type.Name = "comboBox_participant_type";
+            this.comboBox_participant_type.Size = new System.Drawing.Size(223, 21);
+            this.comboBox_participant_type.TabIndex = 10;
+            this.comboBox_participant_type.SelectedIndexChanged += new System.EventHandler(this.comboBox_participant_type_SelectedIndexChanged);
             // 
             // button_header_participant_remove
             // 
@@ -1866,88 +1943,13 @@
             this.splitContainer2.SplitterDistance = 648;
             this.splitContainer2.TabIndex = 6;
             // 
-            // comboBox_participant_type
-            // 
-            this.comboBox_participant_type.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox_participant_type.FormattingEnabled = true;
-            this.comboBox_participant_type.Location = new System.Drawing.Point(103, 209);
-            this.comboBox_participant_type.Name = "comboBox_participant_type";
-            this.comboBox_participant_type.Size = new System.Drawing.Size(223, 21);
-            this.comboBox_participant_type.TabIndex = 10;
-            this.comboBox_participant_type.SelectedIndexChanged += new System.EventHandler(this.comboBox_participant_type_SelectedIndexChanged);
-            // 
-            // comboBox_participant_locality
-            // 
-            this.comboBox_participant_locality.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox_participant_locality.FormattingEnabled = true;
-            this.comboBox_participant_locality.Location = new System.Drawing.Point(103, 236);
-            this.comboBox_participant_locality.Name = "comboBox_participant_locality";
-            this.comboBox_participant_locality.Size = new System.Drawing.Size(223, 21);
-            this.comboBox_participant_locality.TabIndex = 11;
-            this.comboBox_participant_locality.SelectedIndexChanged += new System.EventHandler(this.comboBox_participant_locality_SelectedIndexChanged);
-            // 
-            // comboBox_participant_status
-            // 
-            this.comboBox_participant_status.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox_participant_status.FormattingEnabled = true;
-            this.comboBox_participant_status.Location = new System.Drawing.Point(103, 263);
-            this.comboBox_participant_status.Name = "comboBox_participant_status";
-            this.comboBox_participant_status.Size = new System.Drawing.Size(223, 21);
-            this.comboBox_participant_status.TabIndex = 12;
-            this.comboBox_participant_status.SelectedIndexChanged += new System.EventHandler(this.comboBox_participant_status_SelectedIndexChanged);
-            // 
-            // comboBox_participant_preference
-            // 
-            this.comboBox_participant_preference.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox_participant_preference.FormattingEnabled = true;
-            this.comboBox_participant_preference.Location = new System.Drawing.Point(103, 292);
-            this.comboBox_participant_preference.Name = "comboBox_participant_preference";
-            this.comboBox_participant_preference.Size = new System.Drawing.Size(223, 21);
-            this.comboBox_participant_preference.TabIndex = 13;
-            this.comboBox_participant_preference.SelectedIndexChanged += new System.EventHandler(this.comboBox_participant_preference_SelectedIndexChanged);
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(35, 213);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(62, 13);
-            this.label8.TabIndex = 14;
-            this.label8.Text = "AssignType";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(23, 239);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(74, 13);
-            this.label9.TabIndex = 15;
-            this.label9.Text = "AssignLocality";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(27, 266);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(68, 13);
-            this.label10.TabIndex = 16;
-            this.label10.Text = "AssignStatus";
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(7, 295);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(90, 13);
-            this.label11.TabIndex = 17;
-            this.label11.Text = "AssignPreference";
-            // 
             // ScriptEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(994, 628);
             this.Controls.Add(this.splitContainer2);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "ScriptEditor";
             this.Text = "ScriptEditor";

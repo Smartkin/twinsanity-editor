@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Twinsanity
@@ -6,15 +7,16 @@ namespace Twinsanity
     public class GraphicsInfo : TwinsItem
     {
 
-        public GI_Type0[] ModelIDs { get; set; }
+        public Dictionary<int, ModelLink> ModelIDs { get; set; } = new Dictionary<int, ModelLink>();
         public uint SkinID { get; set; }
         public uint BlendSkinID { get; set; }
         public Pos Coord1 { get; set; } // Bounding box?
         public Pos Coord2 { get; set; } // Bounding box?
-        public GI_Type1[] Type1 { get; set; }
-        public GI_Type2[] Type2 { get; set; }
-        public GI_Type3[] Type3 { get; set; }
+        public Joint[] Joints { get; set; }
+        public ExitPoint[] ExitPoints { get; set; }
+        public SkinTransform[] SkinTransforms { get; set; }
         public GI_CollisionData[] CollisionData { get; set; }
+        public JointTree Skeleton { get; private set; }
 
         public byte[] HeaderVars;
         public byte[] CollisionDataRelated;
@@ -31,64 +33,63 @@ namespace Twinsanity
             writer.Write(Coord2.Z);
             writer.Write(Coord2.W);
 
-            if (Type1.Length > 0)
+            if (Joints.Length > 0)
             {
-                for (int i = 0; i < Type1.Length; i++)
+                for (int i = 0; i < Joints.Length; i++)
                 {
-                    for (int a = 0; a < Type1[i].Numbers.Length; a++)
+                    writer.Write(Joints[i].ReactJointID);
+                    writer.Write(Joints[i].JointIndex);
+                    writer.Write(Joints[i].ParentJointIndex);
+                    writer.Write(Joints[i].ChildJointAmount);
+                    writer.Write(Joints[i].ChildJointAmount2);
+                    for (int a = 0; a < Joints[i].Matrix.Length; a++)
                     {
-                        writer.Write(Type1[i].Numbers[a]);
-                    }
-                    for (int a = 0; a < Type1[i].Matrix.Length; a++)
-                    {
-                        writer.Write(Type1[i].Matrix[a].X);
-                        writer.Write(Type1[i].Matrix[a].Y);
-                        writer.Write(Type1[i].Matrix[a].Z);
-                        writer.Write(Type1[i].Matrix[a].W);
-                    }
-                }
-            }
-
-            if (Type2.Length > 0)
-            {
-                for (int i = 0; i < Type2.Length; i++)
-                {
-                    for (int a = 0; a < Type2[i].Numbers.Length; a++)
-                    {
-                        writer.Write(Type2[i].Numbers[a]);
-                    }
-                    for (int a = 0; a < Type2[i].Matrix.Length; a++)
-                    {
-                        writer.Write(Type2[i].Matrix[a].X);
-                        writer.Write(Type2[i].Matrix[a].Y);
-                        writer.Write(Type2[i].Matrix[a].Z);
-                        writer.Write(Type2[i].Matrix[a].W);
+                        writer.Write(Joints[i].Matrix[a].X);
+                        writer.Write(Joints[i].Matrix[a].Y);
+                        writer.Write(Joints[i].Matrix[a].Z);
+                        writer.Write(Joints[i].Matrix[a].W);
                     }
                 }
             }
 
-            if (ModelIDs.Length > 0)
+            if (ExitPoints.Length > 0)
             {
-                for (int i = 0; i < ModelIDs.Length; i++)
+                for (int i = 0; i < ExitPoints.Length; i++)
                 {
-                    writer.Write((byte)ModelIDs[i].ID);
-                }
-                for (int i = 0; i < ModelIDs.Length; i++)
-                {
-                    writer.Write(ModelIDs[i].ModelID);
+                    writer.Write(ExitPoints[i].ParentJointIndex);
+                    writer.Write(ExitPoints[i].ID);
+                    for (int a = 0; a < ExitPoints[i].Matrix.Length; a++)
+                    {
+                        writer.Write(ExitPoints[i].Matrix[a].X);
+                        writer.Write(ExitPoints[i].Matrix[a].Y);
+                        writer.Write(ExitPoints[i].Matrix[a].Z);
+                        writer.Write(ExitPoints[i].Matrix[a].W);
+                    }
                 }
             }
 
-            if (Type1.Length > 0)
+            if (ModelIDs.Count > 0)
             {
-                for (int a = 0; a < Type3.Length; a++)
+                foreach (var pair in ModelIDs)
                 {
-                    for (int i = 0; i < Type3[a].Matrix.Length; i++)
+                    writer.Write((byte)pair.Value.JointIndex);
+                }
+                foreach (var pair in ModelIDs)
+                {
+                    writer.Write(pair.Value.ModelID);
+                }
+            }
+
+            if (Joints.Length > 0)
+            {
+                for (int a = 0; a < SkinTransforms.Length; a++)
+                {
+                    for (int i = 0; i < SkinTransforms[a].Matrix.Length; i++)
                     {
-                        writer.Write(Type3[a].Matrix[i].X);
-                        writer.Write(Type3[a].Matrix[i].Y);
-                        writer.Write(Type3[a].Matrix[i].Z);
-                        writer.Write(Type3[a].Matrix[i].W);
+                        writer.Write(SkinTransforms[a].Matrix[i].X);
+                        writer.Write(SkinTransforms[a].Matrix[i].Y);
+                        writer.Write(SkinTransforms[a].Matrix[i].Z);
+                        writer.Write(SkinTransforms[a].Matrix[i].W);
                     }
                 }
             }
@@ -113,6 +114,11 @@ namespace Twinsanity
 
         }
 
+        public override string ToString()
+        {
+            return DefaultHashes.Hash_OGI[ID];
+        }
+
         public override void Load(BinaryReader reader, int size)
         {
             long pre_pos = reader.BaseStream.Position;
@@ -120,66 +126,75 @@ namespace Twinsanity
             HeaderVars = new byte[0x10];
             HeaderVars = reader.ReadBytes(0x10);
 
-            uint Type1_Size = HeaderVars[0];
-            uint Type2_Size = HeaderVars[1];
+            uint jointsAmt = HeaderVars[0];
+            uint exitPointsAmt = HeaderVars[1];
+            uint reactJointsAmt = HeaderVars[2]; // These joints rotate and react to camera movement
             uint Model_Size = HeaderVars[5];
             uint SkinFlag = HeaderVars[6];
             uint BlendSkinFlag = HeaderVars[7];
-            int Type4_Size = HeaderVars[8];
+            int collisionDataAmount = HeaderVars[8];
 
             Coord1 = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
             Coord2 = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
 
-            if (Type1_Size > 0)
+            if (jointsAmt > 0)
             {
-                Type1 = new GI_Type1[Type1_Size];
-                for (int i = 0; i < Type1_Size; i++)
+                Joints = new Joint[jointsAmt];
+                for (int i = 0; i < jointsAmt; i++)
                 {
-                    Pos[] Type1_Matrix = new Pos[5];
-                    uint[] Type1_Numbers = new uint[5];
-                    for (int a = 0; a < Type1_Numbers.Length; a++)
+                    Pos[] jointMatrix = new Pos[5];
+                    uint[] jointParameters = new uint[5];
+                    for (int a = 0; a < jointParameters.Length; a++)
                     {
-                        Type1_Numbers[a] = reader.ReadUInt32();
+                        jointParameters[a] = reader.ReadUInt32();
                     }
-                    Type1_Matrix[0] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    Type1_Matrix[1] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    Type1_Matrix[2] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    Type1_Matrix[3] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    Type1_Matrix[4] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    GI_Type1 temp_Type1 = new GI_Type1() { Matrix = Type1_Matrix, Numbers = Type1_Numbers };
-                    Type1[i] = temp_Type1;
+                    jointMatrix[0] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                    jointMatrix[1] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                    jointMatrix[2] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                    jointMatrix[3] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                    jointMatrix[4] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                    Joint joint = new Joint()
+                    {
+                        Matrix = jointMatrix,
+                        ReactJointID = jointParameters[0],
+                        JointIndex = jointParameters[1],
+                        ParentJointIndex = jointParameters[2],
+                        ChildJointAmount = jointParameters[3],
+                        ChildJointAmount2 = jointParameters[4]
+                    };
+                    Joints[i] = joint;
                 }
             }
             else
             {
-                Type1 = new GI_Type1[0];
+                Joints = new Joint[0];
             }
 
-            if (Type2_Size > 0)
+            if (exitPointsAmt > 0)
             {
-                Type2 = new GI_Type2[Type2_Size];
-                for (int i = 0; i < Type2_Size; i++)
+                ExitPoints = new ExitPoint[exitPointsAmt];
+                for (int i = 0; i < exitPointsAmt; i++)
                 {
-                    Pos[] Type2_Matrix = new Pos[4];
-                    uint[] Type2_Numbers = new uint[2];
-                    Type2_Numbers[0] = reader.ReadUInt32();
-                    Type2_Numbers[1] = reader.ReadUInt32();
-                    for (int a = 0; a < Type2_Matrix.Length; a++)
+                    Pos[] exitPointMatrix = new Pos[4];
+                    uint[] exitPointParameters = new uint[2];
+                    exitPointParameters[0] = reader.ReadUInt32();
+                    exitPointParameters[1] = reader.ReadUInt32();
+                    for (int a = 0; a < exitPointMatrix.Length; a++)
                     {
-                        Type2_Matrix[a] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                        exitPointMatrix[a] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                     }
-                    GI_Type2 temp_Type2 = new GI_Type2() { Matrix = Type2_Matrix, Numbers = Type2_Numbers };
-                    Type2[i] = temp_Type2;
+                    ExitPoint exitPoint = new ExitPoint() { Matrix = exitPointMatrix, ParentJointIndex = exitPointParameters[0], ID = exitPointParameters[1] };
+                    ExitPoints[i] = exitPoint;
                 }
             }
             else
             {
-                Type2 = new GI_Type2[0];
+                ExitPoints = new ExitPoint[0];
             }
 
             if (Model_Size > 0)
             {
-                ModelIDs = new GI_Type0[Model_Size];
+                ModelIDs = new Dictionary<int, ModelLink>();
                 uint[] IDs = new uint[Model_Size];
                 uint[] IDs_m = new uint[Model_Size];
                 for (int i = 0; i < Model_Size; i++)
@@ -192,42 +207,46 @@ namespace Twinsanity
                 }
                 for (int i = 0; i < Model_Size; i++)
                 {
-                    GI_Type0 Type0 = new GI_Type0() { ID = IDs[i], ModelID = IDs_m[i] };
-                    ModelIDs[i] = Type0;
-                }
-
-            }
-            else
-            {
-                ModelIDs = new GI_Type0[0];
-            }
-
-            if (Type1_Size > 0)
-            {
-                Type3 = new GI_Type3[Type1_Size];
-                for (int a = 0; a < Type1_Size; a++)
-                {
-                    Pos[] Type3_Matrix = new Pos[4];
-                    for (int i = 0; i < Type3_Matrix.Length; i++)
+                    var modelLink = new ModelLink()
                     {
-                        Type3_Matrix[i] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                        JointIndex = IDs[i],
+                        ModelID = IDs_m[i]
+                    };
+                    ModelIDs.Add(i, modelLink);
+                }
+
+            }
+            else
+            {
+                ModelIDs = new Dictionary<int, ModelLink>();
+            }
+
+            if (jointsAmt > 0)
+            {
+                SkinTransforms = new SkinTransform[jointsAmt];
+                for (int a = 0; a < jointsAmt; a++)
+                {
+                    Pos[] skinTransform = new Pos[4];
+                    for (int i = 0; i < skinTransform.Length; i++)
+                    {
+                        skinTransform[i] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                     }
-                    Type3[a] = new GI_Type3() { Matrix = Type3_Matrix };
+                    SkinTransforms[a] = new SkinTransform() { Matrix = skinTransform };
                 }
             }
             else
             {
-                Type3 = new GI_Type3[0];
+                SkinTransforms = new SkinTransform[0];
             }
 
             SkinID = reader.ReadUInt32();
 
             BlendSkinID = reader.ReadUInt32();
 
-            if (Type4_Size > 0)
+            if (collisionDataAmount > 0)
             {
-                CollisionData = new GI_CollisionData[Type4_Size];
-                for (int a = 0; a < Type4_Size; a++)
+                CollisionData = new GI_CollisionData[collisionDataAmount];
+                for (int a = 0; a < collisionDataAmount; a++)
                 {
                     ushort[] header = new ushort[11];
                     for (var i = 0; i < 11; ++i)
@@ -269,42 +288,75 @@ namespace Twinsanity
                 CollisionData = new GI_CollisionData[0];
             }
 
-            CollisionDataRelated = reader.ReadBytes(Type4_Size);
+            CollisionDataRelated = reader.ReadBytes(collisionDataAmount);
 
+            BuildSkeleton();
+        }
+
+        private void BuildSkeleton()
+        {
+            Skeleton = new JointTree
+            {
+                Root = new JointNode(Joints[0]),
+                Nodes = new Dictionary<int, JointNode>()
+            };
+            Skeleton.Nodes.Add(0, Skeleton.Root);
+
+            for (int i = 1; i < Joints.Length; i++)
+            {
+                var joint = Joints[i];
+                var node = new JointNode(joint);
+                Skeleton.Nodes.Add((int)joint.JointIndex, node);
+                if (Skeleton.Nodes.ContainsKey((int)joint.ParentJointIndex))
+                {
+                    var parent = Skeleton.Nodes[(int)joint.ParentJointIndex];
+                    parent.Children.Add(node);
+                }
+            }
+
+            // Children amount validation
+            foreach (var node in Skeleton.Nodes)
+            {
+                if (node.Value.Joint.ChildJointAmount != node.Value.Children.Count)
+                {
+                    Console.WriteLine($"WARNING: Joint {node.Value.Joint.JointIndex} in OGI 0x{ID:X} {ToString()} was supposed to have {node.Value.Joint.ChildJointAmount} children, instead has {node.Value.Children.Count}");
+                }
+            }
         }
 
         protected override int GetSize()
         {
             int count = 0x10 + 16 + 16 + 4 + 4 + CollisionDataRelated.Length;
 
-            if (Type1.Length > 0)
+            if (Joints.Length > 0)
             {
-                for (int i = 0; i < Type1.Length; i++)
+                for (int i = 0; i < Joints.Length; i++)
                 {
-                    count += Type1[i].Numbers.Length * 4;
-                    count += Type1[i].Matrix.Length * 16;
+                    count += 5 * 4;
+                    count += Joints[i].Matrix.Length * 16;
                 }
             }
 
-            if (Type2.Length > 0)
+            if (ExitPoints.Length > 0)
             {
-                for (int i = 0; i < Type2.Length; i++)
+                for (int i = 0; i < ExitPoints.Length; i++)
                 {
-                    count += Type2[i].Numbers.Length * 4;
-                    count += Type2[i].Matrix.Length * 16;
+                    count += 4;
+                    count += 4;
+                    count += ExitPoints[i].Matrix.Length * 16;
                 }
             }
 
-            if (ModelIDs.Length > 0)
+            if (ModelIDs.Count > 0)
             {
-                count += ModelIDs.Length * 5;
+                count += ModelIDs.Count * 5;
             }
 
-            if (Type3.Length > 0)
+            if (SkinTransforms.Length > 0)
             {
-                for (int i = 0; i < Type3.Length; i++)
+                for (int i = 0; i < SkinTransforms.Length; i++)
                 {
-                    count += Type3[i].Matrix.Length * 16;
+                    count += SkinTransforms[i].Matrix.Length * 16;
                 }
             }
 
@@ -319,25 +371,47 @@ namespace Twinsanity
             return count;
         }
 
-        public struct GI_Type0
+        public struct JointTree
         {
-            public uint ID;
+            public JointNode Root;
+            public Dictionary<int, JointNode> Nodes;
+        }
+
+        public struct JointNode
+        {
+            public List<JointNode> Children;
+            public Joint Joint;
+            public JointNode(Joint joint)
+            {
+                Children = new List<JointNode>();
+                Joint = joint;
+            }
+        }
+
+        public struct ModelLink
+        {
+            public uint JointIndex;
             public uint ModelID;
         }
 
-        public struct GI_Type1
+        public struct Joint
         {
-            public uint[] Numbers; // 5
+            public uint ReactJointID;
+            public uint JointIndex;
+            public uint ParentJointIndex;
+            public uint ChildJointAmount;
+            public uint ChildJointAmount2;
             public Pos[] Matrix; // 5
         }
 
-        public struct GI_Type2
+        public struct ExitPoint
         {
-            public uint[] Numbers; // 2
+            public uint ParentJointIndex;
+            public uint ID;
             public Pos[] Matrix; // 4
         }
 
-        public struct GI_Type3
+        public struct SkinTransform // Used for skinning vertexes on skins (column-major)
         {
             public Pos[] Matrix; // 4
         }
@@ -357,14 +431,14 @@ namespace Twinsanity
             var destinationSkins = destination.GetItem<TwinsSection>(11).GetItem<TwinsSection>(4);
             var sourceBlend = source.GetItem<TwinsSection>(11).GetItem<TwinsSection>(5);
             var destinationBlend = destination.GetItem<TwinsSection>(11).GetItem<TwinsSection>(5);
-            foreach (GI_Type0 modelID in ModelIDs)
+            foreach (var modelID in ModelIDs)
             {
-                if (destinationModels.HasItem(modelID.ModelID))
+                if (destinationModels.HasItem(modelID.Value.ModelID))
                 {
                     continue;
                 }
-                var linkedModel = sourceModels.GetItem<RigidModel>(modelID.ModelID);
-                destinationModels.AddItem(modelID.ModelID, linkedModel);
+                var linkedModel = sourceModels.GetItem<RigidModel>(modelID.Value.ModelID);
+                destinationModels.AddItem(modelID.Value.ModelID, linkedModel);
                 linkedModel.FillPackage(source, destination);
             }
             if (sourceSkins.HasItem(SkinID))

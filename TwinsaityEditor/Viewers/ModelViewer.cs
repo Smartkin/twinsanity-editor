@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using Twinsanity;
 
 namespace TwinsaityEditor
 {
@@ -7,7 +8,7 @@ namespace TwinsaityEditor
         private RigidModelController model;
         private FileController file;
 
-        public ModelViewer(RigidModelController model, Form pform) : base(model.MainFile.MeshSection.GetItem<ModelController>(model.Data.MeshID), pform)
+        public ModelViewer(RigidModelController model, Form pform) : base(model, pform)
         {
             //initialize variables here
             this.model = model;

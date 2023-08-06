@@ -137,6 +137,14 @@ namespace Twinsanity
             }
         }
 
+        public Bitmap GetBmp()
+        {
+            Bitmap BMP = new Bitmap(Convert.ToInt32(Width), Convert.ToInt32(Height));
+            for (int i = 0; i < RawData.Length; i++)
+                BMP.SetPixel((i % Width), (i / Width), RawData[i]);
+            return BMP;
+        }
+
         protected override int GetSize()
         {
             return (int)ItemSize;
