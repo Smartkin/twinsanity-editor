@@ -51,7 +51,10 @@ namespace Twinsanity
             FacialAnimationDataPacker &= ~(0x3FFU << 0x16);
             UInt32 packed2 = (UInt32)FacialJointsSettings.Count & 0x7F;
             packed2 |= (UInt32)(((FacialStaticTransforms.Count * 2) & 0xFFE) << 0xA);
-            packed2 |= (UInt32)(FacialAnimatedTransforms.Count << 0x16);
+            if (FacialAnimatedTransforms.Count > 0)
+            {
+                packed2 |= (UInt32)(FacialAnimatedTransforms[0].Values.Count << 0x16);
+            }
             packed2 |= FacialAnimationDataPacker;
             writer.Write(packed2);
             FacialAnimationDataPacker = packed2;
