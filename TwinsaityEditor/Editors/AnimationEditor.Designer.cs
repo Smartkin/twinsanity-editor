@@ -78,6 +78,7 @@
             this.tpPreview = new System.Windows.Forms.TabPage();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.cbShowSkeleton = new System.Windows.Forms.CheckBox();
             this.tbAnimationTimeline = new System.Windows.Forms.TrackBar();
             this.cbLoop = new System.Windows.Forms.CheckBox();
             this.btnPlayAnim = new System.Windows.Forms.Button();
@@ -85,7 +86,6 @@
             this.tbPlaybackFps = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.cbOGIList = new System.Windows.Forms.ComboBox();
-            this.cbShowSkeleton = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tcProperties.SuspendLayout();
@@ -655,6 +655,20 @@
             this.panel1.Size = new System.Drawing.Size(836, 70);
             this.panel1.TabIndex = 6;
             // 
+            // cbShowSkeleton
+            // 
+            this.cbShowSkeleton.AutoSize = true;
+            this.cbShowSkeleton.Checked = true;
+            this.cbShowSkeleton.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbShowSkeleton.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.cbShowSkeleton.Location = new System.Drawing.Point(5, 48);
+            this.cbShowSkeleton.Name = "cbShowSkeleton";
+            this.cbShowSkeleton.Size = new System.Drawing.Size(336, 17);
+            this.cbShowSkeleton.TabIndex = 7;
+            this.cbShowSkeleton.Text = "Render skeleton outline";
+            this.cbShowSkeleton.UseVisualStyleBackColor = true;
+            this.cbShowSkeleton.CheckedChanged += new System.EventHandler(this.cbShowSkeleton_CheckedChanged);
+            // 
             // tbAnimationTimeline
             // 
             this.tbAnimationTimeline.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -728,20 +742,6 @@
             this.cbOGIList.Size = new System.Drawing.Size(157, 21);
             this.cbOGIList.TabIndex = 2;
             this.cbOGIList.SelectedIndexChanged += new System.EventHandler(this.cbOGIList_SelectedIndexChanged);
-            // 
-            // cbShowSkeleton
-            // 
-            this.cbShowSkeleton.AutoSize = true;
-            this.cbShowSkeleton.Checked = true;
-            this.cbShowSkeleton.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbShowSkeleton.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.cbShowSkeleton.Location = new System.Drawing.Point(5, 48);
-            this.cbShowSkeleton.Name = "cbShowSkeleton";
-            this.cbShowSkeleton.Size = new System.Drawing.Size(336, 17);
-            this.cbShowSkeleton.TabIndex = 7;
-            this.cbShowSkeleton.Text = "Render skeleton outline";
-            this.cbShowSkeleton.UseVisualStyleBackColor = true;
-            this.cbShowSkeleton.CheckedChanged += new System.EventHandler(this.cbShowSkeleton_CheckedChanged);
             // 
             // AnimationEditor
             // 

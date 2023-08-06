@@ -278,10 +278,8 @@ namespace TwinsaityEditor
         private void LoadSceneryModel(SceneryData.SceneryModelStruct leaf, Matrix4 chunkMatrix)
         {
             float min_x = float.MaxValue, min_y = float.MaxValue, min_z = float.MaxValue, max_x = float.MinValue, max_y = float.MinValue, max_z = float.MinValue;
-            SceneryDataController scenery_sec = file.GetItem<SceneryDataController>(0);
+
             SectionController graphics_sec = file.GetItem<SectionController>(6);
-            SectionController tex_sec = graphics_sec.GetItem<SectionController>(0);
-            SectionController mat_sec = graphics_sec.GetItem<SectionController>(1);
             SectionController mesh_sec = graphics_sec.GetItem<SectionController>(2);
             SectionController model_sec = graphics_sec.GetItem<SectionController>(6);
             SectionController special_sec = graphics_sec.GetItem<SectionController>(7);
@@ -363,17 +361,28 @@ namespace TwinsaityEditor
 
                         if (rigid != null)
                         {
-                            Utils.TextUtils.LoadTexture(rigid.MaterialIDs, file, vtx[vtx_id], v);
+                            Utils.TextUtils.LoadTexture(rigid.MaterialIDs, file, sceneryObjects[vtx_id], v);
                         }
 
                         sceneryObjects[vtx_id].Vtx = mesh.Vertices[v];
                         sceneryObjects[vtx_id].VtxInd = mesh.Indices[v];
                         mesh.Vertices[v] = vbuffer;
 
-                        UpdateVBO(vtx_id);
+                        UpdateVBOforScenery(vtx_id);
                     }
                 }
             }
+        }
+
+        protected void UpdateVBOforScenery(int id)
+        {
+            GL.BindBuffer(BufferTarget.ArrayBuffer, sceneryObjects[id].ID);
+            if (sceneryObjects[id].Vtx.Length > sceneryObjects[id].LastSize)
+                GL.BufferData(BufferTarget.ArrayBuffer, Vertex.SizeOf * sceneryObjects[id].Vtx.Length, sceneryObjects[id].Vtx, BufferUsageHint.StaticDraw);
+            else
+                GL.BufferSubData(BufferTarget.ArrayBuffer, (IntPtr)0, Vertex.SizeOf * sceneryObjects[id].Vtx.Length, sceneryObjects[id].Vtx);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            sceneryObjects[id].LastSize = sceneryObjects[id].Vtx.Length;
         }
 
         private readonly int sceneryLimit = 4000;

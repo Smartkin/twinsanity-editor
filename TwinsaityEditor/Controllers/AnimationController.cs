@@ -252,11 +252,16 @@ namespace TwinsaityEditor.Controllers
 
         protected override void GenText()
         {
+            var hasAnimData = (Data.Bitfield & 0x1) == 1 ? "yes" : "no";
+            var hasFacialAnimationData = (Data.Bitfield & 0x2) == 1 ? "yes" : "no";
+            var animationFps = (Data.Bitfield >> 0x12) & 0x1F;
             List<string> text = new List<string>
             {
                 $"ID: {Data.ID}",
                 $"Size: {Data.Size}",
-                $"Unknown bitfield: 0x{Data.Bitfield:X}",
+                $"Has animation data: {hasAnimData}",
+                $"Has facial animation data: {hasFacialAnimationData}",
+                $"Animation FPS in-game: {animationFps}",
                 $"Main animation total frames: {Data.TotalFrames}",
                 $"Blob packed 1: 0x{Data.AnimationDataPacker:X}",
                 $"Main animation joint settings: {Data.JointsSettings.Count}",
