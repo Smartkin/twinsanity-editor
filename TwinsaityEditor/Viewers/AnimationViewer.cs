@@ -22,7 +22,8 @@ namespace TwinsaityEditor.Viewers
         private GraphicsInfoController graphicsInfo;
         private SkinController skin;
         private BlendSkinController bskin;
-        private ModelController mesh;
+        private SkinXController skinX;
+        private BlendSkinXController bskinX;
         private FileController targetFile;
         private FileController file;
         private AnimationPlayer player;
@@ -79,48 +80,96 @@ namespace TwinsaityEditor.Viewers
 
         private void SetupVBORender()
         {
-            ModelController m;
             var vbos = 0;
             skin = null;
             bskin = null;
+            skinX = null;
+            bskinX = null;
             SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(2);
-            foreach(var pair in graphicsInfo.Data.ModelIDs)
-            {
-                foreach (RigidModel mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
-                {
-                    if (mod.ID == pair.Value.ModelID)
-                    {
-                        uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(mod.ID).MeshID;
-                        m = mesh_sec.GetItem<ModelController>(meshID);
-                        vbos += m.Data.SubModels.Count;
-                        break;
-                    }
-                }
-            }
 
-            if (graphicsInfo.Data.SkinID != 0)
+            if (targetFile.Data.Type == TwinsFile.FileType.RMX)
             {
-                SectionController skin_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(4);
-                foreach (Skin mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(4).Records)
+                foreach (var pair in graphicsInfo.Data.ModelIDs)
                 {
-                    if (mod.ID == graphicsInfo.Data.SkinID)
+                    foreach (RigidModel mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
                     {
-                        skin = skin_sec.GetItem<SkinController>(mod.ID);
-                        vbos += skin.Data.SubModels.Count;
-                        break;
+                        if (mod.ID == pair.Value.ModelID)
+                        {
+                            uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(mod.ID).MeshID;
+                            ModelXController m = mesh_sec.GetItem<ModelXController>(meshID);
+                            vbos += m.Data.SubModels.Count;
+                            break;
+                        }
+                    }
+                }
+
+                if (graphicsInfo.Data.SkinID != 0)
+                {
+                    SectionController skin_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(4);
+                    foreach (SkinX mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(4).Records)
+                    {
+                        if (mod.ID == graphicsInfo.Data.SkinID)
+                        {
+                            skinX = skin_sec.GetItem<SkinXController>(mod.ID);
+                            vbos += skinX.Data.SubModels.Count;
+                            break;
+                        }
+                    }
+                }
+                if (graphicsInfo.Data.BlendSkinID != 0)
+                {
+                    SectionController blend_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(5);
+                    foreach (BlendSkinX mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(5).Records)
+                    {
+                        if (mod.ID == graphicsInfo.Data.BlendSkinID)
+                        {
+                            bskinX = blend_sec.GetItem<BlendSkinXController>(mod.ID);
+                            vbos += bskinX.Data.SubModels.Count;
+                            break;
+                        }
                     }
                 }
             }
-            if (graphicsInfo.Data.BlendSkinID != 0)
+            else
             {
-                SectionController blend_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(5);
-                foreach (BlendSkin mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(5).Records)
+                foreach (var pair in graphicsInfo.Data.ModelIDs)
                 {
-                    if (mod.ID == graphicsInfo.Data.BlendSkinID)
+                    foreach (RigidModel mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
                     {
-                        bskin = blend_sec.GetItem<BlendSkinController>(mod.ID);
-                        vbos += bskin.Data.Models.Length;
-                        break;
+                        if (mod.ID == pair.Value.ModelID)
+                        {
+                            uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(mod.ID).MeshID;
+                            ModelController m = mesh_sec.GetItem<ModelController>(meshID);
+                            vbos += m.Data.SubModels.Count;
+                            break;
+                        }
+                    }
+                }
+
+                if (graphicsInfo.Data.SkinID != 0)
+                {
+                    SectionController skin_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(4);
+                    foreach (Skin mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(4).Records)
+                    {
+                        if (mod.ID == graphicsInfo.Data.SkinID)
+                        {
+                            skin = skin_sec.GetItem<SkinController>(mod.ID);
+                            vbos += skin.Data.SubModels.Count;
+                            break;
+                        }
+                    }
+                }
+                if (graphicsInfo.Data.BlendSkinID != 0)
+                {
+                    SectionController blend_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(5);
+                    foreach (BlendSkin mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(5).Records)
+                    {
+                        if (mod.ID == graphicsInfo.Data.BlendSkinID)
+                        {
+                            bskin = blend_sec.GetItem<BlendSkinController>(mod.ID);
+                            vbos += bskin.Data.Models.Length;
+                            break;
+                        }
                     }
                 }
             }
@@ -148,6 +197,10 @@ namespace TwinsaityEditor.Viewers
             if (targetFile.Data.Type == TwinsFile.FileType.RM2 || targetFile.Data.Type == TwinsFile.FileType.DemoRM2)
             {
                 LoadOGI_PS2();
+            }
+            else if (targetFile.Data.Type == TwinsFile.FileType.RMX)
+            {
+                LoadOGI_Xbox();
             }
         }
 
@@ -207,9 +260,17 @@ namespace TwinsaityEditor.Viewers
             {
                 AnimateSkeletonSkin();
             }
+            if (skinX != null)
+            {
+                AnimateSkeletonSkinX();
+            }
             if (bskin != null)
             {
                 AnimateSkeletonBskin();
+            }
+            if (bskinX != null)
+            {
+                AnimateSkeletonBskinX();
             }
         }
 
@@ -253,6 +314,81 @@ namespace TwinsaityEditor.Viewers
                 vtxIndex++;
             }
         }
+        private void AnimateSkeletonBskinX()
+        {
+            var faceProgress = player.PlayFacial();
+            var vtxIndex = 0;
+            var skeleton = graphicsInfo.Skeleton;
+            for (int i = 0; i < bskinX.Vertices.Count; i++)
+            {
+                var faceVerts = new Vector3[bskinX.Vertices[i].Length];
+                if (faceProgress.Length > 0)
+                {
+                    for (var j = 0; j < faceProgress.Length; ++j)
+                    {
+                        var face = bskinX.GetFacialPositions(j, faceProgress[j]);
+                        for (int k = 0; k < bskinX.Vertices[i].Length; ++k)
+                        {
+                            faceVerts[k] += face[i][k];
+                        }
+                    }
+                }
+
+                int GroupID = 0;
+                int GroupVert = 0;
+                Vertex[] vbuffer = new Vertex[bskinX.Vertices[i].Length];
+                for (int k = 0; k < bskinX.Vertices[i].Length; k++)
+                {
+                    ushort Bone1 = 0;
+                    ushort Bone2 = 0;
+                    ushort Bone3 = 0;
+                    int Joint1 = (bskinX.Data.SubModels[i].VData[k].Joint1 - 16) / 4;
+                    int Joint2 = (bskinX.Data.SubModels[i].VData[k].Joint2 - 16) / 4;
+                    int Joint3 = (bskinX.Data.SubModels[i].VData[k].Joint3 - 16) / 4;
+                    if (Joint1 < bskinX.Data.SubModels[i].GroupJoints[GroupID].Count)
+                    {
+                        Bone1 = (ushort)bskinX.Data.SubModels[i].GroupJoints[GroupID][Joint1];
+                        if (Bone1 > JointTransforms.Count - 1)
+                            Bone1 = 0;
+                    }
+                    if (Joint2 < bskinX.Data.SubModels[i].GroupJoints[GroupID].Count)
+                    {
+                        Bone2 = (ushort)bskinX.Data.SubModels[i].GroupJoints[GroupID][Joint2];
+                        if (Bone2 > JointTransforms.Count - 1)
+                            Bone2 = 0;
+                    }
+                    if (Joint3 < bskinX.Data.SubModels[i].GroupJoints[GroupID].Count)
+                    {
+                        Bone3 = (ushort)bskinX.Data.SubModels[i].GroupJoints[GroupID][Joint3];
+                        if (Bone3 > JointTransforms.Count - 1)
+                            Bone3 = 0;
+                    }
+
+                    vbuffer[k] = bskinX.Vertices[i][k];
+                    var bindPose1 = skeleton.InverseBindPose[Bone1] * JointTransforms[Bone1];
+                    var bindPose2 = skeleton.InverseBindPose[Bone2] * JointTransforms[Bone2];
+                    var bindPose3 = skeleton.InverseBindPose[Bone3] * JointTransforms[Bone3];
+                    Vector4 targetPos = new Vector4(bskinX.Vertices[i][k].Pos.X + faceVerts[k].X, bskinX.Vertices[i][k].Pos.Y + faceVerts[k].Y, bskinX.Vertices[i][k].Pos.Z + faceVerts[k].Z, 1);
+                    var t1 = (targetPos * bindPose1) * bskinX.Data.SubModels[i].VData[k].Weight1;
+                    var t2 = (targetPos * bindPose2) * bskinX.Data.SubModels[i].VData[k].Weight2;
+                    var t3 = (targetPos * bindPose3) * bskinX.Data.SubModels[i].VData[k].Weight3;
+                    targetPos = t1 + t2 + t3;
+                    bskinX.Vertices[i][k].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+
+                    GroupVert++;
+                    if (GroupVert > bskinX.Data.SubModels[i].GroupList[GroupID] - 1)
+                    {
+                        GroupVert = 0;
+                        GroupID++;
+                    }
+                }
+                vtx[vtxIndex].Vtx = bskinX.Vertices[i];
+                vtx[vtxIndex].VtxInd = bskinX.Indices[i];
+                bskinX.Vertices[i] = vbuffer;
+                UpdateVBO(vtxIndex);
+                vtxIndex++;
+            }
+        }
 
         private void AnimateSkeletonSkin()
         {
@@ -277,6 +413,67 @@ namespace TwinsaityEditor.Viewers
                 vtx[vtxIndex].Vtx = skin.TposeVertices[i];
                 vtx[vtxIndex].VtxInd = skin.Indices[i];
                 skin.TposeVertices[i] = vbuffer;
+                UpdateVBO(vtxIndex);
+                vtxIndex++;
+            }
+        }
+        private void AnimateSkeletonSkinX()
+        {
+            var vtxIndex = bskinEndIndex;
+            var skeleton = graphicsInfo.Skeleton;
+            for (int i = 0; i < skinX.Vertices.Count; i++)
+            {
+                int GroupID = 0;
+                int GroupVert = 0;
+                Vertex[] vbuffer = new Vertex[skinX.Vertices[i].Length];
+                for (int k = 0; k < skinX.Vertices[i].Length; k++)
+                {
+                    ushort Bone1 = 0;
+                    ushort Bone2 = 0;
+                    ushort Bone3 = 0;
+                    int Joint1 = (skinX.Data.SubModels[i].VData[k].Joint1 - 16) / 4;
+                    int Joint2 = (skinX.Data.SubModels[i].VData[k].Joint2 - 16) / 4;
+                    int Joint3 = (skinX.Data.SubModels[i].VData[k].Joint3 - 16) / 4;
+                    if (Joint1 < skinX.Data.SubModels[i].GroupJoints[GroupID].Count)
+                    {
+                        Bone1 = (ushort)skinX.Data.SubModels[i].GroupJoints[GroupID][Joint1];
+                        if (Bone1 > JointTransforms.Count - 1)
+                            Bone1 = 0;
+                    }
+                    if (Joint2 < skinX.Data.SubModels[i].GroupJoints[GroupID].Count)
+                    {
+                        Bone2 = (ushort)skinX.Data.SubModels[i].GroupJoints[GroupID][Joint2];
+                        if (Bone2 > JointTransforms.Count - 1)
+                            Bone2 = 0;
+                    }
+                    if (Joint3 < skinX.Data.SubModels[i].GroupJoints[GroupID].Count)
+                    {
+                        Bone3 = (ushort)skinX.Data.SubModels[i].GroupJoints[GroupID][Joint3];
+                        if (Bone3 > JointTransforms.Count - 1)
+                            Bone3 = 0;
+                    }
+
+                    vbuffer[k] = skinX.Vertices[i][k];
+                    var bindPose1 = skeleton.InverseBindPose[Bone1] * JointTransforms[Bone1];
+                    var bindPose2 = skeleton.InverseBindPose[Bone2] * JointTransforms[Bone2];
+                    var bindPose3 = skeleton.InverseBindPose[Bone3] * JointTransforms[Bone3];
+                    Vector4 targetPos = new Vector4(skinX.Vertices[i][k].Pos.X, skinX.Vertices[i][k].Pos.Y, skinX.Vertices[i][k].Pos.Z, 1);
+                    var t1 = (targetPos * bindPose1) * skinX.Data.SubModels[i].VData[k].Weight1;
+                    var t2 = (targetPos * bindPose2) * skinX.Data.SubModels[i].VData[k].Weight2;
+                    var t3 = (targetPos * bindPose3) * skinX.Data.SubModels[i].VData[k].Weight3;
+                    targetPos = t1 + t2 + t3;
+                    skinX.Vertices[i][k].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+
+                    GroupVert++;
+                    if (GroupVert > skinX.Data.SubModels[i].GroupList[GroupID] - 1)
+                    {
+                        GroupVert = 0;
+                        GroupID++;
+                    }
+                }
+                vtx[vtxIndex].Vtx = skinX.Vertices[i];
+                vtx[vtxIndex].VtxInd = skinX.Indices[i];
+                skinX.Vertices[i] = vbuffer;
                 UpdateVBO(vtxIndex);
                 vtxIndex++;
             }
@@ -317,34 +514,71 @@ namespace TwinsaityEditor.Viewers
                 var vtxIndex = VbufferMap[model.Key];
                 var modelId = model.Value.ModelID;
 
+                
                 SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(2);
-                foreach (RigidModel mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
+                if (mesh_sec.Data.Type == SectionType.ModelX)
                 {
-                    if (mod.ID == modelId)
+                    ModelXController mesh = null;
+                    foreach (RigidModel mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
                     {
-                        uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(mod.ID).MeshID;
-                        mesh = mesh_sec.GetItem<ModelController>(meshID);
-                        break;
+                        if (mod.ID == modelId)
+                        {
+                            uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(mod.ID).MeshID;
+                            mesh = mesh_sec.GetItem<ModelXController>(meshID);
+                            break;
+                        }
+                    }
+
+                    for (int v = 0; v < mesh.Vertices.Count; v++)
+                    {
+                        Vertex[] vbuffer = new Vertex[mesh.Vertices[v].Length];
+                        for (int k = 0; k < mesh.Vertices[v].Length; k++)
+                        {
+                            vbuffer[k] = mesh.Vertices[v][k];
+                            Vector4 targetPos = new Vector4(mesh.Vertices[v][k].Pos.X, mesh.Vertices[v][k].Pos.Y, mesh.Vertices[v][k].Pos.Z, 1);
+                            targetPos *= poseTransform;
+                            mesh.Vertices[v][k].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+                        }
+
+                        vtx[vtxIndex].Vtx = mesh.Vertices[v];
+                        vtx[vtxIndex].VtxInd = mesh.Indices[v];
+                        mesh.Vertices[v] = vbuffer;
+                        UpdateVBO(vtxIndex);
+
+                        vtxIndex++;
                     }
                 }
-
-                for (int v = 0; v < mesh.Vertices.Count; v++)
+                else
                 {
-                    Vertex[] vbuffer = new Vertex[mesh.TposeVertices[v].Length];
-                    for (int k = 0; k < mesh.TposeVertices[v].Length; k++)
+                    ModelController mesh = null;
+                    foreach (RigidModel mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
                     {
-                        vbuffer[k] = mesh.TposeVertices[v][k];
-                        Vector4 targetPos = new Vector4(mesh.TposeVertices[v][k].Pos.X, mesh.TposeVertices[v][k].Pos.Y, mesh.TposeVertices[v][k].Pos.Z, 1);
-                        targetPos *= poseTransform;
-                        mesh.TposeVertices[v][k].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+                        if (mod.ID == modelId)
+                        {
+                            uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(mod.ID).MeshID;
+                            mesh = mesh_sec.GetItem<ModelController>(meshID);
+                            break;
+                        }
                     }
 
-                    vtx[vtxIndex].Vtx = mesh.TposeVertices[v];
-                    vtx[vtxIndex].VtxInd = mesh.Indices[v];
-                    mesh.TposeVertices[v] = vbuffer;
-                    UpdateVBO(vtxIndex);
+                    for (int v = 0; v < mesh.Vertices.Count; v++)
+                    {
+                        Vertex[] vbuffer = new Vertex[mesh.TposeVertices[v].Length];
+                        for (int k = 0; k < mesh.TposeVertices[v].Length; k++)
+                        {
+                            vbuffer[k] = mesh.TposeVertices[v][k];
+                            Vector4 targetPos = new Vector4(mesh.TposeVertices[v][k].Pos.X, mesh.TposeVertices[v][k].Pos.Y, mesh.TposeVertices[v][k].Pos.Z, 1);
+                            targetPos *= poseTransform;
+                            mesh.TposeVertices[v][k].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+                        }
 
-                    vtxIndex++;
+                        vtx[vtxIndex].Vtx = mesh.TposeVertices[v];
+                        vtx[vtxIndex].VtxInd = mesh.Indices[v];
+                        mesh.TposeVertices[v] = vbuffer;
+                        UpdateVBO(vtxIndex);
+
+                        vtxIndex++;
+                    }
                 }
             }
         }
@@ -501,6 +735,7 @@ namespace TwinsaityEditor.Viewers
                 SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(2);
                 SectionController rigid_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(3);
                 RigidModelController rigid = null;
+                ModelController mesh = null;
                 foreach (RigidModel mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
                 {
                     if (mod.ID == pair.Value.ModelID)
@@ -545,6 +780,136 @@ namespace TwinsaityEditor.Viewers
                     vtx[vtxIndex].VtxInd = mesh.Indices[v];
                     UpdateVBO(vtxIndex);
                     
+                    vtxIndex++;
+                }
+
+
+            }
+
+            zFar = Math.Max(zFar, Math.Max(max_x - min_x, Math.Max(max_y - min_y, max_z - min_z)));
+        }
+
+        public void LoadOGI_Xbox()
+        {
+            float min_x = float.MaxValue, min_y = float.MaxValue, min_z = float.MaxValue, max_x = float.MinValue, max_y = float.MinValue, max_z = float.MinValue;
+
+            var vtxIndex = 0;
+            if (graphicsInfo.Data.BlendSkinID != 0)
+            {
+                bskinX.LoadMeshData();
+                foreach (var list in bskinX.Vertices)
+                {
+                    foreach (var v in list)
+                    {
+                        min_x = Math.Min(min_x, v.Pos.X);
+                        min_y = Math.Min(min_y, v.Pos.Y);
+                        min_z = Math.Min(min_z, v.Pos.Z);
+                        max_x = Math.Max(max_x, v.Pos.X);
+                        max_y = Math.Max(max_y, v.Pos.Y);
+                        max_z = Math.Max(max_z, v.Pos.Z);
+                    }
+                }
+                for (int i = 0; i < bskinX.Vertices.Count; i++)
+                {
+                    vtx[vtxIndex].Vtx = bskinX.Vertices[i];
+                    vtx[vtxIndex].VtxInd = bskinX.Indices[i];
+                    Utils.TextUtils.LoadTexture(bskinX.Data.SubModels.Select((subModel) =>
+                    {
+                        return subModel.MaterialID;
+                    }).ToArray(), file, vtx[vtxIndex], i);
+                    UpdateVBO(vtxIndex);
+                    vtxIndex++;
+                }
+            }
+            bskinEndIndex = vtxIndex;
+            if (graphicsInfo.Data.SkinID != 0)
+            {
+                skinX.LoadMeshData();
+                foreach (var list in skinX.Vertices)
+                {
+                    foreach (var v in list)
+                    {
+                        min_x = Math.Min(min_x, v.Pos.X);
+                        min_y = Math.Min(min_y, v.Pos.Y);
+                        min_z = Math.Min(min_z, v.Pos.Z);
+                        max_x = Math.Max(max_x, v.Pos.X);
+                        max_y = Math.Max(max_y, v.Pos.Y);
+                        max_z = Math.Max(max_z, v.Pos.Z);
+                    }
+                }
+
+                for (int i = 0; i < skinX.Vertices.Count; i++)
+                {
+                    Vertex[] vbuffer = new Vertex[skinX.Vertices[i].Length];
+                    for (int k = 0; k < skinX.Vertices[i].Length; k++)
+                    {
+                        vbuffer[k] = skinX.Vertices[i][k];
+                        Vector4 targetPos = new Vector4(skinX.Vertices[i][k].Pos.X, skinX.Vertices[i][k].Pos.Y, skinX.Vertices[i][k].Pos.Z, 1);
+                        skinX.Vertices[i][k].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+                        //skinX.Vertices[i][k].Col = Vertex.ColorToABGR(Color.FromArgb(255, Color.White));
+                    }
+                    vtx[vtxIndex].Vtx = skinX.Vertices[i];
+                    vtx[vtxIndex].VtxInd = skinX.Indices[i];
+                    Utils.TextUtils.LoadTexture(skinX.Data.SubModels.Select((subModel) =>
+                    {
+                        return subModel.MaterialID;
+                    }).ToArray(), file, vtx[vtxIndex], i);
+                    skinX.Vertices[i] = vbuffer;
+                    UpdateVBO(vtxIndex);
+                    vtxIndex++;
+                }
+            }
+            skinEndIndex = vtxIndex;
+            foreach (var pair in graphicsInfo.Data.ModelIDs)
+            {
+                SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(2);
+                SectionController rigid_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(3);
+                RigidModelController rigid = null;
+                ModelXController mesh = null;
+                foreach (RigidModel mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
+                {
+                    if (mod.ID == pair.Value.ModelID)
+                    {
+                        uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(mod.ID).MeshID;
+                        mesh = mesh_sec.GetItem<ModelXController>(meshID);
+                        rigid = rigid_sec.GetItem<RigidModelController>(mod.ID);
+                    }
+                }
+
+                mesh.LoadMeshData();
+
+                var skeleton = graphicsInfo.Skeleton;
+                var bindPose = skeleton.BindPose[(int)pair.Value.JointIndex];
+                VbufferMap.Add(pair.Key, vtxIndex);
+
+                for (int v = 0; v < mesh.Vertices.Count; v++)
+                {
+                    for (int k = 0; k < mesh.Vertices[v].Length; k++)
+                    {
+                        Vector4 targetPos = new Vector4(mesh.Vertices[v][k].Pos.X, mesh.Vertices[v][k].Pos.Y, mesh.Vertices[v][k].Pos.Z, 1);
+                        targetPos *= bindPose;
+                        mesh.Vertices[v][k].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+                        //mesh.Vertices[v][k].Col = Vertex.ColorToABGR(Color.FromArgb(255, Color.White));
+                    }
+
+
+                    foreach (var p in mesh.Vertices[v])
+                    {
+                        min_x = Math.Min(min_x, p.Pos.X);
+                        min_y = Math.Min(min_y, p.Pos.Y);
+                        min_z = Math.Min(min_z, p.Pos.Z);
+                        max_x = Math.Max(max_x, p.Pos.X);
+                        max_y = Math.Max(max_y, p.Pos.Y);
+                        max_z = Math.Max(max_z, p.Pos.Z);
+                    }
+                    if (rigid != null)
+                    {
+                        Utils.TextUtils.LoadTexture(rigid.Data.MaterialIDs, file, vtx[vtxIndex], v);
+                    }
+                    vtx[vtxIndex].Vtx = mesh.Vertices[v];
+                    vtx[vtxIndex].VtxInd = mesh.Indices[v];
+                    UpdateVBO(vtxIndex);
+
                     vtxIndex++;
                 }
 

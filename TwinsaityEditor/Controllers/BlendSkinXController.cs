@@ -160,6 +160,28 @@ namespace TwinsaityEditor
 
         }
 
+        public List<Vector3[]> GetFacialPositions(int blendShape, float faceProgress)
+        {
+            var faceOffsets = new List<Vector3[]>();
+            foreach (var model in Data.SubModels)
+            {
+                var modelFace = new List<Vector3>();
+                for (var j = 0; j < model.VData.Count; ++j)
+                {
+                    var blendVec = new Vector3(-model.VData[j].BlendShapes[blendShape].X,
+                        model.VData[j].BlendShapes[blendShape].Y,
+                        model.VData[j].BlendShapes[blendShape].Z);
+                    var origVec = new Vector3(-model.VData[j].X, model.VData[j].Y, model.VData[j].Z);
+                    blendVec = blendVec - origVec;
+                    blendVec *= faceProgress;
+                    modelFace.Add(blendVec);
+                }
+                faceOffsets.Add(modelFace.ToArray());
+            }
+
+            return faceOffsets;
+        }
+
         private void Menu_OpenViewer()
         {
             MainFile.OpenMeshViewer(this);
