@@ -112,6 +112,78 @@ namespace Twinsanity
                         (Model.unkBlobSizePacked >> 0x16) * Model.unkBlobSizeHelper * 0x4;
 
                     Model.dynBlob = reader.ReadBytes(blobSize);
+                    using (MemoryStream memoryStream = new MemoryStream(Model.dynBlob))
+                    {
+                        using (BinaryReader blobReader = new BinaryReader(memoryStream))
+                        {
+                            Model.AnimByte1 = blobReader.ReadByte();
+                            Model.AnimByte2 = blobReader.ReadByte();
+                            Model.AnimFlags = blobReader.ReadByte();
+                            Model.AnimByte4 = blobReader.ReadByte();
+                            Model.AnimInt = blobReader.ReadUInt32(); // 0?
+                            Model.WorldPosition = new Pos(0, 0, 0, 1);
+                            Model.WorldRotation = new Pos(0, 0, 0, 0);
+                            if ((Model.AnimFlags & 1) != 0)
+                                Model.WorldPosition.X = blobReader.ReadSingle();
+                            else
+                                Model.AnimPosX = new List<float>();
+                            if ((Model.AnimFlags & 2) != 0)
+                                Model.WorldPosition.Y = blobReader.ReadSingle();
+                            else
+                                Model.AnimPosY = new List<float>();
+                            if ((Model.AnimFlags & 4) != 0)
+                                Model.WorldPosition.Z = blobReader.ReadSingle();
+                            else
+                                Model.AnimPosZ = new List<float>();
+                            if ((Model.AnimFlags & 8) != 0)
+                                Model.WorldRotation.X = blobReader.ReadSingle();
+                            else
+                                Model.AnimRotX = new List<float>();
+                            if ((Model.AnimFlags & 16) != 0)
+                                Model.WorldRotation.Y = blobReader.ReadSingle();
+                            else
+                                Model.AnimRotY = new List<float>();
+                            if ((Model.AnimFlags & 32) != 0)
+                                Model.WorldRotation.Z = blobReader.ReadSingle();
+                            else
+                                Model.AnimRotZ = new List<float>();
+                            if ((Model.AnimFlags & 64) != 0)
+                                Model.WorldRotation.W = blobReader.ReadSingle();
+                            else
+                                Model.AnimRotW = new List<float>();
+                            for (int f = 0; f < Model.unkInt2; f++)
+                            {
+                                if ((Model.AnimFlags & 1) == 0)
+                                    Model.AnimPosX.Add(blobReader.ReadSingle());
+                                if ((Model.AnimFlags & 2) == 0)
+                                    Model.AnimPosY.Add(blobReader.ReadSingle());
+                                if ((Model.AnimFlags & 4) == 0)
+                                    Model.AnimPosZ.Add(blobReader.ReadSingle());
+                                if ((Model.AnimFlags & 8) == 0)
+                                    Model.AnimRotX.Add(blobReader.ReadSingle());
+                                if ((Model.AnimFlags & 16) == 0)
+                                    Model.AnimRotY.Add(blobReader.ReadSingle());
+                                if ((Model.AnimFlags & 32) == 0)
+                                    Model.AnimRotZ.Add(blobReader.ReadSingle());
+                                if ((Model.AnimFlags & 64) == 0)
+                                    Model.AnimRotW.Add(blobReader.ReadSingle());
+                            }
+                            if ((Model.AnimFlags & 1) == 0)
+                                Model.WorldPosition.X = Model.AnimPosX[0];
+                            if ((Model.AnimFlags & 2) == 0)
+                                Model.WorldPosition.Y = Model.AnimPosY[0];
+                            if ((Model.AnimFlags & 4) == 0)
+                                Model.WorldPosition.Z = Model.AnimPosZ[0];
+                            if ((Model.AnimFlags & 8) == 0)
+                                Model.WorldRotation.X = Model.AnimRotX[0];
+                            if ((Model.AnimFlags & 16) == 0)
+                                Model.WorldRotation.Y = Model.AnimRotY[0];
+                            if ((Model.AnimFlags & 32) == 0)
+                                Model.WorldRotation.Z = Model.AnimRotZ[0];
+                            if ((Model.AnimFlags & 64) == 0)
+                                Model.WorldRotation.W = Model.AnimRotW[0];
+                        }
+                    }
 
                     Model.unkByte = reader.ReadByte();
 
@@ -144,8 +216,20 @@ namespace Twinsanity
             public Pos BoundingBoxVector1;
             public Pos BoundingBoxVector2;
 
-            //public byte[] BlobHeader; // 5
-            //public Pos WorldPosition;
+            public Pos WorldPosition;
+            public Pos WorldRotation;
+            public byte AnimByte1;
+            public byte AnimByte2;
+            public byte AnimFlags;
+            public byte AnimByte4;
+            public uint AnimInt;
+            public List<float> AnimPosX;
+            public List<float> AnimPosY;
+            public List<float> AnimPosZ;
+            public List<float> AnimRotX;
+            public List<float> AnimRotY;
+            public List<float> AnimRotZ;
+            public List<float> AnimRotW;
         }
 
         public class GI_Type3
