@@ -12,8 +12,8 @@ namespace TwinsaityEditor
     {
         public new ModelX Data { get; set; }
 
-        public Vertex[] Vertices { get; set; }
-        public uint[] Indices { get; set; }
+        public List<Vertex[]> Vertices { get; set; } = new List<Vertex[]>();
+        public List<uint[]> Indices { get; set; } = new List<uint[]>();
         public bool IsLoaded { get; private set; }
 
         public ModelXController(MainForm topform, ModelX item) : base(topform, item)
@@ -53,15 +53,19 @@ namespace TwinsaityEditor
 
         public void LoadMeshData()
         {
-            if (IsLoaded) return;
-            List<Vertex> vtx = new List<Vertex>();
-            List<uint> idx = new List<uint>();
-            int off = 0;
+            Vertices.Clear();
+            Indices.Clear();
+
             foreach (var s in Data.SubModels)
             {
+                List<Vertex> vtx = new List<Vertex>();
+                List<uint> idx = new List<uint>();
+                int off = 0;
                 for (int v = 0; v < s.VData.Count; v++)
                 {
-                    vtx.Add(new Vertex(new Vector3(-s.VData[v].X, s.VData[v].Y, s.VData[v].Z), Color.FromArgb(s.VData[v].R, s.VData[v].G, s.VData[v].B)));
+                    vtx.Add(new Vertex(new Vector3(-s.VData[v].X, s.VData[v].Y, s.VData[v].Z),
+                        new Vector2(s.VData[v].UV_X, 1 - s.VData[v].UV_Y),
+                        Color.FromArgb(s.VData[v].R, s.VData[v].G, s.VData[v].B)));
                 }
                 for (int g = 0; g < s.GroupList.Count; g++)
                 {
@@ -86,9 +90,9 @@ namespace TwinsaityEditor
                     }
                     off += (int)s.GroupList[g];
                 }
+                Vertices.Add(vtx.ToArray());
+                Indices.Add(idx.ToArray());
             }
-            Vertices = vtx.ToArray();
-            Indices = idx.ToArray();
             IsLoaded = true;
         }
 

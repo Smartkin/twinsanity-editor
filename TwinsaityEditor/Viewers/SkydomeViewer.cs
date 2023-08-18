@@ -99,35 +99,71 @@ namespace TwinsaityEditor
             SectionController model_sec = file.GetItem<SectionController>(6).GetItem<SectionController>(6);
             SectionController special_sec = file.GetItem<SectionController>(6).GetItem<SectionController>(7);
             var vtxIndex = 0;
-            for (int i = 0; i < sky.Data.MeshIDs.Length; ++i)
+            if (mesh_sec.Data.Type == SectionType.ModelX)
             {
-                if (special_sec.Data.ContainsItem(sky.Data.MeshIDs[i]))
-                    continue;
-                ModelController mesh = mesh_sec.GetItem<ModelController>(model_sec.GetItem<RigidModelController>(sky.Data.MeshIDs[i]).Data.MeshID);
-                mesh.LoadMeshData();
-                foreach (var list in mesh.Vertices)
+                for (int i = 0; i < sky.Data.MeshIDs.Length; ++i)
                 {
-                    foreach (var v in list)
+                    if (special_sec.Data.ContainsItem(sky.Data.MeshIDs[i]))
+                        continue;
+                    ModelXController mesh = mesh_sec.GetItem<ModelXController>(model_sec.GetItem<RigidModelController>(sky.Data.MeshIDs[i]).Data.MeshID);
+                    mesh.LoadMeshData();
+                    foreach (var list in mesh.Vertices)
                     {
-                        min_x = Math.Min(min_x, v.Pos.X);
-                        min_y = Math.Min(min_y, v.Pos.Y);
-                        min_z = Math.Min(min_z, v.Pos.Z);
-                        max_x = Math.Max(max_x, v.Pos.X);
-                        max_y = Math.Max(max_y, v.Pos.Y);
-                        max_z = Math.Max(max_z, v.Pos.Z);
+                        foreach (var v in list)
+                        {
+                            min_x = Math.Min(min_x, v.Pos.X);
+                            min_y = Math.Min(min_y, v.Pos.Y);
+                            min_z = Math.Min(min_z, v.Pos.Z);
+                            max_x = Math.Max(max_x, v.Pos.X);
+                            max_y = Math.Max(max_y, v.Pos.Y);
+                            max_z = Math.Max(max_z, v.Pos.Z);
+                        }
                     }
+                    for (int j = 0; j < mesh.Vertices.Count; j++)
+                    {
+                        vtx[vtxIndex].Vtx = mesh.Vertices[j];
+                        vtx[vtxIndex].VtxInd = mesh.Indices[j];
+                        Utils.TextUtils.LoadTexture(model_sec.GetItem<RigidModelController>(sky.Data.MeshIDs[i]).Data.MaterialIDs, file, vtx[vtxIndex], j);
+                        UpdateVBO(vtxIndex);
+                        vtxIndex++;
+                    }
+
+
                 }
-                for (int j = 0; j < mesh.Vertices.Count; j++)
-                {
-                    vtx[vtxIndex].Vtx = mesh.Vertices[j];
-                    vtx[vtxIndex].VtxInd = mesh.Indices[j];
-                    Utils.TextUtils.LoadTexture(model_sec.GetItem<RigidModelController>(sky.Data.MeshIDs[i]).Data.MaterialIDs, file, vtx[vtxIndex], j);
-                    UpdateVBO(vtxIndex);
-                    vtxIndex++;
-                }
-                
-                
             }
+            else
+            {
+                for (int i = 0; i < sky.Data.MeshIDs.Length; ++i)
+                {
+                    if (special_sec.Data.ContainsItem(sky.Data.MeshIDs[i]))
+                        continue;
+                    ModelController mesh = mesh_sec.GetItem<ModelController>(model_sec.GetItem<RigidModelController>(sky.Data.MeshIDs[i]).Data.MeshID);
+                    mesh.LoadMeshData();
+                    foreach (var list in mesh.Vertices)
+                    {
+                        foreach (var v in list)
+                        {
+                            min_x = Math.Min(min_x, v.Pos.X);
+                            min_y = Math.Min(min_y, v.Pos.Y);
+                            min_z = Math.Min(min_z, v.Pos.Z);
+                            max_x = Math.Max(max_x, v.Pos.X);
+                            max_y = Math.Max(max_y, v.Pos.Y);
+                            max_z = Math.Max(max_z, v.Pos.Z);
+                        }
+                    }
+                    for (int j = 0; j < mesh.Vertices.Count; j++)
+                    {
+                        vtx[vtxIndex].Vtx = mesh.Vertices[j];
+                        vtx[vtxIndex].VtxInd = mesh.Indices[j];
+                        Utils.TextUtils.LoadTexture(model_sec.GetItem<RigidModelController>(sky.Data.MeshIDs[i]).Data.MaterialIDs, file, vtx[vtxIndex], j);
+                        UpdateVBO(vtxIndex);
+                        vtxIndex++;
+                    }
+
+
+                }
+            }
+            
             zFar = Math.Max(zFar, Math.Max(max_x - min_x, Math.Max(max_y - min_y, max_z - min_z)));
         }
 

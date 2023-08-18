@@ -52,9 +52,9 @@ namespace Twinsanity
                     writer.Write(v.Weight1);
                     writer.Write(v.Weight2);
                     writer.Write(v.Weight3);
-                    writer.Write(v.UnkShort1);
-                    writer.Write(v.UnkShort2);
-                    writer.Write(v.UnkShort3);
+                    writer.Write(v.Joint1);
+                    writer.Write(v.Joint2);
+                    writer.Write(v.Joint3);
                     writer.Write(v.UnkShort4);
                     writer.Write(v.PackedNormals);
                     writer.Write(v.R);
@@ -112,9 +112,9 @@ namespace Twinsanity
                     v.Weight1 = reader.ReadSingle();
                     v.Weight2 = reader.ReadSingle();
                     v.Weight3 = reader.ReadSingle();
-                    v.UnkShort1 = reader.ReadUInt16();
-                    v.UnkShort2 = reader.ReadUInt16();
-                    v.UnkShort3 = reader.ReadUInt16();
+                    v.Joint1 = reader.ReadUInt16();
+                    v.Joint2 = reader.ReadUInt16();
+                    v.Joint3 = reader.ReadUInt16();
                     v.UnkShort4 = reader.ReadUInt16();
                     v.PackedNormals = reader.ReadUInt32();
                     v.R = reader.ReadByte();
@@ -157,12 +157,12 @@ namespace Twinsanity
         {
             public float X, Y, Z;
             // Weight 1 + Weight 2 + Weight 3 = 1 always
-            public float Weight1; // Vertex weight 1?
-            public float Weight2; // Vertex weight 2?
-            public float Weight3; // Vertex weight 3?
-            public ushort UnkShort1;
-            public ushort UnkShort2;
-            public ushort UnkShort3;
+            public float Weight1;
+            public float Weight2;
+            public float Weight3;
+            public ushort Joint1;
+            public ushort Joint2;
+            public ushort Joint3;
             public ushort UnkShort4; // Confirmed always zero
             public uint PackedNormals; // Packed normals? (into 10-bit x3 + 2?)
             public byte R, G, B, A;
