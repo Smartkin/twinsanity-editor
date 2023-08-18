@@ -21,6 +21,7 @@ namespace TwinsaityEditor
         private GameObject gameObject;
         private FileController File { get; set; }
         private TwinsFile FileData { get => File.Data; }
+        private InstanceFlagsEditor flagsEditor;
 
         private ListManipulatorUInt16 ScriptsManipulator;
         private ListManipulatorUInt16 ObjectsManipulator;
@@ -122,6 +123,10 @@ namespace TwinsaityEditor
             {
                 File.SelectItem((GameObject)controller.Data.Records[objectList.SelectedIndex]);
                 gameObject = (GameObject)File.SelectedItem;
+                if (flagsEditor != null)
+                {
+                    flagsEditor.Agent = gameObject;
+                }
                 InitLists();
             }
             else
@@ -171,6 +176,7 @@ namespace TwinsaityEditor
             objectId.Text = Convert.ToString(gameObject.ID, 10);
 
             PopulateObjectCommandList();
+            instFlagsBox.Value = gameObject.PUI32;
         }
 
         private void nameSource_TextChanged(object sender, EventArgs e)
@@ -627,6 +633,24 @@ namespace TwinsaityEditor
                 lbCommandArguments.Items.Clear();
                 lblArguments.Text = "Arguments: 0";
                 PopulateObjectCommandList();
+            }
+        }
+
+        private void buttonEditFlags_Click(object sender, EventArgs e)
+        {
+            if (flagsEditor == null || flagsEditor.IsDisposed)
+            {
+                flagsEditor = new InstanceFlagsEditor(gameObject, instFlagsBox);
+            }
+            flagsEditor.Show();
+        }
+
+        private void instFlagsBox_ValueChanged(object sender, EventArgs e)
+        {
+            gameObject.PUI32 = (uint)instFlagsBox.Value;
+            if (flagsEditor != null)
+            {
+                flagsEditor.Agent = gameObject;
             }
         }
     }

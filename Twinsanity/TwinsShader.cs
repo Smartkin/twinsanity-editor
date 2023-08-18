@@ -13,7 +13,7 @@ namespace Twinsanity
         public UInt32 IntParam { get; set; }
         public Single[] FloatParam { get; private set; }
         public AlphaBlending ABlending;
-        byte AlphaRegSettingsIndex;
+        public byte AlphaRegSettingsIndex;
         public AlphaTest ATest;
         public AlphaTestMethod ATestMethod;
         public byte AlphaValueToBeComparedTo;
@@ -45,9 +45,9 @@ namespace Twinsanity
         // For LOD level calculation the following formula is used: LOD = (log2(1/Q)<<L)+K, applicable only to STQ TextureCoordinatesSpecification
         public UInt16 LodParamK { get; set; }
         public UInt16 LodParamL { get; set; }
-        public TwinsVector4 UnkVector1 { get; private set; }
-        public TwinsVector4 UnkVector2 { get; private set; }
-        public TwinsVector4 UnkVector3 { get; private set; }
+        public TwinsVector4 UnkVector1 { get; set; }
+        public TwinsVector4 UnkVector2 { get; set; }
+        public TwinsVector4 UnkVector3 { get; set; }
         public UInt32 TextureId { get; set; }
         public bool isDemo { get; set; }
         

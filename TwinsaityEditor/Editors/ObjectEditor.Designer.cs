@@ -212,6 +212,9 @@
             this.deleteObjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createObjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.duplicateObjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.groupBox19 = new System.Windows.Forms.GroupBox();
+            this.buttonEditFlags = new System.Windows.Forms.Button();
+            this.instFlagsBox = new System.Windows.Forms.NumericUpDown();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -237,6 +240,8 @@
             this.groupBox18.SuspendLayout();
             this.panel1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            this.groupBox19.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.instFlagsBox)).BeginInit();
             this.SuspendLayout();
             // 
             // objectList
@@ -1220,6 +1225,7 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.groupBox19);
             this.tabPage3.Controls.Add(this.groupBox14);
             this.tabPage3.Controls.Add(this.groupBox15);
             this.tabPage3.Controls.Add(this.groupBox16);
@@ -1473,7 +1479,7 @@
             this.groupBox17.Size = new System.Drawing.Size(232, 195);
             this.groupBox17.TabIndex = 14;
             this.groupBox17.TabStop = false;
-            this.groupBox17.Text = "Instance flags";
+            this.groupBox17.Text = "Instance angles";
             // 
             // unk1Source
             // 
@@ -1997,6 +2003,40 @@
             this.duplicateObjectToolStripMenuItem.Text = "Duplicate Object";
             this.duplicateObjectToolStripMenuItem.Click += new System.EventHandler(this.duplicateObjectToolStripMenuItem_Click);
             // 
+            // groupBox19
+            // 
+            this.groupBox19.Controls.Add(this.instFlagsBox);
+            this.groupBox19.Controls.Add(this.buttonEditFlags);
+            this.groupBox19.Location = new System.Drawing.Point(245, 213);
+            this.groupBox19.Name = "groupBox19";
+            this.groupBox19.Size = new System.Drawing.Size(232, 195);
+            this.groupBox19.TabIndex = 18;
+            this.groupBox19.TabStop = false;
+            this.groupBox19.Text = "Instance flags";
+            // 
+            // buttonEditFlags
+            // 
+            this.buttonEditFlags.Location = new System.Drawing.Point(10, 47);
+            this.buttonEditFlags.Name = "buttonEditFlags";
+            this.buttonEditFlags.Size = new System.Drawing.Size(75, 23);
+            this.buttonEditFlags.TabIndex = 1;
+            this.buttonEditFlags.Text = "Edit Flags";
+            this.buttonEditFlags.UseVisualStyleBackColor = true;
+            this.buttonEditFlags.Click += new System.EventHandler(this.buttonEditFlags_Click);
+            // 
+            // instFlagsBox
+            // 
+            this.instFlagsBox.Location = new System.Drawing.Point(10, 22);
+            this.instFlagsBox.Maximum = new decimal(new int[] {
+            -1,
+            0,
+            0,
+            0});
+            this.instFlagsBox.Name = "instFlagsBox";
+            this.instFlagsBox.Size = new System.Drawing.Size(216, 20);
+            this.instFlagsBox.TabIndex = 2;
+            this.instFlagsBox.ValueChanged += new System.EventHandler(this.instFlagsBox_ValueChanged);
+            // 
             // ObjectEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2054,6 +2094,8 @@
             this.panel1.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.groupBox19.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.instFlagsBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2244,5 +2286,8 @@
         private System.Windows.Forms.Label lblArguments;
         private System.Windows.Forms.TextBox tbBitfield;
         private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.GroupBox groupBox19;
+        private System.Windows.Forms.Button buttonEditFlags;
+        private System.Windows.Forms.NumericUpDown instFlagsBox;
     }
 }
