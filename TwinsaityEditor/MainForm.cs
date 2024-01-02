@@ -154,6 +154,8 @@ namespace TwinsaityEditor
                 c = new GraphicsInfoMBController(this, (GraphicsInfoMB)a);
             else if (a is TextureP)
                 c = new TexturePController(this, (TextureP)a);
+            else if (a is ModelP)
+                c = new ModelPController(this, (ModelP)a);
             else
                 c = new ItemController(this, a);
 

@@ -103,6 +103,7 @@
     <Compile Include="Items\DynamicSceneryDataMB.cs" />
     <Compile Include="Items\Graphics\BlendSkin.cs" />
     <Compile Include="Items\Graphics\BlendSkinX.cs" />
+    <Compile Include="Items\Graphics\ModelP.cs" />
     <Compile Include="Items\Graphics\ModelX.cs" />
     <Compile Include="Items\Graphics\Skin.cs" />
     <Compile Include="Items\Graphics\SkinX.cs" />

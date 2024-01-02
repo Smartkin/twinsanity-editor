@@ -17,6 +17,7 @@ namespace TwinsaityEditor
         private ModelXController meshX;
         private SkinXController skinX;
         private BlendSkinXController bskinX;
+        private ModelPController meshP;
         private GraphicsInfoController model;
         private FileController file;
         private uint TargetBlendShape = 0;
@@ -150,6 +151,20 @@ namespace TwinsaityEditor
             pform.Text = "Loading mesh...";
             BSkinActive = true;
             LoadBSkinX();
+            pform.Text = "Initializing...";
+        }
+        public MeshViewer(ModelPController mesh, Form pform)
+        {
+            //initialize variables here
+            this.meshP = mesh;
+            zFar = 50F;
+            file = mesh.MainFile;
+            lighting = true;
+            wire = false;
+            Tag = pform;
+            InitVBO(mesh.Data.SubModels.Count, true);
+            pform.Text = "Loading mesh...";
+            LoadMeshP();
             pform.Text = "Initializing...";
         }
         public MeshViewer(GraphicsInfoController mesh, Form pform, FileController tFile)
@@ -964,6 +979,35 @@ namespace TwinsaityEditor
 
             }
 
+            zFar = Math.Max(zFar, Math.Max(max_x - min_x, Math.Max(max_y - min_y, max_z - min_z)));
+        }
+
+        public void LoadMeshP()
+        {
+            meshP.LoadMeshData();
+            float min_x = float.MaxValue, min_y = float.MaxValue, min_z = float.MaxValue, max_x = float.MinValue, max_y = float.MinValue, max_z = float.MinValue;
+            foreach (var list in meshP.Vertices)
+            {
+                foreach (var v in list)
+                {
+                    min_x = Math.Min(min_x, v.Pos.X);
+                    min_y = Math.Min(min_y, v.Pos.Y);
+                    min_z = Math.Min(min_z, v.Pos.Z);
+                    max_x = Math.Max(max_x, v.Pos.X);
+                    max_y = Math.Max(max_y, v.Pos.Y);
+                    max_z = Math.Max(max_z, v.Pos.Z);
+                }
+            }
+            for (int i = 0; i < meshP.Vertices.Count; i++)
+            {
+                vtx[i].Vtx = meshP.Vertices[i];
+                vtx[i].VtxInd = meshP.Indices[i];
+                if (this is ModelViewer)
+                {
+                    Utils.TextUtils.LoadTexture(rigid.Data.MaterialIDs, file, vtx[i], i);
+                }
+                UpdateVBO(i);
+            }
             zFar = Math.Max(zFar, Math.Max(max_x - min_x, Math.Max(max_y - min_y, max_z - min_z)));
         }
 

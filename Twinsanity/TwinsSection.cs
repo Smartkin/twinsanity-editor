@@ -417,6 +417,9 @@ namespace Twinsanity
                     case SectionType.ModelX:
                         LoadItem<ModelX>(reader, sub, Type);
                         break;
+                    case SectionType.ModelMB:
+                        LoadItem<ModelP>(reader, sub, Type);
+                        break;
                     case SectionType.RigidModel:
                     case SectionType.Mesh:
                         LoadItem<RigidModel>(reader, sub, Type);
