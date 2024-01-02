@@ -109,6 +109,7 @@
     <Compile Include="Items\Graphics\MaterialDemo.cs" />
     <Compile Include="Items\Graphics\Skydome.cs" />
     <Compile Include="Items\Graphics\LodModel.cs" />
+    <Compile Include="Items\Graphics\TextureP.cs" />
     <Compile Include="Items\Graphics\TextureX.cs" />
     <Compile Include="Items\Instances\AIPath.cs" />
     <Compile Include="Items\Instances\AIPosition.cs" />

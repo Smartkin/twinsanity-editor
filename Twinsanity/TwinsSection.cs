@@ -402,6 +402,9 @@ namespace Twinsanity
                     case SectionType.TextureX: //XBOX textures
                         LoadItem<TextureX>(reader, sub, Type);
                         break;
+                    case SectionType.TextureMB:
+                        LoadItem<TextureP>(reader, sub, Type);
+                        break;
                     case SectionType.Material:
                         LoadItem<Material>(reader, sub, Type);
                         break;

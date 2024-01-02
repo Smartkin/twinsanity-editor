@@ -28,7 +28,7 @@ namespace TwinsaityEditor
             text.Add($"Size: {Data.Size}");
             text.Add($"Header: {Data.Header} MaterialCount: {Data.MaterialIDs.Length}");
             for (int i = 0; i < Data.MaterialIDs.Length; ++i)
-                text.Add(MainFile.GetMaterialName(Data.MaterialIDs[i]));
+                text.Add($"#{i}: 0x{Data.MaterialIDs[i]:X8}:{MainFile.GetMaterialName(Data.MaterialIDs[i])}");
             text.Add(string.Format("Model: {0:X8}", Data.MeshID));
             TextPrev = text.ToArray();
         }

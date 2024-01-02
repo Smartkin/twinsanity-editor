@@ -18,11 +18,21 @@ namespace TwinsaityEditor
         private int texInd;
 
         public Texture SelectedTexture;
+        public TextureX SelectedTextureX;
+        public TextureP SelectedTextureP;
         public int TextureIndex
         {
             set
             {
-                lblTextureIndex.Text = (value + 1).ToString() + "/" + Textures.Count;
+                if (SelectedTexture == null)
+                {
+                    if (SelectedTextureX == null)
+                        lblTextureIndex.Text = (value + 1).ToString() + "/" + TexturesP.Count;
+                    else
+                        lblTextureIndex.Text = (value + 1).ToString() + "/" + TexturesX.Count;
+                }
+                else
+                    lblTextureIndex.Text = (value + 1).ToString() + "/" + Textures.Count;
                 texInd = value;
             }
             get
@@ -31,6 +41,8 @@ namespace TwinsaityEditor
             }
         }
         public List<Texture> Textures = new List<Texture>();
+        public List<TextureX> TexturesX = new List<TextureX>();
+        public List<TextureP> TexturesP = new List<TextureP>();
 
         public bool Mat = false;
         public uint CurTex = 0;
@@ -62,27 +74,51 @@ namespace TwinsaityEditor
             GL.ClearColor(Color.Black);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.Begin(PrimitiveType.Points);
-            for (int i = 0; i < SelectedTexture.RawData.Length; i++)
+            if (SelectedTexture == null)
             {
-                GL.Color4(SelectedTexture.RawData[i]);
-                GL.Vertex2(i % (SelectedTexture.Width), i / (SelectedTexture.Width));
-            }
-            GL.End();
-            if (SelectedTexture.MipLevels > 0)
-            {
-                var widthOffset = SelectedTexture.Width;
-                for (var i = 0; i < SelectedTexture.MipLevels; ++i)
+                if (SelectedTextureX == null)
                 {
-                    var mip = SelectedTexture.GetMips(i);
-                    var mipWidth = (SelectedTexture.Width / (1 << (i + 1)));
-                    GL.Begin(PrimitiveType.Points);
-                    for (int j = 0; j < mip.Length; ++j)
+                    for (int i = 0; i < SelectedTextureP.RawData.Length; i++)
                     {
-                        GL.Color4(mip[j]);
-                        GL.Vertex2(widthOffset + j % mipWidth, j / mipWidth);
+                        GL.Color4(SelectedTextureP.RawData[i]);
+                        GL.Vertex2(i % (SelectedTextureP.Width), i / (SelectedTextureP.Width));
                     }
                     GL.End();
-                    widthOffset += mipWidth;
+                }
+                else
+                {
+                    for (int i = 0; i < SelectedTextureX.RawData.Length; i++)
+                    {
+                        GL.Color4(SelectedTextureX.RawData[i]);
+                        GL.Vertex2(i % (SelectedTextureX.Width), i / (SelectedTextureX.Width));
+                    }
+                    GL.End();
+                }
+            }
+            else
+            {
+                for (int i = 0; i < SelectedTexture.RawData.Length; i++)
+                {
+                    GL.Color4(SelectedTexture.RawData[i]);
+                    GL.Vertex2(i % (SelectedTexture.Width), i / (SelectedTexture.Width));
+                }
+                GL.End();
+                if (SelectedTexture.MipLevels > 0)
+                {
+                    var widthOffset = SelectedTexture.Width;
+                    for (var i = 0; i < SelectedTexture.MipLevels; ++i)
+                    {
+                        var mip = SelectedTexture.GetMips(i);
+                        var mipWidth = (SelectedTexture.Width / (1 << (i + 1)));
+                        GL.Begin(PrimitiveType.Points);
+                        for (int j = 0; j < mip.Length; ++j)
+                        {
+                            GL.Color4(mip[j]);
+                            GL.Vertex2(widthOffset + j % mipWidth, j / mipWidth);
+                        }
+                        GL.End();
+                        widthOffset += mipWidth;
+                    }
                 }
             }
             GlControl1.SwapBuffers();
@@ -94,23 +130,43 @@ namespace TwinsaityEditor
             SavePNG.FileName = SelectedTexture.ID.ToString();
             if (SavePNG.ShowDialog() == DialogResult.OK)
             {
-                Bitmap BMP = new Bitmap(Convert.ToInt32(SelectedTexture.Width), Convert.ToInt32(SelectedTexture.Height));
-                for (int i = 0; i < SelectedTexture.RawData.Length; i++)
-                    BMP.SetPixel((i % SelectedTexture.Width), (i / SelectedTexture.Width), SelectedTexture.RawData[i]);
-                BMP.Save(SavePNG.FileName, System.Drawing.Imaging.ImageFormat.Png);
-                if (cbSaveMips.Checked)
+                if (SelectedTexture == null)
                 {
-                    if (SelectedTexture.MipLevels > 0)
+                    if (SelectedTextureX == null)
                     {
-                        for (var i = 0; i < SelectedTexture.MipLevels; ++i)
+                        Bitmap BMP = new Bitmap(Convert.ToInt32(SelectedTextureP.Width), Convert.ToInt32(SelectedTextureP.Height));
+                        for (int i = 0; i < SelectedTextureP.RawData.Length; i++)
+                            BMP.SetPixel((i % SelectedTextureP.Width), (i / SelectedTextureP.Width), SelectedTextureP.RawData[i]);
+                        BMP.Save(SavePNG.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                    }
+                    else
+                    {
+                        Bitmap BMP = new Bitmap(Convert.ToInt32(SelectedTextureX.Width), Convert.ToInt32(SelectedTextureX.Height));
+                        for (int i = 0; i < SelectedTextureX.RawData.Length; i++)
+                            BMP.SetPixel((i % SelectedTextureX.Width), (i / SelectedTextureX.Width), SelectedTextureX.RawData[i]);
+                        BMP.Save(SavePNG.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                    }
+                }
+                else
+                {
+                    Bitmap BMP = new Bitmap(Convert.ToInt32(SelectedTexture.Width), Convert.ToInt32(SelectedTexture.Height));
+                    for (int i = 0; i < SelectedTexture.RawData.Length; i++)
+                        BMP.SetPixel((i % SelectedTexture.Width), (i / SelectedTexture.Width), SelectedTexture.RawData[i]);
+                    BMP.Save(SavePNG.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                    if (cbSaveMips.Checked)
+                    {
+                        if (SelectedTexture.MipLevels > 0)
                         {
-                            var mip = SelectedTexture.GetMips(i);
-                            var mipWidth = (SelectedTexture.Width / (1 << (i + 1)));
-                            var mipHeight = (SelectedTexture.Height / (1 << (i + 1)));
-                            Bitmap mipBmp = new Bitmap(Convert.ToInt32(mipWidth), Convert.ToInt32(mipHeight));
-                            for (int j = 0; j < mip.Length; j++)
-                                mipBmp.SetPixel((j % mipWidth), (j / mipWidth), mip[j]);
-                            mipBmp.Save(SavePNG.FileName.Substring(0, SavePNG.FileName.Length - 4) + "_mip_" + (i + 1).ToString() + ".png", System.Drawing.Imaging.ImageFormat.Png);
+                            for (var i = 0; i < SelectedTexture.MipLevels; ++i)
+                            {
+                                var mip = SelectedTexture.GetMips(i);
+                                var mipWidth = (SelectedTexture.Width / (1 << (i + 1)));
+                                var mipHeight = (SelectedTexture.Height / (1 << (i + 1)));
+                                Bitmap mipBmp = new Bitmap(Convert.ToInt32(mipWidth), Convert.ToInt32(mipHeight));
+                                for (int j = 0; j < mip.Length; j++)
+                                    mipBmp.SetPixel((j % mipWidth), (j / mipWidth), mip[j]);
+                                mipBmp.Save(SavePNG.FileName.Substring(0, SavePNG.FileName.Length - 4) + "_mip_" + (i + 1).ToString() + ".png", System.Drawing.Imaging.ImageFormat.Png);
+                            }
                         }
                     }
                 }
@@ -120,32 +176,91 @@ namespace TwinsaityEditor
         private void btnPrevTexture_Click(object sender, EventArgs e)
         {
             TextureIndex--;
-            if (TextureIndex < 0)
+            if (SelectedTexture == null)
             {
-                TextureIndex = Textures.Count - 1;
+                if (SelectedTextureX == null)
+                {
+                    if (TextureIndex < 0)
+                    {
+                        TextureIndex = TexturesP.Count - 1;
+                    }
+                    SelectedTextureP = TexturesP[TextureIndex];
+                }
+                else
+                {
+                    if (TextureIndex < 0)
+                    {
+                        TextureIndex = TexturesX.Count - 1;
+                    }
+                    SelectedTextureX = TexturesX[TextureIndex];
+                }
             }
-            SelectedTexture = Textures[TextureIndex];
+            else
+            {
+                if (TextureIndex < 0)
+                {
+                    TextureIndex = Textures.Count - 1;
+                }
+                SelectedTexture = Textures[TextureIndex];
+            }
             Refresh();
         }
 
         public void UpdateTextureLabel()
         {
-            lblTextureIndex.Text = (TextureIndex + 1).ToString() + "/" + Textures.Count;
+            if (SelectedTexture == null)
+            {
+                if (SelectedTextureX == null)
+                {
+                    lblTextureIndex.Text = (TextureIndex + 1).ToString() + "/" + TexturesP.Count;
+                }
+                else
+                {
+                    lblTextureIndex.Text = (TextureIndex + 1).ToString() + "/" + TexturesX.Count;
+                }
+            }
+            else
+            {
+                lblTextureIndex.Text = (TextureIndex + 1).ToString() + "/" + Textures.Count;
+            }
         }
 
         private void btnNextTexture_Click(object sender, EventArgs e)
         {
             TextureIndex++;
-            if (TextureIndex >= Textures.Count)
+            if (SelectedTexture == null)
             {
-                TextureIndex = 0;
+                if (SelectedTextureX == null)
+                {
+                    if (TextureIndex >= TexturesP.Count)
+                    {
+                        TextureIndex = 0;
+                    }
+                    SelectedTextureP = TexturesP[TextureIndex];
+                }
+                else
+                {
+                    if (TextureIndex >= TexturesX.Count)
+                    {
+                        TextureIndex = 0;
+                    }
+                    SelectedTextureX = TexturesX[TextureIndex];
+                }
             }
-            SelectedTexture = Textures[TextureIndex];
+            else
+            {
+                if (TextureIndex >= Textures.Count)
+                {
+                    TextureIndex = 0;
+                }
+                SelectedTexture = Textures[TextureIndex];
+            }
             Refresh();
         }
 
         private void btnImport_Click(object sender, EventArgs e)
         {
+            if (SelectedTexture == null) return;
             if (LoadPNG.ShowDialog() == DialogResult.OK)
             {
                 Bitmap temp = new Bitmap(LoadPNG.FileName);

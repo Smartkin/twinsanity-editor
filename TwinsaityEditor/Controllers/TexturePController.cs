@@ -3,11 +3,11 @@ using Twinsanity;
 
 namespace TwinsaityEditor
 {
-    public class TextureXController : ItemController
+    public class TexturePController : ItemController
     {
-        public new TextureX Data { get; set; }
+        public new TextureP Data { get; set; }
 
-        public TextureXController(MainForm topform, TextureX item) : base(topform, item)
+        public TexturePController(MainForm topform, TextureP item) : base(topform, item)
         {
             Data = item;
             if (Data.RawData != null)
@@ -18,7 +18,7 @@ namespace TwinsaityEditor
 
         protected override string GetName()
         {
-            return string.Format("TextureX [ID {0:X8}]", Data.ID);
+            return string.Format("TextureP [ID {0:X8}]", Data.ID);
         }
 
         protected override void GenText()

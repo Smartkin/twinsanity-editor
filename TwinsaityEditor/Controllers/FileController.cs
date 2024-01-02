@@ -413,6 +413,78 @@ namespace TwinsaityEditor
             }
         }
 
+        public void OpenTextureViewer(TextureXController c)
+        {
+            if (texViewer == null || texViewer.IsDisposed)
+            {
+                texViewer = new TextureViewer();
+                texViewer.SelectedTextureX = c.Data;
+                List<TwinsItem> textures = null;
+                if (c.MainFile.FileName.EndsWith(".smx"))
+                {
+                    textures = Data.GetItem<TwinsSection>(6).GetItem<TwinsSection>(0).Records;
+                }
+                else
+                {
+                    textures = Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(0).Records;
+                }
+                for (var i = 0; i < textures.Count; ++i)
+                {
+                    texViewer.TexturesX.Add((TextureX)textures[i]);
+                    if ((TextureX)textures[i] == c.Data)
+                    {
+                        texViewer.TextureIndex = i;
+                    }
+                }
+                texViewer.UpdateTextureLabel();
+                texViewer.FormClosed += delegate
+                {
+                    texViewer = null;
+                };
+                texViewer.Show();
+            }
+            else
+            {
+                texViewer.Select();
+            }
+        }
+
+        public void OpenTextureViewer(TexturePController c)
+        {
+            if (texViewer == null || texViewer.IsDisposed)
+            {
+                texViewer = new TextureViewer();
+                texViewer.SelectedTextureP = c.Data;
+                List<TwinsItem> textures = null;
+                if (c.MainFile.FileName.EndsWith(".sm"))
+                {
+                    textures = Data.GetItem<TwinsSection>(7).GetItem<TwinsSection>(0).Records;
+                }
+                else
+                {
+                    textures = Data.GetItem<TwinsSection>(12).GetItem<TwinsSection>(0).Records;
+                }
+                for (var i = 0; i < textures.Count; ++i)
+                {
+                    texViewer.TexturesP.Add((TextureP)textures[i]);
+                    if ((TextureP)textures[i] == c.Data)
+                    {
+                        texViewer.TextureIndex = i;
+                    }
+                }
+                texViewer.UpdateTextureLabel();
+                texViewer.FormClosed += delegate
+                {
+                    texViewer = null;
+                };
+                texViewer.Show();
+            }
+            else
+            {
+                texViewer.Select();
+            }
+        }
+
         public void CloseMeshViewer(uint mesh_id)
         {
             var f = MeshViewers[mesh_id];
