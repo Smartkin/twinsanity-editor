@@ -71,7 +71,7 @@ namespace Twinsanity
             return 4 + paramLen + 30 + 4 + 16 * 3 + 8;
         }
 
-        public void Read(BinaryReader reader, int length, bool Demo = false)
+        public void Read(BinaryReader reader, int length, bool Demo = false, bool SMBA = false)
         {
             ShaderType = reader.ReadUInt32();
             switch (ShaderType)
@@ -140,6 +140,10 @@ namespace Twinsanity
             UnkVector1.Load(reader, 16);
             UnkVector2.Load(reader, 16);
             UnkVector3.Load(reader, 16);
+            if (SMBA)
+            {
+                reader.ReadUInt16(); // todo somewhere here these 2 bytes
+            }
             TextureId = reader.ReadUInt32();
             reader.ReadUInt32(); // Shader type
         }

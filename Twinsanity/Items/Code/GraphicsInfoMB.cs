@@ -6,12 +6,11 @@ using System.Collections.Generic;
 
 namespace Twinsanity
 {
-    public class GraphicsInfoMB : TwinsItem
+    public class GraphicsInfoMB : GraphicsInfo
     {
 
-        public GraphicsInfo OGI;
         public List<byte[]> SurfData;
-        public GHG_Actor_MB GHG;
+        public GHG_Actor_MB PHG;
 
         public override void Save(BinaryWriter writer)
         {
@@ -23,18 +22,20 @@ namespace Twinsanity
             long pre_pos = reader.BaseStream.Position;
 
             uint Version = reader.ReadUInt32();
-            uint GHG_Size = reader.ReadUInt32(); // Size of GHG file at the end
-            OGI = new GraphicsInfo();
-            OGI.Load(reader, size);
+            if (Parent.Type == SectionType.GraphicsInfoP)
+            {
+                uint PHG_Size = reader.ReadUInt32(); // Size of PHG file at the end, PSP ONLY
+            }
+            base.Load(reader, size);
 
             SurfData = new List<byte[]>();
-            for (int i = 0; i < OGI.CollisionData.Length; i++)
+            for (int i = 0; i < CollisionData.Length; i++)
             {
                 SurfData.Add(reader.ReadBytes(0x10));
             }
 
-            GHG = new GHG_Actor_MB();
-            //GHG.Load(reader, (int)GHG_Size); // todo
+            PHG = new GHG_Actor_MB();
+            //PHG.Load(reader, (int)PHG_Size); // todo
 
             reader.BaseStream.Position = pre_pos;
             Data = reader.ReadBytes(size);
@@ -43,6 +44,11 @@ namespace Twinsanity
         protected override int GetSize()
         {
             return Data.Length;
+        }
+
+        public override string ToString()
+        {
+            return $"GI_{ID:X8}";
         }
     }
 

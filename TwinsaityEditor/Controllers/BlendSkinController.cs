@@ -81,7 +81,9 @@ namespace TwinsaityEditor
             var refIndex = 0U;
             var offset = 0;
 
-            var isSpyroModel = DefaultHashes.Hash_BlendSkins[Data.ID] == "Spyro";
+            var isSpyroModel = false;
+            if (DefaultHashes.Hash_BlendSkins.ContainsKey(Data.ID) && DefaultHashes.Hash_BlendSkins[Data.ID] == "Spyro")
+                isSpyroModel = true;
 
             foreach (var rigidModel in Data.Models)
             {
@@ -162,7 +164,9 @@ namespace TwinsaityEditor
 
             var refIndex = 0U;
 
-            var isSpyroModel = DefaultHashes.Hash_BlendSkins[Data.ID] == "Spyro";
+            var isSpyroModel = false;
+            if (DefaultHashes.Hash_BlendSkins.ContainsKey(Data.ID) && DefaultHashes.Hash_BlendSkins[Data.ID] == "Spyro")
+                isSpyroModel = true;
 
             foreach (var rigidModel in Data.Models)
             {

@@ -21,7 +21,12 @@ namespace TwinsaityEditor
             file = sky.MainFile;
             zFar = 100F;
             var vbos = 0;
-            SectionController mesh_sec = file.GetItem<SectionController>(6).GetItem<SectionController>(6);
+            uint gfx_section = 6;
+            if (file.Data.Type == TwinsFile.FileType.MonkeyBallSM)
+            {
+                gfx_section = 7;
+            }
+            SectionController mesh_sec = file.GetItem<SectionController>(gfx_section).GetItem<SectionController>(6);
             for (var i = 0; i < sky.Data.MeshIDs.Length; i++)
             {
                 foreach (RigidModel mod in mesh_sec.Data.Records)
@@ -95,9 +100,14 @@ namespace TwinsaityEditor
         private void LoadModels()
         {
             float min_x = float.MaxValue, min_y = float.MaxValue, min_z = float.MaxValue, max_x = float.MinValue, max_y = float.MinValue, max_z = float.MinValue;
-            SectionController mesh_sec = file.GetItem<SectionController>(6).GetItem<SectionController>(2);
-            SectionController model_sec = file.GetItem<SectionController>(6).GetItem<SectionController>(6);
-            SectionController special_sec = file.GetItem<SectionController>(6).GetItem<SectionController>(7);
+            uint gfx_section = 6;
+            if (file.Data.Type == TwinsFile.FileType.MonkeyBallSM)
+            {
+                gfx_section = 7;
+            }
+            SectionController mesh_sec = file.GetItem<SectionController>(gfx_section).GetItem<SectionController>(2);
+            SectionController model_sec = file.GetItem<SectionController>(gfx_section).GetItem<SectionController>(6);
+            SectionController special_sec = file.GetItem<SectionController>(gfx_section).GetItem<SectionController>(7);
             var vtxIndex = 0;
             if (mesh_sec.Data.Type == SectionType.ModelX)
             {

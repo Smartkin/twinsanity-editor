@@ -178,16 +178,21 @@ namespace TwinsaityEditor
             wire = false;
             Tag = pform;
             var vbos = 0;
-            SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(2);
+            uint gfx_section = 11;
+            if (targetFile.Data.Type == TwinsFile.FileType.MonkeyBallRM)
+            {
+                gfx_section = 12;
+            }
+            SectionController mesh_sec = targetFile.GetItem<SectionController>(gfx_section).GetItem<SectionController>(2);
             if (mesh_sec.Data.Type == SectionType.ModelX)
             {
                 foreach (var pair in model.Data.ModelIDs)
                 {
-                    foreach (RigidModel mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
+                    foreach (RigidModel mod in targetFile.Data.GetItem<TwinsSection>(gfx_section).GetItem<TwinsSection>(3).Records)
                     {
                         if (mod.ID == pair.Value.ModelID)
                         {
-                            uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(mod.ID).MeshID;
+                            uint meshID = targetFile.Data.GetItem<TwinsSection>(gfx_section).GetItem<TwinsSection>(3).GetItem<RigidModel>(mod.ID).MeshID;
                             ModelXController m = mesh_sec.GetItem<ModelXController>(meshID);
                             vbos += m.Data.SubModels.Count;
                             break;
@@ -199,11 +204,11 @@ namespace TwinsaityEditor
             {
                 foreach (var pair in model.Data.ModelIDs)
                 {
-                    foreach (RigidModel mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
+                    foreach (RigidModel mod in targetFile.Data.GetItem<TwinsSection>(gfx_section).GetItem<TwinsSection>(3).Records)
                     {
                         if (mod.ID == pair.Value.ModelID)
                         {
-                            uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(mod.ID).MeshID;
+                            uint meshID = targetFile.Data.GetItem<TwinsSection>(gfx_section).GetItem<TwinsSection>(3).GetItem<RigidModel>(mod.ID).MeshID;
                             ModelController m = mesh_sec.GetItem<ModelController>(meshID);
                             vbos += m.Data.SubModels.Count;
                             break;
@@ -214,10 +219,10 @@ namespace TwinsaityEditor
             
             if (model.Data.SkinID != 0)
             {
-                SectionController skin_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(4);
+                SectionController skin_sec = targetFile.GetItem<SectionController>(gfx_section).GetItem<SectionController>(4);
                 if (skin_sec.Data.Type == SectionType.SkinX)
                 {
-                    foreach (SkinX mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(4).Records)
+                    foreach (SkinX mod in targetFile.Data.GetItem<TwinsSection>(gfx_section).GetItem<TwinsSection>(4).Records)
                     {
                         if (mod.ID == model.Data.SkinID)
                         {
@@ -228,7 +233,7 @@ namespace TwinsaityEditor
                 }
                 else
                 {
-                    foreach (Skin mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(4).Records)
+                    foreach (Skin mod in targetFile.Data.GetItem<TwinsSection>(gfx_section).GetItem<TwinsSection>(4).Records)
                     {
                         if (mod.ID == model.Data.SkinID)
                         {
@@ -241,10 +246,10 @@ namespace TwinsaityEditor
             if (mesh.Data.BlendSkinID != 0)
             {
                 BSkinActive = true;
-                SectionController blend_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(5);
+                SectionController blend_sec = targetFile.GetItem<SectionController>(gfx_section).GetItem<SectionController>(5);
                 if (blend_sec.Data.Type == SectionType.BlendSkinX)
                 {
-                    foreach (BlendSkinX mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(5).Records)
+                    foreach (BlendSkinX mod in targetFile.Data.GetItem<TwinsSection>(gfx_section).GetItem<TwinsSection>(5).Records)
                     {
                         if (mod.ID == model.Data.BlendSkinID)
                         {
@@ -255,7 +260,7 @@ namespace TwinsaityEditor
                 }
                 else
                 {
-                    foreach (BlendSkin mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(5).Records)
+                    foreach (BlendSkin mod in targetFile.Data.GetItem<TwinsSection>(gfx_section).GetItem<TwinsSection>(5).Records)
                     {
                         if (mod.ID == model.Data.BlendSkinID)
                         {
@@ -270,7 +275,7 @@ namespace TwinsaityEditor
 
             InitVBO(vbos, true);
             pform.Text = "Loading mesh...";
-            if (targetFile.Data.Type == TwinsFile.FileType.RM2 || targetFile.Data.Type == TwinsFile.FileType.DemoRM2)
+            if (targetFile.Data.Type == TwinsFile.FileType.RM2 || targetFile.Data.Type == TwinsFile.FileType.DemoRM2 || targetFile.Data.Type == TwinsFile.FileType.MonkeyBallRM)
             {
                 LoadOGI_PS2();
             }
@@ -295,7 +300,7 @@ namespace TwinsaityEditor
                     {
                         renderString += $"Z BlendShape {TargetBlendShape}/{bskinX.Data.BlendShapeCount}\n";
                     }
-                    else if (targetFile.Data.Type == TwinsFile.FileType.RM2)
+                    else if (targetFile.Data.Type == TwinsFile.FileType.RM2 || targetFile.Data.Type == TwinsFile.FileType.MonkeyBallRM)
                     {
                         renderString += $"Z BlendShape {TargetBlendShape}/{bskin.Data.BlendShapeCount}\n";
                     }
@@ -307,7 +312,7 @@ namespace TwinsaityEditor
                 {
                     renderString += $"Z BlendShape {TargetBlendShape}/{bskinX.Data.BlendShapeCount}\n";
                 }
-                else if (targetFile.Data.Type == TwinsFile.FileType.RM2)
+                else if (targetFile.Data.Type == TwinsFile.FileType.RM2 || targetFile.Data.Type == TwinsFile.FileType.MonkeyBallRM)
                 {
                     renderString += $"Z BlendShape {TargetBlendShape}/{bskin.Data.BlendShapeCount}\n";
                 }
@@ -811,11 +816,17 @@ namespace TwinsaityEditor
         {
             float min_x = float.MaxValue, min_y = float.MaxValue, min_z = float.MaxValue, max_x = float.MinValue, max_y = float.MinValue, max_z = float.MinValue;
 
+            uint gfx_section = 11;
+            if (targetFile.Data.Type == TwinsFile.FileType.MonkeyBallRM)
+            {
+                gfx_section = 12;
+            }
+
             var vtxIndex = 0;
             if (model.Data.BlendSkinID != 0)
             {
-                SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(5);
-                foreach (BlendSkin mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(5).Records)
+                SectionController mesh_sec = targetFile.GetItem<SectionController>(gfx_section).GetItem<SectionController>(5);
+                foreach (BlendSkin mod in targetFile.Data.GetItem<TwinsSection>(gfx_section).GetItem<TwinsSection>(5).Records)
                 {
                     if (mod.ID == model.Data.BlendSkinID)
                     {
@@ -851,8 +862,8 @@ namespace TwinsaityEditor
             bskinEndIndex = vtxIndex;
             if (model.Data.SkinID != 0)
             {
-                SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(4);
-                foreach (Skin mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(4).Records)
+                SectionController mesh_sec = targetFile.GetItem<SectionController>(gfx_section).GetItem<SectionController>(4);
+                foreach (Skin mod in targetFile.Data.GetItem<TwinsSection>(gfx_section).GetItem<TwinsSection>(4).Records)
                 {
                     if (mod.ID == model.Data.SkinID)
                     {
@@ -888,14 +899,14 @@ namespace TwinsaityEditor
             skinEndIndex = vtxIndex;
             foreach (var pair in model.Data.ModelIDs)
             {
-                SectionController mesh_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(2);
-                SectionController rigid_sec = targetFile.GetItem<SectionController>(11).GetItem<SectionController>(3);
+                SectionController mesh_sec = targetFile.GetItem<SectionController>(gfx_section).GetItem<SectionController>(2);
+                SectionController rigid_sec = targetFile.GetItem<SectionController>(gfx_section).GetItem<SectionController>(3);
                 RigidModelController rigid = null;
-                foreach (RigidModel mod in targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).Records)
+                foreach (RigidModel mod in targetFile.Data.GetItem<TwinsSection>(gfx_section).GetItem<TwinsSection>(3).Records)
                 {
                     if (mod.ID == pair.Value.ModelID)
                     {
-                        uint meshID = targetFile.Data.GetItem<TwinsSection>(11).GetItem<TwinsSection>(3).GetItem<RigidModel>(mod.ID).MeshID;
+                        uint meshID = targetFile.Data.GetItem<TwinsSection>(gfx_section).GetItem<TwinsSection>(3).GetItem<RigidModel>(mod.ID).MeshID;
                         mesh = mesh_sec.GetItem<ModelController>(meshID);
                         rigid = rigid_sec.GetItem<RigidModelController>(mod.ID);
                     }

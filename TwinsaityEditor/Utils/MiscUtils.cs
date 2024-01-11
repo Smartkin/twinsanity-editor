@@ -91,17 +91,25 @@ namespace TwinsaityEditor.Utils
             {
                 secId = 6U;
             }
+            else if (file.Data.Type == TwinsFile.FileType.MonkeyBallRM)
+            {
+                secId = 12U;
+            }
+            else if (file.Data.Type == TwinsFile.FileType.MonkeyBallSM)
+            {
+                secId = 7U;
+            }
             var matSec = file.Data.GetItem<TwinsSection>(secId).GetItem<TwinsSection>(1);
             var texSec = file.Data.GetItem<TwinsSection>(secId).GetItem<TwinsSection>(0);
             if (matSec.ContainsItem(material))
             {
-                if (file.Data.Type == TwinsFile.FileType.RM2 || file.Data.Type == TwinsFile.FileType.SM2)
+                if (file.Data.Type == TwinsFile.FileType.RM2 || file.Data.Type == TwinsFile.FileType.SM2 || file.Data.Type == TwinsFile.FileType.MonkeyBallSM || file.Data.Type == TwinsFile.FileType.MonkeyBallRM)
                 {
                     var mat = matSec.GetItem<Material>(material);
                     Texture texture = null;
                     foreach (var shader in mat.Shaders)
                     {
-                        if (shader.TxtMapping == TwinsShader.TextureMapping.ON)
+                        if (shader.TxtMapping >= TwinsShader.TextureMapping.ON && shader.TextureId != 0)
                         {
                             texture = texSec.GetItem<Texture>(shader.TextureId);
                             break;

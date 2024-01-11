@@ -2,7 +2,7 @@
 
 ## Description
 
-This is an editor of game files for the games Crash TwinSanity (PS2/XBOX) and Super Monkey Ball Adventure (PSP).  
+This is an editor of game files for the games Crash TwinSanity (PS2/XBOX) and Super Monkey Ball Adventure (PS2/PSP).  
 (Editor originally created by NeoKesha)
 
 The following formats are supported:
@@ -14,6 +14,7 @@ The following formats are supported:
 - .RMX (XBOX level resources) editing
 - .SMX (XBOX scenery resources) editing
 - .RM2/.SM2 editing support of the Crash TwinSanity demo
+- .RM2/.SM2 viewing support of Super Monkey Ball Adventure (PS2)
 - .RM (PSP level resources) limited editing
 - .SM (PSP level resources) limited editing
 

@@ -20,20 +20,20 @@ namespace Twinsanity
         ParticleData,
         Unknown,
 
-        Texture, TextureX, TextureMB,
+        Texture, TextureX, TextureP,
         Material, MaterialD,
-        Model, ModelX, ModelMB,
+        Model, ModelX, ModelP,
         RigidModel,
         Skin, SkinX,
         BlendSkin, BlendSkinX,
         Mesh,
-        LodModel,
+        LodModel, LodModelMB,
         Skydome,
 
         Object, ObjectDemo, ObjectMB,
         Script, ScriptX, ScriptDemo, ScriptMB,
         Animation,
-        OGI, GraphicsInfo, GraphicsInfoMB,
+        OGI, GraphicsInfo, GraphicsInfoMB, GraphicsInfoP,
         CodeModel, CodeModelX, CodeModelDemo,
         SE, Xbox_SE, MB_SE,
         SE_Eng, Xbox_SE_Eng,
@@ -56,7 +56,7 @@ namespace Twinsanity
         Last
     }
 
-    public struct TwinsSubInfo
+    public class TwinsSubInfo
     {
         public uint Off;
         public int Size;
@@ -97,25 +97,85 @@ namespace Twinsanity
             this.size = size;
             Records = new List<TwinsItem>();
             RecordIDs = new Dictionary<uint, int>();
+            var MagicStart = reader.BaseStream.Position;
             if (size < 0xC || ((Magic = reader.ReadUInt32()) != magic && Magic != magicV2))
                 return;
             int count = 0;
             if (isMonkeyBallPS2)
             {
                 count = reader.ReadInt16();
-                reader.ReadByte();
+                reader.ReadBytes(2); // compression flag?
             }
             else
             {
                 count = reader.ReadInt32();
             }
             var sec_size = reader.ReadUInt32();
-            if (isMonkeyBallPS2)
-            {
-                reader.ReadByte();
-            }
             var start_sk = reader.BaseStream.Position - 12;
             long extra_begin = 12;
+
+            if (isMonkeyBallPS2 && Level == 2)
+            {
+                List<TwinsSubInfo> SubItems = new List<TwinsSubInfo>();
+                for (int i = 0; i < count; i++)
+                {
+                    TwinsSubInfo sub = new TwinsSubInfo
+                    {
+                        Off = reader.ReadUInt32(),
+                        Size = reader.ReadInt32(),
+                        ID = reader.ReadUInt32()
+                    };
+                    SubItems.Add(sub);
+                }
+                for (int i = 0; i < count; i++)
+                {
+                    int ItemSize = 0;
+                    bool compressionCheck = true;
+                    var sk = reader.BaseStream.Position;
+                    if (i != count - 1)
+                        ItemSize = (int)(SubItems[i + 1].Off - SubItems[i].Off);
+                    else
+                        ItemSize = (int)(size - SubItems[i].Off);
+                    if (SubItems[i].Size == ItemSize) compressionCheck = false;
+                    int preSize = SubItems[i].Size;
+                    reader.BaseStream.Position = MagicStart + SubItems[i].Off;
+                    extra_begin = Math.Max(SubItems[i].Off + ItemSize, extra_begin);
+                    if (i == count - 1 && Type == SectionType.MB_SE)
+                    {
+                        compressionCheck = false;
+                        extra_begin = SubItems[i].Off + SubItems[i].Size;
+                    }
+                    if (Type == SectionType.Unknown)
+                    {
+                        compressionCheck = false;
+                        SubItems[i].Size = ItemSize;
+                    }
+                    if (compressionCheck)
+                    {
+                        try
+                        {
+                            reader.ReadBytes(4); // PACK
+                            byte[] outData = InteropUCL.DecompressNRV2B(reader.ReadBytes(ItemSize - 4));
+                            using (MemoryStream subMem = new MemoryStream(outData))
+                            using (BinaryReader subReader = new BinaryReader(subMem))
+                                LoadSectionItem(subReader, SubItems[i]);
+                        }
+                        catch
+                        {
+                            Console.WriteLine($"Failed to unpack item {SubItems[i].ID} in {Type} at {(MagicStart + SubItems[i].Off):X8}");
+                        }
+                    }
+                    else
+                    {
+                        LoadSectionItem(reader, SubItems[i]);
+                    }
+                    reader.BaseStream.Position = sk;
+                }
+                reader.BaseStream.Position = start_sk + extra_begin;
+                ExtraData = reader.ReadBytes((int)(size - extra_begin));
+                return;
+            }
+
             for (int i = 0; i < count; i++)
             {
                 TwinsSubInfo sub = new TwinsSubInfo
@@ -129,423 +189,452 @@ namespace Twinsanity
                 extra_begin = Math.Max(sub.Off + sub.Size, extra_begin);
                 //var m = reader.ReadUInt32(); //get magic number [obsolete?]
                 //reader.BaseStream.Position -= 4;
-                switch (Type)
-                {
-                    case SectionType.Graphics:
-                    case SectionType.GraphicsX:
-                    case SectionType.GraphicsD:
-                    case SectionType.GraphicsMB:
-                        switch (sub.ID)
-                        {
-                            case 0:
-                                if (Type == SectionType.GraphicsX)
-                                    LoadSection(reader, sub, SectionType.TextureX);
-                                else if (Type == SectionType.GraphicsMB)
-                                    LoadSection(reader, sub, SectionType.TextureMB);
-                                else
-                                    LoadSection(reader, sub, SectionType.Texture);
-                                break;
-                            case 1:
-                                if (Type == SectionType.GraphicsD)
-                                    LoadSection(reader, sub, SectionType.MaterialD);
-                                else
-                                    LoadSection(reader, sub, SectionType.Material);
-                                break;
-                            case 2:
-                                if (Type == SectionType.GraphicsX)
-                                    LoadSection(reader, sub, SectionType.ModelX);
-                                else if (Type == SectionType.GraphicsMB)
-                                    LoadSection(reader, sub, SectionType.ModelMB);
-                                else
-                                    LoadSection(reader, sub, SectionType.Model);
-                                break;
-                            case 3:
-                                LoadSection(reader, sub, SectionType.RigidModel);
-                                break;
-                            case 4:
-                                if (Type == SectionType.GraphicsX)
-                                    LoadSection(reader, sub, SectionType.SkinX);
-                                else
-                                    LoadSection(reader, sub, SectionType.Skin);
-                                break;
-                            case 5:
-                                if (Type == SectionType.GraphicsX)
-                                    LoadSection(reader, sub, SectionType.BlendSkinX);
-                                else
-                                    LoadSection(reader, sub, SectionType.BlendSkin);
-                                break;
-                            case 6:
-                                LoadSection(reader, sub, SectionType.Mesh);
-                                break;
-                            case 7:
-                                LoadSection(reader, sub, SectionType.LodModel);
-                                break;
-                            case 8:
-                                LoadSection(reader, sub, SectionType.Skydome);
-                                break;
-                            default:
-                                LoadItem<TwinsItem>(reader, sub, Type);
-                                break;
-                        }
-                        break;
-                    case SectionType.Instance:
-                    case SectionType.InstanceDemo:
-                        switch (sub.ID)
-                        {
-                            case 0:
-                                if (Type == SectionType.InstanceDemo)
-                                    LoadSection(reader, sub, SectionType.InstanceTemplateDemo);
-                                else
-                                    LoadSection(reader, sub, SectionType.InstanceTemplate);
-                                break;
-                            case 1:
-                                LoadSection(reader, sub, SectionType.AIPosition);
-                                break;
-                            case 2:
-                                LoadSection(reader, sub, SectionType.AIPath);
-                                break;
-                            case 3:
-                                LoadSection(reader, sub, SectionType.Position);
-                                break;
-                            case 4:
-                                LoadSection(reader, sub, SectionType.Path);
-                                break;
-                            case 5:
-                                LoadSection(reader, sub, SectionType.CollisionSurface);
-                                break;
-                            case 6:
-                                if (Type == SectionType.InstanceDemo)
-                                    LoadSection(reader, sub, SectionType.ObjectInstanceDemo);
-                                else
-                                    LoadSection(reader, sub, SectionType.ObjectInstance);
-                                break;
-                            case 7:
-                                LoadSection(reader, sub, SectionType.Trigger);
-                                break;
-                            case 8:
-                                if (Type == SectionType.InstanceDemo)
-                                    LoadSection(reader, sub, SectionType.CameraDemo);
-                                else
-                                    LoadSection(reader, sub, SectionType.Camera);
-                                break;
-                            default:
-                                LoadItem<TwinsItem>(reader, sub, Type);
-                                break;
-                        }
-                        break;
-                    case SectionType.InstanceMB:
-                        switch (sub.ID)
-                        {
-                            case 0:
-                                LoadSection(reader, sub, SectionType.InstanceTemplateMB);
-                                break;
-                            case 1:
-                                LoadSection(reader, sub, SectionType.AIPosition);
-                                break;
-                            case 2:
-                                LoadSection(reader, sub, SectionType.AIPath);
-                                break;
-                            case 3:
-                                LoadSection(reader, sub, SectionType.Position);
-                                break;
-                            case 4:
-                                LoadSection(reader, sub, SectionType.Path);
-                                break;
-                            case 5:
-                                LoadSection(reader, sub, SectionType.CollisionSurface);
-                                break;
-                            case 6:
-                                LoadSection(reader, sub, SectionType.ObjectInstanceMB);
-                                break;
-                            case 7:
-                                LoadSection(reader, sub, SectionType.Trigger);
-                                break;
-                            case 8:
-                                LoadSection(reader, sub, SectionType.Camera);
-                                break;
-                            default:
-                                LoadItem<TwinsItem>(reader, sub, Type);
-                                break;
-                        }
-                        break;
-                    case SectionType.Code:
-                    case SectionType.CodeX:
-                    case SectionType.CodeDemo:
-                        switch (sub.ID)
-                        {
-                            case 0:
-                                if (Type == SectionType.CodeDemo)
-                                    LoadSection(reader, sub, SectionType.ObjectDemo);
-                                else
-                                    LoadSection(reader, sub, SectionType.Object);
-                                break;
-                            case 1:
-                                if (Type == SectionType.Code)
-                                    LoadSection(reader, sub, SectionType.Script);
-                                else if (Type == SectionType.CodeX)
-                                    LoadSection(reader, sub, SectionType.ScriptX);
-                                else
-                                    LoadSection(reader, sub, SectionType.ScriptDemo);
-                                break;
-                            case 2:
-                                LoadSection(reader, sub, SectionType.Animation);
-                                break;
-                            case 3:
-                                LoadSection(reader, sub, SectionType.OGI);
-                                break;
-                            case 4:
-                                if (Type == SectionType.Code)
-                                    LoadSection(reader, sub, SectionType.CodeModel);
-                                else if (Type == SectionType.CodeX)
-                                    LoadSection(reader, sub, SectionType.CodeModelX);
-                                else
-                                    LoadSection(reader, sub, SectionType.CodeModelDemo);
-                                break;
-                            case 6:
-                                if (Type == SectionType.CodeX)
-                                    LoadSection(reader, sub, SectionType.Xbox_SE);
-                                else
-                                    LoadSection(reader, sub, SectionType.SE);
-                                break;
-                            case 7:
-                                if (Type == SectionType.CodeX)
-                                    LoadSection(reader, sub, SectionType.Xbox_SE_Eng);
-                                else
-                                    LoadSection(reader, sub, SectionType.SE_Eng);
-                                break;
-                            case 8:
-                                if (Type == SectionType.CodeX)
-                                    LoadSection(reader, sub, SectionType.Xbox_SE_Fre);
-                                else
-                                    LoadSection(reader, sub, SectionType.SE_Fre);
-                                break;
-                            case 9:
-                                if (Type == SectionType.CodeX)
-                                    LoadSection(reader, sub, SectionType.Xbox_SE_Ger);
-                                else
-                                    LoadSection(reader, sub, SectionType.SE_Ger);
-                                break;
-                            case 10:
-                                if (Type == SectionType.CodeX)
-                                    LoadSection(reader, sub, SectionType.Xbox_SE_Spa);
-                                else
-                                    LoadSection(reader, sub, SectionType.SE_Spa);
-                                break;
-                            case 11:
-                                if (Type == SectionType.CodeX)
-                                    LoadSection(reader, sub, SectionType.Xbox_SE_Ita);
-                                else
-                                    LoadSection(reader, sub, SectionType.SE_Ita);
-                                break;
-                            case 12:
-                                if (Type == SectionType.CodeX)
-                                    LoadSection(reader, sub, SectionType.Xbox_SE_Jpn);
-                                else
-                                    LoadSection(reader, sub, SectionType.SE_Jpn);
-                                break;
-                            default:
-                                LoadItem<TwinsItem>(reader, sub, Type);
-                                break;
-                        }
-                        break;
-                    case SectionType.CodeMB:
-                        switch (sub.ID)
-                        {
-                            case 0:
-                                LoadSection(reader, sub, SectionType.ObjectMB);
-                                break;
-                            case 1:
-                                LoadSection(reader, sub, SectionType.ScriptMB);
-                                break;
-                            case 2:
-                                LoadSection(reader, sub, SectionType.Animation);
-                                break;
-                            case 3:
-                                LoadSection(reader, sub, SectionType.GraphicsInfoMB);
-                                break;
-                            case 4:
-                                LoadSection(reader, sub, SectionType.CodeModel);
-                                break;
-                            case 5:
-                                LoadSection(reader, sub, SectionType.Unknown);
-                                break;
-                            //case 6:
-                                //loads forever
-                                //LoadSection(reader, sub, SectionType.MB_SE);
-                                //break;
-                            case 7:
-                                LoadSection(reader, sub, SectionType.SE_Eng);
-                                break;
-                            case 8:
-                                LoadSection(reader, sub, SectionType.SE_Fre);
-                                break;
-                            case 9:
-                                LoadSection(reader, sub, SectionType.SE_Ger);
-                                break;
-                            case 10:
-                                LoadSection(reader, sub, SectionType.SE_Spa);
-                                break;
-                            case 11:
-                                LoadSection(reader, sub, SectionType.SE_Ita);
-                                break;
-                            case 12:
-                                LoadSection(reader, sub, SectionType.SE_Jpn);
-                                break;
-                            default:
-                                LoadItem<TwinsItem>(reader, sub, Type);
-                                break;
-                        }
-                        break;
-                    case SectionType.Texture:
-                        LoadItem<Texture>(reader, sub, Type);
-                        break;
-                    case SectionType.TextureX: //XBOX textures
-                        LoadItem<TextureX>(reader, sub, Type);
-                        break;
-                    case SectionType.TextureMB:
-                        LoadItem<TextureP>(reader, sub, Type);
-                        break;
-                    case SectionType.Material:
-                        LoadItem<Material>(reader, sub, Type);
-                        break;
-                    case SectionType.MaterialD: //PS2 DEMO Materials
-                        LoadItem<MaterialDemo>(reader, sub, Type);
-                        break;
-                    case SectionType.Model:
-                        LoadItem<Model>(reader, sub, Type);
-                        break;
-                    case SectionType.ModelX:
-                        LoadItem<ModelX>(reader, sub, Type);
-                        break;
-                    case SectionType.ModelMB:
-                        LoadItem<ModelP>(reader, sub, Type);
-                        break;
-                    case SectionType.RigidModel:
-                    case SectionType.Mesh:
-                        LoadItem<RigidModel>(reader, sub, Type);
-                        break;
-                    case SectionType.Skydome:
-                        LoadItem<Skydome>(reader, sub, Type);
-                        break;
-                    case SectionType.Object:
-                        LoadItem<GameObject>(reader, sub, Type);
-                        break;
-                    case SectionType.ObjectDemo: //PS2 DEMO objects
-                        LoadItem<GameObjectDemo>(reader, sub, Type);
-                        break;
-                    case SectionType.CodeModel:
-                        LoadItem<CodeModel>(reader, sub, Type);
-                        break;
-                    case SectionType.CodeModelX:
-                        LoadItem<CodeModel>(reader, sub, Type);
-                        break;
-                    case SectionType.CodeModelDemo:
-                        LoadItem<CodeModel>(reader, sub, Type);
-                        break;
-                    case SectionType.Script:
-                        LoadItem<Script>(reader, sub, Type);
-                        break;
-                    case SectionType.ScriptX:
-                        LoadItem<Script>(reader, sub, Type);
-                        break;
-                    case SectionType.ScriptDemo:
-                        LoadItem<Script>(reader, sub, Type);
-                        break;
-                    case SectionType.ScriptMB:
-                        LoadItem<Script>(reader, sub, Type);
-                        break;
-                    case SectionType.Animation:
-                        LoadItem<Animation>(reader, sub, Type);
-                        break;
-                    case SectionType.SE:
-                    case SectionType.SE_Eng:
-                    case SectionType.SE_Fre:
-                    case SectionType.SE_Ger:
-                    case SectionType.SE_Ita:
-                    case SectionType.SE_Spa:
-                    case SectionType.SE_Jpn:
-                        LoadItem<SoundEffect>(reader, sub, Type);
-                        break;
-                    case SectionType.Xbox_SE:
-                    case SectionType.Xbox_SE_Eng:
-                    case SectionType.Xbox_SE_Fre:
-                    case SectionType.Xbox_SE_Ger:
-                    case SectionType.Xbox_SE_Ita:
-                    case SectionType.Xbox_SE_Jpn:
-                    case SectionType.Xbox_SE_Spa:
-                        LoadItem<SoundEffectX>(reader, sub, Type);
-                        break;
-                    case SectionType.AIPosition:
-                        LoadItem<AIPosition>(reader, sub, Type);
-                        break;
-                    case SectionType.AIPath:
-                        LoadItem<AIPath>(reader, sub, Type);
-                        break;
-                    case SectionType.Position:
-                        LoadItem<Position>(reader, sub, Type);
-                        break;
-                    case SectionType.Path:
-                        LoadItem<Path>(reader, sub, Type);
-                        break;
-                    case SectionType.ObjectInstance:
-                        LoadItem<Instance>(reader, sub, Type);
-                        break;
-                    case SectionType.ObjectInstanceDemo: //PS2 DEMO instances
-                        LoadItem<InstanceDemo>(reader, sub, Type);
-                        break;
-                    case SectionType.ObjectInstanceMB:
-                        LoadItem<InstanceMB>(reader, sub, Type);
-                        break;
-                    case SectionType.Trigger:
-                        LoadItem<Trigger>(reader, sub, Type);
-                        break;
-                    case SectionType.Camera:
-                        LoadItem<Camera>(reader, sub, Type);
-                        break;
-                    case SectionType.CameraDemo:
-                        LoadItem<Camera>(reader, sub, Type);
-                        break;
-                    case SectionType.OGI:
-                        LoadItem<GraphicsInfo>(reader, sub, Type);
-                        break;
-                    case SectionType.GraphicsInfoMB:
-                        LoadItem<GraphicsInfoMB>(reader, sub, Type);
-                        break;
-                    case SectionType.Skin:
-                        LoadItem<Skin>(reader, sub, Type);
-                        break;
-                    case SectionType.SkinX: //XBOX Skins
-                        LoadItem<SkinX>(reader, sub, Type);
-                        break;
-                    case SectionType.LodModel:
-                        LoadItem<LodModel>(reader, sub, Type);
-                        break;
-                    case SectionType.ParticleData:
-                        LoadItem<ParticleData>(reader, sub, Type);
-                        break;
-                    case SectionType.CollisionSurface:
-                        LoadItem<CollisionSurface>(reader, sub, Type);
-                        break;
-                    case SectionType.InstanceTemplate:
-                        LoadItem<InstanceTemplate>(reader, sub, Type);
-                        break;
-                    case SectionType.InstanceTemplateDemo:
-                        LoadItem<InstanceTemplateDemo>(reader, sub, Type);
-                        break;
-                    case SectionType.BlendSkin:
-                        LoadItem<BlendSkin>(reader, sub, Type);
-                        break;
-                    case SectionType.BlendSkinX:
-                        LoadItem<BlendSkinX>(reader, sub, Type);
-                        break;
-                    default:
-                        LoadItem<TwinsItem>(reader, sub, Type);
-                        break;
-                }
+                LoadSectionItem(reader, sub);
                 reader.BaseStream.Position = sk;
             }
             reader.BaseStream.Position = start_sk + extra_begin;
             ExtraData = reader.ReadBytes((int)(size - extra_begin));
+        }
+
+        protected void LoadSectionItem(BinaryReader reader, TwinsSubInfo sub)
+        {
+            switch (Type)
+            {
+                case SectionType.Graphics:
+                case SectionType.GraphicsX:
+                case SectionType.GraphicsD:
+                case SectionType.GraphicsMB:
+                    switch (sub.ID)
+                    {
+                        case 0:
+                            if (Type == SectionType.GraphicsX)
+                                LoadSection(reader, sub, SectionType.TextureX);
+                            else if (Type == SectionType.GraphicsMB && !isMonkeyBallPS2)
+                                LoadSection(reader, sub, SectionType.TextureP);
+                            else
+                                LoadSection(reader, sub, SectionType.Texture);
+                            break;
+                        case 1:
+                            if (Type == SectionType.GraphicsD)
+                                LoadSection(reader, sub, SectionType.MaterialD);
+                            else
+                                LoadSection(reader, sub, SectionType.Material);
+                            break;
+                        case 2:
+                            if (Type == SectionType.GraphicsX)
+                                LoadSection(reader, sub, SectionType.ModelX);
+                            else if (Type == SectionType.GraphicsMB && !isMonkeyBallPS2)
+                                LoadSection(reader, sub, SectionType.ModelP);
+                            else
+                                LoadSection(reader, sub, SectionType.Model);
+                            break;
+                        case 3:
+                            LoadSection(reader, sub, SectionType.RigidModel);
+                            break;
+                        case 4:
+                            if (Type == SectionType.GraphicsX)
+                                LoadSection(reader, sub, SectionType.SkinX);
+                            else
+                                LoadSection(reader, sub, SectionType.Skin);
+                            break;
+                        case 5:
+                            if (Type == SectionType.GraphicsX)
+                                LoadSection(reader, sub, SectionType.BlendSkinX);
+                            else
+                                LoadSection(reader, sub, SectionType.BlendSkin);
+                            break;
+                        case 6:
+                            LoadSection(reader, sub, SectionType.Mesh);
+                            break;
+                        case 7:
+                            if (Type == SectionType.GraphicsMB)
+                                LoadSection(reader, sub, SectionType.LodModelMB);
+                            else
+                                LoadSection(reader, sub, SectionType.LodModel);
+                            break;
+                        case 8:
+                            LoadSection(reader, sub, SectionType.Skydome);
+                            break;
+                        default:
+                            LoadItem<TwinsItem>(reader, sub, Type);
+                            break;
+                    }
+                    break;
+                case SectionType.Instance:
+                case SectionType.InstanceDemo:
+                    switch (sub.ID)
+                    {
+                        case 0:
+                            if (Type == SectionType.InstanceDemo)
+                                LoadSection(reader, sub, SectionType.InstanceTemplateDemo);
+                            else
+                                LoadSection(reader, sub, SectionType.InstanceTemplate);
+                            break;
+                        case 1:
+                            LoadSection(reader, sub, SectionType.AIPosition);
+                            break;
+                        case 2:
+                            LoadSection(reader, sub, SectionType.AIPath);
+                            break;
+                        case 3:
+                            LoadSection(reader, sub, SectionType.Position);
+                            break;
+                        case 4:
+                            LoadSection(reader, sub, SectionType.Path);
+                            break;
+                        case 5:
+                            LoadSection(reader, sub, SectionType.CollisionSurface);
+                            break;
+                        case 6:
+                            if (Type == SectionType.InstanceDemo)
+                                LoadSection(reader, sub, SectionType.ObjectInstanceDemo);
+                            else
+                                LoadSection(reader, sub, SectionType.ObjectInstance);
+                            break;
+                        case 7:
+                            LoadSection(reader, sub, SectionType.Trigger);
+                            break;
+                        case 8:
+                            if (Type == SectionType.InstanceDemo)
+                                LoadSection(reader, sub, SectionType.CameraDemo);
+                            else
+                                LoadSection(reader, sub, SectionType.Camera);
+                            break;
+                        default:
+                            LoadItem<TwinsItem>(reader, sub, Type);
+                            break;
+                    }
+                    break;
+                case SectionType.InstanceMB:
+                    switch (sub.ID)
+                    {
+                        case 0:
+                            LoadSection(reader, sub, SectionType.InstanceTemplateMB);
+                            break;
+                        case 1:
+                            LoadSection(reader, sub, SectionType.AIPosition);
+                            break;
+                        case 2:
+                            LoadSection(reader, sub, SectionType.AIPath);
+                            break;
+                        case 3:
+                            LoadSection(reader, sub, SectionType.Position);
+                            break;
+                        case 4:
+                            LoadSection(reader, sub, SectionType.Path);
+                            break;
+                        case 5:
+                            LoadSection(reader, sub, SectionType.CollisionSurface);
+                            break;
+                        case 6:
+                            LoadSection(reader, sub, SectionType.ObjectInstanceMB);
+                            break;
+                        case 7:
+                            LoadSection(reader, sub, SectionType.Trigger);
+                            break;
+                        case 8:
+                            LoadSection(reader, sub, SectionType.Camera);
+                            break;
+                        default:
+                            LoadItem<TwinsItem>(reader, sub, Type);
+                            break;
+                    }
+                    break;
+                case SectionType.Code:
+                case SectionType.CodeX:
+                case SectionType.CodeDemo:
+                    switch (sub.ID)
+                    {
+                        case 0:
+                            if (Type == SectionType.CodeDemo)
+                                LoadSection(reader, sub, SectionType.ObjectDemo);
+                            else
+                                LoadSection(reader, sub, SectionType.Object);
+                            break;
+                        case 1:
+                            if (Type == SectionType.Code)
+                                LoadSection(reader, sub, SectionType.Script);
+                            else if (Type == SectionType.CodeX)
+                                LoadSection(reader, sub, SectionType.ScriptX);
+                            else
+                                LoadSection(reader, sub, SectionType.ScriptDemo);
+                            break;
+                        case 2:
+                            LoadSection(reader, sub, SectionType.Animation);
+                            break;
+                        case 3:
+                            LoadSection(reader, sub, SectionType.OGI);
+                            break;
+                        case 4:
+                            if (Type == SectionType.Code)
+                                LoadSection(reader, sub, SectionType.CodeModel);
+                            else if (Type == SectionType.CodeX)
+                                LoadSection(reader, sub, SectionType.CodeModelX);
+                            else
+                                LoadSection(reader, sub, SectionType.CodeModelDemo);
+                            break;
+                        case 6:
+                            if (Type == SectionType.CodeX)
+                                LoadSection(reader, sub, SectionType.Xbox_SE);
+                            else
+                                LoadSection(reader, sub, SectionType.SE);
+                            break;
+                        case 7:
+                            if (Type == SectionType.CodeX)
+                                LoadSection(reader, sub, SectionType.Xbox_SE_Eng);
+                            else
+                                LoadSection(reader, sub, SectionType.SE_Eng);
+                            break;
+                        case 8:
+                            if (Type == SectionType.CodeX)
+                                LoadSection(reader, sub, SectionType.Xbox_SE_Fre);
+                            else
+                                LoadSection(reader, sub, SectionType.SE_Fre);
+                            break;
+                        case 9:
+                            if (Type == SectionType.CodeX)
+                                LoadSection(reader, sub, SectionType.Xbox_SE_Ger);
+                            else
+                                LoadSection(reader, sub, SectionType.SE_Ger);
+                            break;
+                        case 10:
+                            if (Type == SectionType.CodeX)
+                                LoadSection(reader, sub, SectionType.Xbox_SE_Spa);
+                            else
+                                LoadSection(reader, sub, SectionType.SE_Spa);
+                            break;
+                        case 11:
+                            if (Type == SectionType.CodeX)
+                                LoadSection(reader, sub, SectionType.Xbox_SE_Ita);
+                            else
+                                LoadSection(reader, sub, SectionType.SE_Ita);
+                            break;
+                        case 12:
+                            if (Type == SectionType.CodeX)
+                                LoadSection(reader, sub, SectionType.Xbox_SE_Jpn);
+                            else
+                                LoadSection(reader, sub, SectionType.SE_Jpn);
+                            break;
+                        default:
+                            LoadItem<TwinsItem>(reader, sub, Type);
+                            break;
+                    }
+                    break;
+                case SectionType.CodeMB:
+                    switch (sub.ID)
+                    {
+                        case 0:
+                            LoadSection(reader, sub, SectionType.ObjectMB);
+                            break;
+                        case 1:
+                            LoadSection(reader, sub, SectionType.ScriptMB);
+                            break;
+                        case 2:
+                            LoadSection(reader, sub, SectionType.Animation);
+                            break;
+                        case 3:
+                            if (isMonkeyBallPS2)
+                            {
+                                LoadSection(reader, sub, SectionType.GraphicsInfoMB);
+                            }
+                            else
+                            {
+                                LoadSection(reader, sub, SectionType.GraphicsInfoP);
+                            }
+                            break;
+                        case 4:
+                            LoadSection(reader, sub, SectionType.CodeModel);
+                            break;
+                        case 5:
+                            LoadSection(reader, sub, SectionType.MB_SE);
+                            break;
+                        case 6:
+                            //loads forever on PSP
+                            if (isMonkeyBallPS2)
+                            {
+                                LoadSection(reader, sub, SectionType.Unknown);
+                            }
+                            else
+                            {
+                                LoadItem<TwinsItem>(reader, sub, Type);
+                            }
+                            break;
+                        case 7:
+                            LoadSection(reader, sub, SectionType.SE_Eng);
+                            break;
+                        case 8:
+                            LoadSection(reader, sub, SectionType.SE_Fre);
+                            break;
+                        case 9:
+                            LoadSection(reader, sub, SectionType.SE_Ger);
+                            break;
+                        case 10:
+                            LoadSection(reader, sub, SectionType.SE_Spa);
+                            break;
+                        case 11:
+                            LoadSection(reader, sub, SectionType.SE_Ita);
+                            break;
+                        case 12:
+                            LoadSection(reader, sub, SectionType.SE_Jpn);
+                            break;
+                        default:
+                            LoadItem<TwinsItem>(reader, sub, Type);
+                            break;
+                    }
+                    break;
+                case SectionType.Texture:
+                    LoadItem<Texture>(reader, sub, Type);
+                    break;
+                case SectionType.TextureX: //XBOX textures
+                    LoadItem<TextureX>(reader, sub, Type);
+                    break;
+                case SectionType.TextureP:
+                    LoadItem<TextureP>(reader, sub, Type);
+                    break;
+                case SectionType.Material:
+                    LoadItem<Material>(reader, sub, Type);
+                    break;
+                case SectionType.MaterialD: //PS2 DEMO Materials
+                    LoadItem<MaterialDemo>(reader, sub, Type);
+                    break;
+                case SectionType.Model:
+                    LoadItem<Model>(reader, sub, Type);
+                    break;
+                case SectionType.ModelX:
+                    LoadItem<ModelX>(reader, sub, Type);
+                    break;
+                case SectionType.ModelP:
+                    LoadItem<ModelP>(reader, sub, Type);
+                    break;
+                case SectionType.RigidModel:
+                case SectionType.Mesh:
+                    LoadItem<RigidModel>(reader, sub, Type);
+                    break;
+                case SectionType.Skydome:
+                    LoadItem<Skydome>(reader, sub, Type);
+                    break;
+                case SectionType.Object:
+                    LoadItem<GameObject>(reader, sub, Type);
+                    break;
+                case SectionType.ObjectDemo: //PS2 DEMO objects
+                    LoadItem<GameObjectDemo>(reader, sub, Type);
+                    break;
+                case SectionType.CodeModel:
+                    LoadItem<CodeModel>(reader, sub, Type);
+                    break;
+                case SectionType.CodeModelX:
+                    LoadItem<CodeModel>(reader, sub, Type);
+                    break;
+                case SectionType.CodeModelDemo:
+                    LoadItem<CodeModel>(reader, sub, Type);
+                    break;
+                case SectionType.Script:
+                    LoadItem<Script>(reader, sub, Type);
+                    break;
+                case SectionType.ScriptX:
+                    LoadItem<Script>(reader, sub, Type);
+                    break;
+                case SectionType.ScriptDemo:
+                    LoadItem<Script>(reader, sub, Type);
+                    break;
+                case SectionType.ScriptMB:
+                    LoadItem<Script>(reader, sub, Type);
+                    break;
+                case SectionType.Animation:
+                    LoadItem<Animation>(reader, sub, Type);
+                    break;
+                case SectionType.SE:
+                case SectionType.SE_Eng:
+                case SectionType.SE_Fre:
+                case SectionType.SE_Ger:
+                case SectionType.SE_Ita:
+                case SectionType.SE_Spa:
+                case SectionType.SE_Jpn:
+                    LoadItem<SoundEffect>(reader, sub, Type);
+                    break;
+                case SectionType.Xbox_SE:
+                case SectionType.Xbox_SE_Eng:
+                case SectionType.Xbox_SE_Fre:
+                case SectionType.Xbox_SE_Ger:
+                case SectionType.Xbox_SE_Ita:
+                case SectionType.Xbox_SE_Jpn:
+                case SectionType.Xbox_SE_Spa:
+                    LoadItem<SoundEffectX>(reader, sub, Type);
+                    break;
+                case SectionType.MB_SE:
+                    LoadItem<SoundEffectMB>(reader, sub, Type);
+                    break;
+                case SectionType.AIPosition:
+                    LoadItem<AIPosition>(reader, sub, Type);
+                    break;
+                case SectionType.AIPath:
+                    LoadItem<AIPath>(reader, sub, Type);
+                    break;
+                case SectionType.Position:
+                    LoadItem<Position>(reader, sub, Type);
+                    break;
+                case SectionType.Path:
+                    LoadItem<Path>(reader, sub, Type);
+                    break;
+                case SectionType.ObjectInstance:
+                    LoadItem<Instance>(reader, sub, Type);
+                    break;
+                case SectionType.ObjectInstanceDemo: //PS2 DEMO instances
+                    LoadItem<InstanceDemo>(reader, sub, Type);
+                    break;
+                case SectionType.ObjectInstanceMB:
+                    LoadItem<InstanceMB>(reader, sub, Type);
+                    break;
+                case SectionType.Trigger:
+                    LoadItem<Trigger>(reader, sub, Type);
+                    break;
+                case SectionType.Camera:
+                    LoadItem<Camera>(reader, sub, Type);
+                    break;
+                case SectionType.CameraDemo:
+                    LoadItem<Camera>(reader, sub, Type);
+                    break;
+                case SectionType.OGI:
+                    LoadItem<GraphicsInfo>(reader, sub, Type);
+                    break;
+                case SectionType.GraphicsInfoMB:
+                case SectionType.GraphicsInfoP:
+                    LoadItem<GraphicsInfoMB>(reader, sub, Type);
+                    break;
+                case SectionType.Skin:
+                    LoadItem<Skin>(reader, sub, Type);
+                    break;
+                case SectionType.SkinX: //XBOX Skins
+                    LoadItem<SkinX>(reader, sub, Type);
+                    break;
+                case SectionType.LodModel:
+                    LoadItem<LodModel>(reader, sub, Type);
+                    break;
+                case SectionType.LodModelMB:
+                    LoadItem<LodModelMB>(reader, sub, Type);
+                    break;
+                case SectionType.ParticleData:
+                    LoadItem<ParticleData>(reader, sub, Type);
+                    break;
+                case SectionType.CollisionSurface:
+                    LoadItem<CollisionSurface>(reader, sub, Type);
+                    break;
+                case SectionType.InstanceTemplate:
+                    LoadItem<InstanceTemplate>(reader, sub, Type);
+                    break;
+                case SectionType.InstanceTemplateDemo:
+                    LoadItem<InstanceTemplateDemo>(reader, sub, Type);
+                    break;
+                case SectionType.BlendSkin:
+                    LoadItem<BlendSkin>(reader, sub, Type);
+                    break;
+                case SectionType.BlendSkinX:
+                    LoadItem<BlendSkinX>(reader, sub, Type);
+                    break;
+                default:
+                    LoadItem<TwinsItem>(reader, sub, Type);
+                    break;
+            }
         }
 
         protected void LoadItem<T>(BinaryReader reader, TwinsSubInfo sub, SectionType type) where T : TwinsItem, new()
@@ -568,7 +657,7 @@ namespace Twinsanity
                 Level = Level + 1,
                 Type = type,
                 Parent = this,
-                //isMonkeyBallPS2 = this.isMonkeyBallPS2,
+                isMonkeyBallPS2 = this.isMonkeyBallPS2,
             };
             sec.Load(reader, sub.Size);
             RecordIDs.Add(sub.ID, Records.Count);

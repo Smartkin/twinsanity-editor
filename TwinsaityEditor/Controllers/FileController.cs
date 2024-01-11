@@ -54,14 +54,7 @@ namespace TwinsaityEditor
 
         protected override string GetName()
         {
-            if (Data.Type == TwinsFile.FileType.MonkeyBallRM || Data.Type == TwinsFile.FileType.MonkeyBallSM)
-            {
-                if (Data.Console == TwinsFile.ConsoleType.PS2)
-                {
-                    return "Compressed File";
-                }
-            }
-            return "File";
+            return $"{Data.Type} File";
         }
 
         protected override void GenText()
@@ -125,6 +118,14 @@ namespace TwinsaityEditor
             if (Data.Type == TwinsFile.FileType.SM2 || Data.Type == TwinsFile.FileType.SMX || Data.Type == TwinsFile.FileType.DemoSM2)
             {
                 gfx_id = 6;
+            }
+            else if (Data.Type == TwinsFile.FileType.MonkeyBallRM)
+            {
+                gfx_id = 12;
+            }
+            else if (Data.Type == TwinsFile.FileType.MonkeyBallSM)
+            {
+                gfx_id = 7;
             }
             if (Data.ContainsItem(gfx_id) && Data.GetItem<TwinsSection>(gfx_id).ContainsItem(2))
             {
@@ -206,7 +207,12 @@ namespace TwinsaityEditor
                 {
                     case Editors.ColData:
                         {
-                            if (Data.ContainsItem(9)) editor_var_ptr = new ColDataEditor(Data.GetItem<ColData>(9)) { Tag = TopForm };
+                            uint col_section = 9;
+                            if (Data.Type == TwinsFile.FileType.MonkeyBallRM)
+                            {
+                                col_section = 10;
+                            }
+                            if (Data.ContainsItem(col_section)) editor_var_ptr = new ColDataEditor(Data.GetItem<ColData>(col_section)) { Tag = TopForm };
                             else return;
                         }
                         break;
@@ -403,9 +409,17 @@ namespace TwinsaityEditor
                 texViewer = new TextureViewer();
                 texViewer.SelectedTexture = c.Data;
                 List<TwinsItem> textures = null;
-                if (c.MainFile.FileName.EndsWith(".sm2"))
+                if (c.MainFile.Data.Type == TwinsFile.FileType.SM2 || c.MainFile.Data.Type == TwinsFile.FileType.SMX || c.MainFile.Data.Type == TwinsFile.FileType.DemoSM2)
                 {
                     textures = Data.GetItem<TwinsSection>(6).GetItem<TwinsSection>(0).Records;
+                }
+                else if (c.MainFile.Data.Type == TwinsFile.FileType.MonkeyBallRM)
+                {
+                    textures = Data.GetItem<TwinsSection>(12).GetItem<TwinsSection>(0).Records;
+                }
+                else if (c.MainFile.Data.Type == TwinsFile.FileType.MonkeyBallSM)
+                {
+                    textures = Data.GetItem<TwinsSection>(7).GetItem<TwinsSection>(0).Records;
                 }
                 else
                 {
@@ -545,6 +559,7 @@ namespace TwinsaityEditor
             SectionController model_sec = GetItem<SectionController>(6).GetItem<SectionController>(6);
             uint LODcount = spec.Data.ModelsAmount;
             int targetLOD = LODcount == 1 ? 0 : 1;
+            if (spec.Data.LODModelIDs[targetLOD] == 0xDDDDDDDD) return;
             RigidModelController c = model_sec.GetItem<RigidModelController>(spec.Data.LODModelIDs[targetLOD]);
             var id = c.Data.ID;
             if (!ModelViewers.ContainsKey(id))

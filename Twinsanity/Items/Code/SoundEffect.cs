@@ -23,7 +23,7 @@ namespace Twinsanity
         public uint SoundSize { get; set; }
         public uint SoundOffset { get; set; }
 
-        public ushort Freq
+        public virtual ushort Freq
         {
             get => GetFreq(FreqFac); 
             set

@@ -39,7 +39,7 @@ namespace TwinsaityEditor
             lbAnimations.Items.Clear();
             foreach (Animation anim in controller.Data.Records)
             {
-                if (DefaultHashes.Hash_Animations.ContainsKey(anim.ID))
+                if (controller.MainFile.Data.Type != TwinsFile.FileType.MonkeyBallRM && DefaultHashes.Hash_Animations.ContainsKey(anim.ID))
                 {
                     lbAnimations.Items.Add($"ID {anim.ID} - {DefaultHashes.Hash_Animations[anim.ID]}");
                 }
@@ -112,7 +112,12 @@ namespace TwinsaityEditor
                 viewer.FrameChanged -= Viewer_FrameChanged;
             }
 
-            var ogis = controller.MainFile.GetItem<SectionController>(10).GetItem<SectionController>(3);
+            uint code_section = 10;
+            if (controller.MainFile.Data.Type == TwinsFile.FileType.MonkeyBallRM)
+            {
+                code_section = 11;
+            }
+            var ogis = controller.MainFile.GetItem<SectionController>(code_section).GetItem<SectionController>(3);
             var ogisList = new List<GraphicsInfo>();
             foreach (GraphicsInfo ogi in ogis.Data.Records.Cast<GraphicsInfo>())
             {
@@ -506,7 +511,12 @@ namespace TwinsaityEditor
         {
             if (cbOGIList.SelectedIndex == -1) return;
 
-            var ogis = controller.MainFile.GetItem<SectionController>(10).GetItem<SectionController>(3);
+            uint code_section = 10;
+            if (controller.MainFile.Data.Type == TwinsFile.FileType.MonkeyBallRM)
+            {
+                code_section = 11;
+            }
+            var ogis = controller.MainFile.GetItem<SectionController>(code_section).GetItem<SectionController>(3);
             var ogi = cbOGIList.SelectedItem as GraphicsInfo;
             var ogic = ogis.GetItem<GraphicsInfoController>(ogi.ID);
             viewer?.ChangeGraphicsInfo(ogic);

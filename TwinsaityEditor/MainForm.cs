@@ -12,6 +12,7 @@ namespace TwinsaityEditor
         private Form mhForm, exeForm, bdForm, imageMakerForm;
 
         private TreeNode nodeLastSelected;
+        private int LastFilterIndex;
 
         //private List<FileController> FilesOpened { get; }
         public FileController FilesController { get => (FileController)Tag; }
@@ -252,12 +253,14 @@ namespace TwinsaityEditor
             using (OpenFileDialog ofd = new OpenFileDialog
             {
                 InitialDirectory = Settings.Default.ChunkFilePath,
-                Filter = "RM2 files|*.rm2|SM2 files|*.sm2|RMX files|*.rmx|SMX files|*.smx|Demo RM2 files|*.rm2|Demo SM2 files|*.sm2|SMBA RM files|*.rm|SMBA SM files|*.sm"
+                Filter = "RM2 files|*.rm2|SM2 files|*.sm2|RMX files|*.rmx|SMX files|*.smx|Demo RM2 files|*.rm2|Demo SM2 files|*.sm2|SMBA RM files|*.rm|SMBA SM files|*.sm",
+                FilterIndex = LastFilterIndex,
                 //Filter = "PS2 files (.rm2; .sm2)|*.rm2;*.sm2|XBOX files (.rmx; .smx)|*.rmx;*.smx|Demo files (.rm2; .sm2)|*.rm2; *.sm2";
             })
             {
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
+                    LastFilterIndex = ofd.FilterIndex;
                     if (CurCont != null)
                     {
                         Utils.TextUtils.ClearTextureCache();

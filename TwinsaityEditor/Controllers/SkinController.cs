@@ -69,7 +69,9 @@ namespace TwinsaityEditor
             var refIndex = 0U;
             var offset = 0;
 
-            var isSpyroModel = DefaultHashes.Hash_Skins[Data.ID] == "Spyro";
+            var isSpyroModel = false;
+            if (DefaultHashes.Hash_Skins.ContainsKey(Data.ID) && DefaultHashes.Hash_Skins[Data.ID] == "Spyro")
+                isSpyroModel = true;
 
             foreach (var model in Data.SubModels)
             {

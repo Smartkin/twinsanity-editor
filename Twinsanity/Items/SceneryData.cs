@@ -21,6 +21,7 @@ namespace Twinsanity
         public List<LightNegative> LightsNegative;
 
         public uint unkVar5;
+        public bool IsMonkeyBall = false;
 
         public SceneryData()
         {
@@ -34,6 +35,10 @@ namespace Twinsanity
             if ((HeaderUnk1 & 0x10000) != 0)
             {
                 count += 4;
+            }
+            if (IsMonkeyBall)
+            {
+                count += 3;
             }
 
             if ((HeaderUnk1 & 0x20000) != 0)
@@ -112,6 +117,12 @@ namespace Twinsanity
             writer.Write((uint)ChunkName.Length);
             writer.Write(ChunkName.ToCharArray());
             writer.Write(HeaderUnk2);
+            if (IsMonkeyBall)
+            {
+                writer.Write((byte)0);
+                writer.Write((byte)0);
+                writer.Write((byte)0);
+            }
             writer.Write(HeaderUnk3);
             writer.Write(HeaderUnk4);
             if ((HeaderUnk1 & 0x10000) != 0)
@@ -253,6 +264,10 @@ namespace Twinsanity
             uint chunkNameLength = reader.ReadUInt32();
             ChunkName = new string(reader.ReadChars((int)chunkNameLength));
             HeaderUnk2 = reader.ReadUInt32();
+            if (IsMonkeyBall)
+            {
+                reader.ReadBytes(3);
+            }
             HeaderUnk3 = reader.ReadUInt32();
             HeaderUnk4 = reader.ReadByte();
             if ((HeaderUnk1 & 0x10000) != 0)

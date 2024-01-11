@@ -3,11 +3,11 @@ using System.IO;
 
 namespace Twinsanity
 {
-    public sealed class ColData : TwinsItem
+    public class ColData : TwinsItem
     {
-        private uint someNumber;
-        private readonly uint mask = 0x3FFFF;
-        private bool isEmpty;
+        public uint someNumber;
+        public readonly uint mask = 0x3FFFF;
+        public bool isEmpty;
 
         public ColData()
         {

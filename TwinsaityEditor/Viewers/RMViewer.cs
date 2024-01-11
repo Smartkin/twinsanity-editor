@@ -34,7 +34,7 @@ namespace TwinsaityEditor
             collisions = true;
             this.file = file;
             Tag = pform;
-            if (file.Data.Type == TwinsFile.FileType.RM2 || file.Data.Type == TwinsFile.FileType.RMX)
+            if (file.Data.Type == TwinsFile.FileType.RM2 || file.Data.Type == TwinsFile.FileType.RMX || file.Data.Type == TwinsFile.FileType.MonkeyBallRM)
             {
                 int ObjectModelPool = 3000; // model limit
                 InitVBO(ObjectModelPool);
@@ -52,7 +52,10 @@ namespace TwinsaityEditor
             if (file.DataAux != null && file.DataAux.ContainsItem(0))
             {
                 scenery = file.DataAux.GetItem<SceneryData>(0);
-                LoadScenery(new Matrix4());
+                if (scenery != null)
+                {
+                    LoadScenery(new Matrix4());
+                }
             }
             uint col_section = 9;
             if (file.Data.Type == TwinsFile.FileType.MonkeyBallRM) col_section = 10;
@@ -823,12 +826,17 @@ namespace TwinsaityEditor
         {
             float min_x = float.MaxValue, min_y = float.MaxValue, min_z = float.MaxValue, max_x = float.MinValue, max_y = float.MinValue, max_z = float.MinValue;
 
-            SectionController graphics_sec = file.DataAuxCont.GetItem<SectionController>(6);
+            uint gfx_section = 6;
+            if (file.DataAux.Type == TwinsFile.FileType.MonkeyBallSM)
+            {
+                gfx_section = 7;
+            }
+            SectionController graphics_sec = file.DataAuxCont.GetItem<SectionController>(gfx_section);
             SectionController mesh_sec = graphics_sec.GetItem<SectionController>(2);
             SectionController model_sec = graphics_sec.GetItem<SectionController>(6);
             SectionController special_sec = graphics_sec.GetItem<SectionController>(7);
 
-            if (file.DataAux.Type == TwinsFile.FileType.SM2 || file.DataAux.Type == TwinsFile.FileType.DemoSM2)
+            if (file.DataAux.Type == TwinsFile.FileType.SM2 || file.DataAux.Type == TwinsFile.FileType.DemoSM2 || file.DataAux.Type == TwinsFile.FileType.MonkeyBallSM)
             {
                 for (int m = 0; m < leaf.Models.Count; m++)
                 {
@@ -844,6 +852,7 @@ namespace TwinsaityEditor
                         //int targetLOD = LODcount == 1 ? 0 : 1;
                         modelID = special_sec.Data.GetItem<LodModel>(leaf.Models[m].ModelID).LODModelIDs[0];
                     }
+                    if (modelID == 0xDDDDDDDD) continue;
                     mesh = mesh_sec.GetItem<ModelController>(model_sec.GetItem<RigidModelController>(modelID).Data.MeshID);
 
                     var rigid = model_sec.GetItem<RigidModelController>(modelID).Data;
@@ -932,6 +941,7 @@ namespace TwinsaityEditor
                         //int targetLOD = LODcount == 1 ? 0 : 1;
                         modelID = special_sec.Data.GetItem<LodModel>(leaf.Models[m].ModelID).LODModelIDs[0];
                     }
+                    if (modelID == 0xDDDDDDDD) continue;
                     mesh = mesh_sec.GetItem<ModelXController>(model_sec.GetItem<RigidModelController>(modelID).Data.MeshID);
 
                     var rigid = model_sec.GetItem<RigidModelController>(modelID).Data;
