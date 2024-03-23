@@ -33,7 +33,7 @@ namespace TwinsaityEditor
             TextPrev[0] = $"ID: {Data.ID}";
             TextPrev[1] = $"Size: {Data.Size}";
             TextPrev[2] = $"Object ID {Data.ObjectID} - {(obj_name != string.Empty ? obj_name : string.Empty)}";
-            TextPrev[3] = "";//$"Script ID {Data.ScriptID}";
+            TextPrev[3] = $"Flags: {Data.Flags:X8}";//$"Script ID {Data.ScriptID}";s
             TextPrev[4] = $"Position ({Data.Pos.X}, {Data.Pos.Y}, {Data.Pos.Z}, {Data.Pos.W})";
             TextPrev[5] = $"Rotation ({Data.RotX} | {Data.RotY} | {Data.RotZ})";
 

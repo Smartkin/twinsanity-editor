@@ -22,38 +22,38 @@ namespace TwinsaityEditor
 
         private CheckBox[] checkboxes;
         internal static string[] flagtext = new string[32] {
-            "Deactivated?", // 0
+            "Inactive", // 0
             "Collidable", // 1
             "Visible", // 2
             "Shadow", // 3
-            string.Empty, // 4
-            "Tangible", // 5
-            string.Empty, // 6
-            string.Empty, // 7
-            "Receive OnTrigger signals?", // 8
-            "Can damage character?", // 9
-            string.Empty, // 10
-            string.Empty, // 11
-            string.Empty, // 12
-            string.Empty, // 13
-            string.Empty, // 14
-            "Harmful?", // 15
-            "Can always damage character?", // 16
-            string.Empty, // 17
-            string.Empty, // 18
-            string.Empty, // 19
-            string.Empty, // 20
-            string.Empty, // 21
-            string.Empty, // 22
-            string.Empty, // 23
-            string.Empty, // 24
-            string.Empty, // 25
-            string.Empty, // 26
-            string.Empty, // 27
-            string.Empty, // 28
-            string.Empty, // 29
-            string.Empty, // 30
-            string.Empty // 31
+            "", // 4
+            "", // 5 Tangible?
+            "HasLoadZoneState", // 6 Persistent state flag
+            "", // 7
+            "", // 8 Receive OnTrigger signals?
+            "Harmful", // 9 Collision harmful
+            "SolidToBodyslam", // 10
+            "SolidToSlide", // 11
+            "SolidToSpin", // 12
+            "SolidToTwinSlam", // 13
+            "", // 14 SolidTo something?
+            "Targetable", // 15 Targetable with MultiTool and Nina
+            "", // 16
+            "", // 17
+            "ScriptSoftFlag18", // 18
+            "ScriptSoftFlag19", // 19
+            "ScriptSoftFlag20", // 20
+            "ScriptSoftFlag21", // 21
+            "ScriptSoftFlag22", // 22
+            "ScriptSoftFlag23", // 23
+            "ScriptSoftFlag24", // 24
+            "ScriptSoftFlag25", // 25
+            "ScriptSoftFlag26", // 26
+            "ScriptSoftFlag27", // 27
+            "ScriptSoftFlag28", // 28
+            "ScriptSoftFlag29", // 29
+            "ScriptSoftFlag30", // 30
+            "ScriptSoftFlag31" // 31
         };
 
         internal string GetFlagText(int id)
