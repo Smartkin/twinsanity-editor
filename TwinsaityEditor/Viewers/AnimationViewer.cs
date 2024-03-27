@@ -610,9 +610,12 @@ namespace TwinsaityEditor.Viewers
 
             var slerpedRot = transforms.Item2;
             slerpedRot.X = -slerpedRot.X;
+            ushort Flags = player.animation.Data.JointsSettings[jointIndex].Flags;
+            bool useAddRot = (Flags >> 0xC & 0x1) != 0;
+            bool useParentScale = (Flags >> 0xD & 0x1) != 0;
 
             var rot = Matrix4.CreateFromQuaternion(slerpedRot);
-            if (transforms.Item3)
+            if (useAddRot)
             {
                 var jointAddRot = graphicsInfo.Data.Joints[jointIndex].Matrix[4];
                 var addRot = new Quaternion(-jointAddRot.X, jointAddRot.Y, jointAddRot.Z, -jointAddRot.W);
@@ -621,10 +624,14 @@ namespace TwinsaityEditor.Viewers
             }
 
             var jointScale = new Vector4(transforms.Item1.Row1.Xyz, 1.0f);
-            var resultScale = new Vector3(jointScale.X / parentScale.X, jointScale.Y / parentScale.Y, jointScale.Z / parentScale.Z);
+            var resultScale = new Vector3(jointScale.X, jointScale.Y, jointScale.Z);
+            if (useParentScale)
+            {
+                resultScale = new Vector3(jointScale.X / parentScale.X, jointScale.Y / parentScale.Y, jointScale.Z / parentScale.Z);
+            }
             var scale = Matrix4.CreateScale(resultScale);
 
-            var localTransform = rot * scale * Matrix4.CreateTranslation(transforms.Item1.Row0.Xyz);
+            var localTransform = scale * rot * Matrix4.CreateTranslation(transforms.Item1.Row0.Xyz);
             var jointTransform = localTransform * parentTransform;
 
             return new Tuple<Matrix4, Vector4>(jointTransform, new Vector4(jointTransform.ExtractScale(), 1.0f));

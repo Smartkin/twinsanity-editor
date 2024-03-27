@@ -80,6 +80,7 @@ namespace TwinsaityEditor
             tbJointTwoPartTransformIndex2.Text = "";
             tbTransformation.Text = "";
             tbTransformation2.Text = "";
+            tbJointFlags.Text = "";
             tbAnimationTimeline.Value = 0;
             cbOGIList.Items.Clear();
             playing = false;
@@ -180,6 +181,7 @@ namespace TwinsaityEditor
             tbJointTransformChoice.Text = jointSettings.TransformationChoice.ToString();
             tbJointTransformIndex.Text = jointSettings.TransformationIndex.ToString();
             tbJointAnimatedTransformIndex.Text = jointSettings.AnimatedTransformIndex.ToString();
+            tbJointFlags.Text = $"{jointSettings.Flags:X4}";
 
             var transformChoice = JointSettings.TransformationChoice;
             var timelineText = new List<string>();

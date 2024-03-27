@@ -45,6 +45,8 @@
             this.label10 = new System.Windows.Forms.Label();
             this.lbTransformations = new System.Windows.Forms.ListBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.tbJointFlags = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.cbAddRotation = new System.Windows.Forms.CheckBox();
             this.cbParentScale = new System.Windows.Forms.CheckBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -165,11 +167,14 @@
             // 
             // groupBox10
             // 
+            this.groupBox10.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox10.AutoSize = true;
             this.groupBox10.Controls.Add(this.tbJointTimelineView);
             this.groupBox10.Location = new System.Drawing.Point(270, 309);
             this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(559, 214);
+            this.groupBox10.Size = new System.Drawing.Size(559, 227);
             this.groupBox10.TabIndex = 3;
             this.groupBox10.TabStop = false;
             this.groupBox10.Text = "Joint timeline view";
@@ -177,13 +182,15 @@
             // tbJointTimelineView
             // 
             this.tbJointTimelineView.AcceptsReturn = true;
-            this.tbJointTimelineView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbJointTimelineView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tbJointTimelineView.Location = new System.Drawing.Point(3, 16);
             this.tbJointTimelineView.Multiline = true;
             this.tbJointTimelineView.Name = "tbJointTimelineView";
             this.tbJointTimelineView.ReadOnly = true;
             this.tbJointTimelineView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbJointTimelineView.Size = new System.Drawing.Size(553, 195);
+            this.tbJointTimelineView.Size = new System.Drawing.Size(550, 192);
             this.tbJointTimelineView.TabIndex = 1;
             // 
             // groupBox5
@@ -281,6 +288,8 @@
             // groupBox3
             // 
             this.groupBox3.AutoSize = true;
+            this.groupBox3.Controls.Add(this.tbJointFlags);
+            this.groupBox3.Controls.Add(this.label1);
             this.groupBox3.Controls.Add(this.cbAddRotation);
             this.groupBox3.Controls.Add(this.cbParentScale);
             this.groupBox3.Controls.Add(this.label7);
@@ -298,6 +307,22 @@
             this.groupBox3.TabIndex = 0;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Joint settings";
+            // 
+            // tbJointFlags
+            // 
+            this.tbJointFlags.Location = new System.Drawing.Point(144, 478);
+            this.tbJointFlags.Name = "tbJointFlags";
+            this.tbJointFlags.Size = new System.Drawing.Size(100, 20);
+            this.tbJointFlags.TabIndex = 21;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(4, 480);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(60, 13);
+            this.label1.TabIndex = 20;
+            this.label1.Text = "Flags (Hex)";
             // 
             // cbAddRotation
             // 
@@ -846,5 +871,7 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.TrackBar tbAnimationTimeline;
         private System.Windows.Forms.CheckBox cbShowSkeleton;
+        private System.Windows.Forms.TextBox tbJointFlags;
+        private System.Windows.Forms.Label label1;
     }
 }

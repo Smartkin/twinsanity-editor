@@ -10,7 +10,7 @@ namespace TwinsaityEditor.Animations
 {
     public class AnimationPlayer
     {
-        private AnimationController animation;
+        public AnimationController animation;
         private float time;
         private int animFrame;
         private bool playing;
