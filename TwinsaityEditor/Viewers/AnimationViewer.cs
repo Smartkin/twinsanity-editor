@@ -634,7 +634,7 @@ namespace TwinsaityEditor.Viewers
             var localTransform = scale * rot * Matrix4.CreateTranslation(transforms.Item1.Row0.Xyz);
             var jointTransform = localTransform * parentTransform;
 
-            return new Tuple<Matrix4, Vector4>(jointTransform, new Vector4(jointTransform.ExtractScale(), 1.0f));
+            return new Tuple<Matrix4, Vector4>(jointTransform, jointScale);
         }
 
         private void ComputeTposeTransform(GraphicsInfo.JointNode joint, Matrix4 parentTransform)
