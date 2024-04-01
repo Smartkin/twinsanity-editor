@@ -68,13 +68,17 @@ namespace TwinsaityEditor
             text.Add($"Reference Data");
             text.Add($"");
 
-            text.Add($"UnknownInt32Count: {Data.UI32.Count}");
+            text.Add($"Message Reciever Count: {Data.UI32.Count}");
             for (int i = 0; i < Data.UI32.Count; ++i)
             {
                 var u32 = Data.UI32[i];
                 ushort script = (ushort)((u32 >> 0xA) & 0x3FFF);
-                string scriptLine = Data.UI32[i].ToString("X");
-                scriptLine += " Packed script: " + script.ToString();
+                ushort arg = (ushort)(u32 & 0x3FF);
+                ushort caller = (ushort)((u32 >> 0x18 & 0x1));
+                string scriptLine = "";//Data.UI32[i].ToString("X");
+                scriptLine += " Arg: " + arg;
+                scriptLine += " Caller: " + caller;
+                scriptLine += " Script: " + script.ToString();
                 if (Enum.IsDefined(typeof(DefaultEnums.ScriptID), script))
                 {
                     scriptLine += " " + (DefaultEnums.ScriptID)script;

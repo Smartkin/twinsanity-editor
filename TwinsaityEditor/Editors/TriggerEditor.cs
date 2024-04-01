@@ -85,6 +85,26 @@ namespace TwinsaityEditor
                 numericUpDown20.Value = (decimal)(trigger.Coords[0].Z / angle_modify);
                 numericUpDown21.Value = (decimal)angle * 2;
             }
+            checkBox1.Checked = trigger.Arg1_Used;
+            numericUpDown6.Enabled = trigger.Arg1_Used;
+            checkBox2.Checked = trigger.Arg2_Used;
+            numericUpDown7.Enabled = trigger.Arg2_Used;
+            checkBox3.Checked = trigger.Arg3_Used;
+            numericUpDown8.Enabled = trigger.Arg3_Used;
+            checkBox4.Checked = trigger.Arg4_Used;
+            numericUpDown9.Enabled = trigger.Arg4_Used;
+
+            bool[] TrigMask = trigger.Mask;
+
+            checkBox5.Checked = TrigMask[0];
+            checkBox6.Checked = TrigMask[1];
+            checkBox7.Checked = TrigMask[2];
+            checkBox8.Checked = TrigMask[3];
+            checkBox9.Checked = TrigMask[4];
+            checkBox10.Checked = TrigMask[5];
+            checkBox11.Checked = TrigMask[6];
+            checkBox12.Checked = TrigMask[7];
+            checkBox13.Checked = TrigMask[8];
 
             var lines = new string[trigger.Instances.Count];
             for (int i = 0; i < trigger.Instances.Count; ++i)
@@ -107,7 +127,7 @@ namespace TwinsaityEditor
                 if (!controller.Data.ContainsItem(id))
                     break;
             }
-            Trigger new_trigger = new Trigger { ID = id, Parent = controller.Data, Instances = new List<ushort>(), Coords = new Pos[] { new Pos(0, 0, 0, 1), new Pos(0, 0, 0, 1), new Pos(0, 0, 0, 1) } };
+            Trigger new_trigger = new Trigger { ID = id, Enabled = 1, Header = 50, SomeFloat = 0.3f, SectionHead = 10, Instances = new List<ushort>(), Coords = new Pos[] { new Pos(0, 0, 0, 1), new Pos(0, 0, 0, 1), new Pos(0, 0, 0, 1) } };
             controller.Data.AddItem(id, new_trigger);
             ((MainForm)Tag).GenTreeNode(new_trigger, controller);
             trigger = new_trigger;
@@ -295,6 +315,122 @@ namespace TwinsaityEditor
             trigger.Coords[0].X = (float)((float)numericUpDown18.Value * Math.Sin((float)numericUpDown21.Value * 2));
             trigger.Coords[0].Y = (float)((float)numericUpDown19.Value * Math.Sin((float)numericUpDown21.Value * 2));
             trigger.Coords[0].Z = (float)((float)numericUpDown20.Value * Math.Sin((float)numericUpDown21.Value * 2));
+            CurCont.UpdateTextBox();
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ignore_value_change) return;
+            trigger.Arg1_Used = checkBox1.Checked;
+            numericUpDown6.Enabled = trigger.Arg1_Used;
+            numericUpDown1.Value = trigger.Header;
+            CurCont.UpdateTextBox();
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ignore_value_change) return;
+            trigger.Arg2_Used = checkBox2.Checked;
+            numericUpDown7.Enabled = trigger.Arg2_Used;
+            numericUpDown1.Value = trigger.Header;
+            CurCont.UpdateTextBox();
+        }
+
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ignore_value_change) return;
+            trigger.Arg3_Used = checkBox3.Checked;
+            numericUpDown8.Enabled = trigger.Arg3_Used;
+            numericUpDown1.Value = trigger.Header;
+            CurCont.UpdateTextBox();
+        }
+
+        private void checkBox4_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ignore_value_change) return;
+            trigger.Arg4_Used = checkBox4.Checked;
+            numericUpDown9.Enabled = trigger.Arg4_Used;
+            numericUpDown1.Value = trigger.Header;
+            CurCont.UpdateTextBox();
+        }
+
+        private void UpdateTrigMask()
+        {
+            bool[] TrigMask = trigger.Mask;
+            TrigMask[0] = checkBox5.Checked;
+            TrigMask[1] = checkBox6.Checked;
+            TrigMask[2] = checkBox7.Checked;
+            TrigMask[3] = checkBox8.Checked;
+            TrigMask[4] = checkBox9.Checked;
+            TrigMask[5] = checkBox10.Checked;
+            TrigMask[6] = checkBox11.Checked;
+            TrigMask[7] = checkBox12.Checked;
+            TrigMask[8] = checkBox13.Checked;
+            trigger.Mask = TrigMask;
+
+            numericUpDown2.Value = trigger.Enabled;
+        }
+
+        private void checkBox5_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ignore_value_change) return;
+            UpdateTrigMask();
+            CurCont.UpdateTextBox();
+        }
+
+        private void checkBox6_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ignore_value_change) return;
+            UpdateTrigMask();
+            CurCont.UpdateTextBox();
+        }
+
+        private void checkBox7_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ignore_value_change) return;
+            UpdateTrigMask();
+            CurCont.UpdateTextBox();
+        }
+
+        private void checkBox8_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ignore_value_change) return;
+            UpdateTrigMask();
+            CurCont.UpdateTextBox();
+        }
+
+        private void checkBox9_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ignore_value_change) return;
+            UpdateTrigMask();
+            CurCont.UpdateTextBox();
+        }
+
+        private void checkBox10_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ignore_value_change) return;
+            UpdateTrigMask();
+            CurCont.UpdateTextBox();
+        }
+
+        private void checkBox11_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ignore_value_change) return;
+            UpdateTrigMask();
+            CurCont.UpdateTextBox();
+        }
+
+        private void checkBox12_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ignore_value_change) return;
+            UpdateTrigMask();
+            CurCont.UpdateTextBox();
+        }
+
+        private void checkBox13_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ignore_value_change) return;
+            UpdateTrigMask();
             CurCont.UpdateTextBox();
         }
     }
