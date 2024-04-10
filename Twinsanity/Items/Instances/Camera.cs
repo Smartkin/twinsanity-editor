@@ -14,28 +14,27 @@ namespace Twinsanity
         public uint SectionHead { get; set; }
         public List<ushort> Instances { get; set; }
 
-        public ushort CamHeader { get; set; }
-        public ushort CamHeader2 { get; set; }
+        public uint CamHeader { get; set; }
         public ushort UnkShort { get; set; }
-        public float? UnkFloat1 { get; set; }
+        public float UnkFloat1 { get; set; }
         public Pos UnkCoords1 { get; set; }
         public Pos UnkCoords2 { get; set; }
-        public float? UnkFloat2 { get; set; }
-        public float? UnkFloat3 { get; set; }
-        public uint? UnkUInt1 { get; set; }
-        public uint? UnkUInt2 { get; set; }
-        public uint? UnkUInt3 { get; set; }
-        public uint? UnkUInt4 { get; set; }
-        public int? UnkInt5 { get; set; }
-        public int? UnkInt6 { get; set; }
-        public float? UnkFloat4 { get; set; }
-        public float? UnkFloat5 { get; set; }
-        public float? UnkFloat6 { get; set; }
-        public float? UnkFloat7 { get; set; }
-        public uint? UnkUInt7 { get; set; }
-        public int? UnkInt8 { get; set; }
-        public uint? UnkUInt9 { get; set; }
-        public float? UnkFloat8 { get; set; }
+        public float UnkFloat2 { get; set; }
+        public float UnkFloat3 { get; set; }
+        public uint UnkUInt1 { get; set; }
+        public uint UnkUInt2 { get; set; }
+        public uint UnkUInt3 { get; set; }
+        public uint UnkUInt4 { get; set; }
+        public int UnkInt5 { get; set; }
+        public int UnkInt6 { get; set; }
+        public float UnkFloat4 { get; set; }
+        public float UnkFloat5 { get; set; }
+        public float UnkFloat6 { get; set; }
+        public float UnkFloat7 { get; set; }
+        public uint UnkUInt7 { get; set; }
+        public int UnkInt8 { get; set; }
+        public uint UnkUInt9 { get; set; }
+        public float UnkFloat8 { get; set; }
         public uint CameraType1 { get; set; }
         public uint CameraType2 { get; set; }
         public object[] Cameras { get; set; } = new object[2];
@@ -58,6 +57,172 @@ namespace Twinsanity
             Zone = 0x1C0F,
         }
 
+        public bool[] Mask
+        {
+            get
+            {
+                bool[] m = new bool[9] { false, false, false, false, false, false, false, false, false };
+
+                for (int i = 0; i < m.Length; i++)
+                {
+                    if ((Enabled >> i & 0x1) != 0)
+                    {
+                        m[i] = true;
+                    }
+                }
+
+                return m;
+            }
+            set
+            {
+                Enabled = 0;
+
+                for (int i = 0; i < value.Length; i++)
+                {
+                    if (value[i])
+                    {
+                        Enabled |= (uint)(1 << i);
+                    }
+                }
+            }
+        }
+
+        public bool UnkFlag0
+        {
+            get
+            {
+                return (Header >> 0x0 & 0x1) != 0;
+            }
+            set
+            {
+                uint mask = 1 << 0x0;
+                if (value)
+                    Header |= mask;
+                else
+                    Header &= ~mask;
+            }
+        }
+        public bool UnkFlag1
+        {
+            get
+            {
+                return (Header >> 0x1 & 0x1) != 0;
+            }
+            set
+            {
+                uint mask = 1 << 0x1;
+                if (value)
+                    Header |= mask;
+                else
+                    Header &= ~mask;
+            }
+        }
+        public bool UnkFlag2
+        {
+            get
+            {
+                return (Header >> 0x2 & 0x1) != 0;
+            }
+            set
+            {
+                uint mask = 1 << 0x2;
+                if (value)
+                    Header |= mask;
+                else
+                    Header &= ~mask;
+            }
+        }
+        public bool UnkFlag3
+        {
+            get
+            {
+                return (Header >> 0x3 & 0x1) != 0;
+            }
+            set
+            {
+                uint mask = 1 << 0x3;
+                if (value)
+                    Header |= mask;
+                else
+                    Header &= ~mask;
+            }
+        }
+        public bool UnkFlag4
+        {
+            get
+            {
+                return (Header >> 0x4 & 0x1) != 0;
+            }
+            set
+            {
+                uint mask = 1 << 0x4;
+                if (value)
+                    Header |= mask;
+                else
+                    Header &= ~mask;
+            }
+        }
+        public bool UnkFlag5
+        {
+            get
+            {
+                return (Header >> 0x5 & 0x1) != 0;
+            }
+            set
+            {
+                uint mask = 1 << 0x5;
+                if (value)
+                    Header |= mask;
+                else
+                    Header &= ~mask;
+            }
+        }
+        public bool UnkFlag6
+        {
+            get
+            {
+                return (Header >> 0x6 & 0x1) != 0;
+            }
+            set
+            {
+                uint mask = 1 << 0x6;
+                if (value)
+                    Header |= mask;
+                else
+                    Header &= ~mask;
+            }
+        }
+        public bool UnkFlag18
+        {
+            get
+            {
+                return (Header >> 0x12 & 0x1) != 0;
+            }
+            set
+            {
+                uint mask = 1 << 0x12;
+                if (value)
+                    Header |= mask;
+                else
+                    Header &= ~mask;
+            }
+        }
+        public bool UnkFlag20
+        {
+            get
+            {
+                return (Header >> 0x14 & 0x1) != 0;
+            }
+            set
+            {
+                uint mask = 1 << 0x14;
+                if (value)
+                    Header |= mask;
+                else
+                    Header &= ~mask;
+            }
+        }
+
         public override void Save(BinaryWriter writer)
         {
             writer.Write(Header);
@@ -77,12 +242,11 @@ namespace Twinsanity
                 writer.Write(Instances[i]);
 
             writer.Write(CamHeader);
-            writer.Write(CamHeader2);
             if (ParentType != SectionType.CameraDemo)
             {
                 writer.Write(UnkShort);
             }
-            WriteFloatOrNull(UnkFloat1, writer);
+            writer.Write(UnkFloat1);
             writer.Write(UnkCoords1.X);
             writer.Write(UnkCoords1.Y);
             writer.Write(UnkCoords1.Z);
@@ -92,22 +256,22 @@ namespace Twinsanity
             writer.Write(UnkCoords2.Z);
             writer.Write(UnkCoords2.W);
 
-            WriteFloatOrNull(UnkFloat2, writer);
-            WriteFloatOrNull(UnkFloat3, writer);
-            WriteUIntOrNull(UnkUInt1, writer);
-            WriteUIntOrNull(UnkUInt2, writer);
-            WriteUIntOrNull(UnkUInt3, writer);
-            WriteUIntOrNull(UnkUInt4, writer);
-            WriteIntOrNull(UnkInt5, writer);
-            WriteIntOrNull(UnkInt6, writer);
-            WriteFloatOrNull(UnkFloat4, writer);
-            WriteFloatOrNull(UnkFloat5, writer);
-            WriteFloatOrNull(UnkFloat6, writer);
-            WriteFloatOrNull(UnkFloat7, writer);
-            WriteUIntOrNull(UnkUInt7, writer);
-            WriteIntOrNull(UnkInt8, writer);
-            WriteUIntOrNull(UnkUInt9, writer);
-            WriteFloatOrNull(UnkFloat8, writer);
+            writer.Write(UnkFloat2);
+            writer.Write(UnkFloat3);
+            writer.Write(UnkUInt1);
+            writer.Write(UnkUInt2);
+            writer.Write(UnkUInt3);
+            writer.Write(UnkUInt4);
+            writer.Write(UnkInt5);
+            writer.Write(UnkInt6);
+            writer.Write(UnkFloat4);
+            writer.Write(UnkFloat5);
+            writer.Write(UnkFloat6);
+            writer.Write(UnkFloat7);
+            writer.Write(UnkUInt7);
+            writer.Write(UnkInt8);
+            writer.Write(UnkUInt9);
+            writer.Write(UnkFloat8);
 
             writer.Write(CameraType1);
             writer.Write(CameraType2);
@@ -144,8 +308,7 @@ namespace Twinsanity
             for (int i = 0; i < n; ++i)
                 Instances.Add(reader.ReadUInt16());
 
-            CamHeader = reader.ReadUInt16();
-            CamHeader2 = reader.ReadUInt16();
+            CamHeader = reader.ReadUInt32();
             if (ParentType != SectionType.CameraDemo)
             {
                 UnkShort = reader.ReadUInt16();
@@ -158,22 +321,22 @@ namespace Twinsanity
 
             UnkCoords1 = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
             UnkCoords2 = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-            UnkFloat2 = ReadFloatOrNull(reader);
-            UnkFloat3 = ReadFloatOrNull(reader);
-            UnkUInt1 = ReadUIntOrNull(reader);
-            UnkUInt2 = ReadUIntOrNull(reader);
-            UnkUInt3 = ReadUIntOrNull(reader);
-            UnkUInt4 = ReadUIntOrNull(reader);
-            UnkInt5 = ReadIntOrNull(reader);
-            UnkInt6 = ReadIntOrNull(reader);
-            UnkFloat4 = ReadFloatOrNull(reader);
-            UnkFloat5 = ReadFloatOrNull(reader);
-            UnkFloat6 = ReadFloatOrNull(reader);
-            UnkFloat7 = ReadFloatOrNull(reader);
-            UnkUInt7 = ReadUIntOrNull(reader);
-            UnkInt8 = ReadIntOrNull(reader);
-            UnkUInt9 = ReadUIntOrNull(reader);
-            UnkFloat8 = ReadFloatOrNull(reader);
+            UnkFloat2 = reader.ReadSingle();
+            UnkFloat3 = reader.ReadSingle();
+            UnkUInt1 = reader.ReadUInt32();
+            UnkUInt2 = reader.ReadUInt32();
+            UnkUInt3 = reader.ReadUInt32();
+            UnkUInt4 = reader.ReadUInt32();
+            UnkInt5 = reader.ReadInt32();
+            UnkInt6 = reader.ReadInt32();
+            UnkFloat4 = reader.ReadSingle();
+            UnkFloat5 = reader.ReadSingle();
+            UnkFloat6 = reader.ReadSingle();
+            UnkFloat7 = reader.ReadSingle();
+            UnkUInt7 = reader.ReadUInt32();
+            UnkInt8 = reader.ReadInt32();
+            UnkUInt9 = reader.ReadUInt32();
+            UnkFloat8 = reader.ReadSingle();
 
             CameraType1 = reader.ReadUInt32();
             CameraType2 = reader.ReadUInt32();
@@ -194,79 +357,6 @@ namespace Twinsanity
             if (CameraType2 != 3)
             {
                 ReadCamera(reader, CameraType2, 1);
-            }
-        }
-
-        private float? ReadFloatOrNull(BinaryReader reader)
-        {
-            float? Value;
-            uint Test = reader.ReadUInt32();
-            if (Test == 0xCDCDCDCD)
-            {
-                Value = null;
-            }
-            else
-            {
-                reader.BaseStream.Position -= 4;
-                Value = reader.ReadSingle();
-            }
-            return Value;
-        }
-        private uint? ReadUIntOrNull(BinaryReader reader)
-        {
-            uint? Value;
-            uint Test = reader.ReadUInt32();
-            if (Test == 0xCDCDCDCD)
-                Value = null;
-            else
-                Value = Test;
-            return Value;
-        }
-        private int? ReadIntOrNull(BinaryReader reader)
-        {
-            int? Value;
-            uint Test = reader.ReadUInt32();
-            if (Test == 0xCDCDCDCD)
-                Value = null;
-            else
-            {
-                reader.BaseStream.Position -= 4;
-                Value = reader.ReadInt32();
-            }
-            return Value;
-        }
-
-        private void WriteFloatOrNull(float? val, BinaryWriter writer)
-        {
-            if (val == null)
-            {
-                writer.Write(0xCDCDCDCD);
-            }
-            else
-            {
-                writer.Write((float)val);
-            }
-        }
-        private void WriteIntOrNull(int? val, BinaryWriter writer)
-        {
-            if (val == null)
-            {
-                writer.Write(0xCDCDCDCD);
-            }
-            else
-            {
-                writer.Write((int)val);
-            }
-        }
-        private void WriteUIntOrNull(uint? val, BinaryWriter writer)
-        {
-            if (val == null)
-            {
-                writer.Write(0xCDCDCDCD);
-            }
-            else
-            {
-                writer.Write((uint)val);
             }
         }
 

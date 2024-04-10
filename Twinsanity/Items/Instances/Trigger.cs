@@ -68,6 +68,112 @@ namespace Twinsanity
             }
         }
 
+        public bool UnkFlag0
+        {
+            get
+            {
+                return (Header >> 0x0 & 0x1) != 0;
+            }
+            set
+            {
+                uint mask = 1 << 0x0;
+                if (value)
+                    Header |= mask;
+                else
+                    Header &= ~mask;
+            }
+        }
+        public bool UnkFlag1
+        {
+            get
+            {
+                return (Header >> 0x1 & 0x1) != 0;
+            }
+            set
+            {
+                uint mask = 1 << 0x1;
+                if (value)
+                    Header |= mask;
+                else
+                    Header &= ~mask;
+            }
+        }
+        public bool UnkFlag2
+        {
+            get
+            {
+                return (Header >> 0x2 & 0x1) != 0;
+            }
+            set
+            {
+                uint mask = 1 << 0x2;
+                if (value)
+                    Header |= mask;
+                else
+                    Header &= ~mask;
+            }
+        }
+        public bool UnkFlag3
+        {
+            get
+            {
+                return (Header >> 0x3 & 0x1) != 0;
+            }
+            set
+            {
+                uint mask = 1 << 0x3;
+                if (value)
+                    Header |= mask;
+                else
+                    Header &= ~mask;
+            }
+        }
+        public bool UnkFlag4
+        {
+            get
+            {
+                return (Header >> 0x4 & 0x1) != 0;
+            }
+            set
+            {
+                uint mask = 1 << 0x4;
+                if (value)
+                    Header |= mask;
+                else
+                    Header &= ~mask;
+            }
+        }
+        public bool UnkFlag5
+        {
+            get
+            {
+                return (Header >> 0x5 & 0x1) != 0;
+            }
+            set
+            {
+                uint mask = 1 << 0x5;
+                if (value)
+                    Header |= mask;
+                else
+                    Header &= ~mask;
+            }
+        }
+        public bool UnkFlag6
+        {
+            get
+            {
+                return (Header >> 0x6 & 0x1) != 0;
+            }
+            set
+            {
+                uint mask = 1 << 0x6;
+                if (value)
+                    Header |= mask;
+                else
+                    Header &= ~mask;
+            }
+        }
+
         public bool[] Mask
         {
             get

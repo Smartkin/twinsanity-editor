@@ -30,6 +30,7 @@ namespace TwinsaityEditor
                     || item.Type == SectionType.Position
                     || item.Type == SectionType.Path
                     || item.Type == SectionType.Trigger
+                    || item.Type == SectionType.Camera
                     || item.Type == SectionType.Script
                     || item.Type == SectionType.ScriptDemo
                     || item.Type == SectionType.ScriptX

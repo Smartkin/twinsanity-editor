@@ -113,6 +113,14 @@ namespace TwinsaityEditor
             }
             textBox1.Lines = lines;
 
+            checkBoxFlag0.Checked = trigger.UnkFlag0;
+            checkBoxFlag1.Checked = trigger.UnkFlag1;
+            checkBoxFlag2.Checked = trigger.UnkFlag2;
+            checkBoxFlag3.Checked = trigger.UnkFlag3;
+            checkBoxFlag4.Checked = trigger.UnkFlag4;
+            checkBoxFlag5.Checked = trigger.UnkFlag5;
+            checkBoxFlag6.Checked = trigger.UnkFlag6;
+
             ignore_value_change = false;
 
             this.ResumeDrawing();
@@ -165,13 +173,44 @@ namespace TwinsaityEditor
         private void numericUpDown1_ValueChanged(object sender, System.EventArgs e)
         {
             if (ignore_value_change) return;
+            ignore_value_change = true;
             trigger.Header = (uint)numericUpDown1.Value;
+
+            checkBoxFlag0.Checked = trigger.UnkFlag0;
+            checkBoxFlag1.Checked = trigger.UnkFlag1;
+            checkBoxFlag2.Checked = trigger.UnkFlag2;
+            checkBoxFlag3.Checked = trigger.UnkFlag3;
+            checkBoxFlag4.Checked = trigger.UnkFlag4;
+            checkBoxFlag5.Checked = trigger.UnkFlag5;
+            checkBoxFlag6.Checked = trigger.UnkFlag6;
+            checkBox1.Checked = trigger.Arg1_Used;
+            numericUpDown6.Enabled = trigger.Arg1_Used;
+            checkBox2.Checked = trigger.Arg2_Used;
+            numericUpDown7.Enabled = trigger.Arg2_Used;
+            checkBox3.Checked = trigger.Arg3_Used;
+            numericUpDown8.Enabled = trigger.Arg3_Used;
+            checkBox4.Checked = trigger.Arg4_Used;
+            numericUpDown9.Enabled = trigger.Arg4_Used;
+            CurCont.UpdateTextBox();
+            ignore_value_change = false;
         }
 
         private void numericUpDown2_ValueChanged(object sender, System.EventArgs e)
         {
             if (ignore_value_change) return;
             trigger.Enabled = (uint)numericUpDown2.Value;
+
+            bool[] TrigMask = trigger.Mask;
+            checkBox5.Checked = TrigMask[0];
+            checkBox6.Checked = TrigMask[1];
+            checkBox7.Checked = TrigMask[2];
+            checkBox8.Checked = TrigMask[3];
+            checkBox9.Checked = TrigMask[4];
+            checkBox10.Checked = TrigMask[5];
+            checkBox11.Checked = TrigMask[6];
+            checkBox12.Checked = TrigMask[7];
+            checkBox13.Checked = TrigMask[8];
+            CurCont.UpdateTextBox();
         }
 
         private void numericUpDown3_ValueChanged(object sender, System.EventArgs e)
@@ -185,6 +224,7 @@ namespace TwinsaityEditor
         {
             if (ignore_value_change) return;
             trigger.SectionHead = (uint)numericUpDown4.Value;
+            CurCont.UpdateTextBox();
         }
 
         private void numericUpDown6_ValueChanged(object sender, System.EventArgs e)
@@ -432,6 +472,76 @@ namespace TwinsaityEditor
             if (ignore_value_change) return;
             UpdateTrigMask();
             CurCont.UpdateTextBox();
+        }
+
+        private void checkBoxFlag0_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ignore_value_change) return;
+            ignore_value_change = true;
+            trigger.UnkFlag0 = checkBoxFlag0.Checked;
+            numericUpDown1.Value = trigger.Header;
+            CurCont.UpdateTextBox();
+            ignore_value_change = false;
+        }
+
+        private void checkBoxFlag1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ignore_value_change) return;
+            ignore_value_change = true;
+            trigger.UnkFlag1 = checkBoxFlag1.Checked;
+            numericUpDown1.Value = trigger.Header;
+            CurCont.UpdateTextBox();
+            ignore_value_change = false;
+        }
+
+        private void checkBoxFlag2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ignore_value_change) return;
+            ignore_value_change = true;
+            trigger.UnkFlag2 = checkBoxFlag2.Checked;
+            numericUpDown1.Value = trigger.Header;
+            CurCont.UpdateTextBox();
+            ignore_value_change = false;
+        }
+
+        private void checkBoxFlag3_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ignore_value_change) return;
+            ignore_value_change = true;
+            trigger.UnkFlag3 = checkBoxFlag3.Checked;
+            numericUpDown1.Value = trigger.Header;
+            CurCont.UpdateTextBox();
+            ignore_value_change = false;
+        }
+
+        private void checkBoxFlag4_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ignore_value_change) return;
+            ignore_value_change = true;
+            trigger.UnkFlag4 = checkBoxFlag4.Checked;
+            numericUpDown1.Value = trigger.Header;
+            CurCont.UpdateTextBox();
+            ignore_value_change = false;
+        }
+
+        private void checkBoxFlag5_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ignore_value_change) return;
+            ignore_value_change = true;
+            trigger.UnkFlag5 = checkBoxFlag5.Checked;
+            numericUpDown1.Value = trigger.Header;
+            CurCont.UpdateTextBox();
+            ignore_value_change = false;
+        }
+
+        private void checkBoxFlag6_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ignore_value_change) return;
+            ignore_value_change = true;
+            trigger.UnkFlag6 = checkBoxFlag6.Checked;
+            numericUpDown1.Value = trigger.Header;
+            CurCont.UpdateTextBox();
+            ignore_value_change = false;
         }
     }
 }

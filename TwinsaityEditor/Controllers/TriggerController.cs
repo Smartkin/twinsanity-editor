@@ -23,14 +23,14 @@ namespace TwinsaityEditor
             List<string> text = new List<string>();
             text.Add($"ID: {Data.ID}");
             text.Add($"Size: {Data.Size}");
-            text.Add($"Other ({Data.Coords[0].X}, {Data.Coords[0].Y}, {Data.Coords[0].Z}, {Data.Coords[0].W})");
+            text.Add($"Rotation ({Data.Coords[0].X}, {Data.Coords[0].Y}, {Data.Coords[0].Z}, {Data.Coords[0].W})");
             text.Add($"Position ({Data.Coords[1].X}, {Data.Coords[1].Y}, {Data.Coords[1].Z}, {Data.Coords[1].W})");
             text.Add($"Size ({Data.Coords[2].X}, {Data.Coords[2].Y}, {Data.Coords[2].Z}, {Data.Coords[2].W})");
-            text.Add($"Emabled: {Data.Enabled} SomeFloat: {Data.SomeFloat} SectionHead: {Data.SectionHead}");
-            text.Add($"Argument 1: {Data.Arg1}");
-            text.Add($"Argument 2: {Data.Arg2}");
-            text.Add($"Argument 3: {Data.Arg3}");
-            text.Add($"Argument 4: {Data.Arg4}");
+            text.Add($"Header {Data.Header} Mask: {Data.Enabled} SomeFloat: {Data.SomeFloat} SectionHead: {Data.SectionHead}");
+            if (Data.Arg1_Used) text.Add($"Argument 1: {Data.Arg1}");
+            if (Data.Arg2_Used) text.Add($"Argument 2: {Data.Arg2}");
+            if (Data.Arg3_Used) text.Add($"Argument 3: {Data.Arg3}");
+            if (Data.Arg4_Used) text.Add($"Argument 4: {Data.Arg4}");
 
             text.Add($"Instances: {Data.Instances.Count}");
             if (MainFile.Data.Type != TwinsFile.FileType.MonkeyBallRM)

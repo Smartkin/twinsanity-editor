@@ -11,7 +11,7 @@ namespace TwinsaityEditor
         public CameraController(MainForm topform, Camera item) : base(topform, item)
         {
             Data = item;
-            //AddMenu("Open editor", Menu_OpenEditor);
+            AddMenu("Open editor", Menu_OpenEditor);
         }
 
         protected override string GetName()
@@ -25,10 +25,10 @@ namespace TwinsaityEditor
 
             text.Add(string.Format("ID: {0:X8}", Data.ID));
             text.Add($"Size: {Data.Size}");
-            text.Add($"Other ({Data.Coords[0].X}, {Data.Coords[0].Y}, {Data.Coords[0].Z}, {Data.Coords[0].W})");
+            text.Add($"Rotation ({Data.Coords[0].X}, {Data.Coords[0].Y}, {Data.Coords[0].Z}, {Data.Coords[0].W})");
             text.Add($"Position ({Data.Coords[1].X}, {Data.Coords[1].Y}, {Data.Coords[1].Z}, {Data.Coords[1].W})");
             text.Add($"Size ({Data.Coords[2].X}, {Data.Coords[2].Y}, {Data.Coords[2].Z}, {Data.Coords[2].W})");
-            text.Add($"Emabled: {Data.Enabled} SomeFloat: {Data.SomeFloat} SectionHead: {Data.SectionHead}");
+            text.Add($"Header: {Data.Header} Mask: {Data.Enabled} SomeFloat: {Data.SomeFloat} SectionHead: {Data.SectionHead}");
 
             text.Add($"Instances: {Data.Instances.Count}");
             for (int i = 0; i < Data.Instances.Count; ++i)
@@ -41,20 +41,11 @@ namespace TwinsaityEditor
 
             string nullText = "N/A";
             text.Add("");
-            text.Add($"Cam Header: {Data.CamHeader} {Data.CamHeader2}");
+            text.Add($"Cam Header: {Data.CamHeader}");
             string flag = Convert.ToString(Data.CamHeader, 2);
-            if (flag.Length < 16)
+            if (flag.Length < 32)
             {
-                while (flag.Length < 16)
-                {
-                    flag = "0" + flag;
-                }
-            }
-            text.Add(flag);
-            flag = Convert.ToString(Data.CamHeader2, 2);
-            if (flag.Length < 16)
-            {
-                while (flag.Length < 16)
+                while (flag.Length < 32)
                 {
                     flag = "0" + flag;
                 }

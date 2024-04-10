@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Twinsanity.Actions
 {
-    [ActionID(DefaultEnums.CommandID.HideBottomText)]
+    [ActionID(DefaultEnums.CommandID.BottomTextHide)]
     public class HideBottomTextAction : ScriptAction
     {
         public float FadeDuration { get; set; } = 1f;

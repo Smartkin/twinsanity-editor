@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Twinsanity.Actions
 {
-    [ActionID(DefaultEnums.CommandID.ShowBottomText)]
+    [ActionID(DefaultEnums.CommandID.BottomTextShow)]
     public class ShowBottomTextAction : ScriptAction
     {
         public float FadeDuration { get; set; } = 1f;

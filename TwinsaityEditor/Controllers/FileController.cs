@@ -28,7 +28,7 @@ namespace TwinsaityEditor
         private Form editScripts;
         private Form editObjects;
         private Form editAnimations;
-        private readonly Form[] editInstances = new Form[9], editPositions = new Form[9], editPaths = new Form[9], editTriggers = new Form[9];
+        private readonly Form[] editInstances = new Form[9], editPositions = new Form[9], editPaths = new Form[9], editTriggers = new Form[9], editCameras = new Form[9];
 
         //Viewers
         private Form colForm;
@@ -152,6 +152,7 @@ namespace TwinsaityEditor
                 CloseEditor(Editors.Position, i);
                 CloseEditor(Editors.Path, i);
                 CloseEditor(Editors.Trigger, i);
+                CloseEditor(Editors.Camera, i);
             }
             Data = DataAux = DataDefault = null;
         }
@@ -172,6 +173,8 @@ namespace TwinsaityEditor
                 OpenEditor(ref editInstances[((InstanceMBController)c).Data.Parent.Parent.ID], Editors.InstanceMB, (Controller)c.Node.Parent.Tag);
             else if (c is TriggerController)
                 OpenEditor(ref editTriggers[((TriggerController)c).Data.Parent.Parent.ID], Editors.Trigger, (Controller)c.Node.Parent.Tag);
+            else if (c is CameraController)
+                OpenEditor(ref editTriggers[((CameraController)c).Data.Parent.Parent.ID], Editors.Trigger, (Controller)c.Node.Parent.Tag);
             else if (c is ScriptController)
                 OpenEditor(ref editScripts, Editors.Script, (Controller)c.Node.Parent.Tag);
             else if (c is AnimationController)
@@ -190,6 +193,8 @@ namespace TwinsaityEditor
                     OpenEditor(ref editPaths[s.Data.Parent.ID], Editors.Path, c);
                 else if (s.Data.Type == SectionType.Trigger)
                     OpenEditor(ref editTriggers[s.Data.Parent.ID], Editors.Trigger, c);
+                else if (s.Data.Type == SectionType.Camera || s.Data.Type == SectionType.CameraDemo)
+                    OpenEditor(ref editTriggers[s.Data.Parent.ID], Editors.Camera, c);
                 else if (s.Data.Type == SectionType.Script || s.Data.Type == SectionType.ScriptDemo || s.Data.Type == SectionType.ScriptX)
                     OpenEditor(ref editScripts, Editors.Script, c);
                 else if (s.Data.Type == SectionType.Object)
@@ -222,6 +227,7 @@ namespace TwinsaityEditor
                     case Editors.Instance: editor_var_ptr = new InstanceEditor((SectionController)cont) { Tag = TopForm }; break;
                     case Editors.InstanceMB: editor_var_ptr = new InstanceMBEditor((SectionController)cont) { Tag = TopForm }; break;
                     case Editors.Trigger: editor_var_ptr = new TriggerEditor((SectionController)cont) { Tag = TopForm }; break;
+                    case Editors.Camera: editor_var_ptr = new CameraTriggerEditor((SectionController)cont) { Tag = TopForm }; break;
                     case Editors.Script: editor_var_ptr = new ScriptEditor((SectionController)cont) { Tag = TopForm }; break;
                     case Editors.Object: editor_var_ptr = new ObjectEditor((SectionController)cont) { Tag = TopForm }; break;
                     case Editors.Animation: editor_var_ptr = new AnimationEditor((SectionController)cont) { Tag = TopForm }; break;
@@ -243,6 +249,7 @@ namespace TwinsaityEditor
                 case Editors.Position: editorForm = editPositions[arg]; break;
                 case Editors.Path: editorForm = editPaths[arg]; break;
                 case Editors.Trigger: editorForm = editTriggers[arg]; break;
+                case Editors.Camera: editorForm = editCameras[arg]; break;
                 case Editors.Script: editorForm = editScripts; break;
                 case Editors.Animation: editorForm = editAnimations; break;
             }

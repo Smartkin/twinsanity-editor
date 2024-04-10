@@ -1922,6 +1922,10 @@ namespace TwinsaityEditor
             {
                 SetPosition(new Vector3(-trig.Coords[1].X, trig.Coords[1].Y, trig.Coords[1].Z));
             }
+            else if (file.SelectedItem is Camera cam)
+            {
+                SetPosition(new Vector3(-cam.Coords[1].X, cam.Coords[1].Y, cam.Coords[1].Z));
+            }
         }
 
         /// <summary> 

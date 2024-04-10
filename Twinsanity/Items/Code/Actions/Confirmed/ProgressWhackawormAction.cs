@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Twinsanity.Actions
 {
-    [ActionID(DefaultEnums.CommandID.ProgressWhackaworm)]
+    [ActionID(DefaultEnums.CommandID.WhackawormProgress)]
     public class ProgressWhackawormAction : ScriptAction
     {
         public int WormCounterAdd { get; set; } = -1;

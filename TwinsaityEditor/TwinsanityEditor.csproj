@@ -233,6 +233,12 @@
     <Compile Include="Editors\AnimationEditor.Designer.cs">
       <DependentUpon>AnimationEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Editors\CameraTriggerEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\CameraTriggerEditor.Designer.cs">
+      <DependentUpon>CameraTriggerEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Editors\ChunkLinksEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -395,6 +401,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Editors\AnimationEditor.resx">
       <DependentUpon>AnimationEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\CameraTriggerEditor.resx">
+      <DependentUpon>CameraTriggerEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\ChunkLinksEditor.resx">
       <DependentUpon>ChunkLinksEditor.cs</DependentUpon>

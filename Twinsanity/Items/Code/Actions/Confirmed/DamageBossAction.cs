@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Twinsanity.Actions
 {
-    [ActionID(DefaultEnums.CommandID.DamageBoss)]
+    [ActionID(DefaultEnums.CommandID.BossModeDamage)]
     public class DamageBossAction : ScriptAction
     {
         public int DamageAdd { get; set; } = -1;
