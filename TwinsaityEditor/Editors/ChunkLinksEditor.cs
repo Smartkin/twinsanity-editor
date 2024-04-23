@@ -68,7 +68,7 @@ namespace TwinsaityEditor
 
             comboBox1.SelectedIndex = link.Type;
 
-            textBox2.Text = Convert.ToString(link.Flags, 16).ToUpper();
+            textBox2.Text = link.Flags.ToString();//Convert.ToString(link.Flags, 16).ToUpper();
 
             numericUpDown4.Value = (decimal)link.ObjectMatrix[3].W;
 
@@ -117,6 +117,12 @@ namespace TwinsaityEditor
                 GetAreaMatrix1Pos();
                 GetAreaMatrix2Pos();
             }
+
+            checkBoxTFlag0.Checked = (link.Flags & (1 << 0)) != 0;
+            checkBoxTFlag1.Checked = (link.Flags & (1 << 1)) != 0;
+            checkBoxTFlag2.Checked = (link.Flags & (1 << 7)) != 0;
+            checkBoxTFlag3.Checked = (link.Flags & (1 << 8)) != 0;
+            checkBoxTFlag4.Checked = (link.Flags & (1 << 19)) != 0;
 
             ignore_value_change = false;
             return;
@@ -331,14 +337,23 @@ namespace TwinsaityEditor
 
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
+            if (ignore_value_change) return;
             uint o;
-            if (uint.TryParse(textBox2.Text, System.Globalization.NumberStyles.HexNumber, null, out o))
+            //if (uint.TryParse(textBox2.Text, System.Globalization.NumberStyles.HexNumber, null, out o))
+            if (uint.TryParse(textBox2.Text, System.Globalization.NumberStyles.Integer, null, out o))
                 link.Flags = o;
             controller.Data.Links[listBox1.SelectedIndex] = link;
             if (groupBox6.Enabled = (link.Flags & 0x80000) != 0)
             {
                 GetLoadWallPos();
             }
+            ignore_value_change = true;
+            checkBoxTFlag0.Checked = (link.Flags & (1 << 0)) != 0;
+            checkBoxTFlag1.Checked = (link.Flags & (1 << 1)) != 0;
+            checkBoxTFlag2.Checked = (link.Flags & (1 << 7)) != 0;
+            checkBoxTFlag3.Checked = (link.Flags & (1 << 8)) != 0;
+            checkBoxTFlag4.Checked = (link.Flags & (1 << 19)) != 0;
+            ignore_value_change = false;
             controller.UpdateText();
         }
 
@@ -499,6 +514,80 @@ namespace TwinsaityEditor
                 Pos pos = Link.UnknownMatrix[u2_i];
                 pos.W = (float)numericUpDown34.Value;
                 Link.UnknownMatrix[u2_i] = pos;
+            }
+        }
+
+        private void checkBoxTFlag0_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ignore_value_change) return;
+            ignore_value_change = true;
+            uint mask = 1 << 0;
+            if (checkBoxTFlag0.Checked)
+                link.Flags |= mask;
+            else
+                link.Flags &= ~mask;
+            textBox2.Text = link.Flags.ToString();
+            ignore_value_change = false;
+            controller.UpdateText();
+        }
+
+        private void checkBoxTFlag1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ignore_value_change) return;
+            ignore_value_change = true;
+            uint mask = 1 << 1;
+            if (checkBoxTFlag1.Checked)
+                link.Flags |= mask;
+            else
+                link.Flags &= ~mask;
+            textBox2.Text = link.Flags.ToString();
+            ignore_value_change = false;
+            controller.UpdateText();
+        }
+
+        private void checkBoxTFlag2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ignore_value_change) return;
+            ignore_value_change = true;
+            uint mask = 1 << 7;
+            if (checkBoxTFlag2.Checked)
+                link.Flags |= mask;
+            else
+                link.Flags &= ~mask;
+            textBox2.Text = link.Flags.ToString();
+            ignore_value_change = false;
+            controller.UpdateText();
+        }
+
+        private void checkBoxTFlag3_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ignore_value_change) return;
+            ignore_value_change = true;
+            uint mask = 1 << 8;
+            if (checkBoxTFlag3.Checked)
+                link.Flags |= mask;
+            else
+                link.Flags &= ~mask;
+            textBox2.Text = link.Flags.ToString();
+            ignore_value_change = false;
+            controller.UpdateText();
+        }
+
+        private void checkBoxTFlag4_CheckedChanged(object sender, EventArgs e)
+        {
+            if (ignore_value_change) return;
+            ignore_value_change = true;
+            uint mask = 1 << 19;
+            if (checkBoxTFlag4.Checked)
+                link.Flags |= mask;
+            else
+                link.Flags &= ~mask;
+            textBox2.Text = link.Flags.ToString();
+            ignore_value_change = false;
+            controller.UpdateText();
+            if (groupBox6.Enabled = (link.Flags & 0x80000) != 0)
+            {
+                GetLoadWallPos();
             }
         }
 

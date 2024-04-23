@@ -90,6 +90,12 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.checkBoxTFlag0 = new System.Windows.Forms.CheckBox();
+            this.checkBoxTFlag1 = new System.Windows.Forms.CheckBox();
+            this.checkBoxTFlag2 = new System.Windows.Forms.CheckBox();
+            this.checkBoxTFlag3 = new System.Windows.Forms.CheckBox();
+            this.checkBoxTFlag4 = new System.Windows.Forms.CheckBox();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
             this.button7 = new System.Windows.Forms.Button();
             this.label32 = new System.Windows.Forms.Label();
@@ -167,6 +173,7 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            this.groupBox10.SuspendLayout();
             this.groupBox9.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown33)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown34)).BeginInit();
@@ -1045,7 +1052,7 @@
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Location = new System.Drawing.Point(0, 24);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(185, 398);
+            this.listBox1.Size = new System.Drawing.Size(185, 482);
             this.listBox1.TabIndex = 0;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
@@ -1063,6 +1070,7 @@
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.Controls.Add(this.groupBox10);
             this.splitContainer1.Panel2.Controls.Add(this.groupBox9);
             this.splitContainer1.Panel2.Controls.Add(this.groupBox8);
             this.splitContainer1.Panel2.Controls.Add(this.groupBox7);
@@ -1070,7 +1078,7 @@
             this.splitContainer1.Panel2.Controls.Add(this.groupBox3);
             this.splitContainer1.Panel2.Controls.Add(this.groupBox1);
             this.splitContainer1.Panel2.Controls.Add(this.groupBox2);
-            this.splitContainer1.Size = new System.Drawing.Size(779, 422);
+            this.splitContainer1.Size = new System.Drawing.Size(779, 506);
             this.splitContainer1.SplitterDistance = 185;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -1098,6 +1106,75 @@
             this.removeToolStripMenuItem.Size = new System.Drawing.Size(62, 20);
             this.removeToolStripMenuItem.Text = "Remove";
             this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
+            // 
+            // groupBox10
+            // 
+            this.groupBox10.Controls.Add(this.checkBoxTFlag0);
+            this.groupBox10.Controls.Add(this.checkBoxTFlag1);
+            this.groupBox10.Controls.Add(this.checkBoxTFlag2);
+            this.groupBox10.Controls.Add(this.checkBoxTFlag3);
+            this.groupBox10.Controls.Add(this.checkBoxTFlag4);
+            this.groupBox10.Location = new System.Drawing.Point(9, 424);
+            this.groupBox10.Name = "groupBox10";
+            this.groupBox10.Size = new System.Drawing.Size(569, 74);
+            this.groupBox10.TabIndex = 37;
+            this.groupBox10.TabStop = false;
+            this.groupBox10.Text = "Trigger flags";
+            // 
+            // checkBoxTFlag0
+            // 
+            this.checkBoxTFlag0.AutoSize = true;
+            this.checkBoxTFlag0.Location = new System.Drawing.Point(6, 19);
+            this.checkBoxTFlag0.Name = "checkBoxTFlag0";
+            this.checkBoxTFlag0.Size = new System.Drawing.Size(92, 17);
+            this.checkBoxTFlag0.TabIndex = 25;
+            this.checkBoxTFlag0.Text = "Visible Always";
+            this.checkBoxTFlag0.UseVisualStyleBackColor = true;
+            this.checkBoxTFlag0.CheckedChanged += new System.EventHandler(this.checkBoxTFlag0_CheckedChanged);
+            // 
+            // checkBoxTFlag1
+            // 
+            this.checkBoxTFlag1.AutoSize = true;
+            this.checkBoxTFlag1.Location = new System.Drawing.Point(6, 42);
+            this.checkBoxTFlag1.Name = "checkBoxTFlag1";
+            this.checkBoxTFlag1.Size = new System.Drawing.Size(179, 17);
+            this.checkBoxTFlag1.TabIndex = 26;
+            this.checkBoxTFlag1.Text = "Visible When In Camera Frustum";
+            this.checkBoxTFlag1.UseVisualStyleBackColor = true;
+            this.checkBoxTFlag1.CheckedChanged += new System.EventHandler(this.checkBoxTFlag1_CheckedChanged);
+            // 
+            // checkBoxTFlag2
+            // 
+            this.checkBoxTFlag2.AutoSize = true;
+            this.checkBoxTFlag2.Location = new System.Drawing.Point(214, 19);
+            this.checkBoxTFlag2.Name = "checkBoxTFlag2";
+            this.checkBoxTFlag2.Size = new System.Drawing.Size(72, 17);
+            this.checkBoxTFlag2.TabIndex = 27;
+            this.checkBoxTFlag2.Text = "UnkFlag3";
+            this.checkBoxTFlag2.UseVisualStyleBackColor = true;
+            this.checkBoxTFlag2.CheckedChanged += new System.EventHandler(this.checkBoxTFlag2_CheckedChanged);
+            // 
+            // checkBoxTFlag3
+            // 
+            this.checkBoxTFlag3.AutoSize = true;
+            this.checkBoxTFlag3.Location = new System.Drawing.Point(214, 42);
+            this.checkBoxTFlag3.Name = "checkBoxTFlag3";
+            this.checkBoxTFlag3.Size = new System.Drawing.Size(152, 17);
+            this.checkBoxTFlag3.TabIndex = 28;
+            this.checkBoxTFlag3.Text = "Load Wall Can Be Entered";
+            this.checkBoxTFlag3.UseVisualStyleBackColor = true;
+            this.checkBoxTFlag3.CheckedChanged += new System.EventHandler(this.checkBoxTFlag3_CheckedChanged);
+            // 
+            // checkBoxTFlag4
+            // 
+            this.checkBoxTFlag4.AutoSize = true;
+            this.checkBoxTFlag4.Location = new System.Drawing.Point(352, 19);
+            this.checkBoxTFlag4.Name = "checkBoxTFlag4";
+            this.checkBoxTFlag4.Size = new System.Drawing.Size(96, 17);
+            this.checkBoxTFlag4.TabIndex = 29;
+            this.checkBoxTFlag4.Text = "Has Load Wall";
+            this.checkBoxTFlag4.UseVisualStyleBackColor = true;
+            this.checkBoxTFlag4.CheckedChanged += new System.EventHandler(this.checkBoxTFlag4_CheckedChanged);
             // 
             // groupBox9
             // 
@@ -1601,7 +1678,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(779, 422);
+            this.ClientSize = new System.Drawing.Size(779, 506);
             this.Controls.Add(this.splitContainer1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
@@ -1657,6 +1734,8 @@
             this.splitContainer1.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.groupBox10.ResumeLayout(false);
+            this.groupBox10.PerformLayout();
             this.groupBox9.ResumeLayout(false);
             this.groupBox9.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown33)).EndInit();
@@ -1778,5 +1857,11 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem addToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
+        private System.Windows.Forms.GroupBox groupBox10;
+        private System.Windows.Forms.CheckBox checkBoxTFlag0;
+        private System.Windows.Forms.CheckBox checkBoxTFlag1;
+        private System.Windows.Forms.CheckBox checkBoxTFlag2;
+        private System.Windows.Forms.CheckBox checkBoxTFlag3;
+        private System.Windows.Forms.CheckBox checkBoxTFlag4;
     }
 }

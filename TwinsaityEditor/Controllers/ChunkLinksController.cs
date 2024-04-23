@@ -30,7 +30,7 @@ namespace TwinsaityEditor
                 text.Add($"Link{i}");
                 text.Add($"Type: {Data.Links[i].Type}");
                 text.Add($"Directory: {Data.Links[i].Path}");
-                text.Add($"Flags: {Convert.ToString(Data.Links[i].Flags, 16).ToUpper()}");
+                text.Add($"Flags: {Data.Links[i].Flags} / 0x{Convert.ToString(Data.Links[i].Flags, 16).ToUpper()}");
                 ChunkLinks.ChunkLink.LinkTree tree = Data.Links[i].TreeRoot;
                 string add = "";
                 int depth = 0;
