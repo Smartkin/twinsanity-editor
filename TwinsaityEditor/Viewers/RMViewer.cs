@@ -12,6 +12,7 @@ namespace TwinsaityEditor
     public class RMViewer : ThreeDViewer
     {
         private static readonly int circle_res = 16;
+        private static readonly int reserved_layers = 7;
 
         private bool show_col_nodes, show_triggers, show_cams, wire_col, sm2_links, obj_models, collisions, show_scenery;
         private FileController file;
@@ -41,7 +42,7 @@ namespace TwinsaityEditor
             }
             else
             {
-                InitVBO(6);
+                InitVBO(reserved_layers);
             }
             uint link_section = 5;
             if (file.DataAux != null && file.DataAux.Type == TwinsFile.FileType.MonkeyBallSM) link_section = 6;
@@ -69,6 +70,8 @@ namespace TwinsaityEditor
                     LoadColNodes();
                 }
             }
+            pform.Text = "Loading particles...";
+            LoadParticles();
             pform.Text = "Loading instances...";
             LoadInstances();
             pform.Text = "Loading positions...";
@@ -134,7 +137,7 @@ namespace TwinsaityEditor
             if ((file.Data.Type == TwinsFile.FileType.RM2 || file.Data.Type == TwinsFile.FileType.RMX) && obj_models)
             {
                 //GL.Enable(EnableCap.Lighting);
-                for (int i = 5; i < vtx.Count; i++)
+                for (int i = reserved_layers; i < vtx.Count; i++)
                 {
                     vtx[i]?.DrawAllElements(PrimitiveType.Triangles, BufferPointerFlags.Normal);
                 }
@@ -144,9 +147,10 @@ namespace TwinsaityEditor
             //instances
             vtx[1].DrawMulti(PrimitiveType.LineStrip, BufferPointerFlags.Default);
 
-            //positions + ai positions
+            //positions + ai positions + particles
             vtx[3].DrawMulti(PrimitiveType.LineLoop, BufferPointerFlags.Default);
             vtx[4].DrawMulti(PrimitiveType.LineLoop, BufferPointerFlags.Default);
+            vtx[5].DrawMulti(PrimitiveType.LineLoop, BufferPointerFlags.Default);
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
 
@@ -589,6 +593,28 @@ namespace TwinsaityEditor
 
                             }
                         }
+                    }
+                }
+            }
+
+            uint partSection = file.Data.Type == TwinsFile.FileType.MonkeyBallRM ? (uint)9 : (uint)8;
+            if (file.Data.GetItem<ParticleData>(partSection).Size > 12) //particle positions
+            {
+                ParticleData partData = file.Data.GetItem<ParticleData>(partSection);
+                if (partData.ParticleInstances.Count > 0)
+                {
+                    for (int p = 0; p < partData.ParticleInstances.Count; p++)
+                    {
+                        Matrix3 rot_ins = Matrix3.Identity;
+                        //rot_ins *= Matrix3.CreateRotationX(partData.ParticleInstances[p].Rot_X / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
+                        //rot_ins *= Matrix3.CreateRotationY(-partData.ParticleInstances[p].Rot_Y / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
+                        //rot_ins *= Matrix3.CreateRotationZ(-partData.ParticleInstances[p].Rot_Z / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
+                        GL.PointSize(5);
+                        GL.Color3(Color.Pink);
+                        GL.Begin(PrimitiveType.Points);
+                        GL.Vertex3(-partData.ParticleInstances[p].Position.X, partData.ParticleInstances[p].Position.Y, partData.ParticleInstances[p].Position.Z);
+                        GL.End();
+                        RenderString3D(p.ToString(), Color.Pink, -partData.ParticleInstances[p].Position.X, partData.ParticleInstances[p].Position.Y, partData.ParticleInstances[p].Position.Z, ref rot_ins, 0.5F);
                     }
                 }
             }
@@ -1398,12 +1424,12 @@ namespace TwinsaityEditor
                                                             modelCont.Vertices[v][p].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
                                                         }
                                                         
-                                                        vtx[5 + cur_instance] = new VertexBufferData();
-                                                        vtx[5 + cur_instance].Vtx = modelCont.Vertices[v];
-                                                        vtx[5 + cur_instance].VtxInd = modelCont.Indices[v];
+                                                        vtx[reserved_layers + cur_instance] = new VertexBufferData();
+                                                        vtx[reserved_layers + cur_instance].Vtx = modelCont.Vertices[v];
+                                                        vtx[reserved_layers + cur_instance].VtxInd = modelCont.Indices[v];
                                                         modelCont.Vertices[v] = vbuffer;
-                                                        Utils.TextUtils.LoadTexture(rigid.MaterialIDs, file, vtx[5 + cur_instance], v);
-                                                        UpdateVBO(5 + cur_instance);
+                                                        Utils.TextUtils.LoadTexture(rigid.MaterialIDs, file, vtx[reserved_layers + cur_instance], v);
+                                                        UpdateVBO(reserved_layers + cur_instance);
                                                         cur_instance++;
                                                     }
                                                     
@@ -1412,7 +1438,7 @@ namespace TwinsaityEditor
                                                 }
                                                 else
                                                 {
-                                                    vtx[5 + cur_instance] = null;
+                                                    vtx[reserved_layers + cur_instance] = null;
                                                 }
                                             }
                                             else if (file.Data.Type == TwinsFile.FileType.RMX)
@@ -1450,18 +1476,18 @@ namespace TwinsaityEditor
                                                             targetPos += pos_ins_4;
                                                             modelCont.Vertices[mv][v].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
                                                         }
-                                                        vtx[5 + cur_instance] = new VertexBufferData();
-                                                        vtx[5 + cur_instance].Vtx = modelCont.Vertices[mv];
-                                                        vtx[5 + cur_instance].VtxInd = modelCont.Indices[mv];
-                                                        Utils.TextUtils.LoadTexture(rigidModelCont.Data.MaterialIDs, file, vtx[5 + cur_instance], mv);
+                                                        vtx[reserved_layers + cur_instance] = new VertexBufferData();
+                                                        vtx[reserved_layers + cur_instance].Vtx = modelCont.Vertices[mv];
+                                                        vtx[reserved_layers + cur_instance].VtxInd = modelCont.Indices[mv];
+                                                        Utils.TextUtils.LoadTexture(rigidModelCont.Data.MaterialIDs, file, vtx[reserved_layers + cur_instance], mv);
                                                         modelCont.Vertices[mv] = vbuffer;
-                                                        UpdateVBO(5 + cur_instance);
+                                                        UpdateVBO(reserved_layers + cur_instance);
                                                         cur_instance++;
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    vtx[5 + cur_instance] = null;
+                                                    vtx[reserved_layers + cur_instance] = null;
                                                     cur_instance++;
                                                 }
                                             }
@@ -1505,15 +1531,15 @@ namespace TwinsaityEditor
                                                 modelCont.Vertices[v][p].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
                                             }
                                             
-                                            vtx[5 + cur_instance] = new VertexBufferData();
-                                            vtx[5 + cur_instance].Vtx = modelCont.Vertices[v];
-                                            vtx[5 + cur_instance].VtxInd = modelCont.Indices[v];
+                                            vtx[reserved_layers + cur_instance] = new VertexBufferData();
+                                            vtx[reserved_layers + cur_instance].Vtx = modelCont.Vertices[v];
+                                            vtx[reserved_layers + cur_instance].VtxInd = modelCont.Indices[v];
                                             Utils.TextUtils.LoadTexture(modelCont.Data.SubModels.Select((subModel) =>
                                             {
                                                 return subModel.MaterialID;
-                                            }).ToArray(), file, vtx[5 + cur_instance], v);
+                                            }).ToArray(), file, vtx[reserved_layers + cur_instance], v);
                                             modelCont.Vertices[v] = vbuffer;
-                                            UpdateVBO(5 + cur_instance);
+                                            UpdateVBO(reserved_layers + cur_instance);
                                             cur_instance++;
                                         }
                                     }
@@ -1552,15 +1578,15 @@ namespace TwinsaityEditor
                                                 modelCont.Vertices[v][p].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
                                             }
 
-                                            vtx[5 + cur_instance] = new VertexBufferData();
-                                            vtx[5 + cur_instance].Vtx = modelCont.Vertices[v];
-                                            vtx[5 + cur_instance].VtxInd = modelCont.Indices[v];
+                                            vtx[reserved_layers + cur_instance] = new VertexBufferData();
+                                            vtx[reserved_layers + cur_instance].Vtx = modelCont.Vertices[v];
+                                            vtx[reserved_layers + cur_instance].VtxInd = modelCont.Indices[v];
                                             Utils.TextUtils.LoadTexture(modelCont.Data.SubModels.Select((subModel) =>
                                             {
                                                 return subModel.MaterialID;
-                                            }).ToArray(), file, vtx[5 + cur_instance], v);
+                                            }).ToArray(), file, vtx[reserved_layers + cur_instance], v);
                                             modelCont.Vertices[v] = vbuffer;
-                                            UpdateVBO(5 + cur_instance);
+                                            UpdateVBO(reserved_layers + cur_instance);
                                             cur_instance++;
                                         }
                                     }
@@ -1600,15 +1626,15 @@ namespace TwinsaityEditor
                                                 modelCont.Vertices[v][p].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
                                             }
                                             
-                                            vtx[5 + cur_instance] = new VertexBufferData();
-                                            vtx[5 + cur_instance].Vtx = modelCont.Vertices[v];
-                                            vtx[5 + cur_instance].VtxInd = modelCont.Indices[v];
+                                            vtx[reserved_layers + cur_instance] = new VertexBufferData();
+                                            vtx[reserved_layers + cur_instance].Vtx = modelCont.Vertices[v];
+                                            vtx[reserved_layers + cur_instance].VtxInd = modelCont.Indices[v];
                                             Utils.TextUtils.LoadTexture(modelCont.Data.Models.Select((subModel) =>
                                             {
                                                 return subModel.MaterialID;
-                                            }).ToArray(), file, vtx[5 + cur_instance], v);
+                                            }).ToArray(), file, vtx[reserved_layers + cur_instance], v);
                                             modelCont.Vertices[v] = vbuffer;
-                                            UpdateVBO(5 + cur_instance);
+                                            UpdateVBO(reserved_layers + cur_instance);
                                             cur_instance++;
                                         }
                                     }
@@ -1647,15 +1673,15 @@ namespace TwinsaityEditor
                                                 modelCont.Vertices[v][p].Pos = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
                                             }
 
-                                            vtx[5 + cur_instance] = new VertexBufferData();
-                                            vtx[5 + cur_instance].Vtx = modelCont.Vertices[v];
-                                            vtx[5 + cur_instance].VtxInd = modelCont.Indices[v];
+                                            vtx[reserved_layers + cur_instance] = new VertexBufferData();
+                                            vtx[reserved_layers + cur_instance].Vtx = modelCont.Vertices[v];
+                                            vtx[reserved_layers + cur_instance].VtxInd = modelCont.Indices[v];
                                             Utils.TextUtils.LoadTexture(modelCont.Data.SubModels.Select((subModel) =>
                                             {
                                                 return subModel.MaterialID;
-                                            }).ToArray(), file, vtx[5 + cur_instance], v);
+                                            }).ToArray(), file, vtx[reserved_layers + cur_instance], v);
                                             modelCont.Vertices[v] = vbuffer;
-                                            UpdateVBO(5 + cur_instance);
+                                            UpdateVBO(reserved_layers + cur_instance);
                                             cur_instance++;
                                         }
                                     }
@@ -1901,6 +1927,96 @@ namespace TwinsaityEditor
             UpdateVBO(4);
         }
 
+        public void LoadParticles()
+        {
+            float min_x = float.MaxValue, min_y = float.MaxValue, min_z = float.MaxValue, max_x = float.MinValue, max_y = float.MinValue, max_z = float.MinValue;
+            bool record_exists = false;
+            uint posi_count = 0;
+            int vID = 5;
+            record_exists = file.Data.ContainsItem(8);
+            if (!record_exists)
+            {
+                vtx[vID].VtxCounts = new int[0];
+                vtx[vID].VtxOffs = new int[0];
+                vtx[vID].Vtx = new Vertex[0];
+                return;
+            }
+            uint partSection = file.Data.Type == TwinsFile.FileType.MonkeyBallRM ? (uint)9 : (uint)8;
+            ParticleData partData = file.Data.GetItem<ParticleData>(partSection);
+            posi_count = (uint)partData.ParticleInstances.Count;
+            if (posi_count <= 0)
+            {
+                vtx[vID].VtxCounts = new int[0];
+                vtx[vID].VtxOffs = new int[0];
+                vtx[vID].Vtx = new Vertex[0];
+                return;
+            }
+            if (vtx[vID] == null || vtx.Count != (circle_res * 3 + 6) * posi_count)
+            {
+                vtx[vID].VtxCounts = new int[6 * posi_count];
+                vtx[vID].VtxOffs = new int[6 * posi_count];
+                vtx[vID].Vtx = new Vertex[(circle_res * 3 + 6) * posi_count];
+                for (int i = 0; i < posi_count; ++i)
+                {
+                    vtx[vID].VtxCounts[i * 6 + 0] = 2;
+                    vtx[vID].VtxCounts[i * 6 + 1] = 2;
+                    vtx[vID].VtxCounts[i * 6 + 2] = 2;
+                    vtx[vID].VtxCounts[i * 6 + 3] = circle_res;
+                    vtx[vID].VtxCounts[i * 6 + 4] = circle_res;
+                    vtx[vID].VtxCounts[i * 6 + 5] = circle_res;
+                }
+            }
+            int l = 0, m = 0;
+            for (int i = 0; i < partData.ParticleInstances.Count; i++)
+            {
+                Matrix3 rot_ins = Matrix3.Identity;
+                //rot_ins *= Matrix3.CreateRotationX(partData.ParticleInstances[i].Rot_X / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
+                //rot_ins *= Matrix3.CreateRotationY(-partData.ParticleInstances[i].Rot_Y / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
+                //rot_ins *= Matrix3.CreateRotationZ(-partData.ParticleInstances[i].Rot_Z / (float)(ushort.MaxValue + 1) * MathHelper.TwoPi);
+                Vector3 pos_pos = partData.ParticleInstances[i].Position.ToVec3();
+                pos_pos.X = -pos_pos.X;
+                vtx[vID].VtxOffs[l++] = m;
+                vtx[vID].Vtx[m++] = new Vertex(new Vector3(-indicator_size * 0.75f * 0.5f, 0, 0) * rot_ins + pos_pos, Color.Red);
+                vtx[vID].Vtx[m++] = new Vertex(new Vector3(+indicator_size * 0.375f * 0.5f, 0, 0) * rot_ins + pos_pos, Color.Red);
+                vtx[vID].VtxOffs[l++] = m;
+                vtx[vID].Vtx[m++] = new Vertex(new Vector3(0, indicator_size * 0.75f * 0.5f, 0) * rot_ins + pos_pos, Color.Green);
+                vtx[vID].Vtx[m++] = new Vertex(new Vector3(0, -indicator_size * 0.375f * 0.5f, 0) * rot_ins + pos_pos, Color.Green);
+                vtx[vID].VtxOffs[l++] = m;
+                vtx[vID].Vtx[m++] = new Vertex(new Vector3(0, 0, indicator_size * 0.75f * 0.5f) * rot_ins + pos_pos, Color.Blue);
+                vtx[vID].Vtx[m++] = new Vertex(new Vector3(0, 0, -indicator_size * 0.375f * 0.5f) * rot_ins + pos_pos, Color.Blue);
+                Color cur_color = Color.Pink;
+                vtx[vID].VtxOffs[l++] = m;
+                for (int j = 0; j < circle_res; ++j)
+                {
+                    Vector3 vec = new Vector3(0, 0, indicator_size);
+                    vec *= Matrix3.Identity * Matrix3.CreateRotationX(MathHelper.TwoPi / circle_res * j);
+                    vtx[vID].Vtx[m++] = new Vertex(pos_pos + vec, cur_color);
+                }
+                vtx[vID].VtxOffs[l++] = m;
+                for (int j = 0; j < circle_res; ++j)
+                {
+                    Vector3 vec = new Vector3(0, 0, indicator_size);
+                    vec *= Matrix3.Identity * Matrix3.CreateRotationY(MathHelper.TwoPi / circle_res * j);
+                    vtx[vID].Vtx[m++] = new Vertex(pos_pos + vec, cur_color);
+                }
+                vtx[vID].VtxOffs[l++] = m;
+                for (int j = 0; j < circle_res; ++j)
+                {
+                    Vector3 vec = new Vector3(0, indicator_size, 0);
+                    vec *= Matrix3.Identity * Matrix3.CreateRotationZ(MathHelper.TwoPi / circle_res * j);
+                    vtx[vID].Vtx[m++] = new Vertex(pos_pos + vec, cur_color);
+                }
+                min_x = Math.Min(min_x, pos_pos.X);
+                min_y = Math.Min(min_y, pos_pos.Y);
+                min_z = Math.Min(min_z, pos_pos.Z);
+                max_x = Math.Max(max_x, pos_pos.X);
+                max_y = Math.Max(max_y, pos_pos.Y);
+                max_z = Math.Max(max_z, pos_pos.Z);
+            }
+            zFar = Math.Max(zFar, Math.Max(max_x - min_x, Math.Max(max_y - min_y, max_z - min_z)));
+            UpdateVBO(vID);
+        }
+
         public void UpdateSelected()
         {
             if (file.SelectedItem is Instance ins)
@@ -1926,6 +2042,12 @@ namespace TwinsaityEditor
             {
                 SetPosition(new Vector3(-cam.Coords[1].X, cam.Coords[1].Y, cam.Coords[1].Z));
             }
+        }
+
+        public void UpdateSelectedPos(float x, float y, float z)
+        {
+            SetPosition(new Vector3(x, y, z));
+            LoadParticles();
         }
 
         /// <summary> 

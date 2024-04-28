@@ -28,6 +28,7 @@ namespace TwinsaityEditor
         private Form editScripts;
         private Form editObjects;
         private Form editAnimations;
+        private Form editParticles;
         private readonly Form[] editInstances = new Form[9], editPositions = new Form[9], editPaths = new Form[9], editTriggers = new Form[9], editCameras = new Form[9];
 
         //Viewers
@@ -146,6 +147,7 @@ namespace TwinsaityEditor
             CloseEditor(Editors.ColData);
             CloseEditor(Editors.Script);
             CloseEditor(Editors.Animation);
+            CloseEditor(Editors.Particles);
             for (int i = 0; i <= 7; ++i)
             {
                 CloseEditor(Editors.Instance, i);
@@ -181,6 +183,8 @@ namespace TwinsaityEditor
                 OpenEditor(ref editAnimations, Editors.Animation, (Controller)c.Node.Parent.Tag);
             else if (c is ObjectController)
                 OpenEditor(ref editObjects, Editors.Object, (Controller)c.Node.Parent.Tag);
+            else if (c is ParticleDataController)
+                OpenEditor(ref editObjects, Editors.Particles, c);
             else if (c is SectionController s)
             {
                 if (s.Data.Type == SectionType.ObjectInstance)
@@ -222,6 +226,7 @@ namespace TwinsaityEditor
                         }
                         break;
                     case Editors.ChunkLinks: editor_var_ptr = new ChunkLinksEditor((ChunkLinksController)cont) { Tag = TopForm }; break;
+                    case Editors.Particles: editor_var_ptr = new ParticlesEditor((ParticleDataController)cont) { Tag = TopForm }; break;
                     case Editors.Position: editor_var_ptr = new PositionEditor((SectionController)cont) { Tag = TopForm }; break;
                     case Editors.Path: editor_var_ptr = new PathEditor((SectionController)cont) { Tag = TopForm }; break;
                     case Editors.Instance: editor_var_ptr = new InstanceEditor((SectionController)cont) { Tag = TopForm }; break;
@@ -252,6 +257,7 @@ namespace TwinsaityEditor
                 case Editors.Camera: editorForm = editCameras[arg]; break;
                 case Editors.Script: editorForm = editScripts; break;
                 case Editors.Animation: editorForm = editAnimations; break;
+                case Editors.Particles: editorForm = editParticles; break;
             }
             CloseForm(editorForm);
         }
@@ -677,6 +683,12 @@ namespace TwinsaityEditor
                 rmViewer.LoadPositions();
         }
 
+        public void RMViewer_LoadParticles()
+        {
+            if (rmViewer != null)
+                rmViewer.LoadParticles();
+        }
+
         public Pos RMViewer_GetPos(Pos pos_in)
         {
             Pos pos = new Pos(pos_in.X, pos_in.Y, pos_in.Z, 1);
@@ -738,6 +750,26 @@ namespace TwinsaityEditor
                 }
                 else
                     rmViewer.UpdateSelected();
+            }
+        }
+        public void SelectParticle(ParticleData part, ParticleData.ParticleSystemInstance item, int arg = -1)
+        {
+            var prev_item = SelectedItem;
+            SelectedItem = part;
+            SelectedItemArg = arg;
+            if (rmViewer != null)
+            {
+                if (item == null && prev_item != null)
+                {
+                    if (prev_item is Instance)
+                        rmViewer.LoadInstances();
+                    else if (prev_item is InstanceMB)
+                        rmViewer.LoadInstances();
+                    else if (prev_item is Position)
+                        rmViewer.LoadPositions();
+                }
+                else
+                    rmViewer.UpdateSelectedPos(-item.Position.X, item.Position.Y, item.Position.Z);
             }
         }
 

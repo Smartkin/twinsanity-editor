@@ -2,6 +2,6 @@
 {
     public static partial class Program
     {
-        public static string EditorVersion = "0.81  (Alpha)";
+        public static string EditorVersion = "0.82  (Alpha)";
     }
 }

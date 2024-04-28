@@ -253,9 +253,8 @@ namespace TwinsaityEditor
             using (OpenFileDialog ofd = new OpenFileDialog
             {
                 InitialDirectory = Settings.Default.ChunkFilePath,
-                Filter = "RM2 files|*.rm2|SM2 files|*.sm2|RMX files|*.rmx|SMX files|*.smx|Demo RM2 files|*.rm2|Demo SM2 files|*.sm2|SMBA RM files|*.rm|SMBA SM files|*.sm",
+                Filter = "RM2/RMX/RM files|*.rm2;*.rmx;*.rm|SM2/SMX/SM files|*.sm2;*.smx;*.sm|Demo RM2 files|*.rm2|Demo SM2 files|*.sm2",
                 FilterIndex = LastFilterIndex,
-                //Filter = "PS2 files (.rm2; .sm2)|*.rm2;*.sm2|XBOX files (.rmx; .smx)|*.rmx;*.smx|Demo files (.rm2; .sm2)|*.rm2; *.sm2";
             })
             {
                 if (ofd.ShowDialog() == DialogResult.OK)
@@ -271,52 +270,70 @@ namespace TwinsaityEditor
                     TwinsFile file = new TwinsFile();
                     TwinsFile aux_file = null;
                     TwinsFile default_file = null;
-                    bool IsScenery = ofd.FileName.Contains(".sm");
+                    bool IsScenery = ofd.FileName.ToLower().Contains(".sm");
+                    bool IsXBOX = ofd.FileName.ToLower().EndsWith(".smx") || ofd.FileName.ToLower().EndsWith(".rmx");
+                    bool IsMB = ofd.FileName.ToLower().EndsWith(".rm") || ofd.FileName.ToLower().EndsWith(".sm");
                     switch (ofd.FilterIndex)
                     {
                         case 1:
                         case 2:
-                            if (IsScenery)
-                                file.LoadFile(ofd.FileName, TwinsFile.FileType.SM2);
-                            else
+                            if (!IsMB)
                             {
-                                file.LoadFile(ofd.FileName, TwinsFile.FileType.RM2);
-                                aux_file = new TwinsFile();
-                                if (System.IO.File.Exists(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".sm2"))
+                                if (IsScenery)
                                 {
-                                    aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".sm2", TwinsFile.FileType.SM2);
+                                    file.LoadFile(ofd.FileName, IsXBOX ? TwinsFile.FileType.SMX : TwinsFile.FileType.SM2);
                                 }
                                 else
                                 {
-                                    aux_file = null;
+                                    file.LoadFile(ofd.FileName, IsXBOX ? TwinsFile.FileType.RMX : TwinsFile.FileType.RM2);
+                                    aux_file = new TwinsFile();
+                                    if (System.IO.File.Exists(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".sm2"))
+                                    {
+                                        aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".sm2", TwinsFile.FileType.SM2);
+                                    }
+                                    else if (System.IO.File.Exists(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".smx"))
+                                    {
+                                        aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".smx", TwinsFile.FileType.SMX);
+                                    }
+                                    else
+                                    {
+                                        aux_file = null;
+                                    }
+                                    if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + "/Default.rm2"))
+                                    {
+                                        default_file = new TwinsFile();
+                                        default_file.LoadFile(AppDomain.CurrentDomain.BaseDirectory + "/Default.rm2", TwinsFile.FileType.RM2);
+                                    }
+                                    else if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + "/Default.rmx"))
+                                    {
+                                        default_file = new TwinsFile();
+                                        default_file.LoadFile(AppDomain.CurrentDomain.BaseDirectory + "/Default.rmx", TwinsFile.FileType.RMX);
+                                    }
                                 }
-                                if (System.IO.File.Exists(AppDomain.CurrentDomain.BaseDirectory + "/Default.rm2"))
+                            }
+                            else
+                            {
+                                if (IsScenery)
                                 {
-                                    default_file = new TwinsFile();
-                                    default_file.LoadFile(AppDomain.CurrentDomain.BaseDirectory + "/Default.rm2", TwinsFile.FileType.RM2);
+                                    file.LoadFile(ofd.FileName, TwinsFile.FileType.MonkeyBallSM);
+                                }
+                                else
+                                {
+                                    file.LoadFile(ofd.FileName, TwinsFile.FileType.MonkeyBallRM);
+                                    aux_file = new TwinsFile();
+                                    try
+                                    {
+                                        aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".sm", TwinsFile.FileType.MonkeyBallSM);
+                                    }
+                                    catch
+                                    {
+                                        aux_file = null;
+                                    }
                                 }
                             }
                             break;
                         case 3:
                         case 4:
-                            if (IsScenery)
-                                file.LoadFile(ofd.FileName, TwinsFile.FileType.SMX);
-                            else
-                            {
-                                file.LoadFile(ofd.FileName, TwinsFile.FileType.RMX);
-                                aux_file = new TwinsFile();
-                                if (System.IO.File.Exists(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".smx"))
-                                {
-                                    aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".smx", TwinsFile.FileType.SMX);
-                                }
-                                else
-                                {
-                                    aux_file = null;
-                                }
-                            }
-                            break;
-                        case 5:
-                        case 6:
                             if (IsScenery)
                                 file.LoadFile(ofd.FileName, TwinsFile.FileType.DemoSM2);
                             else
@@ -333,21 +350,6 @@ namespace TwinsaityEditor
                                     aux_file = null;
                                 }
                             }
-                            break;
-                        case 7:
-                            file.LoadFile(ofd.FileName, TwinsFile.FileType.MonkeyBallRM);
-                            aux_file = new TwinsFile();
-                            try
-                            {
-                                aux_file.LoadFile(ofd.FileName.Substring(0, ofd.FileName.LastIndexOf('.')) + ".sm", TwinsFile.FileType.MonkeyBallSM);
-                            }
-                            catch
-                            {
-                                aux_file = null;
-                            }
-                            break;
-                        case 8:
-                            file.LoadFile(ofd.FileName, TwinsFile.FileType.MonkeyBallSM);
                             break;
                     }
                     file.SafeFileName = ofd.SafeFileName;

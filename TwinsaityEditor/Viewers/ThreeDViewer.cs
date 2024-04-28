@@ -387,7 +387,7 @@ namespace TwinsaityEditor
             vtx = new List<VertexBufferData>(count);
             for (int i = 0; i < count; ++i)
             {
-                if (i > 4 && !ForceCreate)
+                if (i > 6 && !ForceCreate)
                 {
                     vtx.Add(null);
                 }
