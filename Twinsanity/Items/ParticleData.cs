@@ -333,7 +333,7 @@ namespace Twinsanity
                     {
                         if (Version > 0x1A)
                         {
-                            writer.Write(PS.UnkInt);
+                            writer.Write(PS.TexturePage);
                         }
                         if (Version > 0x1B)
                         {
@@ -711,7 +711,7 @@ namespace Twinsanity
                     {
                         if (Version > 0x1A)
                         {
-                            PS.UnkInt = reader.ReadInt32();
+                            PS.TexturePage = reader.ReadInt32();
                         }
                         if (Version > 0x1B)
                         {
@@ -901,7 +901,7 @@ namespace Twinsanity
             public float JibberXAmp;
             public float JibberYFreq;
             public float JibberYAmp;
-            public TwinsVector4[] UnkVecs;
+            public TwinsVector4[] UnkVecs; // Color timeline (Time 0.0 - 1.0 / RGB 0.0 - 255.0)
             public Int64[] UnkLongs1;
             public Single UnkFloat27; // Version > 0x15
             public Single UnkFloat28; // Version > 0x15
@@ -927,7 +927,7 @@ namespace Twinsanity
             public Single UnkFloat38; // Version >= 0x10
             public Single UnkFloat39; // Version >= 0x19, always 0.5?
             public Single UnkFloat40; // Version >= 0x1A, always 0?
-            public Int32 UnkInt; // Version > 0x1A, particle texture page? (0-2)
+            public int TexturePage; // Version > 0x1A, (0-2)
             public TwinsVector4 UnkVec3; // Version >= 0x1E, default/editor spawn position? W always 0
 
             public enum GenSort
@@ -944,7 +944,7 @@ namespace Twinsanity
             public enum TextureFiltering
             {
                 Additive = 0,
-                Unknown = 1, // exists in 5 particles in default
+                Unknown = 1, // negative? inverts colors, not the same as sub, exists in 5 particles in default
                 Modulation = 0x02,
                 Subtractive = 0x03,
                 Glass = 0x07,

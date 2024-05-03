@@ -63,6 +63,7 @@ namespace TwinsaityEditor
             {
                 ParticleData.ParticleSystemDefinition PS = Data.ParticleTypes[i];
                 text.Add($"#{i} Name: {PS.Name} ");
+                /*
                 text.Add($"\tGenRate: {PS.GenRate} ");
                 text.Add($"\tMax Particle Count: {PS.MaxParticleCount} ");
                 text.Add($"\tUnkUShort3: {PS.UnkUShort3} ");
@@ -164,6 +165,7 @@ namespace TwinsaityEditor
                 text.Add($"\tUnkFloat40: {PS.UnkFloat40} ");
                 text.Add($"\tUnkInt: {PS.UnkInt} ");
                 text.Add($"\tUnkVec3: {PS.UnkVec3.X}; {PS.UnkVec3.Y}; {PS.UnkVec3.Z}; {PS.UnkVec3.W}");
+                */
 
             }
             text.Add($"Instances:");
