@@ -36,10 +36,10 @@ namespace TwinsaityEditor
             "SolidToSlide", // 11
             "SolidToSpin", // 12
             "SolidToTwinSlam", // 13
-            "", // 14 SolidTo something?
+            "SolidToTwinThrow", // 14
             "Targetable", // 15 Targetable with MultiTool and Nina
             "", // 16
-            "", // 17
+            "BounceRegularProjectiles", // 17
             "ScriptSoftFlag18", // 18
             "ScriptSoftFlag19", // 19
             "ScriptSoftFlag20", // 20

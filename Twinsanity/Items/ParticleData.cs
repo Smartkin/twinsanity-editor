@@ -53,7 +53,7 @@ namespace Twinsanity
             if (Version >= 0x0F) instSize += 2;
             count += (int)ParticleInstances.Count * instSize;
 
-            int defSize = 690; 
+            int defSize = 690;
             if (Version == 0x20) defSize += 76;
             if (Version >= 0x06) defSize += 8;
             if (Version >= 0x0A) defSize += 4;
@@ -220,48 +220,54 @@ namespace Twinsanity
                     writer.Write(PS.JibberYAmp);
                     for (var i = 0; i < 8; ++i)
                     {
-                        writer.Write(PS.UnkVecs[i].X);
-                        writer.Write(PS.UnkVecs[i].Y);
-                        writer.Write(PS.UnkVecs[i].Z);
-                        writer.Write(PS.UnkVecs[i].W);
+                        writer.Write(PS.ColorGradient[i].X);
+                        writer.Write(PS.ColorGradient[i].Y);
+                        writer.Write(PS.ColorGradient[i].Z);
+                        writer.Write(PS.ColorGradient[i].W);
                     }
                     for (var i = 0; i < 8; ++i)
                     {
-                        writer.Write(PS.UnkLongs1[i]);
+                        writer.Write(PS.AlphaGradientTime[i]);
+                        writer.Write(PS.AlphaGradientValue[i]);
                     }
                     if (Version >= 0x15)
                     {
-                        writer.Write(PS.UnkFloat27);
-                        writer.Write(PS.UnkFloat28);
+                        writer.Write(PS.DistortionX);
+                        writer.Write(PS.DistortionY);
                     }
-                    writer.Write(PS.UnkFloat29);
-                    writer.Write(PS.UnkFloat30);
+                    writer.Write(PS.MinSize);
+                    writer.Write(PS.MaxSize);
                     for (var i = 0; i < 8; ++i)
                     {
-                        writer.Write(PS.UnkLongs2[i]);
-                    }
-                    for (var i = 0; i < 8; ++i)
-                    {
-                        writer.Write(PS.UnkLongs3[i]);
-                    }
-                    writer.Write(PS.UnkFloat31);
-                    writer.Write(PS.UnkFloat32);
-                    for (var i = 0; i < 8; ++i)
-                    {
-                        writer.Write(PS.UnkLongs4[i]);
+                        writer.Write(PS.SizeWidthTime[i]);
+                        writer.Write(PS.SizeWidthValue[i]);
                     }
                     for (var i = 0; i < 8; ++i)
                     {
-                        writer.Write(PS.UnkLongs5[i]);
+                        writer.Write(PS.SizeHeightTime[i]);
+                        writer.Write(PS.SizeHeightValue[i]);
+                    }
+                    writer.Write(PS.MinRotation);
+                    writer.Write(PS.MaxRotation);
+                    for (var i = 0; i < 8; ++i)
+                    {
+                        writer.Write(PS.RotationTime[i]);
+                        writer.Write(PS.RotationValue[i]);
                     }
                     for (var i = 0; i < 8; ++i)
                     {
-                        writer.Write(PS.UnkLongs6[i]);
+                        writer.Write(PS.UnkGradient1Time[i]);
+                        writer.Write(PS.UnkGradient1Value[i]);
                     }
-                    writer.Write(PS.UnkFloat33);
-                    writer.Write(PS.UnkFloat34);
-                    writer.Write(PS.UnkFloat35);
-                    writer.Write(PS.UnkFloat36);
+                    for (var i = 0; i < 8; ++i)
+                    {
+                        writer.Write(PS.UnkGradient2Time[i]);
+                        writer.Write(PS.UnkGradient2Value[i]);
+                    }
+                    writer.Write(PS.TextureStartX);
+                    writer.Write(PS.TextureStartY);
+                    writer.Write(PS.TextureEndX);
+                    writer.Write(PS.TextureEndY);
                     if (Version == 0x20)
                     {
                         writer.Write(0);
@@ -270,9 +276,10 @@ namespace Twinsanity
                     {
                         for (var i = 0; i < 8; ++i)
                         {
-                            writer.Write(PS.UnkLongs7[i]);
+                            writer.Write(PS.CollisionTime[i]);
+                            writer.Write(PS.CollisionValue[i]);
                         }
-                        writer.Write(PS.UnkByte8);
+                        writer.Write(PS.CollisionNumSpheres);
                     }
                     if (Version >= 0x11)
                     {
@@ -306,23 +313,32 @@ namespace Twinsanity
                             }
                         }
                     }
+                    if (Version <= 0x15) // TWOC / Proto PTL
+                    {
+                        for (int s = 0; s < 4; s++)
+                        {
+                            writer.Write(PS.SoundIDs[s]);
+                            writer.Write((uint)PS.SoundTypes[s]);
+                            writer.Write(PS.SoundDelays[s]);
+                        }
+                    }
                     if (Version >= 0x10)
                     {
                         if (Version == 0x20)
                         {
-                            writer.Write(PS.UnkShorts[1]);
+                            writer.Write(PS.AttachedSoundID);
                             writer.Write((Byte)0);
                             writer.Write((Byte)0);
                         }
                         else
                         {
-                            writer.Write((Int32)PS.UnkShorts[1]);
+                            writer.Write((Int32)PS.AttachedSoundID);
                         }
                         writer.Write(PS.UnkFloat38);
                     }
                     if (Version >= 0x19 && Version != 0x20)
                     {
-                        writer.Write((Int32)PS.UnkShorts[2]);
+                        writer.Write((Int32)PS.UnkShort2);
                         writer.Write(PS.UnkFloat39);
                     }
                     if (Version >= 0x1A && Version != 0x20)
@@ -595,51 +611,57 @@ namespace Twinsanity
                     PS.JibberYAmp = reader.ReadSingle();
                     for (int a = 0; a < 8; a++)
                     {
-                        PS.UnkVecs[a] = new TwinsVector4();
-                        PS.UnkVecs[a].X = reader.ReadSingle();
-                        PS.UnkVecs[a].Y = reader.ReadSingle();
-                        PS.UnkVecs[a].Z = reader.ReadSingle();
-                        PS.UnkVecs[a].W = reader.ReadSingle();
+                        PS.ColorGradient[a] = new TwinsVector4();
+                        PS.ColorGradient[a].X = reader.ReadSingle();
+                        PS.ColorGradient[a].Y = reader.ReadSingle();
+                        PS.ColorGradient[a].Z = reader.ReadSingle();
+                        PS.ColorGradient[a].W = reader.ReadSingle();
                     }
                     for (int a = 0; a < 8; a++)
                     {
-                        PS.UnkLongs1[a] = reader.ReadInt64();
+                        PS.AlphaGradientTime[a] = reader.ReadSingle();
+                        PS.AlphaGradientValue[a] = reader.ReadSingle();
                     }
-                    PS.UnkFloat27 = 0.125f;
-                    PS.UnkFloat28 = 0.125f;
-                    if (Version > 0x15)
+                    PS.DistortionX = 0.125f;
+                    PS.DistortionY = 0.125f;
+                    if (Version >= 0x15)
                     {
-                        PS.UnkFloat27 = reader.ReadSingle();
-                        PS.UnkFloat28 = reader.ReadSingle();
+                        PS.DistortionX = reader.ReadSingle();
+                        PS.DistortionY = reader.ReadSingle();
                     }
-                    PS.UnkFloat29 = reader.ReadSingle();
-                    PS.UnkFloat30 = reader.ReadSingle();
+                    PS.MinSize = reader.ReadSingle();
+                    PS.MaxSize = reader.ReadSingle();
                     for (var a = 0; a < 8; ++a)
                     {
-                        PS.UnkLongs2[a] = reader.ReadInt64();
-                    }
-                    for (var a = 0; a < 8; ++a)
-                    {
-                        PS.UnkLongs3[a] = reader.ReadInt64();
-                    }
-                    PS.UnkFloat31 = reader.ReadSingle();
-                    PS.UnkFloat32 = reader.ReadSingle();
-                    for (var a = 0; a < 8; ++a)
-                    {
-                        PS.UnkLongs4[a] = reader.ReadInt64();
+                        PS.SizeWidthTime[a] = reader.ReadSingle();
+                        PS.SizeWidthValue[a] = reader.ReadSingle();
                     }
                     for (var a = 0; a < 8; ++a)
                     {
-                        PS.UnkLongs5[a] = reader.ReadInt64();
+                        PS.SizeHeightTime[a] = reader.ReadSingle();
+                        PS.SizeHeightValue[a] = reader.ReadSingle();
+                    }
+                    PS.MinRotation = reader.ReadSingle();
+                    PS.MaxRotation = reader.ReadSingle();
+                    for (var a = 0; a < 8; ++a)
+                    {
+                        PS.RotationTime[a] = reader.ReadSingle();
+                        PS.RotationValue[a] = reader.ReadSingle();
                     }
                     for (var a = 0; a < 8; ++a)
                     {
-                        PS.UnkLongs6[a] = reader.ReadInt64();
+                        PS.UnkGradient1Time[a] = reader.ReadSingle();
+                        PS.UnkGradient1Value[a] = reader.ReadSingle();
                     }
-                    PS.UnkFloat33 = reader.ReadSingle();
-                    PS.UnkFloat34 = reader.ReadSingle();
-                    PS.UnkFloat35 = reader.ReadSingle();
-                    PS.UnkFloat36 = reader.ReadSingle();
+                    for (var a = 0; a < 8; ++a)
+                    {
+                        PS.UnkGradient2Time[a] = reader.ReadSingle();
+                        PS.UnkGradient2Value[a] = reader.ReadSingle();
+                    }
+                    PS.TextureStartX = reader.ReadSingle();
+                    PS.TextureStartY = reader.ReadSingle();
+                    PS.TextureEndX = reader.ReadSingle();
+                    PS.TextureEndY = reader.ReadSingle();
                     if (Version == 0x20)
                     {
                         reader.ReadBytes(4);
@@ -648,9 +670,10 @@ namespace Twinsanity
                     {
                         for (var a = 0; a < 8; ++a)
                         {
-                            PS.UnkLongs7[a] = reader.ReadInt64();
+                            PS.CollisionTime[a] = reader.ReadSingle();
+                            PS.CollisionValue[a] = reader.ReadSingle();
                         }
-                        PS.UnkByte8 = reader.ReadByte();
+                        PS.CollisionNumSpheres = reader.ReadByte();
                     }
                     if (Version >= 0x11)
                     {
@@ -680,26 +703,37 @@ namespace Twinsanity
                             reader.ReadBytes(44);
                         }
                     }
-                    PS.UnkShorts[1] = 0;
+                    if (Version <= 0x15)
+                    {
+                        // TWOC could attach up to 4 sounds here, but version 16 changed it to one sound ID keeping this as legacy for converting
+                        // later this got removed entirely
+                        for (int s = 0; s < 4; s++)
+                        {
+                            PS.SoundIDs[s] = reader.ReadInt32();
+                            PS.SoundTypes[s] = (ParticleSystemDefinition.SoundControl)reader.ReadUInt32();
+                            PS.SoundDelays[s] = reader.ReadUInt32();
+                        }
+                    }
+                    PS.AttachedSoundID = 0;
                     PS.UnkFloat38 = 0;
                     if (Version >= 0x10)
                     {
                         if (Version == 0x20)
                         {
-                            PS.UnkShorts[1] = reader.ReadInt16();
+                            PS.AttachedSoundID = reader.ReadInt16();
                             reader.ReadBytes(2);
                         }
                         else
                         {
-                            PS.UnkShorts[1] = (Int16)reader.ReadInt32();
+                            PS.AttachedSoundID = (Int16)reader.ReadInt32();
                         }
                         PS.UnkFloat38 = reader.ReadSingle();
                     }
-                    PS.UnkShorts[2] = 5;
+                    PS.UnkShort2 = 5;
                     PS.UnkFloat39 = 0.5f;
                     if (Version >= 0x19 && Version != 0x20)
                     {
-                        PS.UnkShorts[2] = (Int16)reader.ReadInt32();
+                        PS.UnkShort2 = (Int16)reader.ReadInt32();
                         PS.UnkFloat39 = reader.ReadSingle();
                     }
                     PS.UnkFloat40 = 0;
@@ -733,13 +767,12 @@ namespace Twinsanity
                         PS.UnkVec3.W = 0f;
                         if (PS.GSort == ParticleSystemDefinition.GenSort.Normal)
                         {
-                            var f1 = PS.UnkFloat30 * 0.0001f;
+                            var f1 = PS.MaxSize * 0.0001f;
                             PS.UnkVec3.X = ((PS.Velocity + PS.Random_Emit_X) * PS.ParticleLifeTime + PS.Random_Start_X + f1) * 0.75f;
                             PS.UnkVec3.Y = ((PS.Velocity + PS.Random_Emit_Y) * PS.ParticleLifeTime + PS.Random_Start_Y + f1) * 0.75f;
                             PS.UnkVec3.Z = ((PS.Velocity + PS.Random_Emit_Z) * PS.ParticleLifeTime + PS.Random_Start_Z + f1) * 0.75f;
                         }
                     }
-
 
                     ParticleTypes.Add(PS);
                 }
@@ -832,7 +865,7 @@ namespace Twinsanity
                 DecalMaterialID = reader.ReadUInt32();
             }
 
-            // todo: more data after this in default (more decal stuff?)
+            // todo: more data after this in default (more decal/trail stuff?)
 
             int RemainBytes = (int)((start_pos + size) - reader.BaseStream.Position);
             if (RemainBytes > 0)
@@ -854,31 +887,36 @@ namespace Twinsanity
             public string Name;
             public byte[] Remain = new byte[0];
 
-            public byte UnkByte1;
-            public short GenRate; // -10 - 10
+            public byte UnkByte1; // Version == 0x20 (not used in any existing files)
+            public short GenRate; // Multiplier
             public ushort MaxParticleCount;
-            public UInt16 UnkUShort3; // always 0?
+            public UInt16 UnkUShort3; // always 0
             public ushort Emitter_OverTime;
             public ushort Emitter_OverTimeRandom;
             public ushort Emitter_OffTime;
             public ushort Emitter_OffTimeRandom;
-            public GenSort GSort;
-            public Byte UnkByte3; // always 0?
+            public GenSort GSort; // Emitter type
+            public Byte UnkByte3; // always 0, maybe GenCode enum?
             public TextureFiltering TextureFilter;
-            public Byte UnkByte5; // always 0?
-            public Single UnkFloat1; // always 25?
-            public float CutOnRadius; // Version >= 0x6
-            public float CutOffRadius; // Version >= 0x6
-            public float DrawCutOff; // Version >= 0xA
-            public Single UnkFloat5; // Version > 0x16, always 0?
-            public Single UnkFloat6; // Version >= 0x18, always 0.5?
-            public float Velocity;
-            public float Random_Emit_X;
-            public float Random_Emit_Y;
-            public float Random_Emit_Z;
-            public float Random_Start_X;
-            public float Random_Start_Y;
-            public float Random_Start_Z;
+            public Byte UnkByte5; // always 0
+            public Single UnkFloat1; // always 25? always 40000 in proto/twoc?
+            public float CutOnRadius; // Version >= 0x6, distance at which particles start emitting
+            public float CutOffRadius; // Version >= 0x6, distance at which particles stop emitting
+            public float DrawCutOff; // Version >= 0xA, draw distance
+            public Single UnkFloat5; // Version > 0x16, always 0
+            public Single UnkFloat6; // Version >= 0x18, always 0.5
+            public float Velocity; // Towards instance emit direction
+            public float Random_Emit_X; /* velocity on x axis (both sides)
+            GSort Radial: Rand_Mag_X - random start distance from Base Mag */
+            public float Random_Emit_Y; /* velocity on y axis (both sides)
+            GSort Radial: Rand_Rot_Y - 0 to 180 random starting point around sphere, 
+            Radial Rotor: Step_Rot_Y - -90 to 90 rotation speed of sphere around sphere (X / 65535) * 360    */
+            public float Random_Emit_Z; /* velocity on z axis (both sides)
+            GSort Radial: Rand_Rot_Z - 0 to 180 random starting point on angle (top to bottom), 
+            Radial Rotor: Step_Rot_Z - -90 to 90 rotation speed of sphere on angle (top to bottom) (X / 65535) * 360    */
+            public float Random_Start_X; // spawn point on x axis (both sides) | GSort Radial: Base_Mag - start distance from center of sphere
+            public float Random_Start_Y; // spawn point on y axis (both sides) | GSort Radial: Base_Rot_Y - -180 to 180 starting point around sphere (X / 65535) * 360
+            public float Random_Start_Z; // spawn point on z axis (both sides) | GSort Radial: Base_Rot_Z - -180 to 0 starting point on angle (top to bottom) (X / 65535) * 360
             public Single UnkFloat8;
             public Single UnkFloat9;
             public Single UnkFloat10;
@@ -891,68 +929,117 @@ namespace Twinsanity
             public Single UnkFloat17;
             public Single UnkFloat18;
             public Single UnkFloat19;
-            public float Gravity;
+            public float Gravity; // Positive value - particle goes up
             public float ParticleLifeTime;
             public UInt16 UnkUShort8; // usually 0 or 16 (together with the next two)
             public Byte UnkByte6; // usually 0 or 1
             public Byte UnkByte7; // usually 1 or 3
             public Single UnkFloat22; // usually 0 or 320
-            public float JibberXFreq;
-            public float JibberXAmp;
-            public float JibberYFreq;
-            public float JibberYAmp;
-            public TwinsVector4[] UnkVecs; // Color timeline (Time 0.0 - 1.0 / RGB 0.0 - 255.0)
-            public Int64[] UnkLongs1;
-            public Single UnkFloat27; // Version > 0x15
-            public Single UnkFloat28; // Version > 0x15
-            public Single UnkFloat29;
-            public Single UnkFloat30;
-            public Int64[] UnkLongs2;
-            public Int64[] UnkLongs3;
-            public Single UnkFloat31;
-            public Single UnkFloat32;
-            public Int64[] UnkLongs4;
-            public Int64[] UnkLongs5;
-            public Int64[] UnkLongs6;
-            public Single UnkFloat33;
-            public Single UnkFloat34;
-            public Single UnkFloat35;
-            public Single UnkFloat36;
-            public Int64[] UnkLongs7; // Version >= 0x3
-            public Byte UnkByte8; // Version >= 0x3
-            public Byte UnkByte9; // Version >= 0x11
-            public Int32 padAmount; // Version > 0x16 && Version < 0x1D
+            public float JibberXFreq; // particle vibration speed on X axis
+            public float JibberXAmp; // particle vibration distance on X axis
+            public float JibberYFreq; // particle vibration speed on Y axis
+            public float JibberYAmp; // particle vibration distance on Y axis
+            public TwinsVector4[] ColorGradient; // (Time 0.0 - 1.0 / RGB 0.0 - 255.0)
+            public float[] AlphaGradientTime;
+            public float[] AlphaGradientValue; // (0.0 - 255.0), for glass it's a Distortion gradient
+            public float DistortionX; // Version >= 0x15, glass only?
+            public float DistortionY; // Version >= 0x15, glass only?
+            public float MinSize;
+            public float MaxSize;
+            public float[] SizeWidthTime;
+            public float[] SizeWidthValue;
+            public float[] SizeHeightTime;
+            public float[] SizeHeightValue;
+            public float MinRotation;
+            public float MaxRotation;
+            public float[] RotationTime;
+            public float[] RotationValue; // 32767 = 180 deg; (X / 65535) * 360
+            public float[] UnkGradient1Time;
+            public float[] UnkGradient1Value;
+            public float[] UnkGradient2Time;
+            public float[] UnkGradient2Value;
+            public float TextureStartX; // +0x80000 or +0x40000
+            public float TextureStartY; // +0x80000 or +0x40000
+            public float TextureEndX; // +0x80000 or +0x40000
+            public float TextureEndY; // +0x80000 or +0x40000
+            public float[] CollisionTime; // Version >= 0x3
+            public float[] CollisionValue; // Version >= 0x3, size of the biggest collision sphere
+            public byte CollisionNumSpheres; /* Version >= 0x3, (0-8), 
+            non-zero creates a HOLLOW sphere from emit point that grows according to gradient then resets to min point,
+            more spheres create more spheres at halfway size and positon step of the next bigger one, 
+            collision deals damage, travels towards emit direction with velocity speed (ignores Rand_Emit/Rand_Start values?)*/
+            public Byte UnkByte9; // Version >= 0x11, always 0, setting to non-zero disables it?
+            public Int32 padAmount; // Version > 0x16 && Version < 0x1D (not used in any existing files)
             public Single UnkFloat37; // Version > 0x1B
-            public Int16[] UnkShorts; // [1]: Version >= 0x10, [2]: Version >= 0x19, [0] and [3] always 0, [2] always 5?
-            public Single UnkFloat38; // Version >= 0x10
-            public Single UnkFloat39; // Version >= 0x19, always 0.5?
-            public Single UnkFloat40; // Version >= 0x1A, always 0?
+            public short AttachedSoundID; // Version >= 0x10
+            public Single UnkFloat38; // Version >= 0x10, sound related?
+            public Int16 UnkShort2; // Version >= 0x19, always 5 (0 in editor created types that weren't edited)
+            public Single UnkFloat39; // Version >= 0x19, always 0.5 (0 in editor created types that weren't edited)
+            public Single UnkFloat40; // Version >= 0x1A, always 0
             public int TexturePage; // Version > 0x1A, (0-2)
-            public TwinsVector4 UnkVec3; // Version >= 0x1E, default/editor spawn position? W always 0
+            public TwinsVector4 UnkVec3; // Version >= 0x1E, W always 0
+            public int[] SoundIDs; // Version <= 0x15
+            public SoundControl[] SoundTypes; // Version <= 0x15
+            public uint[] SoundDelays; // Version <= 0x15
+
 
             public enum GenSort
             {
-                Normal = 0,
-                Radial = 0x06,
-                RadialRotor = 0x07,
+                Normal = 0, // emit from point
+                Unk1 = 1, // same as normal? (not in editor, unused)
+                Unk2 = 2, // in the sky? sun? (not in editor, unused)
+                Unk3 = 3, // in the sky? sun? (not in editor, unused)
+                Unk4 = 4, // in the sky? sun? (not in editor, unused)
+                Unk5 = 5, // in the sky? sun? (not in editor, unused)
+                Radial = 0x06, // emit from flat sphere
+                RadialRotor = 0x07, // emit from rotating sphere
                 Spheroid = 0x08,
-                BounceY = 0x09,
+                BounceY = 0x09, // bounces vertically for a bit after spawning?
                 BounceXZ = 0x0A,
-                ImprovedRadial = 0x0B,
+                ImprovedRadial = 0x0B, // radial but distance is on X axis instead of Y axis, proto or newer
+                StarRadial, // unk value, final game or newer (not used?)
+            }
+
+            public enum GenCode
+            {
+                // 0 nothing
+                // 1 wind-like near player
+                // 2 corner flying
+                // 3 wind-like stronger
+                // 4 wind-like very small and fast
+                // 5 nothing?
+                // 6 grounded very small?
+                PosRev,
+                Splash,
+                AshRock,
+                PosRevTree,
+                PosAll,
             }
 
             public enum TextureFiltering
             {
                 Additive = 0,
-                Unknown = 1, // negative? inverts colors, not the same as sub, exists in 5 particles in default
+                Unknown = 1, // exists in 5 particles in default
                 Modulation = 0x02,
                 Subtractive = 0x03,
-                Glass = 0x07,
+                Unk4 = 0x04, // some kind of transprency (not in editor, unused)
+                Unk5 = 0x05, // some kind of transprency, brighter (not in editor, unused)
+                Unk6 = 0x06, // flat color (not in editor, unused)
+                Glass = 0x07, // only allowed in GenSort normal? proto or newer
+            }
+
+            public enum SoundControl
+            {
+                Off = 0,
+                OnEdge = 1,
+                OffEdge = 2,
+                PerParticle = 3,
+                Regular = 4,
             }
 
             public ParticleSystemDefinition()
             {
-                UnkVecs = new TwinsVector4[8]
+                ColorGradient = new TwinsVector4[8]
                 {
                     new TwinsVector4(),
                     new TwinsVector4(),
@@ -963,15 +1050,24 @@ namespace Twinsanity
                     new TwinsVector4(),
                     new TwinsVector4(),
                 };
-                UnkLongs1 = new Int64[8];
-                UnkLongs2 = new Int64[8];
-                UnkLongs3 = new Int64[8];
-                UnkLongs4 = new Int64[8];
-                UnkLongs5 = new Int64[8];
-                UnkLongs6 = new Int64[8];
-                UnkLongs7 = new Int64[8];
-                UnkShorts = new Int16[4];
+                AlphaGradientTime = new float[8];
+                AlphaGradientValue = new float[8];
+                SizeWidthTime = new float[8];
+                SizeWidthValue = new float[8];
+                SizeHeightTime = new float[8];
+                SizeHeightValue = new float[8];
+                RotationTime = new float[8];
+                RotationValue = new float[8];
+                UnkGradient1Time = new float[8];
+                UnkGradient1Value = new float[8];
+                UnkGradient2Time = new float[8];
+                UnkGradient2Value = new float[8];
+                CollisionTime = new float[8];
+                CollisionValue = new float[8];
                 UnkVec3 = new TwinsVector4();
+                SoundIDs = new int[4] { -1, -1, -1, -1 };
+                SoundTypes = new SoundControl[4];
+                SoundDelays = new uint[4];
             }
         }
 
@@ -986,7 +1082,7 @@ namespace Twinsanity
             public uint Offset; // Version >= 0x08
             public string Name;
             public int SwitchType; // (0 - none, 1 - global switch) // Version >= 0x9
-            public int SwitchID; // (default -1) // Version >= 0x9
+            public int SwitchID; // (default -1) (-1 - 128) // Version >= 0x9
             public float SwitchValue; // (0.0 - 20.0) // Version >= 0x9
             public Int16 UnkShort6; // Version >= 0xC
             public Int16 UnkShort7; // Version >= 0xC

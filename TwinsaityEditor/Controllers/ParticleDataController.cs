@@ -30,16 +30,8 @@ namespace TwinsaityEditor
         {
             List<string> text = new List<string>();
 
-            if (!Data.IsStandalone)
-            {
-                text.Add($"ID: {Data.ID}");
-                text.Add($"Size: {Data.Size}");
-            }
-            else
-            {
-                text.Add($"Size: {Data.Size}");
-            }
-            text.Add($"Version: 0x{Data.Version:X8}");
+            text.Add($"Size: {Data.Size}");
+            text.Add($"Version: {Data.Version}");
 
             if (Data.IsDefault)
             {
@@ -47,23 +39,15 @@ namespace TwinsaityEditor
                 text.Add(string.Format("Particle Bank 2: Material ID: {0:X8}; Texture ID: {1:X8}", Data.ParticleMaterialID_2, Data.ParticleTextureID_2));
                 text.Add(string.Format("Particle Bank 3: Material ID: {0:X8}; Texture ID: {1:X8}", Data.ParticleMaterialID_3, Data.ParticleTextureID_3));
                 text.Add(string.Format("Decal Bank: Material ID: {0:X8}; Texture ID: {1:X8}", Data.DecalMaterialID, Data.DecalTextureID));
-                if (Data.isMonkeyBall)
-                {
-                    text.Add(string.Format("Unk 1: ID 1: {0:X8}; Material ID: {1:X8}", Data.UnkTextureID_1, Data.UnkMaterialID_1));
-                    text.Add(string.Format("Unk 2: ID 2: {0:X8}; Material ID: {1:X8}", Data.UnkTextureID_2, Data.UnkMaterialID_2));
-                    text.Add(string.Format("Unk 3: ID 3: {0:X8}; Material ID: {1:X8}", Data.UnkTextureID_3, Data.UnkMaterialID_3));
-                }
             }
 
-            text.Add($"Particle Definitions: {Data.ParticleTypes.Count}");
-            text.Add($"Particle Instances: {Data.ParticleInstances.Count}");
-            text.Add($"Remain length: {Data.Remain.Length}");
-            text.Add($"Definitions:");
+            text.Add($"Particle Types: {Data.ParticleTypes.Count}");
             for (int i = 0; i < Data.ParticleTypes.Count; i++)
             {
                 ParticleData.ParticleSystemDefinition PS = Data.ParticleTypes[i];
                 text.Add($"#{i} Name: {PS.Name} ");
-                /*
+
+                if (Data.Version == 0x20) text.Add($"\tGenRate: {PS.UnkByte1} ");
                 text.Add($"\tGenRate: {PS.GenRate} ");
                 text.Add($"\tMax Particle Count: {PS.MaxParticleCount} ");
                 text.Add($"\tUnkUShort3: {PS.UnkUShort3} ");
@@ -76,11 +60,11 @@ namespace TwinsaityEditor
                 text.Add($"\tTexture Filtering: {PS.TextureFilter} ");
                 text.Add($"\tUnkByte5: {PS.UnkByte5} ");
                 text.Add($"\tUnkFloat1: {PS.UnkFloat1} ");
-                text.Add($"\tCutOn Radius: {PS.CutOnRadius} ");
-                text.Add($"\tCutOff Radius: {PS.CutOffRadius} ");
-                text.Add($"\tDraw CutOff: {PS.DrawCutOff} ");
-                text.Add($"\tUnkFloat5: {PS.UnkFloat5} ");
-                text.Add($"\tUnkFloat6: {PS.UnkFloat6} ");
+                if (Data.Version >= 0x6) text.Add($"\tCutOn Radius: {PS.CutOnRadius} ");
+                if (Data.Version >= 0x6) text.Add($"\tCutOff Radius: {PS.CutOffRadius} ");
+                if (Data.Version >= 0xA) text.Add($"\tDraw CutOff: {PS.DrawCutOff} ");
+                if (Data.Version > 0x16) text.Add($"\tUnkFloat5: {PS.UnkFloat5} ");
+                if (Data.Version >= 0x18) text.Add($"\tUnkFloat6: {PS.UnkFloat6} ");
                 text.Add($"\tVelocity: {PS.Velocity} ");
                 text.Add($"\tRandom Emit X: {PS.Random_Emit_X} ");
                 text.Add($"\tRandom Emit Y: {PS.Random_Emit_Y} ");
@@ -110,70 +94,91 @@ namespace TwinsaityEditor
                 text.Add($"\tJibberXAmp: {PS.JibberXAmp} ");
                 text.Add($"\tJibberYFreq: {PS.JibberYFreq} ");
                 text.Add($"\tJibberYAmp: {PS.JibberYAmp} ");
-                for (int a = 0; a < PS.UnkVecs.Length; a++)
+                for (int a = 0; a < PS.ColorGradient.Length; a++)
                 {
-                    text.Add($"\tUnkVecs {a}: {PS.UnkVecs[a].X}; {PS.UnkVecs[a].Y}; {PS.UnkVecs[a].Z}; {PS.UnkVecs[a].W}");
+                    text.Add($"\tColor {a}: Time: {PS.ColorGradient[a].X}; R: {PS.ColorGradient[a].Y}; G: {PS.ColorGradient[a].Z}; B: {PS.ColorGradient[a].W}");
                 }
-                for (int a = 0; a < PS.UnkLongs1.Length; a++)
+                for (int a = 0; a < PS.AlphaGradientTime.Length; a++)
                 {
-                    text.Add($"\tUnkLongs1 {a}: {PS.UnkLongs1[a]}");
+                    text.Add($"\tAlpha {a}: Time: {PS.AlphaGradientTime[a]} Value: {PS.AlphaGradientValue[a]}");
                 }
-                text.Add($"\tUnkFloat27: {PS.UnkFloat27} ");
-                text.Add($"\tUnkFloat28: {PS.UnkFloat28} ");
-                text.Add($"\tUnkFloat29: {PS.UnkFloat29} ");
-                text.Add($"\tUnkFloat30: {PS.UnkFloat30} ");
-                for (int a = 0; a < PS.UnkLongs2.Length; a++)
+                if (Data.Version >= 0x15) text.Add($"\tDistortionX: {PS.DistortionX} ");
+                if (Data.Version >= 0x15) text.Add($"\tDistortionY: {PS.DistortionY} ");
+                text.Add($"\tMinSize: {PS.MinSize} ");
+                text.Add($"\tMaxSize: {PS.MaxSize} ");
+                for (int a = 0; a < PS.SizeWidthTime.Length; a++)
                 {
-                    text.Add($"\tUnkLongs2 {a}: {PS.UnkLongs2[a]}");
+                    text.Add($"\tSizeWidth {a}: Time: {PS.SizeWidthTime[a]} Value: {PS.SizeWidthValue[a]}");
                 }
-                for (int a = 0; a < PS.UnkLongs3.Length; a++)
+                for (int a = 0; a < PS.SizeHeightTime.Length; a++)
                 {
-                    text.Add($"\tUnkLongs3 {a}: {PS.UnkLongs3[a]}");
+                    text.Add($"\tSizeHeight {a}: Time: {PS.SizeHeightTime[a]} Value: {PS.SizeHeightValue[a]}");
                 }
-                text.Add($"\tUnkFloat31: {PS.UnkFloat31} ");
-                text.Add($"\tUnkFloat32: {PS.UnkFloat32} ");
-                for (int a = 0; a < PS.UnkLongs4.Length; a++)
+                text.Add($"\tMinRotation (deg): {PS.MinRotation} ");
+                text.Add($"\tMaxRotation (deg): {PS.MaxRotation} ");
+                for (int a = 0; a < PS.RotationTime.Length; a++)
                 {
-                    text.Add($"\tUnkLongs4 {a}: {PS.UnkLongs4[a]}");
+                    text.Add($"\tRotation {a}: Time: {PS.RotationTime[a]} Value: {PS.RotationValue[a]} ({PS.RotationValue[a] * 360f / 65535f} deg)");
                 }
-                for (int a = 0; a < PS.UnkLongs5.Length; a++)
+                for (int a = 0; a < PS.UnkGradient1Time.Length; a++)
                 {
-                    text.Add($"\tUnkLongs5 {a}: {PS.UnkLongs6[a]}");
+                    text.Add($"\tUnkGrad1 {a}: Time: {PS.UnkGradient1Time[a]} Value: {PS.UnkGradient1Value[a]}");
                 }
-                for (int a = 0; a < PS.UnkLongs6.Length; a++)
+                for (int a = 0; a < PS.UnkGradient2Time.Length; a++)
                 {
-                    text.Add($"\tUnkLongs6 {a}: {PS.UnkLongs6[a]}");
+                    text.Add($"\tUnkGrad2 {a}: Time: {PS.UnkGradient2Time[a]} Value: {PS.UnkGradient2Value[a]}");
                 }
-                text.Add($"\tUnkFloat33: {PS.UnkFloat33} ");
-                text.Add($"\tUnkFloat34: {PS.UnkFloat34} ");
-                text.Add($"\tUnkFloat35: {PS.UnkFloat35} ");
-                text.Add($"\tUnkFloat36: {PS.UnkFloat36} ");
-                for (int a = 0; a < PS.UnkLongs7.Length; a++)
+                if (PS.TextureStartX >= 524288f)
+                    text.Add($"\tTextureStartX: {PS.TextureStartX - 524288f} / {PS.TextureStartX} F2");
+                else
+                    text.Add($"\tTextureStartX: {PS.TextureStartX - 262144f} / {PS.TextureStartX} F1");
+                if (PS.TextureStartY >= 524288f)
+                    text.Add($"\tTextureStartY: {PS.TextureStartY - 524288f} / {PS.TextureStartY} F2");
+                else
+                    text.Add($"\tTextureStartY: {PS.TextureStartY - 262144f} / {PS.TextureStartY} F1");
+                if (PS.TextureEndX >= 524288f)
+                    text.Add($"\tTextureEndX: {PS.TextureEndX - 524288f} / {PS.TextureEndX} F2");
+                else
+                    text.Add($"\tTextureEndX: {PS.TextureEndX - 262144f} / {PS.TextureEndX} F1");
+                if (PS.TextureEndY >= 524288f)
+                    text.Add($"\tTextureEndY: {PS.TextureEndY - 524288f} / {PS.TextureEndY} F2");
+                else
+                    text.Add($"\tTextureEndY: {PS.TextureEndY - 262144f} / {PS.TextureEndY} F1");
+                if (Data.Version >= 0x3)
                 {
-                    text.Add($"\tUnkLongs7 {a}: {PS.UnkLongs7[a]}");
+                    for (int a = 0; a < PS.CollisionTime.Length; a++)
+                    {
+                        text.Add($"\tCollision {a}: Time: {PS.CollisionTime[a]} Value: {PS.CollisionValue[a]}");
+                    }
                 }
-                text.Add($"\tUnkByte8: {PS.UnkByte8} ");
-                text.Add($"\tUnkByte9: {PS.UnkByte9} ");
-                text.Add($"\tPadAmount: {PS.padAmount} ");
-                text.Add($"\tUnkFloat37: {PS.UnkFloat37} ");
-                for (int a = 0; a < PS.UnkShorts.Length; a++)
+                if (Data.Version >= 0x3) text.Add($"\tCollisionNumSpheres: {PS.CollisionNumSpheres} ");
+                if (Data.Version >= 0x11) text.Add($"\tUnkByte9: {PS.UnkByte9} ");
+                if (Data.Version > 0x16 && Data.Version < 0x1D) text.Add($"\tPadAmount: {PS.padAmount} ");
+                if (Data.Version > 0x1B) text.Add($"\tUnkFloat37: {PS.UnkFloat37} ");
+                if (Data.Version >= 0x10) text.Add($"\tAttachedSoundID: {PS.AttachedSoundID}");
+                if (Data.Version >= 0x10) text.Add($"\tUnkFloat38: {PS.UnkFloat38} ");
+                if (Data.Version >= 0x19) text.Add($"\tUnkShort2: {PS.UnkShort2}");
+                if (Data.Version >= 0x19) text.Add($"\tUnkFloat39: {PS.UnkFloat39} ");
+                if (Data.Version >= 0x1A) text.Add($"\tUnkFloat40: {PS.UnkFloat40} ");
+                if (Data.Version > 0x1A) text.Add($"\tTexture Page: {PS.TexturePage} ");
+                if (Data.Version >= 0x1E) text.Add($"\tUnkVec3: {PS.UnkVec3.X}; {PS.UnkVec3.Y}; {PS.UnkVec3.Z}; {PS.UnkVec3.W}");
+                if (Data.Version <= 0x15)
                 {
-                    text.Add($"\tUnkShorts {a}: {PS.UnkShorts[a]}");
+                    for (int a = 0; a < PS.SoundIDs.Length; a++)
+                    {
+                        text.Add($"\tSound {a}: ID: {PS.SoundIDs[a]} Type: {PS.SoundTypes[a]} Delay: {PS.SoundDelays[a]}");
+                    }
                 }
-                text.Add($"\tUnkFloat38: {PS.UnkFloat38} ");
-                text.Add($"\tUnkFloat39: {PS.UnkFloat39} ");
-                text.Add($"\tUnkFloat40: {PS.UnkFloat40} ");
-                text.Add($"\tUnkInt: {PS.UnkInt} ");
-                text.Add($"\tUnkVec3: {PS.UnkVec3.X}; {PS.UnkVec3.Y}; {PS.UnkVec3.Z}; {PS.UnkVec3.W}");
-                */
 
             }
-            text.Add($"Instances:");
+            text.Add($"Particle Instances: {Data.ParticleInstances.Count}");
             for (int i = 0; i < Data.ParticleInstances.Count; i++)
             {
                 var PI = Data.ParticleInstances[i];
-                text.Add($"#{i} Name: {PI.Name} Pos: {PI.Position.X}; {PI.Position.Y}; {PI.Position.Z} Rot: {PI.EmitRotX}; {PI.EmitRotY}");
-                /* Not altered in vanilla chunks:
+                text.Add($"#{i} Name: {PI.Name}");
+                text.Add($"#{i} Pos: {PI.Position.X}; {PI.Position.Y}; {PI.Position.Z}");
+                text.Add($"#{i} Rot: {PI.EmitRotX}; {PI.EmitRotY}");
+                /* Not altered:
                 text.Add($"#{i} Gravity Rot: {PI.GravityRotX}; {PI.GravityRotY}");
                 text.Add($"#{i} Offset: {PI.Offset} UnkShort5: {PI.UnkShort5}");
                 text.Add($"#{i} SwitchType: {PI.SwitchType} SwitchID: {PI.SwitchID} SwitchValue: {PI.SwitchValue}");
@@ -181,7 +186,7 @@ namespace TwinsaityEditor
                 text.Add($"#{i} UnkShort6: {PI.UnkShort6} UnkShort7: {PI.UnkShort7}");
                 */
             }
-            
+            text.Add($"Remain length: {Data.Remain.Length}");
             /*
             string remainText = "";
             for (int i = 0; i < Data.Remain.Length; i++)
@@ -190,8 +195,6 @@ namespace TwinsaityEditor
             }
             text.Add(remainText);
             */
-
-
 
             TextPrev = text.ToArray();
         }
