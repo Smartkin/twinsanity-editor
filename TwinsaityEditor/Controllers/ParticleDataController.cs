@@ -152,17 +152,17 @@ namespace TwinsaityEditor
                     }
                 }
                 if (Data.Version >= 0x3) text.Add($"\tCollisionNumSpheres: {PS.CollisionNumSpheres} ");
-                if (Data.Version >= 0x11) text.Add($"\tUnkByte9: {PS.UnkByte9} ");
+                if (Data.Version >= 0x11) text.Add($"\tDrawFlag: {PS.DrawFlag} ");
                 if (Data.Version > 0x16 && Data.Version < 0x1D) text.Add($"\tPadAmount: {PS.padAmount} ");
-                if (Data.Version > 0x1B) text.Add($"\tUnkFloat37: {PS.UnkFloat37} ");
-                if (Data.Version >= 0x10) text.Add($"\tAttachedSoundID: {PS.AttachedSoundID}");
-                if (Data.Version >= 0x10) text.Add($"\tUnkFloat38: {PS.UnkFloat38} ");
-                if (Data.Version >= 0x19) text.Add($"\tUnkShort2: {PS.UnkShort2}");
-                if (Data.Version >= 0x19) text.Add($"\tUnkFloat39: {PS.UnkFloat39} ");
-                if (Data.Version >= 0x1A) text.Add($"\tUnkFloat40: {PS.UnkFloat40} ");
+                if (Data.Version > 0x1B) text.Add($"\tScaleFactor: {PS.ScaleFactor} ");
+                if (Data.Version >= 0x10) text.Add($"\tGhostsNum: {PS.ParticleGhostsNum}");
+                if (Data.Version >= 0x10) text.Add($"\tGhostSeparation: {PS.GhostSeparation} ");
+                if (Data.Version >= 0x19) text.Add($"\tStarRadialPoints: {PS.StarRadialPoints}");
+                if (Data.Version >= 0x19) text.Add($"\tStarRadiusRatio: {PS.StarRadiusRatio} ");
+                if (Data.Version >= 0x1A) text.Add($"\tRampTime: {PS.RampTime} ");
                 if (Data.Version > 0x1A) text.Add($"\tTexture Page: {PS.TexturePage} ");
                 if (Data.Version >= 0x1E) text.Add($"\tUnkVec3: {PS.UnkVec3.X}; {PS.UnkVec3.Y}; {PS.UnkVec3.Z}; {PS.UnkVec3.W}");
-                if (Data.Version <= 0x15)
+                if (Data.Version >= 0xB && Data.Version <= 0x15)
                 {
                     for (int a = 0; a < PS.SoundIDs.Length; a++)
                     {

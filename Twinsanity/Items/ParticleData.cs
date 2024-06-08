@@ -11,6 +11,13 @@ namespace Twinsanity
 
         public long DataSize;
 
+        // TWOC proto - 9/10
+        // TWOC - 11/13/15
+        // Twins Proto - 21
+        // Nemo - 26
+        // Twins Demo/Some Final PTL files - 28
+        // Twins Final/SMBA - 30
+        // LSW/Narnia - 34
         public uint Version;
         public List<ParticleSystemDefinition> ParticleTypes = new List<ParticleSystemDefinition>();
         public List<ParticleSystemInstance> ParticleInstances = new List<ParticleSystemInstance>();
@@ -79,6 +86,7 @@ namespace Twinsanity
                     count += ParticleTypes[i].padAmount * 24;
                 }
             }
+            if (Version >= 0xB && Version <= 0x15) count += 0x30;
 
             for (int i = 0; i < ParticleTypes.Count; i++)
             {
@@ -283,7 +291,7 @@ namespace Twinsanity
                     }
                     if (Version >= 0x11)
                     {
-                        writer.Write(PS.UnkByte9);
+                        writer.Write((byte)PS.DrawFlag);
                     }
                     if (Version == 0x20)
                     {
@@ -306,14 +314,14 @@ namespace Twinsanity
                     {
                         if (Version == 0x20)
                         {
-                            writer.Write(PS.UnkFloat37);
+                            writer.Write(PS.ScaleFactor);
                             for (var i = 0; i < 11; ++i)
                             {
                                 writer.Write(0);
                             }
                         }
                     }
-                    if (Version <= 0x15) // TWOC / Proto PTL
+                    if (Version >= 0xB && Version <= 0x15) // TWOC / Proto PTL
                     {
                         for (int s = 0; s < 4; s++)
                         {
@@ -326,24 +334,24 @@ namespace Twinsanity
                     {
                         if (Version == 0x20)
                         {
-                            writer.Write(PS.AttachedSoundID);
+                            writer.Write(PS.ParticleGhostsNum);
                             writer.Write((Byte)0);
                             writer.Write((Byte)0);
                         }
                         else
                         {
-                            writer.Write((Int32)PS.AttachedSoundID);
+                            writer.Write((Int32)PS.ParticleGhostsNum);
                         }
-                        writer.Write(PS.UnkFloat38);
+                        writer.Write(PS.GhostSeparation);
                     }
                     if (Version >= 0x19 && Version != 0x20)
                     {
-                        writer.Write((Int32)PS.UnkShort2);
-                        writer.Write(PS.UnkFloat39);
+                        writer.Write((Int32)PS.StarRadialPoints);
+                        writer.Write(PS.StarRadiusRatio);
                     }
                     if (Version >= 0x1A && Version != 0x20)
                     {
-                        writer.Write(PS.UnkFloat40);
+                        writer.Write(PS.RampTime);
                     }
                     if (Version != 0x20)
                     {
@@ -353,7 +361,7 @@ namespace Twinsanity
                         }
                         if (Version > 0x1B)
                         {
-                            writer.Write(PS.UnkFloat37);
+                            writer.Write(PS.ScaleFactor);
                         }
                     }
                     if (Version >= 0x1E)
@@ -677,11 +685,11 @@ namespace Twinsanity
                     }
                     if (Version >= 0x11)
                     {
-                        PS.UnkByte9 = reader.ReadByte();
+                        PS.DrawFlag = (ParticleSystemDefinition.DrawFlags)reader.ReadByte();
                     }
                     if (PS.TextureFilter == ParticleSystemDefinition.TextureFiltering.Glass)
                     {
-                        PS.UnkByte9 = 2;
+                        PS.DrawFlag = ParticleSystemDefinition.DrawFlags.GlassRelated;
                     }
                     if (Version == 0x20)
                     {
@@ -699,14 +707,13 @@ namespace Twinsanity
                     {
                         if (Version == 0x20)
                         {
-                            PS.UnkFloat37 = reader.ReadSingle();
+                            PS.ScaleFactor = reader.ReadSingle();
                             reader.ReadBytes(44);
                         }
                     }
-                    if (Version <= 0x15)
+                    if (Version >= 0xB && Version <= 0x15)
                     {
-                        // TWOC could attach up to 4 sounds here, but version 16 changed it to one sound ID keeping this as legacy for converting
-                        // later this got removed entirely
+                        // TWOC could attach up to 4 sounds here
                         for (int s = 0; s < 4; s++)
                         {
                             PS.SoundIDs[s] = reader.ReadInt32();
@@ -714,32 +721,32 @@ namespace Twinsanity
                             PS.SoundDelays[s] = reader.ReadUInt32();
                         }
                     }
-                    PS.AttachedSoundID = 0;
-                    PS.UnkFloat38 = 0;
+                    PS.ParticleGhostsNum = 0;
+                    PS.GhostSeparation = 0;
                     if (Version >= 0x10)
                     {
                         if (Version == 0x20)
                         {
-                            PS.AttachedSoundID = reader.ReadInt16();
+                            PS.ParticleGhostsNum = reader.ReadInt16();
                             reader.ReadBytes(2);
                         }
                         else
                         {
-                            PS.AttachedSoundID = (Int16)reader.ReadInt32();
+                            PS.ParticleGhostsNum = (Int16)reader.ReadInt32();
                         }
-                        PS.UnkFloat38 = reader.ReadSingle();
+                        PS.GhostSeparation = reader.ReadSingle();
                     }
-                    PS.UnkShort2 = 5;
-                    PS.UnkFloat39 = 0.5f;
+                    PS.StarRadialPoints = 5;
+                    PS.StarRadiusRatio = 0.5f;
                     if (Version >= 0x19 && Version != 0x20)
                     {
-                        PS.UnkShort2 = (Int16)reader.ReadInt32();
-                        PS.UnkFloat39 = reader.ReadSingle();
+                        PS.StarRadialPoints = (Int16)reader.ReadInt32();
+                        PS.StarRadiusRatio = reader.ReadSingle();
                     }
-                    PS.UnkFloat40 = 0;
+                    PS.RampTime = 0;
                     if (Version >= 0x1A && Version != 0x20)
                     {
-                        PS.UnkFloat40 = reader.ReadSingle();
+                        PS.RampTime = reader.ReadSingle();
                     }
                     if (Version != 0x20)
                     {
@@ -749,7 +756,7 @@ namespace Twinsanity
                         }
                         if (Version > 0x1B)
                         {
-                            PS.UnkFloat37 = reader.ReadSingle();
+                            PS.ScaleFactor = reader.ReadSingle();
                         }
                     }
                     if (Version >= 0x1E)
@@ -968,19 +975,19 @@ namespace Twinsanity
             non-zero creates a HOLLOW sphere from emit point that grows according to gradient then resets to min point,
             more spheres create more spheres at halfway size and positon step of the next bigger one, 
             collision deals damage, travels towards emit direction with velocity speed (ignores Rand_Emit/Rand_Start values?)*/
-            public Byte UnkByte9; // Version >= 0x11, always 0, setting to non-zero disables it?
-            public Int32 padAmount; // Version > 0x16 && Version < 0x1D (not used in any existing files)
-            public Single UnkFloat37; // Version > 0x1B
-            public short AttachedSoundID; // Version >= 0x10
-            public Single UnkFloat38; // Version >= 0x10, sound related?
-            public Int16 UnkShort2; // Version >= 0x19, always 5 (0 in editor created types that weren't edited)
-            public Single UnkFloat39; // Version >= 0x19, always 0.5 (0 in editor created types that weren't edited)
-            public Single UnkFloat40; // Version >= 0x1A, always 0
+            public DrawFlags DrawFlag; // Version >= 0x11, always 0
+            public Int32 padAmount; // Version > 0x16 && Version < 0x1D, always 0
+            public float ScaleFactor; // Version > 0x1B, scales the particles
+            public short ParticleGhostsNum; // Version >= 0x10
+            public float GhostSeparation; // Version >= 0x10
+            public short StarRadialPoints; // Version >= 0x19, default 5
+            public float StarRadiusRatio; // Version >= 0x19, default 0.5
+            public float RampTime; // Version >= 0x1A, always 0, time to ramp up radial emit shape to full size
             public int TexturePage; // Version > 0x1A, (0-2)
             public TwinsVector4 UnkVec3; // Version >= 0x1E, W always 0
-            public int[] SoundIDs; // Version <= 0x15
-            public SoundControl[] SoundTypes; // Version <= 0x15
-            public uint[] SoundDelays; // Version <= 0x15
+            public int[] SoundIDs; // Version >= 0xB && Version <= 0x15 (TWOC/Proto only)
+            public SoundControl[] SoundTypes; // Version >= 0xB && Version <= 0x15 (TWOC/Proto only)
+            public uint[] SoundDelays; // Version >= 0xB && Version <= 0x15 (TWOC/Proto only)
 
 
             public enum GenSort
@@ -997,7 +1004,7 @@ namespace Twinsanity
                 BounceY = 0x09, // bounces vertically for a bit after spawning?
                 BounceXZ = 0x0A,
                 ImprovedRadial = 0x0B, // radial but distance is on X axis instead of Y axis, proto or newer
-                StarRadial, // unk value, final game or newer (not used?)
+                StarRadial = 0x0C, // emit from shape of a star, final game or newer (not used?) (random rot Y 180, base rot Z 90, base mag 1)
             }
 
             public enum GenCode
@@ -1009,6 +1016,8 @@ namespace Twinsanity
                 // 4 wind-like very small and fast
                 // 5 nothing?
                 // 6 grounded very small?
+                None,
+                Pos,
                 PosRev,
                 Splash,
                 AshRock,
@@ -1035,6 +1044,14 @@ namespace Twinsanity
                 OffEdge = 2,
                 PerParticle = 3,
                 Regular = 4,
+            }
+
+            public enum DrawFlags
+            {
+                AfterFog = 0,
+                BeforeFog = 1,
+                GlassRelated = 2,
+                SuperEarly = 3,
             }
 
             public ParticleSystemDefinition()

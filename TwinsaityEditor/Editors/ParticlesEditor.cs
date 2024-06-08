@@ -212,8 +212,8 @@ namespace TwinsaityEditor
                 TextureStartY = 524288f,
                 TextureEndX = 524416f,
                 TextureEndY = 524416f,
-                UnkShort2 = 5,
-                UnkFloat39 = 0.5f,
+                StarRadialPoints = 5,
+                StarRadiusRatio = 0.5f,
                 UnkVec3 = new TwinsVector4(0.7500094f, 0.7500094f, 0.7500094f, 0f),
             };
             partdef.ColorGradient[0] = new TwinsVector4(0f, 64f, 64f, 64f);
@@ -450,13 +450,14 @@ namespace TwinsaityEditor
                 numericUpDown103.Value = (decimal)CurDef.TextureEndY;
 
             numericUpDown104.Value = (decimal)CurDef.CollisionNumSpheres;
-            numericUpDown105.Value = (decimal)CurDef.UnkByte9;
-            numericUpDown106.Value = (decimal)CurDef.UnkFloat37;
-            numericUpDown107.Value = (decimal)CurDef.AttachedSoundID;
-            numericUpDown108.Value = (decimal)CurDef.UnkShort2;
-            numericUpDown109.Value = (decimal)CurDef.UnkFloat38;
-            numericUpDown110.Value = (decimal)CurDef.UnkFloat39;
-            numericUpDown111.Value = (decimal)CurDef.UnkFloat40;
+            //numericUpDown105.Value = (decimal)CurDef.DrawFlag;
+            comboBox3.SelectedIndex = (int)CurDef.DrawFlag;
+            numericUpDown106.Value = (decimal)CurDef.ScaleFactor;
+            numericUpDown107.Value = (decimal)CurDef.ParticleGhostsNum;
+            numericUpDown108.Value = (decimal)CurDef.StarRadialPoints;
+            numericUpDown109.Value = (decimal)CurDef.GhostSeparation;
+            numericUpDown110.Value = (decimal)CurDef.StarRadiusRatio;
+            numericUpDown111.Value = (decimal)CurDef.RampTime;
             numericUpDown112.Value = (decimal)CurDef.TexturePage;
             numericUpDown113.Value = (decimal)CurDef.UnkVec3.X;
             numericUpDown114.Value = (decimal)CurDef.UnkVec3.Y;
@@ -1264,44 +1265,44 @@ namespace TwinsaityEditor
 
         private void numericUpDown105_ValueChanged(object sender, EventArgs e)
         {
-            if (ignore_value_change) return;
-            CurDef.UnkByte9 = (byte)numericUpDown105.Value;
+            //if (ignore_value_change) return;
+            //CurDef.DrawFlag = (ParticleData.ParticleSystemDefinition.DrawFlags)numericUpDown105.Value;
         }
 
         private void numericUpDown106_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            CurDef.UnkFloat37 = (float)numericUpDown94.Value;
+            CurDef.ScaleFactor = (float)numericUpDown106.Value;
         }
 
         private void numericUpDown107_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            CurDef.AttachedSoundID = (short)numericUpDown107.Value;
+            CurDef.ParticleGhostsNum = (short)numericUpDown107.Value;
         }
 
         private void numericUpDown108_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            CurDef.UnkShort2 = (short)numericUpDown108.Value;
+            CurDef.StarRadialPoints = (short)numericUpDown108.Value;
         }
 
         private void numericUpDown109_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            CurDef.UnkFloat38 = (float)numericUpDown109.Value;
+            CurDef.GhostSeparation = (float)numericUpDown109.Value;
         }
 
         private void numericUpDown110_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            CurDef.UnkFloat39 = (float)numericUpDown110.Value;
+            CurDef.StarRadiusRatio = (float)numericUpDown110.Value;
         }
 
         private void numericUpDown111_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            CurDef.UnkFloat40 = (float)numericUpDown111.Value;
+            CurDef.RampTime = (float)numericUpDown111.Value;
         }
 
         private void numericUpDown112_ValueChanged(object sender, EventArgs e)
@@ -2004,6 +2005,12 @@ namespace TwinsaityEditor
         {
             if (ignore_value_change) return;
             CurDef.UnkGradient2Value[7] = (float)numericUpDown228.Value;
+        }
+
+        private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ignore_value_change) return;
+            CurDef.DrawFlag = (ParticleData.ParticleSystemDefinition.DrawFlags)comboBox3.SelectedIndex;
         }
     }
 }
