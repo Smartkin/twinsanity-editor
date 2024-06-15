@@ -29,7 +29,16 @@ namespace TwinsaityEditor
         private Form editObjects;
         private Form editAnimations;
         private Form editParticles;
-        private readonly Form[] editInstances = new Form[9], editPositions = new Form[9], editPaths = new Form[9], editTriggers = new Form[9], editCameras = new Form[9];
+        private Form editID;
+        private Form editCustomAgent;
+        private Form editMaterial;
+        private Form editLod;
+        private Form editSkydome;
+        private Form editScenery;
+        private Form editOGI;
+        private Form editDynScenery;
+        private readonly Form[] editInstances = new Form[9], editPositions = new Form[9], editPaths = new Form[9],
+            editTriggers = new Form[9], editCameras = new Form[9], editAIPositions = new Form[9], editAIPaths = new Form[9], editSurfaces = new Form[9];
 
         //Viewers
         private Form colForm;
@@ -148,6 +157,14 @@ namespace TwinsaityEditor
             CloseEditor(Editors.Script);
             CloseEditor(Editors.Animation);
             CloseEditor(Editors.Particles);
+            CloseEditor(Editors.ID);
+            CloseEditor(Editors.CustomAgent);
+            CloseEditor(Editors.Material);
+            CloseEditor(Editors.LodModel);
+            CloseEditor(Editors.Skydome);
+            CloseEditor(Editors.Scenery);
+            CloseEditor(Editors.OGI);
+            CloseEditor(Editors.DynamicScenery);
             for (int i = 0; i <= 7; ++i)
             {
                 CloseEditor(Editors.Instance, i);
@@ -155,6 +172,9 @@ namespace TwinsaityEditor
                 CloseEditor(Editors.Path, i);
                 CloseEditor(Editors.Trigger, i);
                 CloseEditor(Editors.Camera, i);
+                CloseEditor(Editors.AIPosition, i);
+                CloseEditor(Editors.AIPath, i);
+                CloseEditor(Editors.Surface, i);
             }
             Data = DataAux = DataDefault = null;
         }
@@ -236,6 +256,7 @@ namespace TwinsaityEditor
                     case Editors.Script: editor_var_ptr = new ScriptEditor((SectionController)cont) { Tag = TopForm }; break;
                     case Editors.Object: editor_var_ptr = new ObjectEditor((SectionController)cont) { Tag = TopForm }; break;
                     case Editors.Animation: editor_var_ptr = new AnimationEditor((SectionController)cont) { Tag = TopForm }; break;
+                    case Editors.ID: editor_var_ptr = new IDEditor((ItemController)cont) { Tag = TopForm }; break;
                 }
                 editor_var_ptr.Show();
             }
@@ -258,6 +279,7 @@ namespace TwinsaityEditor
                 case Editors.Script: editorForm = editScripts; break;
                 case Editors.Animation: editorForm = editAnimations; break;
                 case Editors.Particles: editorForm = editParticles; break;
+                case Editors.ID: editorForm = editID; break;
             }
             CloseForm(editorForm);
         }
@@ -853,6 +875,11 @@ namespace TwinsaityEditor
                     return null;
             }
             else throw new System.ArgumentException("The requested section does not have an object instance section.");
+        }
+
+        public void OpenIDEditor(ItemController c)
+        {
+            OpenEditor(ref editID, Editors.ID, c);
         }
     }
 }

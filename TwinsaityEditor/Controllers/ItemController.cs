@@ -13,6 +13,7 @@ namespace TwinsaityEditor
         {
             MainFile = TopForm.CurCont;
             Data = item;
+            AddMenu("Change ID", Menu_ChangeID);
             AddMenu("Extract raw data to file", Menu_ExtractItem);
             AddMenu("Replace raw data with new file", Menu_ReplaceItem);
             AddMenu("Remove item", Menu_RemoveItem);
@@ -108,5 +109,12 @@ namespace TwinsaityEditor
                 UpdateText();
             }
         }
+
+        private void Menu_ChangeID()
+        {
+            MainFile.OpenIDEditor(this);
+        }
+
+        public string GetItemName() => GetName();
     }
 }

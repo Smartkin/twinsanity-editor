@@ -245,6 +245,12 @@
     <Compile Include="Editors\ChunkLinksEditor.Designer.cs">
       <DependentUpon>ChunkLinksEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Editors\IDEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\IDEditor.Designer.cs">
+      <DependentUpon>IDEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Editors\InstanceEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -413,6 +419,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\ChunkLinksEditor.resx">
       <DependentUpon>ChunkLinksEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\IDEditor.resx">
+      <DependentUpon>IDEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\InstanceEditor.resx">
       <DependentUpon>InstanceEditor.cs</DependentUpon>

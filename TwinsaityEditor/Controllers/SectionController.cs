@@ -16,6 +16,7 @@ namespace TwinsaityEditor
         {
             MainFile = TopForm.CurCont;
             Data = item;
+            AddMenu("Add item from raw data file", Menu_AddFromFile);
             if (item.Type != SectionType.Texture && item.Type != SectionType.TextureX
                 && item.Type != SectionType.Material && item.Type != SectionType.Model
                 && item.Type != SectionType.ModelX && item.Type != SectionType.RigidModel
@@ -392,5 +393,29 @@ namespace TwinsaityEditor
             DefaultHashes.DefaultNames = !DefaultHashes.DefaultNames;
             RefreshSection();
         }
+
+        private void Menu_AddFromFile()
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                uint id = 0;
+                if (Data.Records.Count > 0)
+                {
+                    id = Data.Records[Data.Records.Count - 1].ID + 1;
+                }
+                TwinsItem item = new TwinsItem() { ID = id };
+
+                BinaryReader reader = new BinaryReader(new FileStream(ofd.FileName, FileMode.Open, FileAccess.Read));
+                item.Load(reader, (int)reader.BaseStream.Length);
+                reader.Close();
+
+                Data.AddItem(id, item);
+                TopForm.GenTreeNode(item, this);
+                UpdateText();
+                ((Controller)Node.Nodes[Data.RecordIDs[id]].Tag).UpdateText();
+            }
+        }
+
     }
 }

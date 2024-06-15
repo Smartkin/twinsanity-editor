@@ -83,5 +83,16 @@ namespace TwinsaityEditor
         Animation,
         Particles,
         InstanceMB,
+        ID,
+        CustomAgent,
+        Material,
+        LodModel,
+        Skydome,
+        AIPosition,
+        Scenery,
+        OGI,
+        AIPath,
+        Surface,
+        DynamicScenery,
     };
 }
