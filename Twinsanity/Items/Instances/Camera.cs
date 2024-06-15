@@ -7,18 +7,22 @@ namespace Twinsanity
     public class Camera : TwinsItem
     {
 
-        public uint Header { get; set; }
-        public uint Enabled { get; set; }
-        public float SomeFloat { get; set; }
-        public Pos[] Coords { get; set; } = new Pos[3]; // rot/pos/size
-        public uint SectionHead { get; set; }
-        public List<ushort> Instances { get; set; }
+        public uint Header { get; set; } = 1310720;
+        public uint Enabled { get; set; } = 1;
+        public float SomeFloat { get; set; } = 0.3f;
+        public Pos[] Coords { get; set; } = new Pos[3]{
+            new Pos(0,0,0,1),
+            new Pos(0,0,0,1),
+            new Pos(1,1,1,1),
+        }; // rot/pos/size
+        public uint SectionHead { get; set; } = 10;
+        public List<ushort> Instances { get; set; } = new List<ushort>();
 
         public uint CamHeader { get; set; }
         public ushort UnkShort { get; set; }
-        public float UnkFloat1 { get; set; }
-        public Pos UnkCoords1 { get; set; }
-        public Pos UnkCoords2 { get; set; }
+        public float UnkFloat1 { get; set; } = 1f;
+        public Pos UnkCoords1 { get; set; } = new Pos(0, 0, 0, 1);
+        public Pos UnkCoords2 { get; set; } = new Pos(0, 0, 0, 1);
         public float UnkFloat2 { get; set; }
         public float UnkFloat3 { get; set; }
         public uint UnkUInt1 { get; set; }
@@ -35,9 +39,9 @@ namespace Twinsanity
         public int UnkInt8 { get; set; }
         public uint UnkUInt9 { get; set; }
         public float UnkFloat8 { get; set; }
-        public uint CameraType1 { get; set; }
-        public uint CameraType2 { get; set; }
-        public object[] Cameras { get; set; } = new object[2];
+        public uint CameraType1 { get; set; } = 3;
+        public uint CameraType2 { get; set; } = 3;
+        public object[] Cameras { get; set; } = new object[2] { null, null };
         public byte UnkByte { get; set; }
 
         public enum CameraType : uint

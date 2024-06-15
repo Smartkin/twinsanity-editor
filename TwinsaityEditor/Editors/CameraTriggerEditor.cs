@@ -215,7 +215,7 @@ namespace TwinsaityEditor
                     break;
             }
             Camera new_trigger = new Camera { ID = id, Enabled = 1, Header = 1310720, SomeFloat = 0.3f, SectionHead = 10, Instances = new List<ushort>(),
-                Coords = new Pos[] { new Pos(0, 0, 0, 1), new Pos(0, 0, 0, 1), new Pos(0, 0, 0, 1) }, UnkCoords1 = new Pos(0,0,0,1), UnkCoords2 = new Pos(0,0,0,1),
+                Coords = new Pos[] { new Pos(0, 0, 0, 1), new Pos(0, 0, 0, 1), new Pos(1, 1, 1, 1) }, UnkCoords1 = new Pos(0,0,0,1), UnkCoords2 = new Pos(0,0,0,1),
                 CameraType1 = 3, CameraType2 = 3, UnkFloat1 = 1f};
             controller.Data.AddItem(id, new_trigger);
             ((MainForm)Tag).GenTreeNode(new_trigger, controller);

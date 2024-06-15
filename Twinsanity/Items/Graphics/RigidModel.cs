@@ -4,8 +4,8 @@ namespace Twinsanity
 {
     public class RigidModel : TwinsItem
     {
-        public uint Header { get; set; }
-        public uint[] MaterialIDs { get; set; }
+        public uint Header { get; set; } = 257;
+        public uint[] MaterialIDs { get; set; } = new uint[1] { 0 };
         public uint MeshID { get; set; }
 
         public override void Save(BinaryWriter writer)

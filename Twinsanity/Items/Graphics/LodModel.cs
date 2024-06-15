@@ -7,11 +7,11 @@ namespace Twinsanity
     public class LodModel : TwinsItem
     {
 
-        public uint Header;
-        public uint ModelsAmount;
+        public uint Header = 4098;
+        public uint ModelsAmount = 1;
         public uint Zero;
-        public uint[] LODDistance; // 4
-        public uint[] LODModelIDs; // 4
+        public uint[] LODDistance = new uint[4] { 1641631945, 1641631945, 1641631945, 1641631945 }; // 4
+        public uint[] LODModelIDs = new uint[1] { 0, }; // 4
 
         public LodModel()
         {

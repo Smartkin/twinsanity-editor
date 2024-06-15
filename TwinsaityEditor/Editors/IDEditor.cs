@@ -27,7 +27,7 @@ namespace TwinsaityEditor
             DataID = i.Data.ID;
             InitializeComponent();
             textBox1.Text = $"{DataID:X8}";
-            Text = $"ID Editor {i.GetItemName()}";
+            Text = $"ID Editor: {i.GetItemName()}";
             numericUpDown2.Value = DataID;
         }
 

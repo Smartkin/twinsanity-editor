@@ -26,7 +26,7 @@ namespace TwinsaityEditor
             }
             else
             {
-                return string.Format("Collision Surface [ID {0:X8}]", Data.ID);
+                return string.Format("Surface [ID {0:X8}]", Data.ID);
             }
 
 
@@ -49,7 +49,7 @@ namespace TwinsaityEditor
                 text.Add($"Type: { Data.SurfaceID }");
             }
 
-            text.Add("Flags:");
+            text.Add($"Flags: {Data.Flags[0]:X2} {Data.Flags[1]:X2} {Data.Flags[2]:X2} {Data.Flags[3]:X2}");
             for (int i = 0; i < Data.Flags.Length; i++)
             {
                 string flag = Convert.ToString(Data.Flags[i], 2);

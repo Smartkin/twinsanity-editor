@@ -57,9 +57,9 @@ namespace Twinsanity
                 case SectionType.Xbox_SE_Spa:
                     targetDict = Hash_Sounds;
                     break;
-                case SectionType.CodeModel:
-                case SectionType.CodeModelDemo:
-                case SectionType.CodeModelX:
+                case SectionType.CustomAgent:
+                case SectionType.CustomAgentDemo:
+                case SectionType.CustomAgentX:
                     targetDict = Hash_CustomAgents;
                     break;
                 case SectionType.Texture:

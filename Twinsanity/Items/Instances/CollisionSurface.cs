@@ -4,11 +4,22 @@ namespace Twinsanity
 {
     public class CollisionSurface : TwinsItem
     {
-        public byte[] Flags; //4
+        public byte[] Flags = new byte[4]{
+            0xF0,0xF0,0x1F,0x00
+        }; //4
         public ushort SurfaceID;
-        public ushort[] SoundIDs; //10
-        public Pos[] Floats; //4
-        public ushort[] UnkInts; //12
+        public ushort[] SoundIDs = new ushort[10] {
+            65535, 65535, 65535, 65535, 65535, 65535, 65535, 65535, 65535, 65535,
+        }; //10
+        public Pos[] Floats = new Pos[4] {
+            new Pos(0.2f,-1f,-1f,0.25f),
+            new Pos(0.15f,1000000f,1f,1f),
+            new Pos(0,0,0,0),
+            new Pos(0,1f,0,0)
+        }; //4
+        public ushort[] UnkInts = new ushort[12]{
+            0, 0, 0, 0, 0, 0, 52480, 52685, 52685, 52685, 52685, 52685
+        }; //12
 
         public override void Save(BinaryWriter writer)
         {

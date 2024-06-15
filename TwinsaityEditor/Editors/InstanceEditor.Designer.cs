@@ -879,7 +879,7 @@
             this.groupBox11.Size = new System.Drawing.Size(160, 122);
             this.groupBox11.TabIndex = 3;
             this.groupBox11.TabStop = false;
-            this.groupBox11.Text = "Flags";
+            this.groupBox11.Text = "Angles";
             // 
             // textBox7
             // 

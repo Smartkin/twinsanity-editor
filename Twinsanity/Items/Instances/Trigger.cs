@@ -5,7 +5,7 @@ namespace Twinsanity
 {
     public class Trigger : TwinsItem
     {
-        public uint Header { get; set; }
+        public uint Header { get; set; } = 50;
 
         public bool Arg1_Used
         {
@@ -204,11 +204,15 @@ namespace Twinsanity
             }
         }
 
-        public uint Enabled { get; set; }
-        public float SomeFloat { get; set; }
-        public Pos[] Coords { get; set; } = new Pos[3]; // rot/pos/size
-        public uint SectionHead { get; set; }
-        public List<ushort> Instances { get; set; }
+        public uint Enabled { get; set; } = 1;
+        public float SomeFloat { get; set; } = 0.3f;
+        public Pos[] Coords { get; set; } = new Pos[3]{
+            new Pos(0,0,0,1),
+            new Pos(0,0,0,1),
+            new Pos(1,1,1,1),
+        }; // rot/pos/size
+        public uint SectionHead { get; set; } = 10;
+        public List<ushort> Instances { get; set; } = new List<ushort>();
 
         public ushort Arg1 { get; set; }
         public ushort Arg2 { get; set; }

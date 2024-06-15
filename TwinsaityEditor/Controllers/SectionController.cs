@@ -16,44 +16,7 @@ namespace TwinsaityEditor
         {
             MainFile = TopForm.CurCont;
             Data = item;
-            AddMenu("Add item from raw data file", Menu_AddFromFile);
-            if (item.Type != SectionType.Texture && item.Type != SectionType.TextureX
-                && item.Type != SectionType.Material && item.Type != SectionType.Model
-                && item.Type != SectionType.ModelX && item.Type != SectionType.RigidModel
-                && item.Type != SectionType.Skin && item.Type != SectionType.BlendSkin && item.Type != SectionType.SkinX
-                && item.Type != SectionType.Mesh && item.Type != SectionType.LodModel
-                && item.Type != SectionType.Skydome && !(item is TwinsFile))
-            {
-                
-                if (item.Type == SectionType.ObjectInstance
-                    || item.Type == SectionType.AIPosition
-                    || item.Type == SectionType.AIPath
-                    || item.Type == SectionType.Position
-                    || item.Type == SectionType.Path
-                    || item.Type == SectionType.Trigger
-                    || item.Type == SectionType.Camera
-                    || item.Type == SectionType.Script
-                    || item.Type == SectionType.ScriptDemo
-                    || item.Type == SectionType.ScriptX
-                    || item.Type == SectionType.Object)
-                {
-                    AddMenu("Open editor", Menu_OpenEditor);
-                    AddMenu("Add new item", Menu_AddNew);
-                    AddMenu("Re-ID by order", Menu_ReIDByOrder);
-                }
-                else if (item.Type == SectionType.Instance)
-                {
-                    AddMenu("Clear instance section", Menu_ClearInstanceSection);
-                    AddMenu("Fill instance section", Menu_FillInstanceSection);
-                }
-                else if (item.Type >= SectionType.SE && item.Type <= SectionType.SE_Jpn)
-                {
-                    AddMenu("Extract extra data", Menu_ExtractExtraData);
-                    AddMenu("Add new item", Menu_AddNew);
-                }
-                AddMenu("Re-order by ID (asc.)", Menu_ReOrderByID_Asc);
-            }
-            else if (item is TwinsFile f)
+            if (item is TwinsFile f)
             {
                 if (f.Type == TwinsFile.FileType.RM2)
                 {
@@ -64,13 +27,27 @@ namespace TwinsaityEditor
             }
             else
             {
+                AddMenu("Open editor", Menu_OpenEditor);
                 AddMenu("Add new item", Menu_AddNew);
+                AddMenu("Add item from raw data file", Menu_AddFromFile);
+                AddMenu("Re-ID by order", Menu_ReIDByOrder);
+                AddMenu("Re-order by ID (asc.)", Menu_ReOrderByID_Asc);
                 AddMenu("Re-order by ID (desc.)", Menu_ReOrderByID_Desc);
+                if (item.Type == SectionType.Model || item.Type == SectionType.ModelX || item.Type == SectionType.RigidModel || item.Type == SectionType.Mesh)
+                {
+                    AddMenu("Export all meshes to PLY", Menu_ExportAllPLY);
+                }
+                else if (item.Type == SectionType.Instance)
+                {
+                    AddMenu("Clear instance section", Menu_ClearInstanceSection);
+                    AddMenu("Fill instance section", Menu_FillInstanceSection);
+                }
+                else if (item.Type >= SectionType.SE && item.Type <= SectionType.SE_Jpn)
+                {
+                    AddMenu("Extract extra data", Menu_ExtractExtraData);
+                }
             }
-            if (item.Type == SectionType.Model || item.Type == SectionType.ModelX || item.Type == SectionType.RigidModel || item.Type == SectionType.Mesh)
-            {
-                AddMenu("Export all meshes to PLY", Menu_ExportAllPLY);
-            }
+            
         }
 
         protected override string GetName()
@@ -134,29 +111,37 @@ namespace TwinsaityEditor
             TwinsItem newItem = null;
             switch (Data.Type)
             {
-                case SectionType.Texture:
-                    newItem = new Texture();
-                    break;
-                case SectionType.Material:
-                    newItem = new Material();
-                    break;
-                case SectionType.Model:
-                    newItem = new Model();
-                    break;
-                case SectionType.RigidModel:
-                    newItem = new RigidModel();
-                    break;
-                case SectionType.Skin:
-                    newItem = new Skin();
-                    break;
-                case SectionType.Object:
-                    newItem = new GameObject();
-                    break;
-                case SectionType.ScriptDemo:
-                case SectionType.ScriptX:
-                case SectionType.Script:
-                    newItem = new Script();
-                    break;
+                case SectionType.Texture: break;
+                case SectionType.TextureX: break;
+                case SectionType.TextureP: break;
+                case SectionType.Material: newItem = new Material(); break;
+                case SectionType.MaterialD: break;
+                case SectionType.Model:  break;
+                case SectionType.ModelX: break;
+                case SectionType.ModelP: break;
+                case SectionType.RigidModel: newItem = new RigidModel(); break;
+                case SectionType.Skin: break;
+                case SectionType.SkinX: break;
+                case SectionType.BlendSkin: break;
+                case SectionType.BlendSkinX: break;
+                case SectionType.Mesh: break;
+                case SectionType.LodModel: newItem = new LodModel(); break;
+                case SectionType.LodModelMB: break;
+                case SectionType.Skydome: newItem = new Skydome(); break;
+
+                case SectionType.Object: newItem = new GameObject(); break;
+                case SectionType.ObjectDemo: break;
+                case SectionType.ObjectMB: break;
+                case SectionType.ScriptDemo: newItem = new Script(); break;
+                case SectionType.ScriptX: newItem = new Script(); break;
+                case SectionType.Script: newItem = new Script(); break;
+                case SectionType.Animation: break;
+                case SectionType.OGI: newItem = new GraphicsInfo(); break;
+                case SectionType.GraphicsInfoMB: break;
+                case SectionType.GraphicsInfoP: break;
+                case SectionType.CustomAgent: break;
+                case SectionType.CustomAgentX: break;
+                case SectionType.CustomAgentDemo: break;
                 case SectionType.SE:
                 case SectionType.SE_Eng:
                 case SectionType.SE_Fre:
@@ -167,18 +152,39 @@ namespace TwinsaityEditor
                     newItem = new SoundEffect();
                     ((SoundEffect)newItem).SoundOffset = (uint)Data.ExtraData.Length;
                     break;
-                default:
-                    newItem = new TwinsItem();
+                case SectionType.Xbox_SE:
+                case SectionType.Xbox_SE_Eng:
+                case SectionType.Xbox_SE_Fre:
+                case SectionType.Xbox_SE_Ger:
+                case SectionType.Xbox_SE_Ita:
+                case SectionType.Xbox_SE_Jpn:
+                case SectionType.Xbox_SE_Spa:
                     break;
+
+                case SectionType.AIPosition: newItem = new AIPosition(); break;
+                case SectionType.AIPath: newItem = new AIPath(); break;
+                case SectionType.Position: newItem = new Position(); break;
+                case SectionType.Path: newItem = new Twinsanity.Path(); break;
+                case SectionType.CollisionSurface: newItem = new CollisionSurface(); break;
+                case SectionType.ObjectInstance: newItem = new Instance(); break;
+                case SectionType.ObjectInstanceDemo: break;
+                case SectionType.ObjectInstanceMB: break;
+                case SectionType.Trigger: newItem = new Trigger(); break;
+                case SectionType.Camera: newItem = new Camera(); break;
+                case SectionType.CameraDemo: break;
+                
+                default: break;
             }
 
             if (newItem == null)
             {
-                throw new System.Exception("Unsupported");
+                MessageBox.Show("Adding this item type is unsupported.");
             }
             else
             {
-                uint newId = Data.RecordIDs.Keys.Max() + 1;
+                uint newId = 0;
+                if (Data.RecordIDs.Count != 0)
+                    newId = Data.RecordIDs.Keys.Max() + 1;
                 newItem.ID = newId;
                 newItem.Parent = Data;
                 AddItem(newId, newItem);
@@ -305,6 +311,14 @@ namespace TwinsaityEditor
 
         private void Menu_ReOrderByID_Desc()
         {
+            if (Data.Type == SectionType.ObjectInstance)
+            {
+                MainFile.CloseEditor(Editors.Instance, (int)Data.Parent.ID);
+            }
+            else if (Data.Type == SectionType.Position)
+            {
+                MainFile.CloseEditor(Editors.Position, (int)Data.Parent.ID);
+            }
             Node.TreeView.BeginUpdate();
             Node.Nodes.Clear();
             SortedDictionary<uint, int> sdic = new SortedDictionary<uint, int>(new Utils.DescendingComparer<uint>());

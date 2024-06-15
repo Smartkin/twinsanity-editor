@@ -37,7 +37,7 @@ namespace Twinsanity
         public Script.MainScript.ScriptCommand scriptCommand = null;
         public List<Script.MainScript.ScriptCommand> scriptCommands = new List<Script.MainScript.ScriptCommand>();
 
-        public string Name { get; set; }
+        public string Name { get; set; } = "New Game Object";
         public GameObject()
         {
             while (ScriptSlots.Count < 8)

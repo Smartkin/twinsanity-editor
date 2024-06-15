@@ -4,7 +4,7 @@ namespace Twinsanity
 {
     public class AIPosition : TwinsItem
     {
-        public Pos Pos { get; set; }
+        public Pos Pos { get; set; } = new Pos(0, 0, 0, 1); // W is node weight?
         public ushort Num { get; set; }
 
         public override void Save(BinaryWriter writer)
@@ -25,6 +25,14 @@ namespace Twinsanity
         protected override int GetSize()
         {
             return 18;
+        }
+
+        public enum NodeType : ushort
+        {
+            Ground = 0, // Default AI node
+            Air = 2, // For jetpack ant / bat
+            WormPath = 4, // Earth worm / farm chickens
+            CortexPoint = 16, // Cortex interest point, also used for bird paths in L03
         }
     }
 }

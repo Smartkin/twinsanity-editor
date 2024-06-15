@@ -5,9 +5,9 @@ namespace Twinsanity
 {
     public class Material : TwinsItem
     {
-        public string Name { get; set; }
-        public ulong Header { get; set; }
-        public int Unknown { get; set; }
+        public string Name { get; set; } = "Unnamed\0";
+        public ulong Header { get; set; } = 2;
+        public int Unknown { get; set; } = 2;
         public List<TwinsShader> Shaders = new List<TwinsShader>();
 
         public override void Save(BinaryWriter writer)

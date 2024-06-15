@@ -24,6 +24,7 @@ namespace TwinsaityEditor
 
             text.Add(string.Format("ID: {0:X8}", Data.ID));
             text.Add($"Size: {Data.Size}");
+            text.Add($"Header: {Data.Header} Zero: {Data.Zero}");
             text.Add($"Models in LOD: {Data.ModelsAmount} ");
             for (int i = 0; i < Data.ModelsAmount; ++i)
             {

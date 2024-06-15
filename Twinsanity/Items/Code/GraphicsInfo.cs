@@ -10,16 +10,21 @@ namespace Twinsanity
         public Dictionary<int, ModelLink> ModelIDs { get; set; } = new Dictionary<int, ModelLink>();
         public uint SkinID { get; set; }
         public uint BlendSkinID { get; set; }
-        public Pos Coord1 { get; set; } // Bounding box?
-        public Pos Coord2 { get; set; } // Bounding box?
-        public Joint[] Joints { get; set; }
-        public ExitPoint[] ExitPoints { get; set; }
-        public SkinTransform[] SkinTransforms { get; set; }
-        public GI_CollisionData[] CollisionData { get; set; }
-        public JointTree Skeleton { get; private set; }
+        public Pos Coord1 { get; set; } = new Pos(-1, -1, -1, 1); // Bounding box?
+        public Pos Coord2 { get; set; } = new Pos(1, 1, 1, 1);// Bounding box?
+        public Joint[] Joints { get; set; } = new Joint[0];
+        public ExitPoint[] ExitPoints { get; set; } = new ExitPoint[0];
+        public SkinTransform[] SkinTransforms { get; set; } = new SkinTransform[0];
+        public GI_CollisionData[] CollisionData { get; set; } = new GI_CollisionData[0];
+        public JointTree Skeleton { get; private set; } = new JointTree()
+        {
+            Nodes = new Dictionary<int, JointNode>()
+        };
 
-        public byte[] HeaderVars;
-        public byte[] CollisionDataRelated;
+        public byte[] HeaderVars = new byte[0x10] {
+            0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0
+        };
+        public byte[] CollisionDataRelated = new byte[0];
 
         public override void Save(BinaryWriter writer)
         {

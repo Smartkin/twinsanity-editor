@@ -61,7 +61,7 @@ namespace TwinsaityEditor.Controllers
 
         protected override string GetName()
         {
-            return $"Code Model [ID {Data.ID}]";
+            return $"CustomAgent [ID {Data.ID}]";
         }
     }
 }

@@ -4,8 +4,8 @@ namespace Twinsanity
 {
     public class Skydome : TwinsItem
     {
-        public uint Unknown { get; set; }
-        public uint[] MeshIDs { get; set; }
+        public uint Unknown { get; set; } = 20480;
+        public uint[] MeshIDs { get; set; } = new uint[1] { 0 };
 
         public override void Save(BinaryWriter writer)
         {

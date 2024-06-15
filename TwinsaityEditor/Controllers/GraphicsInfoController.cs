@@ -48,13 +48,17 @@ namespace TwinsaityEditor
             List<string> text = new List<string>
             {
                 $"ID: {Data.ID}",
+                //$"Header: {Data.HeaderVars[3]}" +
+                //$" {Data.HeaderVars[4]}" +
+                //$" {Data.HeaderVars[9]} {Data.HeaderVars[10]} {Data.HeaderVars[11]}" +
+                //$" {Data.HeaderVars[12]} {Data.HeaderVars[13]} {Data.HeaderVars[14]} {Data.HeaderVars[15]}",
                 $"Bounding Box Vector 1: {Data.Coord1.X}; {Data.Coord1.Y}; {Data.Coord1.Z}; {Data.Coord1.W}",
                 $"Bounding Box Vector 2: {Data.Coord2.X}; {Data.Coord2.Y}; {Data.Coord2.Z}; {Data.Coord2.W}",
                 $"Skin ID: {Data.SkinID:X8}",
-                $"Blend Skin Model ID: {Data.BlendSkinID:X8}",
+                $"Blend Skin ID: {Data.BlendSkinID:X8}",
                 $"Joint Count: {Data.Joints.Length}",
                 $"Exit Point Count: {Data.ExitPoints.Length}",
-                $"Parent Joint Count: {Data.HeaderVars[2]}",
+                $"Joint-ID Count: {Data.HeaderVars[2]}",
                 $"Collision Datas Size: {Data.CollisionData.Length}",
                 $"Rigid Model Count: {Data.ModelIDs.Count}"
             };
@@ -156,6 +160,7 @@ namespace TwinsaityEditor
 
         private void TraverseSkeleton(List<string> text)
         {
+            if (Data.Joints.Length == 0) return;
             text.Add("Skeleton:");
             TraverseJoint(Data.Skeleton.Root, text, Matrix4.Identity, 0);
         }

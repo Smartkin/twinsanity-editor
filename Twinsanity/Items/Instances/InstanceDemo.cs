@@ -5,7 +5,7 @@ namespace Twinsanity
 {
     public class InstanceDemo : TwinsItem
     {
-        public Pos Pos { get; set; }
+        public Pos Pos { get; set; } = new Pos(0, 0, 0, 1);
         public ushort RotX { get; set; }
         public ushort RotY { get; set; }
         public ushort RotZ { get; set; }
@@ -15,16 +15,16 @@ namespace Twinsanity
         public List<ushort> InstanceIDs { get; set; } = new List<ushort>();
         public List<ushort> PositionIDs { get; set; } = new List<ushort>();
         public List<ushort> PathIDs { get; set; } = new List<ushort>();
-        public int SomeNum1 { get; set; }
-        public int SomeNum2 { get; set; }
-        public int SomeNum3 { get; set; }
-        public ushort ObjectID { get; set; }
+        public int SomeNum1 { get; set; } = 10;
+        public int SomeNum2 { get; set; } = 10;
+        public int SomeNum3 { get; set; } = 10;
+        public ushort ObjectID { get; set; } = 1;
         public uint AfterOID { get; set; }
         //public uint PHeader { get; set; }
-        public uint Flags { get; set; }
+        public uint Flags { get; set; } = 0x6;
         public List<uint> UnkI321 { get; set; } = new List<uint>();
-        public List<float> UnkI322 { get; set; } = new List<float>();
-        public List<uint> UnkI323 { get; set; } = new List<uint>();
+        public List<float> UnkI322 { get; set; } = new List<float>() { 1 };
+        public List<uint> UnkI323 { get; set; } = new List<uint>() { 0, 0 };
 
         public override void Save(BinaryWriter writer)
         {

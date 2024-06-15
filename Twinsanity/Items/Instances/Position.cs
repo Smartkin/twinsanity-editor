@@ -4,7 +4,7 @@ namespace Twinsanity
 {
     public class Position : TwinsItem
     {
-        public Pos Pos { get; set; }
+        public Pos Pos { get; set; } = new Pos(0, 0, 0, 1);
 
         public override void Save(BinaryWriter writer)
         {

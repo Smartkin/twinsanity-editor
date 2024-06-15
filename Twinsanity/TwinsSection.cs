@@ -34,7 +34,7 @@ namespace Twinsanity
         Script, ScriptX, ScriptDemo, ScriptMB,
         Animation,
         OGI, GraphicsInfo, GraphicsInfoMB, GraphicsInfoP,
-        CodeModel, CodeModelX, CodeModelDemo,
+        CustomAgent, CustomAgentX, CustomAgentDemo,
         SE, Xbox_SE, MB_SE,
         SE_Eng, Xbox_SE_Eng,
         SE_Fre, Xbox_SE_Fre,
@@ -367,11 +367,11 @@ namespace Twinsanity
                             break;
                         case 4:
                             if (Type == SectionType.Code)
-                                LoadSection(reader, sub, SectionType.CodeModel);
+                                LoadSection(reader, sub, SectionType.CustomAgent);
                             else if (Type == SectionType.CodeX)
-                                LoadSection(reader, sub, SectionType.CodeModelX);
+                                LoadSection(reader, sub, SectionType.CustomAgentX);
                             else
-                                LoadSection(reader, sub, SectionType.CodeModelDemo);
+                                LoadSection(reader, sub, SectionType.CustomAgentDemo);
                             break;
                         case 6:
                             if (Type == SectionType.CodeX)
@@ -443,7 +443,7 @@ namespace Twinsanity
                             }
                             break;
                         case 4:
-                            LoadSection(reader, sub, SectionType.CodeModel);
+                            LoadSection(reader, sub, SectionType.CustomAgent);
                             break;
                         case 5:
                             LoadSection(reader, sub, SectionType.MB_SE);
@@ -519,13 +519,13 @@ namespace Twinsanity
                 case SectionType.ObjectDemo: //PS2 DEMO objects
                     LoadItem<GameObjectDemo>(reader, sub, Type);
                     break;
-                case SectionType.CodeModel:
+                case SectionType.CustomAgent:
                     LoadItem<CodeModel>(reader, sub, Type);
                     break;
-                case SectionType.CodeModelX:
+                case SectionType.CustomAgentX:
                     LoadItem<CodeModel>(reader, sub, Type);
                     break;
-                case SectionType.CodeModelDemo:
+                case SectionType.CustomAgentDemo:
                     LoadItem<CodeModel>(reader, sub, Type);
                     break;
                 case SectionType.Script:
@@ -792,7 +792,7 @@ namespace Twinsanity
             section.CreateSection(SectionType.Script, 1);
             section.CreateSection(SectionType.Animation, 2);
             section.CreateSection(SectionType.OGI, 3);
-            section.CreateSection(SectionType.CodeModel, 4);
+            section.CreateSection(SectionType.CustomAgent, 4);
             section.CreateSection(SectionType.Unknown, 5);
             section.CreateSection(SectionType.SE, 6);
             section.CreateSection(SectionType.SE_Eng, 7);

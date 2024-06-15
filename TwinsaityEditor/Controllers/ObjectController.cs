@@ -36,8 +36,8 @@ namespace TwinsaityEditor
             byte UnkOgiArraySize = (byte)(Data.UnkBitfield >> 0x6 & 0x3F);
             byte OgiType2ArraySize = (byte)(Data.UnkBitfield & 0x3F);
             text.Add($"Object type: {Type}");
-            text.Add($"Type value: {UnkTypeValue}");
-            text.Add($"Camera/React Joint count: {UnkOgiArraySize}");
+            text.Add($"Object mobile type: {UnkTypeValue}");
+            text.Add($"Joint-ID count: {UnkOgiArraySize}");
             text.Add($"Exit Point count: {OgiType2ArraySize}");
 
             for (int i = 0; i < Data.ScriptSlots.Count; ++i)

@@ -2076,6 +2076,7 @@ namespace TwinsaityEditor
             newScriptHeader.ID = id1;
             newScriptHeader.Name = "Behaviour Starter";
             newScriptHeader.flag = 1;
+            newScriptHeader.mask = 50;
             controller.Data.AddItem(id1, newScriptHeader);
             scriptIndices.Add(id1);
             //((MainForm)Tag).GenTreeNode(newScriptHeader, controller);
