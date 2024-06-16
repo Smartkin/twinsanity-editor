@@ -181,6 +181,10 @@ namespace TwinsaityEditor
             uint mobileType = (gameObject.UnkBitfield >> 0xC & 0xFF);
             uint jointIDcount = (gameObject.UnkBitfield >> 0x6 & 0x3F);
             uint exitPointcount = (gameObject.UnkBitfield & 0x3F);
+            uint bitflag1 = (gameObject.UnkBitfield >> 0x1C & 0x1);
+            uint bitflag2 = (gameObject.UnkBitfield >> 0x1D & 0x1);
+            uint bitflag3 = (gameObject.UnkBitfield >> 0x1E & 0x1);
+            uint bitflag4 = (gameObject.UnkBitfield >> 0x1F & 0x1);
             comboBoxObjectType.SelectedIndex = (int)objType;
             switch (mobileType)
             {
@@ -192,6 +196,10 @@ namespace TwinsaityEditor
             numericUpDownExitPoints.Value = exitPointcount;
             objectId.Text = Convert.ToString(gameObject.ID, 10);
             instFlagsBox.Value = gameObject.PUI32;
+            checkBoxUseTemplate.Checked = bitflag1 == 1;
+            checkBoxHasTemplate.Checked = bitflag2 == 1;
+            checkBoxHasResources.Checked = bitflag3 == 1;
+            checkBoxBitfieldFlag4.Checked = bitflag4 == 1;
 
             PopulateObjectCommandList();
         }
@@ -683,11 +691,13 @@ namespace TwinsaityEditor
             uint mobileType = (gameObject.UnkBitfield >> 0xC & 0xFF);
             uint jointIDcount = (gameObject.UnkBitfield >> 0x6 & 0x3F);
             uint exitPointcount = (gameObject.UnkBitfield & 0x3F);
+            uint rest = (gameObject.UnkBitfield >> 0x1C);
             gameObject.UnkBitfield = 0;
             gameObject.UnkBitfield += (uint)comboBoxObjectType.SelectedIndex << 0x14;
             gameObject.UnkBitfield += mobileType << 0xC;
             gameObject.UnkBitfield += jointIDcount << 0x6;
             gameObject.UnkBitfield += exitPointcount;
+            gameObject.UnkBitfield += rest << 0x1C;
         }
 
         private void comboBoxObjectMobileType_SelectedIndexChanged(object sender, EventArgs e)
@@ -696,6 +706,7 @@ namespace TwinsaityEditor
             uint mobileType = (gameObject.UnkBitfield >> 0xC & 0xFF);
             uint jointIDcount = (gameObject.UnkBitfield >> 0x6 & 0x3F);
             uint exitPointcount = (gameObject.UnkBitfield & 0x3F);
+            uint rest = (gameObject.UnkBitfield >> 0x1C);
             gameObject.UnkBitfield = 0;
             gameObject.UnkBitfield += objType << 0x14;
             switch (comboBoxObjectMobileType.SelectedIndex)
@@ -706,6 +717,7 @@ namespace TwinsaityEditor
             }
             gameObject.UnkBitfield += jointIDcount << 0x6;
             gameObject.UnkBitfield += exitPointcount;
+            gameObject.UnkBitfield += rest << 0x1C;
         }
 
         private void numericUpDownJointIDs_ValueChanged(object sender, EventArgs e)
@@ -714,11 +726,13 @@ namespace TwinsaityEditor
             uint mobileType = (gameObject.UnkBitfield >> 0xC & 0xFF);
             uint jointIDcount = (gameObject.UnkBitfield >> 0x6 & 0x3F);
             uint exitPointcount = (gameObject.UnkBitfield & 0x3F);
+            uint rest = (gameObject.UnkBitfield >> 0x1C);
             gameObject.UnkBitfield = 0;
             gameObject.UnkBitfield += objType << 0x14;
             gameObject.UnkBitfield += mobileType << 0xC;
             gameObject.UnkBitfield += (uint)numericUpDownJointIDs.Value << 0x6;
             gameObject.UnkBitfield += exitPointcount;
+            gameObject.UnkBitfield += rest << 0x1C;
         }
 
         private void numericUpDownExitPoints_ValueChanged(object sender, EventArgs e)
@@ -727,11 +741,55 @@ namespace TwinsaityEditor
             uint mobileType = (gameObject.UnkBitfield >> 0xC & 0xFF);
             uint jointIDcount = (gameObject.UnkBitfield >> 0x6 & 0x3F);
             uint exitPointcount = (gameObject.UnkBitfield & 0x3F);
+            uint rest = (gameObject.UnkBitfield >> 0x1C);
             gameObject.UnkBitfield = 0;
             gameObject.UnkBitfield += objType << 0x14;
             gameObject.UnkBitfield += mobileType << 0xC;
             gameObject.UnkBitfield += jointIDcount << 0x6;
             gameObject.UnkBitfield += (byte)numericUpDownExitPoints.Value;
+            gameObject.UnkBitfield += rest << 0x1C;
+        }
+
+        private void checkBoxHasResources_CheckedChanged(object sender, EventArgs e)
+        {
+            uint data1 = gameObject.UnkBitfield & 0x3FFFFFFF;
+            uint data2 = gameObject.UnkBitfield >> 0x1F;
+            uint flag = checkBoxHasResources.Checked ? (uint)1 : 0;
+            gameObject.UnkBitfield = 0;
+            gameObject.UnkBitfield += data1;
+            gameObject.UnkBitfield += flag << 0x1E;
+            gameObject.UnkBitfield += data2 << 0x1F;
+        }
+
+        private void checkBoxHasTemplate_CheckedChanged(object sender, EventArgs e)
+        {
+            uint data1 = gameObject.UnkBitfield & 0x1FFFFFFF;
+            uint data2 = gameObject.UnkBitfield >> 0x1E;
+            uint flag = checkBoxHasTemplate.Checked ? (uint)1 : 0;
+            gameObject.UnkBitfield = 0;
+            gameObject.UnkBitfield += data1;
+            gameObject.UnkBitfield += flag << 0x1D;
+            gameObject.UnkBitfield += data2 << 0x1E;
+        }
+
+        private void checkBoxUseTemplate_CheckedChanged(object sender, EventArgs e)
+        {
+            uint data1 = gameObject.UnkBitfield & 0xFFFFFFF;
+            uint data2 = gameObject.UnkBitfield >> 0x1D;
+            uint flag = checkBoxUseTemplate.Checked ? (uint)1 : 0;
+            gameObject.UnkBitfield = 0;
+            gameObject.UnkBitfield += data1;
+            gameObject.UnkBitfield += flag << 0x1C;
+            gameObject.UnkBitfield += data2 << 0x1D;
+        }
+
+        private void checkBoxBitfieldFlag4_CheckedChanged(object sender, EventArgs e)
+        {
+            uint data1 = gameObject.UnkBitfield & 0x7FFFFFFF;
+            uint flag = checkBoxBitfieldFlag4.Checked ? (uint)1 : 0;
+            gameObject.UnkBitfield = 0;
+            gameObject.UnkBitfield += data1;
+            gameObject.UnkBitfield += flag << 0x1F;
         }
     }
 }

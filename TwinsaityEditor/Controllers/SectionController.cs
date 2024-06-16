@@ -24,6 +24,7 @@ namespace TwinsaityEditor
                     AddMenu("Import object package (RM2)", Menu_ImportPackage);
                 }
                 AddMenu($"Toggle default asset names", Menu_ToggleDefaultNames);
+                AddMenu($"Refresh list", RefreshSection);
             }
             else
             {

@@ -221,6 +221,12 @@
             this.eventsUp = new System.Windows.Forms.Button();
             this.eventsListBox = new System.Windows.Forms.ListBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.numericUpDownExitPoints = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownJointIDs = new System.Windows.Forms.NumericUpDown();
+            this.label25 = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
+            this.comboBoxObjectMobileType = new System.Windows.Forms.ComboBox();
+            this.comboBoxObjectType = new System.Windows.Forms.ComboBox();
             this.label23 = new System.Windows.Forms.Label();
             this.objectId = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -231,12 +237,10 @@
             this.deleteObjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createObjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.duplicateObjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.comboBoxObjectType = new System.Windows.Forms.ComboBox();
-            this.comboBoxObjectMobileType = new System.Windows.Forms.ComboBox();
-            this.label24 = new System.Windows.Forms.Label();
-            this.label25 = new System.Windows.Forms.Label();
-            this.numericUpDownJointIDs = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownExitPoints = new System.Windows.Forms.NumericUpDown();
+            this.checkBoxHasTemplate = new System.Windows.Forms.CheckBox();
+            this.checkBoxUseTemplate = new System.Windows.Forms.CheckBox();
+            this.checkBoxBitfieldFlag4 = new System.Windows.Forms.CheckBox();
+            this.checkBoxHasResources = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -265,9 +269,9 @@
             this.tabPage5.SuspendLayout();
             this.groupBox19.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownJointIDs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownExitPoints)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownJointIDs)).BeginInit();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // objectList
@@ -780,6 +784,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.checkBoxHasResources);
             this.tabPage2.Controls.Add(this.groupBox8);
             this.tabPage2.Controls.Add(this.groupBox9);
             this.tabPage2.Controls.Add(this.groupBox10);
@@ -803,7 +808,7 @@
             this.groupBox8.Controls.Add(this.ccmRemove);
             this.groupBox8.Controls.Add(this.ccmUp);
             this.groupBox8.Controls.Add(this.ccmList);
-            this.groupBox8.Location = new System.Drawing.Point(6, 213);
+            this.groupBox8.Location = new System.Drawing.Point(6, 228);
             this.groupBox8.Name = "groupBox8";
             this.groupBox8.Size = new System.Drawing.Size(232, 195);
             this.groupBox8.TabIndex = 11;
@@ -879,7 +884,7 @@
             this.groupBox9.Controls.Add(this.canimationRemove);
             this.groupBox9.Controls.Add(this.canimationUp);
             this.groupBox9.Controls.Add(this.canimationsList);
-            this.groupBox9.Location = new System.Drawing.Point(483, 213);
+            this.groupBox9.Location = new System.Drawing.Point(483, 228);
             this.groupBox9.Name = "groupBox9";
             this.groupBox9.Size = new System.Drawing.Size(232, 195);
             this.groupBox9.TabIndex = 14;
@@ -955,7 +960,7 @@
             this.groupBox10.Controls.Add(this.cogiRemove);
             this.groupBox10.Controls.Add(this.cogiUp);
             this.groupBox10.Controls.Add(this.cogiList);
-            this.groupBox10.Location = new System.Drawing.Point(245, 213);
+            this.groupBox10.Location = new System.Drawing.Point(245, 228);
             this.groupBox10.Name = "groupBox10";
             this.groupBox10.Size = new System.Drawing.Size(232, 195);
             this.groupBox10.TabIndex = 15;
@@ -1031,7 +1036,7 @@
             this.groupBox11.Controls.Add(this.csoundRemove);
             this.groupBox11.Controls.Add(this.csoundUp);
             this.groupBox11.Controls.Add(this.csoundsList);
-            this.groupBox11.Location = new System.Drawing.Point(483, 12);
+            this.groupBox11.Location = new System.Drawing.Point(483, 27);
             this.groupBox11.Name = "groupBox11";
             this.groupBox11.Size = new System.Drawing.Size(232, 195);
             this.groupBox11.TabIndex = 12;
@@ -1107,7 +1112,7 @@
             this.groupBox12.Controls.Add(this.cobjectRemove);
             this.groupBox12.Controls.Add(this.cobjectUp);
             this.groupBox12.Controls.Add(this.cobjectList);
-            this.groupBox12.Location = new System.Drawing.Point(245, 12);
+            this.groupBox12.Location = new System.Drawing.Point(245, 27);
             this.groupBox12.Name = "groupBox12";
             this.groupBox12.Size = new System.Drawing.Size(232, 195);
             this.groupBox12.TabIndex = 13;
@@ -1183,7 +1188,7 @@
             this.groupBox13.Controls.Add(this.cscriptsRemove);
             this.groupBox13.Controls.Add(this.cscriptsUp);
             this.groupBox13.Controls.Add(this.cscriptsList);
-            this.groupBox13.Location = new System.Drawing.Point(7, 12);
+            this.groupBox13.Location = new System.Drawing.Point(7, 27);
             this.groupBox13.Name = "groupBox13";
             this.groupBox13.Size = new System.Drawing.Size(232, 195);
             this.groupBox13.TabIndex = 10;
@@ -1252,6 +1257,9 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.checkBoxBitfieldFlag4);
+            this.tabPage3.Controls.Add(this.checkBoxUseTemplate);
+            this.tabPage3.Controls.Add(this.checkBoxHasTemplate);
             this.tabPage3.Controls.Add(this.groupBox20);
             this.tabPage3.Controls.Add(this.groupBox14);
             this.tabPage3.Controls.Add(this.groupBox15);
@@ -1268,7 +1276,7 @@
             // 
             this.groupBox20.Controls.Add(this.instFlagsBox);
             this.groupBox20.Controls.Add(this.buttonEditFlags);
-            this.groupBox20.Location = new System.Drawing.Point(245, 213);
+            this.groupBox20.Location = new System.Drawing.Point(245, 228);
             this.groupBox20.Name = "groupBox20";
             this.groupBox20.Size = new System.Drawing.Size(232, 195);
             this.groupBox20.TabIndex = 18;
@@ -1307,7 +1315,7 @@
             this.groupBox14.Controls.Add(this.unk4Remove);
             this.groupBox14.Controls.Add(this.unk4Up);
             this.groupBox14.Controls.Add(this.unk4List);
-            this.groupBox14.Location = new System.Drawing.Point(6, 213);
+            this.groupBox14.Location = new System.Drawing.Point(6, 228);
             this.groupBox14.Name = "groupBox14";
             this.groupBox14.Size = new System.Drawing.Size(232, 195);
             this.groupBox14.TabIndex = 15;
@@ -1383,7 +1391,7 @@
             this.groupBox15.Controls.Add(this.unk3Remove);
             this.groupBox15.Controls.Add(this.unk3Up);
             this.groupBox15.Controls.Add(this.instIntegersList);
-            this.groupBox15.Location = new System.Drawing.Point(483, 12);
+            this.groupBox15.Location = new System.Drawing.Point(483, 27);
             this.groupBox15.Name = "groupBox15";
             this.groupBox15.Size = new System.Drawing.Size(232, 195);
             this.groupBox15.TabIndex = 16;
@@ -1459,7 +1467,7 @@
             this.groupBox16.Controls.Add(this.unk2Remove);
             this.groupBox16.Controls.Add(this.unk2Up);
             this.groupBox16.Controls.Add(this.instFloatsList);
-            this.groupBox16.Location = new System.Drawing.Point(245, 12);
+            this.groupBox16.Location = new System.Drawing.Point(245, 27);
             this.groupBox16.Name = "groupBox16";
             this.groupBox16.Size = new System.Drawing.Size(232, 195);
             this.groupBox16.TabIndex = 17;
@@ -1535,7 +1543,7 @@
             this.groupBox17.Controls.Add(this.unk1Remove);
             this.groupBox17.Controls.Add(this.unk1Up);
             this.groupBox17.Controls.Add(this.instFlagsList);
-            this.groupBox17.Location = new System.Drawing.Point(7, 12);
+            this.groupBox17.Location = new System.Drawing.Point(7, 27);
             this.groupBox17.Name = "groupBox17";
             this.groupBox17.Size = new System.Drawing.Size(232, 195);
             this.groupBox17.TabIndex = 14;
@@ -2147,6 +2155,82 @@
             this.panel1.Size = new System.Drawing.Size(735, 41);
             this.panel1.TabIndex = 1;
             // 
+            // numericUpDownExitPoints
+            // 
+            this.numericUpDownExitPoints.Location = new System.Drawing.Point(678, 11);
+            this.numericUpDownExitPoints.Maximum = new decimal(new int[] {
+            63,
+            0,
+            0,
+            0});
+            this.numericUpDownExitPoints.Name = "numericUpDownExitPoints";
+            this.numericUpDownExitPoints.Size = new System.Drawing.Size(48, 20);
+            this.numericUpDownExitPoints.TabIndex = 13;
+            this.numericUpDownExitPoints.ValueChanged += new System.EventHandler(this.numericUpDownExitPoints_ValueChanged);
+            // 
+            // numericUpDownJointIDs
+            // 
+            this.numericUpDownJointIDs.Location = new System.Drawing.Point(565, 11);
+            this.numericUpDownJointIDs.Maximum = new decimal(new int[] {
+            63,
+            0,
+            0,
+            0});
+            this.numericUpDownJointIDs.Name = "numericUpDownJointIDs";
+            this.numericUpDownJointIDs.Size = new System.Drawing.Size(50, 20);
+            this.numericUpDownJointIDs.TabIndex = 12;
+            this.numericUpDownJointIDs.ValueChanged += new System.EventHandler(this.numericUpDownJointIDs_ValueChanged);
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(616, 15);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(56, 13);
+            this.label25.TabIndex = 11;
+            this.label25.Text = "ExitPoints:";
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(511, 15);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(54, 13);
+            this.label24.TabIndex = 10;
+            this.label24.Text = "Joint-IDs: ";
+            // 
+            // comboBoxObjectMobileType
+            // 
+            this.comboBoxObjectMobileType.FormattingEnabled = true;
+            this.comboBoxObjectMobileType.Items.AddRange(new object[] {
+            "Mobile",
+            "Pickup",
+            "Projectile"});
+            this.comboBoxObjectMobileType.Location = new System.Drawing.Point(424, 11);
+            this.comboBoxObjectMobileType.Name = "comboBoxObjectMobileType";
+            this.comboBoxObjectMobileType.Size = new System.Drawing.Size(81, 21);
+            this.comboBoxObjectMobileType.TabIndex = 9;
+            this.comboBoxObjectMobileType.SelectedIndexChanged += new System.EventHandler(this.comboBoxObjectMobileType_SelectedIndexChanged);
+            // 
+            // comboBoxObjectType
+            // 
+            this.comboBoxObjectType.FormattingEnabled = true;
+            this.comboBoxObjectType.Items.AddRange(new object[] {
+            "Character",
+            "Pickup",
+            "Crate",
+            "Creature",
+            "Furniture",
+            "ChiChiGrass",
+            "PayGate",
+            "Foofie",
+            "Projectile"});
+            this.comboBoxObjectType.Location = new System.Drawing.Point(320, 11);
+            this.comboBoxObjectType.Name = "comboBoxObjectType";
+            this.comboBoxObjectType.Size = new System.Drawing.Size(98, 21);
+            this.comboBoxObjectType.TabIndex = 8;
+            this.comboBoxObjectType.SelectedIndexChanged += new System.EventHandler(this.comboBoxObjectType_SelectedIndexChanged);
+            // 
             // label23
             // 
             this.label23.AutoSize = true;
@@ -2232,81 +2316,49 @@
             this.duplicateObjectToolStripMenuItem.Text = "Duplicate Object";
             this.duplicateObjectToolStripMenuItem.Click += new System.EventHandler(this.duplicateObjectToolStripMenuItem_Click);
             // 
-            // comboBoxObjectType
+            // checkBoxHasTemplate
             // 
-            this.comboBoxObjectType.FormattingEnabled = true;
-            this.comboBoxObjectType.Items.AddRange(new object[] {
-            "Character",
-            "Pickup",
-            "Crate",
-            "Creature",
-            "Furniture",
-            "ChiChiGrass",
-            "PayGate",
-            "Foofie",
-            "Projectile"});
-            this.comboBoxObjectType.Location = new System.Drawing.Point(320, 11);
-            this.comboBoxObjectType.Name = "comboBoxObjectType";
-            this.comboBoxObjectType.Size = new System.Drawing.Size(98, 21);
-            this.comboBoxObjectType.TabIndex = 8;
-            this.comboBoxObjectType.SelectedIndexChanged += new System.EventHandler(this.comboBoxObjectType_SelectedIndexChanged);
+            this.checkBoxHasTemplate.AutoSize = true;
+            this.checkBoxHasTemplate.Location = new System.Drawing.Point(15, 6);
+            this.checkBoxHasTemplate.Name = "checkBoxHasTemplate";
+            this.checkBoxHasTemplate.Size = new System.Drawing.Size(92, 17);
+            this.checkBoxHasTemplate.TabIndex = 19;
+            this.checkBoxHasTemplate.Text = "Has Template";
+            this.checkBoxHasTemplate.UseVisualStyleBackColor = true;
+            this.checkBoxHasTemplate.CheckedChanged += new System.EventHandler(this.checkBoxHasTemplate_CheckedChanged);
             // 
-            // comboBoxObjectMobileType
+            // checkBoxUseTemplate
             // 
-            this.comboBoxObjectMobileType.FormattingEnabled = true;
-            this.comboBoxObjectMobileType.Items.AddRange(new object[] {
-            "Mobile",
-            "Pickup",
-            "Projectile"});
-            this.comboBoxObjectMobileType.Location = new System.Drawing.Point(424, 11);
-            this.comboBoxObjectMobileType.Name = "comboBoxObjectMobileType";
-            this.comboBoxObjectMobileType.Size = new System.Drawing.Size(81, 21);
-            this.comboBoxObjectMobileType.TabIndex = 9;
-            this.comboBoxObjectMobileType.SelectedIndexChanged += new System.EventHandler(this.comboBoxObjectMobileType_SelectedIndexChanged);
+            this.checkBoxUseTemplate.AutoSize = true;
+            this.checkBoxUseTemplate.Location = new System.Drawing.Point(115, 6);
+            this.checkBoxUseTemplate.Name = "checkBoxUseTemplate";
+            this.checkBoxUseTemplate.Size = new System.Drawing.Size(97, 17);
+            this.checkBoxUseTemplate.TabIndex = 20;
+            this.checkBoxUseTemplate.Text = "Uses Template";
+            this.checkBoxUseTemplate.UseVisualStyleBackColor = true;
+            this.checkBoxUseTemplate.CheckedChanged += new System.EventHandler(this.checkBoxUseTemplate_CheckedChanged);
             // 
-            // label24
+            // checkBoxBitfieldFlag4
             // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(511, 15);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(54, 13);
-            this.label24.TabIndex = 10;
-            this.label24.Text = "Joint-IDs: ";
+            this.checkBoxBitfieldFlag4.AutoSize = true;
+            this.checkBoxBitfieldFlag4.Location = new System.Drawing.Point(228, 6);
+            this.checkBoxBitfieldFlag4.Name = "checkBoxBitfieldFlag4";
+            this.checkBoxBitfieldFlag4.Size = new System.Drawing.Size(72, 17);
+            this.checkBoxBitfieldFlag4.TabIndex = 21;
+            this.checkBoxBitfieldFlag4.Text = "UnkFlag4";
+            this.checkBoxBitfieldFlag4.UseVisualStyleBackColor = true;
+            this.checkBoxBitfieldFlag4.CheckedChanged += new System.EventHandler(this.checkBoxBitfieldFlag4_CheckedChanged);
             // 
-            // label25
+            // checkBoxHasResources
             // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(616, 15);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(56, 13);
-            this.label25.TabIndex = 11;
-            this.label25.Text = "ExitPoints:";
-            // 
-            // numericUpDownJointIDs
-            // 
-            this.numericUpDownJointIDs.Location = new System.Drawing.Point(565, 11);
-            this.numericUpDownJointIDs.Maximum = new decimal(new int[] {
-            63,
-            0,
-            0,
-            0});
-            this.numericUpDownJointIDs.Name = "numericUpDownJointIDs";
-            this.numericUpDownJointIDs.Size = new System.Drawing.Size(50, 20);
-            this.numericUpDownJointIDs.TabIndex = 12;
-            this.numericUpDownJointIDs.ValueChanged += new System.EventHandler(this.numericUpDownJointIDs_ValueChanged);
-            // 
-            // numericUpDownExitPoints
-            // 
-            this.numericUpDownExitPoints.Location = new System.Drawing.Point(678, 11);
-            this.numericUpDownExitPoints.Maximum = new decimal(new int[] {
-            63,
-            0,
-            0,
-            0});
-            this.numericUpDownExitPoints.Name = "numericUpDownExitPoints";
-            this.numericUpDownExitPoints.Size = new System.Drawing.Size(48, 20);
-            this.numericUpDownExitPoints.TabIndex = 13;
-            this.numericUpDownExitPoints.ValueChanged += new System.EventHandler(this.numericUpDownExitPoints_ValueChanged);
+            this.checkBoxHasResources.AutoSize = true;
+            this.checkBoxHasResources.Location = new System.Drawing.Point(15, 6);
+            this.checkBoxHasResources.Name = "checkBoxHasResources";
+            this.checkBoxHasResources.Size = new System.Drawing.Size(99, 17);
+            this.checkBoxHasResources.TabIndex = 16;
+            this.checkBoxHasResources.Text = "Has Resources";
+            this.checkBoxHasResources.UseVisualStyleBackColor = true;
+            this.checkBoxHasResources.CheckedChanged += new System.EventHandler(this.checkBoxHasResources_CheckedChanged);
             // 
             // ObjectEditor
             // 
@@ -2336,6 +2388,7 @@
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
             this.groupBox8.ResumeLayout(false);
             this.groupBox8.PerformLayout();
             this.groupBox9.ResumeLayout(false);
@@ -2349,6 +2402,7 @@
             this.groupBox13.ResumeLayout(false);
             this.groupBox13.PerformLayout();
             this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.groupBox20.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.instFlagsBox)).EndInit();
             this.groupBox14.ResumeLayout(false);
@@ -2367,10 +2421,10 @@
             this.groupBox19.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownExitPoints)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownJointIDs)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownJointIDs)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownExitPoints)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2587,5 +2641,9 @@
         private System.Windows.Forms.NumericUpDown numericUpDownJointIDs;
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.CheckBox checkBoxBitfieldFlag4;
+        private System.Windows.Forms.CheckBox checkBoxUseTemplate;
+        private System.Windows.Forms.CheckBox checkBoxHasTemplate;
+        private System.Windows.Forms.CheckBox checkBoxHasResources;
     }
 }
