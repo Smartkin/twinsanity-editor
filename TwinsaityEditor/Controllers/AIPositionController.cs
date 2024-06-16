@@ -9,6 +9,7 @@ namespace TwinsaityEditor
         public AIPositionController(MainForm topform, AIPosition item) : base (topform, item)
         {
             Data = item;
+            AddMenu("Open editor", Menu_OpenEditor);
         }
 
         protected override string GetName()
@@ -23,6 +24,11 @@ namespace TwinsaityEditor
             TextPrev[1] = $"Size: {Data.Size}";
             TextPrev[2] = $"Position: {Data.Pos.X}, {Data.Pos.Y}, {Data.Pos.Z}, {Data.Pos.W}";
             TextPrev[3] = $"Argument: {Data.Num}";
+        }
+
+        private void Menu_OpenEditor()
+        {
+            MainFile.OpenEditor((SectionController)Node.Parent.Tag);
         }
     }
 }

@@ -9,6 +9,7 @@ namespace TwinsaityEditor
         public AIPathController(MainForm topform, AIPath item) : base (topform, item)
         {
             Data = item;
+            AddMenu("Open editor", Menu_OpenEditor);
         }
 
         protected override string GetName()
@@ -26,6 +27,11 @@ namespace TwinsaityEditor
             TextPrev[4] = $"Argument2: {Data.Arg[2]}";
             TextPrev[5] = $"Argument3: {Data.Arg[3]}";
             TextPrev[6] = $"Argument4: {Data.Arg[4]}";
+        }
+
+        private void Menu_OpenEditor()
+        {
+            MainFile.OpenEditor((SectionController)Node.Parent.Tag);
         }
     }
 }

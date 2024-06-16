@@ -205,6 +205,12 @@ namespace TwinsaityEditor
                 OpenEditor(ref editObjects, Editors.Object, (Controller)c.Node.Parent.Tag);
             else if (c is ParticleDataController)
                 OpenEditor(ref editObjects, Editors.Particles, c);
+            else if (c is AIPositionController)
+                OpenEditor(ref editAIPositions[((AIPositionController)c).Data.Parent.Parent.ID], Editors.AIPosition, (Controller)c.Node.Parent.Tag);
+            else if (c is AIPathController)
+                OpenEditor(ref editAIPaths[((AIPathController)c).Data.Parent.Parent.ID], Editors.AIPath, (Controller)c.Node.Parent.Tag);
+            else if (c is CollisionSurfaceController)
+                OpenEditor(ref editSurfaces[((CollisionSurfaceController)c).Data.Parent.Parent.ID], Editors.Surface, (Controller)c.Node.Parent.Tag);
             else if (c is SectionController s)
             {
                 if (s.Data.Type == SectionType.ObjectInstance)
@@ -225,6 +231,12 @@ namespace TwinsaityEditor
                     OpenEditor(ref editObjects, Editors.Object, c);
                 else if (s.Data.Type == SectionType.Animation)
                     OpenEditor(ref editAnimations, Editors.Animation, c);
+                else if (s.Data.Type == SectionType.AIPosition)
+                    OpenEditor(ref editAIPositions[s.Data.Parent.ID], Editors.AIPosition, c);
+                else if (s.Data.Type == SectionType.AIPath)
+                    OpenEditor(ref editAIPaths[s.Data.Parent.ID], Editors.AIPath, c);
+                else if (s.Data.Type == SectionType.CollisionSurface)
+                    OpenEditor(ref editSurfaces[s.Data.Parent.ID], Editors.Surface, c);
             }
         }
 
@@ -257,6 +269,9 @@ namespace TwinsaityEditor
                     case Editors.Object: editor_var_ptr = new ObjectEditor((SectionController)cont) { Tag = TopForm }; break;
                     case Editors.Animation: editor_var_ptr = new AnimationEditor((SectionController)cont) { Tag = TopForm }; break;
                     case Editors.ID: editor_var_ptr = new IDEditor((ItemController)cont) { Tag = TopForm }; break;
+                    case Editors.AIPosition: editor_var_ptr = new AIPositionEditor((SectionController)cont) { Tag = TopForm }; break;
+                    case Editors.AIPath: editor_var_ptr = new AIPathEditor((SectionController)cont) { Tag = TopForm }; break;
+                    case Editors.Surface: editor_var_ptr = new SurfaceEditor((SectionController)cont) { Tag = TopForm }; break;
                 }
                 editor_var_ptr.Show();
             }
@@ -280,6 +295,16 @@ namespace TwinsaityEditor
                 case Editors.Animation: editorForm = editAnimations; break;
                 case Editors.Particles: editorForm = editParticles; break;
                 case Editors.ID: editorForm = editID; break;
+                case Editors.AIPosition: editorForm = editAIPositions[arg]; break;
+                case Editors.AIPath: editorForm = editAIPaths[arg]; break;
+                case Editors.CustomAgent: editorForm = editCustomAgent; break;
+                case Editors.Material: editorForm = editMaterial; break;
+                case Editors.LodModel: editorForm = editLod; break;
+                case Editors.Skydome: editorForm = editSkydome; break;
+                case Editors.Scenery: editorForm = editScenery; break;
+                case Editors.OGI: editorForm = editOGI; break;
+                case Editors.DynamicScenery: editorForm = editDynScenery; break;
+                case Editors.Surface: editorForm = editSurfaces[arg]; break;
             }
             CloseForm(editorForm);
         }

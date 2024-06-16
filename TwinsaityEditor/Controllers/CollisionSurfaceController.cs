@@ -11,6 +11,7 @@ namespace TwinsaityEditor
         public CollisionSurfaceController(MainForm topform, CollisionSurface item) : base(topform, item)
         {
             Data = item;
+            AddMenu("Open editor", Menu_OpenEditor);
         }
 
         protected override string GetName()
@@ -49,41 +50,38 @@ namespace TwinsaityEditor
                 text.Add($"Type: { Data.SurfaceID }");
             }
 
-            text.Add($"Flags: {Data.Flags[0]:X2} {Data.Flags[1]:X2} {Data.Flags[2]:X2} {Data.Flags[3]:X2}");
-            for (int i = 0; i < Data.Flags.Length; i++)
-            {
-                string flag = Convert.ToString(Data.Flags[i], 2);
-                if (flag.Length < 8)
-                {
-                    while (flag.Length < 8)
-                    {
-                        flag = "0" + flag;
-                    }
-                }
-                text.Add(flag);
-            }
-            for (int i = 0; i < Data.SoundIDs.Length; i++)
-            {
-                if (i == 0 || i == 1 || i == 4 || i == 7 || i == 8)
-                {
-                    text.Add($"Sound ID {i}: { Data.SoundIDs[i] }");
-                }
-                else
-                {
-                    text.Add($"Unk ID {i}: { Data.SoundIDs[i] }");
-                }
-            }
-            for (int i = 0; i < Data.Floats.Length; i++)
-            {
-                text.Add($"Float Set {i}: { Data.Floats[i].X }; { Data.Floats[i].Y }; { Data.Floats[i].Z }; { Data.Floats[i].W }; ");
-            }
-            for (int i = 0; i < Data.UnkInts.Length; i++)
-            {
-                text.Add($"UnkInt {i}: { Data.UnkInts[i] }");
-            }
+            text.Add($"Flags: {Data.Flags:X8}");
+            text.Add($"Sound 1: { Data.Sound_1 }");
+            text.Add($"Sound 2: { Data.Sound_2 }");
+            text.Add($"Particle 1: { Data.Particle_1 }");
+            text.Add($"Particle 2: { Data.Particle_2 }");
+            text.Add($"Sound 3: { Data.Sound_3 }");
+            text.Add($"Sound 4: { Data.Sound_4 }");
+            text.Add($"Particle 3: { Data.Particle_3 }");
+            text.Add($"Sound 5: { Data.Sound_5 }");
+            text.Add($"Sound 6: { Data.Sound_6 }");
+            text.Add($"Float1: { Data.UnkFloat1 } ");
+            text.Add($"Float2: { Data.UnkFloat2 } ");
+            text.Add($"Float3: { Data.UnkFloat3 } ");
+            text.Add($"Float4: { Data.UnkFloat4 } ");
+            text.Add($"Float5: { Data.UnkFloat5 } ");
+            text.Add($"Float6: { Data.UnkFloat6 } ");
+            text.Add($"Float7: { Data.UnkFloat7 } ");
+            text.Add($"Float8: { Data.UnkFloat8 } ");
+            text.Add($"Float9: { Data.UnkFloat9 } ");
+            text.Add($"Float10: { Data.UnkFloat10 } ");
+            text.Add($"UnkVector: {Data.UnkVector.X}; {Data.UnkVector.Y}; {Data.UnkVector.Z}; {Data.UnkVector.W}; ");
+            text.Add($"UnkBoundingBox1: {Data.UnkBoundingBox1.X}; {Data.UnkBoundingBox1.Y}; {Data.UnkBoundingBox1.Z}; {Data.UnkBoundingBox1.W}; ");
+            text.Add($"UnkBoundingBox2: {Data.UnkBoundingBox2.X}; {Data.UnkBoundingBox2.Y}; {Data.UnkBoundingBox2.Z}; {Data.UnkBoundingBox2.W}; ");
+
 
             TextPrev = text.ToArray();
 
+        }
+
+        private void Menu_OpenEditor()
+        {
+            MainFile.OpenEditor((SectionController)Node.Parent.Tag);
         }
     }
 }

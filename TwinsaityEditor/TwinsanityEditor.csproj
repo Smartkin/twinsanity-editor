@@ -227,6 +227,18 @@
     <Compile Include="Controllers\TextureController.cs" />
     <Compile Include="Controllers\SectionController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
+    <Compile Include="Editors\AIPathEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\AIPathEditor.Designer.cs">
+      <DependentUpon>AIPathEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\AIPositionEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\AIPositionEditor.Designer.cs">
+      <DependentUpon>AIPositionEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Editors\AnimationEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -286,6 +298,12 @@
     </Compile>
     <Compile Include="Editors\ScriptEditor.Designer.cs">
       <DependentUpon>ScriptEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\SurfaceEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\SurfaceEditor.Designer.cs">
+      <DependentUpon>SurfaceEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Editors\TriggerEditor.cs">
       <SubType>Form</SubType>
@@ -411,6 +429,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Editors\AIPathEditor.resx">
+      <DependentUpon>AIPathEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\AIPositionEditor.resx">
+      <DependentUpon>AIPositionEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Editors\AnimationEditor.resx">
       <DependentUpon>AnimationEditor.cs</DependentUpon>
     </EmbeddedResource>
@@ -440,6 +464,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\ScriptEditor.resx">
       <DependentUpon>ScriptEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\SurfaceEditor.resx">
+      <DependentUpon>SurfaceEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\TriggerEditor.resx">
       <DependentUpon>TriggerEditor.cs</DependentUpon>

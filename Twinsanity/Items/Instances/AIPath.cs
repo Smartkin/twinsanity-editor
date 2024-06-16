@@ -4,7 +4,7 @@ namespace Twinsanity
 {
     public class AIPath : TwinsItem
     {
-        public ushort[] Arg { get; set; } = new ushort[5];
+        public ushort[] Arg { get; set; } = new ushort[5] { 0, 1, 0, 0, 0 };
 
         public override void Save(BinaryWriter writer)
         {
