@@ -23,6 +23,7 @@ namespace TwinsaityEditor
         private TwinsFile FileData { get => File.Data; }
         private InstanceFlagsEditor flagsEditor;
 
+        private ListManipulatorEvent EventsManipulator;
         private ListManipulatorUInt16 ScriptsManipulator;
         private ListManipulatorUInt16 ObjectsManipulator;
         private ListManipulatorUInt16 AnimationsManipulator;
@@ -47,6 +48,7 @@ namespace TwinsaityEditor
             controller = c;
             Text = $"Instance Editor (Section {c.Data.Parent.ID})";
             InitializeComponent();
+            EventsManipulator = new ListManipulatorEvent(eventsAdd, eventsRemove, eventsSet, eventsUp, eventsDown, eventsListBox, eventSource, callerSource, scriptSource, argumentSource);
             ScriptsManipulator = new ListManipulatorUInt16(scriptsAdd, scriptsRemove, scriptsSet, scriptsUp, scriptsDown, scriptsListBox, scrtiptIdSource);
             ObjectsManipulator = new ListManipulatorUInt16(objectsAdd, objectsRemove, objectsSet, objectsUp, objectsDown, objectsListBox, objectIdSource);
             OGIManipulator = new ListManipulatorUInt16(ogiAdd, ogiRemove, ogiSet, ogiUp, ogiDown, ogiListBox, ogiIdSource);
@@ -137,6 +139,8 @@ namespace TwinsaityEditor
         }
         private void InitLists()
         {
+            EventsManipulator.SetSource(gameObject.UI32);
+            EventsManipulator.PopulateList();
             ScriptsManipulator.SetSource(gameObject.Scripts);
             ScriptsManipulator.PopulateList();
             ObjectsManipulator.SetSource(gameObject.Objects);
@@ -173,10 +177,23 @@ namespace TwinsaityEditor
             unk4Manipulator.PopulateList();
 
             nameSource.Text = gameObject.Name;
+            uint objType = (gameObject.UnkBitfield >> 0x14 & 0xFF);
+            uint mobileType = (gameObject.UnkBitfield >> 0xC & 0xFF);
+            uint jointIDcount = (gameObject.UnkBitfield >> 0x6 & 0x3F);
+            uint exitPointcount = (gameObject.UnkBitfield & 0x3F);
+            comboBoxObjectType.SelectedIndex = (int)objType;
+            switch (mobileType)
+            {
+                default: comboBoxObjectMobileType.SelectedIndex = 0; break;
+                case 17: comboBoxObjectMobileType.SelectedIndex = 1; break;
+                case 18: comboBoxObjectMobileType.SelectedIndex = 2; break;
+            }
+            numericUpDownJointIDs.Value = jointIDcount;
+            numericUpDownExitPoints.Value = exitPointcount;
             objectId.Text = Convert.ToString(gameObject.ID, 10);
+            instFlagsBox.Value = gameObject.PUI32;
 
             PopulateObjectCommandList();
-            instFlagsBox.Value = gameObject.PUI32;
         }
 
         private void nameSource_TextChanged(object sender, EventArgs e)
@@ -636,6 +653,12 @@ namespace TwinsaityEditor
             }
         }
 
+        private void typeSource_TextChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+
         private void buttonEditFlags_Click(object sender, EventArgs e)
         {
             if (flagsEditor == null || flagsEditor.IsDisposed)
@@ -652,6 +675,63 @@ namespace TwinsaityEditor
             {
                 flagsEditor.Agent = gameObject;
             }
+        }
+
+        private void comboBoxObjectType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            uint objType = (gameObject.UnkBitfield >> 0x14 & 0xFF);
+            uint mobileType = (gameObject.UnkBitfield >> 0xC & 0xFF);
+            uint jointIDcount = (gameObject.UnkBitfield >> 0x6 & 0x3F);
+            uint exitPointcount = (gameObject.UnkBitfield & 0x3F);
+            gameObject.UnkBitfield = 0;
+            gameObject.UnkBitfield += (uint)comboBoxObjectType.SelectedIndex << 0x14;
+            gameObject.UnkBitfield += mobileType << 0xC;
+            gameObject.UnkBitfield += jointIDcount << 0x6;
+            gameObject.UnkBitfield += exitPointcount;
+        }
+
+        private void comboBoxObjectMobileType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            uint objType = (gameObject.UnkBitfield >> 0x14 & 0xFF);
+            uint mobileType = (gameObject.UnkBitfield >> 0xC & 0xFF);
+            uint jointIDcount = (gameObject.UnkBitfield >> 0x6 & 0x3F);
+            uint exitPointcount = (gameObject.UnkBitfield & 0x3F);
+            gameObject.UnkBitfield = 0;
+            gameObject.UnkBitfield += objType << 0x14;
+            switch (comboBoxObjectMobileType.SelectedIndex)
+            {
+                default: gameObject.UnkBitfield += 1 << 0xC; break;
+                case 1: gameObject.UnkBitfield += 17 << 0xC; break;
+                case 2: gameObject.UnkBitfield += 18 << 0xC; break;
+            }
+            gameObject.UnkBitfield += jointIDcount << 0x6;
+            gameObject.UnkBitfield += exitPointcount;
+        }
+
+        private void numericUpDownJointIDs_ValueChanged(object sender, EventArgs e)
+        {
+            uint objType = (gameObject.UnkBitfield >> 0x14 & 0xFF);
+            uint mobileType = (gameObject.UnkBitfield >> 0xC & 0xFF);
+            uint jointIDcount = (gameObject.UnkBitfield >> 0x6 & 0x3F);
+            uint exitPointcount = (gameObject.UnkBitfield & 0x3F);
+            gameObject.UnkBitfield = 0;
+            gameObject.UnkBitfield += objType << 0x14;
+            gameObject.UnkBitfield += mobileType << 0xC;
+            gameObject.UnkBitfield += (uint)numericUpDownJointIDs.Value << 0x6;
+            gameObject.UnkBitfield += exitPointcount;
+        }
+
+        private void numericUpDownExitPoints_ValueChanged(object sender, EventArgs e)
+        {
+            uint objType = (gameObject.UnkBitfield >> 0x14 & 0xFF);
+            uint mobileType = (gameObject.UnkBitfield >> 0xC & 0xFF);
+            uint jointIDcount = (gameObject.UnkBitfield >> 0x6 & 0x3F);
+            uint exitPointcount = (gameObject.UnkBitfield & 0x3F);
+            gameObject.UnkBitfield = 0;
+            gameObject.UnkBitfield += objType << 0x14;
+            gameObject.UnkBitfield += mobileType << 0xC;
+            gameObject.UnkBitfield += jointIDcount << 0x6;
+            gameObject.UnkBitfield += (byte)numericUpDownExitPoints.Value;
         }
     }
 }

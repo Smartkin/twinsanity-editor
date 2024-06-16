@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ObjectEditor));
             this.objectList = new System.Windows.Forms.ListBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -131,6 +130,9 @@
             this.cscriptsUp = new System.Windows.Forms.Button();
             this.cscriptsList = new System.Windows.Forms.ListBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.groupBox20 = new System.Windows.Forms.GroupBox();
+            this.instFlagsBox = new System.Windows.Forms.NumericUpDown();
+            this.buttonEditFlags = new System.Windows.Forms.Button();
             this.groupBox14 = new System.Windows.Forms.GroupBox();
             this.unk4Source = new System.Windows.Forms.TextBox();
             this.unk4Set = new System.Windows.Forms.Button();
@@ -202,7 +204,24 @@
             this.btnAddCommand = new System.Windows.Forms.Button();
             this.groupBox18 = new System.Windows.Forms.GroupBox();
             this.commandsList = new System.Windows.Forms.ListBox();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.groupBox19 = new System.Windows.Forms.GroupBox();
+            this.label22 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.callerSource = new System.Windows.Forms.TextBox();
+            this.scriptSource = new System.Windows.Forms.TextBox();
+            this.argumentSource = new System.Windows.Forms.TextBox();
+            this.eventSource = new System.Windows.Forms.TextBox();
+            this.eventsSet = new System.Windows.Forms.Button();
+            this.eventsAdd = new System.Windows.Forms.Button();
+            this.eventsDown = new System.Windows.Forms.Button();
+            this.eventsRemove = new System.Windows.Forms.Button();
+            this.eventsUp = new System.Windows.Forms.Button();
+            this.eventsListBox = new System.Windows.Forms.ListBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label23 = new System.Windows.Forms.Label();
             this.objectId = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.nameSource = new System.Windows.Forms.TextBox();
@@ -212,9 +231,12 @@
             this.deleteObjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createObjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.duplicateObjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.groupBox19 = new System.Windows.Forms.GroupBox();
-            this.buttonEditFlags = new System.Windows.Forms.Button();
-            this.instFlagsBox = new System.Windows.Forms.NumericUpDown();
+            this.comboBoxObjectType = new System.Windows.Forms.ComboBox();
+            this.comboBoxObjectMobileType = new System.Windows.Forms.ComboBox();
+            this.label24 = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
+            this.numericUpDownJointIDs = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownExitPoints = new System.Windows.Forms.NumericUpDown();
             this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -232,16 +254,20 @@
             this.groupBox12.SuspendLayout();
             this.groupBox13.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.groupBox20.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.instFlagsBox)).BeginInit();
             this.groupBox14.SuspendLayout();
             this.groupBox15.SuspendLayout();
             this.groupBox16.SuspendLayout();
             this.groupBox17.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.groupBox18.SuspendLayout();
+            this.tabPage5.SuspendLayout();
+            this.groupBox19.SuspendLayout();
             this.panel1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
-            this.groupBox19.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.instFlagsBox)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownJointIDs)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownExitPoints)).BeginInit();
             this.SuspendLayout();
             // 
             // objectList
@@ -272,6 +298,7 @@
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(3, 57);
             this.tabControl1.Name = "tabControl1";
@@ -781,7 +808,7 @@
             this.groupBox8.Size = new System.Drawing.Size(232, 195);
             this.groupBox8.TabIndex = 11;
             this.groupBox8.TabStop = false;
-            this.groupBox8.Text = "Code Model List";
+            this.groupBox8.Text = "Custom Agent List";
             // 
             // ccmIdSource
             // 
@@ -1225,7 +1252,7 @@
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.groupBox19);
+            this.tabPage3.Controls.Add(this.groupBox20);
             this.tabPage3.Controls.Add(this.groupBox14);
             this.tabPage3.Controls.Add(this.groupBox15);
             this.tabPage3.Controls.Add(this.groupBox16);
@@ -1236,6 +1263,40 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Instance values";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // groupBox20
+            // 
+            this.groupBox20.Controls.Add(this.instFlagsBox);
+            this.groupBox20.Controls.Add(this.buttonEditFlags);
+            this.groupBox20.Location = new System.Drawing.Point(245, 213);
+            this.groupBox20.Name = "groupBox20";
+            this.groupBox20.Size = new System.Drawing.Size(232, 195);
+            this.groupBox20.TabIndex = 18;
+            this.groupBox20.TabStop = false;
+            this.groupBox20.Text = "Instance flags";
+            // 
+            // instFlagsBox
+            // 
+            this.instFlagsBox.Location = new System.Drawing.Point(10, 22);
+            this.instFlagsBox.Maximum = new decimal(new int[] {
+            -1,
+            0,
+            0,
+            0});
+            this.instFlagsBox.Name = "instFlagsBox";
+            this.instFlagsBox.Size = new System.Drawing.Size(216, 20);
+            this.instFlagsBox.TabIndex = 2;
+            this.instFlagsBox.ValueChanged += new System.EventHandler(this.instFlagsBox_ValueChanged);
+            // 
+            // buttonEditFlags
+            // 
+            this.buttonEditFlags.Location = new System.Drawing.Point(10, 47);
+            this.buttonEditFlags.Name = "buttonEditFlags";
+            this.buttonEditFlags.Size = new System.Drawing.Size(75, 23);
+            this.buttonEditFlags.TabIndex = 1;
+            this.buttonEditFlags.Text = "Edit Flags";
+            this.buttonEditFlags.UseVisualStyleBackColor = true;
+            this.buttonEditFlags.Click += new System.EventHandler(this.buttonEditFlags_Click);
             // 
             // groupBox14
             // 
@@ -1916,8 +1977,166 @@
             this.commandsList.TabIndex = 0;
             this.commandsList.SelectedIndexChanged += new System.EventHandler(this.commandsList_SelectedIndexChanged);
             // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(this.groupBox19);
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage5.Size = new System.Drawing.Size(727, 509);
+            this.tabPage5.TabIndex = 4;
+            this.tabPage5.Text = "Message Events";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // groupBox19
+            // 
+            this.groupBox19.Controls.Add(this.label22);
+            this.groupBox19.Controls.Add(this.label21);
+            this.groupBox19.Controls.Add(this.label20);
+            this.groupBox19.Controls.Add(this.label18);
+            this.groupBox19.Controls.Add(this.callerSource);
+            this.groupBox19.Controls.Add(this.scriptSource);
+            this.groupBox19.Controls.Add(this.argumentSource);
+            this.groupBox19.Controls.Add(this.eventSource);
+            this.groupBox19.Controls.Add(this.eventsSet);
+            this.groupBox19.Controls.Add(this.eventsAdd);
+            this.groupBox19.Controls.Add(this.eventsDown);
+            this.groupBox19.Controls.Add(this.eventsRemove);
+            this.groupBox19.Controls.Add(this.eventsUp);
+            this.groupBox19.Controls.Add(this.eventsListBox);
+            this.groupBox19.Location = new System.Drawing.Point(17, 6);
+            this.groupBox19.Name = "groupBox19";
+            this.groupBox19.Size = new System.Drawing.Size(704, 497);
+            this.groupBox19.TabIndex = 2;
+            this.groupBox19.TabStop = false;
+            this.groupBox19.Text = "Message Event List";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(21, 428);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(49, 13);
+            this.label22.TabIndex = 39;
+            this.label22.Text = "Channel:";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(21, 388);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(51, 13);
+            this.label21.TabIndex = 38;
+            this.label21.Text = "Script ID:";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(17, 353);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(55, 13);
+            this.label20.TabIndex = 37;
+            this.label20.Text = "Argument:";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(40, 466);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(32, 13);
+            this.label18.TabIndex = 36;
+            this.label18.Text = "Raw:";
+            // 
+            // callerSource
+            // 
+            this.callerSource.Location = new System.Drawing.Point(78, 425);
+            this.callerSource.Name = "callerSource";
+            this.callerSource.Size = new System.Drawing.Size(296, 20);
+            this.callerSource.TabIndex = 9;
+            // 
+            // scriptSource
+            // 
+            this.scriptSource.Location = new System.Drawing.Point(78, 385);
+            this.scriptSource.Name = "scriptSource";
+            this.scriptSource.Size = new System.Drawing.Size(296, 20);
+            this.scriptSource.TabIndex = 8;
+            // 
+            // argumentSource
+            // 
+            this.argumentSource.Location = new System.Drawing.Point(78, 350);
+            this.argumentSource.Name = "argumentSource";
+            this.argumentSource.Size = new System.Drawing.Size(296, 20);
+            this.argumentSource.TabIndex = 7;
+            // 
+            // eventSource
+            // 
+            this.eventSource.Location = new System.Drawing.Point(78, 463);
+            this.eventSource.Name = "eventSource";
+            this.eventSource.Size = new System.Drawing.Size(296, 20);
+            this.eventSource.TabIndex = 6;
+            // 
+            // eventsSet
+            // 
+            this.eventsSet.Location = new System.Drawing.Point(10, 162);
+            this.eventsSet.Name = "eventsSet";
+            this.eventsSet.Size = new System.Drawing.Size(55, 23);
+            this.eventsSet.TabIndex = 5;
+            this.eventsSet.Text = "Set";
+            this.eventsSet.UseVisualStyleBackColor = true;
+            // 
+            // eventsAdd
+            // 
+            this.eventsAdd.Location = new System.Drawing.Point(10, 133);
+            this.eventsAdd.Name = "eventsAdd";
+            this.eventsAdd.Size = new System.Drawing.Size(55, 23);
+            this.eventsAdd.TabIndex = 4;
+            this.eventsAdd.Text = "Add";
+            this.eventsAdd.UseVisualStyleBackColor = true;
+            // 
+            // eventsDown
+            // 
+            this.eventsDown.Location = new System.Drawing.Point(10, 104);
+            this.eventsDown.Name = "eventsDown";
+            this.eventsDown.Size = new System.Drawing.Size(55, 23);
+            this.eventsDown.TabIndex = 3;
+            this.eventsDown.Text = "Down";
+            this.eventsDown.UseVisualStyleBackColor = true;
+            // 
+            // eventsRemove
+            // 
+            this.eventsRemove.Location = new System.Drawing.Point(10, 60);
+            this.eventsRemove.Name = "eventsRemove";
+            this.eventsRemove.Size = new System.Drawing.Size(55, 23);
+            this.eventsRemove.TabIndex = 2;
+            this.eventsRemove.Text = "Remove";
+            this.eventsRemove.UseVisualStyleBackColor = true;
+            // 
+            // eventsUp
+            // 
+            this.eventsUp.Location = new System.Drawing.Point(10, 19);
+            this.eventsUp.Name = "eventsUp";
+            this.eventsUp.Size = new System.Drawing.Size(55, 23);
+            this.eventsUp.TabIndex = 1;
+            this.eventsUp.Text = "Up";
+            this.eventsUp.UseVisualStyleBackColor = true;
+            // 
+            // eventsListBox
+            // 
+            this.eventsListBox.FormattingEnabled = true;
+            this.eventsListBox.Location = new System.Drawing.Point(78, 19);
+            this.eventsListBox.Name = "eventsListBox";
+            this.eventsListBox.Size = new System.Drawing.Size(620, 316);
+            this.eventsListBox.TabIndex = 0;
+            // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.numericUpDownExitPoints);
+            this.panel1.Controls.Add(this.numericUpDownJointIDs);
+            this.panel1.Controls.Add(this.label25);
+            this.panel1.Controls.Add(this.label24);
+            this.panel1.Controls.Add(this.comboBoxObjectMobileType);
+            this.panel1.Controls.Add(this.comboBoxObjectType);
+            this.panel1.Controls.Add(this.label23);
             this.panel1.Controls.Add(this.objectId);
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.nameSource);
@@ -1928,18 +2147,28 @@
             this.panel1.Size = new System.Drawing.Size(735, 41);
             this.panel1.TabIndex = 1;
             // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(281, 15);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(37, 13);
+            this.label23.TabIndex = 6;
+            this.label23.Text = "Type: ";
+            // 
             // objectId
             // 
-            this.objectId.Location = new System.Drawing.Point(60, 12);
+            this.objectId.Enabled = false;
+            this.objectId.Location = new System.Drawing.Point(35, 12);
             this.objectId.Name = "objectId";
-            this.objectId.Size = new System.Drawing.Size(146, 20);
+            this.objectId.Size = new System.Drawing.Size(53, 20);
             this.objectId.TabIndex = 5;
             this.objectId.TextChanged += new System.EventHandler(this.objectId_TextChanged);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(18, 15);
+            this.label3.Location = new System.Drawing.Point(8, 15);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(21, 13);
             this.label3.TabIndex = 4;
@@ -1947,7 +2176,7 @@
             // 
             // nameSource
             // 
-            this.nameSource.Location = new System.Drawing.Point(249, 12);
+            this.nameSource.Location = new System.Drawing.Point(129, 12);
             this.nameSource.Name = "nameSource";
             this.nameSource.Size = new System.Drawing.Size(146, 20);
             this.nameSource.TabIndex = 1;
@@ -1956,7 +2185,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(212, 15);
+            this.label1.Location = new System.Drawing.Point(94, 15);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(41, 13);
             this.label1.TabIndex = 0;
@@ -2003,39 +2232,81 @@
             this.duplicateObjectToolStripMenuItem.Text = "Duplicate Object";
             this.duplicateObjectToolStripMenuItem.Click += new System.EventHandler(this.duplicateObjectToolStripMenuItem_Click);
             // 
-            // groupBox19
+            // comboBoxObjectType
             // 
-            this.groupBox19.Controls.Add(this.instFlagsBox);
-            this.groupBox19.Controls.Add(this.buttonEditFlags);
-            this.groupBox19.Location = new System.Drawing.Point(245, 213);
-            this.groupBox19.Name = "groupBox19";
-            this.groupBox19.Size = new System.Drawing.Size(232, 195);
-            this.groupBox19.TabIndex = 18;
-            this.groupBox19.TabStop = false;
-            this.groupBox19.Text = "Instance flags";
+            this.comboBoxObjectType.FormattingEnabled = true;
+            this.comboBoxObjectType.Items.AddRange(new object[] {
+            "Character",
+            "Pickup",
+            "Crate",
+            "Creature",
+            "Furniture",
+            "ChiChiGrass",
+            "PayGate",
+            "Foofie",
+            "Projectile"});
+            this.comboBoxObjectType.Location = new System.Drawing.Point(320, 11);
+            this.comboBoxObjectType.Name = "comboBoxObjectType";
+            this.comboBoxObjectType.Size = new System.Drawing.Size(98, 21);
+            this.comboBoxObjectType.TabIndex = 8;
+            this.comboBoxObjectType.SelectedIndexChanged += new System.EventHandler(this.comboBoxObjectType_SelectedIndexChanged);
             // 
-            // buttonEditFlags
+            // comboBoxObjectMobileType
             // 
-            this.buttonEditFlags.Location = new System.Drawing.Point(10, 47);
-            this.buttonEditFlags.Name = "buttonEditFlags";
-            this.buttonEditFlags.Size = new System.Drawing.Size(75, 23);
-            this.buttonEditFlags.TabIndex = 1;
-            this.buttonEditFlags.Text = "Edit Flags";
-            this.buttonEditFlags.UseVisualStyleBackColor = true;
-            this.buttonEditFlags.Click += new System.EventHandler(this.buttonEditFlags_Click);
+            this.comboBoxObjectMobileType.FormattingEnabled = true;
+            this.comboBoxObjectMobileType.Items.AddRange(new object[] {
+            "Mobile",
+            "Pickup",
+            "Projectile"});
+            this.comboBoxObjectMobileType.Location = new System.Drawing.Point(424, 11);
+            this.comboBoxObjectMobileType.Name = "comboBoxObjectMobileType";
+            this.comboBoxObjectMobileType.Size = new System.Drawing.Size(81, 21);
+            this.comboBoxObjectMobileType.TabIndex = 9;
+            this.comboBoxObjectMobileType.SelectedIndexChanged += new System.EventHandler(this.comboBoxObjectMobileType_SelectedIndexChanged);
             // 
-            // instFlagsBox
+            // label24
             // 
-            this.instFlagsBox.Location = new System.Drawing.Point(10, 22);
-            this.instFlagsBox.Maximum = new decimal(new int[] {
-            -1,
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(511, 15);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(54, 13);
+            this.label24.TabIndex = 10;
+            this.label24.Text = "Joint-IDs: ";
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(616, 15);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(56, 13);
+            this.label25.TabIndex = 11;
+            this.label25.Text = "ExitPoints:";
+            // 
+            // numericUpDownJointIDs
+            // 
+            this.numericUpDownJointIDs.Location = new System.Drawing.Point(565, 11);
+            this.numericUpDownJointIDs.Maximum = new decimal(new int[] {
+            63,
             0,
             0,
             0});
-            this.instFlagsBox.Name = "instFlagsBox";
-            this.instFlagsBox.Size = new System.Drawing.Size(216, 20);
-            this.instFlagsBox.TabIndex = 2;
-            this.instFlagsBox.ValueChanged += new System.EventHandler(this.instFlagsBox_ValueChanged);
+            this.numericUpDownJointIDs.Name = "numericUpDownJointIDs";
+            this.numericUpDownJointIDs.Size = new System.Drawing.Size(50, 20);
+            this.numericUpDownJointIDs.TabIndex = 12;
+            this.numericUpDownJointIDs.ValueChanged += new System.EventHandler(this.numericUpDownJointIDs_ValueChanged);
+            // 
+            // numericUpDownExitPoints
+            // 
+            this.numericUpDownExitPoints.Location = new System.Drawing.Point(678, 11);
+            this.numericUpDownExitPoints.Maximum = new decimal(new int[] {
+            63,
+            0,
+            0,
+            0});
+            this.numericUpDownExitPoints.Name = "numericUpDownExitPoints";
+            this.numericUpDownExitPoints.Size = new System.Drawing.Size(48, 20);
+            this.numericUpDownExitPoints.TabIndex = 13;
+            this.numericUpDownExitPoints.ValueChanged += new System.EventHandler(this.numericUpDownExitPoints_ValueChanged);
             // 
             // ObjectEditor
             // 
@@ -2045,7 +2316,6 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.objectList);
             this.Controls.Add(this.menuStrip1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "ObjectEditor";
             this.Text = "ObjectEditor";
@@ -2079,6 +2349,8 @@
             this.groupBox13.ResumeLayout(false);
             this.groupBox13.PerformLayout();
             this.tabPage3.ResumeLayout(false);
+            this.groupBox20.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.instFlagsBox)).EndInit();
             this.groupBox14.ResumeLayout(false);
             this.groupBox14.PerformLayout();
             this.groupBox15.ResumeLayout(false);
@@ -2090,12 +2362,15 @@
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
             this.groupBox18.ResumeLayout(false);
+            this.tabPage5.ResumeLayout(false);
+            this.groupBox19.ResumeLayout(false);
+            this.groupBox19.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.groupBox19.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.instFlagsBox)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownJointIDs)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownExitPoints)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2286,8 +2561,31 @@
         private System.Windows.Forms.Label lblArguments;
         private System.Windows.Forms.TextBox tbBitfield;
         private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.GroupBox groupBox19;
-        private System.Windows.Forms.Button buttonEditFlags;
+        private System.Windows.Forms.TextBox eventSource;
+        private System.Windows.Forms.Button eventsSet;
+        private System.Windows.Forms.Button eventsAdd;
+        private System.Windows.Forms.Button eventsDown;
+        private System.Windows.Forms.Button eventsRemove;
+        private System.Windows.Forms.Button eventsUp;
+        private System.Windows.Forms.ListBox eventsListBox;
+        private System.Windows.Forms.TextBox callerSource;
+        private System.Windows.Forms.TextBox scriptSource;
+        private System.Windows.Forms.TextBox argumentSource;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label label23;
+	private System.Windows.Forms.Button buttonEditFlags;
         private System.Windows.Forms.NumericUpDown instFlagsBox;
+	private System.Windows.Forms.GroupBox groupBox20;
+        private System.Windows.Forms.ComboBox comboBoxObjectType;
+        private System.Windows.Forms.ComboBox comboBoxObjectMobileType;
+        private System.Windows.Forms.NumericUpDown numericUpDownExitPoints;
+        private System.Windows.Forms.NumericUpDown numericUpDownJointIDs;
+        private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.Label label24;
     }
 }
