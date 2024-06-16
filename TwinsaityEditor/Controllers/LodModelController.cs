@@ -10,6 +10,7 @@ namespace TwinsaityEditor
         public LodModelController(MainForm topform, LodModel item) : base(topform, item)
         {
             Data = item;
+            AddMenu("Open editor", Menu_OpenEditor);
             AddMenu("Open model viewer", Menu_OpenViewer);
         }
 
@@ -38,6 +39,11 @@ namespace TwinsaityEditor
         private void Menu_OpenViewer()
         {
             MainFile.OpenModelViewer(this);
+        }
+
+        private void Menu_OpenEditor()
+        {
+            MainFile.OpenEditor((SectionController)Node.Parent.Tag);
         }
     }
 }

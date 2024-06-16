@@ -281,6 +281,12 @@
     <Compile Include="Editors\InstanceMBEditor.Designer.cs">
       <DependentUpon>InstanceMBEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Editors\LodEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\LodEditor.Designer.cs">
+      <DependentUpon>LodEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Editors\ObjectEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -298,6 +304,12 @@
     </Compile>
     <Compile Include="Editors\ScriptEditor.Designer.cs">
       <DependentUpon>ScriptEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Editors\SkydomeEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Editors\SkydomeEditor.Designer.cs">
+      <DependentUpon>SkydomeEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Editors\SurfaceEditor.cs">
       <SubType>Form</SubType>
@@ -456,6 +468,9 @@
     <EmbeddedResource Include="Editors\InstanceMBEditor.resx">
       <DependentUpon>InstanceMBEditor.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Editors\LodEditor.resx">
+      <DependentUpon>LodEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Editors\ObjectEditor.resx">
       <DependentUpon>ObjectEditor.cs</DependentUpon>
     </EmbeddedResource>
@@ -464,6 +479,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\ScriptEditor.resx">
       <DependentUpon>ScriptEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Editors\SkydomeEditor.resx">
+      <DependentUpon>SkydomeEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Editors\SurfaceEditor.resx">
       <DependentUpon>SurfaceEditor.cs</DependentUpon>

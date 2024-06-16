@@ -211,6 +211,10 @@ namespace TwinsaityEditor
                 OpenEditor(ref editAIPaths[((AIPathController)c).Data.Parent.Parent.ID], Editors.AIPath, (Controller)c.Node.Parent.Tag);
             else if (c is CollisionSurfaceController)
                 OpenEditor(ref editSurfaces[((CollisionSurfaceController)c).Data.Parent.Parent.ID], Editors.Surface, (Controller)c.Node.Parent.Tag);
+            else if (c is LodModelController)
+                OpenEditor(ref editLod, Editors.LodModel, (Controller)c.Node.Parent.Tag);
+            else if (c is SkydomeController)
+                OpenEditor(ref editSkydome, Editors.Skydome, (Controller)c.Node.Parent.Tag);
             else if (c is SectionController s)
             {
                 if (s.Data.Type == SectionType.ObjectInstance)
@@ -237,6 +241,10 @@ namespace TwinsaityEditor
                     OpenEditor(ref editAIPaths[s.Data.Parent.ID], Editors.AIPath, c);
                 else if (s.Data.Type == SectionType.CollisionSurface)
                     OpenEditor(ref editSurfaces[s.Data.Parent.ID], Editors.Surface, c);
+                else if (s.Data.Type == SectionType.LodModel)
+                    OpenEditor(ref editLod, Editors.LodModel, c);
+                else if (s.Data.Type == SectionType.Skydome)
+                    OpenEditor(ref editLod, Editors.Skydome, c);
             }
         }
 
@@ -272,6 +280,8 @@ namespace TwinsaityEditor
                     case Editors.AIPosition: editor_var_ptr = new AIPositionEditor((SectionController)cont) { Tag = TopForm }; break;
                     case Editors.AIPath: editor_var_ptr = new AIPathEditor((SectionController)cont) { Tag = TopForm }; break;
                     case Editors.Surface: editor_var_ptr = new SurfaceEditor((SectionController)cont) { Tag = TopForm }; break;
+                    case Editors.LodModel: editor_var_ptr = new LodEditor((SectionController)cont) { Tag = TopForm }; break;
+                    case Editors.Skydome: editor_var_ptr = new SkydomeEditor((SectionController)cont) { Tag = TopForm }; break;
                 }
                 editor_var_ptr.Show();
             }

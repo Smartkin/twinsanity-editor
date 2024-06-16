@@ -9,6 +9,7 @@ namespace TwinsaityEditor
         public SkydomeController(MainForm topform, Skydome item) : base (topform, item)
         {
             Data = item;
+            AddMenu("Open editor", Menu_OpenEditor);
             AddMenu("Open skydome viewer", Menu_OpenViewer);
         }
 
@@ -30,6 +31,11 @@ namespace TwinsaityEditor
         private void Menu_OpenViewer()
         {
             MainFile.OpenSkydomeViewer(this);
+        }
+
+        private void Menu_OpenEditor()
+        {
+            MainFile.OpenEditor((SectionController)Node.Parent.Tag);
         }
     }
 }
