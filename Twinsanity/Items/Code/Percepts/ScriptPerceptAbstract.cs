@@ -55,7 +55,7 @@ namespace Twinsanity.Actions
             [DefaultEnums.ConditionID.HeadCanSeePlayer] = PerceptArgument.ExitPoint,
             [DefaultEnums.ConditionID.PlayerHeadLookingAtMe] = PerceptArgument.ExitPoint,
             [DefaultEnums.ConditionID.PlayerHeadCanSeeMe] = PerceptArgument.ExitPoint,
-            [DefaultEnums.ConditionID.HeadCanSeePlayerUnblocked] = PerceptArgument.ExitPoint,
+            [DefaultEnums.ConditionID.PlayerIsAirborne] = PerceptArgument.ExitPoint,
         };
 
         public abstract void Load(Script.MainScript.ScriptCondition input);
