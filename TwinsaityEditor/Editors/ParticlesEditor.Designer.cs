@@ -892,7 +892,7 @@
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(58, 13);
             this.label7.TabIndex = 13;
-            this.label7.Text = "UnkShort7";
+            this.label7.Text = "Plane Angle";
             // 
             // label6
             // 
@@ -901,7 +901,7 @@
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(58, 13);
             this.label6.TabIndex = 12;
-            this.label6.Text = "UnkShort6";
+            this.label6.Text = "Unused";
             // 
             // label5
             // 
@@ -977,7 +977,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(58, 13);
             this.label2.TabIndex = 3;
-            this.label2.Text = "UnkShort5";
+            this.label2.Text = "EmitRotZ";
             // 
             // groupBox1
             // 
@@ -1430,7 +1430,7 @@
             this.label93.Name = "label93";
             this.label93.Size = new System.Drawing.Size(66, 13);
             this.label93.TabIndex = 8;
-            this.label93.Text = "UnkUShort8";
+            this.label93.Text = "TextureFrameCount";
             // 
             // numericUpDown88
             // 
@@ -1720,7 +1720,7 @@
             this.label92.Name = "label92";
             this.label92.Size = new System.Drawing.Size(54, 13);
             this.label92.TabIndex = 22;
-            this.label92.Text = "UnkByte6";
+            this.label92.Text = "TextureFrameStart";
             // 
             // numericUpDown110
             // 
@@ -1753,7 +1753,7 @@
             this.label56.Name = "label56";
             this.label56.Size = new System.Drawing.Size(54, 13);
             this.label56.TabIndex = 24;
-            this.label56.Text = "UnkByte7";
+            this.label56.Text = "TextureFrameHold";
             // 
             // numericUpDown109
             // 
@@ -1786,7 +1786,7 @@
             this.label57.Name = "label57";
             this.label57.Size = new System.Drawing.Size(62, 13);
             this.label57.TabIndex = 47;
-            this.label57.Text = "UnkFloat22";
+            this.label57.Text = "TextureFrameRate";
             // 
             // numericUpDown108
             // 
@@ -2069,7 +2069,7 @@
             this.label82.Name = "label82";
             this.label82.Size = new System.Drawing.Size(52, 13);
             this.label82.TabIndex = 127;
-            this.label82.Text = "UnkVec3";
+            this.label82.Text = "BoundingExtents";
             // 
             // numericUpDown113
             // 
@@ -2187,7 +2187,7 @@
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(66, 13);
             this.label18.TabIndex = 24;
-            this.label18.Text = "UnkUShort3";
+            this.label18.Text = "TimingOffset";
             // 
             // panel2
             // 
@@ -3329,7 +3329,7 @@
             this.label89.Name = "label89";
             this.label89.Size = new System.Drawing.Size(100, 13);
             this.label89.TabIndex = 166;
-            this.label89.Text = "Unk2: Time / Value";
+            this.label89.Text = "Unk2: Time / Value (unused)";
             // 
             // numericUpDown188
             // 
@@ -4298,7 +4298,7 @@
             this.label88.Name = "label88";
             this.label88.Size = new System.Drawing.Size(100, 13);
             this.label88.TabIndex = 165;
-            this.label88.Text = "Unk1: Time / Value";
+            this.label88.Text = "Unk1: Time / Value (unused)";
             // 
             // numericUpDown148
             // 
@@ -6156,7 +6156,7 @@
             this.label53.Name = "label53";
             this.label53.Size = new System.Drawing.Size(62, 13);
             this.label53.TabIndex = 92;
-            this.label53.Text = "UnkFloat19";
+            this.label53.Text = "VelocityBaseZ";
             // 
             // label52
             // 
@@ -6165,7 +6165,7 @@
             this.label52.Name = "label52";
             this.label52.Size = new System.Drawing.Size(62, 13);
             this.label52.TabIndex = 91;
-            this.label52.Text = "UnkFloat18";
+            this.label52.Text = "VelocityBaseY";
             // 
             // label51
             // 
@@ -6174,7 +6174,7 @@
             this.label51.Name = "label51";
             this.label51.Size = new System.Drawing.Size(62, 13);
             this.label51.TabIndex = 90;
-            this.label51.Text = "UnkFloat17";
+            this.label51.Text = "VelocityBaseX";
             // 
             // label50
             // 
@@ -6183,7 +6183,7 @@
             this.label50.Name = "label50";
             this.label50.Size = new System.Drawing.Size(62, 13);
             this.label50.TabIndex = 89;
-            this.label50.Text = "UnkFloat16";
+            this.label50.Text = "VelocityRandomScaleZ";
             // 
             // label49
             // 
@@ -6192,7 +6192,7 @@
             this.label49.Name = "label49";
             this.label49.Size = new System.Drawing.Size(62, 13);
             this.label49.TabIndex = 88;
-            this.label49.Text = "UnkFloat15";
+            this.label49.Text = "VelocityRandomScaleY";
             // 
             // label48
             // 
@@ -6201,7 +6201,7 @@
             this.label48.Name = "label48";
             this.label48.Size = new System.Drawing.Size(62, 13);
             this.label48.TabIndex = 87;
-            this.label48.Text = "UnkFloat14";
+            this.label48.Text = "VelocityRandomScaleX";
             // 
             // numericUpDown51
             // 
@@ -6354,7 +6354,7 @@
             this.label47.Name = "label47";
             this.label47.Size = new System.Drawing.Size(62, 13);
             this.label47.TabIndex = 78;
-            this.label47.Text = "UnkFloat13";
+            this.label47.Text = "StartBaseZ";
             // 
             // label46
             // 
@@ -6363,7 +6363,7 @@
             this.label46.Name = "label46";
             this.label46.Size = new System.Drawing.Size(62, 13);
             this.label46.TabIndex = 77;
-            this.label46.Text = "UnkFloat12";
+            this.label46.Text = "StartBaseY";
             // 
             // label45
             // 
@@ -6372,7 +6372,7 @@
             this.label45.Name = "label45";
             this.label45.Size = new System.Drawing.Size(62, 13);
             this.label45.TabIndex = 76;
-            this.label45.Text = "UnkFloat11";
+            this.label45.Text = "StartBaseX";
             // 
             // label44
             // 
@@ -6381,7 +6381,7 @@
             this.label44.Name = "label44";
             this.label44.Size = new System.Drawing.Size(62, 13);
             this.label44.TabIndex = 75;
-            this.label44.Text = "UnkFloat10";
+            this.label44.Text = "StartRandomScaleZ";
             // 
             // label43
             // 
@@ -6390,7 +6390,7 @@
             this.label43.Name = "label43";
             this.label43.Size = new System.Drawing.Size(56, 13);
             this.label43.TabIndex = 74;
-            this.label43.Text = "UnkFloat9";
+            this.label43.Text = "StartRandomScaleY";
             // 
             // label42
             // 
@@ -6399,7 +6399,7 @@
             this.label42.Name = "label42";
             this.label42.Size = new System.Drawing.Size(56, 13);
             this.label42.TabIndex = 73;
-            this.label42.Text = "UnkFloat8";
+            this.label42.Text = "StartRandomScaleX";
             // 
             // label41
             // 
@@ -6480,7 +6480,7 @@
             this.label34.Name = "label34";
             this.label34.Size = new System.Drawing.Size(56, 13);
             this.label34.TabIndex = 65;
-            this.label34.Text = "UnkFloat6";
+            this.label34.Text = "UnkFloat6 (unused)";
             // 
             // label33
             // 
@@ -6489,7 +6489,7 @@
             this.label33.Name = "label33";
             this.label33.Size = new System.Drawing.Size(56, 13);
             this.label33.TabIndex = 64;
-            this.label33.Text = "UnkFloat5";
+            this.label33.Text = "UnkFloat5 (unused)";
             // 
             // label32
             // 
@@ -6957,7 +6957,7 @@
             this.label29.Name = "label29";
             this.label29.Size = new System.Drawing.Size(56, 13);
             this.label29.TabIndex = 42;
-            this.label29.Text = "UnkFloat1";
+            this.label29.Text = "UnkFloat1 (unused)";
             // 
             // numericUpDown27
             // 
@@ -6990,7 +6990,7 @@
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(54, 13);
             this.label28.TabIndex = 40;
-            this.label28.Text = "UnkByte5";
+            this.label28.Text = "UnkByte5 (unused)";
             // 
             // numericUpDown26
             // 
@@ -7039,7 +7039,7 @@
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(54, 13);
             this.label26.TabIndex = 36;
-            this.label26.Text = "UnkByte3";
+            this.label26.Text = "GenCode";
             // 
             // numericUpDown25
             // 

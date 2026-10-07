@@ -50,21 +50,21 @@ namespace TwinsaityEditor
                 if (Data.Version == 0x20) text.Add($"\tGenRate: {PS.UnkByte1} ");
                 text.Add($"\tGenRate: {PS.GenRate} ");
                 text.Add($"\tMax Particle Count: {PS.MaxParticleCount} ");
-                text.Add($"\tUnkUShort3: {PS.UnkUShort3} ");
+                text.Add($"\tTiming Offset: {PS.TimingOffset} ");
                 text.Add($"\tEmitter Over Time: {PS.Emitter_OverTime} ");
                 text.Add($"\tEmitter Over Time Random: {PS.Emitter_OverTimeRandom} ");
                 text.Add($"\tEmitter Off Time: {PS.Emitter_OffTime} ");
                 text.Add($"\tEmitter Off Time Random: {PS.Emitter_OffTimeRandom} ");
                 text.Add($"\tGenSort: {PS.GSort} ");
-                text.Add($"\tUnkByte3: {PS.UnkByte3} ");
+                text.Add($"\tGenCode: {PS.GCode} ");
                 text.Add($"\tTexture Filtering: {PS.TextureFilter} ");
-                text.Add($"\tUnkByte5: {PS.UnkByte5} ");
-                text.Add($"\tUnkFloat1: {PS.UnkFloat1} ");
+                text.Add($"\tUnkByte5 (unused): {PS.UnkByte5} ");
+                text.Add($"\tUnkFloat1 (unused): {PS.UnkFloat1} ");
                 if (Data.Version >= 0x6) text.Add($"\tCutOn Radius: {PS.CutOnRadius} ");
                 if (Data.Version >= 0x6) text.Add($"\tCutOff Radius: {PS.CutOffRadius} ");
                 if (Data.Version >= 0xA) text.Add($"\tDraw CutOff: {PS.DrawCutOff} ");
-                if (Data.Version > 0x16) text.Add($"\tUnkFloat5: {PS.UnkFloat5} ");
-                if (Data.Version >= 0x18) text.Add($"\tUnkFloat6: {PS.UnkFloat6} ");
+                if (Data.Version > 0x16) text.Add($"\tUnkFloat5 (unused): {PS.UnkFloat5} ");
+                if (Data.Version >= 0x18) text.Add($"\tUnkFloat6 (unused): {PS.UnkFloat6} ");
                 text.Add($"\tVelocity: {PS.Velocity} ");
                 text.Add($"\tRandom Emit X: {PS.Random_Emit_X} ");
                 text.Add($"\tRandom Emit Y: {PS.Random_Emit_Y} ");
@@ -72,24 +72,24 @@ namespace TwinsaityEditor
                 text.Add($"\tRandom Start X: {PS.Random_Start_X} ");
                 text.Add($"\tRandom Start Y: {PS.Random_Start_Y} ");
                 text.Add($"\tRandom Start Z: {PS.Random_Start_Z} ");
-                text.Add($"\tUnkFloat8: {PS.UnkFloat8} ");
-                text.Add($"\tUnkFloat9: {PS.UnkFloat9} ");
-                text.Add($"\tUnkFloat10: {PS.UnkFloat10} ");
-                text.Add($"\tUnkFloat11: {PS.UnkFloat11} ");
-                text.Add($"\tUnkFloat12: {PS.UnkFloat12} ");
-                text.Add($"\tUnkFloat13: {PS.UnkFloat13} ");
-                text.Add($"\tUnkFloat14: {PS.UnkFloat14} ");
-                text.Add($"\tUnkFloat15: {PS.UnkFloat15} ");
-                text.Add($"\tUnkFloat16: {PS.UnkFloat16} ");
-                text.Add($"\tUnkFloat17: {PS.UnkFloat17} ");
-                text.Add($"\tUnkFloat18: {PS.UnkFloat18} ");
-                text.Add($"\tUnkFloat19: {PS.UnkFloat19} ");
+                text.Add($"\tStartRandomScaleX: {PS.StartRandomScaleX} ");
+                text.Add($"\tStartRandomScaleY: {PS.StartRandomScaleY} ");
+                text.Add($"\tStartRandomScaleZ: {PS.StartRandomScaleZ} ");
+                text.Add($"\tStartBaseX: {PS.StartBaseX} ");
+                text.Add($"\tStartBaseY: {PS.StartBaseY} ");
+                text.Add($"\tStartBaseZ: {PS.StartBaseZ} ");
+                text.Add($"\tVelocityRandomScaleX: {PS.VelocityRandomScaleX} ");
+                text.Add($"\tVelocityRandomScaleY: {PS.VelocityRandomScaleY} ");
+                text.Add($"\tVelocityRandomScaleZ: {PS.VelocityRandomScaleZ} ");
+                text.Add($"\tVelocityBaseX: {PS.VelocityBaseX} ");
+                text.Add($"\tVelocityBaseY: {PS.VelocityBaseY} ");
+                text.Add($"\tVelocityBaseZ: {PS.VelocityBaseZ} ");
                 text.Add($"\tGravity: {PS.Gravity} ");
                 text.Add($"\tParticleLifeTime: {PS.ParticleLifeTime} ");
-                text.Add($"\tUnkShort8: {PS.UnkUShort8} ");
-                text.Add($"\tUnkByte6: {PS.UnkByte6} ");
-                text.Add($"\tUnkByte7: {PS.UnkByte7} ");
-                text.Add($"\tUnkFloat22: {PS.UnkFloat22} ");
+                text.Add($"\tTextureFrameCount: {PS.TextureFrameCount} ");
+                text.Add($"\tTextureFrameStart: {PS.TextureFrameStart} ");
+                text.Add($"\tTextureFrameHold: {PS.TextureFrameHold} ");
+                text.Add($"\tTextureFrameRate: {PS.TextureFrameRate} ");
                 text.Add($"\tJibberXFreq: {PS.JibberXFreq} ");
                 text.Add($"\tJibberXAmp: {PS.JibberXAmp} ");
                 text.Add($"\tJibberYFreq: {PS.JibberYFreq} ");
@@ -122,11 +122,11 @@ namespace TwinsaityEditor
                 }
                 for (int a = 0; a < PS.UnkGradient1Time.Length; a++)
                 {
-                    text.Add($"\tUnkGrad1 {a}: Time: {PS.UnkGradient1Time[a]} Value: {PS.UnkGradient1Value[a]}");
+                    text.Add($"\tUnusedGrad1 {a}: Time: {PS.UnkGradient1Time[a]} Value: {PS.UnkGradient1Value[a]}");
                 }
                 for (int a = 0; a < PS.UnkGradient2Time.Length; a++)
                 {
-                    text.Add($"\tUnkGrad2 {a}: Time: {PS.UnkGradient2Time[a]} Value: {PS.UnkGradient2Value[a]}");
+                    text.Add($"\tUnusedGrad2 {a}: Time: {PS.UnkGradient2Time[a]} Value: {PS.UnkGradient2Value[a]}");
                 }
                 if (PS.TextureStartX >= 524288f)
                     text.Add($"\tTextureStartX: {PS.TextureStartX - 524288f} / {PS.TextureStartX} F2");
@@ -161,7 +161,7 @@ namespace TwinsaityEditor
                 if (Data.Version >= 0x19) text.Add($"\tStarRadiusRatio: {PS.StarRadiusRatio} ");
                 if (Data.Version >= 0x1A) text.Add($"\tRampTime: {PS.RampTime} ");
                 if (Data.Version > 0x1A) text.Add($"\tTexture Page: {PS.TexturePage} ");
-                if (Data.Version >= 0x1E) text.Add($"\tUnkVec3: {PS.UnkVec3.X}; {PS.UnkVec3.Y}; {PS.UnkVec3.Z}; {PS.UnkVec3.W}");
+                if (Data.Version >= 0x1E) text.Add($"\tBoundingExtents: {PS.BoundingExtents.X}; {PS.BoundingExtents.Y}; {PS.BoundingExtents.Z}; {PS.BoundingExtents.W}");
                 if (Data.Version >= 0xB && Data.Version <= 0x15)
                 {
                     for (int a = 0; a < PS.SoundIDs.Length; a++)

@@ -20,6 +20,7 @@ namespace TwinsaityEditor
         {
             File = c.MainFile;
             controller = c;
+            ignore_value_change = true;
             InitializeComponent();
             Text = $"Particles Editor";
             PopulateList();
@@ -69,13 +70,13 @@ namespace TwinsaityEditor
             numericUpDown15.Value = (decimal)CurInst.GravityRotY;
             numericUpDown18.Value = (decimal)CurInst.EmitRotX;
             numericUpDown19.Value = (decimal)CurInst.EmitRotY;
-            numericUpDown1.Value = (decimal)CurInst.UnkShort5;
+            numericUpDown1.Value = (decimal)CurInst.EmitRotZ;
             numericUpDown2.Value = (decimal)CurInst.Offset;
             numericUpDown3.Value = (decimal)CurInst.SwitchType;
             numericUpDown4.Value = (decimal)CurInst.SwitchID;
             numericUpDown5.Value = (decimal)CurInst.SwitchValue;
             numericUpDown6.Value = (decimal)CurInst.UnkShort6;
-            numericUpDown7.Value = (decimal)CurInst.UnkShort7;
+            numericUpDown7.Value = (decimal)CurInst.BouncePlaneAngle;
             numericUpDown8.Value = (decimal)CurInst.PlaneOffset;
             numericUpDown9.Value = (decimal)CurInst.BounceFactor;
             numericUpDown13.Value = (decimal)CurInst.GroupID;
@@ -201,7 +202,7 @@ namespace TwinsaityEditor
                 UnkFloat6 = 0.5f,
                 Velocity = 1f,
                 ParticleLifeTime = 1f,
-                UnkByte7 = 1,
+                TextureFrameHold = 1,
                 DistortionX = 0.125f,
                 DistortionY = 0.125f,
                 MinSize = 0f,
@@ -214,7 +215,7 @@ namespace TwinsaityEditor
                 TextureEndY = 524416f,
                 StarRadialPoints = 5,
                 StarRadiusRatio = 0.5f,
-                UnkVec3 = new TwinsVector4(0.7500094f, 0.7500094f, 0.7500094f, 0f),
+                BoundingExtents = new TwinsVector4(0.7500094f, 0.7500094f, 0.7500094f, 0f),
             };
             partdef.ColorGradient[0] = new TwinsVector4(0f, 64f, 64f, 64f);
             partdef.ColorGradient[1] = new TwinsVector4(1f, 0f, 0f, 0f);
@@ -260,7 +261,7 @@ namespace TwinsaityEditor
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            CurInst.UnkShort5 = (short)numericUpDown1.Value;
+            CurInst.EmitRotZ = (short)numericUpDown1.Value;
         }
 
         private void numericUpDown2_ValueChanged(object sender, EventArgs e)
@@ -296,7 +297,7 @@ namespace TwinsaityEditor
         private void numericUpDown7_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            CurInst.UnkShort7 = (short)numericUpDown7.Value;
+            CurInst.BouncePlaneAngle = (short)numericUpDown7.Value;
         }
 
         private void numericUpDown8_ValueChanged(object sender, EventArgs e)
@@ -338,13 +339,13 @@ namespace TwinsaityEditor
             textBox2.Text = CurDef.Name;
             numericUpDown16.Value = (decimal)CurDef.GenRate;
             numericUpDown17.Value = (decimal)CurDef.MaxParticleCount;
-            numericUpDown20.Value = (decimal)CurDef.UnkUShort3;
+            numericUpDown20.Value = (decimal)CurDef.TimingOffset;
             numericUpDown21.Value = (decimal)CurDef.Emitter_OverTime;
             numericUpDown22.Value = (decimal)CurDef.Emitter_OverTimeRandom;
             numericUpDown23.Value = (decimal)CurDef.Emitter_OffTime;
             numericUpDown24.Value = (decimal)CurDef.Emitter_OffTimeRandom;
             comboBox1.SelectedIndex = (int)CurDef.GSort;
-            numericUpDown25.Value = (decimal)CurDef.UnkByte3;
+            numericUpDown25.Value = (decimal)CurDef.GCode;
             comboBox2.SelectedIndex = (int)CurDef.TextureFilter;
             numericUpDown26.Value = (decimal)CurDef.UnkByte5;
             numericUpDown27.Value = (decimal)CurDef.UnkFloat1;
@@ -360,24 +361,24 @@ namespace TwinsaityEditor
             numericUpDown37.Value = (decimal)CurDef.Random_Start_X;
             numericUpDown38.Value = (decimal)CurDef.Random_Start_Y;
             numericUpDown39.Value = (decimal)CurDef.Random_Start_Z;
-            numericUpDown40.Value = (decimal)CurDef.UnkFloat8;
-            numericUpDown41.Value = (decimal)CurDef.UnkFloat9;
-            numericUpDown42.Value = (decimal)CurDef.UnkFloat10;
-            numericUpDown43.Value = (decimal)CurDef.UnkFloat11;
-            numericUpDown44.Value = (decimal)CurDef.UnkFloat12;
-            numericUpDown45.Value = (decimal)CurDef.UnkFloat13;
-            numericUpDown46.Value = (decimal)CurDef.UnkFloat14;
-            numericUpDown47.Value = (decimal)CurDef.UnkFloat15;
-            numericUpDown48.Value = (decimal)CurDef.UnkFloat16;
-            numericUpDown49.Value = (decimal)CurDef.UnkFloat17;
-            numericUpDown50.Value = (decimal)CurDef.UnkFloat18;
-            numericUpDown51.Value = (decimal)CurDef.UnkFloat19;
+            numericUpDown40.Value = (decimal)CurDef.StartRandomScaleX;
+            numericUpDown41.Value = (decimal)CurDef.StartRandomScaleY;
+            numericUpDown42.Value = (decimal)CurDef.StartRandomScaleZ;
+            numericUpDown43.Value = (decimal)CurDef.StartBaseX;
+            numericUpDown44.Value = (decimal)CurDef.StartBaseY;
+            numericUpDown45.Value = (decimal)CurDef.StartBaseZ;
+            numericUpDown46.Value = (decimal)CurDef.VelocityRandomScaleX;
+            numericUpDown47.Value = (decimal)CurDef.VelocityRandomScaleY;
+            numericUpDown48.Value = (decimal)CurDef.VelocityRandomScaleZ;
+            numericUpDown49.Value = (decimal)CurDef.VelocityBaseX;
+            numericUpDown50.Value = (decimal)CurDef.VelocityBaseY;
+            numericUpDown51.Value = (decimal)CurDef.VelocityBaseZ;
             numericUpDown52.Value = (decimal)CurDef.Gravity;
             numericUpDown53.Value = (decimal)CurDef.ParticleLifeTime;
-            numericUpDown89.Value = (decimal)CurDef.UnkUShort8;
-            numericUpDown88.Value = (decimal)CurDef.UnkByte6;
-            numericUpDown54.Value = (decimal)CurDef.UnkByte7;
-            numericUpDown55.Value = (decimal)CurDef.UnkFloat22;
+            numericUpDown89.Value = (decimal)CurDef.TextureFrameCount;
+            numericUpDown88.Value = (decimal)CurDef.TextureFrameStart;
+            numericUpDown54.Value = (decimal)CurDef.TextureFrameHold;
+            numericUpDown55.Value = (decimal)CurDef.TextureFrameRate;
             numericUpDown56.Value = (decimal)CurDef.JibberXFreq;
             numericUpDown57.Value = (decimal)CurDef.JibberXAmp;
             numericUpDown58.Value = (decimal)CurDef.JibberYFreq;
@@ -459,10 +460,10 @@ namespace TwinsaityEditor
             numericUpDown110.Value = (decimal)CurDef.StarRadiusRatio;
             numericUpDown111.Value = (decimal)CurDef.RampTime;
             numericUpDown112.Value = (decimal)CurDef.TexturePage;
-            numericUpDown113.Value = (decimal)CurDef.UnkVec3.X;
-            numericUpDown114.Value = (decimal)CurDef.UnkVec3.Y;
-            numericUpDown115.Value = (decimal)CurDef.UnkVec3.Z;
-            numericUpDown116.Value = (decimal)CurDef.UnkVec3.W;
+            numericUpDown113.Value = (decimal)CurDef.BoundingExtents.X;
+            numericUpDown114.Value = (decimal)CurDef.BoundingExtents.Y;
+            numericUpDown115.Value = (decimal)CurDef.BoundingExtents.Z;
+            numericUpDown116.Value = (decimal)CurDef.BoundingExtents.W;
 
             numericUpDown117.Value = (decimal)CurDef.AlphaGradientTime[0];
             numericUpDown118.Value = (decimal)CurDef.AlphaGradientTime[1];
@@ -678,7 +679,7 @@ namespace TwinsaityEditor
         private void numericUpDown20_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            CurDef.UnkUShort3 = (ushort)numericUpDown20.Value;
+            CurDef.TimingOffset = (ushort)numericUpDown20.Value;
         }
 
         private void numericUpDown21_ValueChanged(object sender, EventArgs e)
@@ -715,7 +716,7 @@ namespace TwinsaityEditor
         private void numericUpDown25_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            CurDef.UnkByte3 = (byte)numericUpDown25.Value;
+            CurDef.GCode = (byte)numericUpDown25.Value;
         }
 
         private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
@@ -856,73 +857,73 @@ namespace TwinsaityEditor
         private void numericUpDown40_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            CurDef.UnkFloat8 = (float)numericUpDown40.Value;
+            CurDef.StartRandomScaleX = (float)numericUpDown40.Value;
         }
 
         private void numericUpDown41_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            CurDef.UnkFloat9 = (float)numericUpDown41.Value;
+            CurDef.StartRandomScaleY = (float)numericUpDown41.Value;
         }
 
         private void numericUpDown42_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            CurDef.UnkFloat10 = (float)numericUpDown42.Value;
+            CurDef.StartRandomScaleZ = (float)numericUpDown42.Value;
         }
 
         private void numericUpDown43_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            CurDef.UnkFloat11 = (float)numericUpDown43.Value;
+            CurDef.StartBaseX = (float)numericUpDown43.Value;
         }
 
         private void numericUpDown44_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            CurDef.UnkFloat12 = (float)numericUpDown44.Value;
+            CurDef.StartBaseY = (float)numericUpDown44.Value;
         }
 
         private void numericUpDown45_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            CurDef.UnkFloat13 = (float)numericUpDown45.Value;
+            CurDef.StartBaseZ = (float)numericUpDown45.Value;
         }
 
         private void numericUpDown46_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            CurDef.UnkFloat14 = (float)numericUpDown46.Value;
+            CurDef.VelocityRandomScaleX = (float)numericUpDown46.Value;
         }
 
         private void numericUpDown47_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            CurDef.UnkFloat15 = (float)numericUpDown47.Value;
+            CurDef.VelocityRandomScaleY = (float)numericUpDown47.Value;
         }
 
         private void numericUpDown48_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            CurDef.UnkFloat16 = (float)numericUpDown48.Value;
+            CurDef.VelocityRandomScaleZ = (float)numericUpDown48.Value;
         }
 
         private void numericUpDown49_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            CurDef.UnkFloat17 = (float)numericUpDown49.Value;
+            CurDef.VelocityBaseX = (float)numericUpDown49.Value;
         }
 
         private void numericUpDown50_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            CurDef.UnkFloat18 = (float)numericUpDown50.Value;
+            CurDef.VelocityBaseY = (float)numericUpDown50.Value;
         }
 
         private void numericUpDown51_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            CurDef.UnkFloat19 = (float)numericUpDown51.Value;
+            CurDef.VelocityBaseZ = (float)numericUpDown51.Value;
         }
 
         private void numericUpDown52_ValueChanged(object sender, EventArgs e)
@@ -940,25 +941,25 @@ namespace TwinsaityEditor
         private void numericUpDown89_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            CurDef.UnkUShort8 = (ushort)numericUpDown89.Value;
+            CurDef.TextureFrameCount = (short)numericUpDown89.Value;
         }
 
         private void numericUpDown88_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            CurDef.UnkByte6 = (byte)numericUpDown88.Value;
+            CurDef.TextureFrameStart = (byte)numericUpDown88.Value;
         }
 
         private void numericUpDown54_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            CurDef.UnkByte7 = (byte)numericUpDown54.Value;
+            CurDef.TextureFrameHold = (byte)numericUpDown54.Value;
         }
 
         private void numericUpDown55_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            CurDef.UnkFloat22 = (float)numericUpDown55.Value;
+            CurDef.TextureFrameRate = (float)numericUpDown55.Value;
         }
 
         private void numericUpDown56_ValueChanged(object sender, EventArgs e)
@@ -1314,25 +1315,25 @@ namespace TwinsaityEditor
         private void numericUpDown113_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            CurDef.UnkVec3.X = (float)numericUpDown113.Value;
+            CurDef.BoundingExtents.X = (float)numericUpDown113.Value;
         }
 
         private void numericUpDown114_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            CurDef.UnkVec3.Y = (float)numericUpDown114.Value;
+            CurDef.BoundingExtents.Y = (float)numericUpDown114.Value;
         }
 
         private void numericUpDown115_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            CurDef.UnkVec3.Z = (float)numericUpDown115.Value;
+            CurDef.BoundingExtents.Z = (float)numericUpDown115.Value;
         }
 
         private void numericUpDown116_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            CurDef.UnkVec3.W = (float)numericUpDown116.Value;
+            CurDef.BoundingExtents.W = (float)numericUpDown116.Value;
         }
 
         private void numericUpDown117_ValueChanged(object sender, EventArgs e)
