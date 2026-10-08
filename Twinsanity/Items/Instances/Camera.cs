@@ -9,7 +9,7 @@ namespace Twinsanity
 
         public uint Header { get; set; } = 1310720;
         public uint Enabled { get; set; } = 1;
-        public float SomeFloat { get; set; } = 0.3f;
+        public float CheckInterval { get; set; } = 0.3f;
         public Pos[] Coords { get; set; } = new Pos[3]{
             new Pos(0,0,0,1),
             new Pos(0,0,0,1),
@@ -18,31 +18,31 @@ namespace Twinsanity
         public uint SectionHead { get; set; } = 10;
         public List<ushort> Instances { get; set; } = new List<ushort>();
 
-        public uint CamHeader { get; set; }
-        public ushort UnkShort { get; set; }
-        public float UnkFloat1 { get; set; } = 1f;
-        public Pos UnkCoords1 { get; set; } = new Pos(0, 0, 0, 1);
-        public Pos UnkCoords2 { get; set; } = new Pos(0, 0, 0, 1);
-        public float UnkFloat2 { get; set; }
-        public float UnkFloat3 { get; set; }
-        public uint UnkUInt1 { get; set; }
-        public uint UnkUInt2 { get; set; }
-        public uint UnkUInt3 { get; set; }
-        public uint UnkUInt4 { get; set; }
-        public int UnkInt5 { get; set; }
-        public int UnkInt6 { get; set; }
-        public float UnkFloat4 { get; set; }
-        public float UnkFloat5 { get; set; }
-        public float UnkFloat6 { get; set; }
-        public float UnkFloat7 { get; set; }
-        public uint UnkUInt7 { get; set; }
-        public int UnkInt8 { get; set; }
-        public uint UnkUInt9 { get; set; }
-        public float UnkFloat8 { get; set; }
+        public uint CamFlags { get; set; }
+        public ushort CamSwitches { get; set; }
+        public float BlendTime { get; set; } = 1f;
+        public Pos TargetBoxMin { get; set; } = new Pos(0, 0, 0, 1);
+        public Pos TargetBoxMax { get; set; } = new Pos(0, 0, 0, 1);
+        public float FramingDistance { get; set; }
+        public float FramingShare { get; set; }
+        public uint FovStart { get; set; }
+        public uint FovEnd { get; set; }
+        public uint PitchStart { get; set; }
+        public uint PitchEnd { get; set; }
+        public int YawStart { get; set; }
+        public int YawEnd { get; set; }
+        public float DistanceStart { get; set; }
+        public float DistanceEnd { get; set; }
+        public float PositionFollowRate { get; set; }
+        public float TargetFollowRate { get; set; }
+        public uint YawSpeed { get; set; }
+        public int BlendInYaw { get; set; }
+        public uint BlendInPitch { get; set; }
+        public float BlendInDistance { get; set; }
         public uint CameraType1 { get; set; } = 3;
         public uint CameraType2 { get; set; } = 3;
         public object[] Cameras { get; set; } = new object[2] { null, null };
-        public byte UnkByte { get; set; }
+        public byte Group { get; set; }
 
         public enum CameraType : uint
         {
@@ -91,7 +91,7 @@ namespace Twinsanity
             }
         }
 
-        public bool UnkFlag0
+        public bool IsType0
         {
             get
             {
@@ -106,7 +106,7 @@ namespace Twinsanity
                     Header &= ~mask;
             }
         }
-        public bool UnkFlag1
+        public bool IsType1
         {
             get
             {
@@ -121,7 +121,7 @@ namespace Twinsanity
                     Header &= ~mask;
             }
         }
-        public bool UnkFlag2
+        public bool IsType2
         {
             get
             {
@@ -136,7 +136,7 @@ namespace Twinsanity
                     Header &= ~mask;
             }
         }
-        public bool UnkFlag3
+        public bool IsType3
         {
             get
             {
@@ -151,7 +151,7 @@ namespace Twinsanity
                     Header &= ~mask;
             }
         }
-        public bool UnkFlag4
+        public bool IsType4
         {
             get
             {
@@ -166,7 +166,7 @@ namespace Twinsanity
                     Header &= ~mask;
             }
         }
-        public bool UnkFlag5
+        public bool IsType5
         {
             get
             {
@@ -181,7 +181,7 @@ namespace Twinsanity
                     Header &= ~mask;
             }
         }
-        public bool UnkFlag6
+        public bool IsType6
         {
             get
             {
@@ -190,6 +190,21 @@ namespace Twinsanity
             set
             {
                 uint mask = 1 << 0x6;
+                if (value)
+                    Header |= mask;
+                else
+                    Header &= ~mask;
+            }
+        }
+        public bool IsType7
+        {
+            get
+            {
+                return (Header >> 0x7 & 0x1) != 0;
+            }
+            set
+            {
+                uint mask = 1 << 0x7;
                 if (value)
                     Header |= mask;
                 else
@@ -227,11 +242,27 @@ namespace Twinsanity
             }
         }
 
+         public bool NotPolled
+        {
+            get
+            {
+                return (Header >> 0xC & 0x1) != 0;
+            }
+            set
+            {
+                uint mask = 1 << 0xC;
+                if (value)
+                    Header |= mask;
+                else
+                    Header &= ~mask;
+            }
+        }
+
         public override void Save(BinaryWriter writer)
         {
             writer.Write(Header);
             writer.Write(Enabled);
-            writer.Write(SomeFloat);
+            writer.Write(CheckInterval);
             for (int i = 0; i < 3; ++i)
             {
                 writer.Write(Coords[i].X);
@@ -245,44 +276,44 @@ namespace Twinsanity
             for (int i = 0; i < Instances.Count; ++i)
                 writer.Write(Instances[i]);
 
-            writer.Write(CamHeader);
+            writer.Write(CamFlags);
             if (ParentType != SectionType.CameraDemo)
             {
-                writer.Write(UnkShort);
+                writer.Write(CamSwitches);
             }
-            writer.Write(UnkFloat1);
-            writer.Write(UnkCoords1.X);
-            writer.Write(UnkCoords1.Y);
-            writer.Write(UnkCoords1.Z);
-            writer.Write(UnkCoords1.W);
-            writer.Write(UnkCoords2.X);
-            writer.Write(UnkCoords2.Y);
-            writer.Write(UnkCoords2.Z);
-            writer.Write(UnkCoords2.W);
+            writer.Write(BlendTime);
+            writer.Write(TargetBoxMin.X);
+            writer.Write(TargetBoxMin.Y);
+            writer.Write(TargetBoxMin.Z);
+            writer.Write(TargetBoxMin.W);
+            writer.Write(TargetBoxMax.X);
+            writer.Write(TargetBoxMax.Y);
+            writer.Write(TargetBoxMax.Z);
+            writer.Write(TargetBoxMax.W);
 
-            writer.Write(UnkFloat2);
-            writer.Write(UnkFloat3);
-            writer.Write(UnkUInt1);
-            writer.Write(UnkUInt2);
-            writer.Write(UnkUInt3);
-            writer.Write(UnkUInt4);
-            writer.Write(UnkInt5);
-            writer.Write(UnkInt6);
-            writer.Write(UnkFloat4);
-            writer.Write(UnkFloat5);
-            writer.Write(UnkFloat6);
-            writer.Write(UnkFloat7);
-            writer.Write(UnkUInt7);
-            writer.Write(UnkInt8);
-            writer.Write(UnkUInt9);
-            writer.Write(UnkFloat8);
+            writer.Write(FramingDistance);
+            writer.Write(FramingShare);
+            writer.Write(FovStart);
+            writer.Write(FovEnd);
+            writer.Write(PitchStart);
+            writer.Write(PitchEnd);
+            writer.Write(YawStart);
+            writer.Write(YawEnd);
+            writer.Write(DistanceStart);
+            writer.Write(DistanceEnd);
+            writer.Write(PositionFollowRate);
+            writer.Write(TargetFollowRate);
+            writer.Write(YawSpeed);
+            writer.Write(BlendInYaw);
+            writer.Write(BlendInPitch);
+            writer.Write(BlendInDistance);
 
             writer.Write(CameraType1);
             writer.Write(CameraType2);
 
             if (ParentType != SectionType.CameraDemo)
             {
-                writer.Write(UnkByte);
+                writer.Write(Group);
             }
 
             if (CameraType1 != 3)
@@ -300,7 +331,7 @@ namespace Twinsanity
         {
             Header = reader.ReadUInt32();
             Enabled = reader.ReadUInt32();
-            SomeFloat = reader.ReadSingle();
+            CheckInterval = reader.ReadSingle();
             for (int i = 0; i < 3; ++i)
             {
                 Coords[i] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
@@ -312,46 +343,46 @@ namespace Twinsanity
             for (int i = 0; i < n; ++i)
                 Instances.Add(reader.ReadUInt16());
 
-            CamHeader = reader.ReadUInt32();
+            CamFlags = reader.ReadUInt32();
             if (ParentType != SectionType.CameraDemo)
             {
-                UnkShort = reader.ReadUInt16();
+                CamSwitches = reader.ReadUInt16();
             }
             else
             {
-                UnkShort = 0;
+                CamSwitches = 0;
             }
-            UnkFloat1 = reader.ReadSingle();
+            BlendTime = reader.ReadSingle();
 
-            UnkCoords1 = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-            UnkCoords2 = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-            UnkFloat2 = reader.ReadSingle();
-            UnkFloat3 = reader.ReadSingle();
-            UnkUInt1 = reader.ReadUInt32();
-            UnkUInt2 = reader.ReadUInt32();
-            UnkUInt3 = reader.ReadUInt32();
-            UnkUInt4 = reader.ReadUInt32();
-            UnkInt5 = reader.ReadInt32();
-            UnkInt6 = reader.ReadInt32();
-            UnkFloat4 = reader.ReadSingle();
-            UnkFloat5 = reader.ReadSingle();
-            UnkFloat6 = reader.ReadSingle();
-            UnkFloat7 = reader.ReadSingle();
-            UnkUInt7 = reader.ReadUInt32();
-            UnkInt8 = reader.ReadInt32();
-            UnkUInt9 = reader.ReadUInt32();
-            UnkFloat8 = reader.ReadSingle();
+            TargetBoxMin = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+            TargetBoxMax = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+            FramingDistance = reader.ReadSingle();
+            FramingShare = reader.ReadSingle();
+            FovStart = reader.ReadUInt32();
+            FovEnd = reader.ReadUInt32();
+            PitchStart = reader.ReadUInt32();
+            PitchEnd = reader.ReadUInt32();
+            YawStart = reader.ReadInt32();
+            YawEnd = reader.ReadInt32();
+            DistanceStart = reader.ReadSingle();
+            DistanceEnd = reader.ReadSingle();
+            PositionFollowRate = reader.ReadSingle();
+            TargetFollowRate = reader.ReadSingle();
+            YawSpeed = reader.ReadUInt32();
+            BlendInYaw = reader.ReadInt32();
+            BlendInPitch = reader.ReadUInt32();
+            BlendInDistance = reader.ReadSingle();
 
             CameraType1 = reader.ReadUInt32();
             CameraType2 = reader.ReadUInt32();
 
             if (ParentType != SectionType.CameraDemo)
             {
-                UnkByte = reader.ReadByte();
+                Group = reader.ReadByte();
             }
             else
             {
-                UnkByte = 0;
+                Group = 0;
             }
 
             if (CameraType1 != 3)
@@ -373,160 +404,169 @@ namespace Twinsanity
                 case 0xA19:
                     Camera_Boss Camera1 = new Camera_Boss();
 
-                    Camera1.unkInt = reader.ReadUInt32();
-                    Camera1.unkFloat1 = reader.ReadSingle();
-                    Camera1.unkFloat2 = reader.ReadSingle();
-                    Camera1.unkMatrix1 = new Pos[4];
-                    for (int i = 0; i < Camera1.unkMatrix1.Length; ++i)
+                    Camera1.Flags = reader.ReadUInt32();
+                    Camera1.Rate = reader.ReadSingle();
+                    Camera1.Offset = reader.ReadSingle();
+                    Camera1.WorldToArena = new Pos[4];
+                    for (int i = 0; i < Camera1.WorldToArena.Length; ++i)
                     {
-                        Camera1.unkMatrix1[i] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                        Camera1.WorldToArena[i] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                     }
-                    Camera1.unkMatrix2 = new Pos[4];
-                    for (int i = 0; i < Camera1.unkMatrix2.Length; ++i)
+                    Camera1.ArenaToWorld = new Pos[4];
+                    for (int i = 0; i < Camera1.ArenaToWorld.Length; ++i)
                     {
-                        Camera1.unkMatrix2[i] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                        Camera1.ArenaToWorld[i] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                     }
-                    Camera1.unkVector = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    Camera1.unkByte1 = reader.ReadByte();
-                    Camera1.unkFloat3 = reader.ReadSingle();
-                    Camera1.unkFloat4 = reader.ReadSingle();
-                    Camera1.unkFloat5 = reader.ReadSingle();
-                    Camera1.unkFloat6 = reader.ReadSingle();
-                    Camera1.unkByte2 = reader.ReadByte();
+                    Camera1.Orbit = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                    Camera1.Curves = reader.ReadByte();
+                    Camera1.RadiusShare = reader.ReadSingle();
+                    Camera1.MiddleHeight = reader.ReadSingle();
+                    Camera1.EdgeHeight = reader.ReadSingle();
+                    Camera1.TurnLimit = reader.ReadSingle();
+                    Camera1.CurveAllAxes = reader.ReadByte();
 
                     Cameras[ID] = Camera1;
                     break;
                 case 0x1C02:
                     Camera_Point Camera2 = new Camera_Point();
 
-                    Camera2.unkInt = reader.ReadUInt32();
-                    Camera2.unkFloat1 = reader.ReadSingle();
-                    Camera2.unkFloat2 = reader.ReadSingle();
-                    Camera2.unkVector = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                    Camera2.Flags = reader.ReadUInt32();
+                    Camera2.Rate = reader.ReadSingle();
+                    Camera2.Offset = reader.ReadSingle();
+                    Camera2.Point = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
 
                     Cameras[ID] = Camera2;
                     break;
                 case 0x1C03:
                     Camera_Line Camera3 = new Camera_Line();
 
-                    Camera3.unkInt = reader.ReadUInt32();
-                    Camera3.unkFloat1 = reader.ReadSingle();
-                    Camera3.unkFloat2 = reader.ReadSingle();
-                    Camera3.unkBoundingBoxVector1 = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    Camera3.unkBoundingBoxVector2 = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                    Camera3.Flags = reader.ReadUInt32();
+                    Camera3.Rate = reader.ReadSingle();
+                    Camera3.Offset = reader.ReadSingle();
+                    Camera3.LineStart = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                    Camera3.LineEnd = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
 
                     Cameras[ID] = Camera3;
                     break;
                 case 0x1C04:
                     Camera_Path Camera4 = new Camera_Path();
 
-                    Camera4.unkInt = reader.ReadUInt32();
-                    Camera4.unkFloat1 = reader.ReadSingle();
-                    Camera4.unkFloat2 = reader.ReadSingle();
+                    Camera4.Flags = reader.ReadUInt32();
+                    Camera4.Rate = reader.ReadSingle();
+                    Camera4.Offset = reader.ReadSingle();
                     uint VectorCount = reader.ReadUInt32();
-                    Camera4.unkVectors = new Pos[VectorCount];
+                    Camera4.Points = new Pos[VectorCount];
                     for (int i = 0; i < VectorCount; ++i)
                     {
-                        Camera4.unkVectors[i] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                        Camera4.Points[i] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                     }
-                    Camera4.unkInt2 = reader.ReadInt32();
-                    Camera4.unkData = reader.ReadBytes(Camera4.unkInt2 * 0x8);
+                    uint Parameters = reader.ReadUInt32();
+                    Camera4.Lengths = new float[Parameters];
+                    Camera4.Steps = new float[Parameters];
+                    for (int i = 0; i < Parameters; ++i)
+                    {
+                        Camera4.Lengths[i] = reader.ReadSingle();
+                    }
+                    for (int i = 0; i < Parameters; ++i)
+                    {
+                        Camera4.Steps[i] = reader.ReadSingle();
+                    }
 
                     Cameras[ID] = Camera4;
                     break;
                 case 0x1C05:
-                    Camera_0x1C05 Camera5 = new Camera_0x1C05();
+                    Camera_Main Camera5 = new Camera_Main();
                     Cameras[ID] = Camera5;
                     break;
                 case 0x1C06:
                     Camera_Spline Camera6 = new Camera_Spline();
 
-                    Camera6.unkInt = reader.ReadInt32();
-                    Camera6.unkFloat1 = reader.ReadSingle();
-                    Camera6.unkFloat2 = reader.ReadSingle();
-                    Camera6.unkUInt = reader.ReadUInt32();
-                    Camera6.unkFloat3 = reader.ReadSingle();
-                    Camera6.unkVectors = new Pos[(Camera6.unkUInt + 1) * 2];
-                    for (int i = 0; i < Camera6.unkVectors.Length; ++i)
+                    Camera6.Flags = reader.ReadInt32();
+                    Camera6.Rate = reader.ReadSingle();
+                    Camera6.Offset = reader.ReadSingle();
+                    Camera6.Count = reader.ReadUInt32();
+                    Camera6.Step = reader.ReadSingle();
+                    Camera6.Samples = new Pos[(Camera6.Count + 1) * 2];
+                    for (int i = 0; i < Camera6.Samples.Length; ++i)
                     {
-                        Camera6.unkVectors[i] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                        Camera6.Samples[i] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                     }
-                    Camera6.unkData = reader.ReadBytes((int)Camera6.unkUInt * 0x8);
-                    Camera6.unkShort = reader.ReadUInt16();
+                    Camera6.Lengths = new float[Camera6.Count];
+                    Camera6.Steps = new float[Camera6.Count];
+                    for (int i = 0; i < Camera6.Count; ++i)
+                    {
+                        Camera6.Lengths[i] = reader.ReadSingle();
+                    }
+                    for (int i = 0; i < Camera6.Count; ++i)
+                    {
+                        Camera6.Steps[i] = reader.ReadSingle();
+                    }
+                    Camera6.SplineFlags = reader.ReadInt16();
 
                     Cameras[ID] = Camera6;
                     break;
                 case 0x1C09:
-                    Camera_0x1C09 Camera7 = new Camera_0x1C09();
+                    Camera_SplineArm Camera7 = new Camera_SplineArm();
 
-                    Camera7.unkInt = reader.ReadUInt32();
-                    Camera7.unkFloat1 = reader.ReadSingle();
-                    Camera7.unkFloat2 = reader.ReadSingle();
+                    Camera7.Flags = reader.ReadUInt32();
+                    Camera7.Rate = reader.ReadSingle();
+                    Camera7.Offset = reader.ReadSingle();
 
                     Cameras[ID] = Camera7;
                     break;
                 case 0x1C0B:
                     Camera_Point2 Camera8 = new Camera_Point2();
 
-                    Camera8.unkInt = reader.ReadUInt32();
-                    Camera8.unkFloat1 = reader.ReadSingle();
-                    Camera8.unkFloat2 = reader.ReadSingle();
-                    Camera8.unkVector = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    Camera8.unkFloat3 = reader.ReadSingle();
-                    Camera8.unkByte = reader.ReadByte();
+                    Camera8.Flags = reader.ReadUInt32();
+                    Camera8.Rate = reader.ReadSingle();
+                    Camera8.Offset = reader.ReadSingle();
+                    Camera8.Point = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                    Camera8.Distance = reader.ReadSingle();
+                    Camera8.Mode = reader.ReadByte();
 
                     Cameras[ID] = Camera8;
                     break;
                 case 0x1C0C:
-                    Camera_0x1C0C Camera9 = new Camera_0x1C0C();
+                    Camera_Orbit Camera9 = new Camera_Orbit();
 
-                    Camera9.unkByte1 = reader.ReadByte();
-                    Camera9.unkByte2 = reader.ReadByte();
-                    Camera9.unkByte3 = reader.ReadByte();
-                    Camera9.unkByte4 = reader.ReadByte();
+                    Camera9.Flag1 = reader.ReadByte();
+                    Camera9.Flag2 = reader.ReadByte();
+                    Camera9.Flag3 = reader.ReadByte();
+                    Camera9.Flag4 = reader.ReadByte();
 
                     Cameras[ID] = Camera9;
                     break;
                 case 0x1C0D:
                     Camera_Line2 Camera10 = new Camera_Line2();
 
-                    Camera10.unkInt = reader.ReadUInt32();
-                    Camera10.unkFloat1 = reader.ReadSingle();
-                    Camera10.unkFloat2 = reader.ReadSingle();
-                    Camera10.unkBoundingBoxVector1 = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    Camera10.unkBoundingBoxVector2 = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
-                    Camera10.unkFloat3 = reader.ReadSingle();
-                    Camera10.unkFloat4 = reader.ReadSingle();
+                    Camera10.Flags = reader.ReadUInt32();
+                    Camera10.Rate = reader.ReadSingle();
+                    Camera10.Offset = reader.ReadSingle();
+                    Camera10.LineStart = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                    Camera10.LineEnd = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                    Camera10.NearDistance = reader.ReadSingle();
+                    Camera10.FarDistance = reader.ReadSingle();
 
                     Cameras[ID] = Camera10;
                     break;
                 case 0x1C0E:
-                    Camera_0x1C0E Camera11 = new Camera_0x1C0E();
+                    Camera_Keyed Camera11 = new Camera_Keyed();
                     Cameras[ID] = Camera11;
                     break;
                 case 0x1C0F:
                     Camera_Zone Camera12 = new Camera_Zone();
 
-                    //Camera12.unkData1 = reader.ReadBytes(0x50);
-                    //Camera12.unkData2 = reader.ReadBytes(0x50);
-
-                    Camera12.Data1_Vectors = new Pos[4];
-                    for (int i = 0; i < Camera12.Data1_Vectors.Length; i++)
+                    Camera12.CameraBox = new Pos[5];
+                    for (int i = 0; i < Camera12.CameraBox.Length; i++)
                     {
-                        Camera12.Data1_Vectors[i] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                        Camera12.CameraBox[i] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                     }
-                    Camera12.Data1_unkInt1 = reader.ReadUInt32();
-                    Camera12.Data1_unkInt2 = reader.ReadUInt32();
-                    Camera12.Data1_padding = reader.ReadUInt64();
 
-                    Camera12.Data2_Vectors = new Pos[4];
-                    for (int i = 0; i < Camera12.Data2_Vectors.Length; i++)
+                    Camera12.TargetBox = new Pos[5];
+                    for (int i = 0; i < Camera12.TargetBox.Length; i++)
                     {
-                        Camera12.Data2_Vectors[i] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
+                        Camera12.TargetBox[i] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
                     }
-                    Camera12.Data2_unkInt1 = reader.ReadUInt32();
-                    Camera12.Data2_unkInt2 = reader.ReadUInt32();
-                    Camera12.Data2_padding = reader.ReadUInt64();
 
                     Cameras[ID] = Camera12;
                     break;
@@ -543,79 +583,86 @@ namespace Twinsanity
                 case 0xA19:
                     Camera_Boss Camera1 = (Camera_Boss)Cameras[ID];
 
-                    writer.Write(Camera1.unkInt);
-                    writer.Write(Camera1.unkFloat1);
-                    writer.Write(Camera1.unkFloat2);
-                    for (int i = 0; i < Camera1.unkMatrix1.Length; ++i)
+                    writer.Write(Camera1.Flags);
+                    writer.Write(Camera1.Rate);
+                    writer.Write(Camera1.Offset);
+                    for (int i = 0; i < Camera1.WorldToArena.Length; ++i)
                     {
-                        writer.Write(Camera1.unkMatrix1[i].X);
-                        writer.Write(Camera1.unkMatrix1[i].Y);
-                        writer.Write(Camera1.unkMatrix1[i].Z);
-                        writer.Write(Camera1.unkMatrix1[i].W);
+                        writer.Write(Camera1.WorldToArena[i].X);
+                        writer.Write(Camera1.WorldToArena[i].Y);
+                        writer.Write(Camera1.WorldToArena[i].Z);
+                        writer.Write(Camera1.WorldToArena[i].W);
                     }
-                    for (int i = 0; i < Camera1.unkMatrix2.Length; ++i)
+                    for (int i = 0; i < Camera1.ArenaToWorld.Length; ++i)
                     {
-                        writer.Write(Camera1.unkMatrix2[i].X);
-                        writer.Write(Camera1.unkMatrix2[i].Y);
-                        writer.Write(Camera1.unkMatrix2[i].Z);
-                        writer.Write(Camera1.unkMatrix2[i].W);
+                        writer.Write(Camera1.ArenaToWorld[i].X);
+                        writer.Write(Camera1.ArenaToWorld[i].Y);
+                        writer.Write(Camera1.ArenaToWorld[i].Z);
+                        writer.Write(Camera1.ArenaToWorld[i].W);
                     }
-                    writer.Write(Camera1.unkVector.X);
-                    writer.Write(Camera1.unkVector.Y);
-                    writer.Write(Camera1.unkVector.Z);
-                    writer.Write(Camera1.unkVector.W);
-                    writer.Write(Camera1.unkByte1);
-                    writer.Write(Camera1.unkFloat3);
-                    writer.Write(Camera1.unkFloat4);
-                    writer.Write(Camera1.unkFloat5);
-                    writer.Write(Camera1.unkFloat6);
-                    writer.Write(Camera1.unkByte2);
+                    writer.Write(Camera1.Orbit.X);
+                    writer.Write(Camera1.Orbit.Y);
+                    writer.Write(Camera1.Orbit.Z);
+                    writer.Write(Camera1.Orbit.W);
+                    writer.Write(Camera1.Curves);
+                    writer.Write(Camera1.RadiusShare);
+                    writer.Write(Camera1.MiddleHeight);
+                    writer.Write(Camera1.EdgeHeight);
+                    writer.Write(Camera1.TurnLimit);
+                    writer.Write(Camera1.CurveAllAxes);
 
                     break;
                 case 0x1C02:
                     Camera_Point Camera2 = (Camera_Point)Cameras[ID];
 
-                    writer.Write(Camera2.unkInt);
-                    writer.Write(Camera2.unkFloat1);
-                    writer.Write(Camera2.unkFloat2);
-                    writer.Write(Camera2.unkVector.X);
-                    writer.Write(Camera2.unkVector.Y);
-                    writer.Write(Camera2.unkVector.Z);
-                    writer.Write(Camera2.unkVector.W);
+                    writer.Write(Camera2.Flags);
+                    writer.Write(Camera2.Rate);
+                    writer.Write(Camera2.Offset);
+                    writer.Write(Camera2.Point.X);
+                    writer.Write(Camera2.Point.Y);
+                    writer.Write(Camera2.Point.Z);
+                    writer.Write(Camera2.Point.W);
 
                     break;
                 case 0x1C03:
                     Camera_Line Camera3 = (Camera_Line)Cameras[ID];
 
-                    writer.Write(Camera3.unkInt);
-                    writer.Write(Camera3.unkFloat1);
-                    writer.Write(Camera3.unkFloat2);
-                    writer.Write(Camera3.unkBoundingBoxVector1.X);
-                    writer.Write(Camera3.unkBoundingBoxVector1.Y);
-                    writer.Write(Camera3.unkBoundingBoxVector1.Z);
-                    writer.Write(Camera3.unkBoundingBoxVector1.W);
-                    writer.Write(Camera3.unkBoundingBoxVector2.X);
-                    writer.Write(Camera3.unkBoundingBoxVector2.Y);
-                    writer.Write(Camera3.unkBoundingBoxVector2.Z);
-                    writer.Write(Camera3.unkBoundingBoxVector2.W);
+                    writer.Write(Camera3.Flags);
+                    writer.Write(Camera3.Rate);
+                    writer.Write(Camera3.Offset);
+                    writer.Write(Camera3.LineStart.X);
+                    writer.Write(Camera3.LineStart.Y);
+                    writer.Write(Camera3.LineStart.Z);
+                    writer.Write(Camera3.LineStart.W);
+                    writer.Write(Camera3.LineEnd.X);
+                    writer.Write(Camera3.LineEnd.Y);
+                    writer.Write(Camera3.LineEnd.Z);
+                    writer.Write(Camera3.LineEnd.W);
 
                     break;
                 case 0x1C04:
                     Camera_Path Camera4 = (Camera_Path)Cameras[ID];
 
-                    writer.Write(Camera4.unkInt);
-                    writer.Write(Camera4.unkFloat1);
-                    writer.Write(Camera4.unkFloat2);
-                    writer.Write(Camera4.unkVectors.Length);
-                    for (int i = 0; i < Camera4.unkVectors.Length; ++i)
+                    writer.Write(Camera4.Flags);
+                    writer.Write(Camera4.Rate);
+                    writer.Write(Camera4.Offset);
+                    writer.Write(Camera4.Points.Length);
+                    for (int i = 0; i < Camera4.Points.Length; ++i)
                     {
-                        writer.Write(Camera4.unkVectors[i].X);
-                        writer.Write(Camera4.unkVectors[i].Y);
-                        writer.Write(Camera4.unkVectors[i].Z);
-                        writer.Write(Camera4.unkVectors[i].W);
+                        writer.Write(Camera4.Points[i].X);
+                        writer.Write(Camera4.Points[i].Y);
+                        writer.Write(Camera4.Points[i].Z);
+                        writer.Write(Camera4.Points[i].W);
                     }
-                    writer.Write(Camera4.unkInt2);
-                    writer.Write(Camera4.unkData);
+                    writer.Write(Camera4.Lengths.Length);
+                    for (int i = 0; i < Camera4.Lengths.Length; ++i)
+                    {
+                        writer.Write(Camera4.Lengths[i]);
+                    }
+                    for (int i = 0; i < Camera4.Steps.Length; ++i)
+                    {
+                        writer.Write(Camera4.Steps[i]);
+                    }
 
                     break;
                 case 0x1C05:
@@ -623,69 +670,76 @@ namespace Twinsanity
                 case 0x1C06:
                     Camera_Spline Camera6 = (Camera_Spline)Cameras[ID];
 
-                    writer.Write(Camera6.unkInt);
-                    writer.Write(Camera6.unkFloat1);
-                    writer.Write(Camera6.unkFloat2);
-                    writer.Write(Camera6.unkUInt);
-                    writer.Write(Camera6.unkFloat3);
-                    for (int i = 0; i < Camera6.unkVectors.Length; ++i)
+                    writer.Write(Camera6.Flags);
+                    writer.Write(Camera6.Rate);
+                    writer.Write(Camera6.Offset);
+                    writer.Write(Camera6.Count);
+                    writer.Write(Camera6.Step);
+                    for (int i = 0; i < Camera6.Samples.Length; ++i)
                     {
-                        writer.Write(Camera6.unkVectors[i].X);
-                        writer.Write(Camera6.unkVectors[i].Y);
-                        writer.Write(Camera6.unkVectors[i].Z);
-                        writer.Write(Camera6.unkVectors[i].W);
+                        writer.Write(Camera6.Samples[i].X);
+                        writer.Write(Camera6.Samples[i].Y);
+                        writer.Write(Camera6.Samples[i].Z);
+                        writer.Write(Camera6.Samples[i].W);
                     }
-                    writer.Write(Camera6.unkData);
-                    writer.Write(Camera6.unkShort);
+                    for (int i = 0; i < Camera6.Count; ++i)
+                    {
+                        writer.Write(Camera6.Lengths[i]);
+                    }
+                    for (int i = 0; i < Camera6.Count; ++i)
+                    {
+                        writer.Write(Camera6.Steps[i]);
+                    }
+                    writer.Write(Camera6.SplineFlags);
 
                     break;
                 case 0x1C09:
-                    Camera_0x1C09 Camera7 = (Camera_0x1C09)Cameras[ID];
+                    Camera_SplineArm Camera7 = (Camera_SplineArm)Cameras[ID];
 
-                    writer.Write(Camera7.unkInt);
-                    writer.Write(Camera7.unkFloat1);
-                    writer.Write(Camera7.unkFloat2);
+                    writer.Write(Camera7.Flags);
+                    writer.Write(Camera7.Rate);
+                    writer.Write(Camera7.Offset);
 
                     break;
                 case 0x1C0B:
                     Camera_Point2 Camera8 = (Camera_Point2)Cameras[ID];
 
-                    writer.Write(Camera8.unkInt);
-                    writer.Write(Camera8.unkFloat1);
-                    writer.Write(Camera8.unkFloat2);
-                    writer.Write(Camera8.unkVector.X);
-                    writer.Write(Camera8.unkVector.Y);
-                    writer.Write(Camera8.unkVector.Z);
-                    writer.Write(Camera8.unkVector.W);
-                    writer.Write(Camera8.unkFloat3);
-                    writer.Write(Camera8.unkByte);
+                    writer.Write(Camera8.Flags);
+                    writer.Write(Camera8.Rate);
+                    writer.Write(Camera8.Offset);
+                    writer.Write(Camera8.Point.X);
+                    writer.Write(Camera8.Point.Y);
+                    writer.Write(Camera8.Point.Z);
+                    writer.Write(Camera8.Point.W);
+                    writer.Write(Camera8.Distance);
+                    writer.Write(Camera8.Mode);
 
                     break;
                 case 0x1C0C:
-                    Camera_0x1C0C Camera9 = (Camera_0x1C0C)Cameras[ID];
+                    Camera_Orbit Camera9 = (Camera_Orbit)Cameras[ID];
 
-                    writer.Write(Camera9.unkByte1);
-                    writer.Write(Camera9.unkByte2);
-                    writer.Write(Camera9.unkByte3);
-                    writer.Write(Camera9.unkByte4);
+                    writer.Write(Camera9.Flag1);
+                    writer.Write(Camera9.Flag2);
+                    writer.Write(Camera9.Flag3);
+                    writer.Write(Camera9.Flag4);
 
                     break;
                 case 0x1C0D:
                     Camera_Line2 Camera10 = (Camera_Line2)Cameras[ID];
 
-                    writer.Write(Camera10.unkInt);
-                    writer.Write(Camera10.unkFloat1);
-                    writer.Write(Camera10.unkFloat2);
-                    writer.Write(Camera10.unkBoundingBoxVector1.X);
-                    writer.Write(Camera10.unkBoundingBoxVector1.Y);
-                    writer.Write(Camera10.unkBoundingBoxVector1.Z);
-                    writer.Write(Camera10.unkBoundingBoxVector1.W);
-                    writer.Write(Camera10.unkBoundingBoxVector2.X);
-                    writer.Write(Camera10.unkBoundingBoxVector2.Y);
-                    writer.Write(Camera10.unkBoundingBoxVector2.Z);
-                    writer.Write(Camera10.unkBoundingBoxVector2.W);
-                    writer.Write(Camera10.unkFloat3);
-                    writer.Write(Camera10.unkFloat4);
+                    writer.Write(Camera10.Flags);
+                    writer.Write(Camera10.Rate);
+                    writer.Write(Camera10.Offset);
+                    writer.Write(Camera10.LineStart.X);
+                    writer.Write(Camera10.LineStart.Y);
+                    writer.Write(Camera10.LineStart.Z);
+                    writer.Write(Camera10.LineStart.W);
+                    writer.Write(Camera10.LineEnd.X);
+                    writer.Write(Camera10.LineEnd.Y);
+                    writer.Write(Camera10.LineEnd.Z);
+                    writer.Write(Camera10.LineEnd.W);
+                    writer.Write(Camera10.NearDistance);
+                    writer.Write(Camera10.FarDistance);
 
                     break;
                 case 0x1C0E:
@@ -693,27 +747,21 @@ namespace Twinsanity
                 case 0x1C0F:
                     Camera_Zone Camera12 = (Camera_Zone)Cameras[ID];
 
-                    for (int i = 0; i < Camera12.Data1_Vectors.Length; i++)
+                    for (int i = 0; i < Camera12.CameraBox.Length; i++)
                     {
-                        writer.Write(Camera12.Data1_Vectors[i].X);
-                        writer.Write(Camera12.Data1_Vectors[i].Y);
-                        writer.Write(Camera12.Data1_Vectors[i].Z);
-                        writer.Write(Camera12.Data1_Vectors[i].W);
+                        writer.Write(Camera12.CameraBox[i].X);
+                        writer.Write(Camera12.CameraBox[i].Y);
+                        writer.Write(Camera12.CameraBox[i].Z);
+                        writer.Write(Camera12.CameraBox[i].W);
                     }
-                    writer.Write(Camera12.Data1_unkInt1);
-                    writer.Write(Camera12.Data1_unkInt2);
-                    writer.Write(Camera12.Data1_padding);
 
-                    for (int i = 0; i < Camera12.Data2_Vectors.Length; i++)
+                    for (int i = 0; i < Camera12.TargetBox.Length; i++)
                     {
-                        writer.Write(Camera12.Data2_Vectors[i].X);
-                        writer.Write(Camera12.Data2_Vectors[i].Y);
-                        writer.Write(Camera12.Data2_Vectors[i].Z);
-                        writer.Write(Camera12.Data2_Vectors[i].W);
+                        writer.Write(Camera12.TargetBox[i].X);
+                        writer.Write(Camera12.TargetBox[i].Y);
+                        writer.Write(Camera12.TargetBox[i].Z);
+                        writer.Write(Camera12.TargetBox[i].W);
                     }
-                    writer.Write(Camera12.Data2_unkInt1);
-                    writer.Write(Camera12.Data2_unkInt2);
-                    writer.Write(Camera12.Data2_padding);
 
                     break;
 
@@ -745,7 +793,7 @@ namespace Twinsanity
                 }
                 else if (Cameras[i] is Camera_Boss Camera1)
                 {
-                    count += 4 + 4 + 4 + (Camera1.unkMatrix1.Length * 16) + (Camera1.unkMatrix2.Length * 16) +
+                    count += 4 + 4 + 4 + (Camera1.WorldToArena.Length * 16) + (Camera1.ArenaToWorld.Length * 16) +
                         16 + 1 + 4 + 4 + 4 + 4 + 1;
                 }
                 else if (Cameras[i] is Camera_Point Camera2)
@@ -758,17 +806,17 @@ namespace Twinsanity
                 }
                 else if (Cameras[i] is Camera_Path Camera4)
                 {
-                    count += 4 + 4 + 4 + 4 + (Camera4.unkVectors.Length * 16) + 4 + (Camera4.unkData.Length);
+                    count += 4 + 4 + 4 + 4 + (Camera4.Points.Length * 16) + 4 + (Camera4.Lengths.Length * 4) + (Camera4.Steps.Length * 4);
                 }
-                else if (Cameras[i] is Camera_0x1C05 Camera5)
+                else if (Cameras[i] is Camera_Main Camera5)
                 {
 
                 }
                 else if (Cameras[i] is Camera_Spline Camera6)
                 {
-                    count += 4 + 4 + 4 + 4 + 4 + (Camera6.unkVectors.Length * 16) + Camera6.unkData.Length + 2;
+                    count += 4 + 4 + 4 + 4 + 4 + (Camera6.Samples.Length * 16) + (Camera6.Lengths.Length * 4) + (Camera6.Steps.Length * 4) + 2;
                 }
-                else if (Cameras[i] is Camera_0x1C09 Camera7)
+                else if (Cameras[i] is Camera_SplineArm Camera7)
                 {
                     count += 4 + 4 + 4;
                 }
@@ -776,7 +824,7 @@ namespace Twinsanity
                 {
                     count += 4 + 4 + 4 + 16 + 4 + 1;
                 }
-                else if (Cameras[i] is Camera_0x1C0C Camera9)
+                else if (Cameras[i] is Camera_Orbit Camera9)
                 {
                     count += 4;
                 }
@@ -784,13 +832,13 @@ namespace Twinsanity
                 {
                     count += 4 + 4 + 4 + 16 + 16 + 4 + 4;
                 }
-                else if (Cameras[i] is Camera_0x1C0E Camera11)
+                else if (Cameras[i] is Camera_Keyed Camera11)
                 {
 
                 }
                 else if (Cameras[i] is Camera_Zone Camera12)
                 {
-                    count += (Camera12.Data1_Vectors.Length * 16) + 4 + 4 + 8 + (Camera12.Data2_Vectors.Length * 16) + 4 + 4 + 8;
+                    count += (Camera12.CameraBox.Length * 16) + 4 + 4 + 8 + (Camera12.TargetBox.Length * 16) + 4 + 4 + 8;
                 }
                 else
                 {
@@ -804,119 +852,110 @@ namespace Twinsanity
 
         public class Camera_Boss // Boss Camera (Centers on Boss) 0xA19
         {
-            public uint unkInt;
-            public float unkFloat1;
-            public float unkFloat2;
-            public Pos[] unkMatrix1; // 4
-            public Pos[] unkMatrix2; // 4
-            public Pos unkVector;
-            public byte unkByte1;
-            public float unkFloat3;
-            public float unkFloat4;
-            public float unkFloat5;
-            public float unkFloat6;
-            public byte unkByte2;
+            public uint Flags;
+            public float Rate;
+            public float Offset;
+            public Pos[] WorldToArena; // 4
+            public Pos[] ArenaToWorld; // 4
+            public Pos Orbit;
+            public byte Curves;
+            public float RadiusShare;
+            public float MiddleHeight;
+            public float EdgeHeight;
+            public float TurnLimit;
+            public byte CurveAllAxes;
         }
 
         public class Camera_Point // Point 0x1C02
         {
-            public uint unkInt;
-            public float unkFloat1;
-            public float unkFloat2;
-            public Pos unkVector;
+            public uint Flags;
+            public float Rate;
+            public float Offset;
+            public Pos Point;
         }
 
         public class Camera_Line // Line 0x1C03
         {
-            public uint unkInt;
-            public float unkFloat1;
-            public float unkFloat2;
-            public Pos unkBoundingBoxVector1;
-            public Pos unkBoundingBoxVector2;
+            public uint Flags;
+            public float Rate;
+            public float Offset;
+            public Pos LineStart;
+            public Pos LineEnd;
         }
 
         public class Camera_Path // Polygonal chain 0x1C04
         {
-            public uint unkInt;
-            public float unkFloat1;
-            public float unkFloat2;
-            public Pos[] unkVectors; // uint vectorAmount 
-            public int unkInt2;
-            public byte[] unkData; //unkInt2 * 0x8
+            public uint Flags;
+            public float Rate;
+            public float Offset;
+            public Pos[] Points; // uint vectorAmount 
+            public float[] Lengths;
+            public float[] Steps;
         }
 
-        public class Camera_0x1C05 // NULL 0x1C05
+        public class Camera_Main // NULL 0x1C05
         {
             // Can't be read because methods are set to NULL
         }
 
         public class Camera_Spline // Spline 0x1C06
         {
-            public int unkInt;
-            public float unkFloat1;
-            public float unkFloat2;
-            public uint unkUInt;
-            public float unkFloat3;
-            public Pos[] unkVectors; // unkInt2 * 2
-            public byte[] unkData; // unkInt2 * 0x8
-            public ushort unkShort;
+            public int Flags;
+            public float Rate;
+            public float Offset;
+            public uint Count;
+            public float Step;
+            public Pos[] Samples; // Count * 2
+            public float[] Lengths;
+            public float[] Steps;
+            public short SplineFlags;
         }
 
-        public class Camera_0x1C09 // Unused, spits errors, zooms out to a certain angle and stays in place while in the trigger
+        public class Camera_SplineArm // Unused, spits errors, zooms out to a certain angle and stays in place while in the trigger
         {
-            public uint unkInt;
-            public float unkFloat1;
-            public float unkFloat2;
+            public uint Flags;
+            public float Rate;
+            public float Offset;
         }
 
         public class Camera_Point2 // Point (Ukafight) 0x1C0B
         {
-            public uint unkInt;
-            public float unkFloat1;
-            public float unkFloat2;
-            public Pos unkVector;
-            public float unkFloat3;
-            public byte unkByte;
+            public uint Flags;
+            public float Rate;
+            public float Offset;
+            public Pos Point;
+            public float Distance;
+            public byte Mode;
         }
 
-        public class Camera_0x1C0C // Unused, fixed angle or distance from player?
+        public class Camera_Orbit // Unused, fixed angle or distance from player?
         {
-            public byte unkByte1;
-            public byte unkByte2;
-            public byte unkByte3;
-            public byte unkByte4;
+            public byte Flag1;
+            public byte Flag2;
+            public byte Flag3;
+            public byte Flag4;
         }
 
         public class Camera_Line2 // Line (Gpa12/Throne) 0x1C0D
         {
-            public uint unkInt;
-            public float unkFloat1;
-            public float unkFloat2;
-            public Pos unkBoundingBoxVector1;
-            public Pos unkBoundingBoxVector2;
-            public float unkFloat3;
-            public float unkFloat4;
+            public uint Flags;
+            public float Rate;
+            public float Offset;
+            public Pos LineStart;
+            public Pos LineEnd;
+            public float NearDistance;
+            public float FarDistance;
         }
 
-        public class Camera_0x1C0E // Empty 0x1C0E
+        public class Camera_Keyed // Empty 0x1C0E
         {
             // Nothing, method empty
         }
 
         public class Camera_Zone // Zone 0x1C0F
         {
-            //public byte[] unkData1; //0x50
-            //public byte[] unkData2; //0x50
-
-            public Pos[] Data1_Vectors; //4
-            public uint Data1_unkInt1;
-            public uint Data1_unkInt2;
-            public ulong Data1_padding;
-
-            public Pos[] Data2_Vectors; //4
-            public uint Data2_unkInt1;
-            public uint Data2_unkInt2;
-            public ulong Data2_padding;
+            public Pos[] CameraBox; //5
+            public Pos[] TargetBox; //5
         }
     }
 }

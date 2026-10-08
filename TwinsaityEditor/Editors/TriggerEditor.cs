@@ -54,7 +54,7 @@ namespace TwinsaityEditor
 
             numericUpDown1.Value = trigger.Header;
             numericUpDown2.Value = trigger.Enabled;
-            numericUpDown3.Value = (decimal)trigger.SomeFloat;
+            numericUpDown3.Value = (decimal)trigger.CheckInterval;
             numericUpDown4.Value = trigger.SectionHead;
             numericUpDown5.Value = trigger.ID;
             numericUpDown6.Value = trigger.Arg1;
@@ -113,13 +113,13 @@ namespace TwinsaityEditor
             }
             textBox1.Lines = lines;
 
-            checkBoxFlag0.Checked = trigger.UnkFlag0;
-            checkBoxFlag1.Checked = trigger.UnkFlag1;
-            checkBoxFlag2.Checked = trigger.UnkFlag2;
-            checkBoxFlag3.Checked = trigger.UnkFlag3;
-            checkBoxFlag4.Checked = trigger.UnkFlag4;
-            checkBoxFlag5.Checked = trigger.UnkFlag5;
-            checkBoxFlag6.Checked = trigger.UnkFlag6;
+            checkBoxFlag0.Checked = trigger.IsType0;
+            checkBoxFlag1.Checked = trigger.IsType1;
+            checkBoxFlag2.Checked = trigger.IsType2;
+            checkBoxFlag3.Checked = trigger.IsType3;
+            checkBoxFlag4.Checked = trigger.IsType4;
+            checkBoxFlag5.Checked = trigger.IsType5;
+            checkBoxFlag6.Checked = trigger.IsType6;
 
             ignore_value_change = false;
 
@@ -135,7 +135,7 @@ namespace TwinsaityEditor
                 if (!controller.Data.ContainsItem(id))
                     break;
             }
-            Trigger new_trigger = new Trigger { ID = id, Enabled = 1, Header = 50, SomeFloat = 0.1f, SectionHead = 10, Instances = new List<ushort>(), Coords = new Pos[] { new Pos(0, 0, 0, 1), new Pos(0, 0, 0, 1), new Pos(1, 1, 1, 1) } };
+            Trigger new_trigger = new Trigger { ID = id, Enabled = 1, Header = 50, CheckInterval = 0.1f, SectionHead = 10, Instances = new List<ushort>(), Coords = new Pos[] { new Pos(0, 0, 0, 1), new Pos(0, 0, 0, 1), new Pos(1, 1, 1, 1) } };
             controller.Data.AddItem(id, new_trigger);
             ((MainForm)Tag).GenTreeNode(new_trigger, controller);
             trigger = new_trigger;
@@ -176,13 +176,13 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             trigger.Header = (uint)numericUpDown1.Value;
 
-            checkBoxFlag0.Checked = trigger.UnkFlag0;
-            checkBoxFlag1.Checked = trigger.UnkFlag1;
-            checkBoxFlag2.Checked = trigger.UnkFlag2;
-            checkBoxFlag3.Checked = trigger.UnkFlag3;
-            checkBoxFlag4.Checked = trigger.UnkFlag4;
-            checkBoxFlag5.Checked = trigger.UnkFlag5;
-            checkBoxFlag6.Checked = trigger.UnkFlag6;
+            checkBoxFlag0.Checked = trigger.IsType0;
+            checkBoxFlag1.Checked = trigger.IsType1;
+            checkBoxFlag2.Checked = trigger.IsType2;
+            checkBoxFlag3.Checked = trigger.IsType3;
+            checkBoxFlag4.Checked = trigger.IsType4;
+            checkBoxFlag5.Checked = trigger.IsType5;
+            checkBoxFlag6.Checked = trigger.IsType6;
             checkBox1.Checked = trigger.Arg1_Used;
             numericUpDown6.Enabled = trigger.Arg1_Used;
             checkBox2.Checked = trigger.Arg2_Used;
@@ -216,7 +216,7 @@ namespace TwinsaityEditor
         private void numericUpDown3_ValueChanged(object sender, System.EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.SomeFloat = (float)numericUpDown3.Value;
+            trigger.CheckInterval = (float)numericUpDown3.Value;
             CurCont.UpdateTextBox();
         }
 
@@ -478,7 +478,7 @@ namespace TwinsaityEditor
         {
             if (ignore_value_change) return;
             ignore_value_change = true;
-            trigger.UnkFlag0 = checkBoxFlag0.Checked;
+            trigger.IsType0 = checkBoxFlag0.Checked;
             numericUpDown1.Value = trigger.Header;
             CurCont.UpdateTextBox();
             ignore_value_change = false;
@@ -488,7 +488,7 @@ namespace TwinsaityEditor
         {
             if (ignore_value_change) return;
             ignore_value_change = true;
-            trigger.UnkFlag1 = checkBoxFlag1.Checked;
+            trigger.IsType1 = checkBoxFlag1.Checked;
             numericUpDown1.Value = trigger.Header;
             CurCont.UpdateTextBox();
             ignore_value_change = false;
@@ -498,7 +498,7 @@ namespace TwinsaityEditor
         {
             if (ignore_value_change) return;
             ignore_value_change = true;
-            trigger.UnkFlag2 = checkBoxFlag2.Checked;
+            trigger.IsType2 = checkBoxFlag2.Checked;
             numericUpDown1.Value = trigger.Header;
             CurCont.UpdateTextBox();
             ignore_value_change = false;
@@ -508,7 +508,7 @@ namespace TwinsaityEditor
         {
             if (ignore_value_change) return;
             ignore_value_change = true;
-            trigger.UnkFlag3 = checkBoxFlag3.Checked;
+            trigger.IsType3 = checkBoxFlag3.Checked;
             numericUpDown1.Value = trigger.Header;
             CurCont.UpdateTextBox();
             ignore_value_change = false;
@@ -518,7 +518,7 @@ namespace TwinsaityEditor
         {
             if (ignore_value_change) return;
             ignore_value_change = true;
-            trigger.UnkFlag4 = checkBoxFlag4.Checked;
+            trigger.IsType4 = checkBoxFlag4.Checked;
             numericUpDown1.Value = trigger.Header;
             CurCont.UpdateTextBox();
             ignore_value_change = false;
@@ -528,7 +528,7 @@ namespace TwinsaityEditor
         {
             if (ignore_value_change) return;
             ignore_value_change = true;
-            trigger.UnkFlag5 = checkBoxFlag5.Checked;
+            trigger.IsType5 = checkBoxFlag5.Checked;
             numericUpDown1.Value = trigger.Header;
             CurCont.UpdateTextBox();
             ignore_value_change = false;
@@ -538,7 +538,7 @@ namespace TwinsaityEditor
         {
             if (ignore_value_change) return;
             ignore_value_change = true;
-            trigger.UnkFlag6 = checkBoxFlag6.Checked;
+            trigger.IsType6 = checkBoxFlag6.Checked;
             numericUpDown1.Value = trigger.Header;
             CurCont.UpdateTextBox();
             ignore_value_change = false;

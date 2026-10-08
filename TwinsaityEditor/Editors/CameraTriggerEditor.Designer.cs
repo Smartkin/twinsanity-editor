@@ -359,33 +359,33 @@
             // checkBoxFlag31
             // 
             this.checkBoxFlag31.AutoSize = true;
-            this.checkBoxFlag31.Location = new System.Drawing.Point(251, 42);
+            this.checkBoxFlag31.Location = new System.Drawing.Point(190, 42);
             this.checkBoxFlag31.Name = "checkBoxFlag31";
             this.checkBoxFlag31.Size = new System.Drawing.Size(38, 17);
             this.checkBoxFlag31.TabIndex = 56;
-            this.checkBoxFlag31.Text = "31";
+            this.checkBoxFlag31.Text = "AddsExtraYaw";
             this.checkBoxFlag31.UseVisualStyleBackColor = true;
             this.checkBoxFlag31.CheckedChanged += new System.EventHandler(this.checkBoxFlag31_CheckedChanged);
             // 
             // checkBoxFlag30
             // 
             this.checkBoxFlag30.AutoSize = true;
-            this.checkBoxFlag30.Location = new System.Drawing.Point(251, 19);
+            this.checkBoxFlag30.Location = new System.Drawing.Point(190, 19);
             this.checkBoxFlag30.Name = "checkBoxFlag30";
             this.checkBoxFlag30.Size = new System.Drawing.Size(38, 17);
             this.checkBoxFlag30.TabIndex = 55;
-            this.checkBoxFlag30.Text = "30";
+            this.checkBoxFlag30.Text = "SkipsViewCheck";
             this.checkBoxFlag30.UseVisualStyleBackColor = true;
             this.checkBoxFlag30.CheckedChanged += new System.EventHandler(this.checkBoxFlag30_CheckedChanged);
             // 
             // checkBoxFlag29
             // 
             this.checkBoxFlag29.AutoSize = true;
-            this.checkBoxFlag29.Location = new System.Drawing.Point(162, 179);
+            this.checkBoxFlag29.Location = new System.Drawing.Point(122, 179);
             this.checkBoxFlag29.Name = "checkBoxFlag29";
             this.checkBoxFlag29.Size = new System.Drawing.Size(38, 17);
             this.checkBoxFlag29.TabIndex = 54;
-            this.checkBoxFlag29.Text = "29";
+            this.checkBoxFlag29.Text = "BlendsAlongLine";
             this.checkBoxFlag29.UseVisualStyleBackColor = true;
             this.checkBoxFlag29.CheckedChanged += new System.EventHandler(this.checkBoxFlag29_CheckedChanged);
             // 
@@ -396,84 +396,84 @@
             this.checkBoxFlag28.Name = "checkBoxFlag28";
             this.checkBoxFlag28.Size = new System.Drawing.Size(38, 17);
             this.checkBoxFlag28.TabIndex = 53;
-            this.checkBoxFlag28.Text = "28";
+            this.checkBoxFlag28.Text = "TargetBoxUnturned";
             this.checkBoxFlag28.UseVisualStyleBackColor = true;
             this.checkBoxFlag28.CheckedChanged += new System.EventHandler(this.checkBoxFlag28_CheckedChanged);
             // 
             // checkBoxFlag27
             // 
             this.checkBoxFlag27.AutoSize = true;
-            this.checkBoxFlag27.Location = new System.Drawing.Point(162, 157);
+            this.checkBoxFlag27.Location = new System.Drawing.Point(122, 157);
             this.checkBoxFlag27.Name = "checkBoxFlag27";
             this.checkBoxFlag27.Size = new System.Drawing.Size(38, 17);
             this.checkBoxFlag27.TabIndex = 52;
-            this.checkBoxFlag27.Text = "27";
+            this.checkBoxFlag27.Text = "IgnoresPlayerState";
             this.checkBoxFlag27.UseVisualStyleBackColor = true;
             this.checkBoxFlag27.CheckedChanged += new System.EventHandler(this.checkBoxFlag27_CheckedChanged);
             // 
             // checkBoxFlag26
             // 
             this.checkBoxFlag26.AutoSize = true;
-            this.checkBoxFlag26.Location = new System.Drawing.Point(162, 134);
+            this.checkBoxFlag26.Location = new System.Drawing.Point(122, 134);
             this.checkBoxFlag26.Name = "checkBoxFlag26";
             this.checkBoxFlag26.Size = new System.Drawing.Size(38, 17);
             this.checkBoxFlag26.TabIndex = 51;
-            this.checkBoxFlag26.Text = "26";
+            this.checkBoxFlag26.Text = "NeedsRunningCamera";
             this.checkBoxFlag26.UseVisualStyleBackColor = true;
             this.checkBoxFlag26.CheckedChanged += new System.EventHandler(this.checkBoxFlag26_CheckedChanged);
             // 
             // checkBoxFlag25
             // 
             this.checkBoxFlag25.AutoSize = true;
-            this.checkBoxFlag25.Location = new System.Drawing.Point(162, 108);
+            this.checkBoxFlag25.Location = new System.Drawing.Point(122, 108);
             this.checkBoxFlag25.Name = "checkBoxFlag25";
             this.checkBoxFlag25.Size = new System.Drawing.Size(38, 17);
             this.checkBoxFlag25.TabIndex = 50;
-            this.checkBoxFlag25.Text = "25";
+            this.checkBoxFlag25.Text = "BlendsWhenNear";
             this.checkBoxFlag25.UseVisualStyleBackColor = true;
             this.checkBoxFlag25.CheckedChanged += new System.EventHandler(this.checkBoxFlag25_CheckedChanged);
             // 
             // checkBoxFlag24
             // 
             this.checkBoxFlag24.AutoSize = true;
-            this.checkBoxFlag24.Location = new System.Drawing.Point(162, 87);
+            this.checkBoxFlag24.Location = new System.Drawing.Point(122, 87);
             this.checkBoxFlag24.Name = "checkBoxFlag24";
             this.checkBoxFlag24.Size = new System.Drawing.Size(38, 17);
             this.checkBoxFlag24.TabIndex = 49;
-            this.checkBoxFlag24.Text = "24";
+            this.checkBoxFlag24.Text = "CutsFromSameKind";
             this.checkBoxFlag24.UseVisualStyleBackColor = true;
             this.checkBoxFlag24.CheckedChanged += new System.EventHandler(this.checkBoxFlag24_CheckedChanged);
             // 
             // checkBoxFlag23
             // 
             this.checkBoxFlag23.AutoSize = true;
-            this.checkBoxFlag23.Location = new System.Drawing.Point(162, 63);
+            this.checkBoxFlag23.Location = new System.Drawing.Point(122, 63);
             this.checkBoxFlag23.Name = "checkBoxFlag23";
             this.checkBoxFlag23.Size = new System.Drawing.Size(38, 17);
             this.checkBoxFlag23.TabIndex = 48;
-            this.checkBoxFlag23.Text = "23";
+            this.checkBoxFlag23.Text = "NoProbes";
             this.checkBoxFlag23.UseVisualStyleBackColor = true;
             this.checkBoxFlag23.CheckedChanged += new System.EventHandler(this.checkBoxFlag23_CheckedChanged);
             // 
             // checkBoxFlag22
             // 
             this.checkBoxFlag22.AutoSize = true;
-            this.checkBoxFlag22.Location = new System.Drawing.Point(162, 42);
+            this.checkBoxFlag22.Location = new System.Drawing.Point(122, 42);
             this.checkBoxFlag22.Name = "checkBoxFlag22";
             this.checkBoxFlag22.Size = new System.Drawing.Size(38, 17);
             this.checkBoxFlag22.TabIndex = 47;
-            this.checkBoxFlag22.Text = "22";
+            this.checkBoxFlag22.Text = "Tilts";
             this.checkBoxFlag22.UseVisualStyleBackColor = true;
             this.checkBoxFlag22.CheckedChanged += new System.EventHandler(this.checkBoxFlag22_CheckedChanged);
             // 
             // checkBoxFlag21
             // 
             this.checkBoxFlag21.AutoSize = true;
-            this.checkBoxFlag21.Location = new System.Drawing.Point(125, 19);
+            this.checkBoxFlag21.Location = new System.Drawing.Point(122, 19);
             this.checkBoxFlag21.Name = "checkBoxFlag21";
             this.checkBoxFlag21.Size = new System.Drawing.Size(124, 17);
             this.checkBoxFlag21.TabIndex = 46;
-            this.checkBoxFlag21.Text = "Unused Fixed Point?";
+            this.checkBoxFlag21.Text = "HoldsStill";
             this.checkBoxFlag21.UseVisualStyleBackColor = true;
             this.checkBoxFlag21.CheckedChanged += new System.EventHandler(this.checkBoxFlag21_CheckedChanged);
             // 
@@ -484,7 +484,7 @@
             this.checkBoxFlag20.Name = "checkBoxFlag20";
             this.checkBoxFlag20.Size = new System.Drawing.Size(118, 17);
             this.checkBoxFlag20.TabIndex = 45;
-            this.checkBoxFlag20.Text = "Lock Vertical Angle";
+            this.checkBoxFlag20.Text = "KeepsHeight";
             this.checkBoxFlag20.UseVisualStyleBackColor = true;
             this.checkBoxFlag20.CheckedChanged += new System.EventHandler(this.checkBoxFlag20_CheckedChanged);
             // 
@@ -495,7 +495,7 @@
             this.checkBoxFlag19.Name = "checkBoxFlag19";
             this.checkBoxFlag19.Size = new System.Drawing.Size(152, 17);
             this.checkBoxFlag19.TabIndex = 44;
-            this.checkBoxFlag19.Text = "Lock Control And Look Up";
+            this.checkBoxFlag19.Text = "OnlyLooksAtTarget";
             this.checkBoxFlag19.UseVisualStyleBackColor = true;
             this.checkBoxFlag19.CheckedChanged += new System.EventHandler(this.checkBoxFlag19_CheckedChanged);
             // 
@@ -506,7 +506,7 @@
             this.checkBoxFlag18.Name = "checkBoxFlag18";
             this.checkBoxFlag18.Size = new System.Drawing.Size(38, 17);
             this.checkBoxFlag18.TabIndex = 43;
-            this.checkBoxFlag18.Text = "18";
+            this.checkBoxFlag18.Text = "BlendsInFromDist";
             this.checkBoxFlag18.UseVisualStyleBackColor = true;
             this.checkBoxFlag18.CheckedChanged += new System.EventHandler(this.checkBoxFlag18_CheckedChanged);
             // 
@@ -517,7 +517,7 @@
             this.checkBoxFlag17.Name = "checkBoxFlag17";
             this.checkBoxFlag17.Size = new System.Drawing.Size(38, 17);
             this.checkBoxFlag17.TabIndex = 42;
-            this.checkBoxFlag17.Text = "17";
+            this.checkBoxFlag17.Text = "BlendsInFromPitch";
             this.checkBoxFlag17.UseVisualStyleBackColor = true;
             this.checkBoxFlag17.CheckedChanged += new System.EventHandler(this.checkBoxFlag17_CheckedChanged);
             // 
@@ -528,7 +528,7 @@
             this.checkBoxFlag16.Name = "checkBoxFlag16";
             this.checkBoxFlag16.Size = new System.Drawing.Size(38, 17);
             this.checkBoxFlag16.TabIndex = 41;
-            this.checkBoxFlag16.Text = "16";
+            this.checkBoxFlag16.Text = "BlendsInFromYaw";
             this.checkBoxFlag16.UseVisualStyleBackColor = true;
             this.checkBoxFlag16.CheckedChanged += new System.EventHandler(this.checkBoxFlag16_CheckedChanged);
             // 
@@ -539,7 +539,7 @@
             this.checkBoxFlag15.Name = "checkBoxFlag15";
             this.checkBoxFlag15.Size = new System.Drawing.Size(38, 17);
             this.checkBoxFlag15.TabIndex = 40;
-            this.checkBoxFlag15.Text = "15";
+            this.checkBoxFlag15.Text = "YawSpeed";
             this.checkBoxFlag15.UseVisualStyleBackColor = true;
             this.checkBoxFlag15.CheckedChanged += new System.EventHandler(this.checkBoxFlag15_CheckedChanged);
             // 
@@ -550,7 +550,7 @@
             this.checkBoxFlag14.Name = "checkBoxFlag14";
             this.checkBoxFlag14.Size = new System.Drawing.Size(38, 17);
             this.checkBoxFlag14.TabIndex = 39;
-            this.checkBoxFlag14.Text = "14";
+            this.checkBoxFlag14.Text = "Unused14";
             this.checkBoxFlag14.UseVisualStyleBackColor = true;
             this.checkBoxFlag14.CheckedChanged += new System.EventHandler(this.checkBoxFlag14_CheckedChanged);
             // 
@@ -561,7 +561,7 @@
             this.checkBoxFlag13.Name = "checkBoxFlag13";
             this.checkBoxFlag13.Size = new System.Drawing.Size(110, 17);
             this.checkBoxFlag13.TabIndex = 38;
-            this.checkBoxFlag13.Text = "Movement Speed";
+            this.checkBoxFlag13.Text = "TargetFollowRate";
             this.checkBoxFlag13.UseVisualStyleBackColor = true;
             this.checkBoxFlag13.CheckedChanged += new System.EventHandler(this.checkBoxFlag13_CheckedChanged);
             // 
@@ -572,7 +572,7 @@
             this.checkBoxFlag12.Name = "checkBoxFlag12";
             this.checkBoxFlag12.Size = new System.Drawing.Size(38, 17);
             this.checkBoxFlag12.TabIndex = 37;
-            this.checkBoxFlag12.Text = "12";
+            this.checkBoxFlag12.Text = "PosFollowRate";
             this.checkBoxFlag12.UseVisualStyleBackColor = true;
             this.checkBoxFlag12.CheckedChanged += new System.EventHandler(this.checkBoxFlag12_CheckedChanged);
             // 
@@ -583,29 +583,29 @@
             this.checkBoxFlag11.Name = "checkBoxFlag11";
             this.checkBoxFlag11.Size = new System.Drawing.Size(86, 17);
             this.checkBoxFlag11.TabIndex = 36;
-            this.checkBoxFlag11.Text = "Lock Control";
+            this.checkBoxFlag11.Text = "AlwaysTakesValues";
             this.checkBoxFlag11.UseVisualStyleBackColor = true;
             this.checkBoxFlag11.CheckedChanged += new System.EventHandler(this.checkBoxFlag11_CheckedChanged);
             // 
             // checkBoxFlag10
             // 
             this.checkBoxFlag10.AutoSize = true;
-            this.checkBoxFlag10.Location = new System.Drawing.Point(296, 134);
+            this.checkBoxFlag10.Location = new System.Drawing.Point(276, 134);
             this.checkBoxFlag10.Name = "checkBoxFlag10";
             this.checkBoxFlag10.Size = new System.Drawing.Size(38, 17);
             this.checkBoxFlag10.TabIndex = 35;
-            this.checkBoxFlag10.Text = "10";
+            this.checkBoxFlag10.Text = "ValuesAlongGeom";
             this.checkBoxFlag10.UseVisualStyleBackColor = true;
             this.checkBoxFlag10.CheckedChanged += new System.EventHandler(this.checkBoxFlag10_CheckedChanged);
             // 
             // checkBoxFlag9
             // 
             this.checkBoxFlag9.AutoSize = true;
-            this.checkBoxFlag9.Location = new System.Drawing.Point(296, 111);
+            this.checkBoxFlag9.Location = new System.Drawing.Point(276, 111);
             this.checkBoxFlag9.Name = "checkBoxFlag9";
             this.checkBoxFlag9.Size = new System.Drawing.Size(32, 17);
             this.checkBoxFlag9.TabIndex = 34;
-            this.checkBoxFlag9.Text = "9";
+            this.checkBoxFlag9.Text = "FramesInstances";
             this.checkBoxFlag9.UseVisualStyleBackColor = true;
             this.checkBoxFlag9.CheckedChanged += new System.EventHandler(this.checkBoxFlag9_CheckedChanged);
             // 
@@ -616,7 +616,7 @@
             this.checkBoxFlag0.Name = "checkBoxFlag0";
             this.checkBoxFlag0.Size = new System.Drawing.Size(32, 17);
             this.checkBoxFlag0.TabIndex = 25;
-            this.checkBoxFlag0.Text = "0";
+            this.checkBoxFlag0.Text = "Cam2AtParam";
             this.checkBoxFlag0.UseVisualStyleBackColor = true;
             this.checkBoxFlag0.CheckedChanged += new System.EventHandler(this.checkBoxFlag0_CheckedChanged);
             // 
@@ -627,7 +627,7 @@
             this.checkBoxFlag8.Name = "checkBoxFlag8";
             this.checkBoxFlag8.Size = new System.Drawing.Size(165, 17);
             this.checkBoxFlag8.TabIndex = 33;
-            this.checkBoxFlag8.Text = "Local XYZ Offset From Focus";
+            this.checkBoxFlag8.Text = "Gives Target Box";
             this.checkBoxFlag8.UseVisualStyleBackColor = true;
             this.checkBoxFlag8.CheckedChanged += new System.EventHandler(this.checkBoxFlag8_CheckedChanged);
             // 
@@ -638,7 +638,7 @@
             this.checkBoxFlag1.Name = "checkBoxFlag1";
             this.checkBoxFlag1.Size = new System.Drawing.Size(32, 17);
             this.checkBoxFlag1.TabIndex = 26;
-            this.checkBoxFlag1.Text = "1";
+            this.checkBoxFlag1.Text = "AllowsSwitchBack";
             this.checkBoxFlag1.UseVisualStyleBackColor = true;
             this.checkBoxFlag1.CheckedChanged += new System.EventHandler(this.checkBoxFlag1_CheckedChanged);
             // 
@@ -649,7 +649,7 @@
             this.checkBoxFlag7.Name = "checkBoxFlag7";
             this.checkBoxFlag7.Size = new System.Drawing.Size(86, 17);
             this.checkBoxFlag7.TabIndex = 32;
-            this.checkBoxFlag7.Text = "Field of View";
+            this.checkBoxFlag7.Text = "SetsFoV";
             this.checkBoxFlag7.UseVisualStyleBackColor = true;
             this.checkBoxFlag7.CheckedChanged += new System.EventHandler(this.checkBoxFlag7_CheckedChanged);
             // 
@@ -660,18 +660,18 @@
             this.checkBoxFlag2.Name = "checkBoxFlag2";
             this.checkBoxFlag2.Size = new System.Drawing.Size(32, 17);
             this.checkBoxFlag2.TabIndex = 27;
-            this.checkBoxFlag2.Text = "2";
+            this.checkBoxFlag2.Text = "SetsPitch";
             this.checkBoxFlag2.UseVisualStyleBackColor = true;
             this.checkBoxFlag2.CheckedChanged += new System.EventHandler(this.checkBoxFlag2_CheckedChanged);
             // 
             // checkBoxFlag6
             // 
             this.checkBoxFlag6.AutoSize = true;
-            this.checkBoxFlag6.Location = new System.Drawing.Point(264, 64);
+            this.checkBoxFlag6.Location = new System.Drawing.Point(296, 64);
             this.checkBoxFlag6.Name = "checkBoxFlag6";
             this.checkBoxFlag6.Size = new System.Drawing.Size(122, 17);
             this.checkBoxFlag6.TabIndex = 31;
-            this.checkBoxFlag6.Text = "Angle Around Focus";
+            this.checkBoxFlag6.Text = "SetsYaw";
             this.checkBoxFlag6.UseVisualStyleBackColor = true;
             this.checkBoxFlag6.CheckedChanged += new System.EventHandler(this.checkBoxFlag6_CheckedChanged);
             // 
@@ -682,7 +682,7 @@
             this.checkBoxFlag3.Name = "checkBoxFlag3";
             this.checkBoxFlag3.Size = new System.Drawing.Size(68, 17);
             this.checkBoxFlag3.TabIndex = 28;
-            this.checkBoxFlag3.Text = "Distance";
+            this.checkBoxFlag3.Text = "SetsDistance";
             this.checkBoxFlag3.UseVisualStyleBackColor = true;
             this.checkBoxFlag3.CheckedChanged += new System.EventHandler(this.checkBoxFlag3_CheckedChanged);
             // 
@@ -693,7 +693,7 @@
             this.checkBoxFlag5.Name = "checkBoxFlag5";
             this.checkBoxFlag5.Size = new System.Drawing.Size(32, 17);
             this.checkBoxFlag5.TabIndex = 30;
-            this.checkBoxFlag5.Text = "5";
+            this.checkBoxFlag5.Text = "NoBlendIn";
             this.checkBoxFlag5.UseVisualStyleBackColor = true;
             this.checkBoxFlag5.CheckedChanged += new System.EventHandler(this.checkBoxFlag5_CheckedChanged);
             // 
@@ -704,7 +704,7 @@
             this.checkBoxFlag4.Name = "checkBoxFlag4";
             this.checkBoxFlag4.Size = new System.Drawing.Size(32, 17);
             this.checkBoxFlag4.TabIndex = 29;
-            this.checkBoxFlag4.Text = "4";
+            this.checkBoxFlag4.Text = "Steers";
             this.checkBoxFlag4.UseVisualStyleBackColor = true;
             this.checkBoxFlag4.CheckedChanged += new System.EventHandler(this.checkBoxFlag4_CheckedChanged);
             // 
@@ -1362,7 +1362,7 @@
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(28, 13);
             this.label8.TabIndex = 18;
-            this.label8.Text = "Byte";
+            this.label8.Text = "Group";
             // 
             // label7
             // 
@@ -1371,7 +1371,7 @@
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(30, 13);
             this.label7.TabIndex = 17;
-            this.label7.Text = "Float";
+            this.label7.Text = "B.Time";
             // 
             // label6
             // 
@@ -1380,7 +1380,7 @@
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(32, 13);
             this.label6.TabIndex = 16;
-            this.label6.Text = "Short";
+            this.label6.Text = "Swit";
             // 
             // numericUpDowncamShort
             // 

@@ -54,7 +54,7 @@ namespace TwinsaityEditor
 
             numericUpDown1.Value = trigger.Header;
             numericUpDown2.Value = trigger.Enabled;
-            numericUpDown3.Value = (decimal)trigger.SomeFloat;
+            numericUpDown3.Value = (decimal)trigger.CheckInterval;
             numericUpDown4.Value = trigger.SectionHead;
             numericUpDown5.Value = trigger.ID;
             numericUpDown10.Value = (decimal)trigger.Coords[1].X;
@@ -101,78 +101,78 @@ namespace TwinsaityEditor
             }
             textBox1.Lines = lines;
 
-            numericUpDowncamFlags.Value = trigger.CamHeader;
-            numericUpDowncamByte.Value = trigger.UnkByte;
-            numericUpDowncamShort.Value = trigger.UnkShort;
-            numericUpDowncamFloat.Value = (decimal)trigger.UnkFloat1;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
+            numericUpDowncamByte.Value = trigger.Group;
+            numericUpDowncamShort.Value = trigger.CamSwitches;
+            numericUpDowncamFloat.Value = (decimal)trigger.BlendTime;
 
-            checkBoxFlag0.Checked = (trigger.CamHeader & (1 << 0)) != 0;
-            checkBoxFlag1.Checked = (trigger.CamHeader & (1 << 1)) != 0;
-            checkBoxFlag2.Checked = (trigger.CamHeader & (1 << 2)) != 0;
-            checkBoxFlag3.Checked = (trigger.CamHeader & (1 << 3)) != 0;
-            checkBoxFlag4.Checked = (trigger.CamHeader & (1 << 4)) != 0;
-            checkBoxFlag5.Checked = (trigger.CamHeader & (1 << 5)) != 0;
-            checkBoxFlag6.Checked = (trigger.CamHeader & (1 << 6)) != 0;
-            checkBoxFlag7.Checked = (trigger.CamHeader & (1 << 7)) != 0;
-            checkBoxFlag8.Checked = (trigger.CamHeader & (1 << 8)) != 0;
-            checkBoxFlag9.Checked = (trigger.CamHeader & (1 << 9)) != 0;
-            checkBoxFlag10.Checked = (trigger.CamHeader & (1 << 10)) != 0;
-            checkBoxFlag11.Checked = (trigger.CamHeader & (1 << 11)) != 0;
-            checkBoxFlag12.Checked = (trigger.CamHeader & (1 << 12)) != 0;
-            checkBoxFlag13.Checked = (trigger.CamHeader & (1 << 13)) != 0;
-            checkBoxFlag14.Checked = (trigger.CamHeader & (1 << 14)) != 0;
-            checkBoxFlag15.Checked = (trigger.CamHeader & (1 << 15)) != 0;
-            checkBoxFlag16.Checked = (trigger.CamHeader & (1 << 16)) != 0;
-            checkBoxFlag17.Checked = (trigger.CamHeader & (1 << 17)) != 0;
-            checkBoxFlag18.Checked = (trigger.CamHeader & (1 << 18)) != 0;
-            checkBoxFlag19.Checked = (trigger.CamHeader & (1 << 19)) != 0;
-            checkBoxFlag20.Checked = (trigger.CamHeader & (1 << 20)) != 0;
-            checkBoxFlag21.Checked = (trigger.CamHeader & (1 << 21)) != 0;
-            checkBoxFlag22.Checked = (trigger.CamHeader & (1 << 22)) != 0;
-            checkBoxFlag23.Checked = (trigger.CamHeader & (1 << 23)) != 0;
-            checkBoxFlag24.Checked = (trigger.CamHeader & (1 << 24)) != 0;
-            checkBoxFlag25.Checked = (trigger.CamHeader & (1 << 25)) != 0;
-            checkBoxFlag26.Checked = (trigger.CamHeader & (1 << 26)) != 0;
-            checkBoxFlag27.Checked = (trigger.CamHeader & (1 << 27)) != 0;
-            checkBoxFlag28.Checked = (trigger.CamHeader & (1 << 28)) != 0;
-            checkBoxFlag29.Checked = (trigger.CamHeader & (1 << 29)) != 0;
-            checkBoxFlag30.Checked = (trigger.CamHeader & (1 << 30)) != 0;
-            checkBoxFlag31.Checked = (trigger.CamHeader & (1 << 31)) != 0;
+            checkBoxFlag0.Checked = (trigger.CamFlags & (1 << 0)) != 0;
+            checkBoxFlag1.Checked = (trigger.CamFlags & (1 << 1)) != 0;
+            checkBoxFlag2.Checked = (trigger.CamFlags & (1 << 2)) != 0;
+            checkBoxFlag3.Checked = (trigger.CamFlags & (1 << 3)) != 0;
+            checkBoxFlag4.Checked = (trigger.CamFlags & (1 << 4)) != 0;
+            checkBoxFlag5.Checked = (trigger.CamFlags & (1 << 5)) != 0;
+            checkBoxFlag6.Checked = (trigger.CamFlags & (1 << 6)) != 0;
+            checkBoxFlag7.Checked = (trigger.CamFlags & (1 << 7)) != 0;
+            checkBoxFlag8.Checked = (trigger.CamFlags & (1 << 8)) != 0;
+            checkBoxFlag9.Checked = (trigger.CamFlags & (1 << 9)) != 0;
+            checkBoxFlag10.Checked = (trigger.CamFlags & (1 << 10)) != 0;
+            checkBoxFlag11.Checked = (trigger.CamFlags & (1 << 11)) != 0;
+            checkBoxFlag12.Checked = (trigger.CamFlags & (1 << 12)) != 0;
+            checkBoxFlag13.Checked = (trigger.CamFlags & (1 << 13)) != 0;
+            checkBoxFlag14.Checked = (trigger.CamFlags & (1 << 14)) != 0;
+            checkBoxFlag15.Checked = (trigger.CamFlags & (1 << 15)) != 0;
+            checkBoxFlag16.Checked = (trigger.CamFlags & (1 << 16)) != 0;
+            checkBoxFlag17.Checked = (trigger.CamFlags & (1 << 17)) != 0;
+            checkBoxFlag18.Checked = (trigger.CamFlags & (1 << 18)) != 0;
+            checkBoxFlag19.Checked = (trigger.CamFlags & (1 << 19)) != 0;
+            checkBoxFlag20.Checked = (trigger.CamFlags & (1 << 20)) != 0;
+            checkBoxFlag21.Checked = (trigger.CamFlags & (1 << 21)) != 0;
+            checkBoxFlag22.Checked = (trigger.CamFlags & (1 << 22)) != 0;
+            checkBoxFlag23.Checked = (trigger.CamFlags & (1 << 23)) != 0;
+            checkBoxFlag24.Checked = (trigger.CamFlags & (1 << 24)) != 0;
+            checkBoxFlag25.Checked = (trigger.CamFlags & (1 << 25)) != 0;
+            checkBoxFlag26.Checked = (trigger.CamFlags & (1 << 26)) != 0;
+            checkBoxFlag27.Checked = (trigger.CamFlags & (1 << 27)) != 0;
+            checkBoxFlag28.Checked = (trigger.CamFlags & (1 << 28)) != 0;
+            checkBoxFlag29.Checked = (trigger.CamFlags & (1 << 29)) != 0;
+            checkBoxFlag30.Checked = (trigger.CamFlags & (1 << 30)) != 0;
+            checkBoxFlag31.Checked = (trigger.CamFlags & (1 << 31)) != 0;
 
-            checkBoxTFlag0.Checked = trigger.UnkFlag0;
-            checkBoxTFlag1.Checked = trigger.UnkFlag1;
-            checkBoxTFlag2.Checked = trigger.UnkFlag2;
-            checkBoxTFlag3.Checked = trigger.UnkFlag3;
-            checkBoxTFlag4.Checked = trigger.UnkFlag4;
-            checkBoxTFlag5.Checked = trigger.UnkFlag5;
-            checkBoxTFlag6.Checked = trigger.UnkFlag6;
+            checkBoxTFlag0.Checked = trigger.IsType0;
+            checkBoxTFlag1.Checked = trigger.IsType1;
+            checkBoxTFlag2.Checked = trigger.IsType2;
+            checkBoxTFlag3.Checked = trigger.IsType3;
+            checkBoxTFlag4.Checked = trigger.IsType4;
+            checkBoxTFlag5.Checked = trigger.IsType5;
+            checkBoxTFlag6.Checked = trigger.IsType6;
             checkBoxTFlag18.Checked = trigger.UnkFlag18;
             checkBoxTFlag20.Checked = trigger.UnkFlag20;
 
-            numericUpDownUInt3.Value = trigger.UnkUInt3;
-            numericUpDownUInt4.Value = trigger.UnkUInt4;
-            numericUpDownFloat4.Value = (decimal)trigger.UnkFloat4;
-            numericUpDownFloat5.Value = (decimal)trigger.UnkFloat5;
-            numericUpDownInt5.Value = trigger.UnkInt5;
-            numericUpDownInt6.Value = trigger.UnkInt6;
-            numericUpDownUInt1.Value = trigger.UnkUInt1;
-            numericUpDownUInt2.Value = trigger.UnkUInt2;
-            numericUpDownUnkCoord1X.Value = (decimal)trigger.UnkCoords1.X;
-            numericUpDownUnkCoord1Y.Value = (decimal)trigger.UnkCoords1.Y;
-            numericUpDownUnkCoord1Z.Value = (decimal)trigger.UnkCoords1.Z;
-            numericUpDownUnkCoord1W.Value = (decimal)trigger.UnkCoords1.W;
-            numericUpDownUnkCoord2X.Value = (decimal)trigger.UnkCoords2.X;
-            numericUpDownUnkCoord2Y.Value = (decimal)trigger.UnkCoords2.Y;
-            numericUpDownUnkCoord2Z.Value = (decimal)trigger.UnkCoords2.Z;
-            numericUpDownUnkCoord2W.Value = (decimal)trigger.UnkCoords2.W;
-            numericUpDownFloat2.Value = (decimal)trigger.UnkFloat2;
-            numericUpDownFloat3.Value = (decimal)trigger.UnkFloat3;
-            numericUpDownFloat6.Value = (decimal)trigger.UnkFloat6;
-            numericUpDownFloat7.Value = (decimal)trigger.UnkFloat7;
-            numericUpDownUInt7.Value = trigger.UnkUInt7;
-            numericUpDownInt8.Value = trigger.UnkInt8;
-            numericUpDownUInt9.Value = trigger.UnkUInt9;
-            numericUpDownFloat8.Value = (decimal)trigger.UnkFloat8;
+            numericUpDownUInt3.Value = trigger.PitchStart;
+            numericUpDownUInt4.Value = trigger.PitchEnd;
+            numericUpDownFloat4.Value = (decimal)trigger.DistanceStart;
+            numericUpDownFloat5.Value = (decimal)trigger.DistanceEnd;
+            numericUpDownInt5.Value = trigger.YawStart;
+            numericUpDownInt6.Value = trigger.YawEnd;
+            numericUpDownUInt1.Value = trigger.FovStart;
+            numericUpDownUInt2.Value = trigger.FovEnd;
+            numericUpDownUnkCoord1X.Value = (decimal)trigger.TargetBoxMin.X;
+            numericUpDownUnkCoord1Y.Value = (decimal)trigger.TargetBoxMin.Y;
+            numericUpDownUnkCoord1Z.Value = (decimal)trigger.TargetBoxMin.Z;
+            numericUpDownUnkCoord1W.Value = (decimal)trigger.TargetBoxMin.W;
+            numericUpDownUnkCoord2X.Value = (decimal)trigger.TargetBoxMax.X;
+            numericUpDownUnkCoord2Y.Value = (decimal)trigger.TargetBoxMax.Y;
+            numericUpDownUnkCoord2Z.Value = (decimal)trigger.TargetBoxMax.Z;
+            numericUpDownUnkCoord2W.Value = (decimal)trigger.TargetBoxMax.W;
+            numericUpDownFloat2.Value = (decimal)trigger.FramingDistance;
+            numericUpDownFloat3.Value = (decimal)trigger.FramingShare;
+            numericUpDownFloat6.Value = (decimal)trigger.PositionFollowRate;
+            numericUpDownFloat7.Value = (decimal)trigger.TargetFollowRate;
+            numericUpDownUInt7.Value = trigger.YawSpeed;
+            numericUpDownInt8.Value = trigger.BlendInYaw;
+            numericUpDownUInt9.Value = trigger.BlendInPitch;
+            numericUpDownFloat8.Value = (decimal)trigger.BlendInDistance;
             numericUpDownUInt3.Enabled = checkBoxFlag2.Checked;
             numericUpDownUInt4.Enabled = checkBoxFlag2.Checked;
             numericUpDownFloat4.Enabled = checkBoxFlag3.Checked;
@@ -214,9 +214,9 @@ namespace TwinsaityEditor
                 if (!controller.Data.ContainsItem(id))
                     break;
             }
-            Camera new_trigger = new Camera { ID = id, Enabled = 1, Header = 1310720, SomeFloat = 0.3f, SectionHead = 10, Instances = new List<ushort>(),
-                Coords = new Pos[] { new Pos(0, 0, 0, 1), new Pos(0, 0, 0, 1), new Pos(1, 1, 1, 1) }, UnkCoords1 = new Pos(0,0,0,1), UnkCoords2 = new Pos(0,0,0,1),
-                CameraType1 = 3, CameraType2 = 3, UnkFloat1 = 1f};
+            Camera new_trigger = new Camera { ID = id, Enabled = 1, Header = 1310720, CheckInterval = 0.3f, SectionHead = 10, Instances = new List<ushort>(),
+                Coords = new Pos[] { new Pos(0, 0, 0, 1), new Pos(0, 0, 0, 1), new Pos(1, 1, 1, 1) }, TargetBoxMin = new Pos(0,0,0,1), TargetBoxMax = new Pos(0,0,0,1),
+                CameraType1 = 3, CameraType2 = 3, BlendTime = 1f};
             controller.Data.AddItem(id, new_trigger);
             ((MainForm)Tag).GenTreeNode(new_trigger, controller);
             trigger = new_trigger;
@@ -256,13 +256,13 @@ namespace TwinsaityEditor
             if (ignore_value_change) return;
             ignore_value_change = true;
             trigger.Header = (uint)numericUpDown1.Value;
-            checkBoxTFlag0.Checked = trigger.UnkFlag0;
-            checkBoxTFlag1.Checked = trigger.UnkFlag1;
-            checkBoxTFlag2.Checked = trigger.UnkFlag2;
-            checkBoxTFlag3.Checked = trigger.UnkFlag3;
-            checkBoxTFlag4.Checked = trigger.UnkFlag4;
-            checkBoxTFlag5.Checked = trigger.UnkFlag5;
-            checkBoxTFlag6.Checked = trigger.UnkFlag6;
+            checkBoxTFlag0.Checked = trigger.IsType0;
+            checkBoxTFlag1.Checked = trigger.IsType1;
+            checkBoxTFlag2.Checked = trigger.IsType2;
+            checkBoxTFlag3.Checked = trigger.IsType3;
+            checkBoxTFlag4.Checked = trigger.IsType4;
+            checkBoxTFlag5.Checked = trigger.IsType5;
+            checkBoxTFlag6.Checked = trigger.IsType6;
             checkBoxTFlag18.Checked = trigger.UnkFlag18;
             checkBoxTFlag20.Checked = trigger.UnkFlag20;
             CurCont.UpdateTextBox();
@@ -289,7 +289,7 @@ namespace TwinsaityEditor
         private void numericUpDown3_ValueChanged(object sender, System.EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.SomeFloat = (float)numericUpDown3.Value;
+            trigger.CheckInterval = (float)numericUpDown3.Value;
             CurCont.UpdateTextBox();
         }
 
@@ -486,61 +486,61 @@ namespace TwinsaityEditor
         private void numericUpDowncamFlags_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.CamHeader = (uint)numericUpDowncamFlags.Value;
+            trigger.CamFlags = (uint)numericUpDowncamFlags.Value;
             CurCont.UpdateTextBox();
 
-            checkBoxFlag0.Checked = (trigger.CamHeader & (1 << 0)) != 0;
-            checkBoxFlag1.Checked = (trigger.CamHeader & (1 << 1)) != 0;
-            checkBoxFlag2.Checked = (trigger.CamHeader & (1 << 2)) != 0;
-            checkBoxFlag3.Checked = (trigger.CamHeader & (1 << 3)) != 0;
-            checkBoxFlag4.Checked = (trigger.CamHeader & (1 << 4)) != 0;
-            checkBoxFlag5.Checked = (trigger.CamHeader & (1 << 5)) != 0;
-            checkBoxFlag6.Checked = (trigger.CamHeader & (1 << 6)) != 0;
-            checkBoxFlag7.Checked = (trigger.CamHeader & (1 << 7)) != 0;
-            checkBoxFlag8.Checked = (trigger.CamHeader & (1 << 8)) != 0;
-            checkBoxFlag9.Checked = (trigger.CamHeader & (1 << 9)) != 0;
-            checkBoxFlag10.Checked = (trigger.CamHeader & (1 << 10)) != 0;
-            checkBoxFlag11.Checked = (trigger.CamHeader & (1 << 11)) != 0;
-            checkBoxFlag12.Checked = (trigger.CamHeader & (1 << 12)) != 0;
-            checkBoxFlag13.Checked = (trigger.CamHeader & (1 << 13)) != 0;
-            checkBoxFlag14.Checked = (trigger.CamHeader & (1 << 14)) != 0;
-            checkBoxFlag15.Checked = (trigger.CamHeader & (1 << 15)) != 0;
-            checkBoxFlag16.Checked = (trigger.CamHeader & (1 << 16)) != 0;
-            checkBoxFlag17.Checked = (trigger.CamHeader & (1 << 17)) != 0;
-            checkBoxFlag18.Checked = (trigger.CamHeader & (1 << 18)) != 0;
-            checkBoxFlag19.Checked = (trigger.CamHeader & (1 << 19)) != 0;
-            checkBoxFlag20.Checked = (trigger.CamHeader & (1 << 20)) != 0;
-            checkBoxFlag21.Checked = (trigger.CamHeader & (1 << 21)) != 0;
-            checkBoxFlag22.Checked = (trigger.CamHeader & (1 << 22)) != 0;
-            checkBoxFlag23.Checked = (trigger.CamHeader & (1 << 23)) != 0;
-            checkBoxFlag24.Checked = (trigger.CamHeader & (1 << 24)) != 0;
-            checkBoxFlag25.Checked = (trigger.CamHeader & (1 << 25)) != 0;
-            checkBoxFlag26.Checked = (trigger.CamHeader & (1 << 26)) != 0;
-            checkBoxFlag27.Checked = (trigger.CamHeader & (1 << 27)) != 0;
-            checkBoxFlag28.Checked = (trigger.CamHeader & (1 << 28)) != 0;
-            checkBoxFlag29.Checked = (trigger.CamHeader & (1 << 29)) != 0;
-            checkBoxFlag30.Checked = (trigger.CamHeader & (1 << 30)) != 0;
-            checkBoxFlag31.Checked = (trigger.CamHeader & (1 << 31)) != 0;
+            checkBoxFlag0.Checked = (trigger.CamFlags & (1 << 0)) != 0;
+            checkBoxFlag1.Checked = (trigger.CamFlags & (1 << 1)) != 0;
+            checkBoxFlag2.Checked = (trigger.CamFlags & (1 << 2)) != 0;
+            checkBoxFlag3.Checked = (trigger.CamFlags & (1 << 3)) != 0;
+            checkBoxFlag4.Checked = (trigger.CamFlags & (1 << 4)) != 0;
+            checkBoxFlag5.Checked = (trigger.CamFlags & (1 << 5)) != 0;
+            checkBoxFlag6.Checked = (trigger.CamFlags & (1 << 6)) != 0;
+            checkBoxFlag7.Checked = (trigger.CamFlags & (1 << 7)) != 0;
+            checkBoxFlag8.Checked = (trigger.CamFlags & (1 << 8)) != 0;
+            checkBoxFlag9.Checked = (trigger.CamFlags & (1 << 9)) != 0;
+            checkBoxFlag10.Checked = (trigger.CamFlags & (1 << 10)) != 0;
+            checkBoxFlag11.Checked = (trigger.CamFlags & (1 << 11)) != 0;
+            checkBoxFlag12.Checked = (trigger.CamFlags & (1 << 12)) != 0;
+            checkBoxFlag13.Checked = (trigger.CamFlags & (1 << 13)) != 0;
+            checkBoxFlag14.Checked = (trigger.CamFlags & (1 << 14)) != 0;
+            checkBoxFlag15.Checked = (trigger.CamFlags & (1 << 15)) != 0;
+            checkBoxFlag16.Checked = (trigger.CamFlags & (1 << 16)) != 0;
+            checkBoxFlag17.Checked = (trigger.CamFlags & (1 << 17)) != 0;
+            checkBoxFlag18.Checked = (trigger.CamFlags & (1 << 18)) != 0;
+            checkBoxFlag19.Checked = (trigger.CamFlags & (1 << 19)) != 0;
+            checkBoxFlag20.Checked = (trigger.CamFlags & (1 << 20)) != 0;
+            checkBoxFlag21.Checked = (trigger.CamFlags & (1 << 21)) != 0;
+            checkBoxFlag22.Checked = (trigger.CamFlags & (1 << 22)) != 0;
+            checkBoxFlag23.Checked = (trigger.CamFlags & (1 << 23)) != 0;
+            checkBoxFlag24.Checked = (trigger.CamFlags & (1 << 24)) != 0;
+            checkBoxFlag25.Checked = (trigger.CamFlags & (1 << 25)) != 0;
+            checkBoxFlag26.Checked = (trigger.CamFlags & (1 << 26)) != 0;
+            checkBoxFlag27.Checked = (trigger.CamFlags & (1 << 27)) != 0;
+            checkBoxFlag28.Checked = (trigger.CamFlags & (1 << 28)) != 0;
+            checkBoxFlag29.Checked = (trigger.CamFlags & (1 << 29)) != 0;
+            checkBoxFlag30.Checked = (trigger.CamFlags & (1 << 30)) != 0;
+            checkBoxFlag31.Checked = (trigger.CamFlags & (1 << 31)) != 0;
         }
 
         private void numericUpDowncamFloat_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.UnkFloat1 = (float)numericUpDowncamFloat.Value;
+            trigger.BlendTime = (float)numericUpDowncamFloat.Value;
             CurCont.UpdateTextBox();
         }
 
         private void numericUpDowncamShort_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.UnkShort = (ushort)numericUpDowncamShort.Value;
+            trigger.CamSwitches = (ushort)numericUpDowncamShort.Value;
             CurCont.UpdateTextBox();
         }
 
         private void numericUpDowncamByte_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.UnkByte = (byte)numericUpDowncamByte.Value;
+            trigger.Group = (byte)numericUpDowncamByte.Value;
             CurCont.UpdateTextBox();
         }
 
@@ -550,10 +550,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             uint mask = 1 << 0;
             if (checkBoxFlag0.Checked)
-                trigger.CamHeader |= mask;
+                trigger.CamFlags |= mask;
             else
-                trigger.CamHeader &= ~mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             ignore_value_change = false;
             CurCont.UpdateTextBox();
         }
@@ -564,10 +564,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             uint mask = 1 << 1;
             if (checkBoxFlag1.Checked)
-                trigger.CamHeader |= mask;
+                trigger.CamFlags |= mask;
             else
-                trigger.CamHeader &= ~mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             ignore_value_change = false;
             CurCont.UpdateTextBox();
         }
@@ -578,10 +578,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             uint mask = 1 << 2;
             if (checkBoxFlag2.Checked)
-                trigger.CamHeader |= mask;
+                trigger.CamFlags |= mask;
             else
-                trigger.CamHeader &= ~mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             numericUpDownUInt3.Enabled = checkBoxFlag2.Checked;
             numericUpDownUInt4.Enabled = checkBoxFlag2.Checked;
             ignore_value_change = false;
@@ -594,10 +594,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             uint mask = 1 << 3;
             if (checkBoxFlag3.Checked)
-                trigger.CamHeader |= mask;
+                trigger.CamFlags |= mask;
             else
-                trigger.CamHeader &= ~mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             numericUpDownFloat4.Enabled = checkBoxFlag3.Checked;
             numericUpDownFloat5.Enabled = checkBoxFlag3.Checked;
             ignore_value_change = false;
@@ -610,10 +610,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             uint mask = 1 << 4;
             if (checkBoxFlag4.Checked)
-                trigger.CamHeader |= mask;
+                trigger.CamFlags |= mask;
             else
-                trigger.CamHeader &= ~mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             ignore_value_change = false;
             CurCont.UpdateTextBox();
         }
@@ -624,10 +624,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             uint mask = 1 << 5;
             if (checkBoxFlag5.Checked)
-                trigger.CamHeader |= mask;
+                trigger.CamFlags |= mask;
             else
-                trigger.CamHeader &= ~mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             ignore_value_change = false;
             CurCont.UpdateTextBox();
         }
@@ -638,10 +638,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             uint mask = 1 << 6;
             if (checkBoxFlag6.Checked)
-                trigger.CamHeader |= mask;
+                trigger.CamFlags |= mask;
             else
-                trigger.CamHeader &= ~mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             numericUpDownInt5.Enabled = checkBoxFlag6.Checked;
             numericUpDownInt6.Enabled = checkBoxFlag6.Checked;
             ignore_value_change = false;
@@ -654,10 +654,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             uint mask = 1 << 7;
             if (checkBoxFlag7.Checked)
-                trigger.CamHeader |= mask;
+                trigger.CamFlags |= mask;
             else
-                trigger.CamHeader &= ~mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             numericUpDownUInt1.Enabled = checkBoxFlag7.Checked;
             numericUpDownUInt2.Enabled = checkBoxFlag7.Checked;
             ignore_value_change = false;
@@ -670,10 +670,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             uint mask = 1 << 8;
             if (checkBoxFlag8.Checked)
-                trigger.CamHeader |= mask;
+                trigger.CamFlags |= mask;
             else
-                trigger.CamHeader &= ~mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             numericUpDownUnkCoord1X.Enabled = checkBoxFlag8.Checked || checkBoxFlag28.Checked;
             numericUpDownUnkCoord1Y.Enabled = checkBoxFlag8.Checked || checkBoxFlag28.Checked;
             numericUpDownUnkCoord1Z.Enabled = checkBoxFlag8.Checked || checkBoxFlag28.Checked;
@@ -692,10 +692,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             uint mask = 1 << 9;
             if (checkBoxFlag9.Checked)
-                trigger.CamHeader |= mask;
+                trigger.CamFlags |= mask;
             else
-                trigger.CamHeader &= ~mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             numericUpDownFloat2.Enabled = checkBoxFlag9.Checked || checkBoxFlag10.Checked;
             numericUpDownFloat3.Enabled = checkBoxFlag9.Checked || checkBoxFlag10.Checked;
             ignore_value_change = false;
@@ -708,10 +708,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             uint mask = 1 << 10;
             if (checkBoxFlag10.Checked)
-                trigger.CamHeader |= mask;
+                trigger.CamFlags |= mask;
             else
-                trigger.CamHeader &= ~mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             numericUpDownFloat2.Enabled = checkBoxFlag9.Checked || checkBoxFlag10.Checked;
             numericUpDownFloat3.Enabled = checkBoxFlag9.Checked || checkBoxFlag10.Checked;
             ignore_value_change = false;
@@ -724,10 +724,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             uint mask = 1 << 11;
             if (checkBoxFlag11.Checked)
-                trigger.CamHeader |= mask;
+                trigger.CamFlags |= mask;
             else
-                trigger.CamHeader &= ~mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             ignore_value_change = false;
             CurCont.UpdateTextBox();
         }
@@ -738,10 +738,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             uint mask = 1 << 12;
             if (checkBoxFlag12.Checked)
-                trigger.CamHeader |= mask;
+                trigger.CamFlags |= mask;
             else
-                trigger.CamHeader &= ~mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             numericUpDownFloat6.Enabled = checkBoxFlag12.Checked;
             ignore_value_change = false;
             CurCont.UpdateTextBox();
@@ -753,10 +753,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             uint mask = 1 << 13;
             if (checkBoxFlag13.Checked)
-                trigger.CamHeader |= mask;
+                trigger.CamFlags |= mask;
             else
-                trigger.CamHeader &= ~mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             numericUpDownFloat7.Enabled = checkBoxFlag13.Checked;
             ignore_value_change = false;
             CurCont.UpdateTextBox();
@@ -768,10 +768,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             uint mask = 1 << 14;
             if (checkBoxFlag14.Checked)
-                trigger.CamHeader |= mask;
+                trigger.CamFlags |= mask;
             else
-                trigger.CamHeader &= ~mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             ignore_value_change = false;
             CurCont.UpdateTextBox();
         }
@@ -782,10 +782,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             uint mask = 1 << 15;
             if (checkBoxFlag15.Checked)
-                trigger.CamHeader |= mask;
+                trigger.CamFlags |= mask;
             else
-                trigger.CamHeader &= ~mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             numericUpDownUInt7.Enabled = checkBoxFlag15.Checked;
             ignore_value_change = false;
             CurCont.UpdateTextBox();
@@ -797,10 +797,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             uint mask = 1 << 16;
             if (checkBoxFlag16.Checked)
-                trigger.CamHeader |= mask;
+                trigger.CamFlags |= mask;
             else
-                trigger.CamHeader &= ~mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             numericUpDownInt8.Enabled = checkBoxFlag16.Checked;
             ignore_value_change = false;
             CurCont.UpdateTextBox();
@@ -812,10 +812,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             uint mask = 1 << 17;
             if (checkBoxFlag17.Checked)
-                trigger.CamHeader |= mask;
+                trigger.CamFlags |= mask;
             else
-                trigger.CamHeader &= ~mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             numericUpDownUInt9.Enabled = checkBoxFlag17.Checked;
             ignore_value_change = false;
             CurCont.UpdateTextBox();
@@ -827,10 +827,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             uint mask = 1 << 18;
             if (checkBoxFlag18.Checked)
-                trigger.CamHeader |= mask;
+                trigger.CamFlags |= mask;
             else
-                trigger.CamHeader &= ~mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             numericUpDownFloat8.Enabled = checkBoxFlag18.Checked;
             ignore_value_change = false;
             CurCont.UpdateTextBox();
@@ -842,10 +842,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             uint mask = 1 << 19;
             if (checkBoxFlag19.Checked)
-                trigger.CamHeader |= mask;
+                trigger.CamFlags |= mask;
             else
-                trigger.CamHeader &= ~mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             ignore_value_change = false;
             CurCont.UpdateTextBox();
         }
@@ -856,10 +856,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             uint mask = 1 << 20;
             if (checkBoxFlag20.Checked)
-                trigger.CamHeader |= mask;
+                trigger.CamFlags |= mask;
             else
-                trigger.CamHeader &= ~mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             ignore_value_change = false;
             CurCont.UpdateTextBox();
         }
@@ -870,10 +870,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             uint mask = 1 << 21;
             if (checkBoxFlag21.Checked)
-                trigger.CamHeader |= mask;
+                trigger.CamFlags |= mask;
             else
-                trigger.CamHeader &= ~mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             ignore_value_change = false;
             CurCont.UpdateTextBox();
         }
@@ -884,10 +884,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             uint mask = 1 << 22;
             if (checkBoxFlag22.Checked)
-                trigger.CamHeader |= mask;
+                trigger.CamFlags |= mask;
             else
-                trigger.CamHeader &= ~mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             ignore_value_change = false;
             CurCont.UpdateTextBox();
         }
@@ -898,10 +898,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             uint mask = 1 << 23;
             if (checkBoxFlag23.Checked)
-                trigger.CamHeader |= mask;
+                trigger.CamFlags |= mask;
             else
-                trigger.CamHeader &= ~mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             ignore_value_change = false;
             CurCont.UpdateTextBox();
         }
@@ -912,10 +912,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             uint mask = 1 << 24;
             if (checkBoxFlag24.Checked)
-                trigger.CamHeader |= mask;
+                trigger.CamFlags |= mask;
             else
-                trigger.CamHeader &= ~mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             ignore_value_change = false;
             CurCont.UpdateTextBox();
         }
@@ -926,10 +926,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             uint mask = 1 << 25;
             if (checkBoxFlag25.Checked)
-                trigger.CamHeader |= mask;
+                trigger.CamFlags |= mask;
             else
-                trigger.CamHeader &= ~mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             ignore_value_change = false;
             CurCont.UpdateTextBox();
         }
@@ -940,10 +940,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             uint mask = 1 << 26;
             if (checkBoxFlag26.Checked)
-                trigger.CamHeader |= mask;
+                trigger.CamFlags |= mask;
             else
-                trigger.CamHeader &= ~mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             ignore_value_change = false;
             CurCont.UpdateTextBox();
         }
@@ -954,10 +954,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             uint mask = 1 << 27;
             if (checkBoxFlag27.Checked)
-                trigger.CamHeader |= mask;
+                trigger.CamFlags |= mask;
             else
-                trigger.CamHeader &= ~mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             ignore_value_change = false;
             CurCont.UpdateTextBox();
         }
@@ -968,10 +968,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             uint mask = 1 << 28;
             if (checkBoxFlag28.Checked)
-                trigger.CamHeader |= mask;
+                trigger.CamFlags |= mask;
             else
-                trigger.CamHeader &= ~mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             numericUpDownUnkCoord1X.Enabled = checkBoxFlag8.Checked || checkBoxFlag28.Checked;
             numericUpDownUnkCoord1Y.Enabled = checkBoxFlag8.Checked || checkBoxFlag28.Checked;
             numericUpDownUnkCoord1Z.Enabled = checkBoxFlag8.Checked || checkBoxFlag28.Checked;
@@ -990,10 +990,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             uint mask = 1 << 29;
             if (checkBoxFlag29.Checked)
-                trigger.CamHeader |= mask;
+                trigger.CamFlags |= mask;
             else
-                trigger.CamHeader &= ~mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             ignore_value_change = false;
             CurCont.UpdateTextBox();
         }
@@ -1004,10 +1004,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             uint mask = 1 << 30;
             if (checkBoxFlag30.Checked)
-                trigger.CamHeader |= mask;
+                trigger.CamFlags |= mask;
             else
-                trigger.CamHeader &= ~mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             ignore_value_change = false;
             CurCont.UpdateTextBox();
         }
@@ -1018,10 +1018,10 @@ namespace TwinsaityEditor
             ignore_value_change = true;
             int mask = 1 << 31;
             if (checkBoxFlag31.Checked)
-                trigger.CamHeader |= (uint)mask;
+                trigger.CamFlags |= (uint)mask;
             else
-                trigger.CamHeader &= ~(uint)mask;
-            numericUpDowncamFlags.Value = trigger.CamHeader;
+                trigger.CamFlags &= ~(uint)mask;
+            numericUpDowncamFlags.Value = trigger.CamFlags;
             ignore_value_change = false;
             CurCont.UpdateTextBox();
         }
@@ -1030,7 +1030,7 @@ namespace TwinsaityEditor
         {
             if (ignore_value_change) return;
             ignore_value_change = true;
-            trigger.UnkFlag0 = checkBoxTFlag0.Checked;
+            trigger.IsType0 = checkBoxTFlag0.Checked;
             numericUpDown1.Value = trigger.Header;
             CurCont.UpdateTextBox();
             ignore_value_change = false;
@@ -1040,7 +1040,7 @@ namespace TwinsaityEditor
         {
             if (ignore_value_change) return;
             ignore_value_change = true;
-            trigger.UnkFlag1 = checkBoxTFlag1.Checked;
+            trigger.IsType1 = checkBoxTFlag1.Checked;
             numericUpDown1.Value = trigger.Header;
             CurCont.UpdateTextBox();
             ignore_value_change = false;
@@ -1050,7 +1050,7 @@ namespace TwinsaityEditor
         {
             if (ignore_value_change) return;
             ignore_value_change = true;
-            trigger.UnkFlag2 = checkBoxTFlag2.Checked;
+            trigger.IsType2 = checkBoxTFlag2.Checked;
             numericUpDown1.Value = trigger.Header;
             CurCont.UpdateTextBox();
             ignore_value_change = false;
@@ -1060,7 +1060,7 @@ namespace TwinsaityEditor
         {
             if (ignore_value_change) return;
             ignore_value_change = true;
-            trigger.UnkFlag3 = checkBoxTFlag3.Checked;
+            trigger.IsType3 = checkBoxTFlag3.Checked;
             numericUpDown1.Value = trigger.Header;
             CurCont.UpdateTextBox();
             ignore_value_change = false;
@@ -1070,7 +1070,7 @@ namespace TwinsaityEditor
         {
             if (ignore_value_change) return;
             ignore_value_change = true;
-            trigger.UnkFlag4 = checkBoxTFlag4.Checked;
+            trigger.IsType4 = checkBoxTFlag4.Checked;
             numericUpDown1.Value = trigger.Header;
             CurCont.UpdateTextBox();
             ignore_value_change = false;
@@ -1080,7 +1080,7 @@ namespace TwinsaityEditor
         {
             if (ignore_value_change) return;
             ignore_value_change = true;
-            trigger.UnkFlag5 = checkBoxTFlag5.Checked;
+            trigger.IsType5 = checkBoxTFlag5.Checked;
             numericUpDown1.Value = trigger.Header;
             CurCont.UpdateTextBox();
             ignore_value_change = false;
@@ -1090,7 +1090,7 @@ namespace TwinsaityEditor
         {
             if (ignore_value_change) return;
             ignore_value_change = true;
-            trigger.UnkFlag6 = checkBoxTFlag6.Checked;
+            trigger.IsType6 = checkBoxTFlag6.Checked;
             numericUpDown1.Value = trigger.Header;
             CurCont.UpdateTextBox();
             ignore_value_change = false;
@@ -1119,168 +1119,168 @@ namespace TwinsaityEditor
         private void numericUpDownUInt3_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.UnkUInt3 = (uint)numericUpDownUInt3.Value;
+            trigger.PitchStart = (uint)numericUpDownUInt3.Value;
             CurCont.UpdateTextBox();
         }
 
         private void numericUpDownUInt4_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.UnkUInt4 = (uint)numericUpDownUInt4.Value;
+            trigger.PitchEnd = (uint)numericUpDownUInt4.Value;
             CurCont.UpdateTextBox();
         }
 
         private void numericUpDownFloat4_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.UnkFloat4 = (float)numericUpDownFloat4.Value;
+            trigger.DistanceStart = (float)numericUpDownFloat4.Value;
             CurCont.UpdateTextBox();
         }
 
         private void numericUpDownFloat5_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.UnkFloat5 = (float)numericUpDownFloat5.Value;
+            trigger.DistanceEnd = (float)numericUpDownFloat5.Value;
             CurCont.UpdateTextBox();
         }
 
         private void numericUpDownInt5_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.UnkInt5 = (int)numericUpDownInt5.Value;
+            trigger.YawStart = (int)numericUpDownInt5.Value;
             CurCont.UpdateTextBox();
         }
 
         private void numericUpDownInt6_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.UnkInt6 = (int)numericUpDownInt6.Value;
+            trigger.YawEnd = (int)numericUpDownInt6.Value;
             CurCont.UpdateTextBox();
         }
 
         private void numericUpDownUInt1_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.UnkUInt1 = (uint)numericUpDownUInt1.Value;
+            trigger.FovStart = (uint)numericUpDownUInt1.Value;
             CurCont.UpdateTextBox();
         }
 
         private void numericUpDownUInt2_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.UnkUInt2 = (uint)numericUpDownUInt2.Value;
+            trigger.FovEnd = (uint)numericUpDownUInt2.Value;
             CurCont.UpdateTextBox();
         }
 
         private void numericUpDownFloat2_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.UnkFloat2 = (float)numericUpDownFloat2.Value;
+            trigger.FramingDistance = (float)numericUpDownFloat2.Value;
             CurCont.UpdateTextBox();
         }
 
         private void numericUpDownFloat3_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.UnkFloat3 = (float)numericUpDownFloat3.Value;
+            trigger.FramingShare = (float)numericUpDownFloat3.Value;
             CurCont.UpdateTextBox();
         }
 
         private void numericUpDownFloat6_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.UnkFloat6 = (float)numericUpDownFloat6.Value;
+            trigger.PositionFollowRate = (float)numericUpDownFloat6.Value;
             CurCont.UpdateTextBox();
         }
 
         private void numericUpDownFloat7_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.UnkFloat7 = (float)numericUpDownFloat7.Value;
+            trigger.TargetFollowRate = (float)numericUpDownFloat7.Value;
             CurCont.UpdateTextBox();
         }
 
         private void numericUpDownUInt7_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.UnkUInt7 = (uint)numericUpDownUInt7.Value;
+            trigger.YawSpeed = (uint)numericUpDownUInt7.Value;
             CurCont.UpdateTextBox();
         }
 
         private void numericUpDownInt8_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.UnkInt8 = (int)numericUpDownInt8.Value;
+            trigger.BlendInYaw = (int)numericUpDownInt8.Value;
             CurCont.UpdateTextBox();
         }
 
         private void numericUpDownUInt9_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.UnkUInt9 = (uint)numericUpDownUInt9.Value;
+            trigger.BlendInPitch = (uint)numericUpDownUInt9.Value;
             CurCont.UpdateTextBox();
         }
 
         private void numericUpDownFloat8_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.UnkFloat8 = (float)numericUpDownFloat8.Value;
+            trigger.BlendInDistance = (float)numericUpDownFloat8.Value;
             CurCont.UpdateTextBox();
         }
 
         private void numericUpDownUnkCoord1X_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.UnkCoords1.X = (float)numericUpDownUnkCoord1X.Value;
+            trigger.TargetBoxMin.X = (float)numericUpDownUnkCoord1X.Value;
             CurCont.UpdateTextBox();
         }
 
         private void numericUpDownUnkCoord1Y_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.UnkCoords1.Y = (float)numericUpDownUnkCoord1Y.Value;
+            trigger.TargetBoxMin.Y = (float)numericUpDownUnkCoord1Y.Value;
             CurCont.UpdateTextBox();
         }
 
         private void numericUpDownUnkCoord1Z_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.UnkCoords1.Z = (float)numericUpDownUnkCoord1Z.Value;
+            trigger.TargetBoxMin.Z = (float)numericUpDownUnkCoord1Z.Value;
             CurCont.UpdateTextBox();
         }
 
         private void numericUpDownUnkCoord1W_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.UnkCoords1.W = (float)numericUpDownUnkCoord1W.Value;
+            trigger.TargetBoxMin.W = (float)numericUpDownUnkCoord1W.Value;
             CurCont.UpdateTextBox();
         }
 
         private void numericUpDownUnkCoord2X_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.UnkCoords2.X = (float)numericUpDownUnkCoord2X.Value;
+            trigger.TargetBoxMax.X = (float)numericUpDownUnkCoord2X.Value;
             CurCont.UpdateTextBox();
         }
 
         private void numericUpDownUnkCoord2Y_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.UnkCoords2.Y = (float)numericUpDownUnkCoord2Y.Value;
+            trigger.TargetBoxMax.Y = (float)numericUpDownUnkCoord2Y.Value;
             CurCont.UpdateTextBox();
         }
 
         private void numericUpDownUnkCoord2Z_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.UnkCoords2.Z = (float)numericUpDownUnkCoord2Z.Value;
+            trigger.TargetBoxMax.Z = (float)numericUpDownUnkCoord2Z.Value;
             CurCont.UpdateTextBox();
         }
 
         private void numericUpDownUnkCoord2W_ValueChanged(object sender, EventArgs e)
         {
             if (ignore_value_change) return;
-            trigger.UnkCoords2.W = (float)numericUpDownUnkCoord2W.Value;
+            trigger.TargetBoxMax.W = (float)numericUpDownUnkCoord2W.Value;
             CurCont.UpdateTextBox();
         }
 

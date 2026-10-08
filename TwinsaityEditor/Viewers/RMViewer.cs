@@ -480,17 +480,17 @@ namespace TwinsaityEditor
                                     if (camera is Camera.Camera_Path CameraPolyline)
                                     {
                                         GL.PointSize(5);
-                                        for (int p = 0; p < CameraPolyline.unkVectors.Length - 1; p++)
+                                        for (int p = 0; p < CameraPolyline.Points.Length - 1; p++)
                                         {
-                                            Pos Point1 = CameraPolyline.unkVectors[p];
-                                            Pos Point2 = CameraPolyline.unkVectors[p + 1];
+                                            Pos Point1 = CameraPolyline.Points[p];
+                                            Pos Point2 = CameraPolyline.Points[p + 1];
                                             GL.Begin(PrimitiveType.Lines);
                                             GL.Vertex3(-Point1.X, Point1.Y, Point1.Z);
                                             GL.Vertex3(-Point2.X, Point2.Y, Point2.Z);
                                             GL.End();
                                             GL.Begin(PrimitiveType.Points);
                                             GL.Vertex3(-Point1.X, Point1.Y, Point1.Z);
-                                            if (p == CameraPolyline.unkVectors.Length - 1)
+                                            if (p == CameraPolyline.Points.Length - 1)
                                             {
                                                 GL.Vertex3(-Point2.X, Point2.Y, Point2.Z);
                                             }
@@ -500,7 +500,7 @@ namespace TwinsaityEditor
                                     else if (camera is Camera.Camera_Point CameraPoint)
                                     {
                                         GL.PointSize(10);
-                                        Pos Point = CameraPoint.unkVector;
+                                        Pos Point = CameraPoint.Point;
                                         Pos Source = new Pos(-cam.Coords[1].X, cam.Coords[1].Y, cam.Coords[1].Z, cam.Coords[1].W);
                                         GL.Begin(PrimitiveType.Points);
                                         GL.Vertex3(-Point.X, Point.Y, Point.Z);
@@ -513,17 +513,17 @@ namespace TwinsaityEditor
                                     else if (camera is Camera.Camera_Spline CameraSpline)
                                     {
                                         GL.PointSize(5);
-                                        for (int p = 0; p < CameraSpline.unkVectors.Length - 3; p++)
+                                        for (int p = 0; p < CameraSpline.Samples.Length - 3; p++)
                                         {
-                                            Pos Point1 = CameraSpline.unkVectors[p];
-                                            Pos Point2 = CameraSpline.unkVectors[p + 2];
+                                            Pos Point1 = CameraSpline.Samples[p];
+                                            Pos Point2 = CameraSpline.Samples[p + 2];
                                             GL.Begin(PrimitiveType.Lines);
                                             GL.Vertex3(-Point1.X, Point1.Y, Point1.Z);
                                             GL.Vertex3(-Point2.X, Point2.Y, Point2.Z);
                                             GL.End();
                                             GL.Begin(PrimitiveType.Points);
                                             GL.Vertex3(-Point1.X, Point1.Y, Point1.Z);
-                                            if (p == CameraSpline.unkVectors.Length - 2)
+                                            if (p == CameraSpline.Samples.Length - 2)
                                             {
                                                 GL.Vertex3(-Point2.X, Point2.Y, Point2.Z);
                                             }
@@ -534,7 +534,7 @@ namespace TwinsaityEditor
                                     else if (camera is Camera.Camera_Point2 CameraPoint2)
                                     {
                                         GL.PointSize(10);
-                                        Pos Point = CameraPoint2.unkVector;
+                                        Pos Point = CameraPoint2.Point;
                                         Pos Source = new Pos(-cam.Coords[1].X, cam.Coords[1].Y, cam.Coords[1].Z, cam.Coords[1].W);
                                         GL.Begin(PrimitiveType.Points);
                                         GL.Vertex3(-Point.X, Point.Y, Point.Z);
@@ -547,8 +547,8 @@ namespace TwinsaityEditor
                                     else if (camera is Camera.Camera_Line CameraLine)
                                     {
                                         GL.PointSize(10);
-                                        Pos Point1 = CameraLine.unkBoundingBoxVector1;
-                                        Pos Point2 = CameraLine.unkBoundingBoxVector2;
+                                        Pos Point1 = CameraLine.LineStart;
+                                        Pos Point2 = CameraLine.LineEnd;
                                         GL.Begin(PrimitiveType.Points);
                                         GL.Vertex3(-Point1.X, Point1.Y, Point1.Z);
                                         GL.Vertex3(-Point2.X, Point2.Y, Point2.Z);
@@ -561,8 +561,8 @@ namespace TwinsaityEditor
                                     else if (camera is Camera.Camera_Line2 CameraLine2)
                                     {
                                         GL.PointSize(10);
-                                        Pos Point1 = CameraLine2.unkBoundingBoxVector1;
-                                        Pos Point2 = CameraLine2.unkBoundingBoxVector2;
+                                        Pos Point1 = CameraLine2.LineStart;
+                                        Pos Point2 = CameraLine2.LineEnd;
                                         GL.Begin(PrimitiveType.Points);
                                         GL.Vertex3(-Point1.X, Point1.Y, Point1.Z);
                                         GL.Vertex3(-Point2.X, Point2.Y, Point2.Z);
@@ -576,8 +576,8 @@ namespace TwinsaityEditor
                                     {
                                         // May be wrong?
                                         GL.PointSize(10);
-                                        Pos Point1 = CameraZone.Data1_Vectors[3];
-                                        Pos Point2 = CameraZone.Data2_Vectors[3];
+                                        Pos Point1 = CameraZone.CameraBox[3];
+                                        Pos Point2 = CameraZone.TargetBox[3];
                                         GL.Begin(PrimitiveType.Points);
                                         GL.Vertex3(-Point1.X, Point1.Y, Point1.Z);
                                         GL.Vertex3(-Point2.X, Point2.Y, Point2.Z);

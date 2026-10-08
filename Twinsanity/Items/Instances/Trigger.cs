@@ -68,7 +68,7 @@ namespace Twinsanity
             }
         }
 
-        public bool UnkFlag0
+        public bool IsType0
         {
             get
             {
@@ -83,7 +83,7 @@ namespace Twinsanity
                     Header &= ~mask;
             }
         }
-        public bool UnkFlag1
+        public bool IsType1
         {
             get
             {
@@ -98,7 +98,7 @@ namespace Twinsanity
                     Header &= ~mask;
             }
         }
-        public bool UnkFlag2
+        public bool IsType2
         {
             get
             {
@@ -113,7 +113,7 @@ namespace Twinsanity
                     Header &= ~mask;
             }
         }
-        public bool UnkFlag3
+        public bool IsType3
         {
             get
             {
@@ -128,7 +128,7 @@ namespace Twinsanity
                     Header &= ~mask;
             }
         }
-        public bool UnkFlag4
+        public bool IsType4
         {
             get
             {
@@ -143,7 +143,7 @@ namespace Twinsanity
                     Header &= ~mask;
             }
         }
-        public bool UnkFlag5
+        public bool IsType5
         {
             get
             {
@@ -158,7 +158,7 @@ namespace Twinsanity
                     Header &= ~mask;
             }
         }
-        public bool UnkFlag6
+        public bool IsType6
         {
             get
             {
@@ -173,6 +173,40 @@ namespace Twinsanity
                     Header &= ~mask;
             }
         }
+
+        public bool IsType7
+        {
+            get
+            {
+                return (Header >> 0x7 & 0x1) != 0;
+            }
+            set
+            {
+                uint mask = 1 << 0x7;
+                if (value)
+                    Header |= mask;
+                else
+                    Header &= ~mask;
+            }
+        }
+
+        public bool NotPolled
+        {
+            get
+            {
+                return (Header >> 0xC & 0x1) != 0;
+            }
+            set
+            {
+                uint mask = 1 << 0xC;
+                if (value)
+                    Header |= mask;
+                else
+                    Header &= ~mask;
+            }
+        }
+
+
 
         public bool[] Mask
         {
@@ -205,7 +239,7 @@ namespace Twinsanity
         }
 
         public uint Enabled { get; set; } = 1;
-        public float SomeFloat { get; set; } = 0.3f;
+        public float CheckInterval { get; set; } = 0.3f;
         public Pos[] Coords { get; set; } = new Pos[3]{
             new Pos(0,0,0,1),
             new Pos(0,0,0,1),
@@ -223,7 +257,7 @@ namespace Twinsanity
         {
             writer.Write(Header);
             writer.Write(Enabled);
-            writer.Write(SomeFloat);
+            writer.Write(CheckInterval);
             for (int i = 0; i < 3; ++i)
             {
                 writer.Write(Coords[i].X);
@@ -247,7 +281,7 @@ namespace Twinsanity
         {
             Header = reader.ReadUInt32();
             Enabled = reader.ReadUInt32();
-            SomeFloat = reader.ReadSingle();
+            CheckInterval = reader.ReadSingle();
             for (int i = 0; i < 3; ++i)
             {
                 Coords[i] = new Pos(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
