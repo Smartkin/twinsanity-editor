@@ -26,11 +26,11 @@ namespace TwinsaityEditor
             "Collidable", // 1
             "Visible", // 2
             "Shadow", // 3
-            "", // 4
-            "", // 5 Tangible?
-            "HasLoadZoneState", // 6 Persistent state flag
-            "", // 7
-            "", // 8 Receive OnTrigger signals?
+            "CarriesRiders", // 4
+            "TracksMovement", // 5
+            "HasPersistentFlag", // 6 Persistent state flag
+            "FlagInChunkStore", // 7
+            "RecievesTriggerSignals", // 8
             "Harmful", // 9 Collision harmful
             "SolidToBodyslam", // 10
             "SolidToSlide", // 11
@@ -38,9 +38,9 @@ namespace TwinsaityEditor
             "SolidToTwinSlam", // 13
             "SolidToTwinThrow", // 14
             "Targetable", // 15 Targetable with MultiTool and Nina
-            "", // 16
+            "AlwaysHarmful", // 16
             "BounceRegularProjectiles", // 17
-            "ScriptSoftFlag18", // 18
+            "SnapsToGround", // 18
             "ScriptSoftFlag19", // 19
             "ScriptSoftFlag20", // 20
             "ScriptSoftFlag21", // 21

@@ -94,7 +94,7 @@ namespace TwinsaityEditor.Workers
                 fdbSave.IsFolderPicker = true;
 
                 pbImport.Show();
-                if (fdbSave.ShowDialog(Handle) == CommonFileDialogResult.Ok)
+                //if (fdbSave.ShowDialog(Handle) == CommonFileDialogResult.Ok)
                 {
                     foreach (var image in listImages.Items)
                     {
