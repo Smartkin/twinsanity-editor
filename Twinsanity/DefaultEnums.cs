@@ -99,13 +99,13 @@ namespace Twinsanity
             OnTrigger = 1,
             OnDamage = 2, // Explosion/Bodyslam/Gunfire/Nina punch
             OnTouch = 3,
-            OnHeadbutt = 4,
+            OnHeadbutt = 4, // Attacked from below
             OnLand = 5, // Something landed on top of this object
             OnGettingSpinAttacked = 6,
             OnGettingBodyslamAttacked = 7,
             OnGettingSlideAttacked = 8,
             OnPhysicsCollision = 9,
-            Unk10 = 10, // Some kind of damage
+            OnGettingThrownAttacked = 10,
         }
         public enum CharacterGameObjectScriptOrder
         {
@@ -603,7 +603,7 @@ namespace Twinsanity
             MeToInitPosSqrDist = 9,
             MeToFocusSqrDist = 10,
             CurrentKey = 11,
-            IsLoadZoneStateSet = 12,
+            IsPersistentFlagSet = 12,
             GotRoute = 13,
             GotKeys = 14,
             HitUnloadedZone = 15,
@@ -689,7 +689,7 @@ namespace Twinsanity
             HeadAtLimit = 93,
             HeadYawBelowLimit = 94,
             HeadYawAboveLimit = 95,
-            HeaPitchBelowLimit = 96,
+            HeadPitchBelowLimit = 96,
             HeadPitchAboveLimit = 97,
             RouteStepUnchecked = 102,
             RouteStep = 103,
@@ -703,7 +703,7 @@ namespace Twinsanity
             Sense0Level = 111,
             Sense2Level = 112,
             Sense1Level = 113,
-            Presense = 114,
+            Presence = 114,
             AlwaysZero = 115,
             RigidBodyAgainstWall = 116,
             GotChildMessageOnceEquals = 117,
@@ -759,13 +759,13 @@ namespace Twinsanity
             FocusInstanceCounter3EqualsThreshold = 166,
             SplineDistToAgentRef1 = 167,
             GroundBelowPointAhead = 168,
-            CountedInstnaces = 169,
+            CountedInstances = 169,
             CountedValue = 170,
             RankAboveGlobalRank = 171,
             TimeSinceMark = 172,
             DUMMY_173 = 173,
             Always = 174,
-            Never = 175,
+            IsGameJapanese = 175,
             LinkedChunksQueued = 176,
             FocusInSameChunk = 177,
 
@@ -803,7 +803,7 @@ namespace Twinsanity
             ClearLineOfSightToPlayer = 542,
             CanSeePlayer = 543,
             PlayerCanSeeMe = 544,
-            PlayerGutShotCharge = 545,
+            PlayerGunShotCharge = 545,
             NodeIsAirborne = 546,
             EdgeNeedsJump = 547,
             EdgeNeedsFlying = 548,
@@ -1196,7 +1196,7 @@ namespace Twinsanity
             RequestFocus2 = 564,
             RequestFocus3 = 565,
             SetAgentRef1ToPlayer = 566,
-            SetFocusPosToPlayer2 = 567,
+            SetFocusPosToPlayer = 567,
             DUMMY_568 = 568,
             ExitVehicleMode = 569,
             SetVehicleRollerbrawl = 570,
