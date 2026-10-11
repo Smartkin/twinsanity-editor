@@ -42,6 +42,11 @@
               Looks up a localized resource of type System.Drawing.Bitmap.
             </summary>
         </member>
+        <member name="P:TwinsaityEditor.Properties.Resources.editoricon">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
         <member name="M:TwinsaityEditor.TwinsanityEditor.Main">
             <summary>
             The main entry point for the application.

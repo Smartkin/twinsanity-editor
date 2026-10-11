@@ -27,6 +27,10 @@ namespace TwinsaityEditor
             treeView1.AfterSelect += treeView1_AfterSelect;
             treeView1.KeyDown += treeView1_KeyDown;
             label3.Text = "v" + Program.EditorVersion;
+            pictureBox1.BackgroundImage = Resources.editoricon;
+            var iconhandle = Resources.editoricon.GetHicon();
+            System.Drawing.Icon ico =  System.Drawing.Icon.FromHandle(iconhandle);
+            this.Icon = ico;
         }
 
         private void GenTree()
