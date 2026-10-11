@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Windows.Forms;
 using System.IO;
 using SharpFont;
 
@@ -211,7 +212,16 @@ namespace TwinsaityEditor.FontWrapper
 
                     if (ftbmp.Width > 0 && ftbmp.Rows > 0)
                     {
-                        Bitmap cBmp = ftbmp.ToGdipBitmap(foreColor);
+                        Bitmap cBmp;
+                        try
+                        {
+                            cBmp = ftbmp.ToGdipBitmap(foreColor);
+                        }
+                        catch
+                        {
+                            // Fallback in case font fails
+                            cBmp = ImageFromText(c.ToString(), SystemFonts.MenuFont, foreColor, backColor, gWidth, gWidth);
+                        }
                         rc.Width = cBmp.Width;
                         rc.BearingX = face.Glyph.BitmapLeft;
                         int x = (int)Math.Round(penX + face.Glyph.BitmapLeft);
@@ -257,6 +267,19 @@ namespace TwinsaityEditor.FontWrapper
             }
 
             return bmp;
+        }
+
+        private static Bitmap ImageFromText(string text, Font font, Color textColor, Color fillColor, float width, float height)
+        {
+            Bitmap bmpOut = new Bitmap((int)Math.Ceiling(width), (int)Math.Ceiling(height), System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            using (Graphics gBmp = Graphics.FromImage(bmpOut))
+            {
+                gBmp.Clear(fillColor);
+                gBmp.SmoothingMode = SmoothingMode.AntiAlias;
+                gBmp.InterpolationMode = InterpolationMode.NearestNeighbor;
+                TextRenderer.DrawText(gBmp, text, font, new Point(0, 0), textColor);
+            }
+            return bmpOut;
         }
 
         #endregion
