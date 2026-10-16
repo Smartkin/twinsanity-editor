@@ -17,6 +17,7 @@ namespace TwinsaityEditor
         public ChunkLinksEditor(ChunkLinksController c)
         {
             controller = c;
+            ignore_value_change = true;
             InitializeComponent();
             PopulateList();
             comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;

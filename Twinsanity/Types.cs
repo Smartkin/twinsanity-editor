@@ -71,6 +71,11 @@ namespace Twinsanity
         {
             return $"{X} {Y} {Z} {W}";
         }
+
+        public float[] ToArray()
+        {
+            return new float[4] { X, Y, Z, W };
+        }
     }
 
     public class CamRot

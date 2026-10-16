@@ -2345,7 +2345,7 @@
             this.checkBoxBitfieldFlag4.Name = "checkBoxBitfieldFlag4";
             this.checkBoxBitfieldFlag4.Size = new System.Drawing.Size(72, 17);
             this.checkBoxBitfieldFlag4.TabIndex = 21;
-            this.checkBoxBitfieldFlag4.Text = "UnkFlag4";
+            this.checkBoxBitfieldFlag4.Text = "UnusedFlag4";
             this.checkBoxBitfieldFlag4.UseVisualStyleBackColor = true;
             this.checkBoxBitfieldFlag4.CheckedChanged += new System.EventHandler(this.checkBoxBitfieldFlag4_CheckedChanged);
             // 
