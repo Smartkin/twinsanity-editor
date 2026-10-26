@@ -121,7 +121,14 @@ namespace Twinsanity
 
         public override string ToString()
         {
-            return DefaultHashes.Hash_OGI[ID];
+            if (DefaultHashes.Hash_OGI.ContainsKey(ID))
+            {
+                return DefaultHashes.Hash_OGI[ID];
+            }
+            else
+            {
+                return $"OGI {ID}";
+            }
         }
 
         public override void Load(BinaryReader reader, int size)
